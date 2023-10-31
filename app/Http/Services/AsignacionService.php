@@ -47,7 +47,7 @@ class AsignacionService{
 
         if($usuarios->count() == 0){
 
-            throw new AsignacionServiceException('No se encontraron usuario para asignar al movimiento registral.');
+            throw new AsignacionServiceException('No se encontraron usuarios de consulta para asignar al movimiento registral.');
 
         }else if($usuarios->count() == 1){
 
@@ -142,7 +142,7 @@ class AsignacionService{
 
         if(!$supervisor){
 
-            throw new AsignacionServiceException('No se encontraron supervisores para asignar al movimiento registral.');
+            throw new AsignacionServiceException('No se encontraron supervisores de ccertificaciones para asignar al movimiento registral.');
 
         }
 
@@ -169,7 +169,7 @@ class AsignacionService{
 
         if($usuarios->count() == 0){
 
-            throw new AsignacionServiceException('No se encontraron usuario para asignar al movimiento registral.');
+            throw new AsignacionServiceException('No se encontraron usuarios de propiedad para asignar al movimiento registral.');
 
         }else if($usuarios->count() == 1){
 
