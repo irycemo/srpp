@@ -35,13 +35,17 @@ class AppServiceProvider extends ServiceProvider
 
         });
 
-        Livewire::setScriptRoute(function ($handle) {
-            return Route::get('/srpp/public/livewire/livewire.js', $handle);
-        });
+        if(!env('LOCAL')){
 
-        Livewire::setUpdateRoute(function ($handle) {
-            return Route::post('/srpp/public/livewire/update', $handle);
-        });
+            Livewire::setScriptRoute(function ($handle) {
+                return Route::get('/srpp/public/livewire/livewire.js', $handle);
+            });
+
+            Livewire::setUpdateRoute(function ($handle) {
+                return Route::post('/srpp/public/livewire/update', $handle);
+            });
+
+        }
 
     }
 }
