@@ -142,7 +142,7 @@ class AsignacionService{
 
         if(!$supervisor){
 
-            throw new AsignacionServiceException('No se encontraron supervisores de ccertificaciones para asignar al movimiento registral.');
+            throw new AsignacionServiceException('No se encontraron supervisores de certificaciones para asignar al movimiento registral.');
 
         }
 

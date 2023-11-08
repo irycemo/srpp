@@ -113,5 +113,32 @@ class UserSeeder extends Seeder
             'area' => 'Subdirección de Tecnologías de la Información',
         ])->assignRole('Propiedad');
 
+        User::create([
+            'name' => 'Propiedad 4',
+            'ubicacion' => 'Regional 4',
+            'status' => 'activo',
+            'email' => 'propiedad4@hotmail.com',
+            'password' => Hash::make('12345678'),
+            'area' => 'Coordinación Regional 4 Purhépecha (Uruapan)',
+        ])->assignRole('Propiedad');
+
+        User::create([
+            'name' => 'Propiedad 5',
+            'ubicacion' => 'Regional 4',
+            'status' => 'activo',
+            'email' => 'propiedad5@hotmail.com',
+            'password' => Hash::make('12345678'),
+            'area' => 'Coordinación Regional 4 Purhépecha (Uruapan)',
+        ])->assignRole('Propiedad');
+
+        User::create([
+            'name' => 'Supervisor Copias',
+            'ubicacion' => 'Regional 4',
+            'status' => 'activo',
+            'email' => 'supervisor2@hotmail.com',
+            'password' => Hash::make('12345678'),
+            'area' => 'Coordinación Regional 4 Purhépecha (Uruapan)',
+        ])->assignRole('Supervisor Copias');
+
     }
 }

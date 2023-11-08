@@ -17,8 +17,6 @@ return new class extends Migration
             $table->foreignId('folio_real')->references('id')->on('folio_reals');
             $table->foreignId('escritura_id')->nullable()->references('id')->on('escrituras');
 
-            $table->unsignedTinyInteger('numero_propiedad')->nullable()->comment("Número de propiedad dentro de la escritura");
-            $table->string('titulo_propiedad')->nullable();
             $table->string('curt')->nullable();
             /* Valores y superficies */
             $table->unsignedDecimal('superficie_terreno', 18,2)->nullable();

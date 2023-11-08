@@ -49,9 +49,11 @@
 
                 @can('Área Inscripciones')
 
-                    @include('layouts.sidebar-propiedad')
+                    @include('layouts.sidebar-inscripciones')
 
                 @endif
+
+                @include('layouts.sidebar-consultas')
 
                 <a href="{{ route('manual') }}" class="mb-3 capitalize font-medium text-md hover:text-red-600 transition ease-in-out duration-500 flex hover  hover:bg-gray-100 p-2 px-4 rounded-xl focus:outline-rojo focus:outline-offset-2">
 

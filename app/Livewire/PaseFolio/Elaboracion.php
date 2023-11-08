@@ -43,9 +43,7 @@ class Elaboracion extends Component
     public $predio;
     public $edificio;
     public $departamento;
-    public $titulo_propiedad;
     public $curt;
-    public $numero_propiedad;
     public $superficie_terreno;
     public $superficie_construccion;
     public $superficie_judicial;
@@ -60,6 +58,7 @@ class Elaboracion extends Component
     public $monto_transaccion;
     public $divisa;
     public $observaciones;
+    public $descripcion;
 
     /* Ubicación predio */
     public $tipo_vialidad;
@@ -90,15 +89,11 @@ class Elaboracion extends Component
     public $solar;
 
     /* Escritura */
-    public $escritura_registro;
-    public $escritura_tomo;
-    public $escritura_distrito;
+    public $escritura_numero;
     public $escritura_fecha_inscripcion;
     public $escritura_fecha_escritura;
     public $escritura_numero_hojas;
     public $escritura_numero_paginas;
-    public $escritura_tipo_fedatario;
-    public $escritura_documento_presentado;
     public $escritura_notaria;
     public $escritura_nombre_notario;
     public $escritura_estado_notario;
@@ -137,6 +132,7 @@ class Elaboracion extends Component
     public $medidas = [];
     public $vientos;
     public $distritos;
+    public $estados;
 
     public function resetear(){
 
@@ -182,24 +178,29 @@ class Elaboracion extends Component
 
             $this->movimientoRegistral->update(['folio_real' => $folioReal->id]);
 
-            $this->escritura = Escritura::create([
-                'tomo' => $this->escritura_tomo,
-                'registro' => $this->escritura_registro,
-                'distrito' => $this->escritura_distrito,
-                'fecha_inscripcion' => $this->escritura_fecha_inscripcion,
-                'fecha_escritura' => $this->escritura_fecha_escritura,
-                'numero_hojas' => $this->escritura_numero_hojas,
-                'numero_paginas' => $this->escritura_numero_paginas,
-                'tipo_fedatario' => $this->escritura_tipo_fedatario,
-                'documento_presentado' => $this->escritura_documento_presentado,
-                'notaria' => $this->escritura_notaria,
-                'nombre_notario' => $this->escritura_nombre_notario,
-                'estado_notario' => $this->escritura_estado_notario,
-                'comentario' => $this->escritura_observaciones,
-            ]);
+            if ($this->tipo_documento == 'escritura'){
+
+                $this->escritura = Escritura::create([
+                    'numero' => $this->escritura_numero,
+                    'fecha_inscripcion' => $this->escritura_fecha_inscripcion,
+                    'fecha_escritura' => $this->escritura_fecha_escritura,
+                    'numero_hojas' => $this->escritura_numero_hojas,
+                    'numero_paginas' => $this->escritura_numero_paginas,
+                    'notaria' => $this->escritura_notaria,
+                    'nombre_notario' => $this->escritura_nombre_notario,
+                    'estado_notario' => $this->escritura_estado_notario,
+                    'comentario' => $this->escritura_observaciones,
+                ]);
+
+                $this->propiedad = Predio::create([
+                    'escritura_id' => $this->escritura->id,
+                    'folio_real' => $folioReal->id,
+                    'status' => 'nuevo'
+                ]);
+
+            }
 
             $this->propiedad = Predio::create([
-                'escritura_id' => $this->escritura->id,
                 'folio_real' => $folioReal->id,
                 'status' => 'nuevo'
             ]);
@@ -211,26 +212,21 @@ class Elaboracion extends Component
     public function guardarDocumentoEntrada(){
 
         $this->validate([
-            'tipo_documento' => 'required',
-            'autoridad_cargo' => 'required',
-            'autoridad_nombre' => 'required',
-            'numero_documento' => 'required',
-            'fecha_emision' => 'required',
-            'fecha_inscripcion' => 'required',
-            'procedencia' => 'required',
-            'escritura_registro' => 'required',
-            'escritura_tomo' => 'required',
-            'escritura_distrito' => 'required',
-            'escritura_fecha_inscripcion' => 'required',
-            'escritura_fecha_escritura' => 'required',
-            'escritura_numero_hojas' => 'required',
-            'escritura_numero_paginas' => 'required',
-            'escritura_tipo_fedatario' => 'required',
-            'escritura_documento_presentado' => 'required',
-            'escritura_notaria' => 'required',
-            'escritura_nombre_notario' => 'required',
-            'escritura_estado_notario' => 'required',
-            'escritura_observaciones' => 'required',
+            'tipo_documento' => 'nullable',
+            'autoridad_cargo' => 'nullable',
+            'autoridad_nombre' => 'nullable',
+            'numero_documento' => 'nullable',
+            'fecha_emision' => 'nullable',
+            'fecha_inscripcion' => 'nullable',
+            'procedencia' => 'nullable',
+            'escritura_fecha_inscripcion' => 'nullable',
+            'escritura_fecha_escritura' => 'nullable',
+            'escritura_numero_hojas' => 'nullable',
+            'escritura_numero_paginas' => 'nullable',
+            'escritura_notaria' => 'nullable',
+            'escritura_nombre_notario' => 'nullable',
+            'escritura_estado_notario' => 'nullable',
+            'escritura_observaciones' => 'nullable',
         ]);
 
         if(!$this->movimientoRegistral->folio_real){
@@ -255,21 +251,21 @@ class Elaboracion extends Component
                     'procedencia' => $this->procedencia,
                 ]);
 
-                $this->escritura->update([
-                    'tomo' => $this->escritura_tomo,
-                    'registro' => $this->escritura_registro,
-                    'distrito' => $this->escritura_distrito,
-                    'fecha_inscripcion' => $this->escritura_fecha_inscripcion,
-                    'fecha_escritura' => $this->escritura_fecha_escritura,
-                    'numero_hojas' => $this->escritura_numero_hojas,
-                    'numero_paginas' => $this->escritura_numero_paginas,
-                    'tipo_fedatario' => $this->escritura_tipo_fedatario,
-                    'documento_presentado' => $this->escritura_documento_presentado,
-                    'notaria' => $this->escritura_notaria,
-                    'nombre_notario' => $this->escritura_nombre_notario,
-                    'estado_notario' => $this->escritura_estado_notario,
-                    'comentario' => $this->escritura_observaciones,
-                ]);
+                if($this->tipo_documento == 'escritura'){
+
+                    $this->escritura->update([
+                        'numero' => $this->escritura_numero,
+                        'fecha_inscripcion' => $this->escritura_fecha_inscripcion,
+                        'fecha_escritura' => $this->escritura_fecha_escritura,
+                        'numero_hojas' => $this->escritura_numero_hojas,
+                        'numero_paginas' => $this->escritura_numero_paginas,
+                        'notaria' => $this->escritura_notaria,
+                        'nombre_notario' => $this->escritura_nombre_notario,
+                        'estado_notario' => $this->escritura_estado_notario,
+                        'comentario' => $this->escritura_observaciones,
+                    ]);
+
+                }
 
                 $this->dispatch('mostrarMensaje', ['success', "El documento de entrada se guardó con éxito."]);
 
@@ -299,7 +295,6 @@ class Elaboracion extends Component
             'predio' => 'required',
             'edificio' => 'required',
             'departamento' => 'required',
-            'titulo_propiedad' => 'required',
             'curt' => 'required',
             'superficie_terreno' => 'required',
             'superficie_construccion' => 'required',
@@ -351,7 +346,6 @@ class Elaboracion extends Component
                     'cp_tipo_predio' => $this->tipo,
                     'cp_registro' => $this->registro,
 
-                    'numero_propiedad' => $this->numero_propiedad,
                     'superficie_terreno' => $this->superficie_terreno,
                     'superficie_construccion' => $this->superficie_construccion,
                     'superficie_judicial' => $this->superficie_judicial,
@@ -365,7 +359,7 @@ class Elaboracion extends Component
                     'valor_catastral' => $this->valor_catastral,
                     'monto_transaccion' => $this->monto_transaccion,
                     'divisa' => $this->divisa,
-                    'observaciones' => $this->observaciones
+                    'descripcion' => $this->observaciones
                 ]);
 
                 $this->propiedad->update([
@@ -382,9 +376,7 @@ class Elaboracion extends Component
                     'cp_oficina' => $this->oficina,
                     'cp_tipo_predio' => $this->tipo,
                     'cp_registro' => $this->registro,
-                    'titulo_propiedad' => $this->titulo_propiedad,
                     'curt' => $this->curt,
-                    'numero_propiedad' => $this->numero_propiedad,
                     'superficie_terreno' => $this->superficie_terreno,
                     'superficie_construccion' => $this->superficie_construccion,
                     'superficie_judicial' => $this->superficie_judicial,
@@ -397,6 +389,7 @@ class Elaboracion extends Component
                     'valor_total_construccion' => $this->valor_total_construccion,
                     'valor_catastral' => $this->valor_catastral,
                     'divisa' => $this->divisa,
+                    'descripcion' =>$this->observaciones
                 ]);
 
                 foreach ($this->medidas as $key =>$medida) {
@@ -502,6 +495,7 @@ class Elaboracion extends Component
                     'ejido' => $this->ejido,
                     'parcela' => $this->parcela,
                     'solar' => $this->solar,
+                    'observaciones' => $this->observaciones
                 ]);
 
                 $this->propiedad->update([
@@ -530,6 +524,7 @@ class Elaboracion extends Component
                     'ejido' => $this->ejido,
                     'parcela' => $this->parcela,
                     'solar' => $this->solar,
+                    'descripcion' => $this->observaciones
                 ]);
 
                 $this->dispatch('mostrarMensaje', ['success', "La ubicación del predio se guardó con éxito."]);
@@ -825,6 +820,8 @@ class Elaboracion extends Component
 
         $this->distritos = Constantes::DISTRITOS;
 
+        $this->estados = Constantes::ESTADOS;
+
         if($this->movimientoRegistral->folioReal){
 
             /* Documento entrada */
@@ -840,7 +837,6 @@ class Elaboracion extends Component
 
             if($this->propiedad){
 
-                $this->titulo_propiedad = $this->propiedad->titulo_propiedad;
                 $this->curt = $this->propiedad->curt;
 
                 $this->localidad = $this->movimientoRegistral->inscripcionPropiedad->cp_localidad;
@@ -855,7 +851,6 @@ class Elaboracion extends Component
                 $this->predio = $this->movimientoRegistral->inscripcionPropiedad->cc_predio;
                 $this->edificio = $this->movimientoRegistral->inscripcionPropiedad->cc_edificio;
                 $this->departamento = $this->movimientoRegistral->inscripcionPropiedad->cc_departamento;
-                $this->numero_propiedad = $this->movimientoRegistral->inscripcionPropiedad->numero_propiedad;
                 $this->superficie_terreno = $this->movimientoRegistral->inscripcionPropiedad->superficie_terreno;
                 $this->superficie_construccion = $this->movimientoRegistral->inscripcionPropiedad->superficie_construccion;
                 $this->superficie_judicial = $this->movimientoRegistral->inscripcionPropiedad->superficie_judicial;
@@ -869,7 +864,6 @@ class Elaboracion extends Component
                 $this->valor_catastral = $this->movimientoRegistral->inscripcionPropiedad->valor_catastral;
                 $this->monto_transaccion = $this->movimientoRegistral->inscripcionPropiedad->monto_transaccion;
                 $this->divisa = $this->movimientoRegistral->inscripcionPropiedad->divisa;
-                $this->observaciones = $this->movimientoRegistral->inscripcionPropiedad->observaciones;
 
                 $this->tipo_vialidad = $this->movimientoRegistral->inscripcionPropiedad->tipo_vialidad;
                 $this->tipo_asentamiento = $this->movimientoRegistral->inscripcionPropiedad->tipo_asentamiento;
@@ -896,18 +890,16 @@ class Elaboracion extends Component
                 $this->ejido = $this->movimientoRegistral->inscripcionPropiedad->ejido;
                 $this->parcela = $this->movimientoRegistral->inscripcionPropiedad->parcela;
                 $this->solar = $this->movimientoRegistral->inscripcionPropiedad->solar;
+                $this->observaciones = $this->movimientoRegistral->inscripcionPropiedad->observaciones;
+                $this->descripcion = $this->movimientoRegistral->inscripcionPropiedad->descripcion;
 
                 if($this->propiedad->escritura){
 
-                    $this->escritura_tomo = $this->propiedad->escritura->tomo;
-                    $this->escritura_registro = $this->propiedad->escritura->registro;
-                    $this->escritura_distrito = $this->propiedad->escritura->distrito;
+                    $this->escritura_numero = $this->propiedad->escritura->numero;
                     $this->escritura_fecha_inscripcion = $this->propiedad->escritura->fecha_inscripcion;
                     $this->escritura_fecha_escritura = $this->propiedad->escritura->fecha_escritura;
                     $this->escritura_numero_hojas = $this->propiedad->escritura->numero_hojas;
                     $this->escritura_numero_paginas = $this->propiedad->escritura->numero_paginas;
-                    $this->escritura_tipo_fedatario = $this->propiedad->escritura->tipo_fedatario;
-                    $this->escritura_documento_presentado = $this->propiedad->escritura->documento_presentado;
                     $this->escritura_notaria = $this->propiedad->escritura->notaria;
                     $this->escritura_nombre_notario = $this->propiedad->escritura->nombre_notario;
                     $this->escritura_estado_notario = $this->propiedad->escritura->estado_notario;

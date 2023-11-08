@@ -120,7 +120,7 @@
 
                 <x-input-group for="tipo_persona" label="Tipo de persona" :error="$errors->first('tipo_persona')" class="w-full">
 
-                    <x-input-select id="tipo_persona" wire:model="tipo_persona" class="w-full">
+                    <x-input-select id="tipo_persona" wire:model.live="tipo_persona" class="w-full">
 
                         <option value="">Seleccione una opción</option>
                         <option value="MORAL">MORAL</option>
@@ -136,23 +136,39 @@
 
                 </x-input-group>
 
-                <x-input-group for="ap_paterno" label="Apellido paterno" :error="$errors->first('ap_paterno')" class="w-full">
+                @if($tipo_persona == 'FISICA')
 
-                    <x-input-text id="ap_paterno" wire:model="ap_paterno" />
+                    <x-input-group for="ap_paterno" label="Apellido paterno" :error="$errors->first('ap_paterno')" class="w-full">
 
-                </x-input-group>
+                        <x-input-text id="ap_paterno" wire:model="ap_paterno" />
 
-                <x-input-group for="ap_materno" label="Apellido materno" :error="$errors->first('ap_materno')" class="w-full">
+                    </x-input-group>
 
-                    <x-input-text id="ap_materno" wire:model="ap_materno" />
+                    <x-input-group for="ap_materno" label="Apellido materno" :error="$errors->first('ap_materno')" class="w-full">
 
-                </x-input-group>
+                        <x-input-text id="ap_materno" wire:model="ap_materno" />
 
-                <x-input-group for="curp" label="CURP" :error="$errors->first('curp')" class="w-full">
+                    </x-input-group>
 
-                    <x-input-text id="curp" wire:model="curp" />
+                    <x-input-group for="curp" label="CURP" :error="$errors->first('curp')" class="w-full">
 
-                </x-input-group>
+                        <x-input-text id="curp" wire:model="curp" />
+
+                    </x-input-group>
+
+                    <x-input-group for="fecha_nacimiento" label="Fecha de nacimiento" :error="$errors->first('fecha_nacimiento')" class="w-full">
+
+                        <x-input-text type="date" id="fecha_nacimiento" wire:model="fecha_nacimiento" />
+
+                    </x-input-group>
+
+                    <x-input-group for="estado_civil" label="Estado civil" :error="$errors->first('estado_civil')" class="w-full">
+
+                        <x-input-text id="estado_civil" wire:model="estado_civil" />
+
+                    </x-input-group>
+
+                @endif
 
                 <x-input-group for="rfc" label="RFC" :error="$errors->first('rfc')" class="w-full">
 
@@ -166,21 +182,9 @@
 
                 </x-input-group>
 
-                <x-input-group for="fecha_nacimiento" label="Fecha de nacimiento" :error="$errors->first('fecha_nacimiento')" class="w-full">
-
-                    <x-input-text type="date" id="fecha_nacimiento" wire:model="fecha_nacimiento" />
-
-                </x-input-group>
-
                 <x-input-group for="nacionalidad" label="Nacionalidad" :error="$errors->first('nacionalidad')" class="w-full">
 
                     <x-input-text id="nacionalidad" wire:model="nacionalidad" />
-
-                </x-input-group>
-
-                <x-input-group for="estado_civil" label="Estado civil" :error="$errors->first('estado_civil')" class="w-full">
-
-                    <x-input-text id="estado_civil" wire:model="estado_civil" />
 
                 </x-input-group>
 

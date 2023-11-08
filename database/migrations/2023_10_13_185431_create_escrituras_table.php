@@ -13,12 +13,11 @@ return new class extends Migration
     {
         Schema::create('escrituras', function (Blueprint $table) {
             $table->id();
+            $table->string('numero');
             $table->date('fecha_inscripcion');
             $table->date('fecha_escritura')->nullable();
             $table->unsignedInteger('numero_hojas');
             $table->unsignedInteger('numero_paginas');
-            $table->string('tipo_fedatario');
-            $table->string('documento_presentado');
             $table->string('notaria');
             $table->string('nombre_notario')->nullable();
             $table->string('estado_notario')->nullable();

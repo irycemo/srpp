@@ -6,19 +6,39 @@
 
         <x-input-group for="tipo_vialidad" label="Tipo de vialidad" :error="$errors->first('tipo_vialidad')" class="w-full">
 
-            <x-input-text id="tipo_vialidad" wire:model="tipo_vialidad" />
+            <x-input-select id="tipo_vialidad" wire:model.live="tipo_vialidad" class="w-full">
 
-        </x-input-group>
+                <option value="">Seleccione una opción</option>
 
-        <x-input-group for="tipo_asentamiento" label="Tipo de asentamiento" :error="$errors->first('tipo_asentamiento')" class="w-full">
+                @foreach ($tipos_vialidades as $vialidad)
 
-            <x-input-text id="tipo_asentamiento" wire:model="tipo_asentamiento" />
+                    <option value="{{ $vialidad }}">{{ $vialidad }}</option>
+
+                @endforeach
+
+            </x-input-select>
 
         </x-input-group>
 
         <x-input-group for="nombre_vialidad" label="Nombre de la vialidad" :error="$errors->first('nombre_vialidad')" class="w-full">
 
             <x-input-text id="nombre_vialidad" wire:model="nombre_vialidad" />
+
+        </x-input-group>
+
+        <x-input-group for="tipo_asentamiento" label="Tipo de asentamiento" :error="$errors->first('tipo_asentamiento')" class="w-full">
+
+            <x-input-select id="tipo_asentamiento" wire:model.live="tipo_asentamiento" class="w-full">
+
+                <option value="">Seleccione una opción</option>
+
+                @foreach ($tipos_asentamientos as $asentamiento)
+
+                    <option value="{{ $asentamiento }}">{{ $asentamiento }}</option>
+
+                @endforeach
+
+            </x-input-select>
 
         </x-input-group>
 
@@ -151,6 +171,12 @@
         <x-input-group for="solar" label="Solar" :error="$errors->first('solar')" class="w-full">
 
             <x-input-text id="solar" wire:model="solar" />
+
+        </x-input-group>
+
+        <x-input-group for="observaciones" label="Observaciones" :error="$errors->first('observaciones')" class="sm:col-span-2 lg:col-span-3">
+
+            <textarea rows="3" class="w-full bg-white rounded" wire:model="observaciones"></textarea>
 
         </x-input-group>
 
