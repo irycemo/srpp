@@ -52,7 +52,7 @@
 
                 <div class="tab-panel rounded-lg" :class="{ 'active': activeTab === 3 }" x-show.transition.in.opacity.duration.800="activeTab === 3">
 
-                    @include('livewire.pase-folio.propietarios')
+                    @livewire('pase-folio.propietarios', ['movimientoRegistral' => $this->movimientoRegistral])
 
                 </div>
 

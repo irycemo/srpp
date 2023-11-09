@@ -183,7 +183,6 @@ class DescripcionPredio extends Component
                     'cp_oficina' => $this->oficina,
                     'cp_tipo_predio' => $this->tipo,
                     'cp_registro' => $this->registro,
-
                     'superficie_terreno' => $this->superficie_terreno,
                     'superficie_construccion' => $this->superficie_construccion,
                     'superficie_judicial' => $this->superficie_judicial,
