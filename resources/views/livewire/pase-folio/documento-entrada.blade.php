@@ -101,7 +101,13 @@
         @elseif ($tipo_documento == 'escritura')
 
             <span class="flex items-center justify-center text-lg text-gray-700  col-span-3">Escritura</span>
-            NUMERO ESCRITURA
+
+            <x-input-group for="escritura_numero" label="Número de escritura" :error="$errors->first('escritura_numero')" class="w-full">
+
+                <x-input-text type="number" id="escritura_numero" wire:model="escritura_numero" />
+
+            </x-input-group>
+
             <x-input-group for="escritura_notaria" label="Número de notaría" :error="$errors->first('escritura_notaria')" class="w-full">
 
                 <x-input-text type="number" id="escritura_notaria" wire:model="escritura_notaria" />

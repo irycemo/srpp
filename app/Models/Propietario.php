@@ -12,7 +12,6 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 class Propietario extends Model implements Auditable
 {
     use HasFactory;
-    use HasFactory;
     use ModelosTrait;
     use \OwenIt\Auditing\Auditable;
 

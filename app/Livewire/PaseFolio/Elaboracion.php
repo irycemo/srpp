@@ -6,7 +6,6 @@ use App\Models\Predio;
 use App\Models\Persona;
 use Livewire\Component;
 use App\Models\FolioReal;
-use App\Models\Colindancia;
 use App\Models\Propietario;
 use App\Constantes\Constantes;
 use App\Models\Escritura;
@@ -29,64 +28,6 @@ class Elaboracion extends Component
     public $fecha_emision;
     public $fecha_inscripcion;
     public $procedencia;
-
-    /* Descripción del predio */
-    public $localidad;
-    public $oficina;
-    public $tipo;
-    public $registro;
-    public $region;
-    public $municipio;
-    public $zona;
-    public $sector;
-    public $manzana;
-    public $predio;
-    public $edificio;
-    public $departamento;
-    public $curt;
-    public $superficie_terreno;
-    public $superficie_construccion;
-    public $superficie_judicial;
-    public $superficie_notarial;
-    public $area_comun_terreno;
-    public $area_comun_construccion;
-    public $valor_terreno_comun;
-    public $valor_construccion_comun;
-    public $valor_total_terreno;
-    public $valor_total_construccion;
-    public $valor_catastral;
-    public $monto_transaccion;
-    public $divisa;
-    public $observaciones;
-    public $descripcion;
-
-    /* Ubicación predio */
-    public $tipo_vialidad;
-    public $tipo_asentamiento;
-    public $nombre_vialidad;
-    public $nombre_asentamiento;
-    public $numero_exterior;
-    public $numero_exterior_2;
-    public $numero_adicional;
-    public $numero_adicional_2;
-    public $numero_interior;
-    public $lote;
-    public $manzana_ubicacion;
-    public $codigo_postal;
-    public $lote_fraccionador;
-    public $manzana_fraccionador;
-    public $etapa_fraccionador;
-    public $nombre_edificio;
-    public $clave_edificio;
-    public $departamento_edificio;
-    public $estado_ubicacion;
-    public $municipio_ubicacion;
-    public $ciudad;
-    public $localidad_ubicacion;
-    public $poblado;
-    public $ejido;
-    public $parcela;
-    public $solar;
 
     /* Escritura */
     public $escritura_numero;
@@ -126,11 +67,9 @@ class Elaboracion extends Component
     public Escritura $escritura;
 
     public $propietario;
-    public $tipos_asentamientos;
-    public $tipos_vialidades;
+
     public $tipos_propietarios;
-    public $medidas = [];
-    public $vientos;
+
     public $distritos;
     public $estados;
 
@@ -253,7 +192,7 @@ class Elaboracion extends Component
 
                 if($this->tipo_documento == 'escritura'){
 
-                    $this->escritura->update([
+                    $this->propiedad->escritura->update([
                         'numero' => $this->escritura_numero,
                         'fecha_inscripcion' => $this->escritura_fecha_inscripcion,
                         'fecha_escritura' => $this->escritura_fecha_escritura,
@@ -269,271 +208,13 @@ class Elaboracion extends Component
 
                 $this->dispatch('mostrarMensaje', ['success', "El documento de entrada se guardó con éxito."]);
 
+                $this->dispatch('cargarPropiedad', id: $this->propiedad->id);
+
             });
 
         } catch (\Throwable $th) {
 
             Log::error("Error al guardar documento de entrada en pase a folio por el usuario: (id: " . auth()->user()->id . ") " . auth()->user()->name . ". " . $th);
-            $this->dispatch('mostrarMensaje', ['error', "Ha ocurrido un error."]);
-
-        }
-
-    }
-
-    public function guardarDescripcionPredio(){
-
-        $this->validate([
-            'localidad' => 'required',
-            'oficina' => 'required',
-            'tipo' => 'required',
-            'registro' => 'required',
-            'region' => 'required',
-            'municipio' => 'required',
-            'zona' => 'required',
-            'sector' => 'required',
-            'manzana' => 'required',
-            'predio' => 'required',
-            'edificio' => 'required',
-            'departamento' => 'required',
-            'curt' => 'required',
-            'superficie_terreno' => 'required',
-            'superficie_construccion' => 'required',
-            'superficie_judicial' => 'required',
-            'superficie_notarial' => 'required',
-            'area_comun_terreno' => 'required',
-            'area_comun_construccion' => 'required',
-            'valor_terreno_comun' => 'required',
-            'valor_construccion_comun' => 'required',
-            'valor_total_terreno' => 'required',
-            'valor_total_construccion' => 'required',
-            'valor_catastral' => 'required',
-            'monto_transaccion' => 'required',
-            'divisa' => 'required',
-            'observaciones' => 'required',
-            'medidas.*' => 'required',
-            'medidas.*.viento' => 'required|string',
-            'medidas.*.longitud' => [
-                                        'required',
-                                        'numeric',
-                                        'min:0',
-                                    ],
-            'medidas.*.descripcion' => 'required|string',
-            'predio' => 'required'
-        ]);
-
-        if(!$this->movimientoRegistral->folio_real){
-
-            $this->generarFolioReal();
-
-        }
-
-        try {
-
-            DB::transaction(function () {
-
-                $this->movimientoRegistral->inscripcionPropiedad->update([
-                    'cc_estado' => 16,
-                    'cc_region_catastral' => $this->region,
-                    'cc_municipio' => $this->municipio,
-                    'cc_zona_catastral' => $this->zona,
-                    'cc_sector' => $this->sector,
-                    'cc_manzana' => $this->manzana,
-                    'cc_predio' => $this->predio,
-                    'cc_edificio' => $this->edificio,
-                    'cc_departamento' => $this->departamento,
-                    'cp_localidad' => $this->localidad,
-                    'cp_oficina' => $this->oficina,
-                    'cp_tipo_predio' => $this->tipo,
-                    'cp_registro' => $this->registro,
-
-                    'superficie_terreno' => $this->superficie_terreno,
-                    'superficie_construccion' => $this->superficie_construccion,
-                    'superficie_judicial' => $this->superficie_judicial,
-                    'superficie_notarial' => $this->superficie_notarial,
-                    'area_comun_terreno' => $this->area_comun_terreno,
-                    'area_comun_construccion' => $this->area_comun_construccion,
-                    'valor_terreno_comun' => $this->valor_terreno_comun,
-                    'valor_construccion_comun' => $this->valor_construccion_comun,
-                    'valor_total_terreno' => $this->valor_total_terreno,
-                    'valor_total_construccion' => $this->valor_total_construccion,
-                    'valor_catastral' => $this->valor_catastral,
-                    'monto_transaccion' => $this->monto_transaccion,
-                    'divisa' => $this->divisa,
-                    'descripcion' => $this->observaciones
-                ]);
-
-                $this->propiedad->update([
-                    'cc_estado' => 16,
-                    'cc_region_catastral' => $this->region,
-                    'cc_municipio' => $this->municipio,
-                    'cc_zona_catastral' => $this->zona,
-                    'cc_sector' => $this->sector,
-                    'cc_manzana' => $this->manzana,
-                    'cc_predio' => $this->predio,
-                    'cc_edificio' => $this->edificio,
-                    'cc_departamento' => $this->departamento,
-                    'cp_localidad' => $this->localidad,
-                    'cp_oficina' => $this->oficina,
-                    'cp_tipo_predio' => $this->tipo,
-                    'cp_registro' => $this->registro,
-                    'curt' => $this->curt,
-                    'superficie_terreno' => $this->superficie_terreno,
-                    'superficie_construccion' => $this->superficie_construccion,
-                    'superficie_judicial' => $this->superficie_judicial,
-                    'superficie_notarial' => $this->superficie_notarial,
-                    'area_comun_terreno' => $this->area_comun_terreno,
-                    'area_comun_construccion' => $this->area_comun_construccion,
-                    'valor_terreno_comun' => $this->valor_terreno_comun,
-                    'valor_construccion_comun' => $this->valor_construccion_comun,
-                    'valor_total_terreno' => $this->valor_total_terreno,
-                    'valor_total_construccion' => $this->valor_total_construccion,
-                    'valor_catastral' => $this->valor_catastral,
-                    'divisa' => $this->divisa,
-                    'descripcion' =>$this->observaciones
-                ]);
-
-                foreach ($this->medidas as $key =>$medida) {
-
-                    if($medida['id'] == null){
-
-                        $aux = $this->propiedad->colindancias()->create([
-                            'viento' => $medida['viento'],
-                            'longitud' => $medida['longitud'],
-                            'descripcion' => $medida['descripcion'],
-                        ]);
-
-                        $this->medidas[$key]['id'] = $aux->id;
-
-                    }else{
-
-                        Colindancia::find($medida['id'])->update([
-                            'viento' => $medida['viento'],
-                            'longitud' => $medida['longitud'],
-                            'descripcion' => $medida['descripcion'],
-                        ]);
-
-                    }
-
-                }
-
-                $this->dispatch('mostrarMensaje', ['success', "La descripción del predio se guardó con éxito."]);
-
-            });
-
-        } catch (\Throwable $th) {
-
-            Log::error("Error al guardar descripción del predio en pase a folio por el usuario: (id: " . auth()->user()->id . ") " . auth()->user()->name . ". " . $th);
-            $this->dispatch('mostrarMensaje', ['error', "Ha ocurrido un error."]);
-
-        }
-
-    }
-
-    public function guardarUbicacionPredio(){
-
-        $this->validate([
-            'tipo_vialidad' => 'required',
-            'tipo_asentamiento' => 'required',
-            'nombre_vialidad' => 'required',
-            'nombre_asentamiento' => 'required',
-            'numero_exterior' => 'required',
-            'numero_exterior_2' => 'required',
-            'numero_adicional' => 'required',
-            'numero_adicional_2' => 'required',
-            'numero_interior' => 'required',
-            'lote' => 'required',
-            'manzana_ubicacion' => 'required',
-            'codigo_postal' => 'required',
-            'lote_fraccionador' => 'required',
-            'manzana_fraccionador' => 'required',
-            'etapa_fraccionador' => 'required',
-            'nombre_edificio' => 'required',
-            'clave_edificio' => 'required',
-            'departamento_edificio' => 'required',
-            'municipio_ubicacion' => 'required',
-            'ciudad' => 'required',
-            'localidad_ubicacion' => 'required',
-            'poblado' => 'required',
-            'ejido' => 'required',
-            'parcela' => 'required',
-            'solar' => 'required',
-        ]);
-
-        if(!$this->movimientoRegistral->folio_real){
-
-            $this->generarFolioReal();
-
-        }
-
-        try {
-
-            DB::transaction(function () {
-
-                $this->movimientoRegistral->inscripcionPropiedad->update([
-                    'tipo_vialidad' => $this->tipo_vialidad,
-                    'tipo_asentamiento' => $this->tipo_asentamiento,
-                    'nombre_vialidad' => $this->nombre_vialidad,
-                    'nombre_asentamiento' => $this->nombre_asentamiento,
-                    'numero_exterior' => $this->numero_exterior,
-                    'numero_exterior_2' => $this->numero_exterior_2,
-                    'numero_adicional' => $this->numero_adicional,
-                    'numero_adicional_2' => $this->numero_adicional_2,
-                    'numero_interior' => $this->numero_interior,
-                    'lote' => $this->lote,
-                    'manzana' => $this->manzana_ubicacion,
-                    'codigo_postal' => $this->codigo_postal,
-                    'lote_fraccionador' => $this->lote_fraccionador,
-                    'manzana_fraccionador' => $this->manzana_fraccionador,
-                    'etapa_fraccionador' => $this->etapa_fraccionador,
-                    'nombre_edificio' => $this->nombre_edificio,
-                    'clave_edificio' => $this->clave_edificio,
-                    'departamento_edificio' => $this->departamento_edificio,
-                    'municipio' => $this->municipio_ubicacion,
-                    'ciudad' => $this->ciudad,
-                    'localidad' => $this->localidad_ubicacion,
-                    'poblado' => $this->poblado,
-                    'ejido' => $this->ejido,
-                    'parcela' => $this->parcela,
-                    'solar' => $this->solar,
-                    'observaciones' => $this->observaciones
-                ]);
-
-                $this->propiedad->update([
-                    'tipo_vialidad' => $this->tipo_vialidad,
-                    'tipo_asentamiento' => $this->tipo_asentamiento,
-                    'nombre_vialidad' => $this->nombre_vialidad,
-                    'nombre_asentamiento' => $this->nombre_asentamiento,
-                    'numero_exterior' => $this->numero_exterior,
-                    'numero_exterior_2' => $this->numero_exterior_2,
-                    'numero_adicional' => $this->numero_adicional,
-                    'numero_adicional_2' => $this->numero_adicional_2,
-                    'numero_interior' => $this->numero_interior,
-                    'lote' => $this->lote,
-                    'manzana' => $this->manzana_ubicacion,
-                    'codigo_postal' => $this->codigo_postal,
-                    'lote_fraccionador' => $this->lote_fraccionador,
-                    'manzana_fraccionador' => $this->manzana_fraccionador,
-                    'etapa_fraccionador' => $this->etapa_fraccionador,
-                    'nombre_edificio' => $this->nombre_edificio,
-                    'clave_edificio' => $this->clave_edificio,
-                    'departamento_edificio' => $this->departamento_edificio,
-                    'municipio' => $this->municipio_ubicacion,
-                    'ciudad' => $this->ciudad,
-                    'localidad' => $this->localidad_ubicacion,
-                    'poblado' => $this->poblado,
-                    'ejido' => $this->ejido,
-                    'parcela' => $this->parcela,
-                    'solar' => $this->solar,
-                    'descripcion' => $this->observaciones
-                ]);
-
-                $this->dispatch('mostrarMensaje', ['success', "La ubicación del predio se guardó con éxito."]);
-
-            });
-
-        } catch (\Throwable $th) {
-
-            Log::error("Error al guardar ubicación del predio en pase a folio por el usuario: (id: " . auth()->user()->id . ") " . auth()->user()->name . ". " . $th);
             $this->dispatch('mostrarMensaje', ['error', "Ha ocurrido un error."]);
 
         }
@@ -785,38 +466,9 @@ class Elaboracion extends Component
 
     }
 
-    public function agregarColindancia(){
-
-        $this->medidas[] = ['viento' => null, 'longitud' => null, 'descripcion' => null, 'id' => null];
-
-    }
-
-    public function borrarColindancia($index){
-
-        try {
-
-            $this->propiedad->colindancias()->where('id', $this->medidas[$index]['id'])->delete();
-
-        } catch (\Throwable $th) {
-            Log::error("Error al borrar colindancia en pase a folio por el usuario: (id: " . auth()->user()->id . ") " . auth()->user()->name . ". " . $th);
-            $this->dispatch('mostrarMensaje', ['error', "Hubo un error."]);
-        }
-
-        unset($this->medidas[$index]);
-
-        $this->medidas = array_values($this->medidas);
-
-    }
-
     public function mount(){
 
-        $this->tipos_vialidades = Constantes::TIPO_VIALIDADES;
-
-        $this->tipos_asentamientos = Constantes::TIPO_ASENTAMIENTO;
-
         $this->tipos_propietarios = Constantes::TIPO_PROPIETARIO;
-
-        $this->vientos = Constantes::VIENTOS;
 
         $this->distritos = Constantes::DISTRITOS;
 
@@ -837,62 +489,6 @@ class Elaboracion extends Component
 
             if($this->propiedad){
 
-                $this->curt = $this->propiedad->curt;
-
-                $this->localidad = $this->movimientoRegistral->inscripcionPropiedad->cp_localidad;
-                $this->oficina = $this->movimientoRegistral->inscripcionPropiedad->cp_oficina;
-                $this->tipo = $this->movimientoRegistral->inscripcionPropiedad->cp_tipo_predio;
-                $this->registro = $this->movimientoRegistral->inscripcionPropiedad->cp_registro;
-                $this->region = $this->movimientoRegistral->inscripcionPropiedad->cc_region_catastral;
-                $this->municipio = $this->movimientoRegistral->inscripcionPropiedad->cc_municipio;
-                $this->zona = $this->movimientoRegistral->inscripcionPropiedad->cc_zona_catastral;
-                $this->sector = $this->movimientoRegistral->inscripcionPropiedad->cc_sector;
-                $this->manzana = $this->movimientoRegistral->inscripcionPropiedad->cc_manzana;
-                $this->predio = $this->movimientoRegistral->inscripcionPropiedad->cc_predio;
-                $this->edificio = $this->movimientoRegistral->inscripcionPropiedad->cc_edificio;
-                $this->departamento = $this->movimientoRegistral->inscripcionPropiedad->cc_departamento;
-                $this->superficie_terreno = $this->movimientoRegistral->inscripcionPropiedad->superficie_terreno;
-                $this->superficie_construccion = $this->movimientoRegistral->inscripcionPropiedad->superficie_construccion;
-                $this->superficie_judicial = $this->movimientoRegistral->inscripcionPropiedad->superficie_judicial;
-                $this->superficie_notarial = $this->movimientoRegistral->inscripcionPropiedad->superficie_notarial;
-                $this->area_comun_terreno = $this->movimientoRegistral->inscripcionPropiedad->area_comun_terreno;
-                $this->area_comun_construccion = $this->movimientoRegistral->inscripcionPropiedad->area_comun_construccion;
-                $this->valor_terreno_comun = $this->movimientoRegistral->inscripcionPropiedad->valor_terreno_comun;
-                $this->valor_construccion_comun = $this->movimientoRegistral->inscripcionPropiedad->valor_construccion_comun;
-                $this->valor_total_terreno = $this->movimientoRegistral->inscripcionPropiedad->valor_total_terreno;
-                $this->valor_total_construccion = $this->movimientoRegistral->inscripcionPropiedad->valor_total_construccion;
-                $this->valor_catastral = $this->movimientoRegistral->inscripcionPropiedad->valor_catastral;
-                $this->monto_transaccion = $this->movimientoRegistral->inscripcionPropiedad->monto_transaccion;
-                $this->divisa = $this->movimientoRegistral->inscripcionPropiedad->divisa;
-
-                $this->tipo_vialidad = $this->movimientoRegistral->inscripcionPropiedad->tipo_vialidad;
-                $this->tipo_asentamiento = $this->movimientoRegistral->inscripcionPropiedad->tipo_asentamiento;
-                $this->nombre_vialidad = $this->movimientoRegistral->inscripcionPropiedad->nombre_vialidad;
-                $this->nombre_asentamiento = $this->movimientoRegistral->inscripcionPropiedad->nombre_asentamiento;
-                $this->numero_exterior = $this->movimientoRegistral->inscripcionPropiedad->numero_exterior;
-                $this->numero_exterior_2 = $this->movimientoRegistral->inscripcionPropiedad->numero_exterior_2;
-                $this->numero_adicional = $this->movimientoRegistral->inscripcionPropiedad->numero_adicional;
-                $this->numero_adicional_2 = $this->movimientoRegistral->inscripcionPropiedad->numero_adicional_2;
-                $this->numero_interior = $this->movimientoRegistral->inscripcionPropiedad->numero_interior;
-                $this->lote = $this->movimientoRegistral->inscripcionPropiedad->lote;
-                $this->manzana_ubicacion = $this->movimientoRegistral->inscripcionPropiedad->manzana;
-                $this->codigo_postal = $this->movimientoRegistral->inscripcionPropiedad->codigo_postal;
-                $this->lote_fraccionador = $this->movimientoRegistral->inscripcionPropiedad->lote_fraccionador;
-                $this->manzana_fraccionador = $this->movimientoRegistral->inscripcionPropiedad->manzana_fraccionador;
-                $this->etapa_fraccionador = $this->movimientoRegistral->inscripcionPropiedad->etapa_fraccionador;
-                $this->nombre_edificio = $this->movimientoRegistral->inscripcionPropiedad->nombre_edificio;
-                $this->clave_edificio = $this->movimientoRegistral->inscripcionPropiedad->clave_edificio;
-                $this->departamento_edificio = $this->movimientoRegistral->inscripcionPropiedad->departamento_edificio;
-                $this->municipio_ubicacion = $this->movimientoRegistral->inscripcionPropiedad->municipio;
-                $this->ciudad = $this->movimientoRegistral->inscripcionPropiedad->ciudad;
-                $this->localidad_ubicacion = $this->movimientoRegistral->inscripcionPropiedad->localidad;
-                $this->poblado = $this->movimientoRegistral->inscripcionPropiedad->poblado;
-                $this->ejido = $this->movimientoRegistral->inscripcionPropiedad->ejido;
-                $this->parcela = $this->movimientoRegistral->inscripcionPropiedad->parcela;
-                $this->solar = $this->movimientoRegistral->inscripcionPropiedad->solar;
-                $this->observaciones = $this->movimientoRegistral->inscripcionPropiedad->observaciones;
-                $this->descripcion = $this->movimientoRegistral->inscripcionPropiedad->descripcion;
-
                 if($this->propiedad->escritura){
 
                     $this->escritura_numero = $this->propiedad->escritura->numero;
@@ -904,17 +500,6 @@ class Elaboracion extends Component
                     $this->escritura_nombre_notario = $this->propiedad->escritura->nombre_notario;
                     $this->escritura_estado_notario = $this->propiedad->escritura->estado_notario;
                     $this->escritura_observaciones = $this->propiedad->escritura->comentario;
-
-                }
-
-                foreach ($this->propiedad->colindancias as $colindancia) {
-
-                    $this->medidas[] = [
-                        'id' => $colindancia->id,
-                        'viento' => $colindancia->viento,
-                        'longitud' => $colindancia->longitud,
-                        'descripcion' => $colindancia->descripcion,
-                    ];
 
                 }
 
