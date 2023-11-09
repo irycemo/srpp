@@ -157,9 +157,11 @@ class DescripcionPredio extends Component
 
         $this->validate();
 
-        if(!$this->propiedad->folio_real){
+        if(!$this->movimientoRegistral->folio_real){
 
-            $this->generarFolioReal();
+            $this->dispatch('mostrarMensaje', ['error', "Primero ingrese la información del documento de entrada."]);
+
+            return;
 
         }
 
@@ -292,7 +294,8 @@ class DescripcionPredio extends Component
 
         $this->vientos = Constantes::VIENTOS;
 
-        $this->cargarPropiedad($this->movimientoRegistral->folioReal->predio->id);
+        if($this->movimientoRegistral->folio_real)
+            $this->cargarPropiedad($this->movimientoRegistral->folioReal->predio->id);
 
     }
 

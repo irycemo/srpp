@@ -137,7 +137,9 @@ class UbicacionPredio extends Component
 
         if(!$this->movimientoRegistral->folio_real){
 
-            $this->generarFolioReal();
+            $this->dispatch('mostrarMensaje', ['error', "Primero ingrese la información del documento de entrada."]);
+
+            return;
 
         }
 
@@ -222,7 +224,8 @@ class UbicacionPredio extends Component
 
         $this->tipos_asentamientos = Constantes::TIPO_ASENTAMIENTO;
 
-        $this->cargarPropiedad($this->movimientoRegistral->folioReal->predio->id);
+        if($this->movimientoRegistral->folio_real)
+            $this->cargarPropiedad($this->movimientoRegistral->folioReal->predio->id);
 
     }
 
