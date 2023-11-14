@@ -42,51 +42,55 @@ class DescripcionPredio extends Component
     public $divisa;
     public $observaciones;
     public $descripcion;
+    public $unidad_area;
 
     public $medidas = [];
     public $vientos;
+    public $areas;
+    public $divisas;
 
     public MovimientoRegistral $movimientoRegistral;
     public Predio $propiedad;
 
     protected function rules(){
         return [
-            'localidad' => 'required',
-            'oficina' => 'required',
-            'tipo' => 'required',
-            'registro' => 'required',
-            'region' => 'required',
-            'municipio' => 'required',
-            'zona' => 'required',
-            'sector' => 'required',
-            'manzana' => 'required',
-            'predio' => 'required',
-            'edificio' => 'required',
-            'departamento' => 'required',
-            'curt' => 'required',
+            'localidad' => 'nullable',
+            'oficina' => 'nullable',
+            'tipo' => 'nullable',
+            'registro' => 'nullable',
+            'region' => 'nullable',
+            'municipio' => 'nullable',
+            'zona' => 'nullable',
+            'sector' => 'nullable',
+            'manzana' => 'nullable',
+            'predio' => 'nullable',
+            'edificio' => 'nullable',
+            'departamento' => 'nullable',
+            'curt' => 'nullable',
             'superficie_terreno' => 'required',
             'superficie_construccion' => 'required',
-            'superficie_judicial' => 'required',
-            'superficie_notarial' => 'required',
-            'area_comun_terreno' => 'required',
-            'area_comun_construccion' => 'required',
-            'valor_terreno_comun' => 'required',
-            'valor_construccion_comun' => 'required',
-            'valor_total_terreno' => 'required',
-            'valor_total_construccion' => 'required',
-            'valor_catastral' => 'required',
+            'superficie_judicial' => 'nullable',
+            'superficie_notarial' => 'nullable',
+            'area_comun_terreno' => 'nullable',
+            'area_comun_construccion' => 'nullable',
+            'valor_terreno_comun' => 'nullable',
+            'valor_construccion_comun' => 'nullable',
+            'valor_total_terreno' => 'nullable',
+            'valor_total_construccion' => 'nullable',
+            'valor_catastral' => 'nullable',
             'monto_transaccion' => 'required',
             'divisa' => 'required',
-            'observaciones' => 'required',
-            'medidas.*' => 'required',
-            'medidas.*.viento' => 'required|string',
+            'observaciones' => 'nullable',
+            'medidas.*' => 'nullable',
+            'medidas.*.viento' => 'nullable|string',
             'medidas.*.longitud' => [
                                         'required',
                                         'numeric',
                                         'min:0',
                                     ],
             'medidas.*.descripcion' => 'required|string',
-            'predio' => 'required'
+            'predio' => 'nullable',
+            'unidad_area' => 'required'
          ];
     }
 
@@ -138,6 +142,7 @@ class DescripcionPredio extends Component
         $this->valor_catastral = $this->movimientoRegistral->inscripcionPropiedad->valor_catastral;
         $this->monto_transaccion = $this->movimientoRegistral->inscripcionPropiedad->monto_transaccion;
         $this->divisa = $this->movimientoRegistral->inscripcionPropiedad->divisa;
+        $this->unidad_area = $this->movimientoRegistral->inscripcionPropiedad->unidad_area;
         $this->observaciones = $this->movimientoRegistral->inscripcionPropiedad->observaciones;
 
         foreach ($this->propiedad->colindancias as $colindancia) {
@@ -292,6 +297,10 @@ class DescripcionPredio extends Component
     public function mount(){
 
         $this->vientos = Constantes::VIENTOS;
+
+        $this->divisas = Constantes::DIVISAS;
+
+        $this->areas = Constantes::UNIDADES;
 
         if($this->movimientoRegistral->folio_real)
             $this->cargarPropiedad($this->movimientoRegistral->folioReal->predio->id);

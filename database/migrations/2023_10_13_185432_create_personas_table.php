@@ -14,9 +14,9 @@ return new class extends Migration
         Schema::create('personas', function (Blueprint $table) {
             $table->id();
             $table->string('tipo');
-            $table->string('nombre');
-            $table->string('ap_paterno');
-            $table->string('ap_materno');
+            $table->string('nombre')->nullable();
+            $table->string('ap_paterno')->nullable();
+            $table->string('ap_materno')->nullable();
             $table->string('curp')->nullable();
             $table->string('rfc')->nullable();
             $table->string('razon_social')->nullable();

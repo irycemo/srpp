@@ -7,6 +7,7 @@ use Livewire\Component;
 use App\Models\FolioReal;
 use App\Constantes\Constantes;
 use App\Models\Escritura;
+use Illuminate\Validation\Rule;
 use Illuminate\Support\Facades\DB;
 use App\Models\MovimientoRegistral;
 use Illuminate\Support\Facades\Log;
@@ -18,6 +19,7 @@ class Elaboracion extends Component
     public $tipo_documento;
     public $autoridad_cargo;
     public $autoridad_nombre;
+    public $autoridad_numero;
     public $numero_documento;
     public $fecha_emision;
     public $fecha_inscripcion;
@@ -41,7 +43,77 @@ class Elaboracion extends Component
     public $distritos;
     public $estados;
 
+    protected function rules(){
+        return [
+            'tipo_documento' => 'required',
+            'autoridad_cargo' => Rule::requiredIf($this->tipo_documento === "oficio"),
+            'autoridad_nombre' => Rule::requiredIf($this->tipo_documento === "oficio"),
+            'autoridad_numero' => Rule::requiredIf($this->tipo_documento === "oficio"),
+            'numero_documento' => Rule::requiredIf($this->tipo_documento === "oficio"),
+            'fecha_emision' => Rule::requiredIf($this->tipo_documento === "oficio"),
+            'fecha_inscripcion' => Rule::requiredIf($this->tipo_documento === "oficio"),
+            'procedencia' => Rule::requiredIf($this->tipo_documento === "oficio"),
+            'escritura_numero' => Rule::requiredIf($this->tipo_documento === "escritura"),
+            'escritura_fecha_inscripcion' => Rule::requiredIf($this->tipo_documento === "escritura"),
+            'escritura_fecha_escritura' => Rule::requiredIf($this->tipo_documento === "escritura"),
+            'escritura_numero_hojas' => Rule::requiredIf($this->tipo_documento === "escritura"),
+            'escritura_numero_paginas' => Rule::requiredIf($this->tipo_documento === "escritura"),
+            'escritura_notaria' => Rule::requiredIf($this->tipo_documento === "escritura"),
+            'escritura_nombre_notario' => Rule::requiredIf($this->tipo_documento === "escritura"),
+            'escritura_estado_notario' => Rule::requiredIf($this->tipo_documento === "escritura"),
+            'escritura_observaciones' => Rule::requiredIf($this->tipo_documento === "escritura"),
+        ];
+    }
+
+    protected $validationAttributes  = [
+        'tipo_documento' => 'tipo de documento',
+        'autoridad_cargo' => 'cargo de la autoridad',
+        'autoridad_nombre' => 'nombre de la autoridad',
+        'autoridad_numero' => 'número de la autoridad',
+        'numero_documento' => 'número del documento',
+        'fecha_emision' => 'fecha de emisión',
+        'fecha_inscripcion' => 'fecha de inscripción',
+        'escritura_fecha_escritura' => 'fecha de la escitura',
+        'escritura_numero_hojas' => 'número de hojas',
+        'escritura_numero_paginas' => 'número de paginas',
+        'escritura_notaria' => 'número de notaría',
+        'escritura_nombre_notario' => 'nombre del notario',
+        'escritura_estado_notario' => 'estado de la notaría',
+        'escritura_observaciones' => 'observaciones',
+    ];
+
+    public function resetAll(){
+
+        $this->reset([
+            'autoridad_cargo',
+            'autoridad_nombre',
+            'autoridad_numero',
+            'numero_documento',
+            'fecha_emision',
+            'fecha_inscripcion',
+            'procedencia',
+            'escritura_numero',
+            'escritura_fecha_inscripcion',
+            'escritura_fecha_escritura',
+            'escritura_numero_hojas',
+            'escritura_numero_paginas',
+            'escritura_notaria',
+            'escritura_nombre_notario',
+            'escritura_estado_notario',
+            'escritura_observaciones',
+        ]);
+
+    }
+
+    public function updatedTipoDocumento(){
+
+        $this->resetAll();
+
+    }
+
     public function generarFolioReal(){
+
+        $this->validate();
 
         DB::transaction(function () {
 
@@ -79,12 +151,14 @@ class Elaboracion extends Component
                     'status' => 'nuevo'
                 ]);
 
-            }
+            }else{
 
-            $this->propiedad = Predio::create([
-                'folio_real' => $folioReal->id,
-                'status' => 'nuevo'
-            ]);
+                $this->propiedad = Predio::create([
+                    'folio_real' => $folioReal->id,
+                    'status' => 'nuevo'
+                ]);
+
+            }
 
         });
 
@@ -92,24 +166,7 @@ class Elaboracion extends Component
 
     public function guardarDocumentoEntrada(){
 
-        $this->validate([
-            'tipo_documento' => 'nullable',
-            'autoridad_cargo' => 'nullable',
-            'autoridad_nombre' => 'nullable',
-            'numero_documento' => 'nullable',
-            'fecha_emision' => 'nullable',
-            'fecha_inscripcion' => 'nullable',
-            'procedencia' => 'nullable',
-            'escritura_numero' => 'nullable',
-            'escritura_fecha_inscripcion' => 'nullable',
-            'escritura_fecha_escritura' => 'nullable',
-            'escritura_numero_hojas' => 'nullable',
-            'escritura_numero_paginas' => 'nullable',
-            'escritura_notaria' => 'nullable',
-            'escritura_nombre_notario' => 'nullable',
-            'escritura_estado_notario' => 'nullable',
-            'escritura_observaciones' => 'nullable',
-        ]);
+        $this->validate();
 
         if(!$this->movimientoRegistral->folio_real){
 
@@ -127,13 +184,14 @@ class Elaboracion extends Component
                     'tipo_documento' => $this->tipo_documento,
                     'autoridad_cargo' => $this->autoridad_cargo,
                     'autoridad_nombre' => $this->autoridad_nombre,
+                    'autoridad_numero' => $this->autoridad_numero,
                     'numero_documento' => $this->numero_documento,
                     'fecha_emision' => $this->fecha_emision,
                     'fecha_inscripcion' => $this->fecha_inscripcion,
                     'procedencia' => $this->procedencia,
                 ]);
 
-                if($this->tipo_documento == 'escritura' && !$this->propiedad->escritura_id){
+                if(!$this->escritura){
 
                     $this->escritura = Escritura::Create([
                         'numero' => $this->escritura_numero,

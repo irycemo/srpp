@@ -5,9 +5,10 @@ namespace App\Livewire\PaseFolio;
 use App\Models\Predio;
 use App\Models\Persona;
 use Livewire\Component;
-use App\Models\Propietario;
 use Livewire\Attributes\On;
 use App\Constantes\Constantes;
+use App\Models\Actor;
+use Illuminate\Validation\Rule;
 use Illuminate\Support\Facades\DB;
 use App\Models\MovimientoRegistral;
 use Illuminate\Support\Facades\Log;
@@ -15,13 +16,17 @@ use Illuminate\Support\Facades\Log;
 class Propietarios extends Component
 {
 
-    public $modal = false;
+    public $modalPropietario = false;
+    public $modalTransmitente = false;
+    public $modalRepresentante = false;
     public $crear = false;
     public $editar = false;
 
     public $propietarios = [];
+    public $representados = [];
     public $tipo_propietario;
-    public $porcentaje;
+    public $porcentaje_nuda;
+    public $porcentaje_usufructo;
     public $tipo_persona;
     public $nombre;
     public $ap_paterno;
@@ -39,8 +44,9 @@ class Propietarios extends Component
     public $cp;
     public $entidad;
     public $municipio_propietario;
+    public $representa_a;
 
-    public $propietario;
+    public $actor;
 
     public $tipos_propietarios;
 
@@ -49,11 +55,47 @@ class Propietarios extends Component
     public MovimientoRegistral $movimientoRegistral;
     public Predio $propiedad;
 
+    protected function rules(){
+        return [
+            'porcentaje_nuda' => Rule::requiredIf($this->modalPropietario === true),
+            'porcentaje_usufructo' => Rule::requiredIf($this->modalPropietario === true),
+            'tipo_persona' => 'required',
+            'nombre' => [
+                Rule::requiredIf($this->tipo_persona === 'FISICA')
+            ],
+            'ap_paterno' => Rule::requiredIf($this->tipo_persona === 'FISICA'),
+            'ap_materno' => Rule::requiredIf($this->tipo_persona === 'FISICA'),
+            'curp' => [
+                'nullable',
+                /* 'regex:/^[A-Z]{1}[AEIOUX]{1}[A-Z]{2}[0-9]{2}(0[1-9]|1[0-2])(0[1-9]|1[0-9]|2[0-9]|3[0-1])[HM]{1}(AS|BC|BS|CC|CS|CH|CL|CM|DF|DG|GT|GR|HG|JC|MC|MN|MS|NT|NL|OC|PL|QT|QR|SP|SL|SR|TC|TS|TL|VZ|YN|ZS|NE)[B-DF-HJ-NP-TV-Z]{3}[0-9A-Z]{1}[0-9]{1}$/i' */
+            ],
+            'rfc' => [
+                'nullable',
+                /* 'regex:/^([A-ZÑ&]{3,4}) ?(?:- ?)?(\d{2}(?:0[1-9]|1[0-2])(?:0[1-9]|[12]\d|3[01])) ?(?:- ?)?([A-Z\d]{2})([A\d])$/' */
+            ],
+            'razon_social' => Rule::requiredIf($this->tipo_persona === 'MORAL'),
+            'fecha_nacimiento' => Rule::requiredIf($this->tipo_persona === 'FISICA'),
+            'nacionalidad' => 'required',
+            'estado_civil' => Rule::requiredIf($this->tipo_persona === 'FISICA'),
+            'calle' => 'required',
+            'numero_exterior_propietario' => 'required',
+            'numero_interior_propietario' => 'required',
+            'colonia' => 'required',
+            'cp' => 'required',
+            'entidad' => 'required',
+            'municipio_propietario' => 'required',
+            'representados' => Rule::requiredIf($this->modalRepresentante === true),
+        ];
+    }
+
+    protected $validationAttributes  = [];
+
     public function resetear(){
 
         $this->reset([
             'tipo_propietario',
-            'porcentaje',
+            'porcentaje_nuda',
+            'porcentaje_usufructo',
             'tipo_persona',
             'nombre',
             'ap_paterno',
@@ -71,14 +113,37 @@ class Propietarios extends Component
             'cp',
             'entidad',
             'municipio_propietario',
-            'modal'
+            'modalPropietario',
+            'modalTransmitente',
+            'modalRepresentante',
         ]);
     }
 
     #[On('cargarPropiedad')]
     public function cargarPropiedad($id){
 
-        $this->propiedad = Predio::with('propietarios.persona')->find($id);
+        $this->propiedad = Predio::with('actores.persona', 'propietarios.persona', 'transmitentes.persona', 'representantes.persona', 'representantes.representados.persona')->find($id);
+
+    }
+
+    public function updatedTipoPersona(){
+
+        if($this->tipo_persona == 'FISICA'){
+
+            $this->reset('razon_social');
+
+        }elseif($this->tipo_persona == 'MORAL'){
+
+            $this->reset([
+                'nombre',
+                'ap_paterno',
+                'ap_materno',
+                'curp',
+                'fecha_nacimiento',
+                'estado_civil',
+            ]);
+
+        }
 
     }
 
@@ -92,36 +157,52 @@ class Propietarios extends Component
 
         }
 
-        $this->modal = true;
+        $this->modalPropietario = true;
+        $this->modalTransmitente = false;
+        $this->modalRepresentante = false;
+        $this->crear = true;
+
+    }
+
+    public function agregarTransmitente(){
+
+        if(!$this->movimientoRegistral->inscripcionPropiedad->cp_oficina){
+
+            $this->dispatch('mostrarMensaje', ['error', "Primero debe ingresar los datos del predio."]);
+
+            return;
+
+        }
+
+        $this->modalPropietario = false;
+        $this->modalTransmitente = true;
+        $this->modalRepresentante = false;
+        $this->crear = true;
+
+    }
+
+    public function agregarRepresentante(){
+
+        if(!$this->movimientoRegistral->inscripcionPropiedad->cp_oficina){
+
+            $this->dispatch('mostrarMensaje', ['error', "Primero debe ingresar los datos del predio."]);
+
+            return;
+
+        }
+
+        $this->modalPropietario = false;
+        $this->modalTransmitente = false;
+        $this->modalRepresentante = true;
         $this->crear = true;
 
     }
 
     public function guardarPropietario(){
 
-        $this->validate([
-            'tipo_propietario' => 'required',
-            'porcentaje' => 'required',
-            'tipo_persona' => 'required',
-            'nombre' => 'required',
-            'ap_paterno' => 'required',
-            'ap_materno' => 'required',
-            'curp' => 'required',
-            'rfc' => 'required',
-            'razon_social' => 'required',
-            'fecha_nacimiento' => 'required',
-            'nacionalidad' => 'required',
-            'estado_civil' => 'required',
-            'calle' => 'required',
-            'numero_exterior_propietario' => 'required',
-            'numero_interior_propietario' => 'required',
-            'colonia' => 'required',
-            'cp' => 'required',
-            'entidad' => 'required',
-            'municipio_propietario' => 'required',
-        ]);
+        $this->validate();
 
-        if($this->revisarProcentajes() + $this->porcentaje > 100){
+        if($this->revisarProcentajes()){
 
             $this->dispatch('mostrarMensaje', ['error', "La suma de los porcentajes no puede exceder el 100%."]);
 
@@ -133,31 +214,52 @@ class Propietarios extends Component
 
             DB::transaction(function () {
 
-                $persona = Persona::Create([
-                    'tipo' => $this->tipo_persona,
-                    'nombre' => $this->nombre,
-                    'ap_paterno' => $this->ap_paterno,
-                    'ap_materno' => $this->ap_materno,
-                    'curp' => $this->curp,
-                    'rfc' => $this->rfc,
-                    'razon_social' => $this->razon_social,
-                    'fecha_nacimiento' => $this->fecha_nacimiento,
-                    'nacionalidad' => $this->nacionalidad,
-                    'estado_civil' => $this->estado_civil,
-                    'calle' => $this->calle,
-                    'numero_exterior' => $this->numero_exterior_propietario,
-                    'numero_interior' => $this->numero_interior_propietario,
-                    'colonia' => $this->colonia,
-                    'cp' => $this->cp,
-                    'entidad' => $this->entidad,
-                    'municipio' => $this->municipio_propietario,
-                    'creado_por' => auth()->id()
-                ]);
+                $persona = Persona::where('rfc', $this->rfc)->first();
 
-                $this->propiedad->propietarios()->create([
+                if($persona){
+
+                    $persona->update([
+                        'estado_civil' => $this->estado_civil,
+                        'calle' => $this->calle,
+                        'numero_exterior' => $this->numero_exterior_propietario,
+                        'numero_interior' => $this->numero_interior_propietario,
+                        'colonia' => $this->colonia,
+                        'cp' => $this->cp,
+                        'entidad' => $this->entidad,
+                        'municipio' => $this->municipio_propietario,
+                        'actualizado_por' => auth()->id()
+                    ]);
+
+                }else{
+
+                    $persona = Persona::create([
+                        'tipo' => $this->tipo_persona,
+                        'nombre' => $this->nombre,
+                        'ap_paterno' => $this->ap_paterno,
+                        'ap_materno' => $this->ap_materno,
+                        'curp' => $this->curp,
+                        'rfc' => $this->rfc,
+                        'razon_social' => $this->razon_social,
+                        'fecha_nacimiento' => $this->fecha_nacimiento,
+                        'nacionalidad' => $this->nacionalidad,
+                        'estado_civil' => $this->estado_civil,
+                        'calle' => $this->calle,
+                        'numero_exterior' => $this->numero_exterior_propietario,
+                        'numero_interior' => $this->numero_interior_propietario,
+                        'colonia' => $this->colonia,
+                        'cp' => $this->cp,
+                        'entidad' => $this->entidad,
+                        'municipio' => $this->municipio_propietario,
+                        'creado_por' => auth()->id()
+                    ]);
+
+                }
+
+                $this->propiedad->actores()->create([
                     'persona_id' => $persona->id,
-                    'tipo' => $this->tipo_propietario,
-                    'porcentaje' => $this->porcentaje,
+                    'tipo_actor' => 'propietario',
+                    'porcentaje_nuda' => $this->porcentaje_nuda,
+                    'porcentaje_usufructo' => $this->porcentaje_usufructo,
                     'creado_por' => auth()->id()
                 ]);
 
@@ -167,7 +269,8 @@ class Propietarios extends Component
 
                 $this->propiedad->refresh();
 
-                $this->propiedad->load('propietarios.persona');
+                $this->propiedad->load('actores.persona', 'propietarios.persona', 'transmitentes.persona', 'representantes.persona', 'representantes.representados.persona');
+
             });
 
         } catch (\Throwable $th) {
@@ -179,61 +282,213 @@ class Propietarios extends Component
 
     }
 
-    public function editarPropietario(Propietario $propietario){
+    public function guardarTransmitente(){
 
-        $this->propietario = $propietario;
+        $this->validate();
 
-        $this->tipo_propietario = $propietario->tipo;
-        $this->porcentaje = $propietario->porcentaje;
-        $this->tipo_persona = $propietario->persona->tipo;
-        $this->nombre = $propietario->persona->nombre;
-        $this->ap_paterno = $propietario->persona->ap_paterno;
-        $this->ap_materno = $propietario->persona->ap_materno;
-        $this->curp = $propietario->persona->curp;
-        $this->rfc = $propietario->persona->rfc;
-        $this->razon_social = $propietario->persona->razon_social;
-        $this->fecha_nacimiento = $propietario->persona->fecha_nacimiento;
-        $this->nacionalidad = $propietario->persona->nacionalidad;
-        $this->estado_civil = $propietario->persona->estado_civil;
-        $this->calle = $propietario->persona->calle;
-        $this->numero_exterior_propietario = $propietario->persona->numero_exterior;
-        $this->numero_interior_propietario = $propietario->persona->numero_interior;
-        $this->colonia = $propietario->persona->colonia;
-        $this->cp = $propietario->persona->cp;
-        $this->entidad = $propietario->persona->entidad;
-        $this->municipio_propietario = $propietario->persona->municipio;
+        try {
 
-        $this->modal = true;
+            DB::transaction(function () {
+
+                $persona = Persona::where('rfc', $this->rfc)->first();
+
+                if($persona){
+
+                    $persona->update([
+                        'estado_civil' => $this->estado_civil,
+                        'calle' => $this->calle,
+                        'numero_exterior' => $this->numero_exterior_propietario,
+                        'numero_interior' => $this->numero_interior_propietario,
+                        'colonia' => $this->colonia,
+                        'cp' => $this->cp,
+                        'entidad' => $this->entidad,
+                        'municipio' => $this->municipio_propietario,
+                        'actualizado_por' => auth()->id()
+                    ]);
+
+                }else{
+
+                    $persona = Persona::create([
+                        'tipo' => $this->tipo_persona,
+                        'nombre' => $this->nombre,
+                        'ap_paterno' => $this->ap_paterno,
+                        'ap_materno' => $this->ap_materno,
+                        'curp' => $this->curp,
+                        'rfc' => $this->rfc,
+                        'razon_social' => $this->razon_social,
+                        'fecha_nacimiento' => $this->fecha_nacimiento,
+                        'nacionalidad' => $this->nacionalidad,
+                        'estado_civil' => $this->estado_civil,
+                        'calle' => $this->calle,
+                        'numero_exterior' => $this->numero_exterior_propietario,
+                        'numero_interior' => $this->numero_interior_propietario,
+                        'colonia' => $this->colonia,
+                        'cp' => $this->cp,
+                        'entidad' => $this->entidad,
+                        'municipio' => $this->municipio_propietario,
+                        'creado_por' => auth()->id()
+                    ]);
+
+                }
+
+                $this->propiedad->actores()->create([
+                    'persona_id' => $persona->id,
+                    'tipo_actor' => 'transmitente',
+                    'creado_por' => auth()->id()
+                ]);
+
+                $this->dispatch('mostrarMensaje', ['success', "El transmitente se guardó con éxito."]);
+
+                $this->resetear();
+
+                $this->propiedad->refresh();
+
+                $this->propiedad->load('actores.persona', 'propietarios.persona', 'transmitentes.persona', 'representantes.persona', 'representantes.representados.persona');
+
+            });
+
+        } catch (\Throwable $th) {
+
+            Log::error("Error al guardar transmitente en pase a folio por el usuario: (id: " . auth()->user()->id . ") " . auth()->user()->name . ". " . $th);
+            $this->dispatch('mostrarMensaje', ['error', "Ha ocurrido un error."]);
+
+        }
+
+    }
+
+    public function guardarRepresentante(){
+
+        $this->validate();
+
+        try {
+
+            DB::transaction(function () {
+
+                $persona = Persona::where('rfc', $this->rfc)->first();
+
+                if($persona){
+
+                    $persona->update([
+                        'estado_civil' => $this->estado_civil,
+                        'calle' => $this->calle,
+                        'numero_exterior' => $this->numero_exterior_propietario,
+                        'numero_interior' => $this->numero_interior_propietario,
+                        'colonia' => $this->colonia,
+                        'cp' => $this->cp,
+                        'entidad' => $this->entidad,
+                        'municipio' => $this->municipio_propietario,
+                        'actualizado_por' => auth()->id()
+                    ]);
+
+                }else{
+
+                    $persona = Persona::create([
+                        'tipo' => $this->tipo_persona,
+                        'nombre' => $this->nombre,
+                        'ap_paterno' => $this->ap_paterno,
+                        'ap_materno' => $this->ap_materno,
+                        'curp' => $this->curp,
+                        'rfc' => $this->rfc,
+                        'razon_social' => $this->razon_social,
+                        'fecha_nacimiento' => $this->fecha_nacimiento,
+                        'nacionalidad' => $this->nacionalidad,
+                        'estado_civil' => $this->estado_civil,
+                        'calle' => $this->calle,
+                        'numero_exterior' => $this->numero_exterior_propietario,
+                        'numero_interior' => $this->numero_interior_propietario,
+                        'colonia' => $this->colonia,
+                        'cp' => $this->cp,
+                        'entidad' => $this->entidad,
+                        'municipio' => $this->municipio_propietario,
+                        'creado_por' => auth()->id()
+                    ]);
+
+                }
+
+                $representante = $this->propiedad->actores()->create([
+                    'persona_id' => $persona->id,
+                    'tipo_actor' => 'representante',
+                    'creado_por' => auth()->id()
+                ]);
+
+                foreach($this->representados as $representado){
+
+                    Actor::find($representado)->update(['representado_por' => $representante->id]);
+
+                }
+
+                $this->dispatch('mostrarMensaje', ['success', "El representante se guardó con éxito."]);
+
+                $this->resetear();
+
+                $this->propiedad->refresh();
+
+                $this->propiedad->load('actores.persona', 'propietarios.persona', 'transmitentes.persona', 'representantes.persona', 'representantes.representados.persona');
+
+            });
+
+        } catch (\Throwable $th) {
+
+            Log::error("Error al guardar representante en pase a folio por el usuario: (id: " . auth()->user()->id . ") " . auth()->user()->name . ". " . $th);
+            $this->dispatch('mostrarMensaje', ['error', "Ha ocurrido un error."]);
+
+        }
+
+    }
+
+    public function editarActor(Actor $actor, $tipo){
+
+        $this->resetear();
+
+        $this->actor = $actor;
+
+        $this->tipo_propietario = $actor->tipo_actor;
+        $this->porcentaje_nuda = $actor->porcentaje_nuda;
+        $this->porcentaje_usufructo = $actor->porcentaje_usufructo;
+        $this->tipo_persona = $actor->persona->tipo;
+        $this->nombre = $actor->persona->nombre;
+        $this->ap_paterno = $actor->persona->ap_paterno;
+        $this->ap_materno = $actor->persona->ap_materno;
+        $this->curp = $actor->persona->curp;
+        $this->rfc = $actor->persona->rfc;
+        $this->razon_social = $actor->persona->razon_social;
+        $this->fecha_nacimiento = $actor->persona->fecha_nacimiento;
+        $this->nacionalidad = $actor->persona->nacionalidad;
+        $this->estado_civil = $actor->persona->estado_civil;
+        $this->calle = $actor->persona->calle;
+        $this->numero_exterior_propietario = $actor->persona->numero_exterior;
+        $this->numero_interior_propietario = $actor->persona->numero_interior;
+        $this->colonia = $actor->persona->colonia;
+        $this->cp = $actor->persona->cp;
+        $this->entidad = $actor->persona->entidad;
+        $this->municipio_propietario = $actor->persona->municipio;
+
+        if($tipo == 'propietario')
+            $this->modalPropietario = true;
+        elseif($tipo == 'transmitente')
+            $this->modalTransmitente = true;
+        elseif($tipo == 'representante'){
+
+            $this->modalRepresentante = true;
+
+            foreach ($actor->representados as $representado) {
+
+                array_push($this->representados, $representado->id);
+            }
+
+        }
+
+        $this->crear = false;
 
         $this->editar = true;
 
     }
 
-    public function actualizarPropietario(){
+    public function actualizarActor(){
 
-        $this->validate([
-            'tipo_propietario' => 'required',
-            'porcentaje' => 'required',
-            'tipo_persona' => 'required',
-            'nombre' => 'required',
-            'ap_paterno' => 'required',
-            'ap_materno' => 'required',
-            'curp' => 'required',
-            'rfc' => 'required',
-            'razon_social' => 'required',
-            'fecha_nacimiento' => 'required',
-            'nacionalidad' => 'required',
-            'estado_civil' => 'required',
-            'calle' => 'required',
-            'numero_exterior_propietario' => 'required',
-            'numero_interior_propietario' => 'required',
-            'colonia' => 'required',
-            'cp' => 'required',
-            'entidad' => 'required',
-            'municipio_propietario' => 'required',
-        ]);
+        $this->validate();
 
-        if($this->revisarProcentajes() + $this->porcentaje > 100){
+        if($this->revisarProcentajes($this->actor->id)){
 
             $this->dispatch('mostrarMensaje', ['error', "La suma de los porcentajes no puede exceder el 100%."]);
 
@@ -245,7 +500,7 @@ class Propietarios extends Component
 
             DB::transaction(function () {
 
-                $this->propietario->persona->update([
+                $this->actor->persona->update([
                     'tipo' => $this->tipo_persona,
                     'nombre' => $this->nombre,
                     'ap_paterno' => $this->ap_paterno,
@@ -266,64 +521,98 @@ class Propietarios extends Component
                     'creado_por' => auth()->id()
                 ]);
 
-                $this->propietario->update([
-                    'tipo' => $this->tipo_propietario,
-                    'porcentaje' => $this->porcentaje,
+                $this->actor->update([
+                    'tipo_propietario' => $this->tipo_propietario,
+                    'porcentaje_nuda' => $this->porcentaje_nuda,
+                    'porcentaje_usufructo' => $this->porcentaje_usufructo,
                     'actualizado_por' => auth()->id()
                 ]);
 
-                $this->dispatch('mostrarMensaje', ['success', "El propietario se actualizó con éxito."]);
+                if($this->modalRepresentante){
+
+                    foreach($this->representados as $representado){
+
+                        Actor::find($representado)->update(['representado_por' => $this->actor->id]);
+
+                    }
+
+                }
+
+                $this->dispatch('mostrarMensaje', ['success', "La información se actualizó con éxito."]);
 
                 $this->resetear();
 
                 $this->propiedad->refresh();
 
-                $this->propiedad->load('propietarios.persona');
+                $this->propiedad->load('actores.persona', 'propietarios.persona', 'transmitentes.persona', 'representantes.persona', 'representantes.representados.persona');
+
             });
 
         } catch (\Throwable $th) {
 
-            Log::error("Error al actualizar propietario en pase a folio por el usuario: (id: " . auth()->user()->id . ") " . auth()->user()->name . ". " . $th);
+            Log::error("Error al actualizar actor en pase a folio por el usuario: (id: " . auth()->user()->id . ") " . auth()->user()->name . ". " . $th);
             $this->dispatch('mostrarMensaje', ['error', "Ha ocurrido un error."]);
 
         }
 
     }
 
-    public function borrarPropietario(Propietario $propietario){
+    public function borrarActor(Actor $actor){
+
+        if($actor->representado_por){
+
+            $this->dispatch('mostrarMensaje', ['error', "Debe borrar primero al representante."]);
+
+            return;
+
+        }
 
         try {
 
-            $propietario->delete();
+            $actor->delete();
 
-            $this->dispatch('mostrarMensaje', ['success', "El propietario se eliminó con éxito."]);
+            $this->dispatch('mostrarMensaje', ['success', "La información se eliminó con éxito."]);
 
             $this->resetear();
 
             $this->propiedad->refresh();
 
-            $this->propiedad->load('propietarios.persona');
+            $this->propiedad->load('actores.persona', 'propietarios.persona', 'transmitentes.persona', 'representantes.persona', 'representantes.representados.persona');
 
         } catch (\Throwable $th) {
 
-            Log::error("Error al borrar propietario en pase a folio por el usuario: (id: " . auth()->user()->id . ") " . auth()->user()->name . ". " . $th);
+            Log::error("Error al borrar actor en pase a folio por el usuario: (id: " . auth()->user()->id . ") " . auth()->user()->name . ". " . $th);
             $this->dispatch('mostrarMensaje', ['error', "Ha ocurrido un error."]);
 
         }
 
     }
 
-    public function revisarProcentajes(){
+    public function revisarProcentajes($id = null){
 
-        $porcentaje = 0;
+        $pn = 0;
+
+        $pu = 0;
 
         foreach($this->propiedad->propietarios as $propietario){
 
-            $porcentaje = $porcentaje + $propietario->porcentaje;
+            if($id == $propietario->id)
+                continue;
+
+            $pn = $pn + $propietario->porcentaje_nuda;
+
+            $pu = $pu + $propietario->porcentaje_usufructo;
 
         }
 
-        return $porcentaje;
+        $pn = $pn + $this->porcentaje_nuda;
+
+        $pu = $pu + $this->porcentaje_usufructo;
+
+        if($pn > 100 || $pu > 100)
+            return true;
+        else
+            return false;
 
     }
 

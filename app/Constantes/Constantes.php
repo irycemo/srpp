@@ -230,4 +230,15 @@ class Constantes{
         'Zacatecas',
     ];
 
+    const UNIDADES = [
+        'Metros cuadrados',
+        'Hectareas'
+    ];
+
+    const DIVISAS = [
+        'MXN',
+        'USD',
+        'EUR'
+    ];
+
 }

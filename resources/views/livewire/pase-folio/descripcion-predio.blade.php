@@ -52,39 +52,123 @@
 
             </x-input-group>
 
-            <x-input-group for="superficie_terreno" label="Superficie de terreno" :error="$errors->first('superficie_terreno')" class="w-full">
+            <x-input-group for="superficie_terreno" label="Superficie de terreno" :error="$errors->first('superficie_terreno')" class="w-full relative">
 
                 <x-input-text type="number" id="superficie_terreno" wire:model="superficie_terreno" />
 
+                <div class="absolute right-0 top-6">
+
+                    <x-input-select id="unidad_area" wire:model="unidad_area">
+
+                        @foreach ($areas as $unidad)
+
+                            <option value="{{ $unidad }}">{{ $unidad }}</option>
+
+                        @endforeach
+
+                    </x-input-select>
+
+                </div>
+
             </x-input-group>
 
-            <x-input-group for="superficie_construccion" label="Superficie de construcción" :error="$errors->first('superficie_construccion')" class="w-full">
+            <x-input-group for="superficie_construccion" label="Superficie de construcción" :error="$errors->first('superficie_construccion')" class="w-full relative">
 
                 <x-input-text type="number" id="superficie_construccion" wire:model="superficie_construccion" />
 
+                <div class="absolute right-0 top-6">
+
+                    <x-input-select id="unidad_area" wire:model="unidad_area">
+
+                        @foreach ($areas as $unidad)
+
+                            <option value="{{ $unidad }}">{{ $unidad }}</option>
+
+                        @endforeach
+
+                    </x-input-select>
+
+                </div>
+
             </x-input-group>
 
-            <x-input-group for="superficie_judicial" label="Superficie judicial" :error="$errors->first('superficie_judicial')" class="w-full">
+            <x-input-group for="superficie_judicial" label="Superficie judicial" :error="$errors->first('superficie_judicial')" class="w-full relative">
 
                 <x-input-text type="number" id="superficie_judicial" wire:model="superficie_judicial" />
 
+                <div class="absolute right-0 top-6">
+
+                    <x-input-select id="unidad_area" wire:model="unidad_area">
+
+                        @foreach ($areas as $unidad)
+
+                            <option value="{{ $unidad }}">{{ $unidad }}</option>
+
+                        @endforeach
+
+                    </x-input-select>
+
+                </div>
+
             </x-input-group>
 
-            <x-input-group for="superficie_notarial" label="Superficie notarial" :error="$errors->first('superficie_notarial')" class="w-full">
+            <x-input-group for="superficie_notarial" label="Superficie notarial" :error="$errors->first('superficie_notarial')" class="w-full relative">
 
                 <x-input-text type="number" id="superficie_notarial" wire:model="superficie_notarial" />
 
+                <div class="absolute right-0 top-6">
+
+                    <x-input-select id="unidad_area" wire:model="unidad_area">
+
+                        @foreach ($areas as $unidad)
+
+                            <option value="{{ $unidad }}">{{ $unidad }}</option>
+
+                        @endforeach
+
+                    </x-input-select>
+
+                </div>
+
             </x-input-group>
 
-            <x-input-group for="area_comun_terreno" label="Área de terreno común" :error="$errors->first('area_comun_terreno')" class="w-full">
+            <x-input-group for="area_comun_terreno" label="Área de terreno común" :error="$errors->first('area_comun_terreno')" class="w-full relative">
 
                 <x-input-text type="number" id="area_comun_terreno" wire:model="area_comun_terreno" />
 
+                <div class="absolute right-0 top-6">
+
+                    <x-input-select id="unidad_area" wire:model="unidad_area">
+
+                        @foreach ($areas as $unidad)
+
+                            <option value="{{ $unidad }}">{{ $unidad }}</option>
+
+                        @endforeach
+
+                    </x-input-select>
+
+                </div>
+
             </x-input-group>
 
-            <x-input-group for="area_comun_construccion" label="Área de contrucción común" :error="$errors->first('area_comun_construccion')" class="w-full">
+            <x-input-group for="area_comun_construccion" label="Área de contrucción común" :error="$errors->first('area_comun_construccion')" class="w-full relative">
 
                 <x-input-text type="number" id="area_comun_construccion" wire:model="area_comun_construccion" />
+
+                <div class="absolute right-0 top-6">
+
+                    <x-input-select id="unidad_area" wire:model="unidad_area">
+
+                        @foreach ($areas as $unidad)
+
+                            <option value="{{ $unidad }}">{{ $unidad }}</option>
+
+                        @endforeach
+
+                    </x-input-select>
+
+                </div>
 
             </x-input-group>
 
@@ -118,15 +202,23 @@
 
             </x-input-group>
 
-            <x-input-group for="monto_transaccion" label="Monto de la transacción" :error="$errors->first('monto_transaccion')" class="w-full">
+            <x-input-group for="monto_transaccion" label="Monto de la transacción" :error="$errors->first('monto_transaccion')" class="w-full relative">
 
                 <x-input-text type="number" id="monto_transaccion" wire:model="monto_transaccion" />
 
-            </x-input-group>
+                <div class="absolute right-0 top-6">
 
-            <x-input-group for="divisa" label="Divisa" :error="$errors->first('divisa')" class="w-full">
+                    <x-input-select id="divisa" wire:model="divisa">
 
-                <x-input-text id="divisa" wire:model="divisa" />
+                        @foreach ($divisas as $divisa)
+
+                            <option value="{{ $divisa }}">{{ $divisa }}</option>
+
+                        @endforeach
+
+                    </x-input-select>
+
+                </div>
 
             </x-input-group>
 

@@ -6,25 +6,27 @@
 
             <span class="flex items-center justify-center text-lg text-gray-700 col-span-3">Ubicación del predio</span>
 
-            <x-input-group for="tipo_vialidad" label="Tipo de vialidad" :error="$errors->first('tipo_vialidad')" class="w-full">
+            <x-input-group for="codigo_postal" label="Código postal" :error="$errors->first('codigo_postal')" class="w-full">
 
-                <x-input-select id="tipo_vialidad" wire:model.live="tipo_vialidad" class="w-full">
-
-                    <option value="">Seleccione una opción</option>
-
-                    @foreach ($tipos_vialidades as $vialidad)
-
-                        <option value="{{ $vialidad }}">{{ $vialidad }}</option>
-
-                    @endforeach
-
-                </x-input-select>
+                <x-input-text id="codigo_postal" wire:model="codigo_postal" />
 
             </x-input-group>
 
-            <x-input-group for="nombre_vialidad" label="Nombre de la vialidad" :error="$errors->first('nombre_vialidad')" class="w-full">
+            <x-input-group for="localidad_ubicacion" label="Localidad" :error="$errors->first('localidad_ubicacion')" class="w-full">
 
-                <x-input-text id="nombre_vialidad" wire:model="nombre_vialidad" />
+                <x-input-text id="localidad_ubicacion" wire:model="localidad_ubicacion" />
+
+            </x-input-group>
+
+            <x-input-group for="municipio_ubicacion" label="Municipio" :error="$errors->first('municipio_ubicacion')" class="w-full">
+
+                <x-input-text id="municipio_ubicacion" wire:model="municipio_ubicacion" />
+
+            </x-input-group>
+
+            <x-input-group for="ciudad" label="Ciudad" :error="$errors->first('ciudad')" class="w-full">
+
+                <x-input-text id="ciudad" wire:model="ciudad" />
 
             </x-input-group>
 
@@ -47,6 +49,28 @@
             <x-input-group for="nombre_asentamiento" label="Nombre del asentamiento" :error="$errors->first('nombre_asentamiento')" class="w-full">
 
                 <x-input-text id="nombre_asentamiento" wire:model="nombre_asentamiento" />
+
+            </x-input-group>
+
+            <x-input-group for="tipo_vialidad" label="Tipo de vialidad" :error="$errors->first('tipo_vialidad')" class="w-full">
+
+                <x-input-select id="tipo_vialidad" wire:model.live="tipo_vialidad" class="w-full">
+
+                    <option value="">Seleccione una opción</option>
+
+                    @foreach ($tipos_vialidades as $vialidad)
+
+                        <option value="{{ $vialidad }}">{{ $vialidad }}</option>
+
+                    @endforeach
+
+                </x-input-select>
+
+            </x-input-group>
+
+            <x-input-group for="nombre_vialidad" label="Nombre de la vialidad" :error="$errors->first('nombre_vialidad')" class="w-full">
+
+                <x-input-text id="nombre_vialidad" wire:model="nombre_vialidad" />
 
             </x-input-group>
 
@@ -80,6 +104,8 @@
 
             </x-input-group>
 
+            <span class="flex items-center justify-center text-lg text-gray-700 col-span-3">Datos extra</span>
+
             <x-input-group for="lote" label="Lote" :error="$errors->first('lote')" class="w-full">
 
                 <x-input-text id="lote" wire:model="lote" />
@@ -89,12 +115,6 @@
             <x-input-group for="manzana_ubicacion" label="Manzana" :error="$errors->first('manzana_ubicacion')" class="w-full">
 
                 <x-input-text id="manzana_ubicacion" wire:model="manzana_ubicacion" />
-
-            </x-input-group>
-
-            <x-input-group for="codigo_postal" label="Código postal" :error="$errors->first('codigo_postal')" class="w-full">
-
-                <x-input-text id="codigo_postal" wire:model="codigo_postal" />
 
             </x-input-group>
 
@@ -131,24 +151,6 @@
             <x-input-group for="departamento_edificio" label="Departamento del edificio" :error="$errors->first('departamento_edificio')" class="w-full">
 
                 <x-input-text id="departamento_edificio" wire:model="departamento_edificio" />
-
-            </x-input-group>
-
-            <x-input-group for="municipio_ubicacion" label="Municipio" :error="$errors->first('municipio_ubicacion')" class="w-full">
-
-                <x-input-text id="municipio_ubicacion" wire:model="municipio_ubicacion" />
-
-            </x-input-group>
-
-            <x-input-group for="ciudad" label="Ciudad" :error="$errors->first('ciudad')" class="w-full">
-
-                <x-input-text id="ciudad" wire:model="ciudad" />
-
-            </x-input-group>
-
-            <x-input-group for="localidad_ubicacion" label="Localidad" :error="$errors->first('localidad_ubicacion')" class="w-full">
-
-                <x-input-text id="localidad_ubicacion" wire:model="localidad_ubicacion" />
 
             </x-input-group>
 

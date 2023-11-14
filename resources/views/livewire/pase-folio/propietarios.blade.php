@@ -1,74 +1,215 @@
+@push('styles')
+
+    <link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css" rel="stylesheet" />
+
+@endpush
 
 <div class="grid grid-cols-3 gap-3">
 
-    <div class=" gap-3 mb-3 col-span-2 bg-white rounded-lg p-3">
+    <div class=" gap-3  col-span-2">
 
-        <span class="flex items-center justify-center text-lg text-gray-700 mb-5">Propietarios</span>
+        <div class="mb-3 bg-white rounded-lg p-3">
 
-        <div class="flex justify-end mb-2">
+            <span class="flex items-center justify-center text-lg text-gray-700 mb-5">Propietarios</span>
 
-            <x-button-gray
-                    wire:click="agregarPropietario"
-                    wire:loading.attr="disabled"
-                    wire:target="agregarPropietario">
+            <div class="flex justify-end mb-2">
 
-                    <img wire:loading wire:target="agregarPropietario" class="mx-auto h-4 mr-1" src="{{ asset('storage/img/loading3.svg') }}" alt="Loading">
-                    Agregar propietario
-            </x-button-gray>
+                <x-button-gray
+                        wire:click="agregarPropietario"
+                        wire:loading.attr="disabled"
+                        wire:target="agregarPropietario">
+
+                        <img wire:loading wire:target="agregarPropietario" class="mx-auto h-4 mr-1" src="{{ asset('storage/img/loading3.svg') }}" alt="Loading">
+                        Agregar propietario
+                </x-button-gray>
+
+            </div>
+
+            <x-table>
+
+                <x-slot name="head">
+                    <x-table.heading >Nombre / Razón social</x-table.heading>
+                    <x-table.heading >Porcentaje nuda</x-table.heading>
+                    <x-table.heading >Porcentaje usufructo</x-table.heading>
+                    <x-table.heading ></x-table.heading>
+                </x-slot>
+
+                <x-slot name="body">
+
+                    @if($propiedad)
+
+                        @foreach ($propiedad->propietarios as $propietario)
+
+                            <x-table.row >
+
+                                <x-table.cell>{{ $propietario->persona->nombre }} {{ $propietario->persona->ap_paterno }} {{ $propietario->persona->ap_materno }} {{ $propietario->persona->razon_social }}</x-table.cell>
+                                <x-table.cell>{{ number_format($propietario->porcentaje_nuda, 2) }}%</x-table.cell>
+                                <x-table.cell>{{ number_format($propietario->porcentaje_usufructo, 2) }}%</x-table.cell>
+                                <x-table.cell>
+                                    <div class="flex items-center gap-3">
+                                        <x-button-blue
+                                            wire:click="editarActor({{ $propietario->id }}, 'propietario')"
+                                            wire:loading.attr="disabled"
+                                        >
+                                            Editar
+                                        </x-button-blue>
+                                        <x-button-red
+                                            wire:click="borrarActor({{ $propietario->id }})"
+                                            wire:loading.attr="disabled">
+                                            Borrar
+                                        </x-button-red>
+                                    </div>
+                                </x-table.cell>
+
+                            </x-table.row>
+
+                        @endforeach
+
+                    @endif
+
+                </x-slot>
+
+                <x-slot name="tfoot"></x-slot>
+
+            </x-table>
 
         </div>
 
-        <x-table>
+        <div class="mb-3 bg-white rounded-lg p-3">
 
-            <x-slot name="head">
-                <x-table.heading >Nombre</x-table.heading>
-                <x-table.heading >Apellido paterno</x-table.heading>
-                <x-table.heading >Apellido materno</x-table.heading>
-                <x-table.heading >Tipo de propietario</x-table.heading>
-                <x-table.heading >Porcentaje</x-table.heading>
-                <x-table.heading ></x-table.heading>
-            </x-slot>
+            <span class="flex items-center justify-center text-lg text-gray-700 mb-5">Transmitentes</span>
 
-            <x-slot name="body">
+            <div class="flex justify-end mb-2">
 
-                @if($propiedad)
+                <x-button-gray
+                        wire:click="agregarTransmitente"
+                        wire:loading.attr="disabled"
+                        wire:target="agregarTransmitente">
 
-                    @foreach ($propiedad->propietarios as $propietario)
+                        <img wire:loading wire:target="agregarTransmitente" class="mx-auto h-4 mr-1" src="{{ asset('storage/img/loading3.svg') }}" alt="Loading">
+                        Agregar transmitente
+                </x-button-gray>
 
-                        <x-table.row >
+            </div>
 
-                            <x-table.cell>{{ $propietario->persona->nombre }}</x-table.cell>
-                            <x-table.cell>{{ $propietario->persona->ap_paterno }}</x-table.cell>
-                            <x-table.cell>{{ $propietario->persona->ap_materno }}</x-table.cell>
-                            <x-table.cell>{{ $propietario->tipo }}</x-table.cell>
-                            <x-table.cell>{{ number_format($propietario->porcentaje, 2) }}%</x-table.cell>
-                            <x-table.cell>
-                                <div class="flex items-center gap-3">
-                                    <x-button-blue
-                                        wire:click="editarPropietario({{ $propietario->id }})"
-                                        wire:loading.attr="disabled"
-                                    >
-                                        Editar
-                                    </x-button-blue>
-                                    <x-button-red
-                                        wire:click="borrarPropietario({{ $propietario->id }})"
-                                        wire:loading.attr="disabled">
-                                        Borrar
-                                    </x-button-red>
-                                </div>
-                            </x-table.cell>
+            <x-table>
 
-                        </x-table.row>
+                <x-slot name="head">
+                    <x-table.heading >Nombre / Razón social</x-table.heading>
+                    <x-table.heading ></x-table.heading>
+                </x-slot>
 
-                    @endforeach
+                <x-slot name="body">
 
-                @endif
+                    @if($propiedad)
 
-            </x-slot>
+                        @foreach ($propiedad->transmitentes as $transmitente)
 
-            <x-slot name="tfoot"></x-slot>
+                            <x-table.row >
 
-        </x-table>
+                                <x-table.cell>{{ $transmitente->persona->nombre }} {{ $transmitente->persona->ap_paterno }} {{ $transmitente->persona->ap_materno }} {{ $transmitente->persona->razon_social }}</x-table.cell>
+                                <x-table.cell>
+                                    <div class="flex items-center gap-3">
+                                        <x-button-blue
+                                            wire:click="editarActor({{ $transmitente->id }}, 'transmitente')"
+                                            wire:loading.attr="disabled"
+                                        >
+                                            Editar
+                                        </x-button-blue>
+                                        <x-button-red
+                                            wire:click="borrarActor({{ $transmitente->id }})"
+                                            wire:loading.attr="disabled">
+                                            Borrar
+                                        </x-button-red>
+                                    </div>
+                                </x-table.cell>
+
+                            </x-table.row>
+
+                        @endforeach
+
+                    @endif
+
+                </x-slot>
+
+                <x-slot name="tfoot"></x-slot>
+
+            </x-table>
+
+        </div>
+
+        <div class="mb-3 bg-white rounded-lg p-3">
+
+            <span class="flex items-center justify-center text-lg text-gray-700 mb-5">Representantes</span>
+
+            <div class="flex justify-end mb-2">
+
+                <x-button-gray
+                        wire:click="agregarRepresentante"
+                        wire:loading.attr="disabled"
+                        wire:target="agregarRepresentante">
+
+                        <img wire:loading wire:target="agregarRepresentante" class="mx-auto h-4 mr-1" src="{{ asset('storage/img/loading3.svg') }}" alt="Loading">
+                        Agregar representante
+                </x-button-gray>
+
+            </div>
+
+            <x-table>
+
+                <x-slot name="head">
+                    <x-table.heading >Nombre / Razón social</x-table.heading>
+                    <x-table.heading >Representados</x-table.heading>
+                    <x-table.heading ></x-table.heading>
+                </x-slot>
+
+                <x-slot name="body">
+
+                    @if($propiedad)
+
+                        @foreach ($propiedad->representantes as $representante)
+
+                            <x-table.row >
+
+                                <x-table.cell>{{ $representante->persona->nombre }} {{ $representante->persona->ap_paterno }} {{ $representante->persona->ap_materno }} {{ $representante->persona->razon_social }}</x-table.cell>
+                                <x-table.cell>
+
+                                    @foreach ($representante->representados as $representado)
+
+                                        <p>{{ $representado->persona->nombre }} {{ $representado->persona->ap_paterno }} {{ $representado->persona->ap_materno }}</p>
+
+                                    @endforeach
+
+                                </x-table.cell>
+                                <x-table.cell>
+                                    <div class="flex items-center gap-3">
+                                        <x-button-blue
+                                            wire:click="editarActor({{ $representante->id }}, 'representante')"
+                                            wire:loading.attr="disabled"
+                                        >
+                                            Editar
+                                        </x-button-blue>
+                                        <x-button-red
+                                            wire:click="borrarActor({{ $representante->id }})"
+                                            wire:loading.attr="disabled">
+                                            Borrar
+                                        </x-button-red>
+                                    </div>
+                                </x-table.cell>
+
+                            </x-table.row>
+
+                        @endforeach
+
+                    @endif
+
+                </x-slot>
+
+                <x-slot name="tfoot"></x-slot>
+
+            </x-table>
+
+        </div>
 
     </div>
 
@@ -78,45 +219,21 @@
 
     </div>
 
-    <x-dialog-modal wire:model="modal">
+    <x-dialog-modal wire:model="modalPropietario">
 
         <x-slot name="title">
 
             @if($crear)
                 Nuevo Propietario
             @elseif($editar)
-                Editar Usuario
+                Editar Propietario
             @endif
 
         </x-slot>
 
         <x-slot name="content">
 
-            {{ $errors }}
-
             <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-3 mb-3 col-span-2 rounded-lg p-3">
-
-                <x-input-group for="tipo_propietario" label="Tipo de propietario" :error="$errors->first('tipo_propietario')" class="w-full">
-
-                    <x-input-select id="tipo_propietario" wire:model="tipo_propietario" class="w-full">
-
-                        <option value="">Seleccione una opción</option>
-
-                        @foreach ($tipos_propietarios as $tipo)
-
-                            <option value="{{ $tipo }}">{{ $tipo }}</option>
-
-                        @endforeach
-
-                    </x-input-select>
-
-                </x-input-group>
-
-                <x-input-group for="porcentaje" label="Porcentaje" :error="$errors->first('porcentaje')" class="w-full">
-
-                    <x-input-text type="number" id="porcentaje" wire:model="porcentaje" />
-
-                </x-input-group>
 
                 <x-input-group for="tipo_persona" label="Tipo de persona" :error="$errors->first('tipo_persona')" class="w-full">
 
@@ -130,13 +247,13 @@
 
                 </x-input-group>
 
-                <x-input-group for="nombre" label="Nombre" :error="$errors->first('nombre')" class="w-full">
-
-                    <x-input-text id="nombre" wire:model="nombre" />
-
-                </x-input-group>
-
                 @if($tipo_persona == 'FISICA')
+
+                    <x-input-group for="nombre" label="Nombre(s)" :error="$errors->first('nombre')" class="w-full">
+
+                        <x-input-text id="nombre" wire:model="nombre" />
+
+                    </x-input-group>
 
                     <x-input-group for="ap_paterno" label="Apellido paterno" :error="$errors->first('ap_paterno')" class="w-full">
 
@@ -168,6 +285,14 @@
 
                     </x-input-group>
 
+                @elseif($tipo_persona == 'MORAL')
+
+                    <x-input-group for="razon_social" label="Razon social" :error="$errors->first('razon_social')" class="w-full">
+
+                        <x-input-text id="razon_social" wire:model="razon_social" />
+
+                    </x-input-group>
+
                 @endif
 
                 <x-input-group for="rfc" label="RFC" :error="$errors->first('rfc')" class="w-full">
@@ -176,15 +301,35 @@
 
                 </x-input-group>
 
-                <x-input-group for="razon_social" label="Razon social" :error="$errors->first('razon_social')" class="w-full">
-
-                    <x-input-text id="razon_social" wire:model="razon_social" />
-
-                </x-input-group>
-
                 <x-input-group for="nacionalidad" label="Nacionalidad" :error="$errors->first('nacionalidad')" class="w-full">
 
                     <x-input-text id="nacionalidad" wire:model="nacionalidad" />
+
+                </x-input-group>
+
+                <span class="flex items-center justify-center text-lg text-gray-700 col-span-3">Domicilio</span>
+
+                <x-input-group for="cp" label="Código postal" :error="$errors->first('cp')" class="w-full">
+
+                    <x-input-text type="number" id="cp" wire:model="cp" />
+
+                </x-input-group>
+
+                <x-input-group for="entidad" label="Entidad" :error="$errors->first('entidad')" class="w-full">
+
+                    <x-input-text id="entidad" wire:model="entidad" />
+
+                </x-input-group>
+
+                <x-input-group for="municipio_propietario" label="Municipio" :error="$errors->first('municipio_propietario')" class="w-full">
+
+                    <x-input-text id="municipio_propietario" wire:model="municipio_propietario" />
+
+                </x-input-group>
+
+                <x-input-group for="colonia" label="Colonia" :error="$errors->first('colonia')" class="w-full">
+
+                    <x-input-text id="colonia" wire:model="colonia" />
 
                 </x-input-group>
 
@@ -206,27 +351,17 @@
 
                 </x-input-group>
 
-                <x-input-group for="colonia" label="Colonia" :error="$errors->first('colonia')" class="w-full">
+                <span class="flex items-center justify-center text-lg text-gray-700 col-span-3">Porcentajes</span>
 
-                    <x-input-text id="colonia" wire:model="colonia" />
+                <x-input-group for="porcentaje_nuda" label="Porcentaje nuda propiedad" :error="$errors->first('porcentaje_nuda')" class="w-full">
 
-                </x-input-group>
-
-                <x-input-group for="cp" label="Código postal" :error="$errors->first('cp')" class="w-full">
-
-                    <x-input-text type="number" id="cp" wire:model="cp" />
+                    <x-input-text type="number" id="porcentaje_nuda" wire:model="porcentaje_nuda" />
 
                 </x-input-group>
 
-                <x-input-group for="entidad" label="Entidad" :error="$errors->first('entidad')" class="w-full">
+                <x-input-group for="porcentaje_usufructo" label="Porcentaje usufructo" :error="$errors->first('porcentaje_usufructo')" class="w-full">
 
-                    <x-input-text id="entidad" wire:model="entidad" />
-
-                </x-input-group>
-
-                <x-input-group for="municipio_propietario" label="Municipio" :error="$errors->first('municipio_propietario')" class="w-full">
-
-                    <x-input-text id="municipio_propietario" wire:model="municipio_propietario" />
+                    <x-input-text type="number" id="porcentaje_usufructo" wire:model="porcentaje_usufructo" />
 
                 </x-input-group>
 
@@ -253,11 +388,11 @@
                 @elseif($editar)
 
                     <x-button-blue
-                        wire:click="actualizarPropietario"
+                        wire:click="actualizarActor"
                         wire:loading.attr="disabled"
-                        wire:target="actualizarPropietario">
+                        wire:target="actualizarActor">
 
-                        <img wire:loading wire:target="actualizarPropietario" class="mx-auto h-4 mr-1" src="{{ asset('storage/img/loading3.svg') }}" alt="Loading">
+                        <img wire:loading wire:target="actualizarActor" class="mx-auto h-4 mr-1" src="{{ asset('storage/img/loading3.svg') }}" alt="Loading">
 
                         <span>Actualizar</span>
                     </x-button-blue>
@@ -265,9 +400,439 @@
                 @endif
 
                 <x-button-red
-                    wire:click="$toggle('modal')"
+                    wire:click="resetear"
                     wire:loading.attr="disabled"
-                    wire:target="$toggle('modal')"
+                    wire:target="resetear"
+                    type="button">
+                    Cerrar
+                </x-button-red>
+
+            </div>
+
+        </x-slot>
+
+    </x-dialog-modal>
+
+    <x-dialog-modal wire:model="modalTransmitente">
+
+        <x-slot name="title">
+
+            @if($crear)
+                Nuevo Transmitente
+            @elseif($editar)
+                Editar Transmitente
+            @endif
+
+        </x-slot>
+
+        <x-slot name="content">
+
+            <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-3 mb-3 col-span-2 rounded-lg p-3">
+
+                <x-input-group for="tipo_persona" label="Tipo de persona" :error="$errors->first('tipo_persona')" class="w-full">
+
+                    <x-input-select id="tipo_persona" wire:model.live="tipo_persona" class="w-full">
+
+                        <option value="">Seleccione una opción</option>
+                        <option value="MORAL">MORAL</option>
+                        <option value="FISICA">FISICA</option>
+
+                    </x-input-select>
+
+                </x-input-group>
+
+                @if($tipo_persona == 'FISICA')
+
+                    <x-input-group for="nombre" label="Nombre(s)" :error="$errors->first('nombre')" class="w-full">
+
+                        <x-input-text id="nombre" wire:model="nombre" />
+
+                    </x-input-group>
+
+                    <x-input-group for="ap_paterno" label="Apellido paterno" :error="$errors->first('ap_paterno')" class="w-full">
+
+                        <x-input-text id="ap_paterno" wire:model="ap_paterno" />
+
+                    </x-input-group>
+
+                    <x-input-group for="ap_materno" label="Apellido materno" :error="$errors->first('ap_materno')" class="w-full">
+
+                        <x-input-text id="ap_materno" wire:model="ap_materno" />
+
+                    </x-input-group>
+
+                    <x-input-group for="curp" label="CURP" :error="$errors->first('curp')" class="w-full">
+
+                        <x-input-text id="curp" wire:model="curp" />
+
+                    </x-input-group>
+
+                    <x-input-group for="fecha_nacimiento" label="Fecha de nacimiento" :error="$errors->first('fecha_nacimiento')" class="w-full">
+
+                        <x-input-text type="date" id="fecha_nacimiento" wire:model="fecha_nacimiento" />
+
+                    </x-input-group>
+
+                    <x-input-group for="estado_civil" label="Estado civil" :error="$errors->first('estado_civil')" class="w-full">
+
+                        <x-input-text id="estado_civil" wire:model="estado_civil" />
+
+                    </x-input-group>
+
+                @elseif($tipo_persona == 'MORAL')
+
+                    <x-input-group for="razon_social" label="Razon social" :error="$errors->first('razon_social')" class="w-full">
+
+                        <x-input-text id="razon_social" wire:model="razon_social" />
+
+                    </x-input-group>
+
+                @endif
+
+                <x-input-group for="rfc" label="RFC" :error="$errors->first('rfc')" class="w-full">
+
+                    <x-input-text id="rfc" wire:model="rfc" />
+
+                </x-input-group>
+
+                <x-input-group for="nacionalidad" label="Nacionalidad" :error="$errors->first('nacionalidad')" class="w-full">
+
+                    <x-input-text id="nacionalidad" wire:model="nacionalidad" />
+
+                </x-input-group>
+
+                <span class="flex items-center justify-center text-lg text-gray-700 col-span-3">Domicilio</span>
+
+                <x-input-group for="cp" label="Código postal" :error="$errors->first('cp')" class="w-full">
+
+                    <x-input-text type="number" id="cp" wire:model="cp" />
+
+                </x-input-group>
+
+                <x-input-group for="entidad" label="Entidad" :error="$errors->first('entidad')" class="w-full">
+
+                    <x-input-text id="entidad" wire:model="entidad" />
+
+                </x-input-group>
+
+                <x-input-group for="municipio_propietario" label="Municipio" :error="$errors->first('municipio_propietario')" class="w-full">
+
+                    <x-input-text id="municipio_propietario" wire:model="municipio_propietario" />
+
+                </x-input-group>
+
+                <x-input-group for="colonia" label="Colonia" :error="$errors->first('colonia')" class="w-full">
+
+                    <x-input-text id="colonia" wire:model="colonia" />
+
+                </x-input-group>
+
+                <x-input-group for="calle" label="Calle" :error="$errors->first('calle')" class="w-full">
+
+                    <x-input-text id="calle" wire:model="calle" />
+
+                </x-input-group>
+
+                <x-input-group for="numero_exterior_propietario" label="Número exterior" :error="$errors->first('numero_exterior_propietario')" class="w-full">
+
+                    <x-input-text id="numero_exterior_propietario" wire:model="numero_exterior_propietario" />
+
+                </x-input-group>
+
+                <x-input-group for="numero_interior_propietario" label="Número interior" :error="$errors->first('numero_interior_propietario')" class="w-full">
+
+                    <x-input-text id="numero_interior_propietario" wire:model="numero_interior_propietario" />
+
+                </x-input-group>
+
+            </div>
+
+        </x-slot>
+
+        <x-slot name="footer">
+
+            <div class="flex gap-3">
+
+                @if($crear)
+
+                    <x-button-blue
+                        wire:click="guardarTransmitente"
+                        wire:loading.attr="disabled"
+                        wire:target="guardarTransmitente">
+
+                        <img wire:loading wire:target="guardarTransmitente" class="mx-auto h-4 mr-1" src="{{ asset('storage/img/loading3.svg') }}" alt="Loading">
+
+                        <span>Guardar</span>
+                    </x-button-blue>
+
+                @elseif($editar)
+
+                    <x-button-blue
+                        wire:click="actualizarActor"
+                        wire:loading.attr="disabled"
+                        wire:target="actualizarActor">
+
+                        <img wire:loading wire:target="actualizarActor" class="mx-auto h-4 mr-1" src="{{ asset('storage/img/loading3.svg') }}" alt="Loading">
+
+                        <span>Actualizar</span>
+                    </x-button-blue>
+
+                @endif
+
+                <x-button-red
+                    wire:click="resetear"
+                    wire:loading.attr="disabled"
+                    wire:target="resetear"
+                    type="button">
+                    Cerrar
+                </x-button-red>
+
+            </div>
+
+        </x-slot>
+
+    </x-dialog-modal>
+
+    <x-dialog-modal wire:model="modalRepresentante">
+
+        <x-slot name="title">
+
+            @if($crear)
+                Nuevo Representante
+            @elseif($editar)
+                Editar Representante
+            @endif
+
+        </x-slot>
+
+        <x-slot name="content">
+
+            <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-3 mb-3 col-span-2 rounded-lg p-3">
+
+                <x-input-group for="tipo_persona" label="Tipo de persona" :error="$errors->first('tipo_persona')" class="w-full">
+
+                    <x-input-select id="tipo_persona" wire:model.live="tipo_persona" class="w-full">
+
+                        <option value="">Seleccione una opción</option>
+                        <option value="MORAL">MORAL</option>
+                        <option value="FISICA">FISICA</option>
+
+                    </x-input-select>
+
+                </x-input-group>
+
+                @if($tipo_persona == 'FISICA')
+
+                    <x-input-group for="nombre" label="Nombre(s)" :error="$errors->first('nombre')" class="w-full">
+
+                        <x-input-text id="nombre" wire:model="nombre" />
+
+                    </x-input-group>
+
+                    <x-input-group for="ap_paterno" label="Apellido paterno" :error="$errors->first('ap_paterno')" class="w-full">
+
+                        <x-input-text id="ap_paterno" wire:model="ap_paterno" />
+
+                    </x-input-group>
+
+                    <x-input-group for="ap_materno" label="Apellido materno" :error="$errors->first('ap_materno')" class="w-full">
+
+                        <x-input-text id="ap_materno" wire:model="ap_materno" />
+
+                    </x-input-group>
+
+                    <x-input-group for="curp" label="CURP" :error="$errors->first('curp')" class="w-full">
+
+                        <x-input-text id="curp" wire:model="curp" />
+
+                    </x-input-group>
+
+                    <x-input-group for="fecha_nacimiento" label="Fecha de nacimiento" :error="$errors->first('fecha_nacimiento')" class="w-full">
+
+                        <x-input-text type="date" id="fecha_nacimiento" wire:model="fecha_nacimiento" />
+
+                    </x-input-group>
+
+                    <x-input-group for="estado_civil" label="Estado civil" :error="$errors->first('estado_civil')" class="w-full">
+
+                        <x-input-text id="estado_civil" wire:model="estado_civil" />
+
+                    </x-input-group>
+
+                @elseif($tipo_persona == 'MORAL')
+
+                    <x-input-group for="razon_social" label="Razon social" :error="$errors->first('razon_social')" class="w-full">
+
+                        <x-input-text id="razon_social" wire:model="razon_social" />
+
+                    </x-input-group>
+
+                @endif
+
+                <x-input-group for="rfc" label="RFC" :error="$errors->first('rfc')" class="w-full">
+
+                    <x-input-text id="rfc" wire:model="rfc" />
+
+                </x-input-group>
+
+                <x-input-group for="nacionalidad" label="Nacionalidad" :error="$errors->first('nacionalidad')" class="w-full">
+
+                    <x-input-text id="nacionalidad" wire:model="nacionalidad" />
+
+                </x-input-group>
+
+                <span class="flex items-center justify-center text-lg text-gray-700 col-span-3">Domicilio</span>
+
+                <x-input-group for="cp" label="Código postal" :error="$errors->first('cp')" class="w-full">
+
+                    <x-input-text type="number" id="cp" wire:model="cp" />
+
+                </x-input-group>
+
+                <x-input-group for="entidad" label="Entidad" :error="$errors->first('entidad')" class="w-full">
+
+                    <x-input-text id="entidad" wire:model="entidad" />
+
+                </x-input-group>
+
+                <x-input-group for="municipio_propietario" label="Municipio" :error="$errors->first('municipio_propietario')" class="w-full">
+
+                    <x-input-text id="municipio_propietario" wire:model="municipio_propietario" />
+
+                </x-input-group>
+
+                <x-input-group for="colonia" label="Colonia" :error="$errors->first('colonia')" class="w-full">
+
+                    <x-input-text id="colonia" wire:model="colonia" />
+
+                </x-input-group>
+
+                <x-input-group for="calle" label="Calle" :error="$errors->first('calle')" class="w-full">
+
+                    <x-input-text id="calle" wire:model="calle" />
+
+                </x-input-group>
+
+                <x-input-group for="numero_exterior_propietario" label="Número exterior" :error="$errors->first('numero_exterior_propietario')" class="w-full">
+
+                    <x-input-text id="numero_exterior_propietario" wire:model="numero_exterior_propietario" />
+
+                </x-input-group>
+
+                <x-input-group for="numero_interior_propietario" label="Número interior" :error="$errors->first('numero_interior_propietario')" class="w-full">
+
+                    <x-input-text id="numero_interior_propietario" wire:model="numero_interior_propietario" />
+
+                </x-input-group>
+
+                <span class="flex items-center justify-center text-lg text-gray-700 col-span-3">Representados</span>
+
+                <div class=" col-span-3">
+
+                    <div class="flex space-x-4 items-center">
+
+                        <Label>Seleccione los representados</Label>
+
+                    </div>
+
+                    <div
+                        x-data = "{ model: @entangle('representados') }"
+                        x-init =
+                        "
+                            select2 = $($refs.select)
+                                .select2({
+                                    placeholder: 'Propietarios y transmitentes',
+                                    width: '100%',
+                                })
+
+                            select2.on('change', function(){
+                                $wire.set('representados', $(this).val())
+                            })
+
+                            select2.on('keyup', function(e) {
+                                if (e.keyCode === 13){
+                                    $wire.set('representados', $('.select2').val())
+                                }
+                            });
+
+                            $watch('model', (value) => {
+                                select2.val(value).trigger('change');
+                            });
+                        "
+                        wire:ignore>
+
+                        <select
+                            class="bg-white rounded text-sm w-full z-50"
+                            wire:model.live="representados"
+                            x-ref="select"
+                            multiple="multiple">
+
+                            @if($propiedad)
+
+                                @foreach ($propiedad->propietarios as $propietario)
+
+                                    <option value="{{ $propietario->id }}">{{ $propietario->persona->nombre }} {{ $propietario->persona->ap_paterno }} {{ $propietario->persona->ap_materno }}</option>
+
+                                @endforeach
+
+                                @foreach ($propiedad->transmitentes as $transmitente)
+
+                                    <option value="{{ $transmitente->id }}">{{ $transmitente->persona->nombre }} {{ $transmitente->persona->ap_paterno }} {{ $transmitente->persona->ap_materno }}</option>
+
+                                @endforeach
+
+                            @endif
+
+                        </select>
+
+                    </div>
+
+                    <div>
+
+                        @error('representados') <span class="error text-sm text-red-500">{{ $message }}</span> @enderror
+
+                    </div>
+
+                </div>
+
+            </div>
+
+        </x-slot>
+
+        <x-slot name="footer">
+
+            <div class="flex gap-3">
+
+                @if($crear)
+
+                    <x-button-blue
+                        wire:click="guardarRepresentante"
+                        wire:loading.attr="disabled"
+                        wire:target="guardarRepresentante">
+
+                        <img wire:loading wire:target="guardarRepresentante" class="mx-auto h-4 mr-1" src="{{ asset('storage/img/loading3.svg') }}" alt="Loading">
+
+                        <span>Guardar</span>
+                    </x-button-blue>
+
+                @elseif($editar)
+
+                    <x-button-blue
+                        wire:click="actualizarActor"
+                        wire:loading.attr="disabled"
+                        wire:target="actualizarActor">
+
+                        <img wire:loading wire:target="actualizarActor" class="mx-auto h-4 mr-1" src="{{ asset('storage/img/loading3.svg') }}" alt="Loading">
+
+                        <span>Actualizar</span>
+                    </x-button-blue>
+
+                @endif
+
+                <x-button-red
+                    wire:click="resetear"
+                    wire:loading.attr="disabled"
+                    wire:target="resetear"
                     type="button">
                     Cerrar
                 </x-button-red>
@@ -279,3 +844,10 @@
     </x-dialog-modal>
 
 </div>
+
+@push('scripts')
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js" integrity="sha512-894YE6QWD5I59HgZOGReFYm4dnWc1Qt5NtvYSaNcOP+u1T9qYdvdihz0PPSiiqn/+/3e7Jo4EaG7TubfWGUrMQ==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+    <script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
+
+@endpush

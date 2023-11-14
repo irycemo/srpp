@@ -68,9 +68,15 @@
 
             </x-input-group>
 
-            <x-input-group for="autoridad_nombre" label="Número y nombre de la autoridad" :error="$errors->first('autoridad_nombre')" class="w-full">
+            <x-input-group for="autoridad_nombre" label="Nombre de la autoridad" :error="$errors->first('autoridad_nombre')" class="w-full">
 
                 <x-input-text id="autoridad_nombre" wire:model="autoridad_nombre" />
+
+            </x-input-group>
+
+            <x-input-group for="autoridad_numero" label="Número de la autoridad" :error="$errors->first('autoridad_numero')" class="w-full">
+
+                <x-input-text id="autoridad_numero" wire:model="autoridad_numero" />
 
             </x-input-group>
 
@@ -189,7 +195,5 @@
         <img wire:loading wire:target="guardarDocumentoEntrada" class="mx-auto h-4 mr-1" src="{{ asset('storage/img/loading3.svg') }}" alt="Loading">
         Guardar y continuar
     </x-button-blue>
-
-    {{ $errors }}
 
 </div>

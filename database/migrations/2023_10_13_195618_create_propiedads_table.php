@@ -34,6 +34,7 @@ return new class extends Migration
             $table->unsignedDecimal('valor_catastral', 18,2)->nullable();
             $table->unsignedDecimal('monto_transaccion')->nullable();
             $table->string('divisa')->nullable();
+            $table->string('unidad_area')->nullable();
             /* Ubicaicón */
             $table->string('tipo_vialidad')->nullable();
             $table->string('tipo_asentamiento')->nullable();
