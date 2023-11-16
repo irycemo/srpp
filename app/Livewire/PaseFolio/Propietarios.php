@@ -339,6 +339,8 @@ class Propietarios extends Component
 
                 $this->dispatch('mostrarMensaje', ['success', "El transmitente se guardó con éxito."]);
 
+                $this->dispatch('reload');
+
                 $this->resetear();
 
                 $this->propiedad->refresh();

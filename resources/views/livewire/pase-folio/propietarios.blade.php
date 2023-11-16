@@ -759,6 +759,7 @@
                                 select2.val(value).trigger('change');
                             });
                         "
+                        x-on:reload.window="x-init"
                         wire:ignore>
 
                         <select
@@ -771,13 +772,13 @@
 
                                 @foreach ($propiedad->propietarios as $propietario)
 
-                                    <option value="{{ $propietario->id }}">{{ $propietario->persona->nombre }} {{ $propietario->persona->ap_paterno }} {{ $propietario->persona->ap_materno }}</option>
+                                    <option value="{{ $propietario->id }}">{{ $propietario->persona->nombre }} {{ $propietario->persona->ap_paterno }} {{ $propietario->persona->ap_materno }} {{ $propietario->persona->razon_social }}</option>
 
                                 @endforeach
 
                                 @foreach ($propiedad->transmitentes as $transmitente)
 
-                                    <option value="{{ $transmitente->id }}">{{ $transmitente->persona->nombre }} {{ $transmitente->persona->ap_paterno }} {{ $transmitente->persona->ap_materno }}</option>
+                                    <option value="{{ $transmitente->id }}">{{ $transmitente->persona->nombre }} {{ $transmitente->persona->ap_paterno }} {{ $transmitente->persona->ap_materno }} {{ $transmitente->persona->razon_social }}</option>
 
                                 @endforeach
 
