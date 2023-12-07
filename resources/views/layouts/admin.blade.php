@@ -3,7 +3,7 @@
     <div class="relative max-h-screen md:flex">
 
         {{-- Sidebar --}}
-        <div id="sidebar" class="z-50 bg-white w-64 absolute inset-y-0 left-0 transform -translate-x-full transition duration-200 ease-in-out md:relative md:translate-x-0">
+        <div id="sidebar" class="z-10 bg-white w-64 absolute inset-y-0 left-0 transform -translate-x-full transition duration-200 ease-in-out md:relative md:translate-x-0">
 
             {{-- Header --}}
             <div class="w-100 flex-none bg-white border-b-2 border-b-grey-200 flex flex-row p-5 pr-0 justify-between items-center h-20 ">
@@ -91,7 +91,7 @@
                 <p x-show.transition.in.duration.1000ms.out.duration.200msw="!open_side_menu"  class="font-semibold text-2xl text-rojo">Sistema RPP</p>
 
                 <!-- Profile dropdown -->
-                <div class="ml-3 relative z-50" x-data="{ open_drop_down:false }">
+                <div class="ml-3 relative z-10" x-data="{ open_drop_down:false }">
 
                     <div>
 

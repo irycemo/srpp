@@ -220,4 +220,12 @@ class Constantes{
         'EUR'
     ];
 
+    const TIPO_DEUDOR = [
+        'I-DEUDOR ÚNICO',
+        'D-GARANTE(S) HIPOTECARIO(S)',
+        'P-PARTE ALICUOTA',
+        'G-GARANTES EN COOPROPIEDAD',
+        'F-FIANZA'
+    ];
+
 }

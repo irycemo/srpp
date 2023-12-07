@@ -5,6 +5,7 @@ namespace App\Livewire\PaseFolio;
 use App\Models\Predio;
 use Livewire\Component;
 use Livewire\Attributes\On;
+use App\Models\CodigoPostal;
 use App\Constantes\Constantes;
 use Illuminate\Support\Facades\DB;
 use App\Models\MovimientoRegistral;
@@ -42,7 +43,9 @@ class UbicacionPredio extends Component
     public $observaciones;
 
     public $tipos_asentamientos;
+    public $nombres_asentamientos = [];
     public $tipos_vialidades;
+    public $codigos_postales;
 
     public MovimientoRegistral $movimientoRegistral;
     public Predio $propiedad;
@@ -55,26 +58,26 @@ class UbicacionPredio extends Component
             'nombre_vialidad' => 'required',
             'nombre_asentamiento' => 'required',
             'numero_exterior' => 'required',
-            'numero_exterior_2' => 'required',
-            'numero_adicional' => 'required',
-            'numero_adicional_2' => 'required',
-            'numero_interior' => 'required',
-            'lote' => 'required',
-            'manzana_ubicacion' => 'required',
+            'numero_exterior_2' => 'nullable',
+            'numero_adicional' => 'nullable',
+            'numero_adicional_2' => 'nullable',
+            'numero_interior' => 'nullable',
+            'lote' => 'nullable',
+            'manzana_ubicacion' => 'nullable',
             'codigo_postal' => 'required',
-            'lote_fraccionador' => 'required',
-            'manzana_fraccionador' => 'required',
-            'etapa_fraccionador' => 'required',
-            'nombre_edificio' => 'required',
-            'clave_edificio' => 'required',
-            'departamento_edificio' => 'required',
+            'lote_fraccionador' => 'nullable',
+            'manzana_fraccionador' => 'nullable',
+            'etapa_fraccionador' => 'nullable',
+            'nombre_edificio' => 'nullable',
+            'clave_edificio' => 'nullable',
+            'departamento_edificio' => 'nullable',
             'municipio_ubicacion' => 'required',
             'ciudad' => 'required',
             'localidad_ubicacion' => 'required',
-            'poblado' => 'required',
-            'ejido' => 'required',
-            'parcela' => 'required',
-            'solar' => 'required',
+            'poblado' => 'nullable',
+            'ejido' => 'nullable',
+            'parcela' => 'nullable',
+            'solar' => 'nullable',
         ];
 
     }
@@ -95,6 +98,31 @@ class UbicacionPredio extends Component
         'municipio_ubicacion' => 'municipio',
         'localidad_ubicacion' => 'localidad',
     ];
+
+    public function updatedCodigoPostal(){
+
+        $this->codigos_postales = CodigoPostal::where('codigo', $this->codigo_postal)->get();
+
+        if($this->codigos_postales->count()){
+
+            $this->municipio_ubicacion = $this->codigos_postales->first()->municipio;
+
+            $this->ciudad = $this->codigos_postales->first()->ciudad;
+
+            foreach ($this->codigos_postales as $codigo) {
+
+                array_push($this->nombres_asentamientos, $codigo->nombre_asentamiento);
+            }
+
+        }
+
+    }
+
+    public function updatedNombreAsentamiento(){
+
+        $this->tipo_asentamiento = $this->codigos_postales->where('nombre_asentamiento', $this->nombre_asentamiento)->first()->tipo_asentamiento;
+
+    }
 
     #[On('cargarPropiedad')]
     public function cargarPropiedad($id){

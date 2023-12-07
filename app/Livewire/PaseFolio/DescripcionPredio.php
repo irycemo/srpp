@@ -300,7 +300,11 @@ class DescripcionPredio extends Component
 
         $this->divisas = Constantes::DIVISAS;
 
+        $this->divisa = $this->divisas[0];
+
         $this->areas = Constantes::UNIDADES;
+
+        $this->unidad_area = $this->areas[0];
 
         if($this->movimientoRegistral->folio_real)
             $this->cargarPropiedad($this->movimientoRegistral->folioReal->predio->id);

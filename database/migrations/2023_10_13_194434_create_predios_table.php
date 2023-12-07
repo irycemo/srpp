@@ -62,6 +62,12 @@ return new class extends Migration
             $table->string('parcela')->nullable();
             $table->string('solar')->nullable();
             $table->string('uso_suelo')->nullable();
+            $table->string('xutm')->nullable();
+            $table->string('yutm')->nullable();
+            $table->unsignedInteger('zutm')->nullable();
+            $table->decimal('lon', 11, 8)->nullable();
+            $table->decimal('lat', 11, 8)->nullable();
+
             /* Clave catastral */
             $table->unsignedInteger('cc_estado')->nullable();
             $table->unsignedInteger('cc_region_catastral')->nullable();

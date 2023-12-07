@@ -74,16 +74,16 @@ class Propietarios extends Component
                 /* 'regex:/^([A-ZÑ&]{3,4}) ?(?:- ?)?(\d{2}(?:0[1-9]|1[0-2])(?:0[1-9]|[12]\d|3[01])) ?(?:- ?)?([A-Z\d]{2})([A\d])$/' */
             ],
             'razon_social' => Rule::requiredIf($this->tipo_persona === 'MORAL'),
-            'fecha_nacimiento' => Rule::requiredIf($this->tipo_persona === 'FISICA'),
-            'nacionalidad' => 'required',
-            'estado_civil' => Rule::requiredIf($this->tipo_persona === 'FISICA'),
-            'calle' => 'required',
-            'numero_exterior_propietario' => 'required',
-            'numero_interior_propietario' => 'required',
-            'colonia' => 'required',
-            'cp' => 'required',
-            'entidad' => 'required',
-            'municipio_propietario' => 'required',
+            'fecha_nacimiento' => 'nullable',
+            'nacionalidad' => 'nullable',
+            'estado_civil' => 'nullable',
+            'calle' => 'nullable',
+            'numero_exterior_propietario' => 'nullable',
+            'numero_interior_propietario' => 'nullable',
+            'colonia' => 'nullable',
+            'cp' => 'nullable',
+            'entidad' => 'nullable',
+            'municipio_propietario' => 'nullable',
             'representados' => Rule::requiredIf($this->modalRepresentante === true),
         ];
     }
@@ -214,9 +214,14 @@ class Propietarios extends Component
 
             DB::transaction(function () {
 
-                $persona = Persona::where('rfc', $this->rfc)->first();
+                $persona = Persona::query()
+                                    ->when($this->nombre, fn($q) => $q->where('nombre', $this->nombre))
+                                    ->when($this->ap_paterno, fn($q) => $q->where('ap_paterno', $this->ap_paterno))
+                                    ->when($this->ap_materno, fn($q) => $q->where('ap_materno', $this->ap_materno))
+                                    ->when($this->razon_social, fn($q) => $q->where('razon_social', $this->razon_social))
+                                    ->first();
 
-                if($persona){
+                if($persona != null){
 
                     $persona->update([
                         'estado_civil' => $this->estado_civil,
@@ -290,7 +295,12 @@ class Propietarios extends Component
 
             DB::transaction(function () {
 
-                $persona = Persona::where('rfc', $this->rfc)->first();
+                $persona = Persona::query()
+                                    ->when($this->nombre, fn($q) => $q->where('nombre', $this->nombre))
+                                    ->when($this->ap_paterno, fn($q) => $q->where('ap_paterno', $this->ap_paterno))
+                                    ->when($this->ap_materno, fn($q) => $q->where('ap_materno', $this->ap_materno))
+                                    ->when($this->razon_social, fn($q) => $q->where('razon_social', $this->razon_social))
+                                    ->first();
 
                 if($persona){
 
@@ -366,7 +376,12 @@ class Propietarios extends Component
 
             DB::transaction(function () {
 
-                $persona = Persona::where('rfc', $this->rfc)->first();
+                $persona = Persona::query()
+                                    ->when($this->nombre, fn($q) => $q->where('nombre', $this->nombre))
+                                    ->when($this->ap_paterno, fn($q) => $q->where('ap_paterno', $this->ap_paterno))
+                                    ->when($this->ap_materno, fn($q) => $q->where('ap_materno', $this->ap_materno))
+                                    ->when($this->razon_social, fn($q) => $q->where('razon_social', $this->razon_social))
+                                    ->first();
 
                 if($persona){
 

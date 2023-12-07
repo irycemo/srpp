@@ -4,9 +4,9 @@
 
         <div class="col-span-2">
 
-            <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3 mb-3 bg-white rounded-lg p-3">
+            <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3 mb-3 bg-white rounded-lg p-3 shadow-lg">
 
-                <span class="flex items-center justify-center text-lg text-gray-700 sm:col-span-2 lg:col-span-3">Descripción del predio</span>
+                <span class="flex items-center justify-center text-lg text-gray-700  md:col-span-3 col-span-1 sm:col-span-2">Descripción del predio</span>
 
                 <div class="space-y-1 sm:col-span-2 lg:col-span-3 mx-auto">
 
@@ -116,9 +116,9 @@
 
             </div>
 
-            <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3 mb-3 bg-white rounded-lg p-3">
+            <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3 mb-3 bg-white rounded-lg p-3 shadow-lg">
 
-                <span class="flex items-center justify-center text-lg text-gray-700 sm:col-span-2 lg:col-span-3">Datos Complementarios</span>
+                <span class="flex items-center justify-center text-lg text-gray-700 md:col-span-3 col-span-1 sm:col-span-2">Datos Complementarios</span>
 
                 <x-input-group for="curt" label="CURT" :error="$errors->first('curt')" class="w-full">
 
@@ -240,7 +240,7 @@
 
         </div>
 
-        <div class="bg-white rounded-lg p-2 mb-3">
+        <div class="bg-white rounded-lg p-2 mb-3 shadow-lg">
 
             <span class="flex items-center justify-center text-lg text-gray-700">Información de la base de datos</span>
 
@@ -250,11 +250,11 @@
 
     <div class="grid grid-cols-1 sm:grid-cols-3 gap-3">
 
-        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3 mb-3 col-span-2 bg-white rounded-lg p-3">
+        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3 mb-3 col-span-2 bg-white rounded-lg p-3 shadow-lg">
 
-            <span class="flex items-center justify-center text-lg text-gray-700 lg:col-span-3">Colindancias</span>
+            <span class="flex items-center justify-center text-lg text-gray-700 md:col-span-3 col-span-1 sm:col-span-2">Colindancias</span>
 
-            <div class="mb-5 divide-y lg:col-span-3">
+            <div class="mb-5 divide-y md:col-span-3 col-span-1 sm:col-span-2">
 
                 @foreach ($medidas as $index => $medida)
 
@@ -296,7 +296,7 @@
 
                             <div>
 
-                                <label class="text-sm" >Longitud</label>
+                                <label class="text-sm" >Longitud (metros)</label>
 
                             </div>
 
@@ -374,7 +374,7 @@
 
         </div>
 
-        <div class="bg-white rounded-lg p-2 mb-3">
+        <div class="bg-white rounded-lg p-2 mb-3 shadow-lg">
 
             <span class="flex items-center justify-center text-lg text-gray-700">Información de la base de datos</span>
 
@@ -383,8 +383,8 @@
     </div>
 
 
-    <div class=" flex justify-end items-center bg-white rounded-lg p-2">
-
+    <div class=" flex justify-end items-center bg-white rounded-lg p-2 shadow-lg">
+        {{ $errors }}
         <x-button-blue
             wire:click="guardarDescripcionPredio"
             wire:loading.attr="disabled"

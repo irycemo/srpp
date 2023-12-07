@@ -9,6 +9,7 @@ use Illuminate\Support\Facades\DB;
 use App\Models\MovimientoRegistral;
 use Illuminate\Support\Facades\Log;
 use App\Http\Services\SistemaTramitesService;
+use App\Models\FolioReal;
 
 class PaseFolio extends Component
 {
@@ -79,6 +80,7 @@ class PaseFolio extends Component
         if(auth()->user()->hasRole('Administrador')){
 
             $movimientos = MovimientoRegistral::with('certificacion', 'inscripcionPropiedad', 'actualizadoPor', 'asignadoA')
+                                                    ->where('folio', 1)
                                                     ->where(function($q){
                                                         $q->whereNull('folio_real')
                                                             ->orWhereHas('folioReal', function($q){
@@ -100,6 +102,7 @@ class PaseFolio extends Component
         }else{
 
             $movimientos = MovimientoRegistral::with('certificacion', 'inscripcionPropiedad', 'actualizadoPor')
+                                                    ->where('folio', 1)
                                                     ->where('estado', 'nuevo')
                                                     ->where(function($q){
                                                         $q->whereNull('folio_real')

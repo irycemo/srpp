@@ -125,7 +125,7 @@ class Elaboracion extends Component
                 'registro_antecedente' => $this->movimientoRegistral->registro,
                 'registro_antecedente_bis' => $this->movimientoRegistral->registro_bis,
                 'numero_propiedad_antecedente' => $this->movimientoRegistral->numero_propiedad,
-                'distrito_antecedente' => $this->movimientoRegistral->distrito,
+                'distrito_antecedente' => $this->movimientoRegistral->getRawOriginal('distrito'),
                 'seccion_antecedente' => $this->movimientoRegistral->seccion,
             ]);
 
@@ -191,7 +191,7 @@ class Elaboracion extends Component
                     'procedencia' => $this->procedencia,
                 ]);
 
-                if(!$this->escritura){
+                if(!$this->propiedad->escritura_id){
 
                     $this->escritura = Escritura::Create([
                         'numero' => $this->escritura_numero,

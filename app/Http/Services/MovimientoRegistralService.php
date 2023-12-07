@@ -11,6 +11,7 @@ use App\Exceptions\CertificacionServiceException;
 use App\Http\Requests\MovimientoRegistralRequest;
 use App\Exceptions\MovimientoRegistralServiceException;
 use App\Http\Requests\MovimientoRegistralCambiarTipoServicioRequest;
+use App\Models\FolioReal;
 
 class MovimientoRegistralService{
 
@@ -132,6 +133,8 @@ class MovimientoRegistralService{
 
         $array = [];
 
+        $folio = 1;
+
         $fields = [
             'folio_real',
             'numero_propiedad',
@@ -150,6 +153,7 @@ class MovimientoRegistralService{
             'fecha_entrega',
             'numero_oficio',
             'tipo_documento',
+            'numero_documento',
             'autoridad_cargo',
             'autoridad_nombre',
             'autoridad_numero',
@@ -168,6 +172,7 @@ class MovimientoRegistralService{
         }
 
         return $array + [
+            'folio' => $this->calcularFolio($request),
             'estado' => 'nuevo',
             'usuario_asignado' => $this->obtenerUsuarioAsignado($request['servicio'], $request['distrito'], $request['solicitante'], $request['tipo_servicio'], false),
             'usuario_supervisor' => $this->obtenerSupervisor($request['distrito']),
@@ -243,6 +248,28 @@ class MovimientoRegistralService{
     {
 
         return $this->asignacionService->obtenerSupervisorCertificaciones($distrito);
+
+    }
+
+    public function calcularFolio($request){
+
+        if($request['categoria_servicio'] == 'Inscripciones - Propiedad'){
+
+            if(!isset($request['folio_real'])){
+
+                return 1;
+
+            }else{
+
+                return FolioReal::find($request['folio_real'])->ultimoFolio() + 1;
+
+            }
+
+        }else{
+
+            return null;
+
+        }
 
     }
 

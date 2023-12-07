@@ -10,7 +10,22 @@ export default {
         './storage/framework/views/*.php',
         './resources/views/**/*.blade.php',
     ],
+    safelist: [
+        'sm:tw-max-w-sm',
+        'sm:tw-max-w-md',
 
+        'md:tw-max-w-lg',
+        'md:tw-max-w-xl',
+
+        'lg:tw-max-w-2xl',
+        'lg:tw-max-w-3xl',
+
+        'xl:tw-max-w-4xl',
+        'xl:tw-max-w-5xl',
+
+        '2xl:tw-max-w-6xl',
+        '2xl:tw-max-w-7xl',
+    ],
     theme: {
         extend: {
             fontFamily: {

@@ -1,14 +1,8 @@
-@push('styles')
-
-    <link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css" rel="stylesheet" />
-
-@endpush
-
-<div class="grid grid-cols-3 gap-3">
+<div class="grid grid-cols-1 sm:grid-cols-3 gap-3">
 
     <div class=" gap-3  col-span-2">
 
-        <div class="mb-3 bg-white rounded-lg p-3">
+        <div class="mb-3 bg-white rounded-lg p-3 shadow-lg">
 
             <span class="flex items-center justify-center text-lg text-gray-700 mb-5">Propietarios</span>
 
@@ -75,7 +69,7 @@
 
         </div>
 
-        <div class="mb-3 bg-white rounded-lg p-3">
+        <div class="mb-3 bg-white rounded-lg p-3 shadow-lg">
 
             <span class="flex items-center justify-center text-lg text-gray-700 mb-5">Transmitentes</span>
 
@@ -138,7 +132,7 @@
 
         </div>
 
-        <div class="mb-3 bg-white rounded-lg p-3">
+        <div class="mb-3 bg-white rounded-lg p-3 shadow-lg">
 
             <span class="flex items-center justify-center text-lg text-gray-700 mb-5">Representantes</span>
 
@@ -213,7 +207,7 @@
 
     </div>
 
-    <div class="bg-white rounded-lg p-2 mb-3">
+    <div class="bg-white rounded-lg p-2 mb-3 shadow-lg">
 
         <span class="flex items-center justify-center text-lg text-gray-700">Información de la base de datos</span>
 
@@ -307,11 +301,11 @@
 
                 </x-input-group>
 
-                <span class="flex items-center justify-center text-lg text-gray-700 col-span-3">Domicilio</span>
+                <span class="flex items-center justify-center text-lg text-gray-700 md:col-span-3 col-span-1 sm:col-span-2">Domicilio</span>
 
                 <x-input-group for="cp" label="Código postal" :error="$errors->first('cp')" class="w-full">
 
-                    <x-input-text type="number" id="cp" wire:model="cp" />
+                    <x-input-text type="number" id="cp" wire:model.lazy="cp" />
 
                 </x-input-group>
 
@@ -351,15 +345,15 @@
 
                 </x-input-group>
 
-                <span class="flex items-center justify-center text-lg text-gray-700 col-span-3">Porcentajes</span>
+                <span class="flex items-center justify-center text-lg text-gray-700 md:col-span-3 col-span-1 sm:col-span-2">Porcentajes</span>
 
-                <x-input-group for="porcentaje_nuda" label="Porcentaje nuda propiedad" :error="$errors->first('porcentaje_nuda')" class="w-full">
+                <x-input-group for="porcentaje_nuda" label="Nuda propiedad" :error="$errors->first('porcentaje_nuda')" class="w-full">
 
                     <x-input-text type="number" id="porcentaje_nuda" wire:model="porcentaje_nuda" />
 
                 </x-input-group>
 
-                <x-input-group for="porcentaje_usufructo" label="Porcentaje usufructo" :error="$errors->first('porcentaje_usufructo')" class="w-full">
+                <x-input-group for="porcentaje_usufructo" label="Usufructo" :error="$errors->first('porcentaje_usufructo')" class="w-full">
 
                     <x-input-text type="number" id="porcentaje_usufructo" wire:model="porcentaje_usufructo" />
 
@@ -501,7 +495,7 @@
 
                 </x-input-group>
 
-                <span class="flex items-center justify-center text-lg text-gray-700 col-span-3">Domicilio</span>
+                <span class="flex items-center justify-center text-lg text-gray-700 md:col-span-3 col-span-1 sm:col-span-2">Domicilio</span>
 
                 <x-input-group for="cp" label="Código postal" :error="$errors->first('cp')" class="w-full">
 
@@ -681,7 +675,7 @@
 
                 </x-input-group>
 
-                <span class="flex items-center justify-center text-lg text-gray-700 col-span-3">Domicilio</span>
+                <span class="flex items-center justify-center text-lg text-gray-700 md:col-span-3 col-span-1 sm:col-span-2">Domicilio</span>
 
                 <x-input-group for="cp" label="Código postal" :error="$errors->first('cp')" class="w-full">
 
@@ -725,9 +719,9 @@
 
                 </x-input-group>
 
-                <span class="flex items-center justify-center text-lg text-gray-700 col-span-3">Representados</span>
+                <span class="flex items-center justify-center text-lg text-gray-700 md:col-span-3 col-span-1 sm:col-span-2">Representados</span>
 
-                <div class=" col-span-3">
+                <div class="md:col-span-3 col-span-1 sm:col-span-2">
 
                     <div class="flex space-x-4 items-center">
 
@@ -845,10 +839,3 @@
     </x-dialog-modal>
 
 </div>
-
-@push('scripts')
-
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js" integrity="sha512-894YE6QWD5I59HgZOGReFYm4dnWc1Qt5NtvYSaNcOP+u1T9qYdvdihz0PPSiiqn/+/3e7Jo4EaG7TubfWGUrMQ==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
-    <script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
-
-@endpush

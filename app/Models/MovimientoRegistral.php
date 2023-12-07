@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use App\Models\Gravamen;
 use App\Models\FolioReal;
 use App\Models\Propiedad;
 use App\Traits\ModelosTrait;
@@ -18,30 +19,7 @@ class MovimientoRegistral extends Model implements Auditable
     use ModelosTrait;
     use \OwenIt\Auditing\Auditable;
 
-    protected $fillable = [
-        'monto',
-        'estado',
-        'predio_id',
-        'folio_real',
-        'tomo',
-        'tomo_bis',
-        'registro',
-        'registro_bis',
-        'año',
-        'tramite',
-        'fecha_prelacion',
-        'fecha_pago',
-        'tipo_servicio',
-        'solicitante',
-        'seccion',
-        'distrito',
-        'usuario_asignado',
-        'numero_oficio',
-        'usuario_supervisor',
-        'fecha_entrega',
-        'actualizado_por',
-        'numero_propiedad'
-    ];
+    protected $guarded = ['id', 'created_at', 'updated_at'];
 
     protected $casts = [
         'fecha_entrega' => 'date',
@@ -69,6 +47,10 @@ class MovimientoRegistral extends Model implements Auditable
 
     public function inscripcionPropiedad(){
         return $this->hasOne(Propiedad::class);
+    }
+
+    public function gravamen(){
+        return $this->hasOne(Gravamen::class);
     }
 
     public function supervisor(){

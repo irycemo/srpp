@@ -14,7 +14,7 @@ return new class extends Migration
         Schema::create('actors', function (Blueprint $table) {
             $table->id();
             $table->foreignId('persona_id')->constrained();
-            $table->foreignId('predio_id')->constrained();
+            $table->foreignId('predio_id')->constrained()->onDelete('cascade');
             $table->string('tipo_actor')->nullable();
             $table->string('tipo_propietario')->nullable();
             $table->unsignedDecimal('porcentaje_nuda', 15,2)->nullable();

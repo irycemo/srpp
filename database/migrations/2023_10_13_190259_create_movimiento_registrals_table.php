@@ -15,33 +15,38 @@ return new class extends Migration
             $table->id();
             $table->string('estado');
             $table->unsignedInteger('folio')->nullable();
-            $table->unsignedDecimal("monto", 18, 2);
-            $table->foreignId('predio_id')->nullable();
             $table->foreignId('folio_real')->nullable()->references('id')->on('folio_reals');
-            $table->unsignedTinyInteger('numero_propiedad')->nullable()->comment("Número de propiedad dentro de la escritura");
+            /* Trámite */
+            $table->unsignedInteger('año')->nullable();
+            $table->unsignedInteger('tramite')->nullable();
+            $table->unsignedDecimal("monto", 18, 2)->nullable();
+            $table->timestamp('fecha_prelacion')->nullable();
+            $table->date('fecha_entrega')->nullable();
+            $table->date('fecha_pago')->nullable();
+            $table->string('tipo_servicio')->nullable();
+            $table->string('solicitante')->nullable();
+            /* Antecedente */
             $table->string("tomo")->nullable();
             $table->boolean("tomo_bis")->nullable();
             $table->string("registro")->nullable();
             $table->boolean("registro_bis")->nullable();
-            $table->unsignedInteger('año');
-            $table->unsignedInteger('tramite');
-            $table->string('numero_oficio')->nullable();
-            $table->timestamp('fecha_prelacion');
-            $table->string('tipo_servicio');
-            $table->string('solicitante');
             $table->string('seccion');
             $table->string('distrito');
-            $table->foreignId('usuario_asignado')->references('id')->on('users');
-            $table->foreignId('usuario_supervisor')->references('id')->on('users');
-            $table->date('fecha_entrega');
-            $table->date('fecha_pago')->nullable();
+            /* Documento de entrada */
             $table->string('tipo_documento')->nullable();
+            $table->string('numero_documento')->nullable();
+            $table->unsignedTinyInteger('numero_propiedad')->nullable()->comment("Número de propiedad dentro de la escritura");
             $table->string('autoridad_cargo')->nullable();
             $table->string('autoridad_nombre')->nullable();
             $table->string('autoridad_numero')->nullable();
             $table->date('fecha_emision')->nullable();
             $table->date('fecha_inscripcion')->nullable();
             $table->string('procedencia')->nullable();
+            /* Otros */
+            $table->string('numero_oficio')->nullable();
+            /* Usuarios */
+            $table->foreignId('usuario_asignado')->nullable()->references('id')->on('users');
+            $table->foreignId('usuario_supervisor')->nullable()->references('id')->on('users');
             $table->foreignId('actualizado_por')->nullable()->references('id')->on('users');
             $table->timestamps();
         });
