@@ -282,8 +282,6 @@
 
         <x-slot name="footer">
 
-            {{ $errors }}
-
             <div class="flex gap-3">
 
                 @if($crear)

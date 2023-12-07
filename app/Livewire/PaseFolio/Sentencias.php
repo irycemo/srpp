@@ -61,6 +61,9 @@ class Sentencias extends Component
     public function resetear(){
 
         $this->reset([
+            'antecedente',
+            'documento_entrada',
+            'datos_sentencia',
             'modalBorrar',
             'modal',
             'crear',

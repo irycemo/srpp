@@ -294,7 +294,12 @@
 
                         <div class="mb-2 flex justify-end">
 
-                            <x-button-blue wire:click="$dispatch('openModal', { component: 'modals.crear-persona', arguments: { crear: true, title: 'Garante' } } )">Agregar grante hipotecario</x-button-blue>
+                            <x-button-blue
+                                wire:click="$dispatch('openModal', { component: 'modals.crear-persona', arguments: { crear: true, title: 'Garante' } } )">
+
+                                <img wire:loading wire:target="$dispatch('openModal', { component: 'modals.crear-persona', arguments: { crear: true, title: 'Garante' } } )" class="mx-auto h-4 mr-1" src="{{ asset('storage/img/loading3.svg') }}" alt="Loading">
+                                Agregar grante hipotecario
+                            </x-button-blue>
 
                         </div>
 
@@ -431,7 +436,12 @@
 
                         <div class="mb-2 flex justify-end">
 
-                            <x-button-blue wire:click="$dispatch('openModal', { component: 'modals.crear-persona', arguments: { crear: true, title: 'Garante' } } )">Agregar grante en coopropiedad</x-button-blue>
+                            <x-button-blue
+                                wire:click="$dispatch('openModal', { component: 'modals.crear-persona', arguments: { crear: true, title: 'Garante' } } )">
+
+                                <img wire:loading wire:target="$dispatch('openModal', { component: 'modals.crear-persona', arguments: { crear: true, title: 'Garante' } } )" class="mx-auto h-4 mr-1" src="{{ asset('storage/img/loading3.svg') }}" alt="Loading">
+                                Agregar grante en coopropiedad
+                            </x-button-blue>
 
                         </div>
 
@@ -502,7 +512,12 @@
 
                         <div class="mb-2 flex justify-end">
 
-                            <x-button-blue wire:click="$dispatch('openModal', { component: 'modals.crear-persona', arguments: { crear: true, title: 'Afianzador' } } )">Agregar afianzador</x-button-blue>
+                            <x-button-blue
+                                wire:click="$dispatch('openModal', { component: 'modals.crear-persona', arguments: { crear: true, title: 'Afianzador' } } )">
+
+                                <img wire:loading wire:target="$dispatch('openModal', { component: 'modals.crear-persona', arguments: { crear: true, title: 'Afianzador' } } )" class="mx-auto h-4 mr-1" src="{{ asset('storage/img/loading3.svg') }}" alt="Loading">
+                                Agregar afianzador
+                            </x-button-blue>
 
                         </div>
 
