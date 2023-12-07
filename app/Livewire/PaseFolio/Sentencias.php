@@ -108,6 +108,31 @@ class Sentencias extends Component
 
     }
 
+    public function actualizarSentencia(Sentencia $sentencia){
+
+        $this->sentencia = $sentencia;
+
+        $this->antecente_tomo = $this->sentencia->movimientoRegistral->tomo;
+        $this->antecente_registro = $this->sentencia->movimientoRegistral->registro;
+        $this->antecente_distrito = $this->sentencia->movimientoRegistral->getRawOriginal('distrito');
+        $this->tipo_documento = $this->sentencia->movimientoRegistral->tipo_documento;
+        $this->autoridad_cargo = $this->sentencia->movimientoRegistral->autoridad_cargo;
+        $this->autoridad_nombre = $this->sentencia->movimientoRegistral->autoridad_nombre;
+        $this->numero_documento = $this->sentencia->movimientoRegistral->numero_documento;
+        $this->fecha_emision = $this->sentencia->movimientoRegistral->fecha_emision;
+        $this->procedencia = $this->sentencia->movimientoRegistral->procedencia;
+        $this->acto_contenido = $this->sentencia->acto_contenido;
+        $this->estado = $this->sentencia->estado;
+        $this->comentario = $this->sentencia->descripcion;
+
+        $this->modal = true;
+
+        $this->editar = true;
+
+        $this->distritos = Constantes::DISTRITOS;
+
+    }
+
     public function cambiar($string){
 
         if($string == 'documento_entrada'){

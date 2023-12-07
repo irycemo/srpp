@@ -40,7 +40,7 @@
                                 <x-table.cell>
                                     <div class="flex items-center gap-3">
                                         <x-button-blue
-                                            wire:click="editarGravamen({{ $sentencia->id }})"
+                                            wire:click="actualizarSentencia({{ $sentencia->id }})"
                                             wire:loading.attr="disabled"
                                         >
                                             Editar
