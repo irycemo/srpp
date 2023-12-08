@@ -12,18 +12,20 @@
 
         <div class="flex px-4 gap-4 justify-center items-center">
 
-            <x-button-pill @click="activeTab = 4" x-bind:class="{ 'bg-slate-100 text-black ': activeTab === 4 }">Propiedad</x-button-pill>
+            <x-button-pill @click="activeTab = 4" x-bind:class="{ 'bg-gray-300 bg-opacity-5 text-black ': activeTab === 4 }">Propiedad</x-button-pill>
 
-            <x-button-pill @click="activeTab = 5" x-bind:class="{ 'bg-slate-100 text-black ': activeTab === 5 }">Gravamen</x-button-pill>
+            <x-button-pill @click="activeTab = 5" x-bind:class="{ 'bg-gray-300 bg-opacity-5 text-black ': activeTab === 5 }">Gravamen</x-button-pill>
 
-            <x-button-pill @click="activeTab = 6" x-bind:class="{ 'bg-slate-100 text-black ': activeTab === 6 }">Sentencias</x-button-pill>
+            <x-button-pill @click="activeTab = 6" x-bind:class="{ 'bg-gray-300 bg-opacity-5 text-black ': activeTab === 6 }">Sentencias</x-button-pill>
 
-            <x-button-pill @click="activeTab = 7" x-bind:class="{ 'bg-slate-100 text-black ': activeTab === 7 }">Varios</x-button-pill>
+            <x-button-pill @click="activeTab = 7" x-bind:class="{ 'bg-gray-300 bg-opacity-5 text-black ': activeTab === 7 }">Varios</x-button-pill>
 
         </div>
 
         <div class="tab-panel rounded-lg" :class="{ 'active': activeTab === 7 }" x-show.transition.in.opacity.duration.800="activeTab === 7">
-            <div class="bg-black">DIV</div>
+
+            @livewire('pase-folio.varios', ['movimientoRegistral' => $this->movimientoRegistral])
+
         </div>
 
         <div class="tab-panel rounded-lg" :class="{ 'active': activeTab === 6 }" x-show.transition.in.opacity.duration.800="activeTab === 6">
@@ -38,13 +40,13 @@
 
                 <div class="flex px-4 gap-4 justify-center items-center  p-3 rounded-lg">
 
-                    <x-button-pill  @click="activeTab = 0" x-bind:class="{ 'bg-slate-100 text-black ': activeTab === 0 }">Documento de entrada</x-button-pill>
+                    <x-button-pill  @click="activeTab = 0" x-bind:class="{ 'bg-gray-300 bg-opacity-5 text-black ': activeTab === 0 }">Documento de entrada</x-button-pill>
 
-                    <x-button-pill  @click="activeTab = 2" x-bind:class="{ 'bg-slate-100 text-black ': activeTab === 2 }">Descripción del predio</x-button-pill>
+                    <x-button-pill  @click="activeTab = 2" x-bind:class="{ 'bg-gray-300 bg-opacity-5 text-black ': activeTab === 2 }">Descripción del predio</x-button-pill>
 
-                    <x-button-pill  @click="activeTab = 1" x-bind:class="{ 'bg-slate-100 text-black ': activeTab === 1 }">Ubicación del predio</x-button-pill>
+                    <x-button-pill  @click="activeTab = 1" x-bind:class="{ 'bg-gray-300 bg-opacity-5 text-black ': activeTab === 1 }">Ubicación del predio</x-button-pill>
 
-                    <x-button-pill  @click="activeTab = 3" x-bind:class="{ 'bg-slate-100 text-black ': activeTab === 3 }">Propietarios</x-button-pill>
+                    <x-button-pill  @click="activeTab = 3" x-bind:class="{ 'bg-gray-300 bg-opacity-5 text-black ': activeTab === 3 }">Propietarios</x-button-pill>
 
                 </div>
 
