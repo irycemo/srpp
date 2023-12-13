@@ -149,7 +149,7 @@ class Propietarios extends Component
 
     public function agregarPropietario(){
 
-        if(!$this->predio->getKey()){
+        if(!$this->propiedad->getKey()){
 
             $this->dispatch('mostrarMensaje', ['error', "Primero debe ingresar los datos del predio."]);
 
@@ -166,7 +166,7 @@ class Propietarios extends Component
 
     public function agregarTransmitente(){
 
-        if(!$this->predio->getKey()){
+        if(!$this->propiedad->getKey()){
 
             $this->dispatch('mostrarMensaje', ['error', "Primero debe ingresar los datos del predio."]);
 
@@ -183,7 +183,7 @@ class Propietarios extends Component
 
     public function agregarRepresentante(){
 
-        if(!$this->predio->getKey()){
+        if(!$this->propiedad->getKey()){
 
             $this->dispatch('mostrarMensaje', ['error', "Primero debe ingresar los datos del predio."]);
 
