@@ -170,7 +170,7 @@
 
                                     @foreach ($representante->representados as $representado)
 
-                                        <p>{{ $representado->persona->nombre }} {{ $representado->persona->ap_paterno }} {{ $representado->persona->ap_materno }}</p>
+                                        <p>{{ $representado->persona->nombre }} {{ $representado->persona->ap_paterno }} {{ $representado->persona->ap_materno }} {{ $representante->persona->razon_social }}</p>
 
                                     @endforeach
 
@@ -719,7 +719,7 @@
 
                 </x-input-group>
 
-                <span class="flex items-center justify-center text-lg text-gray-700 md:col-span-3 col-span-1 sm:col-span-2">Representados</span>
+                <span class="flex items-center justify-center text-lg text-gray-700 md:col-span-3 col-span-1 sm:col-span-2" >Representados</span>
 
                 <div class="md:col-span-3 col-span-1 sm:col-span-2">
 
@@ -752,8 +752,16 @@
                             $watch('model', (value) => {
                                 select2.val(value).trigger('change');
                             });
+
+                            Livewire.on('recargar', function(e) {
+
+                                var newOption = new Option(e[0].description, e[0].id, false, false);
+
+                                $($refs.select).append(newOption).trigger('change');
+
+                            });
+
                         "
-                        x-on:reload.window="x-init"
                         wire:ignore>
 
                         <select

@@ -260,7 +260,7 @@ class Propietarios extends Component
 
                 }
 
-                $this->propiedad->actores()->create([
+                $actor = $this->propiedad->actores()->create([
                     'persona_id' => $persona->id,
                     'tipo_actor' => 'propietario',
                     'porcentaje_nuda' => $this->porcentaje_nuda,
@@ -269,6 +269,8 @@ class Propietarios extends Component
                 ]);
 
                 $this->dispatch('mostrarMensaje', ['success', "El propietario se guardó con éxito."]);
+
+                $this->dispatch('recargar', ['id' => $actor->id, 'description' => $actor->persona->nombre . ' ' . $actor->persona->ap_paterno . ' ' . $actor->persona->ap_materno . ' ' . $actor->persona->razon_social]);
 
                 $this->resetear();
 
@@ -341,7 +343,7 @@ class Propietarios extends Component
 
                 }
 
-                $this->propiedad->actores()->create([
+                $actor = $this->propiedad->actores()->create([
                     'persona_id' => $persona->id,
                     'tipo_actor' => 'transmitente',
                     'creado_por' => auth()->id()
@@ -349,7 +351,7 @@ class Propietarios extends Component
 
                 $this->dispatch('mostrarMensaje', ['success', "El transmitente se guardó con éxito."]);
 
-                $this->dispatch('reload');
+                $this->dispatch('recargar', ['id' => $actor->id, 'description' => $actor->persona->nombre . ' ' . $actor->persona->ap_paterno . ' ' . $actor->persona->ap_materno . ' ' . $actor->persona->razon_social]);
 
                 $this->resetear();
 
