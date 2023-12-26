@@ -15,7 +15,7 @@ class CertificacionController extends Controller
 
     public function actualizarPaginas(CopiasUpdateRequest $request)
     {
-
+info($request);
         try {
 
             $movimientoRegistral = $this->certificacionesService->actualizarPaginas($request);

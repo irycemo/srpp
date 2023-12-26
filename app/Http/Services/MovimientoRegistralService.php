@@ -42,6 +42,7 @@ class MovimientoRegistralService{
 
                 if($request['categoria_servicio'] == 'Inscripciones - Propiedad'){
 
+
                     $this->inscripcionesPropiedadService->store($request + ['movimiento_registral' => $movimiento_registral->id]);
 
                 }
@@ -60,7 +61,13 @@ class MovimientoRegistralService{
 
                 throw new MovimientoRegistralServiceException('El trámite: ' . $request['año'] . '-' . $request['tramite'] . ' ya se encuentra registrado en Sistema RPP.');
 
+            }else{
+
+                throw new MovimientoRegistralServiceException('El trámite: ' . $request['año'] . '-' . $request['tramite'] . $th->getMessage());
+
             }
+
+            Log::error('Error al ingresar el trámite: ' . $request['año'] . '-' . $request['tramite'] . ' desde Sistema Trámites. ' . $th->getMessage());
 
         } catch (CertificacionServiceException $th) {
 
@@ -131,53 +138,61 @@ class MovimientoRegistralService{
     public function requestMovimientoCrear($request):Array
     {
 
-        $array = [];
+        try {
 
-        $folio = 1;
+            $array = [];
 
-        $fields = [
-            'folio_real',
-            'numero_propiedad',
-            'tomo',
-            'tomo_bis',
-            'registro',
-            'registro_bis',
-            'distrito',
-            'seccion',
-            'año',
-            'tramite',
-            'tipo_servicio',
-            'monto',
-            'fecha_prelacion',
-            'fecha_pago',
-            'fecha_entrega',
-            'numero_oficio',
-            'tipo_documento',
-            'numero_documento',
-            'autoridad_cargo',
-            'autoridad_nombre',
-            'autoridad_numero',
-            'fecha_emision',
-            'procedencia',
-        ];
+            $fields = [
+                'folio_real',
+                'numero_propiedad',
+                'tomo',
+                'tomo_bis',
+                'registro',
+                'registro_bis',
+                'distrito',
+                'seccion',
+                'año',
+                'tramite',
+                'tipo_servicio',
+                'monto',
+                'fecha_prelacion',
+                'fecha_pago',
+                'fecha_entrega',
+                'numero_oficio',
+                'tipo_documento',
+                'numero_documento',
+                'autoridad_cargo',
+                'autoridad_nombre',
+                'autoridad_numero',
+                'fecha_emision',
+                'procedencia',
+            ];
 
-        foreach($fields as $field){
+            foreach($fields as $field){
 
-            if(array_key_exists($field, $request)){
+                if(array_key_exists($field, $request)){
 
-                $array[$field] = $request[$field];
+                    $array[$field] = $request[$field];
+
+                }
 
             }
 
-        }
+            return $array + [
+                'folio' => $this->calcularFolio($request),
+                'estado' => 'nuevo',
+                'usuario_asignado' => $this->obtenerUsuarioAsignado($request['servicio'], $request['distrito'], $request['solicitante'], $request['tipo_servicio'], false),
+                'usuario_supervisor' => $this->obtenerSupervisor($request['distrito']),
+                'solicitante' => $request['nombre_solicitante']
+            ];
 
-        return $array + [
-            'folio' => $this->calcularFolio($request),
-            'estado' => 'nuevo',
-            'usuario_asignado' => $this->obtenerUsuarioAsignado($request['servicio'], $request['distrito'], $request['solicitante'], $request['tipo_servicio'], false),
-            'usuario_supervisor' => $this->obtenerSupervisor($request['distrito']),
-            'solicitante' => $request['nombre_solicitante']
-        ];
+        } catch (\Throwable $th) {
+
+            Log::error('Error al procesar request para generar movimiento registral. ' . $th);
+
+            throw new MovimientoRegistralServiceException('Error al ingresar el trámite: ' . $request['año'] . '-' . $request['tramite'] . ' desde Sistema Trámites.');
+
+        }
 
     }
 

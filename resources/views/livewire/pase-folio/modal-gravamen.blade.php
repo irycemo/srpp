@@ -298,7 +298,7 @@
                                 wire:click="$dispatch('openModal', { component: 'modals.crear-persona', arguments: { crear: true, title: 'Garante' } } )">
 
                                 <img wire:loading wire:target="$dispatch('openModal', { component: 'modals.crear-persona', arguments: { crear: true, title: 'Garante' } } )" class="mx-auto h-4 mr-1" src="{{ asset('storage/img/loading3.svg') }}" alt="Loading">
-                                Agregar grante hipotecario
+                                Agregar deudor
                             </x-button-blue>
 
                         </div>
@@ -310,7 +310,7 @@
                                 <x-table>
 
                                     <x-slot name="head">
-                                        <x-table.heading >Deudor</x-table.heading>
+                                        <x-table.heading >Deudores</x-table.heading>
                                         <x-table.heading ></x-table.heading>
                                     </x-slot>
 
@@ -414,23 +414,58 @@
 
                     <div x-show="$wire.tipo_deudor === 'G-GARANTES EN COOPROPIEDAD'" class="col-span-3 mb-4">
 
-                        <x-input-group for="garante_coopropiedad" label="Propietarios" :error="$errors->first('garante_coopropiedad')" class="w-full">
+                        <x-input-group for="propietario" label="Propietarios" :error="$errors->first('propietarios_garantes')" class="w-full mb-3">
 
-                            <select class="bg-white rounded text-sm w-full mb-3" wire:model.live="garante_coopropiedad">
+                            <div
+                                x-data = "{ model: @entangle('propietarios_garantes') }"
+                                x-init =
+                                "
+                                    select2 = $($refs.select)
+                                        .select2({
+                                            placeholder: 'Propietarios',
+                                            width: '100%',
+                                        })
 
-                                <option value="" selected>Seleccione una opción</option>
+                                    select2.on('change', function(){
+                                        $wire.set('propietarios_garantes', $(this).val())
+                                    })
 
-                                @if($propiedad)
+                                    select2.on('select2:unselect', function(e){
+                                        $wire.borrarParteAlicuota(e.params.data.id)
+                                    })
 
-                                    @foreach ($propiedad->propietarios as $propietario)
+                                    select2.on('keyup', function(e) {
+                                        if (e.keyCode === 13){
+                                            $wire.set('propietarios_garantes', $('.select2').val())
+                                        }
+                                    });
 
-                                        <option value="{{ $propietario->id }}">{{ $propietario->persona->nombre }} {{ $propietario->persona->ap_paterno }} {{ $propietario->persona->ap_materno }} {{ $propietario->persona->razon_social }}</option>
+                                    $watch('model', (value) => {
+                                        select2.val(value).trigger('change');
+                                    });
+                                "
+                                x-on:reload.window="x-init"
+                                wire:ignore>
 
-                                    @endforeach
+                                <select
+                                    class="bg-white rounded text-sm w-full z-50"
+                                    wire:model.live="propietarios_garantes"
+                                    x-ref="select"
+                                    multiple="multiple">
 
-                                @endif
+                                    @if($propiedad)
 
-                            </select>
+                                        @foreach ($propiedad->propietarios as $propietario)
+
+                                            <option value="{{ $propietario->id }}">{{ $propietario->persona->nombre }} {{ $propietario->persona->ap_paterno }} {{ $propietario->persona->ap_materno }} {{ $propietario->persona->razon_social }}</option>
+
+                                        @endforeach
+
+                                    @endif
+
+                                </select>
+
+                            </div>
 
                         </x-input-group>
 
@@ -440,7 +475,7 @@
                                 wire:click="$dispatch('openModal', { component: 'modals.crear-persona', arguments: { crear: true, title: 'Garante' } } )">
 
                                 <img wire:loading wire:target="$dispatch('openModal', { component: 'modals.crear-persona', arguments: { crear: true, title: 'Garante' } } )" class="mx-auto h-4 mr-1" src="{{ asset('storage/img/loading3.svg') }}" alt="Loading">
-                                Agregar grante en coopropiedad
+                                Agregar deudor
                             </x-button-blue>
 
                         </div>
@@ -460,39 +495,39 @@
 
                                         @foreach ($gravamen->garantesCoopropiedad as $garante)
 
-                                            <x-table.row >
+                                            @if($garante->persona_id)
 
-                                                <x-table.cell>
-                                                    @if($garante->persona)
+                                                <x-table.row >
 
-                                                        {{ $garante->persona->nombre }} {{ $garante->persona->ap_paterno }} {{ $garante->persona->ap_materno }} {{ $garante->persona->razon_social }}
-
-                                                    @else
-
-                                                        {{ $garante->actor->persona->nombre }} {{ $garante->actor->persona->ap_paterno }} {{ $garante->actor->persona->ap_materno }} {{ $garante->actor->persona->razon_social }}
-
-                                                    @endif
-                                                </x-table.cell>
-                                                <x-table.cell>
-                                                    <div class="flex items-center gap-3">
+                                                    <x-table.cell>
                                                         @if($garante->persona)
 
-                                                            <x-button-blue
-                                                                wire:click="$dispatch('openModal', { component: 'modals.crear-persona', arguments: { editar: true, title: 'Garante', id:{{ $garante->persona->id }} } } )"
-                                                                wire:loading.attr="disabled"
-                                                            >
-                                                                Editar
-                                                            </x-button-blue>
-                                                        @endif
-                                                        <x-button-red
-                                                            wire:click="borrarDeudor({{ $garante->id }})"
-                                                            wire:loading.attr="disabled">
-                                                            Borrar
-                                                        </x-button-red>
-                                                    </div>
-                                                </x-table.cell>
+                                                            {{ $garante->persona->nombre }} {{ $garante->persona->ap_paterno }} {{ $garante->persona->ap_materno }} {{ $garante->persona->razon_social }}
 
-                                            </x-table.row>
+                                                        @endif
+                                                    </x-table.cell>
+                                                    <x-table.cell>
+                                                        <div class="flex items-center gap-3">
+                                                            @if($garante->persona)
+
+                                                                <x-button-blue
+                                                                    wire:click="$dispatch('openModal', { component: 'modals.crear-persona', arguments: { editar: true, title: 'Garante', id:{{ $garante->persona->id }} } } )"
+                                                                    wire:loading.attr="disabled"
+                                                                >
+                                                                    Editar
+                                                                </x-button-blue>
+                                                            @endif
+                                                            <x-button-red
+                                                                wire:click="borrarDeudor({{ $garante->id }})"
+                                                                wire:loading.attr="disabled">
+                                                                Borrar
+                                                            </x-button-red>
+                                                        </div>
+                                                    </x-table.cell>
+
+                                                </x-table.row>
+
+                                            @endif
 
                                         @endforeach
 
@@ -516,7 +551,7 @@
                                 wire:click="$dispatch('openModal', { component: 'modals.crear-persona', arguments: { crear: true, title: 'Afianzador' } } )">
 
                                 <img wire:loading wire:target="$dispatch('openModal', { component: 'modals.crear-persona', arguments: { crear: true, title: 'Afianzador' } } )" class="mx-auto h-4 mr-1" src="{{ asset('storage/img/loading3.svg') }}" alt="Loading">
-                                Agregar afianzador
+                                Agregar fiado
                             </x-button-blue>
 
                         </div>
@@ -528,7 +563,7 @@
                                 <x-table>
 
                                     <x-slot name="head">
-                                        <x-table.heading >Deudor</x-table.heading>
+                                        <x-table.heading >Fiados</x-table.heading>
                                         <x-table.heading ></x-table.heading>
                                     </x-slot>
 

@@ -2,12 +2,13 @@
 
 namespace App\Livewire\PaseFolio;
 
+use App\Models\Actor;
 use App\Models\Predio;
 use App\Models\Persona;
 use Livewire\Component;
 use Livewire\Attributes\On;
+use App\Models\CodigoPostal;
 use App\Constantes\Constantes;
-use App\Models\Actor;
 use Illuminate\Validation\Rule;
 use Illuminate\Support\Facades\DB;
 use App\Models\MovimientoRegistral;
@@ -43,8 +44,10 @@ class Propietarios extends Component
     public $colonia;
     public $cp;
     public $entidad;
+    public $ciudad;
     public $municipio_propietario;
     public $representa_a;
+    public $partes_iguales;
 
     public $actor;
 
@@ -52,13 +55,16 @@ class Propietarios extends Component
 
     public $estados;
 
+    public $tipos_vialidades;
+    public $codigos_postales;
+
     public MovimientoRegistral $movimientoRegistral;
     public Predio $propiedad;
 
     protected function rules(){
         return [
-            'porcentaje_nuda' => Rule::requiredIf($this->modalPropietario === true),
-            'porcentaje_usufructo' => Rule::requiredIf($this->modalPropietario === true),
+            'porcentaje_nuda' => 'nullable',
+            'porcentaje_usufructo' => 'nullable',
             'tipo_persona' => 'required',
             'nombre' => [
                 Rule::requiredIf($this->tipo_persona === 'FISICA')
@@ -82,6 +88,7 @@ class Propietarios extends Component
             'numero_interior_propietario' => 'nullable',
             'colonia' => 'nullable',
             'cp' => 'nullable',
+            'ciudad' => 'nullable',
             'entidad' => 'nullable',
             'municipio_propietario' => 'nullable',
             'representados' => Rule::requiredIf($this->modalRepresentante === true),
@@ -116,6 +123,7 @@ class Propietarios extends Component
             'modalPropietario',
             'modalTransmitente',
             'modalRepresentante',
+            'partes_iguales'
         ]);
     }
 
@@ -260,13 +268,29 @@ class Propietarios extends Component
 
                 }
 
-                $actor = $this->propiedad->actores()->create([
-                    'persona_id' => $persona->id,
-                    'tipo_actor' => 'propietario',
-                    'porcentaje_nuda' => $this->porcentaje_nuda,
-                    'porcentaje_usufructo' => $this->porcentaje_usufructo,
-                    'creado_por' => auth()->id()
-                ]);
+                if($this->partes_iguales){
+
+                    $porcentaje = $this->repartirPartesIguales();
+
+                    $actor = $this->propiedad->actores()->create([
+                        'persona_id' => $persona->id,
+                        'tipo_actor' => 'propietario',
+                        'porcentaje_nuda' => $porcentaje,
+                        'porcentaje_usufructo' => $porcentaje,
+                        'creado_por' => auth()->id()
+                    ]);
+
+                }else{
+
+                    $actor = $this->propiedad->actores()->create([
+                        'persona_id' => $persona->id,
+                        'tipo_actor' => 'propietario',
+                        'porcentaje_nuda' => $this->porcentaje_nuda,
+                        'porcentaje_usufructo' => $this->porcentaje_usufructo,
+                        'creado_por' => auth()->id()
+                    ]);
+
+                }
 
                 $this->dispatch('mostrarMensaje', ['success', "El propietario se guardó con éxito."]);
 
@@ -286,6 +310,23 @@ class Propietarios extends Component
             $this->dispatch('mostrarMensaje', ['error', "Ha ocurrido un error."]);
 
         }
+
+    }
+
+    public function repartirPartesIguales(){
+
+        $porcentaje = 100 / $this->propiedad->propietarios->count();
+
+        foreach ($this->propiedad->propietarios as $propietario) {
+
+            $propietario->update([
+                'porcentaje_nuda' => $porcentaje,
+                'porcentaje_usufructo' => $porcentaje
+            ]);
+
+        }
+
+        return $porcentaje;
 
     }
 
@@ -624,9 +665,9 @@ class Propietarios extends Component
 
         }
 
-        $pn = $pn + $this->porcentaje_nuda;
+        $pn = $pn + (float)$this->porcentaje_nuda;
 
-        $pu = $pu + $this->porcentaje_usufructo;
+        $pu = $pu + (float)$this->porcentaje_usufructo;
 
         if($pn > 100 || $pu > 100)
             return true;

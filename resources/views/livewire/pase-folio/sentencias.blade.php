@@ -75,6 +75,19 @@
 
     </div>
 
+    <div class=" flex justify-end items-center bg-white rounded-lg p-2 shadow-lg gap-3">
+
+        <x-button-red
+            wire:click="$parent.finalizarPaseAFolio"
+            wire:loading.attr="disabled">
+
+            <img wire:loading class="mx-auto h-4 mr-1" src="{{ asset('storage/img/loading3.svg') }}" alt="Loading">
+            Finalizar pase a folio
+
+        </x-button-red>
+
+    </div>
+
     <x-dialog-modal wire:model="modal">
 
         <x-slot name="title">
@@ -221,7 +234,7 @@
 
                 <div class="grid grid-cols-1 sm:grid-cols-2 gap-3  col-span-2 rounded-lg mb-3" x-transition:enter.duration.500ms x-transition:leave.duration.500ms>
 
-                    <span class="flex items-center justify-center ext-gray-700 col-span-3">Datos del gravámen</span>
+                    <span class="flex items-center justify-center ext-gray-700 col-span-3">Datos de la sentencia</span>
 
                     <x-input-group for="acto_contenido" label="Acto contenido" :error="$errors->first('acto_contenido')" class="w-full">
 
@@ -248,14 +261,12 @@
                             <option value="">Seleccione una opción</option>
                             <option value="activo">Activo</option>
                             <option value="cancelado">Cancelado</option>
-                            <option value="parcial">Parcial</option>
-                            <option value="reserva">Reserva de dominio</option>
 
                         </x-input-select>
 
                     </x-input-group>
 
-                    <x-input-group for="comentario" label="Comentario del gravámen" :error="$errors->first('comentario')" class="col-span-3">
+                    <x-input-group for="comentario" label="Comentario de la sentencia" :error="$errors->first('comentario')" class="col-span-3">
 
                         <textarea rows="3" class="w-full bg-white rounded" wire:model="comentario"></textarea>
 

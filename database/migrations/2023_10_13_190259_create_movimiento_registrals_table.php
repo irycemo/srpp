@@ -35,7 +35,7 @@ return new class extends Migration
             /* Documento de entrada */
             $table->string('tipo_documento')->nullable();
             $table->string('numero_documento')->nullable();
-            $table->unsignedTinyInteger('numero_propiedad')->nullable()->comment("Número de propiedad dentro de la escritura");
+            $table->unsignedInteger('numero_propiedad')->nullable()->comment("Número de propiedad dentro de la escritura");
             $table->string('autoridad_cargo')->nullable();
             $table->string('autoridad_nombre')->nullable();
             $table->string('autoridad_numero')->nullable();

@@ -230,7 +230,7 @@ class UbicacionPredio extends Component
                     'ejido' => $this->ejido,
                     'parcela' => $this->parcela,
                     'solar' => $this->solar,
-                    'descripcion' => $this->observaciones
+                    'observaciones' => $this->observaciones
                 ]);
 
                 $this->dispatch('mostrarMensaje', ['success', "La ubicación del predio se guardó con éxito."]);

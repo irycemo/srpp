@@ -11,6 +11,7 @@ use Illuminate\Validation\Rule;
 use Illuminate\Support\Facades\DB;
 use App\Models\MovimientoRegistral;
 use Illuminate\Support\Facades\Log;
+use Livewire\Attributes\On;
 
 class Elaboracion extends Component
 {
@@ -115,52 +116,59 @@ class Elaboracion extends Component
 
         $this->validate();
 
-        DB::transaction(function () {
+        try {
 
-            $folioReal = FolioReal::create([
-                'estado' => 'formacion',
-                'folio' => (FolioReal::max('folio') ?? 0) + 1,
-                'tomo_antecedente' => $this->movimientoRegistral->tomo,
-                'tomo_antecedente_bis' => $this->movimientoRegistral->tomo_bis,
-                'registro_antecedente' => $this->movimientoRegistral->registro,
-                'registro_antecedente_bis' => $this->movimientoRegistral->registro_bis,
-                'numero_propiedad_antecedente' => $this->movimientoRegistral->numero_propiedad,
-                'distrito_antecedente' => $this->movimientoRegistral->getRawOriginal('distrito'),
-                'seccion_antecedente' => $this->movimientoRegistral->seccion,
-            ]);
+            DB::transaction(function () {
 
-            $this->movimientoRegistral->update(['folio_real' => $folioReal->id]);
-
-            if ($this->tipo_documento == 'escritura'){
-
-                $this->escritura = Escritura::create([
-                    'numero' => $this->escritura_numero,
-                    'fecha_inscripcion' => $this->escritura_fecha_inscripcion,
-                    'fecha_escritura' => $this->escritura_fecha_escritura,
-                    'numero_hojas' => $this->escritura_numero_hojas,
-                    'numero_paginas' => $this->escritura_numero_paginas,
-                    'notaria' => $this->escritura_notaria,
-                    'nombre_notario' => $this->escritura_nombre_notario,
-                    'estado_notario' => $this->escritura_estado_notario,
-                    'comentario' => $this->escritura_observaciones,
+                $folioReal = FolioReal::create([
+                    'estado' => 'formacion',
+                    'folio' => (FolioReal::max('folio') ?? 0) + 1,
+                    'tomo_antecedente' => $this->movimientoRegistral->tomo,
+                    'tomo_antecedente_bis' => $this->movimientoRegistral->tomo_bis,
+                    'registro_antecedente' => $this->movimientoRegistral->registro,
+                    'registro_antecedente_bis' => $this->movimientoRegistral->registro_bis,
+                    'numero_propiedad_antecedente' => $this->movimientoRegistral->numero_propiedad,
+                    'distrito_antecedente' => $this->movimientoRegistral->getRawOriginal('distrito'),
+                    'seccion_antecedente' => $this->movimientoRegistral->seccion,
                 ]);
 
-                $this->propiedad = Predio::create([
-                    'escritura_id' => $this->escritura->id,
-                    'folio_real' => $folioReal->id,
-                    'status' => 'nuevo'
-                ]);
+                $this->movimientoRegistral->update(['folio_real' => $folioReal->id]);
 
-            }else{
+                if ($this->tipo_documento == 'escritura'){
 
-                $this->propiedad = Predio::create([
-                    'folio_real' => $folioReal->id,
-                    'status' => 'nuevo'
-                ]);
+                    $this->escritura = Escritura::create([
+                        'numero' => $this->escritura_numero,
+                        'fecha_inscripcion' => $this->escritura_fecha_inscripcion,
+                        'fecha_escritura' => $this->escritura_fecha_escritura,
+                        'numero_hojas' => $this->escritura_numero_hojas,
+                        'numero_paginas' => $this->escritura_numero_paginas,
+                        'notaria' => $this->escritura_notaria,
+                        'nombre_notario' => $this->escritura_nombre_notario,
+                        'estado_notario' => $this->escritura_estado_notario,
+                        'comentario' => $this->escritura_observaciones,
+                    ]);
 
-            }
+                    $this->propiedad = Predio::create([
+                        'escritura_id' => $this->escritura->id,
+                        'folio_real' => $folioReal->id,
+                        'status' => 'nuevo'
+                    ]);
 
-        });
+                }else{
+
+                    $this->propiedad = Predio::create([
+                        'folio_real' => $folioReal->id,
+                        'status' => 'nuevo'
+                    ]);
+
+                }
+
+            });
+
+        } catch (\Throwable $th) {
+            Log::error("Error al generar folio real en pase a folio por el usuario: (id: " . auth()->user()->id . ") " . auth()->user()->name . ". " . $th);
+            $this->dispatch('mostrarMensaje', ['error', "Ha ocurrido un error."]);
+        }
 
     }
 
@@ -238,6 +246,135 @@ class Elaboracion extends Component
 
     }
 
+    #[On('finalizarPaseAFolio')]
+    public function finalizarPaseAFolio(){
+
+        if($this->propiedad)
+            $this->propiedad->refresh();
+
+        if($this->propiedad->colindancias->count() == 0){
+
+            $this->dispatch('mostrarMensaje', ['error', "El predio debe tener al menos una colindancia."]);
+
+            return;
+
+        }
+
+        if(!$this->propiedad->superficie_terreno){
+
+            $this->dispatch('mostrarMensaje', ['error', "El predio debe tener superficie de terreno."]);
+
+            return;
+
+        }
+
+        if(!$this->propiedad->superficie_construccion){
+
+            $this->dispatch('mostrarMensaje', ['error', "El predio debe tener superficie de construcción."]);
+
+            return;
+
+        }
+
+        if(!$this->propiedad->valor_catastral){
+
+            $this->dispatch('mostrarMensaje', ['error', "El predio debe tener monto de transacción."]);
+
+            return;
+
+        }
+
+        if(!$this->propiedad->codigo_postal){
+
+            $this->dispatch('mostrarMensaje', ['error', "El predio debe tener código postal."]);
+
+            return;
+
+        }
+
+        if(!$this->propiedad->nombre_asentamiento){
+
+            $this->dispatch('mostrarMensaje', ['error', "El predio debe nombre de asentamiento."]);
+
+            return;
+
+        }
+
+        if(!$this->propiedad->municipio){
+
+            $this->dispatch('mostrarMensaje', ['error', "El predio debe municipio."]);
+
+            return;
+
+        }
+
+        if(!$this->propiedad->tipo_asentamiento){
+
+            $this->dispatch('mostrarMensaje', ['error', "El predio debe tipo de asentamiento."]);
+
+            return;
+
+        }
+
+        if(!$this->propiedad->localidad){
+
+            $this->dispatch('mostrarMensaje', ['error', "El predio debe localidad."]);
+
+            return;
+
+        }
+
+        if(!$this->propiedad->nombre_vialidad){
+
+            $this->dispatch('mostrarMensaje', ['error', "El predio debe nombre de vialidad."]);
+
+            return;
+
+        }
+
+        if(!$this->propiedad->numero_exterior){
+
+            $this->dispatch('mostrarMensaje', ['error', "El predio debe nombre de numero_exterior."]);
+
+            return;
+
+        }
+
+        if($this->propiedad->propietarios->count() == 0){
+
+            $this->dispatch('mostrarMensaje', ['error', "Debe tener almenos un propietario."]);
+
+            return;
+
+        }
+
+        if($this->propiedad->transmitentes->count() == 0){
+
+            $this->dispatch('mostrarMensaje', ['error', "Debe tener almenos un transmitente."]);
+
+            return;
+
+        }
+
+        try {
+
+            /* $this->movimientoRegistral->folioReal->update([
+                'estado' => 'elaborado'
+            ]); */
+
+            $this->dispatch('imprimir_documento', ['documento' => $this->movimientoRegistral->folio_real]);
+
+            $this->redirectRoute('pase_folio');
+
+        } catch (\Throwable $th) {
+
+            Log::error("Error al finalizar folio real en pase a folio por el usuario: (id: " . auth()->user()->id . ") " . auth()->user()->name . ". " . $th);
+            $this->dispatch('mostrarMensaje', ['error', "Ha ocurrido un error."]);
+
+        }
+
+    }
+
     public function mount(){
 
         $this->distritos = Constantes::DISTRITOS;
@@ -250,6 +387,7 @@ class Elaboracion extends Component
             $this->tipo_documento = $this->movimientoRegistral->folioReal->tipo_documento;
             $this->autoridad_cargo = $this->movimientoRegistral->folioReal->autoridad_cargo;
             $this->autoridad_nombre = $this->movimientoRegistral->folioReal->autoridad_nombre;
+            $this->autoridad_numero = $this->movimientoRegistral->folioReal->autoridad_numero;
             $this->numero_documento = $this->movimientoRegistral->folioReal->numero_documento;
             $this->fecha_emision = $this->movimientoRegistral->folioReal->fecha_emision;
             $this->fecha_inscripcion = $this->movimientoRegistral->folioReal->fecha_inscripcion;
@@ -276,6 +414,10 @@ class Elaboracion extends Component
                 }
 
             }
+
+        }else{
+
+            $this->propiedad = Predio::make();
 
         }
 

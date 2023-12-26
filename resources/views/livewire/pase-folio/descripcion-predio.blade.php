@@ -383,8 +383,9 @@
     </div>
 
 
-    <div class=" flex justify-end items-center bg-white rounded-lg p-2 shadow-lg">
-        {{ $errors }}
+    <div class=" flex justify-end items-center bg-white rounded-lg p-2 shadow-lg gap-3">
+
+
         <x-button-blue
             wire:click="guardarDescripcionPredio"
             wire:loading.attr="disabled"
@@ -393,6 +394,15 @@
             <img wire:loading wire:target="guardarDescripcionPredio" class="mx-auto h-4 mr-1" src="{{ asset('storage/img/loading3.svg') }}" alt="Loading">
             Guardar y continuar
         </x-button-blue>
+
+        <x-button-red
+            wire:click="$parent.finalizarPaseAFolio"
+            wire:loading.attr="disabled">
+
+            <img wire:loading class="mx-auto h-4 mr-1" src="{{ asset('storage/img/loading3.svg') }}" alt="Loading">
+            Finalizar pase a folio
+
+        </x-button-red>
 
     </div>
 

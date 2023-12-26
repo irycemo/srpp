@@ -200,6 +200,7 @@ class DescripcionPredio extends Component
                     'valor_total_construccion' => $this->valor_total_construccion,
                     'valor_catastral' => $this->valor_catastral,
                     'monto_transaccion' => $this->monto_transaccion,
+                    'unidad_area' => $this->unidad_area,
                     'divisa' => $this->divisa,
                     'descripcion' => $this->observaciones
                 ]);
@@ -230,7 +231,9 @@ class DescripcionPredio extends Component
                     'valor_total_terreno' => $this->valor_total_terreno,
                     'valor_total_construccion' => $this->valor_total_construccion,
                     'valor_catastral' => $this->valor_catastral,
+                    'monto_transaccion' => $this->monto_transaccion,
                     'divisa' => $this->divisa,
+                    'unidad_area' => $this->unidad_area,
                     'descripcion' =>$this->observaciones
                 ]);
 

@@ -61,6 +61,7 @@ class ModalGravamen extends ModalComponent
     public $tipo_deudor;
     public $propietario;
     public $propietarios_alicuotas = [];
+    public $propietarios_garantes = [];
     public $garante_coopropiedad;
 
     public $modalD = false;
@@ -93,6 +94,20 @@ class ModalGravamen extends ModalComponent
     public function updatedPropietariosAlicuotas(){
 
         foreach($this->propietarios_alicuotas as $propietario){
+
+            if(!$this->gravamen->deudores()->where('actor_id', (int)$propietario)->first()){
+
+                $this->agregarDeudor(actor: $propietario);
+
+            }
+
+        }
+
+    }
+
+    public function updatedPropietariosGarantes(){
+
+        foreach($this->propietarios_garantes as $propietario){
 
             if(!$this->gravamen->deudores()->where('actor_id', (int)$propietario)->first()){
 
@@ -570,6 +585,13 @@ class ModalGravamen extends ModalComponent
                     foreach ($this->gravamen->parteAlicuota as $deudor) {
 
                         array_push($this->propietarios_alicuotas, $deudor->actor_id);
+
+                    }
+
+                    foreach ($this->gravamen->garantesCoopropiedad as $deudor) {
+
+                        if($deudor->actor_id)
+                            array_push($this->propietarios_garantes, $deudor->actor_id);
 
                     }
 

@@ -213,6 +213,19 @@
 
     </div>
 
+    <div class=" flex justify-end items-center bg-white rounded-lg p-2 shadow-lg md:col-span-3 col-span-1 sm:col-span-2">
+
+        <x-button-red
+            wire:click="$parent.finalizarPaseAFolio"
+            wire:loading.attr="disabled">
+
+            <img wire:loading class="mx-auto h-4 mr-1" src="{{ asset('storage/img/loading3.svg') }}" alt="Loading">
+            Finalizar pase a folio
+
+        </x-button-red>
+
+    </div>
+
     <x-dialog-modal wire:model="modalPropietario">
 
         <x-slot name="title">
@@ -305,7 +318,7 @@
 
                 <x-input-group for="cp" label="Código postal" :error="$errors->first('cp')" class="w-full">
 
-                    <x-input-text type="number" id="cp" wire:model.lazy="cp" />
+                    <x-input-text type="number" id="cp" wire:model="cp" />
 
                 </x-input-group>
 
@@ -318,6 +331,12 @@
                 <x-input-group for="municipio_propietario" label="Municipio" :error="$errors->first('municipio_propietario')" class="w-full">
 
                     <x-input-text id="municipio_propietario" wire:model="municipio_propietario" />
+
+                </x-input-group>
+
+                <x-input-group for="ciudad" label="Ciudad" :error="$errors->first('ciudad')" class="w-full">
+
+                    <x-input-text id="ciudad" wire:model="ciudad" />
 
                 </x-input-group>
 
@@ -356,6 +375,12 @@
                 <x-input-group for="porcentaje_usufructo" label="Usufructo" :error="$errors->first('porcentaje_usufructo')" class="w-full">
 
                     <x-input-text type="number" id="porcentaje_usufructo" wire:model="porcentaje_usufructo" />
+
+                </x-input-group>
+
+                <x-input-group for="partes_iguales" label="Partes iguales" :error="$errors->first('partes_iguales')" class="w-full">
+
+                    <input wire:model="partes_iguales" type="checkbox" class="rounded">
 
                 </x-input-group>
 

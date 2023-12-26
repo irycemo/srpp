@@ -16,6 +16,7 @@ use App\Http\Controllers\SetPasswordController;
 use App\Livewire\Certificaciones\CopiasSimples;
 use App\Livewire\Certificaciones\CopiasCertificadas;
 use App\Http\Controllers\Certificaciones\CopiasController;
+use App\Http\Controllers\PaseFolio\PaseFolioController;
 use App\Livewire\Certificaciones\ConsultasCertificaciones;
 use App\Livewire\Inscripciones\Propiedad;
 use App\Livewire\PaseFolio\Elaboracion;
@@ -59,6 +60,7 @@ Route::group(['middleware' => ['auth', 'esta.activo']], function(){
 
     /* Pase a folio */
     Route::get('pase_folio', PaseFolio::class)->middleware('permission:Pase a folio')->name('pase_folio');
+    Route::get('pase_folio/{folioReal}', [PaseFolioController::class, 'caratula'])->name('pase_folio_caratula');
 
     Route::get('elaboracion_folio/{movimientoRegistral}', Elaboracion::class)->middleware('permission:Pase a folio')->name('elaboracion_folio');
 
@@ -83,4 +85,4 @@ Route::group(['middleware' => ['auth', 'esta.activo']], function(){
 Route::get('setpassword/{email}', [SetPasswordController::class, 'create'])->name('setpassword');
 Route::post('setpassword', [SetPasswordController::class, 'store'])->name('setpassword.store');
 
-Route::get('validacion/{id}', [ValidacionController::class, 'validar'])->name('validar.documento');
+/* Route::get('validacion/{id}', [ValidacionController::class, 'validar'])->name('validar.documento'); */

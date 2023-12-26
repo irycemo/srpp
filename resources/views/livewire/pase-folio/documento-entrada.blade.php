@@ -191,7 +191,7 @@
 
 </div>
 
-<div class=" flex justify-end items-center bg-white rounded-lg p-2 shadow-lg">
+<div class=" flex justify-end items-center bg-white rounded-lg p-2 shadow-lg gap-3">
 
     <x-button-blue
         wire:click="guardarDocumentoEntrada"
@@ -201,5 +201,15 @@
         <img wire:loading wire:target="guardarDocumentoEntrada" class="mx-auto h-4 mr-1" src="{{ asset('storage/img/loading3.svg') }}" alt="Loading">
         Guardar y continuar
     </x-button-blue>
+
+    <x-button-red
+        wire:click="finalizarPaseAFolio"
+        wire:loading.attr="disabled"
+        wire:target="finalizarPaseAFolio">
+
+        <img wire:loading wire:target="finalizarPaseAFolio" class="mx-auto h-4 mr-1" src="{{ asset('storage/img/loading3.svg') }}" alt="Loading">
+        Finalizar pase a folio
+
+    </x-button-red>
 
 </div>

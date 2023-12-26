@@ -22,7 +22,7 @@ class Propiedad extends Component
     public function render()
     {
 
-        $movimientos = MovimientoRegistral::with('inscripcionPropiedad')
+        $movimientos = MovimientoRegistral::with('inscripcionPropiedad', 'asignadoA', 'actualizadoPor')
                                                 ->where(function($q){
                                                     $q->whereHas('asignadoA', function($q){
                                                             $q->where('name', 'LIKE', '%' . $this->search . '%');
@@ -40,10 +40,10 @@ class Propiedad extends Component
                                                 ->when(auth()->user()->ubicacion != 'Regional 4', function($q){
                                                     $q->where('distrito', '!=', 2);
                                                 })
-                                                ->whereHas('certificacion', function($q){
+                                                /* ->whereHas('certificacion', function($q){
                                                     $q->whereIn('servicio', ['DC90', 'DC91', 'DC92', 'DC93'])
                                                     ->whereNull('finalizado_en');
-                                                })
+                                                }) */
                                                 ->orderBy($this->sort, $this->direction)
                                                 ->paginate($this->pagination);
 
