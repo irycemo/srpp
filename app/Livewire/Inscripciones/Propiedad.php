@@ -40,10 +40,9 @@ class Propiedad extends Component
                                                 ->when(auth()->user()->ubicacion != 'Regional 4', function($q){
                                                     $q->where('distrito', '!=', 2);
                                                 })
-                                                /* ->whereHas('certificacion', function($q){
-                                                    $q->whereIn('servicio', ['DC90', 'DC91', 'DC92', 'DC93'])
-                                                    ->whereNull('finalizado_en');
-                                                }) */
+                                                ->whereHas('inscripcionPropiedad', function($q){
+                                                    $q->whereIn('servicio', ['D158', 'DC91', 'D122', 'D114', 'D125']);
+                                                })
                                                 ->orderBy($this->sort, $this->direction)
                                                 ->paginate($this->pagination);
 
