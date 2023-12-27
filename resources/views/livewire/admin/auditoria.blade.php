@@ -311,13 +311,12 @@
 
                 <div class="float-righ">
 
-                    <button
+                    <x-button-red
                         wire:click="$set('modal', false)"
                         wire:loading.attr="disabled"
-                        type="button"
-                        class="bg-red-400 hover:shadow-lg text-white font-bold px-4 py-2 rounded-full text-sm mb-2 hover:bg-red-700 flaot-left focus:outline-none">
+                        type="button">
                         Cerrar
-                    </button>
+                    </x-button-red>
 
                 </div>
 
