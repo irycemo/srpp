@@ -5,11 +5,11 @@ namespace App\AuditResolvers;
 use OwenIt\Auditing\Contracts\Auditable;
 use OwenIt\Auditing\Contracts\Resolver;
 
-class IPResolver implements Resolver
+class IpResolver implements Resolver
 {
     public static function resolve(Auditable $auditable)
     {
-        
+
         if (getenv("HTTP_CLIENT_IP") && strcasecmp(getenv("HTTP_CLIENT_IP"), "unknown")) {
 
             $ip = getenv("HTTP_CLIENT_IP");
@@ -33,6 +33,6 @@ class IPResolver implements Resolver
         }
 
         return($ip);
-        
+
     }
 }
