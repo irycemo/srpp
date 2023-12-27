@@ -387,7 +387,8 @@ class CopiasCertificadas extends Component
                                                         ->orWhere('distrito', 'LIKE', '%' . $this->search . '%')
                                                         ->orWhere('seccion', 'LIKE', '%' . $this->search . '%')
                                                         ->orWhere('tramite', 'LIKE', '%' . $this->search . '%')
-                                                        ->orWhere('estado', 'LIKE', '%' . $this->search . '%');
+                                                        ->orWhere('estado', 'LIKE', '%' . $this->search . '%')
+                                                        ->orWhere('tramite', 'LIKE', '%' . $this->search . '%');
                                                 })
                                                 ->where('estado', 'elaborado')
                                                 ->when(auth()->user()->ubicacion == 'Regional 4', function($q){
@@ -419,7 +420,8 @@ class CopiasCertificadas extends Component
                                                         ->orWhere('distrito', 'LIKE', '%' . $this->search . '%')
                                                         ->orWhere('seccion', 'LIKE', '%' . $this->search . '%')
                                                         ->orWhere('tramite', 'LIKE', '%' . $this->search . '%')
-                                                        ->orWhere('estado', 'LIKE', '%' . $this->search . '%');
+                                                        ->orWhere('estado', 'LIKE', '%' . $this->search . '%')
+                                                        ->orWhere('tramite', 'LIKE', '%' . $this->search . '%');
                                                 })
                                                 ->where('usuario_asignado', auth()->user()->id)
                                                 ->where('estado', 'nuevo')
@@ -454,7 +456,8 @@ class CopiasCertificadas extends Component
                                                         ->orWhere('distrito', 'LIKE', '%' . $this->search . '%')
                                                         ->orWhere('seccion', 'LIKE', '%' . $this->search . '%')
                                                         ->orWhere('tramite', 'LIKE', '%' . $this->search . '%')
-                                                        ->orWhere('estado', 'LIKE', '%' . $this->search . '%');
+                                                        ->orWhere('estado', 'LIKE', '%' . $this->search . '%')
+                                                        ->orWhere('tramite', 'LIKE', '%' . $this->search . '%');
                                                 })
                                                 ->whereHas('certificacion', function($q){
                                                     $q->where('servicio', 'DL13');

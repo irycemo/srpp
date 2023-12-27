@@ -54,7 +54,7 @@
                     <x-table.heading sortable wire:click="sortBy('seccion')" :direction="$sort === 'seccion' ? $direction : null" >Sección</x-table.heading>
                     <x-table.heading sortable wire:click="sortBy('usuario_asignado')" :direction="$sort === 'usuario_asignado' ? $direction : null" >Asignado a</x-table.heading>
                     <x-table.heading sortable wire:click="sortBy('fecha_entrega')" :direction="$sort === 'fecha_entrega' ? $direction : null" >Fecha de entrega</x-table.heading>
-                    <x-table.heading sortable wire:click="sortBy('observaciones')" :direction="$sort === 'observaciones' ? $direction : null" >Observaciones</x-table.heading>
+                    <x-table.heading >Observaciones</x-table.heading>
                     @if(auth()->user()->hasRole('Administrador'))
                         <x-table.heading >Acciones</x-table.heading>
                     @endif
