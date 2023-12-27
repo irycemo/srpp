@@ -282,7 +282,7 @@
 
                                     @can('Finalizar copias certificadas')
 
-                                        @if(auth()->user()->hasRole('Supervisor Copias'))
+                                        @if(auth()->user()->hasRole(['Supervisor Copias', 'Certificador Oficialia', 'Certificador Juridico']))
 
                                             <x-button-blue
                                                 wire:click="finalizarSupervisor({{ $copia->certificacion->id }})"
