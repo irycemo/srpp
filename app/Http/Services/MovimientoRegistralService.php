@@ -186,6 +186,12 @@ class MovimientoRegistralService{
                 'solicitante' => $request['nombre_solicitante']
             ];
 
+        } catch (AsignacionServiceException $th) {
+
+            Log::error('Error al ingresar el trámite: ' . $request['año'] . '-' . $request['tramite'] . ' desde Sistema Trámites. ' . $th->getMessage());
+
+            throw new MovimientoRegistralServiceException($th->getMessage());
+
         } catch (\Throwable $th) {
 
             Log::error('Error al procesar request para generar movimiento registral. ' . $th);
