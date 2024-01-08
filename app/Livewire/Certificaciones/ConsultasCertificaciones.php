@@ -2,6 +2,7 @@
 
 namespace App\Livewire\Certificaciones;
 
+use App\Constantes\Constantes;
 use App\Models\User;
 use Livewire\Component;
 use App\Traits\ComponentesTrait;
@@ -26,6 +27,7 @@ class ConsultasCertificaciones extends Component
     public $observaciones;
     public $usuarios;
     public $usuario;
+    public $años;
 
     public function save(){
 
@@ -145,6 +147,8 @@ class ConsultasCertificaciones extends Component
     }
 
     public function mount(){
+
+        $this->años = Constantes::AÑOS;
 
         $this->año = now()->format('Y');
 

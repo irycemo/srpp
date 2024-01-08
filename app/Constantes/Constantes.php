@@ -249,4 +249,9 @@ class Constantes{
         'F-FIANZA'
     ];
 
+    const AÑOS = [
+        '2023' => '2023',
+        '2024' => '2024'
+    ];
+
 }
