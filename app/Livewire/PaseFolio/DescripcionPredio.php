@@ -160,6 +160,8 @@ class DescripcionPredio extends Component
 
     public function guardarDescripcionPredio(){
 
+        $this->authorize('update', $this->movimientoRegistral);
+
         $this->validate();
 
         if(!$this->movimientoRegistral->folio_real){
@@ -281,6 +283,8 @@ class DescripcionPredio extends Component
     }
 
     public function borrarColindancia($index){
+
+        $this->authorize('update', $this->movimientoRegistral);
 
         try {
 

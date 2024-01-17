@@ -52,4 +52,24 @@ class Predio extends Model implements Auditable
         return $this->belongsTo(FolioReal::class, 'folio_real');
     }
 
+    public function primerPropietario(){
+
+        if($this->propietarios()->first())
+            return $this->propietarios()->first()->persona->nombre . ' ' . $this->propietarios()->first()->persona->ap_paterno . ' ' . $this->propietarios()->first()->persona->ap_materno;
+        else
+            return null;
+    }
+
+    public function cuentaPredial(){
+
+        return $this->cp_localidad . '-' . $this->cp_oficina . '-' . $this->cp_tipo_predio . '-' . $this->cp_registro;
+
+    }
+
+    public function claveCatastral(){
+
+        return $this->cc_estado . '-' . $this->cc_region_catastral . '-' . $this->cc_municipio . '-' . $this->cc_zona_catastral . '-' . $this->cp_localidad . '-' . $this->cc_sector . '-' . $this->cc_manzana . '-' . $this->cc_predio . '-' . $this->cc_edificio . '-' . $this->cc_departamento;
+
+    }
+
 }

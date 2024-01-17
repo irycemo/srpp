@@ -22,13 +22,13 @@
 
         </div>
 
-        <div class="tab-panel rounded-lg" :class="{ 'active': activeTab === 7 }" x-show.transition.in.opacity.duration.800="activeTab === 7">
+        <div class="tab-panel rounded-lg" :class="{ 'active': activeTab === 7 }" x-show.transition.in.opacity.duration.800="activeTab === 7" x-cloak>
 
             @livewire('pase-folio.varios', ['movimientoRegistral' => $this->movimientoRegistral])
 
         </div>
 
-        <div class="tab-panel rounded-lg" :class="{ 'active': activeTab === 6 }" x-show.transition.in.opacity.duration.800="activeTab === 6">
+        <div class="tab-panel rounded-lg" :class="{ 'active': activeTab === 6 }" x-show.transition.in.opacity.duration.800="activeTab === 6" x-cloak>
 
             @livewire('pase-folio.sentencias', ['movimientoRegistral' => $this->movimientoRegistral])
 
@@ -78,7 +78,7 @@
 
         </div>
 
-        <div class="tab-panel rounded-lg" :class="{ 'active': activeTab === 5 }" x-show.transition.in.opacity.duration.800="activeTab === 5">
+        <div class="tab-panel rounded-lg" :class="{ 'active': activeTab === 5 }" x-show.transition.in.opacity.duration.800="activeTab === 5" x-cloak>
 
             @livewire('pase-folio.gravamen', ['movimientoRegistral' => $this->movimientoRegistral])
 

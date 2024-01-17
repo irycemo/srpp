@@ -2,9 +2,13 @@
 
 namespace App\Models;
 
+use App\Models\Vario;
 use App\Models\Predio;
+use App\Models\Gravamen;
+use App\Models\Sentencia;
 use App\Traits\ModelosTrait;
 use App\Constantes\Constantes;
+use App\Models\MovimientoRegistral;
 use Illuminate\Database\Eloquent\Model;
 use OwenIt\Auditing\Contracts\Auditable;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
@@ -18,8 +22,31 @@ class FolioReal extends Model implements Auditable
 
     protected $guarded = ['id', 'created_at', 'updated_at'];
 
+    public function getEstadoColorAttribute()
+    {
+        return [
+            'nuevo' => 'blue-400',
+            'formacion' => 'yellow-400',
+            'rechazado' => 'red-400',
+            'activo' => 'green-400',
+            'bloqueado' => 'black',
+        ][$this->estado] ?? 'gray-400';
+    }
+
     public function movimientosRegistrales(){
-        return $this->hasMany(MovimientoRegistral::class);
+        return $this->hasMany(MovimientoRegistral::class, 'folio_real');
+    }
+
+    public function gravamenes(){
+        return $this->hasManyThrough(Gravamen::class, MovimientoRegistral::class, 'folio_real', 'movimiento_registral_id', 'id', 'id');
+    }
+
+    public function sentencias(){
+        return $this->hasManyThrough(Sentencia::class, MovimientoRegistral::class, 'folio_real', 'movimiento_registral_id', 'id', 'id');
+    }
+
+    public function varios(){
+        return $this->hasManyThrough(Vario::class, MovimientoRegistral::class, 'folio_real', 'movimiento_registral_id', 'id', 'id');
     }
 
     public function predio(){
@@ -40,6 +67,10 @@ class FolioReal extends Model implements Auditable
         else
             return 0;
 
+    }
+
+    public function folioRealAntecedente(){
+        return $this->belongsTo(FolioReal::class, 'antecedente');
     }
 
 }

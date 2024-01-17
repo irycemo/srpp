@@ -161,6 +161,8 @@ class UbicacionPredio extends Component
 
     public function guardarUbicacionPredio(){
 
+        $this->authorize('update', $this->movimientoRegistral);
+
         $this->validate();
 
         if(!$this->movimientoRegistral->folio_real){

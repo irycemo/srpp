@@ -19,7 +19,7 @@ class UserSeeder extends Seeder
             'ubicacion' => 'Catastro',
             'status' => 'activo',
             'email' => 'correo@correo.com',
-            'password' => Hash::make('12345678'),
+            'password' => Hash::make('sistema'),
             'area' => 'Departamento de Operación y Desarrollode Sistemas',
         ])->assignRole('Administrador');
 
@@ -28,7 +28,7 @@ class UserSeeder extends Seeder
             'ubicacion' => 'Catastro',
             'status' => 'activo',
             'email' => 'subdirti.irycem@correo.michoacan.gob.mx',
-            'password' => Hash::make('12345678'),
+            'password' => Hash::make('sistema'),
             'area' => 'Subdirección de Tecnologías de la Información',
         ])->assignRole('Administrador');
 
@@ -37,7 +37,7 @@ class UserSeeder extends Seeder
             'ubicacion' => 'Catastro',
             'status' => 'activo',
             'email' => 'alex@hotmail.com',
-            'password' => Hash::make('12345678'),
+            'password' => Hash::make('sistema'),
             'area' => 'Subdirección de Tecnologías de la Información',
         ])->assignRole('Director');
 
@@ -46,7 +46,7 @@ class UserSeeder extends Seeder
             'ubicacion' => 'Catastro',
             'status' => 'activo',
             'email' => 'supervisor@hotmail.com',
-            'password' => Hash::make('12345678'),
+            'password' => Hash::make('sistema'),
             'area' => 'Subdirección de Tecnologías de la Información',
         ])->assignRole('Supervisor Copias');
 
@@ -55,7 +55,7 @@ class UserSeeder extends Seeder
             'ubicacion' => 'Catastro',
             'status' => 'activo',
             'email' => 'certificador1@hotmail.com',
-            'password' => Hash::make('12345678'),
+            'password' => Hash::make('sistema'),
             'area' => 'Subdirección de Tecnologías de la Información',
         ])->assignRole('Certificador');
 
@@ -64,7 +64,7 @@ class UserSeeder extends Seeder
             'ubicacion' => 'Catastro',
             'status' => 'activo',
             'email' => 'certificador2@hotmail.com',
-            'password' => Hash::make('12345678'),
+            'password' => Hash::make('sistema'),
             'area' => 'Subdirección de Tecnologías de la Información',
         ])->assignRole('Certificador');
 
@@ -73,7 +73,7 @@ class UserSeeder extends Seeder
             'ubicacion' => 'Catastro',
             'status' => 'activo',
             'email' => 'certificador3@hotmail.com',
-            'password' => Hash::make('12345678'),
+            'password' => Hash::make('sistema'),
             'area' => 'Subdirección de Tecnologías de la Información',
         ])->assignRole('Certificador');
 
@@ -82,7 +82,7 @@ class UserSeeder extends Seeder
             'ubicacion' => 'Catastro',
             'status' => 'activo',
             'email' => 'certificador4@hotmail.com',
-            'password' => Hash::make('12345678'),
+            'password' => Hash::make('sistema'),
             'area' => 'Subdirección de Tecnologías de la Información',
         ])->assignRole('Certificador');
 
@@ -91,7 +91,7 @@ class UserSeeder extends Seeder
             'ubicacion' => 'Catastro',
             'status' => 'activo',
             'email' => 'propiedad1@hotmail.com',
-            'password' => Hash::make('12345678'),
+            'password' => Hash::make('sistema'),
             'area' => 'Subdirección de Tecnologías de la Información',
         ])->assignRole('Propiedad');
 
@@ -100,7 +100,7 @@ class UserSeeder extends Seeder
             'ubicacion' => 'Catastro',
             'status' => 'activo',
             'email' => 'propiedad2@hotmail.com',
-            'password' => Hash::make('12345678'),
+            'password' => Hash::make('sistema'),
             'area' => 'Subdirección de Tecnologías de la Información',
         ])->assignRole('Propiedad');
 
@@ -109,7 +109,7 @@ class UserSeeder extends Seeder
             'ubicacion' => 'Catastro',
             'status' => 'activo',
             'email' => 'propiedad3@hotmail.com',
-            'password' => Hash::make('12345678'),
+            'password' => Hash::make('sistema'),
             'area' => 'Subdirección de Tecnologías de la Información',
         ])->assignRole('Propiedad');
 
@@ -118,7 +118,7 @@ class UserSeeder extends Seeder
             'ubicacion' => 'Regional 4',
             'status' => 'activo',
             'email' => 'propiedad4@hotmail.com',
-            'password' => Hash::make('12345678'),
+            'password' => Hash::make('sistema'),
             'area' => 'Coordinación Regional 4 Purhépecha (Uruapan)',
         ])->assignRole('Propiedad');
 
@@ -127,7 +127,7 @@ class UserSeeder extends Seeder
             'ubicacion' => 'Regional 4',
             'status' => 'activo',
             'email' => 'propiedad5@hotmail.com',
-            'password' => Hash::make('12345678'),
+            'password' => Hash::make('sistema'),
             'area' => 'Coordinación Regional 4 Purhépecha (Uruapan)',
         ])->assignRole('Propiedad');
 
@@ -136,7 +136,7 @@ class UserSeeder extends Seeder
             'ubicacion' => 'Regional 4',
             'status' => 'activo',
             'email' => 'supervisor2@hotmail.com',
-            'password' => Hash::make('12345678'),
+            'password' => Hash::make('sistema'),
             'area' => 'Coordinación Regional 4 Purhépecha (Uruapan)',
         ])->assignRole('Supervisor Copias');
 

@@ -2,10 +2,8 @@
 
 namespace App\Http\Controllers\Api;
 
-use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Log;
 use App\Http\Controllers\Controller;
-use App\Http\Services\AsignacionService;
 use App\Http\Requests\MovimientoRegistralRequest;
 use App\Exceptions\MovimientoRegistralServiceException;
 use App\Http\Requests\MovimientoRegistralCambiarTipoServicioRequest;
@@ -15,7 +13,7 @@ use App\Http\Services\MovimientoRegistralService;
 class MovimientoRegistralController extends Controller
 {
 
-    public function __construct(public AsignacionService $asignacionService, public MovimientoRegistralService $movimientoRegistralService){}
+    public function __construct(public MovimientoRegistralService $movimientoRegistralService){}
 
     public function store(MovimientoRegistralRequest $request)
     {

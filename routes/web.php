@@ -18,6 +18,7 @@ use App\Livewire\Certificaciones\CopiasCertificadas;
 use App\Http\Controllers\Certificaciones\CopiasController;
 use App\Http\Controllers\PaseFolio\PaseFolioController;
 use App\Livewire\Certificaciones\ConsultasCertificaciones;
+use App\Livewire\Consulta\Consulta;
 use App\Livewire\Inscripciones\Propiedad;
 use App\Livewire\PaseFolio\Elaboracion;
 use App\Livewire\PaseFolio\PaseFolio;
@@ -73,10 +74,13 @@ Route::group(['middleware' => ['auth', 'esta.activo']], function(){
 
     Route::get('indices_y_tomos', Consultas::class)->middleware('permission:Indices y tomos')->name('indices_y_tomos');
 
-    Route::get('consultas', ConsultasCertificaciones::class)->middleware('permission:Consultas')->name('consultas');
+    Route::get('consultas_certificaciones', ConsultasCertificaciones::class)->middleware('permission:Consultas certificaciones')->name('consulta_certificaciones');
 
     /* Inscripciones */
     Route::get('propiedad', Propiedad::class)->middleware('permission:Propiedad')->name('propiedad');
+
+    /* Consultas */
+    Route::get('consultas', Consulta::class)->middleware('permission:Consultas')->name('consultas');
 
     Route::get('manual', ManualController::class)->name('manual');
 

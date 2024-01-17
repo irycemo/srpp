@@ -4,8 +4,8 @@ namespace App\Console\Commands;
 
 use App\Models\Certificacion;
 use Illuminate\Console\Command;
-use App\Models\MovimientoRegistral;
 use Illuminate\Support\Facades\Log;
+use App\Http\Services\AsignacionService;
 
 class ReasignarUsuario extends Command
 {
@@ -29,48 +29,46 @@ class ReasignarUsuario extends Command
     public function handle()
     {
 
-        $asignacionService = new AsignacionService();
-
         try {
+
+            $asignacionService = new AsignacionService();
 
             $tramites = [];
 
-            $ids = Certificacion::whereHas('movimientoRegistral', function($q){
-                                                                                $q->where('estado', 'nuevo')
-                                                                                    ->where('fecha_entrega', '<=', now()->toDateString());
-                                                                            })
-                                                                            ->pluck('movimiento_registral_id');
+            $certificaciones = Certificacion::withWhereHas('movimientoRegistral', function($q){
+                                                    $q->where('estado', 'nuevo')
+                                                        ->where('fecha_entrega', '>=', now()->toDateString());
+                                                })
+                                                ->get();
 
 
-            foreach($ids as $id){
+            foreach($certificaciones as $certificacion){
 
-                $movimientoRegistral = MovimientoRegistral::findOrFail($id);
-
-                $nuevoUsuario = (new MovimientoRegistralController($asignacionService))->obtenerUsuarioAsignado(
-                    $movimientoRegistral->certificacion->servicio,
-                    $movimientoRegistral->getRawOriginal('distrito'),
-                    $movimientoRegistral->solicitante,
-                    $movimientoRegistral->tipo_servicio,
+                $nuevoUsuario = $asignacionService->obtenerCertificador(
+                    $certificacion->movimientoRegistral->certificacion->servicio,
+                    $certificacion->movimientoRegistral->getRawOriginal('distrito'),
+                    $certificacion->movimientoRegistral->solicitante,
+                    $certificacion->movimientoRegistral->tipo_servicio,
                     false
                 );
 
-                while($nuevoUsuario == $movimientoRegistral->usuario_asignado){
+                while($nuevoUsuario == $certificacion->movimientoRegistral->usuario_asignado){
 
-                    $nuevoUsuario = (new MovimientoRegistralController($asignacionService))->obtenerUsuarioAsignado(
-                                                                                                $movimientoRegistral->certificacion->servicio,
-                                                                                                $movimientoRegistral->getRawOriginal('distrito'),
-                                                                                                $movimientoRegistral->solicitante,
-                                                                                                $movimientoRegistral->tipo_servicio,
-                                                                                                true
-                                                                                            );
+                    $nuevoUsuario = $asignacionService->obtenerCertificador(
+                        $certificacion->movimientoRegistral->certificacion->servicio,
+                        $certificacion->movimientoRegistral->getRawOriginal('distrito'),
+                        $certificacion->movimientoRegistral->solicitante,
+                        $certificacion->movimientoRegistral->tipo_servicio,
+                        true
+                    );
 
                 }
 
-                if($nuevoUsuario != $movimientoRegistral->usuario_asignado){
+                if($nuevoUsuario != $certificacion->movimientoRegistral->usuario_asignado){
 
-                    $movimientoRegistral->update(['usuario_asignado' => $nuevoUsuario]);
+                    $certificacion->movimientoRegistral->update(['usuario_asignado' => $nuevoUsuario]);
 
-                    array_push($tramites, $movimientoRegistral->tramite);
+                    array_push($tramites, $certificacion->movimientoRegistral->tramite);
 
                 }
 

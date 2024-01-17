@@ -53,6 +53,14 @@ class MovimientoRegistral extends Model implements Auditable
         return $this->hasOne(Gravamen::class);
     }
 
+    public function sentencia(){
+        return $this->hasOne(Sentencia::class);
+    }
+
+    public function vario(){
+        return $this->hasOne(Vario::class);
+    }
+
     public function supervisor(){
         return $this->belongsTo(User::class, 'usuario_supervisor');
     }

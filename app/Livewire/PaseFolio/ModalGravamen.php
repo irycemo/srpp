@@ -164,6 +164,8 @@ class ModalGravamen extends ModalComponent
 
     public function cambiar($string){
 
+        $this->authorize('update', $this->movimientoRegistral);
+
         if($string == 'documento_entrada'){
 
             $this->validate([

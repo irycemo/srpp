@@ -114,6 +114,8 @@ class Elaboracion extends Component
 
     public function generarFolioReal(){
 
+        $this->authorize('update', $this->movimientoRegistral);
+
         $this->validate();
 
         try {
@@ -173,6 +175,8 @@ class Elaboracion extends Component
     }
 
     public function guardarDocumentoEntrada(){
+
+        $this->authorize('update', $this->movimientoRegistral);
 
         $this->validate();
 
@@ -248,6 +252,8 @@ class Elaboracion extends Component
 
     #[On('finalizarPaseAFolio')]
     public function finalizarPaseAFolio(){
+
+        $this->authorize('update', $this->movimientoRegistral);
 
         if($this->propiedad)
             $this->propiedad->refresh();
@@ -358,9 +364,9 @@ class Elaboracion extends Component
 
         try {
 
-            /* $this->movimientoRegistral->folioReal->update([
-                'estado' => 'elaborado'
-            ]); */
+            $this->movimientoRegistral->folioReal->update([
+                'estado' => 'activo'
+            ]);
 
             $this->dispatch('imprimir_documento', ['documento' => $this->movimientoRegistral->folio_real]);
 

@@ -76,7 +76,7 @@ class Usuarios extends Component
 
             DB::transaction(function () {
 
-                $this->modelo_editar->password = 'sistema';
+                $this->modelo_editar->password = bcrypt('sistema');
                 $this->modelo_editar->creado_por = auth()->user()->id;
                 $this->modelo_editar->save();
 

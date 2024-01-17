@@ -17,7 +17,8 @@ class Constantes{
         'Ranchos',
         'Certificaciones',
         'Inscripciones',
-        'Pase a folio'
+        'Pase a folio',
+        'Consultas'
     ];
 
     /* USUARIOS */

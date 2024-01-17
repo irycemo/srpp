@@ -53,7 +53,11 @@
 
                 @endif
 
-                @include('layouts.sidebar-consultas')
+                @can('Consultas')
+
+                    @include('layouts.sidebar-consultas')
+
+                @endcan
 
                 <a href="{{ route('manual') }}" class="mb-3 capitalize font-medium text-md hover:text-red-600 transition ease-in-out duration-500 flex hover  hover:bg-gray-100 p-2 px-4 rounded-xl focus:outline-rojo focus:outline-offset-2">
 
@@ -91,7 +95,7 @@
                 <p x-show.transition.in.duration.1000ms.out.duration.200msw="!open_side_menu"  class="font-semibold text-2xl text-rojo">Sistema RPP</p>
 
                 <!-- Profile dropdown -->
-                <div class="ml-3 relative z-10" x-data="{ open_drop_down:false }">
+                <div class="ml-3 relative z-10" x-data="{ open_drop_down:false }" >
 
                     <div>
 
@@ -105,7 +109,7 @@
 
                     </div>
 
-                    <div x-show="open_drop_down" x-on:click.away="open_drop_down=false" class="origin-top-right absolute right-0 mt-2 w-48 rounded-md shadow-lg py-1 bg-white ring-1 ring-black ring-opacity-5 focus:outline-none" role="menu" aria-orientation="vertical" aria-labelledby="user-menu">
+                    <div x-cloak x-show="open_drop_down" x-on:click.away="open_drop_down=false" class="origin-top-right absolute right-0 mt-2 w-48 rounded-md shadow-lg py-1 bg-white ring-1 ring-black ring-opacity-5 focus:outline-none" role="menu" aria-orientation="vertical" aria-labelledby="user-menu">
 
                         <a href="{{ route('profile.show') }}" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100" role="menuitem">Mi Perfil</a>
 

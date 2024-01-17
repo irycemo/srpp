@@ -208,6 +208,8 @@ class Propietarios extends Component
 
     public function guardarPropietario(){
 
+        $this->authorize('update', $this->movimientoRegistral);
+
         $this->validate();
 
         if($this->revisarProcentajes()){
@@ -332,6 +334,8 @@ class Propietarios extends Component
 
     public function guardarTransmitente(){
 
+        $this->authorize('update', $this->movimientoRegistral);
+
         $this->validate();
 
         try {
@@ -412,6 +416,8 @@ class Propietarios extends Component
     }
 
     public function guardarRepresentante(){
+
+        $this->authorize('update', $this->movimientoRegistral);
 
         $this->validate();
 
@@ -618,6 +624,8 @@ class Propietarios extends Component
     }
 
     public function borrarActor(Actor $actor){
+
+        $this->authorize('update', $this->movimientoRegistral);
 
         if($actor->representado_por){
 
