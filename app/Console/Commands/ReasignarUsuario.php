@@ -35,7 +35,8 @@ class ReasignarUsuario extends Command
 
             $tramites = [];
 
-            $certificaciones = Certificacion::withWhereHas('movimientoRegistral', function($q){
+            $certificaciones = Certificacion::with('movimientoRegistral.certificacion')
+                                                ->whereHas('movimientoRegistral', function($q){
                                                     $q->where('estado', 'nuevo')
                                                         ->where('fecha_entrega', '>=', now()->toDateString());
                                                 })

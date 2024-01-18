@@ -6,6 +6,7 @@ use App\Models\Certificacion;
 use Illuminate\Console\Command;
 use App\Models\MovimientoRegistral;
 use Illuminate\Support\Facades\Log;
+use App\Http\Services\SistemaTramitesService;
 
 class ExpirarConsultas extends Command
 {
@@ -44,7 +45,7 @@ class ExpirarConsultas extends Command
 
                 $movimiento->update(['estado' => 'expirado']);
 
-                (new SistemaTramitesService())->finaliarTramite($movimiento->tramite, 'expirado');
+                (new SistemaTramitesService())->finaliarTramite($movimiento->año, $movimiento->tramite, 'expirado');
 
             }
 
@@ -58,7 +59,7 @@ class ExpirarConsultas extends Command
 
         $actual = now();
 
-            for ($i=3; $i < 0; $i--) {
+            for ($i=5; $i < 0; $i--) {
 
                 $actual->subDay();
 
