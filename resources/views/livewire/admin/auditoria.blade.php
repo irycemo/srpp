@@ -99,8 +99,8 @@
                                 Creado
                             @elseif($audit->event  == 'deleted')
                                 Borrado
-                            @elseif($audit->event  == 'sync')
-                                Actualización
+                            @elseif($audit->event  == 'attach' || $audit->event  == 'sync')
+                                Relacionado
                             @endif
 
                         </x-table.cell>
@@ -152,7 +152,7 @@
                             <div class="flex justify-center lg:justify-start gap-2">
 
                                 <x-button-green
-                                    wire:click="ver({{$audit}})"
+                                    wire:click="ver({{ $audit->id }})"
                                     wire:loading.attr="disabled"
                                 >
                                     <svg xmlns="http://www.w3.org/2000/svg" class="w-4 h-4 mr-3" fill="none" viewBox="0 0 24 24" stroke="currentColor">
@@ -227,6 +227,10 @@
                    <p>Creado</p>
                 @elseif($selecetedAudit['event'] == 'sync')
                     <p>Sync</p>
+                @elseif($selecetedAudit['event'] == 'sync')
+                    <p>Sync</p>
+                @elseif($selecetedAudit['event'] == 'attach')
+                    <p>Attach</p>
                 @else
                     Borrado
                 @endif
@@ -249,9 +253,9 @@
                 <strong>Registrado:</strong>
                 <p>{{ $selecetedAudit['created_at'] }}</p>
 
-                @if($selecetedAudit['event'] == 'sync')
+                @if($selecetedAudit['event'] == 'attach' || $selecetedAudit['event'] == 'sync')
 
-                    <p class="mt-4 capitalize"><strong>Relacion:</strong> {{ key(json_decode($selecetedAudit['old_values'])) }}</p>
+                    <p class="mt-4 capitalize"><strong>Relacion:</strong> {{ key($this->newValues) }}</p>
 
                     <div class="grid grid-cols-2 gap-3 my-4">
 
@@ -259,7 +263,17 @@
 
                             <strong>Valores anteriores</strong>
 
-                            <p>Role => {{ $oldRole }}</p>
+                            @if($selecetedAudit['event'] == 'sync')
+
+                                @foreach ($this->oldValues[key($this->oldValues)][0] as $key => $value )
+
+                                    @if($key == 'pivot') @continue @endif
+
+                                    <p>{{ $key }} = {{ $value }}</p>
+
+                                @endforeach
+
+                            @endif
 
                         </div>
 
@@ -267,7 +281,13 @@
 
                             <strong>Valores nuevos</strong>
 
-                            <p>Role => {{ $newRole }}</p>
+                            @foreach ($this->newValues[key($this->newValues)][0] as $key => $value )
+
+                                @if($key == 'pivot') @continue @endif
+
+                                <p>{{ $key }} = {{ $value }}</p>
+
+                            @endforeach
 
                         </div>
 

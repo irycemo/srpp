@@ -73,7 +73,7 @@ class ReasignarUsuario extends Command
 
                 }
 
-                info('Tramites reasignados: ' . $tramites);
+                info('Proceso de para reasignar certificador a las certificaciones que han llegado a su fecha de elaboración sin atenderse completado');
 
             }
 

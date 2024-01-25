@@ -80,7 +80,7 @@ class Usuarios extends Component
                 $this->modelo_editar->creado_por = auth()->user()->id;
                 $this->modelo_editar->save();
 
-                $this->modelo_editar->roles()->attach($this->role);
+                $this->modelo_editar->auditAttach('roles', $this->role);
 
                 $this->resetearTodo();
 
@@ -108,7 +108,7 @@ class Usuarios extends Component
                 $this->modelo_editar->actualizado_por = auth()->user()->id;
                 $this->modelo_editar->save();
 
-                $this->modelo_editar->roles()->sync($this->role);
+                $this->modelo_editar->auditSync('roles', $this->role);
 
                 $this->resetearTodo();
 
