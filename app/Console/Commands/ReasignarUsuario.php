@@ -41,7 +41,7 @@ class ReasignarUsuario extends Command
                                                 })
                                                 ->whereHas('movimientoRegistral', function($q){
                                                     $q->where('estado', 'nuevo')
-                                                        ->where('fecha_entrega', '>=', now()->toDateString());
+                                                        ->whereDate('fecha_entrega', '<', now()->toDateString());
                                                 })
                                                 ->get();
 
