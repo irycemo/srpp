@@ -36,6 +36,9 @@ class ReasignarUsuario extends Command
             $tramites = [];
 
             $certificaciones = Certificacion::with('movimientoRegistral.certificacion')
+                                                ->whereHas('certificacion', function($q){
+                                                    $q->whereIn('servicion', ['DL14', 'DL13']);
+                                                })
                                                 ->whereHas('movimientoRegistral', function($q){
                                                     $q->where('estado', 'nuevo')
                                                         ->where('fecha_entrega', '>=', now()->toDateString());
@@ -73,9 +76,9 @@ class ReasignarUsuario extends Command
 
                 }
 
-                info('Proceso de para reasignar certificador a las certificaciones que han llegado a su fecha de elaboración sin atenderse completado');
-
             }
+
+            info('Proceso de para reasignar certificador a las certificaciones que han llegado a su fecha de elaboración sin atenderse completado');
 
         } catch (\Throwable $th) {
             Log::error("Error al reasignar trámites. " . $th);
