@@ -33,8 +33,6 @@ class ReasignarUsuario extends Command
 
             $asignacionService = new AsignacionService();
 
-            $tramites = [];
-
             $certificaciones = Certificacion::with('movimientoRegistral.certificacion')
                                                 ->whereHas('certificacion', function($q){
                                                     $q->whereIn('servicion', ['DL14', 'DL13']);
@@ -49,7 +47,6 @@ class ReasignarUsuario extends Command
             foreach($certificaciones as $certificacion){
 
                 $nuevoUsuario = $asignacionService->obtenerCertificador(
-                    $certificacion->movimientoRegistral->certificacion->servicio,
                     $certificacion->movimientoRegistral->getRawOriginal('distrito'),
                     $certificacion->movimientoRegistral->solicitante,
                     $certificacion->movimientoRegistral->tipo_servicio,
@@ -59,7 +56,6 @@ class ReasignarUsuario extends Command
                 while($nuevoUsuario == $certificacion->movimientoRegistral->usuario_asignado){
 
                     $nuevoUsuario = $asignacionService->obtenerCertificador(
-                        $certificacion->movimientoRegistral->certificacion->servicio,
                         $certificacion->movimientoRegistral->getRawOriginal('distrito'),
                         $certificacion->movimientoRegistral->solicitante,
                         $certificacion->movimientoRegistral->tipo_servicio,
@@ -71,8 +67,6 @@ class ReasignarUsuario extends Command
                 if($nuevoUsuario != $certificacion->movimientoRegistral->usuario_asignado){
 
                     $certificacion->movimientoRegistral->update(['usuario_asignado' => $nuevoUsuario]);
-
-                    array_push($tramites, $certificacion->movimientoRegistral->tramite);
 
                 }
 
