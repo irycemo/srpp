@@ -272,7 +272,7 @@ class Propietarios extends Component
 
                 if($this->partes_iguales){
 
-                    $porcentaje = $this->repartirPartesIguales();
+                    $porcentaje = $this->repartirPartesIguales(flag: true);
 
                     $actor = $this->propiedad->actores()->create([
                         'persona_id' => $persona->id,
@@ -315,9 +315,11 @@ class Propietarios extends Component
 
     }
 
-    public function repartirPartesIguales(){
+    public function repartirPartesIguales($flag = false){
 
-        $porcentaje = 100 / $this->propiedad->propietarios->count();
+        $propietarios = $flag ? $this->predio->propietarios->count() + 1 : $this->predio->propietarios->count();
+
+        $porcentaje = 100 / $propietarios;
 
         foreach ($this->propiedad->propietarios as $propietario) {
 
