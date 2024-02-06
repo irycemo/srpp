@@ -33,10 +33,8 @@ class ReasignarUsuario extends Command
 
             $asignacionService = new AsignacionService();
 
-            $certificaciones = Certificacion::with('movimientoRegistral.certificacion')
-                                                ->whereHas('certificacion', function($q){
-                                                    $q->whereIn('servicion', ['DL14', 'DL13']);
-                                                })
+            $certificaciones = Certificacion::with('movimientoRegistral')
+                                                ->whereIn('servicio', ['DL14', 'DL13'])
                                                 ->whereHas('movimientoRegistral', function($q){
                                                     $q->where('estado', 'nuevo')
                                                         ->whereDate('fecha_entrega', '<', now()->toDateString());

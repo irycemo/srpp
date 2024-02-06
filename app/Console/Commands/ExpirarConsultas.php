@@ -33,11 +33,11 @@ class ExpirarConsultas extends Command
         try {
 
             $ids = Certificacion::whereHas('movimientoRegistral', function($q){
-                                                                                $q->where('estado', 'nuevo')
-                                                                                    ->whereDate('created_at', '<', $this->calcularDia());
-                                                                            })
-                                                                            ->whereIn('servicio', ['DC92', 'DC91', 'DC90'])
-                                                                            ->pluck('movimiento_registral_id');
+                                                                $q->where('estado', 'nuevo')
+                                                                    ->whereDate('created_at', '<', $this->calcularDia());
+                                                            })
+                                                            ->whereIn('servicio', ['DC92', 'DC91', 'DC90'])
+                                                            ->pluck('movimiento_registral_id');
 
             foreach ($ids as $id) {
 
