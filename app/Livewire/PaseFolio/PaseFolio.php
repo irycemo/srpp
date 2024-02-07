@@ -79,7 +79,7 @@ class PaseFolio extends Component
 
         if(auth()->user()->hasRole('Administrador')){
 
-            $movimientos = MovimientoRegistral::with('certificacion', 'inscripcionPropiedad', 'actualizadoPor', 'asignadoA')
+            $movimientos = MovimientoRegistral::with('certificacion', 'inscripcionPropiedad', 'actualizadoPor', 'asignadoA', 'folioReal')
                                                     ->where('folio', 1)
                                                     ->where(function($q){
                                                         $q->whereNull('folio_real')
@@ -101,7 +101,7 @@ class PaseFolio extends Component
 
         }else{
 
-            $movimientos = MovimientoRegistral::with('certificacion', 'inscripcionPropiedad', 'actualizadoPor')
+            $movimientos = MovimientoRegistral::with('certificacion', 'inscripcionPropiedad', 'actualizadoPor', 'folioReal')
                                                     ->where('folio', 1)
                                                     ->where('estado', 'nuevo')
                                                     ->where(function($q){
