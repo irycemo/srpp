@@ -26,7 +26,7 @@ class FolioReal extends Model implements Auditable
     {
         return [
             'nuevo' => 'blue-400',
-            'formacion' => 'yellow-400',
+            'captura' => 'yellow-400',
             'rechazado' => 'red-400',
             'activo' => 'green-400',
             'bloqueado' => 'black',

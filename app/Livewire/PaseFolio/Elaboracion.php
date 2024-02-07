@@ -123,7 +123,7 @@ class Elaboracion extends Component
             DB::transaction(function () {
 
                 $folioReal = FolioReal::create([
-                    'estado' => 'formacion',
+                    'estado' => 'captura',
                     'folio' => (FolioReal::max('folio') ?? 0) + 1,
                     'tomo_antecedente' => $this->movimientoRegistral->tomo,
                     'tomo_antecedente_bis' => $this->movimientoRegistral->tomo_bis,
