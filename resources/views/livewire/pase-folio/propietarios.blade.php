@@ -322,7 +322,7 @@
 
                 </x-input-group>
 
-                <x-input-group for="entidad" label="Entidad" :error="$errors->first('entidad')" class="w-full">
+                <x-input-group for="entidad" label="Estado" :error="$errors->first('entidad')" class="w-full">
 
                     <x-input-text id="entidad" wire:model="entidad" />
 
@@ -528,7 +528,7 @@
 
                 </x-input-group>
 
-                <x-input-group for="entidad" label="Entidad" :error="$errors->first('entidad')" class="w-full">
+                <x-input-group for="entidad" label="Estado" :error="$errors->first('entidad')" class="w-full">
 
                     <x-input-text id="entidad" wire:model="entidad" />
 
@@ -708,7 +708,7 @@
 
                 </x-input-group>
 
-                <x-input-group for="entidad" label="Entidad" :error="$errors->first('entidad')" class="w-full">
+                <x-input-group for="entidad" label="Estado" :error="$errors->first('entidad')" class="w-full">
 
                     <x-input-text id="entidad" wire:model="entidad" />
 
