@@ -110,7 +110,7 @@
 
                 <x-input-group for="observaciones" label="Descripción" :error="$errors->first('observaciones')" class="sm:col-span-2 lg:col-span-3">
 
-                    <textarea rows="3" class="w-full bg-white rounded" wire:model="observaciones"></textarea>
+                    <textarea rows="3" class="w-full bg-white rounded text-sm" wire:model="observaciones"></textarea>
 
                 </x-input-group>
 

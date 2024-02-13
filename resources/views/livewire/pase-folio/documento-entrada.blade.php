@@ -62,53 +62,53 @@
 
             @if($tipo_documento == 'oficio')
 
-            <x-input-group for="autoridad_cargo" label="Autoridad cargo" :error="$errors->first('autoridad_cargo')" class="w-full">
+                <x-input-group for="autoridad_cargo" label="Autoridad cargo" :error="$errors->first('autoridad_cargo')" class="w-full">
 
-                <x-input-select id="autoridad_cargo" wire:model.live="autoridad_cargo" class="w-full">
+                    <x-input-select id="autoridad_cargo" wire:model.live="autoridad_cargo" class="w-full">
 
-                    <option value="">Seleccione una opción</option>
-                    <option value="juez">Juez(a)</option>
-                    <option value="funcionario">Funcionario</option>
+                        <option value="">Seleccione una opción</option>
+                        <option value="juez">Juez(a)</option>
+                        <option value="funcionario">Funcionario</option>
 
-                </x-input-select>
+                    </x-input-select>
 
-            </x-input-group>
+                </x-input-group>
 
-            <x-input-group for="autoridad_nombre" label="Nombre de la autoridad" :error="$errors->first('autoridad_nombre')" class="w-full">
+                <x-input-group for="autoridad_nombre" label="Nombre de la autoridad" :error="$errors->first('autoridad_nombre')" class="w-full">
 
-                <x-input-text id="autoridad_nombre" wire:model="autoridad_nombre" />
+                    <x-input-text id="autoridad_nombre" wire:model="autoridad_nombre" />
 
-            </x-input-group>
+                </x-input-group>
 
-            <x-input-group for="autoridad_numero" label="Número de la autoridad" :error="$errors->first('autoridad_numero')" class="w-full">
+                <x-input-group for="autoridad_numero" label="Número de la autoridad" :error="$errors->first('autoridad_numero')" class="w-full">
 
-                <x-input-text id="autoridad_numero" wire:model="autoridad_numero" />
+                    <x-input-text id="autoridad_numero" wire:model="autoridad_numero" />
 
-            </x-input-group>
+                </x-input-group>
 
-            <x-input-group for="numero_documento" label="Número de documento / oficio" :error="$errors->first('numero_documento')" class="w-full">
+                <x-input-group for="numero_documento" label="Número de documento / oficio" :error="$errors->first('numero_documento')" class="w-full">
 
-                <x-input-text id="numero_documento" wire:model="numero_documento" />
+                    <x-input-text id="numero_documento" wire:model="numero_documento" />
 
-            </x-input-group>
+                </x-input-group>
 
-            <x-input-group for="fecha_emision" label="Fecha de emisión" :error="$errors->first('fecha_emision')" class="w-full">
+                <x-input-group for="fecha_emision" label="Fecha de emisión" :error="$errors->first('fecha_emision')" class="w-full">
 
-                <x-input-text type="date" id="fecha_emision" wire:model="fecha_emision" />
+                    <x-input-text type="date" id="fecha_emision" wire:model="fecha_emision" />
 
-            </x-input-group>
+                </x-input-group>
 
-            <x-input-group for="fecha_inscripcion" label="Fecha de inscripción" :error="$errors->first('fecha_inscripcion')" class="w-full">
+                <x-input-group for="fecha_inscripcion" label="Fecha de inscripción" :error="$errors->first('fecha_inscripcion')" class="w-full">
 
-                <x-input-text type="date" id="fecha_inscripcion" wire:model="fecha_inscripcion" />
+                    <x-input-text type="date" id="fecha_inscripcion" wire:model="fecha_inscripcion" />
 
-            </x-input-group>
+                </x-input-group>
 
-            <x-input-group for="procedencia" label="Dependencia" :error="$errors->first('procedencia')" class="w-full">
+                <x-input-group for="procedencia" label="Dependencia" :error="$errors->first('procedencia')" class="w-full">
 
-                <x-input-text id="procedencia" wire:model="procedencia" />
+                    <x-input-text id="procedencia" wire:model="procedencia" />
 
-            </x-input-group>
+                </x-input-group>
 
             @elseif ($tipo_documento == 'escritura')
 
@@ -172,10 +172,9 @@
 
                 <x-input-group for="escritura_observaciones" label="Observaciones" :error="$errors->first('escritura_observaciones')" class="sm:col-span-2 lg:col-span-3">
 
-                    <textarea rows="3" class="w-full bg-white rounded" wire:model="escritura_observaciones"></textarea>
+                    <textarea rows="3" class="w-full bg-white rounded text-sm" wire:model="escritura_observaciones"></textarea>
 
                 </x-input-group>
-
 
             @endif
 
