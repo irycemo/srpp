@@ -370,8 +370,6 @@ class Elaboracion extends Component
 
             $this->dispatch('imprimir_documento', ['documento' => $this->movimientoRegistral->folio_real]);
 
-            $this->redirectRoute('pase_folio');
-
         } catch (\Throwable $th) {
 
             Log::error("Error al finalizar folio real en pase a folio por el usuario: (id: " . auth()->user()->id . ") " . auth()->user()->name . ". " . $th);
