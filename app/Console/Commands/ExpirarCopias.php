@@ -4,25 +4,23 @@ namespace App\Console\Commands;
 
 use App\Models\Certificacion;
 use Illuminate\Console\Command;
-use App\Models\MovimientoRegistral;
 use Illuminate\Support\Facades\Log;
-use App\Http\Services\SistemaTramitesService;
 
-class ExpirarConsultas extends Command
+class ExpirarCopias extends Command
 {
     /**
      * The name and signature of the console command.
      *
      * @var string
      */
-    protected $signature = 'expirar:consultas';
+    protected $signature = 'app:expirar-copias';
 
     /**
      * The console command description.
      *
      * @var string
      */
-    protected $description = 'Tarea programada para concluir trámites de consulta';
+    protected $description = 'Command description';
 
     /**
      * Execute the console command.
@@ -34,9 +32,9 @@ class ExpirarConsultas extends Command
 
             $certificaciones = Certificacion::whereHas('movimientoRegistral', function($q){
                                                                 $q->whereIn('estado', ['nuevo', 'rechazado'])
-                                                                    ->whereDate('created_at', '>', $this->calcularDia());
+                                                                    ->whereDate('fecha_pago', '>', now()->subMonth()->format('Y-m-d'));
                                                             })
-                                                            ->where('servicio', 'DC93')
+                                                            ->whereIn('servicio', ['DL14', 'DL13'])
                                                             ->get();
 
             foreach ($certificaciones as $certificado) {
@@ -48,26 +46,6 @@ class ExpirarConsultas extends Command
         } catch (\Throwable $th) {
             Log::error("Error al concluir trámites de consulta en tarea programada. " . $th);
         }
-
-    }
-
-    public function calcularDia(){
-
-        $actual = now();
-
-            for ($i=5; $i < 0; $i--) {
-
-                $actual->subDay();
-
-                while($actual->isWeekend()){
-
-                    $actual->subDay();
-
-                }
-
-            }
-
-            return $actual->toDateString();
 
     }
 
