@@ -222,11 +222,11 @@
     </x-button-blue>
 
     <x-button-red
-        wire:click="finalizarPaseAFolio"
+        wire:click="$parent.finalizarPaseAFolio"
         wire:loading.attr="disabled"
         wire:target="finalizarPaseAFolio">
 
-        <img wire:loading wire:target="finalizarPaseAFolio" class="mx-auto h-4 mr-1" src="{{ asset('storage/img/loading3.svg') }}" alt="Loading">
+        <img wire:loading wire:target="$parent.finalizarPaseAFolio" class="mx-auto h-4 mr-1" src="{{ asset('storage/img/loading3.svg') }}" alt="Loading">
         Finalizar pase a folio
 
     </x-button-red>

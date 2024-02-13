@@ -141,8 +141,8 @@ class DescripcionPredio extends Component
         $this->valor_total_construccion = $this->movimientoRegistral->inscripcionPropiedad->valor_total_construccion;
         $this->valor_catastral = $this->movimientoRegistral->inscripcionPropiedad->valor_catastral;
         $this->monto_transaccion = $this->movimientoRegistral->inscripcionPropiedad->monto_transaccion;
-        $this->divisa = $this->movimientoRegistral->inscripcionPropiedad->divisa;
-        $this->unidad_area = $this->movimientoRegistral->inscripcionPropiedad->unidad_area;
+        $this->divisa = $this->divisa;
+        $this->unidad_area = $this->unidad_area;
         $this->observaciones = $this->movimientoRegistral->inscripcionPropiedad->observaciones;
 
         foreach ($this->propiedad->colindancias as $colindancia) {
