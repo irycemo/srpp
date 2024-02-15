@@ -23,6 +23,9 @@ class Propiedad extends Component
     {
 
         $movimientos = MovimientoRegistral::with('inscripcionPropiedad', 'asignadoA', 'actualizadoPor')
+                                                ->whereHas('folioReal', function($q){
+                                                    $q->where('estado', 'activo');
+                                                })
                                                 ->where(function($q){
                                                     $q->whereHas('asignadoA', function($q){
                                                             $q->where('name', 'LIKE', '%' . $this->search . '%');
@@ -41,7 +44,7 @@ class Propiedad extends Component
                                                     $q->where('distrito', '!=', 2);
                                                 })
                                                 ->whereHas('inscripcionPropiedad', function($q){
-                                                    $q->whereIn('servicio', ['D158', 'DC91', 'D122', 'D114', 'D125']);
+                                                    $q->whereIn('servicio', ['D158', 'D122', 'D114', 'D125', 'D126', 'D124', 'D121', 'D120', 'D119', 'D123', 'D113', 'D115', 'D116', 'D118']);
                                                 })
                                                 ->orderBy($this->sort, $this->direction)
                                                 ->paginate($this->pagination);

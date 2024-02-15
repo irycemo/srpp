@@ -32,7 +32,7 @@ class ExpirarCopias extends Command
 
             $certificaciones = Certificacion::whereHas('movimientoRegistral', function($q){
                                                                 $q->whereIn('estado', ['nuevo', 'rechazado'])
-                                                                    ->whereDate('fecha_pago', '>', now()->subMonth()->format('Y-m-d'));
+                                                                    ->whereDate('fecha_pago', '<', now()->subMonth()->format('Y-m-d'));
                                                             })
                                                             ->whereIn('servicio', ['DL14', 'DL13'])
                                                             ->get();

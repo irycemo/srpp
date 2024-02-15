@@ -18,7 +18,7 @@ class UserSeeder extends Seeder
             'name' => 'Enrique',
             'ubicacion' => 'Catastro',
             'status' => 'activo',
-            'email' => 'correo@correo.com',
+            'email' => 'enrique_j_@hotmail.com',
             'password' => Hash::make('sistema'),
             'area' => 'Departamento de Operación y Desarrollode Sistemas',
         ])->assignRole('Administrador');
@@ -34,83 +34,101 @@ class UserSeeder extends Seeder
 
         User::create([
             'name' => 'Omar Alejandro Morales Arellano',
-            'ubicacion' => 'Catastro',
+            'ubicacion' => 'RPP',
             'status' => 'activo',
             'email' => 'alex@hotmail.com',
             'password' => Hash::make('sistema'),
-            'area' => 'Subdirección de Tecnologías de la Información',
+            'area' => 'Dirección del Registro Público de la Propiedad',
         ])->assignRole('Director');
 
         User::create([
             'name' => 'Supervisor Copias',
-            'ubicacion' => 'Catastro',
+            'ubicacion' => 'RPP',
             'status' => 'activo',
             'email' => 'supervisor@hotmail.com',
             'password' => Hash::make('sistema'),
-            'area' => 'Subdirección de Tecnologías de la Información',
+            'area' => 'Dirección del Registro Público de la Propiedad',
         ])->assignRole('Supervisor Copias');
 
         User::create([
             'name' => 'Certificador 1',
-            'ubicacion' => 'Catastro',
+            'ubicacion' => 'RPP',
             'status' => 'activo',
             'email' => 'certificador1@hotmail.com',
             'password' => Hash::make('sistema'),
-            'area' => 'Subdirección de Tecnologías de la Información',
+            'area' => 'Dirección del Registro Público de la Propiedad',
         ])->assignRole('Certificador');
 
         User::create([
             'name' => 'Certificador 2',
-            'ubicacion' => 'Catastro',
+            'ubicacion' => 'RPP',
             'status' => 'activo',
             'email' => 'certificador2@hotmail.com',
             'password' => Hash::make('sistema'),
-            'area' => 'Subdirección de Tecnologías de la Información',
+            'area' => 'Dirección del Registro Público de la Propiedad',
         ])->assignRole('Certificador');
 
         User::create([
             'name' => 'Certificador 3',
-            'ubicacion' => 'Catastro',
+            'ubicacion' => 'RPP',
             'status' => 'activo',
             'email' => 'certificador3@hotmail.com',
             'password' => Hash::make('sistema'),
-            'area' => 'Subdirección de Tecnologías de la Información',
+            'area' => 'Dirección del Registro Público de la Propiedad',
         ])->assignRole('Certificador');
 
         User::create([
             'name' => 'Certificador 4',
-            'ubicacion' => 'Catastro',
+            'ubicacion' => 'Regional 4',
             'status' => 'activo',
             'email' => 'certificador4@hotmail.com',
             'password' => Hash::make('sistema'),
-            'area' => 'Subdirección de Tecnologías de la Información',
+            'area' => 'Coordinación Regional 4 Purhépecha (Uruapan)',
         ])->assignRole('Certificador');
 
         User::create([
+            'name' => 'Certificador Juridico',
+            'ubicacion' => 'RPP',
+            'status' => 'activo',
+            'email' => 'certificador6@hotmail.com',
+            'password' => Hash::make('sistema'),
+            'area' => 'Dirección del Registro Público de la Propiedad',
+        ])->assignRole('Certificador Juridico');
+
+        User::create([
+            'name' => 'Certificador Oficialia',
+            'ubicacion' => 'RPP',
+            'status' => 'activo',
+            'email' => 'certificador5@hotmail.com',
+            'password' => Hash::make('sistema'),
+            'area' => 'Dirección del Registro Público de la Propiedad',
+        ])->assignRole('Certificador Oficialia');
+
+        User::create([
             'name' => 'Propiedad 1',
-            'ubicacion' => 'Catastro',
+            'ubicacion' => 'RPP',
             'status' => 'activo',
             'email' => 'propiedad1@hotmail.com',
             'password' => Hash::make('sistema'),
-            'area' => 'Subdirección de Tecnologías de la Información',
+            'area' => 'Dirección del Registro Público de la Propiedad',
         ])->assignRole('Propiedad');
 
         User::create([
             'name' => 'Propiedad 2',
-            'ubicacion' => 'Catastro',
+            'ubicacion' => 'RPP',
             'status' => 'activo',
             'email' => 'propiedad2@hotmail.com',
             'password' => Hash::make('sistema'),
-            'area' => 'Subdirección de Tecnologías de la Información',
+            'area' => 'Dirección del Registro Público de la Propiedad',
         ])->assignRole('Propiedad');
 
         User::create([
             'name' => 'Propiedad 3',
-            'ubicacion' => 'Catastro',
+            'ubicacion' => 'RPP',
             'status' => 'activo',
             'email' => 'propiedad3@hotmail.com',
             'password' => Hash::make('sistema'),
-            'area' => 'Subdirección de Tecnologías de la Información',
+            'area' => 'Dirección del Registro Público de la Propiedad',
         ])->assignRole('Propiedad');
 
         User::create([
@@ -139,6 +157,24 @@ class UserSeeder extends Seeder
             'password' => Hash::make('sistema'),
             'area' => 'Coordinación Regional 4 Purhépecha (Uruapan)',
         ])->assignRole('Supervisor Copias');
+
+        User::create([
+            'name' => 'Consulta',
+            'ubicacion' => 'Regional 4',
+            'status' => 'activo',
+            'email' => 'consulta@hotmail.com',
+            'password' => Hash::make('sistema'),
+            'area' => 'Coordinación Regional 4 Purhépecha (Uruapan)',
+        ])->assignRole('Consulta');
+
+        User::create([
+            'name' => 'Consulta',
+            'ubicacion' => 'RPP',
+            'status' => 'activo',
+            'email' => 'consulta2@hotmail.com',
+            'password' => Hash::make('sistema'),
+            'area' => 'Dirección del Registro Público de la Propiedad',
+        ])->assignRole('Consulta');
 
     }
 }

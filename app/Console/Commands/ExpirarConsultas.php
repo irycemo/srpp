@@ -34,7 +34,7 @@ class ExpirarConsultas extends Command
 
             $certificaciones = Certificacion::whereHas('movimientoRegistral', function($q){
                                                                 $q->whereIn('estado', ['nuevo', 'rechazado'])
-                                                                    ->whereDate('created_at', '>', $this->calcularDia());
+                                                                    ->whereDate('created_at', '<', $this->calcularDia());
                                                             })
                                                             ->where('servicio', 'DC93')
                                                             ->get();
