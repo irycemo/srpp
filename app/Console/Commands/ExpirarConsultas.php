@@ -22,7 +22,7 @@ class ExpirarConsultas extends Command
      *
      * @var string
      */
-    protected $description = 'Tarea programada para concluir trámites de consulta';
+    protected $description = 'Proceso de para expirar consultas con mas de 5 dias';
 
     /**
      * Execute the console command.
@@ -44,6 +44,8 @@ class ExpirarConsultas extends Command
                 $certificado->movimientoRegistral->update(['estado' => 'expirado']);
 
             }
+
+            info('Proceso de para expirar consultas con mas de 5 dias completado');
 
         } catch (\Throwable $th) {
             Log::error("Error al concluir trámites de consulta en tarea programada. " . $th);

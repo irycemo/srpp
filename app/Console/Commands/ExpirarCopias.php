@@ -13,14 +13,14 @@ class ExpirarCopias extends Command
      *
      * @var string
      */
-    protected $signature = 'app:expirar-copias';
+    protected $signature = 'expirar:copias';
 
     /**
      * The console command description.
      *
      * @var string
      */
-    protected $description = 'Command description';
+    protected $description = 'Proceso de para expirar coias con fehca de pago mayor a 1 mes';
 
     /**
      * Execute the console command.
@@ -42,6 +42,8 @@ class ExpirarCopias extends Command
                 $certificado->movimientoRegistral->update(['estado' => 'expirado']);
 
             }
+
+            info('Proceso de para expirar coias con fecha de pago mayor a 1 mes completado');
 
         } catch (\Throwable $th) {
             Log::error("Error al concluir trámites de consulta en tarea programada. " . $th);
