@@ -4,8 +4,6 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.0.0/dist/css/bootstrap.min.css"
-    integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
     <title>Carátula de pase a folio</title>
 </head>
 <style>
@@ -33,11 +31,13 @@
 
     body{
         margin-top: 150px;
-        margin-bottom: 20px;
         counter-reset: page;
         height: 100%;
         background-image: url("storage/img/escudo_fondo.png");
         background-size: cover;
+        font-family: sans-serif;
+        font-weight: normal;
+        line-height: 1.5;
         text-transform: uppercase;
     }
 
@@ -49,7 +49,7 @@
     }
 
     .container{
-        font-size: 14px;
+        font-size: 12px;
         display: flex;
         align-content: space-around;
     }
@@ -95,6 +95,7 @@
         font-size: 12px;
         text-align: right;
         padding-right: 10px;
+        text-transform: lowercase;
     }
 
     .fot{
@@ -141,74 +142,11 @@
                     EL DIRECTOR DEL REGISTRO PÚBLICO DE LA PROPIEDAD <strong>{{ $director }}</strong>, AUTORIZA EL PRESENTE FOLIO REAL PARA LOS ASIENTOS RELATIVOS AL INMUEBLE QUE ACONTINUACIÓN SE DESCRIBE:
                 </p>
 
-                <p style="text-align: center"><strong>FOLIO REAL:</strong> {{ $folioReal->folio }}; <strong>SECCIÓN:</strong> {{ $folioReal->seccion_antecedente }}; <strong>DISTRITO:</strong> {{ $distrito}}; <strong>TOMO:</strong> {{ $folioReal->tomo_antecedente }}, <strong>REGISTRO:</strong> {{ $folioReal->registro_antecedente }}</p>
+                <p style="text-align: center"><strong>FOLIO REAL:</strong> {{ $folioReal->folio }}</p>
+
+                <p style="text-align: center"><strong>SECCIÓN:</strong> {{ $folioReal->seccion_antecedente }}; <strong>DISTRITO:</strong> {{ $distrito}}; <strong>TOMO:</strong> {{ $folioReal->tomo_antecedente }}, <strong>REGISTRO:</strong> {{ $folioReal->registro_antecedente }}</p>
 
                 <p style="text-align: center"><strong>DATOS DE IDENTIFICACIÓN</strong></p>
-
-                <p><strong>DESCRIPCIÓN DEL INMUEBLE:</strong></p>
-
-                <p class="parrafo">
-                    @if($folioReal->predio->cp_localidad)
-                        <strong>Cuenta predial:</strong> {{ $folioReal->predio->cp_localidad }}-{{ $folioReal->predio->cp_oficina }}-{{ $folioReal->predio->cp_tipo_predio }}-{{ $folioReal->predio->cp_registro }};
-                    @endif
-
-                    @if($folioReal->predio->cc_region_catastral)
-                        <strong>Clave catastral:</strong> {{ $folioReal->predio->cc_estado }}-{{ $folioReal->predio->cc_region_catastral }}-{{ $folioReal->predio->cc_municipio }}-{{ $folioReal->predio->cc_zona_catastral }}-{{ $folioReal->predio->cc_sector }}-{{ $folioReal->predio->cc_manzana }}-{{ $folioReal->predio->cc_predio }}-{{ $folioReal->predio->cc_edificio }}-{{ $folioReal->predio->cc_departamento }};
-                    @endif
-
-                    <strong>Superficie de terreno:</strong> {{ $superficie_terreno }} {{ $folioReal->predio->unidad_area }} <strong>Superficie de construcción:</strong> {{ $superficie_construccion }} {{ $folioReal->predio->unidad_area }} <strong>monto de la transacción:</strong> {{ $monto_transaccion }} {{ $folioReal->predio->divisa }};
-
-                    @if ($folioReal->predio->curt)
-                        <strong>curt:</strong> {{ $folioReal->predio->curt }};
-                    @endif
-
-                    @if ($folioReal->predio->superficie_judicial)
-                        <strong>superficie judicial:</strong> {{ $folioReal->predio->superficie_judicial }} {{ $folioReal->predio->unidad_area }};
-                    @endif
-
-                    @if ($folioReal->predio->superficie_notarial)
-                        <strong>superficie notarial:</strong> {{ $folioReal->predio->superficie_notarial }} {{ $folioReal->predio->unidad_area }};
-                    @endif
-
-                    @if ($folioReal->predio->area_comun_terreno)
-                        <strong>área de terreno común:</strong> {{ $folioReal->predio->area_comun_terreno }} {{ $folioReal->predio->unidad_area }};
-                    @endif
-
-                    @if ($folioReal->predio->area_comun_construccion)
-                        <strong>área de construcción común:</strong> {{ $folioReal->predio->area_comun_construccion }} {{ $folioReal->predio->unidad_area }};
-                    @endif
-
-                    @if ($folioReal->predio->valor_terreno_comun)
-                        <strong>valor de terreno común:</strong> {{ $folioReal->predio->valor_terreno_comun }} {{ $folioReal->predio->divisa }};
-                    @endif
-
-                    @if ($folioReal->predio->valor_construccion_comun)
-                        <strong>valor de construcción común:</strong> {{ $folioReal->predio->valor_construccion_comun }} {{ $folioReal->predio->divisa }};
-                    @endif
-
-                    @if ($folioReal->predio->valor_catastral)
-                        <strong>valor de construcción común:</strong> {{ $folioReal->predio->valor_catastral }} {{ $folioReal->predio->divisa }};
-                    @endif
-
-                    <strong>Descripción:</strong> {{ $folioReal->predio->descripcion }}.
-
-                </p>
-
-                <p><strong>colindancias:</strong></p>
-
-                <p class="parrafo">
-
-                    <ul>
-
-                        @foreach ($folioReal->predio->colindancias as $colindancia)
-
-                            <li><strong>viento:</strong> {{ $colindancia->viento }}; <strong>longitud:</strong> {{ $colindancia->longitud }} metros; <strong>descripción:</strong> {{ $colindancia->descripcion }}.</li>
-
-                        @endforeach
-
-                    </ul>
-
-                </p>
 
                 <p><strong>UBICACIÓN DEL INMUEBLE:</strong></p>
 
@@ -290,6 +228,71 @@
 
                 </p>
 
+                <p><strong>colindancias:</strong></p>
+
+                <p class="parrafo">
+
+                    <ul>
+
+                        @foreach ($folioReal->predio->colindancias as $colindancia)
+
+                            <li><strong>viento:</strong> {{ $colindancia->viento }}; <strong>longitud:</strong> {{ $colindancia->longitud }} metros; <strong>descripción:</strong> {{ $colindancia->descripcion }}.</li>
+
+                        @endforeach
+
+                    </ul>
+
+                </p>
+
+                <p><strong>DESCRIPCIÓN DEL INMUEBLE:</strong></p>
+
+                <p class="parrafo">
+                    @if($folioReal->predio->cp_localidad)
+                        <strong>Cuenta predial:</strong> {{ $folioReal->predio->cp_localidad }}-{{ $folioReal->predio->cp_oficina }}-{{ $folioReal->predio->cp_tipo_predio }}-{{ $folioReal->predio->cp_registro }};
+                    @endif
+
+                    @if($folioReal->predio->cc_region_catastral)
+                        <strong>Clave catastral:</strong> {{ $folioReal->predio->cc_estado }}-{{ $folioReal->predio->cc_region_catastral }}-{{ $folioReal->predio->cc_municipio }}-{{ $folioReal->predio->cc_zona_catastral }}-{{ $folioReal->predio->cc_sector }}-{{ $folioReal->predio->cc_manzana }}-{{ $folioReal->predio->cc_predio }}-{{ $folioReal->predio->cc_edificio }}-{{ $folioReal->predio->cc_departamento }};
+                    @endif
+
+                    <strong>Superficie de terreno:</strong> {{ $superficie_terreno }} {{ $folioReal->predio->unidad_area }} <strong>Superficie de construcción:</strong> {{ $superficie_construccion }} {{ $folioReal->predio->unidad_area }} <strong>monto de la transacción:</strong> {{ $monto_transaccion }} {{ $folioReal->predio->divisa }};
+
+                    @if ($folioReal->predio->curt)
+                        <strong>curt:</strong> {{ $folioReal->predio->curt }};
+                    @endif
+
+                    @if ($folioReal->predio->superficie_judicial)
+                        <strong>superficie judicial:</strong> {{ $folioReal->predio->superficie_judicial }} {{ $folioReal->predio->unidad_area }};
+                    @endif
+
+                    @if ($folioReal->predio->superficie_notarial)
+                        <strong>superficie notarial:</strong> {{ $folioReal->predio->superficie_notarial }} {{ $folioReal->predio->unidad_area }};
+                    @endif
+
+                    @if ($folioReal->predio->area_comun_terreno)
+                        <strong>área de terreno común:</strong> {{ $folioReal->predio->area_comun_terreno }} {{ $folioReal->predio->unidad_area }};
+                    @endif
+
+                    @if ($folioReal->predio->area_comun_construccion)
+                        <strong>área de construcción común:</strong> {{ $folioReal->predio->area_comun_construccion }} {{ $folioReal->predio->unidad_area }};
+                    @endif
+
+                    @if ($folioReal->predio->valor_terreno_comun)
+                        <strong>valor de terreno común:</strong> {{ $folioReal->predio->valor_terreno_comun }} {{ $folioReal->predio->divisa }};
+                    @endif
+
+                    @if ($folioReal->predio->valor_construccion_comun)
+                        <strong>valor de construcción común:</strong> {{ $folioReal->predio->valor_construccion_comun }} {{ $folioReal->predio->divisa }};
+                    @endif
+
+                    @if ($folioReal->predio->valor_catastral)
+                        <strong>valor de construcción común:</strong> {{ $folioReal->predio->valor_catastral }} {{ $folioReal->predio->divisa }};
+                    @endif
+
+                    <strong>Descripción:</strong> {{ $folioReal->predio->descripcion }}.
+
+                </p>
+
                 <p><strong>propietarios:</strong></p>
 
                 <p class="parrafo">
@@ -315,6 +318,14 @@
                     <p class="borde">
                         @if($distrito == '02 URUAPAN' )L.A. SANDRO MEDINA MORALES @else {{ $director }} @endif
                     </p>
+
+                </div>
+
+                <div class="parrafo">
+
+                    <p><strong>Fecha de pase a folio:</strong> {{ now()->format('d-m-Y H:i:s') }}</p>
+
+                    <p><strong>Registrador:</strong> {{ auth()->user()->name }}</p>
 
                 </div>
 
