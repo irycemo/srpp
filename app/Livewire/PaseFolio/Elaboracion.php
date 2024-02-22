@@ -2,16 +2,19 @@
 
 namespace App\Livewire\PaseFolio;
 
+use App\Models\User;
 use App\Models\Predio;
 use Livewire\Component;
-use App\Models\FolioReal;
-use App\Constantes\Constantes;
 use App\Models\Escritura;
+use App\Models\FolioReal;
+use Livewire\Attributes\On;
+use App\Constantes\Constantes;
 use Illuminate\Validation\Rule;
 use Illuminate\Support\Facades\DB;
 use App\Models\MovimientoRegistral;
 use Illuminate\Support\Facades\Log;
-use Livewire\Attributes\On;
+use App\Livewire\PaseFolio\PaseFolio;
+use App\Http\Services\AsignacionService;
 
 class Elaboracion extends Component
 {
@@ -364,11 +367,39 @@ class Elaboracion extends Component
 
         try {
 
-            $this->movimientoRegistral->folioReal->update([
-                'estado' => 'activo'
-            ]);
+            DB::transaction(function (){
 
-            $this->dispatch('imprimir_documento', ['documento' => $this->movimientoRegistral->folio_real]);
+                $this->movimientoRegistral->folioReal->update([
+                    'estado' => 'activo'
+                ]);
+
+
+                if(auth()->user()->hasRole('Pase a folio')){
+
+                    $usuarios = User::with('ultimoMovimientoRegistralAsignado')
+                                    ->where('status', 'activo')
+                                    ->when($this->movimientoRegistral->getRawOriginal('distrito') == 2, function($q){
+                                        $q->where('ubicacion', 'Regional 4');
+                                    })
+                                    ->when($this->movimientoRegistral->getRawOriginal('distrito') != 2, function($q){
+                                        $q->where('ubicacion', '!=', 'Regional 4');
+                                    })
+                                    ->whereHas('roles', function($q){
+                                        $q->where('name', 'Propiedad');
+                                    })
+                                    ->get();
+
+                    $id = (new AsignacionService())->obtenerUltimoUsuarioConAsignacion($usuarios);
+
+                    $this->movimientoRegistral->update(['usuario_asignado' => $id]);
+
+                }
+
+                $this->dispatch('imprimir_documento', ['documento' => $this->movimientoRegistral->folio_real]);
+
+                $this->redirect(PaseFolio::class);
+
+            });
 
         } catch (\Throwable $th) {
 

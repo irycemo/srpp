@@ -178,11 +178,13 @@ class MovimientoRegistralService{
 
             }
 
+            isset($request['folio_real']) ? $folioReal = $request['folio_real'] : $folioReal = null;
+
             return $array + [
                 'folio' => $this->calcularFolio($request),
                 'estado' => 'nuevo',
-                'usuario_asignado' => $this->obtenerUsuarioAsignado($request['servicio'], $request['distrito'], $request['solicitante'], $request['tipo_servicio'], false),
-                'usuario_supervisor' => $this->obtenerSupervisor($request['distrito']),
+                'usuario_asignado' => $this->obtenerUsuarioAsignado($folioReal, $request['servicio'], $request['distrito'], $request['solicitante'], $request['tipo_servicio'], false),
+                'usuario_supervisor' => $this->obtenerSupervisor($request['servicio'], $request['distrito']),
                 'solicitante' => $request['nombre_solicitante']
             ];
 
@@ -237,7 +239,7 @@ class MovimientoRegistralService{
 
     }
 
-    public function obtenerUsuarioAsignado($servicio, $distrito, $solicitante, $tipo_servicio, $random):int
+    public function obtenerUsuarioAsignado($folioReal, $servicio, $distrito, $solicitante, $tipo_servicio, $random):int
     {
 
         /* Certificaciones: Copias simples, Copias certificadas */
@@ -259,16 +261,32 @@ class MovimientoRegistralService{
         /* Inscripciones: Propiedad */
         if(in_array($servicio, $inscripcionesPropiedad)){
 
-            return $this->asignacionService->obtenerUsuarioPropiedad($distrito);
+            return $this->asignacionService->obtenerUsuarioPropiedad($folioReal, $distrito);
 
         }
 
     }
 
-    public function obtenerSupervisor($distrito):int
+    public function obtenerSupervisor($servicio, $distrito):int
     {
 
-        return $this->asignacionService->obtenerSupervisorCertificaciones($distrito);
+        $certificaciones = ['DC90', 'DC91', 'DC92', 'DC93', 'DL13', 'DL14'];
+
+        if(in_array($servicio, $certificaciones)){
+
+            return $this->asignacionService->obtenerSupervisorCertificaciones($distrito);
+
+        }
+
+        $inscripcionesPropiedad = ['D122', 'D114', 'D125', 'D126', 'D124', 'D121', 'D120', 'D119', 'D123', 'D118', 'D116', 'D115', 'D113'];
+
+        if(in_array($servicio, $inscripcionesPropiedad)){
+
+            return $this->asignacionService->obtenerSupervisorPropiedad($distrito);
+
+        }
+
+
 
     }
 

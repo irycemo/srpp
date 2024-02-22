@@ -107,7 +107,15 @@
 
                                 <span class="lg:hidden absolute top-0 left-0 bg-blue-300 px-2 py-1 text-xs text-white font-bold uppercase rounded-br-xl">Estado</span>
 
-                                <span class="bg-{{ $movimiento->folioReal?->estado_color }} py-1 px-2 rounded-full text-white text-xs">{{ ucfirst($movimiento->folioReal?->estado) }}</span>
+                                @if($movimiento->folio_real)
+
+                                    <span class="bg-{{ $movimiento->folioReal?->estado_color }} py-1 px-2 rounded-full text-white text-xs">{{ ucfirst($movimiento->folioReal?->estado) }}</span>
+
+                                @else
+
+                                    <span class="bg-blue-400 py-1 px-2 rounded-full text-white text-xs">Nuevo</span>
+
+                                @endif
 
                             </x-table.cell>
 

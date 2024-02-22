@@ -56,19 +56,19 @@
 
                 </div>
 
-                <div class="tab-panel rounded-lg" :class="{ 'active': activeTab === 1 }" x-show.transition.in.opacity.duration.800="activeTab === 1">
+                <div class="tab-panel rounded-lg" :class="{ 'active': activeTab === 1 }" x-show.transition.in.opacity.duration.800="activeTab === 1" x-cloak>
 
                     @livewire('pase-folio.ubicacion-predio', ['movimientoRegistral' => $this->movimientoRegistral])
 
                 </div>
 
-                <div class="tab-panel rounded-lg" :class="{ 'active': activeTab === 2 }" x-show.transition.in.opacity.duration.800="activeTab === 2">
+                <div class="tab-panel rounded-lg" :class="{ 'active': activeTab === 2 }" x-show.transition.in.opacity.duration.800="activeTab === 2" x-cloak>
 
                     @livewire('pase-folio.descripcion-predio', ['movimientoRegistral' => $this->movimientoRegistral])
 
                 </div>
 
-                <div class="tab-panel rounded-lg" :class="{ 'active': activeTab === 3 }" x-show.transition.in.opacity.duration.800="activeTab === 3">
+                <div class="tab-panel rounded-lg" :class="{ 'active': activeTab === 3 }" x-show.transition.in.opacity.duration.800="activeTab === 3" x-cloak>
 
                     @livewire('pase-folio.propietarios', ['movimientoRegistral' => $this->movimientoRegistral])
 

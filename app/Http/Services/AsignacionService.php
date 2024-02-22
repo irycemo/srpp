@@ -150,8 +150,34 @@ class AsignacionService{
 
     }
 
+    public function obtenerSupervisorPropiedad($distrito):int
+    {
+
+        $supervisor = User::inRandomOrder()
+                                ->where('status', 'activo')
+                                ->when($distrito == 2, function($q){
+                                    $q->where('ubicacion', 'Regional 4');
+                                })
+                                ->when($distrito != 2, function($q){
+                                    $q->where('ubicacion', '!=', 'Regional 4');
+                                })
+                                ->whereHas('roles', function($q){
+                                    $q->where('name', 'Supervisor propiedad');
+                                })
+                                ->first();
+
+        if(!$supervisor){
+
+            throw new AsignacionServiceException('No se encontraron supervisores de propiedad para asignar al movimiento registral.');
+
+        }
+
+        return $supervisor->id;
+
+    }
+
     /* Inscripciones : Propiedad */
-    public function obtenerUsuarioPropiedad($distrito):int
+    public function obtenerUsuarioPropiedad($folioReal, $distrito):int
     {
 
         $usuarios = User::with('ultimoMovimientoRegistralAsignado')
@@ -162,8 +188,15 @@ class AsignacionService{
                                 ->when($distrito != 2, function($q){
                                     $q->where('ubicacion', '!=', 'Regional 4');
                                 })
-                                ->whereHas('roles', function($q){
-                                    $q->where('name', 'Propiedad');
+                                ->when($folioReal != null, function($q){
+                                    $q->whereHas('roles', function($q){
+                                        $q->whereIn('name', ['Propiedad', 'Registrador']);
+                                    });
+                                })
+                                ->when($folioReal === null, function($q){
+                                    $q->whereHas('roles', function($q){
+                                        $q->whereIn('name', ['Pase a folio', 'Registrador']);
+                                    });
                                 })
                                 ->get();
 
