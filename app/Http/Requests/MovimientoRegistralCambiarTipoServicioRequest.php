@@ -24,6 +24,7 @@ class MovimientoRegistralCambiarTipoServicioRequest extends FormRequest
         return [
             'movimiento_registral' => 'required',
             'tipo_servicio' => 'required',
+            'monto' => 'required'
         ];
     }
 }

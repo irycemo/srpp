@@ -35,7 +35,7 @@ class CertificacionesService{
 
             $movimientoRegistral = MovimientoRegistral::find($data['movimiento_registral']);
 
-            $movimientoRegistral->update(['estado' => 'nuevo']);
+            $movimientoRegistral->update(['estado' => 'nuevo', 'monto' => $movimientoRegistral->monto + (float)$data['monto']]);
 
             $movimientoRegistral->certificacion->update(['numero_paginas' => $movimientoRegistral->certificacion->numero_paginas + (int)$data['numero_paginas']]);
 

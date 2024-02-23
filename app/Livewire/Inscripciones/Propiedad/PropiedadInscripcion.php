@@ -1,26 +1,36 @@
 <?php
 
-namespace App\Livewire\PaseFolio;
+namespace App\Livewire\Inscripciones\Propiedad;
 
+use App\Models\User;
 use App\Models\Actor;
-use App\Models\Predio;
 use App\Models\Persona;
 use Livewire\Component;
-use Livewire\Attributes\On;
-use App\Constantes\Constantes;
+use App\Models\Propiedad;
+use Barryvdh\DomPDF\Facade\Pdf;
 use Illuminate\Validation\Rule;
 use Illuminate\Support\Facades\DB;
-use App\Models\MovimientoRegistral;
 use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Facades\Hash;
 
-class Propietarios extends Component
+class PropiedadInscripcion extends Component
 {
 
-    public $modalPropietario = false;
-    public $modalTransmitente = false;
-    public $modalRepresentante = false;
+    public $modalPropietario;
+    public $modalTransmitente;
+    public $modalRepresentante;
+    public $modalContraseña;
     public $crear = false;
     public $editar = false;
+
+    public $actos;
+    public $acto;
+
+    public $inscripcion;
+    public $propiedad;
+    public $predio;
+
+    public $actor;
 
     public $propietarios = [];
     public $representados = [];
@@ -48,8 +58,6 @@ class Propietarios extends Component
     public $representa_a;
     public $partes_iguales;
 
-    public $actor;
-
     public $tipos_propietarios;
 
     public $estados;
@@ -57,11 +65,28 @@ class Propietarios extends Component
     public $tipos_vialidades;
     public $codigos_postales;
 
-    public MovimientoRegistral $movimientoRegistral;
-    public Predio $propiedad;
+    public $propietario;
+
+    public $descripcion;
+
+    public $contraseña;
 
     protected function rules(){
         return [
+            'inscripcion.cp_localidad' => 'required',
+            'inscripcion.cp_oficina' => 'required',
+            'inscripcion.cp_tipo_predio' => 'required',
+            'inscripcion.cp_registro' => 'required',
+            'inscripcion.cc_region_catastral' => 'required',
+            'inscripcion.cc_municipio' => 'required',
+            'inscripcion.cc_zona_catastral' => 'required',
+            'inscripcion.cc_sector' => 'required',
+            'inscripcion.cc_manzana' => 'required',
+            'inscripcion.cc_predio' => 'required',
+            'inscripcion.cc_edificio' => 'required',
+            'inscripcion.cc_departamento' => 'required',
+            'inscripcion.acto_contenido' => 'required',
+            'inscripcion.descripcion_acto' => 'nullable',
             'porcentaje_nuda' => 'nullable|numeric|gt:0',
             'porcentaje_usufructo' => 'nullable|numeric|gt:0',
             'tipo_persona' => 'required',
@@ -75,7 +100,7 @@ class Propietarios extends Component
                 'regex:/^[A-Z]{1}[AEIOUX]{1}[A-Z]{2}[0-9]{2}(0[1-9]|1[0-2])(0[1-9]|1[0-9]|2[0-9]|3[0-1])[HM]{1}(AS|BC|BS|CC|CS|CH|CL|CM|DF|DG|GT|GR|HG|JC|MC|MN|MS|NT|NL|OC|PL|QT|QR|SP|SL|SR|TC|TS|TL|VZ|YN|ZS|NE)[B-DF-HJ-NP-TV-Z]{3}[0-9A-Z]{1}[0-9]{1}$/i'
             ],
             'rfc' => [
-                'nullable',
+                'required',
                 'regex:/^([A-ZÑ&]{3,4}) ?(?:- ?)?(\d{2}(?:0[1-9]|1[0-2])(?:0[1-9]|[12]\d|3[01])) ?(?:- ?)?([A-Z\d]{2})([A\d])$/'
             ],
             'razon_social' => Rule::requiredIf($this->tipo_persona === 'MORAL'),
@@ -91,10 +116,29 @@ class Propietarios extends Component
             'entidad' => 'nullable',
             'municipio_propietario' => 'nullable',
             'representados' => Rule::requiredIf($this->modalRepresentante === true),
-        ];
+         ];
     }
 
-    protected $validationAttributes  = [];
+    public function updatedTipoPersona(){
+
+        if($this->tipo_persona == 'FISICA'){
+
+            $this->reset('razon_social');
+
+        }elseif($this->tipo_persona == 'MORAL'){
+
+            $this->reset([
+                'nombre',
+                'ap_paterno',
+                'ap_materno',
+                'curp',
+                'fecha_nacimiento',
+                'estado_civil',
+            ]);
+
+        }
+
+    }
 
     public function resetear(){
 
@@ -122,47 +166,12 @@ class Propietarios extends Component
             'modalPropietario',
             'modalTransmitente',
             'modalRepresentante',
+            'modalContraseña',
             'partes_iguales'
         ]);
     }
 
-    #[On('cargarPropiedad')]
-    public function cargarPropiedad($id){
-
-        $this->propiedad = Predio::with('actores.persona')->find($id);
-
-    }
-
-    public function updatedTipoPersona(){
-
-        if($this->tipo_persona == 'FISICA'){
-
-            $this->reset('razon_social');
-
-        }elseif($this->tipo_persona == 'MORAL'){
-
-            $this->reset([
-                'nombre',
-                'ap_paterno',
-                'ap_materno',
-                'curp',
-                'fecha_nacimiento',
-                'estado_civil',
-            ]);
-
-        }
-
-    }
-
     public function agregarPropietario(){
-
-        if(!$this->propiedad->getKey()){
-
-            $this->dispatch('mostrarMensaje', ['error', "Primero debe ingresar los datos del predio."]);
-
-            return;
-
-        }
 
         $this->modalPropietario = true;
         $this->modalTransmitente = false;
@@ -173,14 +182,6 @@ class Propietarios extends Component
 
     public function agregarTransmitente(){
 
-        if(!$this->propiedad->getKey()){
-
-            $this->dispatch('mostrarMensaje', ['error', "Primero debe ingresar los datos del predio."]);
-
-            return;
-
-        }
-
         $this->modalPropietario = false;
         $this->modalTransmitente = true;
         $this->modalRepresentante = false;
@@ -189,14 +190,6 @@ class Propietarios extends Component
     }
 
     public function agregarRepresentante(){
-
-        if(!$this->propiedad->getKey()){
-
-            $this->dispatch('mostrarMensaje', ['error', "Primero debe ingresar los datos del predio."]);
-
-            return;
-
-        }
 
         $this->modalPropietario = false;
         $this->modalTransmitente = false;
@@ -207,24 +200,11 @@ class Propietarios extends Component
 
     public function guardarPropietario(){
 
-        $this->authorize('update', $this->movimientoRegistral);
+        $this->authorize('update', $this->inscripcion->movimientoRegistral);
 
         $this->validate();
 
-        if($this->revisarProcentajes()){
-
-            $this->dispatch('mostrarMensaje', ['error', "La suma de los porcentajes no puede exceder el 100%."]);
-
-            return;
-
-        }
-
-        $persona = Persona::query()
-                                    ->when($this->nombre, fn($q) => $q->where('nombre', $this->nombre))
-                                    ->when($this->ap_paterno, fn($q) => $q->where('ap_paterno', $this->ap_paterno))
-                                    ->when($this->ap_materno, fn($q) => $q->where('ap_materno', $this->ap_materno))
-                                    ->when($this->razon_social, fn($q) => $q->where('razon_social', $this->razon_social))
-                                    ->first();
+        $persona = Persona::where('rfc', $this->rfc)->first();
 
         if($persona){
 
@@ -242,13 +222,30 @@ class Propietarios extends Component
 
         }
 
+        if($this->revisarProcentajes()){
+
+            $this->dispatch('mostrarMensaje', ['error', "La suma de los porcentajes no puede exceder el 100%."]);
+
+            return;
+
+        }
+
         try {
 
             DB::transaction(function () use ($persona){
 
+
                 if($persona != null){
 
                     $persona->update([
+                        'nombre' => $this->nombre,
+                        'ap_paterno' => $this->ap_paterno,
+                        'ap_materno' => $this->ap_materno,
+                        'curp' => $this->curp,
+                        'rfc' => $this->rfc,
+                        'razon_social' => $this->razon_social,
+                        'fecha_nacimiento' => $this->fecha_nacimiento,
+                        'nacionalidad' => $this->nacionalidad,
                         'estado_civil' => $this->estado_civil,
                         'calle' => $this->calle,
                         'numero_exterior' => $this->numero_exterior_propietario,
@@ -289,7 +286,7 @@ class Propietarios extends Component
 
                     $porcentaje = $this->repartirPartesIguales(flag: true);
 
-                    $actor = $this->propiedad->actores()->create([
+                    $actor = $this->inscripcion->actores()->create([
                         'persona_id' => $persona->id,
                         'tipo_actor' => 'propietario',
                         'porcentaje_nuda' => $porcentaje,
@@ -299,7 +296,7 @@ class Propietarios extends Component
 
                 }else{
 
-                    $actor = $this->propiedad->actores()->create([
+                    $actor = $this->inscripcion->actores()->create([
                         'persona_id' => $persona->id,
                         'tipo_actor' => 'propietario',
                         'porcentaje_nuda' => $this->porcentaje_nuda,
@@ -315,9 +312,9 @@ class Propietarios extends Component
 
                 $this->resetear();
 
-                $this->propiedad->refresh();
+                $this->inscripcion->refresh();
 
-                $this->propiedad->load('actores.persona');
+                $this->inscripcion->load('actores.persona');
 
             });
 
@@ -330,49 +327,19 @@ class Propietarios extends Component
 
     }
 
-    public function repartirPartesIguales($flag = false){
-
-        $propietarios = $flag ? $this->propiedad->propietarios()->count() + 1 : $this->propiedad->propietarios()->count();
-
-        $porcentaje = 100 / $propietarios;
-
-        foreach ($this->propiedad->propietarios() as $propietario) {
-
-            $propietario->update([
-                'porcentaje_nuda' => $porcentaje,
-                'porcentaje_usufructo' => $porcentaje
-            ]);
-
-        }
-
-        return $porcentaje;
-
-    }
-
     public function guardarTransmitente(){
 
-        $this->authorize('update', $this->movimientoRegistral);
+        $this->authorize('update', $this->inscripcion->movimientoRegistral);
 
-        $this->validate();
+        $this->validate(['propietario' => 'required']);
 
-        $persona = Persona::query()
-                                ->when($this->nombre, fn($q) => $q->where('nombre', $this->nombre))
-                                ->when($this->ap_paterno, fn($q) => $q->where('ap_paterno', $this->ap_paterno))
-                                ->when($this->ap_materno, fn($q) => $q->where('ap_materno', $this->ap_materno))
-                                ->when($this->razon_social, fn($q) => $q->where('razon_social', $this->razon_social))
-                                ->first();
+        foreach ($this->inscripcion->transmitentes() as $transmitente) {
 
-        if($persona){
+            if($this->propietario == $transmitente->persona_id){
 
-            foreach ($this->inscripcion->propietarios() as $propietario) {
+                $this->dispatch('mostrarMensaje', ['error', "La persona ya es un transmitente."]);
 
-                if($persona->id == $propietario->persona_id){
-
-                    $this->dispatch('mostrarMensaje', ['error', "La persona ya es un transmitente."]);
-
-                    return;
-
-                }
+                return;
 
             }
 
@@ -380,49 +347,10 @@ class Propietarios extends Component
 
         try {
 
-            DB::transaction(function () use($persona){
+            DB::transaction(function () {
 
-                if($persona){
-
-                    $persona->update([
-                        'estado_civil' => $this->estado_civil,
-                        'calle' => $this->calle,
-                        'numero_exterior' => $this->numero_exterior_propietario,
-                        'numero_interior' => $this->numero_interior_propietario,
-                        'colonia' => $this->colonia,
-                        'cp' => $this->cp,
-                        'entidad' => $this->entidad,
-                        'municipio' => $this->municipio_propietario,
-                        'actualizado_por' => auth()->id()
-                    ]);
-
-                }else{
-
-                    $persona = Persona::create([
-                        'tipo' => $this->tipo_persona,
-                        'nombre' => $this->nombre,
-                        'ap_paterno' => $this->ap_paterno,
-                        'ap_materno' => $this->ap_materno,
-                        'curp' => $this->curp,
-                        'rfc' => $this->rfc,
-                        'razon_social' => $this->razon_social,
-                        'fecha_nacimiento' => $this->fecha_nacimiento,
-                        'nacionalidad' => $this->nacionalidad,
-                        'estado_civil' => $this->estado_civil,
-                        'calle' => $this->calle,
-                        'numero_exterior' => $this->numero_exterior_propietario,
-                        'numero_interior' => $this->numero_interior_propietario,
-                        'colonia' => $this->colonia,
-                        'cp' => $this->cp,
-                        'entidad' => $this->entidad,
-                        'municipio' => $this->municipio_propietario,
-                        'creado_por' => auth()->id()
-                    ]);
-
-                }
-
-                $actor = $this->propiedad->actores()->create([
-                    'persona_id' => $persona->id,
+                $actor = $this->inscripcion->actores()->create([
+                    'persona_id' => $this->propietario,
                     'tipo_actor' => 'transmitente',
                     'creado_por' => auth()->id()
                 ]);
@@ -433,9 +361,9 @@ class Propietarios extends Component
 
                 $this->resetear();
 
-                $this->propiedad->refresh();
+                $this->inscripcion->refresh();
 
-                $this->propiedad->load('actores.persona');
+                $this->inscripcion->load('actores.persona');
 
             });
 
@@ -450,16 +378,11 @@ class Propietarios extends Component
 
     public function guardarRepresentante(){
 
-        $this->authorize('update', $this->movimientoRegistral);
+        $this->authorize('update', $this->inscripcion->movimientoRegistral);
 
         $this->validate();
 
-        $persona = Persona::query()
-                            ->when($this->nombre, fn($q) => $q->where('nombre', $this->nombre))
-                            ->when($this->ap_paterno, fn($q) => $q->where('ap_paterno', $this->ap_paterno))
-                            ->when($this->ap_materno, fn($q) => $q->where('ap_materno', $this->ap_materno))
-                            ->when($this->razon_social, fn($q) => $q->where('razon_social', $this->razon_social))
-                            ->first();
+        $persona = Persona::where('rfc', $this->rfc)->first();
 
         if($persona){
 
@@ -479,11 +402,19 @@ class Propietarios extends Component
 
         try {
 
-            DB::transaction(function () use($persona){
+            DB::transaction(function () use ($persona){
 
                 if($persona){
 
                     $persona->update([
+                        'nombre' => $this->nombre,
+                        'ap_paterno' => $this->ap_paterno,
+                        'ap_materno' => $this->ap_materno,
+                        'curp' => $this->curp,
+                        'rfc' => $this->rfc,
+                        'razon_social' => $this->razon_social,
+                        'fecha_nacimiento' => $this->fecha_nacimiento,
+                        'nacionalidad' => $this->nacionalidad,
                         'estado_civil' => $this->estado_civil,
                         'calle' => $this->calle,
                         'numero_exterior' => $this->numero_exterior_propietario,
@@ -520,7 +451,7 @@ class Propietarios extends Component
 
                 }
 
-                $representante = $this->propiedad->actores()->create([
+                $representante = $this->inscripcion->actores()->create([
                     'persona_id' => $persona->id,
                     'tipo_actor' => 'representante',
                     'creado_por' => auth()->id()
@@ -536,9 +467,9 @@ class Propietarios extends Component
 
                 $this->resetear();
 
-                $this->propiedad->refresh();
+                $this->inscripcion->refresh();
 
-                $this->propiedad->load('actores.persona');
+                $this->inscripcion->load('actores.persona');
 
             });
 
@@ -657,9 +588,9 @@ class Propietarios extends Component
 
                 $this->resetear();
 
-                $this->propiedad->refresh();
+                $this->inscripcion->refresh();
 
-                $this->propiedad->load('actores.persona');
+                $this->inscripcion->load('actores.persona');
 
             });
 
@@ -674,7 +605,7 @@ class Propietarios extends Component
 
     public function borrarActor(Actor $actor){
 
-        $this->authorize('update', $this->movimientoRegistral);
+        $this->authorize('update', $this->inscripcion->movimientoRegistral);
 
         if($actor->representado_por){
 
@@ -692,9 +623,9 @@ class Propietarios extends Component
 
             $this->resetear();
 
-            $this->propiedad->refresh();
+            $this->inscripcion->refresh();
 
-            $this->propiedad->load('actores.persona');
+            $this->inscripcion->load('actores.persona');
 
         } catch (\Throwable $th) {
 
@@ -705,13 +636,32 @@ class Propietarios extends Component
 
     }
 
+    public function repartirPartesIguales($flag = false){
+
+        $propietarios = $flag ? $this->inscripcion->propietarios()->count() + 1 : $this->inscripcion->propietarios()->count();
+
+        $porcentaje = 100 / $propietarios;
+
+        foreach ($this->inscripcion->propietarios() as $propietario) {
+
+            $propietario->update([
+                'porcentaje_nuda' => $porcentaje,
+                'porcentaje_usufructo' => $porcentaje
+            ]);
+
+        }
+
+        return $porcentaje;
+
+    }
+
     public function revisarProcentajes($id = null){
 
         $pn = 0;
 
         $pu = 0;
 
-        foreach($this->propiedad->propietarios() as $propietario){
+        foreach($this->inscripcion->propietarios() as $propietario){
 
             if($id == $propietario->id)
                 continue;
@@ -733,19 +683,174 @@ class Propietarios extends Component
 
     }
 
+    public function cargarPropietarios(){
+
+        $this->inscripcion->actores()->delete();
+
+        foreach($this->predio->propietarios() as $propietario){
+
+            $nuevo = $propietario->replicate();
+
+            $nuevo->actorable_type = 'App\Models\Propiedad';
+            $nuevo->actorable_id =$this->inscripcion->id;
+
+            $nuevo->save();
+
+        }
+
+        $this->inscripcion->refresh();
+
+    }
+
+    public function validaciones(){
+
+        if($this->inscripcion->propietarios()->count() == 0){
+
+            $this->dispatch('mostrarMensaje', ['error', "Debe tener almenos un propietario."]);
+
+            return true;
+
+        }
+
+        if($this->inscripcion->transmitentes()->count() == 0){
+
+            $this->dispatch('mostrarMensaje', ['error', "Debe tener almenos un transmitente."]);
+
+            return true;
+
+        }
+
+        $pn = 0;
+
+        $pu = 0;
+
+        foreach($this->inscripcion->propietarios() as $propietario){
+
+            $pn = $pn + $propietario->porcentaje_nuda;
+
+            $pu = $pu + $propietario->porcentaje_usufructo;
+
+        }
+
+        if($pn < 100){
+
+            $this->dispatch('mostrarMensaje', ['error', "El porcentaje de nuda propiedad no es el 100%."]);
+
+            return true;
+
+        }
+
+        if($pu < 100){
+
+            $this->dispatch('mostrarMensaje', ['error', "El porcentaje de usufructo no es el 100%."]);
+
+            return true;
+
+        }
+
+    }
+
+    public function finalizar(){
+
+        $this->validate([
+            'inscripcion.cp_localidad' => 'required',
+            'inscripcion.cp_oficina' => 'required',
+            'inscripcion.cp_tipo_predio' => 'required',
+            'inscripcion.cp_registro' => 'required',
+            'inscripcion.cc_region_catastral' => 'required',
+            'inscripcion.cc_municipio' => 'required',
+            'inscripcion.cc_zona_catastral' => 'required',
+            'inscripcion.cc_sector' => 'required',
+            'inscripcion.cc_manzana' => 'required',
+            'inscripcion.cc_predio' => 'required',
+            'inscripcion.cc_edificio' => 'required',
+            'inscripcion.cc_departamento' => 'required',
+            'inscripcion.acto_contenido' => 'required',
+            'inscripcion.descripcion_acto' => 'required'
+        ]);
+
+        if($this->validaciones()) return;
+
+        $this->modalContraseña = true;
+
+    }
+
+    public function crearPdf(){
+
+        $director = User::where('status', 'activo')->whereHas('roles', function($q){
+            $q->where('name', 'Director');
+        })->first()->name;
+
+        $jefe_departamento = User::where('status', 'activo')->whereHas('roles', function($q){
+            $q->where('name', 'Jefe de departamento')->where('area', 'Departamento de Registro de Inscripciones');
+        })->first()->name;
+
+        $pdf = Pdf::loadView('incripciones.propiedad.transmitivo', [
+            'inscripcion' => $this->inscripcion,
+            'director' => $director,
+            'jefe_departamento' => $jefe_departamento,
+            'distrito' => $this->inscripcion->movimientoRegistral->getRawOriginal('distrito'),
+        ]);
+
+        $pdf->render();
+
+        $dom_pdf = $pdf->getDomPDF();
+
+        $canvas = $dom_pdf->get_canvas();
+
+        $canvas->page_text(480, 794, "Página: {PAGE_NUM} de {PAGE_COUNT}", null, 10, array(1, 1, 1));
+
+        return response()->streamDownload(
+            fn () => print($pdf->output()),
+            'inscripcion.pdf'
+        );
+
+    }
+
+    public function inscribir(){
+
+        if(!Hash::check($this->contraseña, auth()->user()->password)){
+
+            $this->dispatch('mostrarMensaje', ['error', "Contraseña incorrecta."]);
+
+            return;
+
+        }
+
+        try {
+
+            $this->inscripcion->actualizado_por = auth()->id();
+            $this->inscripcion->save();
+
+            $this->dispatch('mostrarMensaje', ['success', "La información se actualizó con éxito."]);
+
+            $this->modalContraseña = false;
+
+            $this->crearPdf();
+
+        } catch (\Throwable $th) {
+            Log::error("Error al finalizar inscripcion de propiedad por el usuario: (id: " . auth()->user()->id . ") " . auth()->user()->name . ". " . $th);
+            $this->dispatch('mostrarMensaje', ['error', "Ha ocurrido un error."]);
+        }
+
+    }
+
     public function mount(){
 
-        $this->tipos_propietarios = Constantes::TIPO_PROPIETARIO;
+        $this->inscripcion = Propiedad::find($this->propiedad);
 
-        $this->estados = Constantes::ESTADOS;
+        $this->predio = $this->inscripcion->movimientoRegistral->folioReal->predio;
 
-        if($this->movimientoRegistral->folio_real)
-            $this->cargarPropiedad($this->movimientoRegistral->folioReal->predio->id);
+        if(in_array($this->inscripcion->servicio, ['D114', 'D116', 'D115', 'D113']))
+            $this->actos = ['Compraventa', 'Propiedad 2', 'Propiedad 3', 'Propiedad 4', 'Propiedad 5', 'Propiedad 6', 'Propiedad 7'];
 
     }
 
     public function render()
     {
-        return view('livewire.pase-folio.propietarios');
+
+        if($this->inscripcion->movimientoRegistral->folioReal->estado != 'activo') abort(401, 'El folio real no esta activo');
+
+        return view('livewire.inscripciones.propiedad.propiedad-inscripcion')->extends('layouts.admin');
     }
 }

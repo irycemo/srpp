@@ -143,7 +143,7 @@ class Consulta extends Component
         ]);
 
         $this->folioReal = $folioReal->load(
-            'predio.propietarios',
+            'predio.propietarios.persona',
             'predio.escritura',
             'predio.colindancias',
             'sentencias.movimientoRegistral',

@@ -139,8 +139,8 @@
             <div>
 
                 <p class="parrafo">
-                    LA PRESENTE COPIA ES TOMADA DE LA QUE OBRE EN EL REGISTRO NÚMERO <strong>{{ $registro }}</strong> <strong>({{ $registro_letras }})</strong>
-                    DEL TOMO <strong>{{ $tomo }}</strong> <strong>({{ $tomo_letras }})</strong> DEL LIBRO DE <STRONG>{{ $seccion }}</STRONG> CORRESPONDIENTE AL
+                    LA PRESENTE COPIA ES TOMADA DE LA QUE OBRE EN EL REGISTRO NÚMERO <strong>{{ $registro }} @if($registro_bis) BIS @endif</strong> <strong>({{ $registro_letras }})</strong>
+                    DEL TOMO <strong>{{ $tomo }} @if($tomo_bis) BIS @endif</strong> <strong>({{ $tomo_letras }})</strong> DEL LIBRO DE <STRONG>{{ $seccion }}</STRONG> CORRESPONDIENTE AL
                     DISTRITO DE <strong>@if($distrito == '02 URUAPAN') URUAPAN @else {{ $distrito }} @endif</strong>, Y SE COMPULSA
                     EN <strong>{{ $paginas }}</strong> <strong>({{ $paginas_letras }})</strong>  PAGINA(S) UTILES
                     PARA ENTREGARSE EN <strong>CARPETA CON FOLIO NO. {{ $folio_carpeta }}</strong> A LA ORDEN DE: <strong>{{ $solicitante }}</strong>

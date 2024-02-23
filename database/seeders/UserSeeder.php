@@ -159,6 +159,24 @@ class UserSeeder extends Seeder
         ])->assignRole('Supervisor Copias');
 
         User::create([
+            'name' => 'Supervisor propiedad',
+            'ubicacion' => 'Regional 4',
+            'status' => 'activo',
+            'email' => 'supervisor3@hotmail.com',
+            'password' => Hash::make('sistema'),
+            'area' => 'Coordinación Regional 4 Purhépecha (Uruapan)',
+        ])->assignRole('Supervisor propiedad');
+
+        User::create([
+            'name' => 'Supervisor propiedad 2',
+            'ubicacion' => 'RPP',
+            'status' => 'activo',
+            'email' => 'supervisor4@hotmail.com',
+            'password' => Hash::make('sistema'),
+            'area' => 'Dirección del Registro Público de la Propiedad',
+        ])->assignRole('Supervisor propiedad');
+
+        User::create([
             'name' => 'Consulta',
             'ubicacion' => 'Regional 4',
             'status' => 'activo',
@@ -175,6 +193,15 @@ class UserSeeder extends Seeder
             'password' => Hash::make('sistema'),
             'area' => 'Dirección del Registro Público de la Propiedad',
         ])->assignRole('Consulta');
+
+        User::create([
+            'name' => 'Pase a folio',
+            'ubicacion' => 'RPP',
+            'status' => 'activo',
+            'email' => 'pasefolio@hotmail.com',
+            'password' => Hash::make('sistema'),
+            'area' => 'Dirección del Registro Público de la Propiedad',
+        ])->assignRole('Pase a folio');
 
     }
 }

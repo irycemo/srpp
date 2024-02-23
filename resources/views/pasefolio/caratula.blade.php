@@ -299,7 +299,7 @@
 
                 <ul>
 
-                    @foreach ($folioReal->predio->propietarios as $propietario)
+                    @foreach ($folioReal->predio->propietarios() as $propietario)
 
                         <li><strong>Nombre:</strong> {{ $propietario->persona->nombre }} {{ $propietario->persona->ap_paterno }} {{ $propietario->persona->ap_materno }} {{ $propietario->persona->razon_social }}; <strong>porcentaje nuda:</strong> {{ $propietario->porcentaje_nuda }} %; <strong>porcentaje usufructo:</strong> {{ $propietario->porcentaje_usufructo }} %;</li>
 

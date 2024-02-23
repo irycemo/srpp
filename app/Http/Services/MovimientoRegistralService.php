@@ -123,7 +123,7 @@ class MovimientoRegistralService{
 
             $movimiento_registral = MovimientoRegistral::findOrFail($data['movimiento_registral']);
 
-            $movimiento_registral->update(['tipo_servicio' => $data['tipo_servicio']]);
+            $movimiento_registral->update(['tipo_servicio' => $data['tipo_servicio'], 'monto' => $movimiento_registral->monto + (float)$data['monto']]);
 
         } catch (\Throwable $th) {
 

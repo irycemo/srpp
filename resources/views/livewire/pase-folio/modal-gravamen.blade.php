@@ -276,7 +276,7 @@
 
                                 @if($propiedad)
 
-                                    @foreach ($propiedad->propietarios as $propietario)
+                                    @foreach ($propiedad->propietarios() as $propietario)
 
                                         <option value="{{ $propietario->id }}">{{ $propietario->persona->nombre }} {{ $propietario->persona->ap_paterno }} {{ $propietario->persona->ap_materno }} {{ $propietario->persona->razon_social }}</option>
 
@@ -396,7 +396,7 @@
 
                                     @if($propiedad)
 
-                                        @foreach ($propiedad->propietarios as $propietario)
+                                        @foreach ($propiedad->propietarios() as $propietario)
 
                                             <option value="{{ $propietario->id }}">{{ $propietario->persona->nombre }} {{ $propietario->persona->ap_paterno }} {{ $propietario->persona->ap_materno }} {{ $propietario->persona->razon_social }}</option>
 
@@ -455,7 +455,7 @@
 
                                     @if($propiedad)
 
-                                        @foreach ($propiedad->propietarios as $propietario)
+                                        @foreach ($propiedad->propietarios() as $propietario)
 
                                             <option value="{{ $propietario->id }}">{{ $propietario->persona->nombre }} {{ $propietario->persona->ap_paterno }} {{ $propietario->persona->ap_materno }} {{ $propietario->persona->razon_social }}</option>
 

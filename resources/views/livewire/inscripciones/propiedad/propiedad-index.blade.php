@@ -8,6 +8,7 @@
 
             <x-slot name="head">
 
+                <x-table.heading sortable wire:click="sortBy('folio_real')" :direction="$sort === 'folio_real' ? $direction : null" >Folio Real</x-table.heading>
                 <x-table.heading sortable wire:click="sortBy('año')" :direction="$sort === 'año' ? $direction : null" >Año</x-table.heading>
                 <x-table.heading sortable wire:click="sortBy('tramite')" :direction="$sort === 'tramite' ? $direction : null" ># control</x-table.heading>
                 <x-table.heading sortable wire:click="sortBy('tomo')" :direction="$sort === 'tomo' ? $direction : null" >Tomo</x-table.heading>
@@ -29,6 +30,14 @@
                 @forelse ($movimientos as $movimiento)
 
                     <x-table.row wire:loading.class.delaylongest="opacity-50" wire:key="row-{{ $movimiento->id }}">
+
+                        <x-table.cell>
+
+                            <span class="lg:hidden absolute top-0 left-0 bg-blue-300 px-2 py-1 text-xs text-white font-bold uppercase rounded-br-xl">Folio Real</span>
+
+                            {{ $movimiento->folioReal->folio }}
+
+                        </x-table.cell>
 
                         <x-table.cell>
 
@@ -120,7 +129,7 @@
 
                             <div class="flex justify-center lg:justify-start gap-2">
 
-                                <x-link href="{{ route('elaboracion_folio', $movimiento->id) }}">Elaborar</x-link>
+                                <x-link href="{{ route('propiedad.inscripcion', $movimiento->inscripcionPropiedad->id) }}">Elaborar</x-link>
 
                             </div>
 
@@ -132,7 +141,7 @@
 
                     <x-table.row>
 
-                        <x-table.cell colspan="11">
+                        <x-table.cell colspan="12">
 
                             <div class="bg-white text-gray-500 text-center p-5 rounded-full text-lg">
 
@@ -152,7 +161,7 @@
 
                 <x-table.row>
 
-                    <x-table.cell colspan="11" class="bg-gray-50">
+                    <x-table.cell colspan="12" class="bg-gray-50">
 
                         {{ $movimientos->links()}}
 

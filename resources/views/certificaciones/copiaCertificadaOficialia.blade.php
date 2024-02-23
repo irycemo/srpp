@@ -141,8 +141,8 @@
                 <p class="parrafo">
                     EL CIUDADANO <strong>@if($distrito == '02 URUAPAN') L.A. SANDRO MEDINA MORALES COORDINADOR REGIONAL URUAPAN @else LICENCIADO EN DERECHO {{ $director }}, DIRECTOR DEL REGISTRO PÚBLICO DE LA PROPIEDAD @endif </strong>
                     EN EL ESTADO DE MICHOACÁN DE OCAMPO QUE ACTUA CONFORME A LA LEY, CERTIFICA QUE LA PRESENTE COPIA ES
-                    FIELMENTE TOMADA DE LA QUE OBRE EN EL REGISTRO NÚMERO <strong>{{ $registro }}</strong> <strong>({{ $registro_letras }})</strong>
-                    DEL TOMO <strong>{{ $tomo }}</strong> <strong>({{ $tomo_letras }})</strong> DEL LIBRO DE <STRONG>{{ $seccion }}</STRONG> CORRESPONDIENTE AL
+                    FIELMENTE TOMADA DE LA QUE OBRE EN EL REGISTRO NÚMERO <strong>{{ $registro }} @if($registro_bis) BIS @endif</strong> <strong>({{ $registro_letras }})</strong>
+                    DEL TOMO <strong>{{ $tomo }} @if($tomo_bis) BIS @endif</strong> <strong>({{ $tomo_letras }})</strong> DEL LIBRO DE <STRONG>{{ $seccion }}</STRONG> CORRESPONDIENTE AL
                     DISTRITO DE <strong>@if($distrito == '02 URUAPAN') URUAPAN @else {{ $distrito }} @endif</strong>, Y SE COMPULSA
                     EN <strong>{{ $paginas }}</strong> <strong>({{ $paginas_letras }})</strong>  PAGINA(S) UTILES DEBIDAMENTE COTEJADAS,
                     SOLICITADAS MEDIANTE OFICIO <strong>{{ $numero_oficio }}</strong> PARA ENTREGARSE A LA ORDEN DE: <strong>{{ $solicitante }}</strong>, DOY FE.-

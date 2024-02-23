@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Livewire\Inscripciones;
+namespace App\Livewire\Inscripciones\Propiedad;
 
 use App\Models\MovimientoRegistral;
 use Livewire\Component;
@@ -8,7 +8,7 @@ use Livewire\WithPagination;
 use App\Models\Propiedad as ModelPropiedad;
 use App\Traits\ComponentesTrait;
 
-class Propiedad extends Component
+class PropiedadIndex extends Component
 {
     use WithPagination;
     use ComponentesTrait;
@@ -22,7 +22,7 @@ class Propiedad extends Component
     public function render()
     {
 
-        $movimientos = MovimientoRegistral::with('inscripcionPropiedad', 'asignadoA', 'actualizadoPor')
+        $movimientos = MovimientoRegistral::with('inscripcionPropiedad', 'asignadoA', 'actualizadoPor', 'folioReal')
                                                 ->whereHas('folioReal', function($q){
                                                     $q->where('estado', 'activo');
                                                 })
@@ -49,6 +49,6 @@ class Propiedad extends Component
                                                 ->orderBy($this->sort, $this->direction)
                                                 ->paginate($this->pagination);
 
-        return view('livewire.inscripciones.propiedad', compact('movimientos'))->extends('layouts.admin');
+        return view('livewire.inscripciones.propiedad.propiedad-index', compact('movimientos'))->extends('layouts.admin');
     }
 }

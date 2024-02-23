@@ -24,6 +24,7 @@ class CopiasUpdateRequest extends FormRequest
         return [
             'movimiento_registral' => 'required',
             'numero_paginas' => 'required',
+            'monto' => 'required'
         ];
     }
 }

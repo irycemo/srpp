@@ -33,9 +33,13 @@ class CopiasController extends Controller
 
         $registro = $certificacion->movimientoRegistral->registro;
 
+        $registro_bis = $certificacion->movimientoRegistral->registro_bis;
+
         $registro_letras = $formatter->toWords($registro);
 
         $tomo = $certificacion->movimientoRegistral->tomo;
+
+        $tomo_bis = $certificacion->movimientoRegistral->tomo_bis;
 
         $tomo_letras = $formatter->toWords($tomo);
 
@@ -92,7 +96,9 @@ class CopiasController extends Controller
                 'director',
                 'registro_letras',
                 'registro',
+                'registro_bis',
                 'tomo',
+                'tomo_bis',
                 'tomo_letras',
                 'paginas',
                 'paginas_letras',
@@ -125,7 +131,9 @@ class CopiasController extends Controller
                 'director',
                 'registro_letras',
                 'registro',
+                'registro_bis',
                 'tomo',
+                'tomo_bis',
                 'tomo_letras',
                 'paginas',
                 'paginas_letras',
@@ -170,9 +178,13 @@ class CopiasController extends Controller
 
         $registro = $certificacion->movimientoRegistral->registro;
 
+        $registro_bis = $certificacion->movimientoRegistral->registro_bis;
+
         $registro_letras = $formatter->toWords($registro);
 
         $tomo = $certificacion->movimientoRegistral->tomo;
+
+        $tomo_bis = $certificacion->movimientoRegistral->tomo_bis;
 
         $tomo_letras = $formatter->toWords($tomo);
 
@@ -225,7 +237,9 @@ class CopiasController extends Controller
             'director',
             'registro_letras',
             'registro',
+            'registro_bis',
             'tomo',
+            'tomo_bis',
             'tomo_letras',
             'paginas',
             'paginas_letras',

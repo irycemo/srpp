@@ -10,7 +10,7 @@
 
                 <x-input-group for="codigo_postal" label="Código postal" :error="$errors->first('codigo_postal')" class="w-full">
 
-                    <x-input-text id="codigo_postal" wire:model.lazy="codigo_postal" />
+                    <x-input-text type="number" id="codigo_postal" wire:model.lazy="codigo_postal" />
 
                 </x-input-group>
 

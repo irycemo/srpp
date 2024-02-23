@@ -35,7 +35,7 @@ class ExpirarConsultas extends Command
             $certificaciones = Certificacion::withWhereHas('movimientoRegistral', function($q){
                                                                 $q->whereIn('estado', ['nuevo', 'rechazado']);
                                                             })
-                                                            ->where('servicio', 'DC93')
+                                                            ->whereIn('servicio', ['DC93', 'DC90', 'DC91', 'DC92'])
                                                             ->get();
 
             foreach ($certificaciones as $certificado) {
@@ -59,7 +59,7 @@ class ExpirarConsultas extends Command
 
         $actual = now();
 
-            for ($i=5; $i < 0; $i--) {
+            for ($i = 0; $i < 5; $i++) {
 
                 $actual->subDay();
 

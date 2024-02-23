@@ -20,24 +20,20 @@ class Predio extends Model implements Auditable
 
     protected $guarded = ['id', 'created_at', 'updated_At'];
 
-    /* public function propietarios(){
-        return $this->hasMany(Propietario::class);
-    } */
-
     public function actores(){
-        return $this->hasMany(Actor::class);
+        return $this->morphMany(Actor::class, 'actorable');
     }
 
     public function propietarios(){
-        return $this->hasMany(Actor::class)->where('tipo_Actor', 'propietario');
+        return $this->actores()->with('persona')->where('tipo_Actor', 'propietario')->get();
     }
 
     public function transmitentes(){
-        return $this->hasMany(Actor::class)->where('tipo_Actor', 'transmitente');
+        return $this->actores()->with('persona')->where('tipo_Actor', 'transmitente')->get();
     }
 
     public function representantes(){
-        return $this->hasMany(Actor::class)->where('tipo_Actor', 'representante');
+        return $this->actores()->with('persona', 'representados.persona')->where('tipo_Actor', 'representante')->get();
     }
 
     public function colindancias(){

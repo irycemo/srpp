@@ -142,7 +142,7 @@ class ModalGravamen extends ModalComponent
     #[On('cargarPropiedad')]
     public function cargarPropiedad($id){
 
-        $this->propiedad = Predio::with('propietarios.persona')->find($id);
+        $this->propiedad = Predio::find($id);
 
     }
 

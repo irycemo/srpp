@@ -261,6 +261,34 @@ class Elaboracion extends Component
         if($this->propiedad)
             $this->propiedad->refresh();
 
+        $pn = 0;
+
+        $pu = 0;
+
+        foreach($this->propiedad->propietarios() as $propietario){
+
+            $pn = $pn + $propietario->porcentaje_nuda;
+
+            $pu = $pu + $propietario->porcentaje_usufructo;
+
+        }
+
+        if($pn < 100){
+
+            $this->dispatch('mostrarMensaje', ['error', "El porcentaje de nuda propiedad no es el 100%."]);
+
+            return;
+
+        }
+
+        if($pu < 100){
+
+            $this->dispatch('mostrarMensaje', ['error', "El porcentaje de usufructo no es el 100%."]);
+
+            return;
+
+        }
+
         if($this->propiedad->colindancias->count() == 0){
 
             $this->dispatch('mostrarMensaje', ['error', "El predio debe tener al menos una colindancia."]);
@@ -349,7 +377,7 @@ class Elaboracion extends Component
 
         }
 
-        if($this->propiedad->propietarios->count() == 0){
+        if($this->propiedad->propietarios()->count() == 0){
 
             $this->dispatch('mostrarMensaje', ['error', "Debe tener almenos un propietario."]);
 
@@ -357,7 +385,7 @@ class Elaboracion extends Component
 
         }
 
-        if($this->propiedad->transmitentes->count() == 0){
+        if($this->propiedad->transmitentes()->count() == 0){
 
             $this->dispatch('mostrarMensaje', ['error', "Debe tener almenos un transmitente."]);
 

@@ -16,8 +16,8 @@ class Actor extends Model implements Auditable
 
     protected $guarded = ['id', 'created_at', 'updated_at'];
 
-    public function predio(){
-        return $this->belongsTo(Predio::class);
+    public function actorable(){
+        return $this->morphTo();
     }
 
     public function persona(){

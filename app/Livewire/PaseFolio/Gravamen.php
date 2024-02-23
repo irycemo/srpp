@@ -27,7 +27,7 @@ class Gravamen extends Component
     #[On('cargarPropiedad')]
     public function cargarPropiedad($id){
 
-        $this->propiedad = Predio::with('propietarios.persona')->find($id);
+        $this->propiedad = Predio::find($id);
 
     }
 
@@ -41,7 +41,7 @@ class Gravamen extends Component
 
         }
 
-        if($this->propiedad->propietarios->count() == 0){
+        if($this->propiedad->propietarios()->count() == 0){
 
             $this->dispatch('mostrarMensaje', ['error', "Primero debe ingresar los propietarios."]);
 

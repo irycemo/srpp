@@ -65,7 +65,6 @@ class MovimientoRegistralRequest extends FormRequest
             'tipo_documento' => 'nullable',
             'autoridad_cargo' => 'nullable',
             'autoridad_nombre' => 'nullable',
-            'autoridad_numero' => 'nullable',
             'fecha_emision' => 'nullable',
             'procedencia' => 'nullable',
         ];
