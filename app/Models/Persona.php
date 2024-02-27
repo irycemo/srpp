@@ -17,4 +17,8 @@ class Persona extends Model implements Auditable
 
     protected $guarded = ['id', 'created_at', 'updated_at'];
 
+    public function nombreCompleto(){
+        return $this->nombre . ' ' . $this->ap_paterno . ' ' . $this->ap_materno;
+    }
+
 }

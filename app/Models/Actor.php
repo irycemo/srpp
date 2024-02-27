@@ -28,4 +28,8 @@ class Actor extends Model implements Auditable
         return $this->hasMany(Actor::class, 'representado_por');
     }
 
+    public function representadoPor(){
+        return $this->belongsTo(Actor::class,'representado_por');
+    }
+
 }

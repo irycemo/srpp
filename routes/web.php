@@ -16,6 +16,7 @@ use App\Http\Controllers\SetPasswordController;
 use App\Livewire\Certificaciones\CopiasSimples;
 use App\Livewire\Certificaciones\CopiasCertificadas;
 use App\Http\Controllers\Certificaciones\CopiasController;
+use App\Http\Controllers\InscripcionesPropiedad\TraslativoController;
 use App\Http\Controllers\PaseFolio\PaseFolioController;
 use App\Livewire\Certificaciones\ConsultasCertificaciones;
 use App\Livewire\Consulta\Consulta;
@@ -80,6 +81,8 @@ Route::group(['middleware' => ['auth', 'esta.activo']], function(){
     /* Inscripciones */
     Route::get('propiedad', PropiedadIndex::class)->middleware('permission:Propiedad')->name('propiedad');
     Route::get('propiedad/{propiedad}', PropiedadInscripcion::class)->middleware('permission:Propiedad inscripción')->name('propiedad.inscripcion');
+    Route::get('boleta_presentacion/{propiedad}', [TraslativoController::class, 'boleta_presentacion'])->middleware('permission:Propiedad inscripción')->name('propiedad.inscripcion.boleta_presentacion');
+    Route::get('acto/{propiedad}', [TraslativoController::class, 'acto'])->middleware('permission:Propiedad inscripción')->name('propiedad.inscripcion.acto');
 
     /* Consultas */
     Route::get('consultas', Consulta::class)->middleware('permission:Consultas')->name('consultas');

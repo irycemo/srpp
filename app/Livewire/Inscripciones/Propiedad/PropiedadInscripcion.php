@@ -785,7 +785,7 @@ class PropiedadInscripcion extends Component
             $q->where('name', 'Jefe de departamento')->where('area', 'Departamento de Registro de Inscripciones');
         })->first()->name;
 
-        $pdf = Pdf::loadView('incripciones.propiedad.transmitivo', [
+        $pdf = Pdf::loadView('incripciones.propiedad.acto', [
             'inscripcion' => $this->inscripcion,
             'director' => $director,
             'jefe_departamento' => $jefe_departamento,
@@ -823,6 +823,8 @@ class PropiedadInscripcion extends Component
             $this->inscripcion->save();
 
             $this->dispatch('mostrarMensaje', ['success', "La información se actualizó con éxito."]);
+
+            $this->dispatch('imprimir_documento', ['inscripcion' => $this->inscripcion->id]);
 
             $this->modalContraseña = false;
 

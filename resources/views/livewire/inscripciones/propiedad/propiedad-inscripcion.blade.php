@@ -427,11 +427,11 @@
     <div class="bg-white rounded-lg p-3 flex justify-end shadow-lg">
 
         <x-button-green
-            wire:click="crearPdf"
+            wire:click="finalizar"
             wire:loading.attr="disabled"
-            wire:target="crearPdf">
+            wire:target="finalizar">
 
-            <img wire:loading wire:target="crearPdf" class="mx-auto h-4 mr-1" src="{{ asset('storage/img/loading3.svg') }}" alt="Loading">
+            <img wire:loading wire:target="finalizar" class="mx-auto h-4 mr-1" src="{{ asset('storage/img/loading3.svg') }}" alt="Loading">
 
             Finalizar inscripción
 
@@ -1015,5 +1015,25 @@
 
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js" integrity="sha512-894YE6QWD5I59HgZOGReFYm4dnWc1Qt5NtvYSaNcOP+u1T9qYdvdihz0PPSiiqn/+/3e7Jo4EaG7TubfWGUrMQ==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
     <script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
+
+    <script>
+
+        window.addEventListener('imprimir_documento', event => {
+
+            const documento = event.detail[0].inscripcion;
+
+            var url = "{{ route('propiedad.inscripcion.boleta_presentacion', '')}}" + "/" + documento;
+
+            window.open(url, '_blank');
+
+            var url = "{{ route('propiedad.inscripcion.acto', '')}}" + "/" + documento;
+
+            window.open(url, '_blank');
+
+            window.location.href = "{{ route('propiedad')}}";
+
+        });
+
+    </script>
 
 @endpush
