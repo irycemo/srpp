@@ -33,17 +33,15 @@ class ExpirarConsultas extends Command
         try {
 
             $certificaciones = Certificacion::withWhereHas('movimientoRegistral', function($q){
-                                                                $q->whereIn('estado', ['nuevo', 'rechazado']);
+                                                                $q->whereIn('estado', ['nuevo', 'rechazado'])
+                                                                    ->whereDate('fecha_pago', '<', $this->calcularDia());
                                                             })
                                                             ->whereIn('servicio', ['DC93', 'DC90', 'DC91', 'DC92'])
                                                             ->get();
 
             foreach ($certificaciones as $certificado) {
 
-                $fecha = $this->calcularDia();
-
-                if($fecha->lte($certificado->created_at))
-                    $certificado->movimientoRegistral->update(['estado' => 'expirado']);
+                $certificado->movimientoRegistral->update(['estado' => 'expirado']);
 
             }
 
@@ -71,7 +69,7 @@ class ExpirarConsultas extends Command
 
             }
 
-            return $actual;
+            return $actual->format('Y-d-m');
 
     }
 

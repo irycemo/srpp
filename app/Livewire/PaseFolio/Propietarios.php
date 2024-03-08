@@ -156,6 +156,14 @@ class Propietarios extends Component
 
     public function agregarPropietario(){
 
+        if(!$this->movimientoRegistral->folio_real){
+
+            $this->dispatch('mostrarMensaje', ['error', "Primero ingrese la información del documento de entrada."]);
+
+            return;
+
+        }
+
         if(!$this->propiedad->getKey()){
 
             $this->dispatch('mostrarMensaje', ['error', "Primero debe ingresar los datos del predio."]);
@@ -173,6 +181,14 @@ class Propietarios extends Component
 
     public function agregarTransmitente(){
 
+        if(!$this->movimientoRegistral->folio_real){
+
+            $this->dispatch('mostrarMensaje', ['error', "Primero ingrese la información del documento de entrada."]);
+
+            return;
+
+        }
+
         if(!$this->propiedad->getKey()){
 
             $this->dispatch('mostrarMensaje', ['error', "Primero debe ingresar los datos del predio."]);
@@ -189,6 +205,14 @@ class Propietarios extends Component
     }
 
     public function agregarRepresentante(){
+
+        if(!$this->movimientoRegistral->folio_real){
+
+            $this->dispatch('mostrarMensaje', ['error', "Primero ingrese la información del documento de entrada."]);
+
+            return;
+
+        }
 
         if(!$this->propiedad->getKey()){
 
@@ -220,15 +244,17 @@ class Propietarios extends Component
         }
 
         $persona = Persona::query()
-                                    ->when($this->nombre, fn($q) => $q->where('nombre', $this->nombre))
-                                    ->when($this->ap_paterno, fn($q) => $q->where('ap_paterno', $this->ap_paterno))
-                                    ->when($this->ap_materno, fn($q) => $q->where('ap_materno', $this->ap_materno))
-                                    ->when($this->razon_social, fn($q) => $q->where('razon_social', $this->razon_social))
-                                    ->first();
+                    ->when($this->nombre, fn($q) => $q->where('nombre', $this->nombre))
+                    ->when($this->ap_paterno, fn($q) => $q->orWhere('ap_paterno', $this->ap_paterno))
+                    ->when($this->ap_materno, fn($q) => $q->orWhere('ap_materno', $this->ap_materno))
+                    ->when($this->razon_social, fn($q) => $q->orWhere('razon_social', $this->razon_social))
+                    ->when($this->rfc, fn($q) => $q->orWhere('rfc', $this->rfc))
+                    ->when($this->curp, fn($q) => $q->orWhere('curp', $this->curp))
+                    ->first();
 
         if($persona){
 
-            foreach ($this->inscripcion->propietarios() as $propietario) {
+            foreach ($this->propiedad->propietarios() as $propietario) {
 
                 if($persona->id == $propietario->persona_id){
 
@@ -357,14 +383,16 @@ class Propietarios extends Component
 
         $persona = Persona::query()
                                 ->when($this->nombre, fn($q) => $q->where('nombre', $this->nombre))
-                                ->when($this->ap_paterno, fn($q) => $q->where('ap_paterno', $this->ap_paterno))
-                                ->when($this->ap_materno, fn($q) => $q->where('ap_materno', $this->ap_materno))
-                                ->when($this->razon_social, fn($q) => $q->where('razon_social', $this->razon_social))
+                                ->when($this->ap_paterno, fn($q) => $q->orWhere('ap_paterno', $this->ap_paterno))
+                                ->when($this->ap_materno, fn($q) => $q->orWhere('ap_materno', $this->ap_materno))
+                                ->when($this->razon_social, fn($q) => $q->orWhere('razon_social', $this->razon_social))
+                                ->when($this->rfc, fn($q) => $q->orWhere('rfc', $this->rfc))
+                                ->when($this->curp, fn($q) => $q->orWhere('curp', $this->curp))
                                 ->first();
 
         if($persona){
 
-            foreach ($this->inscripcion->propietarios() as $propietario) {
+            foreach ($this->propiedad->propietarios() as $propietario) {
 
                 if($persona->id == $propietario->persona_id){
 
@@ -456,14 +484,16 @@ class Propietarios extends Component
 
         $persona = Persona::query()
                             ->when($this->nombre, fn($q) => $q->where('nombre', $this->nombre))
-                            ->when($this->ap_paterno, fn($q) => $q->where('ap_paterno', $this->ap_paterno))
-                            ->when($this->ap_materno, fn($q) => $q->where('ap_materno', $this->ap_materno))
-                            ->when($this->razon_social, fn($q) => $q->where('razon_social', $this->razon_social))
+                            ->when($this->ap_paterno, fn($q) => $q->orWhere('ap_paterno', $this->ap_paterno))
+                            ->when($this->ap_materno, fn($q) => $q->orWhere('ap_materno', $this->ap_materno))
+                            ->when($this->razon_social, fn($q) => $q->orWhere('razon_social', $this->razon_social))
+                            ->when($this->rfc, fn($q) => $q->orWhere('rfc', $this->rfc))
+                            ->when($this->curp, fn($q) => $q->orWhere('curp', $this->curp))
                             ->first();
 
         if($persona){
 
-            foreach ($this->inscripcion->propietarios() as $propietario) {
+            foreach ($this->propiedad->propietarios() as $propietario) {
 
                 if($persona->id == $propietario->persona_id){
 
