@@ -26,15 +26,6 @@ class AppServiceProvider extends ServiceProvider
 
         Model::shouldBeStrict();
 
-        LogViewer::auth(function ($request) {
-
-            if($request->user()->hasRole('Administrador'))
-                return true;
-            else
-                abort(401, 'Unauthorized');
-
-        });
-
         if(!env('LOCAL')){
 
             Livewire::setScriptRoute(function ($handle) {
