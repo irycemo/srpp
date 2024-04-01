@@ -28,7 +28,7 @@ class AppServiceProvider extends ServiceProvider
 
         LogViewer::auth(function ($request) {
 
-            if(auth()->user()->hasRole('Administrador'))
+            if($request->user()->hasRole('Administrador'))
                 return true;
             else
                 abort(401, 'Unauthorized');
