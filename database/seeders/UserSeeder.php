@@ -203,5 +203,14 @@ class UserSeeder extends Seeder
             'area' => 'Dirección del Registro Público de la Propiedad',
         ])->assignRole('Pase a folio');
 
+        User::create([
+            'name' => 'Sistema Trámites',
+            'ubicacion' => 'RPP',
+            'status' => 'activo',
+            'area' => 'Dirección del Registro Público de la Propiedad',
+            'email' => 'sistematramites@gmail.com',
+            'password' => Hash::make('sistema'),
+        ])->assignRole('Sistemas');
+
     }
 }

@@ -8,11 +8,18 @@ use Illuminate\Support\Facades\Http;
 
 class SistemaTramitesService{
 
+    public $token;
+
+    public function __construct()
+    {
+        $this->token = env('SISTEMA_TRAMITES_TOKEN');
+    }
+
     public function finaliarTramite($año, $tramite, $estado){
 
         $url = env('SISTEMA_TRAMITES_FINALIZAR');
 
-        $response = Http::acceptJson()->asForm()->post($url, [
+        $response = Http::withToken($this->token)->acceptJson()->asForm()->post($url, [
             'año' => $año,
             'tramite' => $tramite,
             'estado' => $estado,
@@ -30,7 +37,7 @@ class SistemaTramitesService{
 
         $url = env('SISTEMA_TRAMITES_RECHAZAR');
 
-        $response = Http::acceptJson()->asForm()->post($url, [
+        $response = Http::withToken($this->token)->acceptJson()->asForm()->post($url, [
             'año' => $año,
             'tramite' => $tramite,
             'observaciones' => $observaciones,

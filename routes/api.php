@@ -16,17 +16,17 @@ use App\Http\Controllers\Api\MovimientoRegistralController;
 |
 */
 
-Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
-    return $request->user();
+Route::middleware('auth:sanctum')->group(function () {
+
+    Route::post('movimiento_registral', [MovimientoRegistralController::class, 'store']);
+
+    Route::post('actualizar_registral', [MovimientoRegistralController::class, 'update']);
+
+    Route::post('cambiar_tipo_servicio', [MovimientoRegistralController::class, 'cambiarTipoServicio']);
+
+    Route::post('actualizar_paginas', [CertificacionController::class, 'actualizarPaginas']);
+
 });
-
-Route::post('movimiento_registral', [MovimientoRegistralController::class, 'store']);
-
-Route::post('actualizar_registral', [MovimientoRegistralController::class, 'update']);
-
-Route::post('cambiar_tipo_servicio', [MovimientoRegistralController::class, 'cambiarTipoServicio']);
-
-Route::post('actualizar_paginas', [CertificacionController::class, 'actualizarPaginas']);
 
 Route::fallback(function(){
 
