@@ -68,7 +68,7 @@ class Consulta extends Component
 
         $this->reset('folioReal');
 
-        $this->folios_reales = FolioReal::with('predio.propietarios')
+        $this->folios_reales = FolioReal::with('predio')
                             ->when($this->folio_real, fn($q, $folio_real) => $q->where('folio', $folio_real) )
                             ->when($this->tomo, fn($q, $tomo) => $q->where('tomo_antecedente', $tomo) )
                             ->when($this->registro, fn($q, $registro) => $q->where('registro_antecedente', $registro) )
@@ -142,7 +142,9 @@ class Consulta extends Component
             'folios_reales',
         ]);
 
-        $this->folioReal = $folioReal->load(
+        $this->folioReal = $folioReal;
+
+        $this->folioReal->load(
             'predio.propietarios.persona',
             'predio.escritura',
             'predio.colindancias',
