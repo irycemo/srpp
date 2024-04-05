@@ -168,7 +168,7 @@
                             wire:target="cargarPropietarios">
 
                             <img wire:loading wire:target="cargarPropietarios" class="mx-auto h-4 mr-1" src="{{ asset('storage/img/loading3.svg') }}" alt="Loading">
-                            Cargar propietarios
+                            Borrar propietarios
                     </x-button-red>
 
                     <x-button-gray
@@ -662,7 +662,7 @@
 
                     <option value="">Seleccione una opción</option>
 
-                    @foreach ($inscripcion->propietarios() as $propietario)
+                    @foreach ($predio->propietarios() as $propietario)
 
                     <option value="{{ $propietario->id }}">{{ $propietario->persona->nombre }} {{ $propietario->persona->ap_paterno }} {{ $propietario->persona->ap_materno }} {{ $propietario->persona->razon_social }}</option>
 

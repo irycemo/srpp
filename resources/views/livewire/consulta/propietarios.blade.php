@@ -14,9 +14,9 @@
 
             <x-slot name="body">
 
-                @if($folioReal->predio->propietarios->count() > 0)
+                @if($folioReal->predio->propietarios()->count() > 0)
 
-                    @foreach ($folioReal->predio->propietarios as $propietario)
+                    @foreach ($folioReal->predio->propietarios() as $propietario)
 
                         <x-table.row >
 
@@ -50,9 +50,9 @@
 
             <x-slot name="body">
 
-                @if($folioReal->predio->transmitentes->count() > 0)
+                @if($folioReal->predio->transmitentes()->count() > 0)
 
-                    @foreach ($folioReal->predio->transmitentes as $transmitente)
+                    @foreach ($folioReal->predio->transmitentes() as $transmitente)
 
                         <x-table.row >
 
@@ -72,7 +72,7 @@
 
     </div>
 
-    @if($folioReal->predio->representantes->count() > 0)
+    @if($folioReal->predio->representantes()->count() > 0)
 
         <div class="mb-3 bg-white rounded-lg p-3 shadow-lg">
 
@@ -87,7 +87,7 @@
 
                 <x-slot name="body">
 
-                    @foreach ($folioReal->predio->representantes as $representante)
+                    @foreach ($folioReal->predio->representantes() as $representante)
 
                         <x-table.row >
 

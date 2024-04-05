@@ -25,15 +25,15 @@ class Predio extends Model implements Auditable
     }
 
     public function propietarios(){
-        return $this->actores()->with('persona')->where('tipo_Actor', 'propietario');
+        return $this->actores()->with('persona')->where('tipo_Actor', 'propietario')->get();
     }
 
     public function transmitentes(){
-        return $this->actores()->with('persona')->where('tipo_Actor', 'transmitente');
+        return $this->actores()->with('persona')->where('tipo_Actor', 'transmitente')->get();
     }
 
     public function representantes(){
-        return $this->actores()->with('persona', 'representados.persona')->where('tipo_Actor', 'representante');
+        return $this->actores()->with('persona', 'representados.persona')->where('tipo_Actor', 'representante')->get();
     }
 
     public function colindancias(){
