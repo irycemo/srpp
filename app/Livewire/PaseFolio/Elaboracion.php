@@ -313,7 +313,7 @@ class Elaboracion extends Component
 
         }
 
-        if(!$this->propiedad->valor_catastral){
+        if(!$this->propiedad->monto_transaccion){
 
             $this->dispatch('mostrarMensaje', ['error', "El predio debe tener monto de transacción."]);
 
