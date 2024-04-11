@@ -96,7 +96,7 @@ class PropiedadInscripcion extends Component
             'ap_paterno' => Rule::requiredIf($this->tipo_persona === 'FISICA'),
             'ap_materno' => Rule::requiredIf($this->tipo_persona === 'FISICA'),
             'curp' => [
-                Rule::requiredIf($this->tipo_persona === 'FISICA'),
+                'nullable',
                 'regex:/^[A-Z]{1}[AEIOUX]{1}[A-Z]{2}[0-9]{2}(0[1-9]|1[0-2])(0[1-9]|1[0-9]|2[0-9]|3[0-1])[HM]{1}(AS|BC|BS|CC|CS|CH|CL|CM|DF|DG|GT|GR|HG|JC|MC|MN|MS|NT|NL|OC|PL|QT|QR|SP|SL|SR|TC|TS|TL|VZ|YN|ZS|NE)[B-DF-HJ-NP-TV-Z]{3}[0-9A-Z]{1}[0-9]{1}$/i'
             ],
             'rfc' => [
@@ -117,6 +117,16 @@ class PropiedadInscripcion extends Component
             'municipio_propietario' => 'nullable',
             'representados' => Rule::requiredIf($this->modalRepresentante === true),
          ];
+    }
+
+    public function updated($property, $value){
+
+        if($value === ''){
+
+            $this->reset($property);
+
+        }
+
     }
 
     public function updatedTipoPersona(){
@@ -369,7 +379,7 @@ class PropiedadInscripcion extends Component
 
         } catch (\Throwable $th) {
 
-            Log::error("Error al guardar transmitente en pase a folio por el usuario: (id: " . auth()->user()->id . ") " . auth()->user()->name . ". " . $th);
+            Log::error("Error al guardar transmitente en inscripción de propiedad por el usuario: (id: " . auth()->user()->id . ") " . auth()->user()->name . ". " . $th);
             $this->dispatch('mostrarMensaje', ['error', "Ha ocurrido un error."]);
 
         }

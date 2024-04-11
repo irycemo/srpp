@@ -244,9 +244,11 @@ class Propietarios extends Component
         }
 
         $persona = Persona::query()
-                    ->when($this->nombre, fn($q) => $q->where('nombre', $this->nombre))
-                    ->when($this->ap_paterno, fn($q) => $q->orWhere('ap_paterno', $this->ap_paterno))
-                    ->when($this->ap_materno, fn($q) => $q->orWhere('ap_materno', $this->ap_materno))
+                    ->where(function($q){
+                        $q->when($this->nombre, fn($q) => $q->where('nombre', $this->nombre))
+                            ->when($this->ap_paterno, fn($q) => $q->where('ap_paterno', $this->ap_paterno))
+                            ->when($this->ap_materno, fn($q) => $q->where('ap_materno', $this->ap_materno));
+                    })
                     ->when($this->razon_social, fn($q) => $q->orWhere('razon_social', $this->razon_social))
                     ->when($this->rfc, fn($q) => $q->orWhere('rfc', $this->rfc))
                     ->when($this->curp, fn($q) => $q->orWhere('curp', $this->curp))
@@ -382,13 +384,15 @@ class Propietarios extends Component
         $this->validate();
 
         $persona = Persona::query()
-                                ->when($this->nombre, fn($q) => $q->where('nombre', $this->nombre))
-                                ->when($this->ap_paterno, fn($q) => $q->orWhere('ap_paterno', $this->ap_paterno))
-                                ->when($this->ap_materno, fn($q) => $q->orWhere('ap_materno', $this->ap_materno))
-                                ->when($this->razon_social, fn($q) => $q->orWhere('razon_social', $this->razon_social))
-                                ->when($this->rfc, fn($q) => $q->orWhere('rfc', $this->rfc))
-                                ->when($this->curp, fn($q) => $q->orWhere('curp', $this->curp))
-                                ->first();
+                            ->where(function($q){
+                                $q->when($this->nombre, fn($q) => $q->where('nombre', $this->nombre))
+                                    ->when($this->ap_paterno, fn($q) => $q->where('ap_paterno', $this->ap_paterno))
+                                    ->when($this->ap_materno, fn($q) => $q->where('ap_materno', $this->ap_materno));
+                            })
+                            ->when($this->razon_social, fn($q) => $q->orWhere('razon_social', $this->razon_social))
+                            ->when($this->rfc, fn($q) => $q->orWhere('rfc', $this->rfc))
+                            ->when($this->curp, fn($q) => $q->orWhere('curp', $this->curp))
+                            ->first();
 
         if($persona){
 
@@ -483,9 +487,11 @@ class Propietarios extends Component
         $this->validate();
 
         $persona = Persona::query()
-                            ->when($this->nombre, fn($q) => $q->where('nombre', $this->nombre))
-                            ->when($this->ap_paterno, fn($q) => $q->orWhere('ap_paterno', $this->ap_paterno))
-                            ->when($this->ap_materno, fn($q) => $q->orWhere('ap_materno', $this->ap_materno))
+                            ->where(function($q){
+                                $q->when($this->nombre, fn($q) => $q->where('nombre', $this->nombre))
+                                    ->when($this->ap_paterno, fn($q) => $q->where('ap_paterno', $this->ap_paterno))
+                                    ->when($this->ap_materno, fn($q) => $q->where('ap_materno', $this->ap_materno));
+                            })
                             ->when($this->razon_social, fn($q) => $q->orWhere('razon_social', $this->razon_social))
                             ->when($this->rfc, fn($q) => $q->orWhere('rfc', $this->rfc))
                             ->when($this->curp, fn($q) => $q->orWhere('curp', $this->curp))
