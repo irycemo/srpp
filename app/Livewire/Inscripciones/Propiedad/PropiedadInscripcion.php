@@ -856,6 +856,18 @@ class PropiedadInscripcion extends Component
         if(in_array($this->inscripcion->servicio, ['D114', 'D116', 'D115', 'D113']))
             $this->actos = ['Compraventa', 'Propiedad 2', 'Propiedad 3', 'Propiedad 4', 'Propiedad 5', 'Propiedad 6', 'Propiedad 7'];
 
+        $director = User::where('status', 'activo')->whereHas('roles', function($q){
+            $q->where('name', 'Director');
+        })->first();
+
+        if(!$this->director) abort(500, message:"Es necesario registrar al director.");
+
+        $jefe_departamento = User::where('status', 'activo')->whereHas('roles', function($q){
+            $q->where('name', 'Jefe de departamento')->where('area', 'Departamento de Registro de Inscripciones');
+        })->first();
+
+        if(!$this->jefe_departamento) abort(500, message:"Es necesario registrar al jefe de Departamento de Registro de Inscripciones.");
+
     }
 
     public function render()
