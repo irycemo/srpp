@@ -860,13 +860,13 @@ class PropiedadInscripcion extends Component
             $q->where('name', 'Director');
         })->first();
 
-        if(!$this->director) abort(500, message:"Es necesario registrar al director.");
+        if(!$director) abort(500, message:"Es necesario registrar al director.");
 
         $jefe_departamento = User::where('status', 'activo')->whereHas('roles', function($q){
             $q->where('name', 'Jefe de departamento')->where('area', 'Departamento de Registro de Inscripciones');
         })->first();
 
-        if(!$this->jefe_departamento) abort(500, message:"Es necesario registrar al jefe de Departamento de Registro de Inscripciones.");
+        if(!$jefe_departamento) abort(500, message:"Es necesario registrar al jefe de Departamento de Registro de Inscripciones.");
 
     }
 
