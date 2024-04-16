@@ -50,6 +50,7 @@ class MovimientoRegistralRequest extends FormRequest
             'numero_propiedad' => 'nullable',
             'numero_escritura' => 'nullable',
             'numero_notaria' => 'nullable',
+            'numero_documento' => 'nullable',
 
             'valor_propiedad' => 'nullable',
 
