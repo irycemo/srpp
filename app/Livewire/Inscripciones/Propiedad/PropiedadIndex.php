@@ -23,7 +23,7 @@ class PropiedadIndex extends Component
     {
 
 
-        if(auth()->user()->hasRole(['Propiedad'])){
+        if(auth()->user()->hasRole(['Propiedad', 'Pase a folio'])){
 
             $movimientos = MovimientoRegistral::with('inscripcionPropiedad', 'asignadoA', 'actualizadoPor', 'folioReal')
                                                     ->whereHas('folioReal', function($q){

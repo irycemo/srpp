@@ -53,9 +53,9 @@ class UbicacionPredio extends Component
     protected function rules(){
 
         return [
-            'tipo_vialidad' => 'required',
+            'tipo_vialidad' => 'nullable',
             'tipo_asentamiento' => 'required',
-            'nombre_vialidad' => 'required',
+            'nombre_vialidad' => 'nullable',
             'nombre_asentamiento' => 'required',
             'numero_exterior' => 'required',
             'numero_exterior_2' => 'nullable',
