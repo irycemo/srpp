@@ -158,9 +158,9 @@
                             <td style="padding-right: 40px; text-align:left; ; vertical-align: bottom; white-space: nowrap;">
 
                                 <p style="margin: 0"><strong>NÚMERO DE ENTRADA: </strong>{{ $inscripcion->movimientoRegistral->folio }}</p>
-                                <p style="margin: 0"><strong>FECHA DE RECEPCIÓN: </strong>{{ $inscripcion->movimientoRegistral->fecha_pago->format('d-m-Y') }}</p>
+                                <p style="margin: 0"><strong>FECHA DE RECEPCIÓN: </strong>{{ $inscripcion->movimientoRegistral->fecha_pago }}</p>
                                 <p style="margin: 0"><strong>ESTADO: </strong>{{ $inscripcion->movimientoRegistral->estado }}</p>
-                                <p style="margin: 0"><strong>FECHA DE DOCUMENTO: </strong>{{ $inscripcion->movimientoRegistral->fecha_emision?->format('d-m-Y') }}</p>
+                                <p style="margin: 0"><strong>FECHA DE DOCUMENTO: </strong>{{ $inscripcion->movimientoRegistral->fecha_emision }}</p>
 
                             </td>
 
