@@ -123,7 +123,7 @@ class PropiedadInscripcion extends Component
 
         if($value === ''){
 
-            $this->reset($property);
+            $this->$property = null;
 
         }
 
