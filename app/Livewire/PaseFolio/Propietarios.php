@@ -133,6 +133,17 @@ class Propietarios extends Component
 
     }
 
+    public function updated($property, $value){
+
+        if($value === ''){
+
+            $this->$property = null;
+
+        }
+
+    }
+
+
     public function updatedTipoPersona(){
 
         if($this->tipo_persona == 'FISICA'){
