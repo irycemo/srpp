@@ -31,7 +31,9 @@ class RoleSeeder extends Seeder
         /* Pase a folio */
         $role9 = Role::create(['name' => 'Pase a folio']);
         /* Registrador */
-        $role9 = Role::create(['name' => 'Registrador']);
+        $role9 = Role::create(['name' => 'Registrador Propiedad']);
+        $role9 = Role::create(['name' => 'Registrador Gravamen']);
+        $role9 = Role::create(['name' => 'Registrador Cancelaciones']);
         $role10 = Role::create(['name' => 'Jefe de departamento']);
         $role11 = Role::create(['name' => 'Sistemas']);
 

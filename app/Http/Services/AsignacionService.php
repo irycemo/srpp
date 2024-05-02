@@ -190,12 +190,12 @@ class AsignacionService{
                                 })
                                 ->when($folioReal != null, function($q){
                                     $q->whereHas('roles', function($q){
-                                        $q->whereIn('name', ['Propiedad', 'Registrador']);
+                                        $q->whereIn('name', ['Propiedad', 'Registrador Propiedad']);
                                     });
                                 })
                                 ->when($folioReal === null, function($q){
                                     $q->whereHas('roles', function($q){
-                                        $q->whereIn('name', ['Pase a folio', 'Registrador']);
+                                        $q->whereIn('name', ['Pase a folio', 'Registrador Propiedad']);
                                     });
                                 })
                                 ->get();
@@ -203,6 +203,46 @@ class AsignacionService{
         if($usuarios->count() == 0){
 
             throw new AsignacionServiceException('No se encontraron usuarios de propiedad para asignar al movimiento registral.');
+
+        }else if($usuarios->count() == 1){
+
+            return $usuarios->first()->id;
+
+        }else{
+
+            return $this->obtenerUltimoUsuarioConAsignacion($usuarios);
+
+        }
+
+    }
+
+    /* Gravamen */
+    public function obtenerUsuarioGravamen($folioReal, $distrito):int
+    {
+
+        $usuarios = User::with('ultimoMovimientoRegistralAsignado')
+                                ->where('status', 'activo')
+                                ->when($distrito == 2, function($q){
+                                    $q->where('ubicacion', 'Regional 4');
+                                })
+                                ->when($distrito != 2, function($q){
+                                    $q->where('ubicacion', '!=', 'Regional 4');
+                                })
+                                ->when($folioReal != null, function($q){
+                                    $q->whereHas('roles', function($q){
+                                        $q->whereIn('name', ['Gravamen', 'Registrador Gravamen']);
+                                    });
+                                })
+                                ->when($folioReal === null, function($q){
+                                    $q->whereHas('roles', function($q){
+                                        $q->whereIn('name', ['Pase a folio', 'Registrador Gravamen']);
+                                    });
+                                })
+                                ->get();
+
+        if($usuarios->count() == 0){
+
+            throw new AsignacionServiceException('No se encontraron usuarios de gravamen para asignar al movimiento registral.');
 
         }else if($usuarios->count() == 1){
 

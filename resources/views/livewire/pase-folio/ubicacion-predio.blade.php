@@ -42,7 +42,7 @@
 
                 <x-input-group for="ciudad" label="Ciudad" :error="$errors->first('ciudad')" class="w-full">
 
-                    <x-input-text id="ciudad" wire:model="ciudad" readonly/>
+                    <x-input-text id="ciudad" wire:model="ciudad"/>
 
                 </x-input-group>
 

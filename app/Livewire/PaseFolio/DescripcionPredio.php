@@ -88,7 +88,7 @@ class DescripcionPredio extends Component
                                         'numeric',
                                         'min:0',
                                     ],
-            'medidas.*.descripcion' => 'required|string',
+            'medidas.*.descripcion' => 'required|'. utf8_encode('regex:/^[áéíóúÁÉÍÓÚñÑa-zA-Z-0-9$#.() ]*$/'),
             'predio' => 'nullable',
             'unidad_area' => 'required'
          ];

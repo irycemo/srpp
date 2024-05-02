@@ -80,16 +80,16 @@ class Propietarios extends Component
             ],
             'razon_social' => Rule::requiredIf($this->tipo_persona === 'MORAL'),
             'fecha_nacimiento' => 'nullable',
-            'nacionalidad' => 'nullable',
+            'nacionalidad' => 'nullable|' . utf8_encode('regex:/^[áéíóúÁÉÍÓÚñÑa-zA-Z-0-9$#.() ]*$/'),
             'estado_civil' => 'nullable',
             'calle' => 'nullable',
-            'numero_exterior_propietario' => 'nullable',
-            'numero_interior_propietario' => 'nullable',
-            'colonia' => 'nullable',
-            'cp' => 'nullable',
-            'ciudad' => 'nullable',
-            'entidad' => 'nullable',
-            'municipio_propietario' => 'nullable',
+            'numero_exterior_propietario' => 'nullable|' . utf8_encode('regex:/^[áéíóúÁÉÍÓÚñÑa-zA-Z-0-9$#.() ]*$/'),
+            'numero_interior_propietario' => 'nullable|' . utf8_encode('regex:/^[áéíóúÁÉÍÓÚñÑa-zA-Z-0-9$#.() ]*$/'),
+            'colonia' => 'nullable|' . utf8_encode('regex:/^[áéíóúÁÉÍÓÚñÑa-zA-Z-0-9$#.() ]*$/'),
+            'cp' => 'required|numeric',
+            'ciudad' => 'nullable|' . utf8_encode('regex:/^[áéíóúÁÉÍÓÚñÑa-zA-Z-0-9$#.() ]*$/'),
+            'entidad' => 'nullable|' . utf8_encode('regex:/^[áéíóúÁÉÍÓÚñÑa-zA-Z-0-9$#.() ]*$/'),
+            'municipio_propietario' => 'nullable|' . utf8_encode('regex:/^[áéíóúÁÉÍÓÚñÑa-zA-Z-0-9$#.() ]*$/'),
             'representados' => Rule::requiredIf($this->modalRepresentante === true),
         ];
     }
@@ -254,7 +254,7 @@ class Propietarios extends Component
 
         }
 
-        $persona = Persona::query()
+        /* $persona = Persona::query()
                     ->where(function($q){
                         $q->when($this->nombre, fn($q) => $q->where('nombre', $this->nombre))
                             ->when($this->ap_paterno, fn($q) => $q->where('ap_paterno', $this->ap_paterno))
@@ -279,7 +279,7 @@ class Propietarios extends Component
 
             }
 
-        }
+        } */
 
         try {
 
@@ -394,7 +394,7 @@ class Propietarios extends Component
 
         $this->validate();
 
-        $persona = Persona::query()
+        /* $persona = Persona::query()
                             ->where(function($q){
                                 $q->when($this->nombre, fn($q) => $q->where('nombre', $this->nombre))
                                     ->when($this->ap_paterno, fn($q) => $q->where('ap_paterno', $this->ap_paterno))
@@ -419,7 +419,7 @@ class Propietarios extends Component
 
             }
 
-        }
+        } */
 
         try {
 
@@ -497,7 +497,7 @@ class Propietarios extends Component
 
         $this->validate();
 
-        $persona = Persona::query()
+        /* $persona = Persona::query()
                             ->where(function($q){
                                 $q->when($this->nombre, fn($q) => $q->where('nombre', $this->nombre))
                                     ->when($this->ap_paterno, fn($q) => $q->where('ap_paterno', $this->ap_paterno))
@@ -522,7 +522,7 @@ class Propietarios extends Component
 
             }
 
-        }
+        } */
 
         try {
 

@@ -15,6 +15,7 @@ use App\Models\MovimientoRegistral;
 use Illuminate\Support\Facades\Log;
 use App\Livewire\PaseFolio\PaseFolio;
 use App\Http\Services\AsignacionService;
+use Exception;
 
 class Elaboracion extends Component
 {
@@ -65,7 +66,7 @@ class Elaboracion extends Component
             'escritura_notaria' => Rule::requiredIf($this->tipo_documento === "escritura"),
             'escritura_nombre_notario' => Rule::requiredIf($this->tipo_documento === "escritura"),
             'escritura_estado_notario' => Rule::requiredIf($this->tipo_documento === "escritura"),
-            'escritura_observaciones' => 'nullable',
+            'escritura_observaciones' => 'nullable|' . utf8_encode('regex:/^[áéíóúÁÉÍÓÚñÑa-zA-Z-0-9$#.() ]*$/'),
         ];
     }
 
@@ -416,6 +417,14 @@ class Elaboracion extends Component
                                         $q->where('name', 'Propiedad');
                                     })
                                     ->get();
+
+                    if($usuarios->count()){
+
+                        $this->dispatch('mostrarMensaje', ['error', "No hay usuarios con rol de Propiedad disponibles."]);
+
+                        throw new Exception();
+
+                    }
 
                     $id = (new AsignacionService())->obtenerUltimoUsuarioConAsignacion($usuarios);
 
