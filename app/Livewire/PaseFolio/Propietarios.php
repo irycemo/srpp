@@ -254,7 +254,7 @@ class Propietarios extends Component
 
         }
 
-        /* $persona = Persona::query()
+        $persona = Persona::query()
                     ->where(function($q){
                         $q->when($this->nombre, fn($q) => $q->where('nombre', $this->nombre))
                             ->when($this->ap_paterno, fn($q) => $q->where('ap_paterno', $this->ap_paterno))
@@ -279,7 +279,7 @@ class Propietarios extends Component
 
             }
 
-        } */
+        }
 
         try {
 
@@ -497,7 +497,7 @@ class Propietarios extends Component
 
         $this->validate();
 
-        /* $persona = Persona::query()
+        $persona = Persona::query()
                             ->where(function($q){
                                 $q->when($this->nombre, fn($q) => $q->where('nombre', $this->nombre))
                                     ->when($this->ap_paterno, fn($q) => $q->where('ap_paterno', $this->ap_paterno))
@@ -522,7 +522,7 @@ class Propietarios extends Component
 
             }
 
-        } */
+        }
 
         try {
 
