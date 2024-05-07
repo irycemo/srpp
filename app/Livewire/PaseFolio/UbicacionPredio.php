@@ -129,32 +129,32 @@ class UbicacionPredio extends Component
 
         $this->propiedad = Predio::find($id);
 
-        $this->tipo_vialidad = $this->movimientoRegistral->inscripcionPropiedad->tipo_vialidad;
-        $this->tipo_asentamiento = $this->movimientoRegistral->inscripcionPropiedad->tipo_asentamiento;
-        $this->nombre_vialidad = $this->movimientoRegistral->inscripcionPropiedad->nombre_vialidad;
-        $this->nombre_asentamiento = $this->movimientoRegistral->inscripcionPropiedad->nombre_asentamiento;
-        $this->numero_exterior = $this->movimientoRegistral->inscripcionPropiedad->numero_exterior;
-        $this->numero_exterior_2 = $this->movimientoRegistral->inscripcionPropiedad->numero_exterior_2;
-        $this->numero_adicional = $this->movimientoRegistral->inscripcionPropiedad->numero_adicional;
-        $this->numero_adicional_2 = $this->movimientoRegistral->inscripcionPropiedad->numero_adicional_2;
-        $this->numero_interior = $this->movimientoRegistral->inscripcionPropiedad->numero_interior;
-        $this->lote = $this->movimientoRegistral->inscripcionPropiedad->lote;
-        $this->manzana_ubicacion = $this->movimientoRegistral->inscripcionPropiedad->manzana;
-        $this->codigo_postal = $this->movimientoRegistral->inscripcionPropiedad->codigo_postal;
-        $this->lote_fraccionador = $this->movimientoRegistral->inscripcionPropiedad->lote_fraccionador;
-        $this->manzana_fraccionador = $this->movimientoRegistral->inscripcionPropiedad->manzana_fraccionador;
-        $this->etapa_fraccionador = $this->movimientoRegistral->inscripcionPropiedad->etapa_fraccionador;
-        $this->nombre_edificio = $this->movimientoRegistral->inscripcionPropiedad->nombre_edificio;
-        $this->clave_edificio = $this->movimientoRegistral->inscripcionPropiedad->clave_edificio;
-        $this->departamento_edificio = $this->movimientoRegistral->inscripcionPropiedad->departamento_edificio;
-        $this->municipio_ubicacion = $this->movimientoRegistral->inscripcionPropiedad->municipio;
-        $this->ciudad = $this->movimientoRegistral->inscripcionPropiedad->ciudad;
-        $this->localidad_ubicacion = $this->movimientoRegistral->inscripcionPropiedad->localidad;
-        $this->poblado = $this->movimientoRegistral->inscripcionPropiedad->poblado;
-        $this->ejido = $this->movimientoRegistral->inscripcionPropiedad->ejido;
-        $this->parcela = $this->movimientoRegistral->inscripcionPropiedad->parcela;
-        $this->solar = $this->movimientoRegistral->inscripcionPropiedad->solar;
-        $this->observaciones = $this->movimientoRegistral->inscripcionPropiedad->descripcion;
+        $this->tipo_vialidad = $this->propiedad->tipo_vialidad;
+        $this->tipo_asentamiento = $this->propiedad->tipo_asentamiento;
+        $this->nombre_vialidad = $this->propiedad->nombre_vialidad;
+        $this->nombre_asentamiento = $this->propiedad->nombre_asentamiento;
+        $this->numero_exterior = $this->propiedad->numero_exterior;
+        $this->numero_exterior_2 = $this->propiedad->numero_exterior_2;
+        $this->numero_adicional = $this->propiedad->numero_adicional;
+        $this->numero_adicional_2 = $this->propiedad->numero_adicional_2;
+        $this->numero_interior = $this->propiedad->numero_interior;
+        $this->lote = $this->propiedad->lote;
+        $this->manzana_ubicacion = $this->propiedad->manzana;
+        $this->codigo_postal = $this->propiedad->codigo_postal;
+        $this->lote_fraccionador = $this->propiedad->lote_fraccionador;
+        $this->manzana_fraccionador = $this->propiedad->manzana_fraccionador;
+        $this->etapa_fraccionador = $this->propiedad->etapa_fraccionador;
+        $this->nombre_edificio = $this->propiedad->nombre_edificio;
+        $this->clave_edificio = $this->propiedad->clave_edificio;
+        $this->departamento_edificio = $this->propiedad->departamento_edificio;
+        $this->municipio_ubicacion = $this->propiedad->municipio;
+        $this->ciudad = $this->propiedad->ciudad;
+        $this->localidad_ubicacion = $this->propiedad->localidad;
+        $this->poblado = $this->propiedad->poblado;
+        $this->ejido = $this->propiedad->ejido;
+        $this->parcela = $this->propiedad->parcela;
+        $this->solar = $this->propiedad->solar;
+        $this->observaciones = $this->propiedad->descripcion;
 
 
     }
@@ -177,34 +177,38 @@ class UbicacionPredio extends Component
 
             DB::transaction(function () {
 
-                $this->movimientoRegistral->inscripcionPropiedad->update([
-                    'tipo_vialidad' => $this->tipo_vialidad,
-                    'tipo_asentamiento' => $this->tipo_asentamiento,
-                    'nombre_vialidad' => $this->nombre_vialidad,
-                    'nombre_asentamiento' => $this->nombre_asentamiento,
-                    'numero_exterior' => $this->numero_exterior,
-                    'numero_exterior_2' => $this->numero_exterior_2,
-                    'numero_adicional' => $this->numero_adicional,
-                    'numero_adicional_2' => $this->numero_adicional_2,
-                    'numero_interior' => $this->numero_interior,
-                    'lote' => $this->lote,
-                    'manzana' => $this->manzana_ubicacion,
-                    'codigo_postal' => $this->codigo_postal,
-                    'lote_fraccionador' => $this->lote_fraccionador,
-                    'manzana_fraccionador' => $this->manzana_fraccionador,
-                    'etapa_fraccionador' => $this->etapa_fraccionador,
-                    'nombre_edificio' => $this->nombre_edificio,
-                    'clave_edificio' => $this->clave_edificio,
-                    'departamento_edificio' => $this->departamento_edificio,
-                    'municipio' => $this->municipio_ubicacion,
-                    'ciudad' => $this->ciudad,
-                    'localidad' => $this->localidad_ubicacion,
-                    'poblado' => $this->poblado,
-                    'ejido' => $this->ejido,
-                    'parcela' => $this->parcela,
-                    'solar' => $this->solar,
-                    'observaciones' => $this->observaciones
-                ]);
+                if($this->movimientoRegistral->inscripcionPropiedad){
+
+                    $this->movimientoRegistral->inscripcionPropiedad->update([
+                        'tipo_vialidad' => $this->tipo_vialidad,
+                        'tipo_asentamiento' => $this->tipo_asentamiento,
+                        'nombre_vialidad' => $this->nombre_vialidad,
+                        'nombre_asentamiento' => $this->nombre_asentamiento,
+                        'numero_exterior' => $this->numero_exterior,
+                        'numero_exterior_2' => $this->numero_exterior_2,
+                        'numero_adicional' => $this->numero_adicional,
+                        'numero_adicional_2' => $this->numero_adicional_2,
+                        'numero_interior' => $this->numero_interior,
+                        'lote' => $this->lote,
+                        'manzana' => $this->manzana_ubicacion,
+                        'codigo_postal' => $this->codigo_postal,
+                        'lote_fraccionador' => $this->lote_fraccionador,
+                        'manzana_fraccionador' => $this->manzana_fraccionador,
+                        'etapa_fraccionador' => $this->etapa_fraccionador,
+                        'nombre_edificio' => $this->nombre_edificio,
+                        'clave_edificio' => $this->clave_edificio,
+                        'departamento_edificio' => $this->departamento_edificio,
+                        'municipio' => $this->municipio_ubicacion,
+                        'ciudad' => $this->ciudad,
+                        'localidad' => $this->localidad_ubicacion,
+                        'poblado' => $this->poblado,
+                        'ejido' => $this->ejido,
+                        'parcela' => $this->parcela,
+                        'solar' => $this->solar,
+                        'observaciones' => $this->observaciones
+                    ]);
+
+                }
 
                 $this->propiedad->update([
                     'tipo_vialidad' => $this->tipo_vialidad,

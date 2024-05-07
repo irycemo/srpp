@@ -20,6 +20,8 @@ use App\Http\Controllers\InscripcionesPropiedad\TraslativoController;
 use App\Http\Controllers\PaseFolio\PaseFolioController;
 use App\Livewire\Certificaciones\ConsultasCertificaciones;
 use App\Livewire\Consulta\Consulta;
+use App\Livewire\Gravamenes\GravamenIndex;
+use App\Livewire\Gravamenes\GravamenInscripcion;
 use App\Livewire\Inscripciones\Propiedad\PropiedadIndex;
 use App\Livewire\Inscripciones\Propiedad\PropiedadInscripcion;
 use App\Livewire\PaseFolio\Elaboracion;
@@ -83,6 +85,10 @@ Route::group(['middleware' => ['auth', 'esta.activo']], function(){
     Route::get('propiedad/{propiedad}', PropiedadInscripcion::class)->middleware('permission:Propiedad inscripción')->name('propiedad.inscripcion');
     Route::get('boleta_presentacion/{propiedad}', [TraslativoController::class, 'boleta_presentacion'])->middleware('permission:Propiedad inscripción')->name('propiedad.inscripcion.boleta_presentacion');
     Route::get('acto/{propiedad}', [TraslativoController::class, 'acto'])->middleware('permission:Propiedad inscripción')->name('propiedad.inscripcion.acto');
+
+    /* Gravamen */
+    Route::get('gravamen', GravamenIndex::class)->middleware('permission:Gravamen')->name('gravamen');
+    Route::get('gravamen/{gravamen}', GravamenInscripcion::class)->middleware('permission:Gravamen inscripción')->name('gravamen.inscripcion');
 
     /* Consultas */
     Route::get('consultas', Consulta::class)->middleware('permission:Consultas')->name('consultas');

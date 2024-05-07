@@ -37,12 +37,18 @@ class MovimientoRegistralRequest extends FormRequest
             'tipo_servicio' => 'required',
             'monto' => 'required',
 
+            /* SOlicitante */
             'solicitante' => 'required',
             'nombre_solicitante' => 'required',
 
+            /* Fechas */
             'fecha_prelacion' => 'required',
             'fecha_entrega' => 'required',
             'fecha_pago' => 'nullable',
+
+            /* Gravamen */
+            'tomo_gravamen' => 'nullable',
+            'registro_gravamen' => 'nullable',
 
             'numero_oficio' => 'nullable',
             'numero_paginas' => 'nullable',
@@ -55,6 +61,7 @@ class MovimientoRegistralRequest extends FormRequest
             'valor_propiedad' => 'nullable',
 
             'movimiento_registral' => 'nullable',
+            'asiento_registral' => 'nullable',
 
             'observaciones' => 'nullable',
 

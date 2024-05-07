@@ -1,45 +1,34 @@
 <?php
 
-namespace App\Livewire\Inscripciones\Propiedad;
+namespace App\Livewire\Gravamenes;
 
-use App\Models\MovimientoRegistral;
 use Livewire\Component;
+use App\Models\Gravamen;
 use Livewire\WithPagination;
-use App\Models\Propiedad as ModelPropiedad;
 use App\Traits\ComponentesTrait;
+use App\Models\MovimientoRegistral;
 
-class PropiedadIndex extends Component
+class GravamenIndex extends Component
 {
+
     use WithPagination;
     use ComponentesTrait;
 
-    public ModelPropiedad $modelo_editar;
+    public Gravamen $modelo_editar;
 
     public function crearModeloVacio(){
-        $this->modelo_editar = ModelPropiedad::make();
+        $this->modelo_editar = Gravamen::make();
     }
 
     public function render()
     {
 
 
-        if(auth()->user()->hasRole(['Propiedad'])){
+        if(auth()->user()->hasRole(['Gravamen'])){
 
-            $movimientos = MovimientoRegistral::with('inscripcionPropiedad', 'asignadoA', 'actualizadoPor', 'folioReal')
-                                                    ->where('usuario_asignado', auth()->id())
+            $movimientos = MovimientoRegistral::with('gravamen', 'actualizadoPor', 'folioReal')
                                                     ->whereHas('folioReal', function($q){
                                                         $q->where('estado', 'activo');
-                                                    })
-                                                    ->where(function($q){
-                                                        $q->whereHas('asignadoA', function($q){
-                                                                $q->where('name', 'LIKE', '%' . $this->search . '%');
-                                                            })
-                                                            ->orWhere('solicitante', 'LIKE', '%' . $this->search . '%')
-                                                            ->orWhere('tomo', 'LIKE', '%' . $this->search . '%')
-                                                            ->orWhere('registro', 'LIKE', '%' . $this->search . '%')
-                                                            ->orWhere('distrito', 'LIKE', '%' . $this->search . '%')
-                                                            ->orWhere('seccion', 'LIKE', '%' . $this->search . '%')
-                                                            ->orWhere('tramite', 'LIKE', '%' . $this->search . '%');
                                                     })
                                                     ->when(auth()->user()->ubicacion == 'Regional 4', function($q){
                                                         $q->where('distrito', 2);
@@ -47,15 +36,13 @@ class PropiedadIndex extends Component
                                                     ->when(auth()->user()->ubicacion != 'Regional 4', function($q){
                                                         $q->where('distrito', '!=', 2);
                                                     })
-                                                    ->whereHas('inscripcionPropiedad', function($q){
-                                                        $q->whereIn('servicio', ['D158', 'D122', 'D114', 'D125', 'D126', 'D124', 'D121', 'D120', 'D119', 'D123', 'D113', 'D115', 'D116', 'D118']);
-                                                    })
+                                                    ->where('usuario_asignado', auth()->id())
                                                     ->orderBy($this->sort, $this->direction)
                                                     ->paginate($this->pagination);
 
         }elseif(auth()->user()->hasRole(['Administrador'])){
 
-            $movimientos = MovimientoRegistral::with('inscripcionPropiedad', 'asignadoA', 'actualizadoPor', 'folioReal')
+            $movimientos = MovimientoRegistral::with('gravamen', 'asignadoA', 'actualizadoPor', 'folioReal')
                                                     ->whereHas('folioReal', function($q){
                                                         $q->where('estado', 'activo');
                                                     })
@@ -70,14 +57,16 @@ class PropiedadIndex extends Component
                                                             ->orWhere('seccion', 'LIKE', '%' . $this->search . '%')
                                                             ->orWhere('tramite', 'LIKE', '%' . $this->search . '%');
                                                     })
-                                                    ->whereHas('inscripcionPropiedad', function($q){
-                                                        $q->whereIn('servicio', ['D158', 'D122', 'D114', 'D125', 'D126', 'D124', 'D121', 'D120', 'D119', 'D123', 'D113', 'D115', 'D116', 'D118']);
+                                                    ->whereHas('gravamen', function($q){
+                                                        $q->where('servicio', 'DL64');
                                                     })
                                                     ->orderBy($this->sort, $this->direction)
                                                     ->paginate($this->pagination);
 
         }
 
-        return view('livewire.inscripciones.propiedad.propiedad-index', compact('movimientos'))->extends('layouts.admin');
+        return view('livewire.gravamenes.gravamen-index', compact('movimientos'))->extends('layouts.admin');
+
     }
+
 }

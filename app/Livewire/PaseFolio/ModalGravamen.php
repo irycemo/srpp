@@ -83,6 +83,22 @@ class ModalGravamen extends ModalComponent
         'fecha_inscripcion' => 'fecha de inscripción',
     ];
 
+    public function updatedTipoDocumento(){
+
+        if($this->tipo_documento == "escritura")
+            $this->label_numero_documento = "Número de escritura";
+
+        if($this->tipo_documento == "oficio")
+            $this->label_numero_documento = "Número de oficio";
+
+        if($this->tipo_documento == "contrato")
+            $this->label_numero_documento = "Número de contrato";
+
+        if($this->tipo_documento == "embargo")
+            $this->label_numero_documento = "Número de expediente";
+
+    }
+
     public function updatedPropietario(){
 
         if($this->propietario === "") return;
@@ -143,22 +159,6 @@ class ModalGravamen extends ModalComponent
     public function cargarPropiedad($id){
 
         $this->propiedad = Predio::find($id);
-
-    }
-
-    public function updatedTipoDocumento(){
-
-        if($this->tipo_documento == "escritura")
-            $this->label_numero_documento = "Número de escritura";
-
-        if($this->tipo_documento == "oficio")
-            $this->label_numero_documento = "Número de oficio";
-
-        if($this->tipo_documento == "contrato")
-            $this->label_numero_documento = "Número de contrato";
-
-        if($this->tipo_documento == "embargo")
-            $this->label_numero_documento = "Número de expediente";
 
     }
 
@@ -256,8 +256,8 @@ class ModalGravamen extends ModalComponent
         if($this->gravamen->getKey()){
 
             $this->gravamen->movimientoRegistral->update([
-                'tomo' => $this->antecente_tomo,
-                'registro' => $this->antecente_registro,
+                'tomo_gravamen' => $this->antecente_tomo,
+                'registro_gravamen' => $this->antecente_registro,
                 'distrito' => $this->antecente_distrito,
                 'folio_real' => $this->movimientoRegistral->folio_real,
                 'actualizado_por' => auth()->id()
@@ -269,8 +269,8 @@ class ModalGravamen extends ModalComponent
                 'estado' => 'nuevo',
                 'folio' => $this->movimientoRegistral->folioReal->ultimoFolio() + 1,
                 'seccion' => 'Gravamen',
-                'tomo' => $this->antecente_tomo,
-                'registro' => $this->antecente_registro,
+                'tomo_gravamen' => $this->antecente_tomo,
+                'registro_gravamen' => $this->antecente_registro,
                 'distrito' => $this->antecente_distrito,
                 'folio_real' => $this->movimientoRegistral->folio_real,
                 'actualizado_por' => auth()->id()

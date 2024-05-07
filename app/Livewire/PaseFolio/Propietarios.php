@@ -143,7 +143,6 @@ class Propietarios extends Component
 
     }
 
-
     public function updatedTipoPersona(){
 
         if($this->tipo_persona == 'FISICA'){
@@ -267,11 +266,11 @@ class Propietarios extends Component
 
         if($persona){
 
-            foreach ($this->propiedad->propietarios() as $propietario) {
+            foreach ($this->propiedad->actores() as $propietario) {
 
                 if($persona->id == $propietario->persona_id){
 
-                    $this->dispatch('mostrarMensaje', ['error', "La persona ya es un propietario."]);
+                    $this->dispatch('mostrarMensaje', ['error', "La persona ya actual en el movimiento."]);
 
                     return;
 
@@ -394,8 +393,7 @@ class Propietarios extends Component
 
         $this->validate();
 
-        /* $persona = Persona::query()
-                            ->where(function($q){
+        $persona = Persona::where(function($q){
                                 $q->when($this->nombre, fn($q) => $q->where('nombre', $this->nombre))
                                     ->when($this->ap_paterno, fn($q) => $q->where('ap_paterno', $this->ap_paterno))
                                     ->when($this->ap_materno, fn($q) => $q->where('ap_materno', $this->ap_materno));
@@ -407,11 +405,11 @@ class Propietarios extends Component
 
         if($persona){
 
-            foreach ($this->propiedad->propietarios() as $propietario) {
+            foreach ($this->propiedad->actores() as $propietario) {
 
                 if($persona->id == $propietario->persona_id){
 
-                    $this->dispatch('mostrarMensaje', ['error', "La persona ya es un transmitente."]);
+                    $this->dispatch('mostrarMensaje', ['error', "La persona actua en el movimiento."]);
 
                     return;
 
@@ -419,7 +417,7 @@ class Propietarios extends Component
 
             }
 
-        } */
+        }
 
         try {
 
@@ -497,8 +495,7 @@ class Propietarios extends Component
 
         $this->validate();
 
-        $persona = Persona::query()
-                            ->where(function($q){
+        $persona = Persona::where(function($q){
                                 $q->when($this->nombre, fn($q) => $q->where('nombre', $this->nombre))
                                     ->when($this->ap_paterno, fn($q) => $q->where('ap_paterno', $this->ap_paterno))
                                     ->when($this->ap_materno, fn($q) => $q->where('ap_materno', $this->ap_materno));
@@ -510,11 +507,11 @@ class Propietarios extends Component
 
         if($persona){
 
-            foreach ($this->propiedad->propietarios() as $propietario) {
+            foreach ($this->propiedad->actores() as $propietario) {
 
                 if($persona->id == $propietario->persona_id){
 
-                    $this->dispatch('mostrarMensaje', ['error', "La persona ya es un representante."]);
+                    $this->dispatch('mostrarMensaje', ['error', "La persona ya actua en el movimiento."]);
 
                     return;
 

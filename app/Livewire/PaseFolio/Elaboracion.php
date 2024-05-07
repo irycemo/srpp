@@ -396,7 +396,19 @@ class Elaboracion extends Component
 
         try {
 
-            DB::transaction(function (){
+            $role = null;
+
+            if($this->movimientoRegistral->inscripcionPropiedad){
+
+                $role = 'Propiedad';
+
+            }elseif($this->movimientoRegistral->gravamen){
+
+                $role = 'Gravamen';
+
+            }
+
+            DB::transaction(function () use ($role){
 
                 $this->movimientoRegistral->folioReal->update([
                     'estado' => 'activo'
@@ -405,24 +417,13 @@ class Elaboracion extends Component
 
                 if(auth()->user()->hasRole('Pase a folio')){
 
-                    $usuarios = User::with('ultimoMovimientoRegistralAsignado')
-                                    ->where('status', 'activo')
-                                    ->when($this->movimientoRegistral->getRawOriginal('distrito') == 2, function($q){
-                                        $q->where('ubicacion', 'Regional 4');
-                                    })
-                                    ->when($this->movimientoRegistral->getRawOriginal('distrito') != 2, function($q){
-                                        $q->where('ubicacion', '!=', 'Regional 4');
-                                    })
-                                    ->whereHas('roles', function($q){
-                                        $q->where('name', 'Propiedad');
-                                    })
-                                    ->get();
+                    $usuarios = $this->obtenerUsuarios($role);
 
-                    if($usuarios->count()){
+                    if($usuarios->count() === 0){
 
-                        $this->dispatch('mostrarMensaje', ['error', "No hay usuarios con rol de Propiedad disponibles."]);
+                        $this->dispatch('mostrarMensaje', ['error', "No hay usuarios con rol de " . $role . " disponibles."]);
 
-                        throw new Exception();
+                        throw new Exception("No hay usuarios con rol de " . $role . " disponibles.");
 
                     }
 
@@ -438,6 +439,11 @@ class Elaboracion extends Component
 
             });
 
+        } catch (\Exception $th) {
+
+            Log::error("Error al finalizar folio real en pase a folio por el usuario: (id: " . auth()->user()->id . ") " . auth()->user()->name . ". " . $th);
+            $this->dispatch('mostrarMensaje', ['error', $th->getMessage()]);
+
         } catch (\Throwable $th) {
 
             Log::error("Error al finalizar folio real en pase a folio por el usuario: (id: " . auth()->user()->id . ") " . auth()->user()->name . ". " . $th);
@@ -445,6 +451,22 @@ class Elaboracion extends Component
 
         }
 
+    }
+
+    public function obtenerUsuarios($role){
+
+        return User::with('ultimoMovimientoRegistralAsignado')
+                            ->where('status', 'activo')
+                            ->when($this->movimientoRegistral->getRawOriginal('distrito') == 2, function($q){
+                                $q->where('ubicacion', 'Regional 4');
+                            })
+                            ->when($this->movimientoRegistral->getRawOriginal('distrito') != 2, function($q){
+                                $q->where('ubicacion', '!=', 'Regional 4');
+                            })
+                            ->whereHas('roles', function($q) use ($role){
+                                $q->where('name', $role);
+                            })
+                            ->get();
     }
 
     public function mount(){

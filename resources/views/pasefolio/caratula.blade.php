@@ -114,6 +114,10 @@
         display: block;
     }
 
+    .no-break{
+        page-break-inside: avoid;
+    }
+
 
 </style>
 <body>
@@ -309,7 +313,7 @@
 
                 </p>
 
-                <div class="firma">
+                <div class="firma no-break">
 
                     <p class="atte">
                         <strong>A T E N T A M E N T E</strong>
@@ -334,21 +338,6 @@
         </div>
 
     </main>
-
-    <script type="text/php">
-        if (isset($pdf)) {
-            $x = 280;
-            $y = 810;
-            $text = "Página: {PAGE_NUM} de {PAGE_COUNT}";
-            $font = null;
-            $size = 9;
-            $color = array(0,0,0);
-            $word_space = 0.0;  //  default
-            $char_space = 0.0;  //  default
-            $angle = 0.0;   //  default
-            $pdf->page_text($x, $y, $text, $font, $size, $color, $word_space, $char_space, $angle);
-        }
-    </script>
 
 </body>
 </html>

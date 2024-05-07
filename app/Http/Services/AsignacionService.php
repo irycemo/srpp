@@ -150,32 +150,6 @@ class AsignacionService{
 
     }
 
-    public function obtenerSupervisorPropiedad($distrito):int
-    {
-
-        $supervisor = User::inRandomOrder()
-                                ->where('status', 'activo')
-                                ->when($distrito == 2, function($q){
-                                    $q->where('ubicacion', 'Regional 4');
-                                })
-                                ->when($distrito != 2, function($q){
-                                    $q->where('ubicacion', '!=', 'Regional 4');
-                                })
-                                ->whereHas('roles', function($q){
-                                    $q->where('name', 'Supervisor propiedad');
-                                })
-                                ->first();
-
-        if(!$supervisor){
-
-            throw new AsignacionServiceException('No se encontraron supervisores de propiedad para asignar al movimiento registral.');
-
-        }
-
-        return $supervisor->id;
-
-    }
-
     /* Inscripciones : Propiedad */
     public function obtenerUsuarioPropiedad($folioReal, $distrito):int
     {
@@ -216,6 +190,32 @@ class AsignacionService{
 
     }
 
+    public function obtenerSupervisorPropiedad($distrito):int
+    {
+
+        $supervisor = User::inRandomOrder()
+                                ->where('status', 'activo')
+                                ->when($distrito == 2, function($q){
+                                    $q->where('ubicacion', 'Regional 4');
+                                })
+                                ->when($distrito != 2, function($q){
+                                    $q->where('ubicacion', '!=', 'Regional 4');
+                                })
+                                ->whereHas('roles', function($q){
+                                    $q->where('name', 'Supervisor propiedad');
+                                })
+                                ->first();
+
+        if(!$supervisor){
+
+            throw new AsignacionServiceException('No se encontraron supervisores de propiedad para asignar al movimiento registral.');
+
+        }
+
+        return $supervisor->id;
+
+    }
+
     /* Gravamen */
     public function obtenerUsuarioGravamen($folioReal, $distrito):int
     {
@@ -253,6 +253,32 @@ class AsignacionService{
             return $this->obtenerUltimoUsuarioConAsignacion($usuarios);
 
         }
+
+    }
+
+    public function obtenerSupervisorGravamen($distrito):int
+    {
+
+        $supervisor = User::inRandomOrder()
+                                ->where('status', 'activo')
+                                ->when($distrito == 2, function($q){
+                                    $q->where('ubicacion', 'Regional 4');
+                                })
+                                ->when($distrito != 2, function($q){
+                                    $q->where('ubicacion', '!=', 'Regional 4');
+                                })
+                                ->whereHas('roles', function($q){
+                                    $q->where('name', 'Supervisor gravamen');
+                                })
+                                ->first();
+
+        if(!$supervisor){
+
+            throw new AsignacionServiceException('No se encontraron supervisores de gravamen para asignar al movimiento registral.');
+
+        }
+
+        return $supervisor->id;
 
     }
 }

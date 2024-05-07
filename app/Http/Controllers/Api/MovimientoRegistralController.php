@@ -29,6 +29,8 @@ class MovimientoRegistralController extends Controller
 
         } catch (MovimientoRegistralServiceException $th) {
 
+            Log::error('Error al ingresar el trámite: ' . $request->año . '-' . $request->tramite . ' desde Sistema Trámites. ' . $th);
+
             return response()->json([
                 'result' => 'error',
                 'data' => $th->getMessage(),

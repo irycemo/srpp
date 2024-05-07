@@ -255,4 +255,25 @@ class Constantes{
         '2024' => '2024'
     ];
 
+    const ACTOS_INSCRIPCION_PROPIEDAD = [
+        'COMPRAVENTA',
+        'DONACIÓN',
+        'JUICIO SUCESORIO TESTAMENTARIO',
+        'JUICIO SUCESORIO INTESTAMENTARIO',
+        'ADJUDICACION JUDICIAL POR REMATE',
+        'DACIÓN EN PAGO',
+        'VARIACIÓN CATASTRAL',
+        'PRESCRIPCIÓN POSITIVA',
+        'SOCIEDADES',
+    ];
+
+    const ACTOS_INSCRIPCION_GRAVAMEN = [
+        'HIPOTECA',
+        'FIANZA JUDICIAL',
+        'FIANZA ADMINISTRATIVA',
+        'FIANZA COMERCIAL',
+        'EMBARGO',
+        'RESERVA DE DOMINIO',
+    ];
+
 }

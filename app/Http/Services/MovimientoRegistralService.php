@@ -2,6 +2,7 @@
 
 namespace App\Http\Services;
 
+use App\Models\FolioReal;
 use Illuminate\Support\Facades\DB;
 use App\Models\MovimientoRegistral;
 use Illuminate\Support\Facades\Log;
@@ -9,16 +10,18 @@ use Illuminate\Database\QueryException;
 use App\Exceptions\AsignacionServiceException;
 use App\Exceptions\CertificacionServiceException;
 use App\Http\Requests\MovimientoRegistralRequest;
+use App\Http\Services\InscripcionesCancelacionService;
 use App\Exceptions\MovimientoRegistralServiceException;
 use App\Http\Requests\MovimientoRegistralCambiarTipoServicioRequest;
-use App\Models\FolioReal;
 
 class MovimientoRegistralService{
 
     public function __construct(
         public AsignacionService $asignacionService,
         public CertificacionesService $certificacionesService,
-        public InscripcionesPropiedadService $inscripcionesPropiedadService
+        public InscripcionesPropiedadService $inscripcionesPropiedadService,
+        public InscripcionesGravamenService $inscripcionesGravamenService,
+        public InscripcionesCancelacionService $inscripcionesCancelacionService
     ){}
 
     public function store(MovimientoRegistralRequest $request)
@@ -44,6 +47,20 @@ class MovimientoRegistralService{
 
 
                     $this->inscripcionesPropiedadService->store($request + ['movimiento_registral' => $movimiento_registral->id]);
+
+                }
+
+                if($request['categoria_servicio'] == 'Inscripciones - Gravamenes'){
+
+
+                    $this->inscripcionesGravamenService->store($request + ['movimiento_registral' => $movimiento_registral->id]);
+
+                }
+
+                if($request['categoria_servicio'] == 'Cancelación - Gravamenes'){
+
+
+                    $this->inscripcionesCancelacionService->store($request + ['movimiento_registral' => $movimiento_registral->id]);
 
                 }
 
@@ -150,6 +167,8 @@ class MovimientoRegistralService{
                 'registro',
                 'registro_bis',
                 'distrito',
+                'tomo_gravamen',
+                'registro_gravamen',
                 'seccion',
                 'año',
                 'tramite',
@@ -215,6 +234,8 @@ class MovimientoRegistralService{
             'registro',
             'registro_bis',
             'distrito',
+            'tomo_gravamen',
+            'registro_gravamen',
             'seccion',
             'numero_oficio',
             'tipo_documento',
@@ -265,6 +286,13 @@ class MovimientoRegistralService{
 
         }
 
+        /* Inscripciones: Gravamen */
+        if($servicio == 'DL64'){
+
+            return $this->asignacionService->obtenerUsuarioGravamen($folioReal, $distrito);
+
+        }
+
     }
 
     public function obtenerSupervisor($servicio, $distrito):int
@@ -286,13 +314,16 @@ class MovimientoRegistralService{
 
         }
 
+        if($servicio == 'DL64'){
+            return $this->asignacionService->obtenerSupervisorGravamen($distrito);
 
+        }
 
     }
 
     public function calcularFolio($request){
 
-        if($request['categoria_servicio'] == 'Inscripciones - Propiedad'){
+        if(in_array($request['categoria_servicio'], ['Inscripciones - Propiedad', 'Inscripciones - Gravamenes'])){
 
             if(!isset($request['folio_real'])){
 
@@ -313,3 +344,4 @@ class MovimientoRegistralService{
     }
 
 }
+

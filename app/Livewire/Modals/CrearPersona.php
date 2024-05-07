@@ -42,29 +42,32 @@ class CrearPersona extends ModalComponent
         return [
             'persona.tipo' => 'required',
             'persona.nombre' => [
-                Rule::requiredIf($this->persona->tipo === 'FISICA')
+                'nullable',
+                Rule::requiredIf($this->persona->tipo === 'FISICA'),
+                utf8_encode('regex:/^[áéíóúÁÉÍÓÚñÑa-zA-Z-0-9$#.() ]*$/')
             ],
-            'persona.ap_paterno' => Rule::requiredIf($this->persona->tipo === 'FISICA'),
-            'persona.ap_materno' => Rule::requiredIf($this->persona->tipo === 'FISICA'),
+            'persona.ap_paterno' => ['nullable',Rule::requiredIf($this->tipo_persona === 'FISICA'), utf8_encode('regex:/^[áéíóúÁÉÍÓÚñÑa-zA-Z-0-9$#.() ]*$/')],
+            'persona.ap_materno' => ['nullable',Rule::requiredIf($this->tipo_persona === 'FISICA'), utf8_encode('regex:/^[áéíóúÁÉÍÓÚñÑa-zA-Z-0-9$#.() ]*$/')],
             'persona.curp' => [
                 'nullable',
                 /* 'regex:/^[A-Z]{1}[AEIOUX]{1}[A-Z]{2}[0-9]{2}(0[1-9]|1[0-2])(0[1-9]|1[0-9]|2[0-9]|3[0-1])[HM]{1}(AS|BC|BS|CC|CS|CH|CL|CM|DF|DG|GT|GR|HG|JC|MC|MN|MS|NT|NL|OC|PL|QT|QR|SP|SL|SR|TC|TS|TL|VZ|YN|ZS|NE)[B-DF-HJ-NP-TV-Z]{3}[0-9A-Z]{1}[0-9]{1}$/i' */
             ],
             'persona.rfc' => [
                 'nullable',
+                Rule::requiredIf($this->tipo_persona === 'FISICA'),
                 /* 'regex:/^([A-ZÑ&]{3,4}) ?(?:- ?)?(\d{2}(?:0[1-9]|1[0-2])(?:0[1-9]|[12]\d|3[01])) ?(?:- ?)?([A-Z\d]{2})([A\d])$/' */
             ],
             'persona.razon_social' => Rule::requiredIf($this->persona->tipo === 'MORAL'),
-            'persona.fecha_nacimiento' => 'nullable',
-            'persona.nacionalidad' => 'nullable',
-            'persona.estado_civil' => 'nullable',
-            'persona.calle' => 'nullable',
-            'persona.numero_exterior' => 'nullable',
-            'persona.numero_interior' => 'nullable',
-            'persona.colonia' => 'nullable',
-            'persona.cp' => 'nullable',
-            'persona.entidad' => 'nullable',
-            'persona.municipio' => 'nullable',
+            'persona.fecha_nacimiento' => 'nullable|date',
+            'persona.nacionalidad' => 'nullable|' . utf8_encode('regex:/^[áéíóúÁÉÍÓÚñÑa-zA-Z-0-9$#.() ]*$/'),
+            'persona.estado_civil' => 'nullable|' . utf8_encode('regex:/^[áéíóúÁÉÍÓÚñÑa-zA-Z-0-9$#.() ]*$/'),
+            'persona.calle' => 'nullable|' . utf8_encode('regex:/^[áéíóúÁÉÍÓÚñÑa-zA-Z-0-9$#.() ]*$/'),
+            'persona.numero_exterior' => 'nullable|' . utf8_encode('regex:/^[áéíóúÁÉÍÓÚñÑa-zA-Z-0-9$#.() ]*$/'),
+            'persona.numero_interior' => 'nullable|' . utf8_encode('regex:/^[áéíóúÁÉÍÓÚñÑa-zA-Z-0-9$#.() ]*$/'),
+            'persona.colonia' => 'nullable|' . utf8_encode('regex:/^[áéíóúÁÉÍÓÚñÑa-zA-Z-0-9$#.() ]*$/'),
+            'persona.cp' => 'nullable|numeric',
+            'persona.entidad' => 'nullable|' . utf8_encode('regex:/^[áéíóúÁÉÍÓÚñÑa-zA-Z-0-9$#.() ]*$/'),
+            'persona.municipio' => 'nullable|' . utf8_encode('regex:/^[áéíóúÁÉÍÓÚñÑa-zA-Z-0-9$#.() ]*$/'),
         ];
     }
 

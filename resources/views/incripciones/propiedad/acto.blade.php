@@ -151,7 +151,8 @@
             </div>
 
             <div class="parrafo">
-                <p><strong>por</strong> {{ $inscripcion->movimientoRegistral->tipo_documento }} <strong>n°</strong> {{ $inscripcion->movimientoRegistral->numero_documento }} <strong>de fecha</strong> {{ $inscripcion->movimientoRegistral->fecha_emision }} <strong>otorgado por</strong> {{ $inscripcion->movimientoRegistral->autoridad_cargo }} {{ $inscripcion->movimientoRegistral->autoridad_nombre }}
+
+                <p><strong>por</strong> {{ $inscripcion->movimientoRegistral->tipo_documento }} <strong>n°</strong> {{ $inscripcion->movimientoRegistral->numero_documento }} <strong>de fecha</strong> {{ Carbon\Carbon::parse($inscripcion->movimientoRegistral->fecha_emision)->format('d-m-Y') }} <strong>otorgado por</strong> {{ $inscripcion->movimientoRegistral->autoridad_cargo }} {{ $inscripcion->movimientoRegistral->autoridad_nombre }}
                     <strong>consta que </strong>
                     @foreach ($inscripcion->transmitentes() as $transmitente)
 
@@ -166,6 +167,53 @@
                     @endforeach
                     , <strong>comparecio arealizar el acto de </strong> {{ $inscripcion->acto_contenido }}.
                 </p>
+
+                <p>
+                    <strong>Descripción del predio:</strong> {{ $inscripcion->descripcion }}.
+
+                    <strong>CÓDIGO POSTAL:</strong> {{ $inscripcion->codigo_postal }}; <strong>TIPO DE ASENTAMIENTO:</strong> {{ $inscripcion->tipo_asentamiento }}; <strong>NOMBRE DEL ASENTAMIENTO:</strong> {{ $inscripcion->nombre_asentamiento }}; <strong>MUNICIPIO:</strong> {{ $inscripcion->municipio }};
+
+                    <strong>CIUDAD:</strong> {{ $inscripcion->ciudad }}; <strong>LOCALIDAD:</strong> {{ $inscripcion->localidad }}; <strong>TIPO DE VIALIDAD:</strong> {{ $inscripcion->tipo_vialidad }}; <strong>NOMBRE DE LA VIALIDAD:</strong> {{ $inscripcion->nombre_vialidad }};
+
+                    <strong>NÚMERO EXTERIOR:</strong> {{ $inscripcion->numero_exterior ?? 'SN' }}; <strong>NÚMERO INTERIOR:</strong> {{ $inscripcion->numero_interior ?? 'SN' }};
+                </p>
+
+                <table>
+
+                    <thead>
+
+                        <tr>
+                            <th style="text-align: left;">Viento</th>
+                            <th style="text-align: left;">Longitud</th>
+                            <th style="text-align: left;">Descripción</th>
+                        </tr>
+
+                    </thead>
+
+                    <tbody>
+
+                        @foreach ($inscripcion->movimientoRegistral->folioReal->predio->colindancias as $colindancia)
+
+                            <tr>
+                                <td style="padding-right: 40px;">
+                                    <p>{{ $colindancia->viento }}</p>
+                                </td>
+                                <td style="padding-right: 40px;">
+                                    <p>{{ number_format($colindancia->longitud, 2) }}</p>
+                                </td>
+                                <td>
+                                    <p>{{ $colindancia->descripcion }}</p>
+                                </td>
+                            </tr>
+
+                        @endforeach
+
+                    </tbody>
+
+                </table>
+
+                <p><strong>Valor: {{ $inscripcion->monto_transaccion }}</strong></p>
+
             </div>
 
             <div>
@@ -174,22 +222,33 @@
 
                 <p class="parrafo">
 
-                    <ul>
-                        @foreach ($inscripcion->propietarios() as $transmitente)
+                    <table class="tabla" >
+                        <tbody sty>
 
-                            <li>
-                                {{ $transmitente->persona->nombre }} {{ $transmitente->persona->ap_paterno }} {{ $transmitente->persona->ap_materno }} {{ $transmitente->persona->razon_social }},
-                                @if($transmitente->persona->curp)<strong>estado civil:</strong> {{ $transmitente->persona->estado_civil }},@endif
-                                @if($transmitente->persona->curp)<strong>curp:</strong> {{ $transmitente->persona->curp }},@endif
-                                <strong>rfc:</strong> {{ $transmitente->persona->rfc }},
-                                <strong>nacionalidad:</strong> {{ $transmitente->persona->nacionalidad }},
-                                <strong>porcentaje de nuda:</strong> {{ $transmitente->porcentaje_nuda }},
-                                <strong>porcentaje de usufructo:</strong> {{ $transmitente->porcentaje_usufructo }}.
-                            </li>
+                            @foreach ($inscripcion->propietarios() as $transmitente)
 
-                        @endforeach
+                                <tr>
+                                    <td style="padding-right: 40px; text-align:center; width: 50%; vertical-align: bottom; white-space: nowrap;">
 
-                    </ul>
+                                        {{ $transmitente->persona->nombre }} {{ $transmitente->persona->ap_paterno }} {{ $transmitente->persona->ap_materno }} {{ $transmitente->persona->razon_social }}
+
+                                    </td>
+
+                                    <td style="padding-right: 40px; text-align:center; width: 50%; vertical-align: bottom; white-space: nowrap;">
+
+                                        {{ $transmitente->porcentaje_nuda }}%
+                                    </td>
+
+                                    <td style="padding-right: 40px; text-align:center; width: 50%; vertical-align: bottom; white-space: nowrap;">
+
+                                        {{ $transmitente->porcentaje_usufructo }}%
+                                    </td>
+
+                                </tr>
+
+                            @endif
+                        </tbody>
+                    </table>
 
                 </p>
 
@@ -198,21 +257,10 @@
             <div class="firma">
 
                 <p class="atte">
-                    <strong>A T E N T A M E N T E</strong>
+                    <strong>El DIRECTOR DEL REGISTRO PÚBLICO  DE LA PROPIEDAD</strong>
                 </p>
 
-                @if($distrito == '02 URUAPAN' )
-
-                    <p class="borde">
-                        L.A. SANDRO MEDINA MORALES
-                    </p>
-
-                @else
-
-                    <p class="borde">{{ $director }}</p>
-                    <p style="margin: 0">DIRECTOR DEL REGISTRO PÚBLICO  DE LA PROPIEDAD</p>
-
-                @endif
+                <p class="borde">{{ $director }}</p>
 
             </div>
 
@@ -228,11 +276,15 @@
 
                             </td>
 
-                            <td style="padding-right: 40px; text-align:center; width: 50%; vertical-align: bottom; white-space: nowrap;">
+                            @if($distrito == '02 URUAPAN' )
 
-                                <p class="borde">{{ $jefe_departamento }}</p>
-                                <p style="margin: 0">JEFE DE Departamento de Registro de Inscripciones	</p>
-                            </td>
+                                <td style="padding-right: 40px; text-align:center; width: 50%; vertical-align: bottom; white-space: nowrap;">
+
+                                    <p class="borde">{{ $jefe_departamento }}</p>
+                                    <p style="margin: 0">JEFE DE Departamento de Registro de Inscripciones	</p>
+                                </td>
+
+                            @endif
 
                         </tr>
                     </tbody>
@@ -258,7 +310,7 @@
                             <td style="padding-right: 40px; text-align:left; ; vertical-align: bottom; white-space: nowrap;">
 
                                 {{-- <p><strong>FECHA DE ENTRADA:</strong>{{ $inscripcion->movimientoRegistral->created_at->format('d-m-Y') }}</p> --}}
-                                <p style="margin: 0"><strong>Impreso en: </strong>{{ now()->format('d-m-Y H:i:s') }}</p>
+                                <p style="margin: 0"><strong>Fecha de impresión: </strong>{{ now()->format('d-m-Y H:i:s') }}</p>
                                 <p style="margin: 0"><strong>IMPRESO POR: </strong>{{  auth()->user()->name }}</p>
 
                             </td>

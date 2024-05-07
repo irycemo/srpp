@@ -763,6 +763,10 @@
                                 .select2({
                                     placeholder: 'Propietarios y transmitentes',
                                     width: '100%',
+                                    initSelection : function (element, callback) {
+                                        var data = {id: 63, text: 'hola'};
+                                        callback(data);
+                                    }
                                 })
 
                             select2.on('change', function(){

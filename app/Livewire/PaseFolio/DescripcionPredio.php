@@ -117,33 +117,33 @@ class DescripcionPredio extends Component
         $this->propiedad = Predio::find($id);
 
         $this->curt = $this->propiedad->curt;
-        $this->localidad = $this->movimientoRegistral->inscripcionPropiedad->cp_localidad;
-        $this->oficina = $this->movimientoRegistral->inscripcionPropiedad->cp_oficina;
-        $this->tipo = $this->movimientoRegistral->inscripcionPropiedad->cp_tipo_predio;
-        $this->registro = $this->movimientoRegistral->inscripcionPropiedad->cp_registro;
-        $this->region = $this->movimientoRegistral->inscripcionPropiedad->cc_region_catastral;
-        $this->municipio = $this->movimientoRegistral->inscripcionPropiedad->cc_municipio;
-        $this->zona = $this->movimientoRegistral->inscripcionPropiedad->cc_zona_catastral;
-        $this->sector = $this->movimientoRegistral->inscripcionPropiedad->cc_sector;
-        $this->manzana = $this->movimientoRegistral->inscripcionPropiedad->cc_manzana;
-        $this->predio = $this->movimientoRegistral->inscripcionPropiedad->cc_predio;
-        $this->edificio = $this->movimientoRegistral->inscripcionPropiedad->cc_edificio;
-        $this->departamento = $this->movimientoRegistral->inscripcionPropiedad->cc_departamento;
-        $this->superficie_terreno = $this->movimientoRegistral->inscripcionPropiedad->superficie_terreno;
-        $this->superficie_construccion = $this->movimientoRegistral->inscripcionPropiedad->superficie_construccion;
-        $this->superficie_judicial = $this->movimientoRegistral->inscripcionPropiedad->superficie_judicial;
-        $this->superficie_notarial = $this->movimientoRegistral->inscripcionPropiedad->superficie_notarial;
-        $this->area_comun_terreno = $this->movimientoRegistral->inscripcionPropiedad->area_comun_terreno;
-        $this->area_comun_construccion = $this->movimientoRegistral->inscripcionPropiedad->area_comun_construccion;
-        $this->valor_terreno_comun = $this->movimientoRegistral->inscripcionPropiedad->valor_terreno_comun;
-        $this->valor_construccion_comun = $this->movimientoRegistral->inscripcionPropiedad->valor_construccion_comun;
-        $this->valor_total_terreno = $this->movimientoRegistral->inscripcionPropiedad->valor_total_terreno;
-        $this->valor_total_construccion = $this->movimientoRegistral->inscripcionPropiedad->valor_total_construccion;
-        $this->valor_catastral = $this->movimientoRegistral->inscripcionPropiedad->valor_catastral;
-        $this->monto_transaccion = $this->movimientoRegistral->inscripcionPropiedad->monto_transaccion;
+        $this->localidad = $this->propiedad->cp_localidad;
+        $this->oficina = $this->propiedad->cp_oficina;
+        $this->tipo = $this->propiedad->cp_tipo_predio;
+        $this->registro = $this->propiedad->cp_registro;
+        $this->region = $this->propiedad->cc_region_catastral;
+        $this->municipio = $this->propiedad->cc_municipio;
+        $this->zona = $this->propiedad->cc_zona_catastral;
+        $this->sector = $this->propiedad->cc_sector;
+        $this->manzana = $this->propiedad->cc_manzana;
+        $this->predio = $this->propiedad->cc_predio;
+        $this->edificio = $this->propiedad->cc_edificio;
+        $this->departamento = $this->propiedad->cc_departamento;
+        $this->superficie_terreno = $this->propiedad->superficie_terreno;
+        $this->superficie_construccion = $this->propiedad->superficie_construccion;
+        $this->superficie_judicial = $this->propiedad->superficie_judicial;
+        $this->superficie_notarial = $this->propiedad->superficie_notarial;
+        $this->area_comun_terreno = $this->propiedad->area_comun_terreno;
+        $this->area_comun_construccion = $this->propiedad->area_comun_construccion;
+        $this->valor_terreno_comun = $this->propiedad->valor_terreno_comun;
+        $this->valor_construccion_comun = $this->propiedad->valor_construccion_comun;
+        $this->valor_total_terreno = $this->propiedad->valor_total_terreno;
+        $this->valor_total_construccion = $this->propiedad->valor_total_construccion;
+        $this->valor_catastral = $this->propiedad->valor_catastral;
+        $this->monto_transaccion = $this->propiedad->monto_transaccion;
         $this->divisa = $this->divisa;
         $this->unidad_area = $this->unidad_area;
-        $this->observaciones = $this->movimientoRegistral->inscripcionPropiedad->observaciones;
+        $this->observaciones = $this->propiedad->observaciones;
 
         foreach ($this->propiedad->colindancias as $colindancia) {
 
@@ -176,36 +176,40 @@ class DescripcionPredio extends Component
 
             DB::transaction(function () {
 
-                $this->movimientoRegistral->inscripcionPropiedad->update([
-                    'cc_estado' => 16,
-                    'cc_region_catastral' => $this->region,
-                    'cc_municipio' => $this->municipio,
-                    'cc_zona_catastral' => $this->zona,
-                    'cc_sector' => $this->sector,
-                    'cc_manzana' => $this->manzana,
-                    'cc_predio' => $this->predio,
-                    'cc_edificio' => $this->edificio,
-                    'cc_departamento' => $this->departamento,
-                    'cp_localidad' => $this->localidad,
-                    'cp_oficina' => $this->oficina,
-                    'cp_tipo_predio' => $this->tipo,
-                    'cp_registro' => $this->registro,
-                    'superficie_terreno' => $this->superficie_terreno,
-                    'superficie_construccion' => $this->superficie_construccion,
-                    'superficie_judicial' => $this->superficie_judicial,
-                    'superficie_notarial' => $this->superficie_notarial,
-                    'area_comun_terreno' => $this->area_comun_terreno,
-                    'area_comun_construccion' => $this->area_comun_construccion,
-                    'valor_terreno_comun' => $this->valor_terreno_comun,
-                    'valor_construccion_comun' => $this->valor_construccion_comun,
-                    'valor_total_terreno' => $this->valor_total_terreno,
-                    'valor_total_construccion' => $this->valor_total_construccion,
-                    'valor_catastral' => $this->valor_catastral,
-                    'monto_transaccion' => $this->monto_transaccion,
-                    'unidad_area' => $this->unidad_area,
-                    'divisa' => $this->divisa,
-                    'descripcion' => $this->observaciones
-                ]);
+                if($this->movimientoRegistral->inscripcionPropiedad){
+
+                    $this->movimientoRegistral->inscripcionPropiedad->update([
+                        'cc_estado' => 16,
+                        'cc_region_catastral' => $this->region,
+                        'cc_municipio' => $this->municipio,
+                        'cc_zona_catastral' => $this->zona,
+                        'cc_sector' => $this->sector,
+                        'cc_manzana' => $this->manzana,
+                        'cc_predio' => $this->predio,
+                        'cc_edificio' => $this->edificio,
+                        'cc_departamento' => $this->departamento,
+                        'cp_localidad' => $this->localidad,
+                        'cp_oficina' => $this->oficina,
+                        'cp_tipo_predio' => $this->tipo,
+                        'cp_registro' => $this->registro,
+                        'superficie_terreno' => $this->superficie_terreno,
+                        'superficie_construccion' => $this->superficie_construccion,
+                        'superficie_judicial' => $this->superficie_judicial,
+                        'superficie_notarial' => $this->superficie_notarial,
+                        'area_comun_terreno' => $this->area_comun_terreno,
+                        'area_comun_construccion' => $this->area_comun_construccion,
+                        'valor_terreno_comun' => $this->valor_terreno_comun,
+                        'valor_construccion_comun' => $this->valor_construccion_comun,
+                        'valor_total_terreno' => $this->valor_total_terreno,
+                        'valor_total_construccion' => $this->valor_total_construccion,
+                        'valor_catastral' => $this->valor_catastral,
+                        'monto_transaccion' => $this->monto_transaccion,
+                        'unidad_area' => $this->unidad_area,
+                        'divisa' => $this->divisa,
+                        'descripcion' => $this->observaciones
+                    ]);
+
+                }
 
                 $this->propiedad->update([
                     'cc_estado' => 16,

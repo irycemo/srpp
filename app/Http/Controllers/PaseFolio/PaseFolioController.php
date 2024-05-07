@@ -5,7 +5,6 @@ namespace App\Http\Controllers\PaseFolio;
 use App\Models\User;
 use App\Models\FolioReal;
 use Illuminate\Support\Str;
-use Illuminate\Http\Request;
 use App\Constantes\Constantes;
 use Barryvdh\DomPDF\Facade\Pdf;
 use App\Http\Controllers\Controller;
@@ -54,6 +53,8 @@ class PaseFolioController extends Controller
         $canvas = $dom_pdf->get_canvas();
 
         $canvas->page_text(480, 794, "Página: {PAGE_NUM} de {PAGE_COUNT}", null, 10, array(1, 1, 1));
+
+        $canvas->page_text(35, 794, "Folio real: " . $folioReal->folio , null, 10, array(1, 1, 1));
 
         return $pdf->stream('documento.pdf');
 

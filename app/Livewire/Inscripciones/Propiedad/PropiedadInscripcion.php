@@ -2,6 +2,7 @@
 
 namespace App\Livewire\Inscripciones\Propiedad;
 
+use App\Constantes\Constantes;
 use App\Models\User;
 use App\Models\Actor;
 use App\Models\Persona;
@@ -847,7 +848,7 @@ class PropiedadInscripcion extends Component
         $this->predio = $this->inscripcion->movimientoRegistral->folioReal->predio;
 
         if(in_array($this->inscripcion->servicio, ['D114', 'D116', 'D115', 'D113']))
-            $this->actos = ['Compraventa', 'Propiedad 2', 'Propiedad 3', 'Propiedad 4', 'Propiedad 5', 'Propiedad 6', 'Propiedad 7'];
+            $this->actos = Constantes::ACTOS_INSCRIPCION_PROPIEDAD;
 
         $director = User::where('status', 'activo')->whereHas('roles', function($q){
             $q->where('name', 'Director');
