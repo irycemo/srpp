@@ -21,6 +21,7 @@ class ConsultasCertificaciones extends Component
     public $certificacion;
     public $año;
     public $tramite;
+    public $tramite_usuario;
     public $modal2;
     public $modalRechazar;
     public $paginas;
@@ -133,10 +134,11 @@ class ConsultasCertificaciones extends Component
 
         $this->validate([
             'tramite' => 'required',
-            'año' => 'required'
+            'año' => 'required',
+            'tramite_usuario' => 'required'
         ]);
 
-        $this->certificacion = MovimientoRegistral::where('año', $this->año)->where('tramite', $this->tramite)->first();
+        $this->certificacion = MovimientoRegistral::where('año', $this->año)->where('tramite', $this->tramite)->where('usuario', $this->tramite_usuario)->first();
 
         if(!$this->certificacion){
 

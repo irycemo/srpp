@@ -69,7 +69,7 @@ class CopiasController extends Controller
 
         $año_letras = $formatter->toWords($año);
 
-        $numero_control = $certificacion->movimientoRegistral->año . '-' .$certificacion->movimientoRegistral->tramite;
+        $numero_control = $certificacion->movimientoRegistral->año . '-' .$certificacion->movimientoRegistral->tramite . '-' .$certificacion->movimientoRegistral->usuario;
 
         $superviso = Str::upper($certificacion->movimientoRegistral->supervisor->name);
 
@@ -214,7 +214,7 @@ class CopiasController extends Controller
 
         $año_letras = $formatter->toWords($año);
 
-        $numero_control = $certificacion->movimientoRegistral->tramite;
+        $numero_control = $certificacion->movimientoRegistral->año . '-' .$certificacion->movimientoRegistral->tramite . '-' .$certificacion->movimientoRegistral->usuario;
 
         $superviso = Str::upper($certificacion->movimientoRegistral->supervisor->name);
 
