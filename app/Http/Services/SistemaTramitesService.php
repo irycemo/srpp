@@ -15,13 +15,14 @@ class SistemaTramitesService{
         $this->token = env('SISTEMA_TRAMITES_TOKEN');
     }
 
-    public function finaliarTramite($año, $tramite, $estado){
+    public function finaliarTramite($año, $tramite, $usuario, $estado){
 
         $url = env('SISTEMA_TRAMITES_FINALIZAR');
 
         $response = Http::withToken($this->token)->acceptJson()->asForm()->post($url, [
             'año' => $año,
             'tramite' => $tramite,
+            'usuario' => $usuario,
             'estado' => $estado,
         ]);
 

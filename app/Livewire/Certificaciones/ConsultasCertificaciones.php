@@ -80,7 +80,7 @@ class ConsultasCertificaciones extends Component
 
                 $observaciones = auth()->user()->name . ' rechaza el ' . now() . ', con motivo: ' . $this->observaciones ;
 
-                (new SistemaTramitesService())->rechazarTramite($this->certificacion->año, $this->certificacion->tramite, $observaciones);
+                (new SistemaTramitesService())->rechazarTramite($this->certificacion->año, $this->certificacion->tramite, $this->certificacion->usuario, $observaciones);
 
                 $this->certificacion->update(['estado' => 'rechazado', 'actualizado_por' => auth()->user()->id]);
 

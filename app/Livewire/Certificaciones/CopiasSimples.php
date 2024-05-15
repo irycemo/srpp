@@ -169,7 +169,7 @@ class CopiasSimples extends Component
 
             $this->modelo_editar->save();
 
-            (new SistemaTramitesService())->finaliarTramite($this->modelo_editar->movimientoRegistral->año, $this->modelo_editar->movimientoRegistral->tramite, 'concluido');
+            (new SistemaTramitesService())->finaliarTramite($this->modelo_editar->movimientoRegistral->año, $this->modelo_editar->movimientoRegistral->tramite, $this->modelo_editar->movimientoRegistral->usuario, 'concluido');
 
             $this->resetearTodo();
 
