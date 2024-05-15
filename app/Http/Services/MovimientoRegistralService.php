@@ -172,6 +172,7 @@ class MovimientoRegistralService{
                 'seccion',
                 'año',
                 'tramite',
+                'usuario',
                 'tipo_servicio',
                 'monto',
                 'fecha_prelacion',

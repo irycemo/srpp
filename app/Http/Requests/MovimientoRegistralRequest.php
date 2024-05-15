@@ -34,6 +34,7 @@ class MovimientoRegistralRequest extends FormRequest
             /* Tramite */
             'año' => 'required',
             'tramite' => 'required',
+            'usuario' => 'required',
             'tipo_servicio' => 'required',
             'monto' => 'required',
 
