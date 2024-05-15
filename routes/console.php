@@ -27,7 +27,7 @@ Artisan::command('usuario', function(){
 
     foreach ($movimientosRegistrales as $movimientoRegistral) {
 
-        $tramite = DB::connection('mysql2')->table('tramites')->where('año', $movimientoRegistral->año)->where('numero_control', $movimientoRegistral->tramtie)->first();
+        $tramite = DB::connection('mysql2')->table('tramites')->where('año', $movimientoRegistral->año)->where('numero_control', $movimientoRegistral->tramite)->first();
 
         $movimientoRegistral->update(['usuario', $tramite->usuario]);
 
