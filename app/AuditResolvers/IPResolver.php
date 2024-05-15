@@ -32,7 +32,7 @@ class IPResolver implements Resolver
 
         }
 
-        return($ip);
+        return(substr($ip,0,44));
 
     }
 }
