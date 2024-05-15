@@ -33,13 +33,14 @@ class SistemaTramitesService{
 
     }
 
-    public function rechazarTramite($año, $tramite, $observaciones){
+    public function rechazarTramite($año, $tramite, $usuario, $observaciones){
 
         $url = env('SISTEMA_TRAMITES_RECHAZAR');
 
         $response = Http::withToken($this->token)->acceptJson()->asForm()->post($url, [
             'año' => $año,
             'tramite' => $tramite,
+            'usuario' => $usuario,
             'observaciones' => $observaciones,
             'estado' => 'rechazado'
         ]);
