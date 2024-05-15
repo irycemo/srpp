@@ -29,7 +29,7 @@ Artisan::command('usuario', function(){
 
         $tramite = DB::connection('mysql2')->table('tramites')->where('año', $movimientoRegistral->año)->where('numero_control', $movimientoRegistral->tramite)->first();
 
-        $movimientoRegistral->update(['usuario', $tramite->usuario]);
+        $movimientoRegistral->update(['usuario' =>  $tramite->usuario]);
 
 
     }
