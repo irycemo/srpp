@@ -66,7 +66,7 @@ class Elaboracion extends Component
             'escritura_notaria' => Rule::requiredIf($this->tipo_documento === "escritura"),
             'escritura_nombre_notario' => Rule::requiredIf($this->tipo_documento === "escritura"),
             'escritura_estado_notario' => Rule::requiredIf($this->tipo_documento === "escritura"),
-            'escritura_observaciones' => 'nullable|' . utf8_encode('regex:/^[áéíóúÁÉÍÓÚñÑa-zA-Z-0-9$#.() ]*$/'),
+            'escritura_observaciones' => 'nullable|' . utf8_encode('regex:/^[áéíóúÁÉÍÓÚñÑa-zA-Z-0-9$#.()\/\-," ]*$/'),
         ];
     }
 
