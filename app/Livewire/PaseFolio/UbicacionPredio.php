@@ -54,10 +54,10 @@ class UbicacionPredio extends Component
 
         return [
             'tipo_vialidad' => 'nullable',
-            'tipo_asentamiento' => 'required',
+            'tipo_asentamiento' => 'nullable',
             'nombre_vialidad' => 'nullable|' . utf8_encode('regex:/^[áéíóúÁÉÍÓÚñÑa-zA-Z-0-9$#.() ]*$/'),
-            'nombre_asentamiento' => 'required',
-            'numero_exterior' => 'required|'. utf8_encode('regex:/^[áéíóúÁÉÍÓÚñÑa-zA-Z-0-9$#.() ]*$/'),
+            'nombre_asentamiento' => 'nullable',
+            'numero_exterior' => 'nullable|'. utf8_encode('regex:/^[áéíóúÁÉÍÓÚñÑa-zA-Z-0-9$#.() ]*$/'),
             'numero_exterior_2' => 'nullable|' . utf8_encode('regex:/^[áéíóúÁÉÍÓÚñÑa-zA-Z-0-9$#.() ]*$/'),
             'numero_adicional' => 'nullable|' . utf8_encode('regex:/^[áéíóúÁÉÍÓÚñÑa-zA-Z-0-9$#.() ]*$/'),
             'numero_adicional_2' => 'nullable|' . utf8_encode('regex:/^[áéíóúÁÉÍÓÚñÑa-zA-Z-0-9$#.() ]*$/'),
