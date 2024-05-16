@@ -330,13 +330,13 @@ class Elaboracion extends Component
 
         }
 
-        if(!$this->propiedad->nombre_asentamiento){
+        /* if(!$this->propiedad->nombre_asentamiento){
 
             $this->dispatch('mostrarMensaje', ['error', "El predio debe nombre de asentamiento."]);
 
             return;
 
-        }
+        } */
 
         if(!$this->propiedad->municipio){
 
@@ -370,13 +370,13 @@ class Elaboracion extends Component
 
         }
 
-        if(!$this->propiedad->numero_exterior){
+        /* if(!$this->propiedad->numero_exterior){
 
             $this->dispatch('mostrarMensaje', ['error', "El predio debe nombre de numero_exterior."]);
 
             return;
 
-        }
+        } */
 
         if($this->propiedad->propietarios()->count() == 0){
 
