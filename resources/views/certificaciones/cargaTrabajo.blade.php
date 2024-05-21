@@ -67,7 +67,7 @@
 
                                 <tr>
 
-                                    <td>{{ $item->tramite }}</td>
+                                    <td>{{ $item->año }}-{{ $item->tramite }}-{{ $item->usuario }}</td>
                                     <td>{{ $item->tipo_servicio }}</td>
                                     <td>{{ $item->tomo }}</td>
                                     <td>{{ $item->registro }}</td>
