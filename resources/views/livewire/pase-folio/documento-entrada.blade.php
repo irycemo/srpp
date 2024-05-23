@@ -53,8 +53,8 @@
                 <x-input-select id="tipo_documento" wire:model.live="tipo_documento" class="w-full">
 
                     <option value="">Seleccione una opción</option>
-                    <option value="escritura">Escritura</option>
-                    <option value="oficio">Oficio</option>
+                    <option value="ESCRITURA PÚBLICA">Escritura Pública</option>
+                    <option value="OFICIO">Oficio</option>
 
                 </x-input-select>
 

@@ -246,7 +246,7 @@
 
                                 </tr>
 
-                            @endif
+                            @endforeach
                         </tbody>
                     </table>
 
