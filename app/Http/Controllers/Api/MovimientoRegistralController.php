@@ -29,7 +29,7 @@ class MovimientoRegistralController extends Controller
 
         } catch (MovimientoRegistralServiceException $th) {
 
-            Log::error('Error al ingresar el trámite: ' . $request->año . '-' . $request->tramite . ' desde Sistema Trámites. ' . $th);
+            Log::error('Error al ingresar el trámite: ' . $request->año . '-' . $request->tramite . '-' . $request->usuario . ' desde Sistema Trámites. ' . $th);
 
             return response()->json([
                 'result' => 'error',
@@ -38,7 +38,7 @@ class MovimientoRegistralController extends Controller
 
         }catch (\Throwable $th) {
 
-            Log::error('Error al ingresar el trámite: ' . $request->año . '-' . $request->tramite . ' desde Sistema Trámites. ' . $th);
+            Log::error('Error al ingresar el trámite: ' . $request->año . '-' . $request->tramite  . '-' . $request->usuario .' desde Sistema Trámites. ' . $th);
 
             return response()->json([
                 'result' => 'error',
@@ -69,7 +69,7 @@ class MovimientoRegistralController extends Controller
 
         } catch (\Throwable $th) {
 
-            Log::error('Error al actualizar el trámite: ' . $request->año . '-' . $request->tramite . ' desde Sistema Trámites. ' . $th);
+            Log::error('Error al actualizar el trámite: ' . $request->año . '-' . $request->tramite . '-' . $request->usuario . ' desde Sistema Trámites. ' . $th);
 
             return response()->json([
                 'result' => 'error',
@@ -93,7 +93,7 @@ class MovimientoRegistralController extends Controller
 
         } catch (MovimientoRegistralServiceException $th) {
 
-            Log::error('Error al actualizar el trámite: ' . $request->año . '-' . $request->tramite . ' desde Sistema Trámites. ' . $th);
+            Log::error('Error al actualizar el trámite: ' . $request->año . '-' . $request->tramite . '-' . $request->usuario . ' desde Sistema Trámites. ' . $th);
 
             return response()->json([
                 'result' => 'error',
@@ -102,11 +102,11 @@ class MovimientoRegistralController extends Controller
 
         } catch (\Throwable $th) {
 
-            Log::error('Error al actualizar el trámite: ' . $request->año . '-' . $request->tramite . ' desde Sistema Trámites. ' . $th);
+            Log::error('Error al actualizar el trámite: ' . $request->año . '-' . $request->tramite . '-' . $request->usuario . ' desde Sistema Trámites. ' . $th);
 
             return response()->json([
                 'result' => 'error',
-                'data' => 'Error al actualizar el trámite: ' . $request->año . '-' . $request->tramite . ' en Sistema RPP.',
+                'data' => 'Error al actualizar el trámite: ' . $request->año . '-' . $request->tramite . '-' . $request->usuario . ' en Sistema RPP.',
             ], 500);
 
         }

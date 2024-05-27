@@ -76,15 +76,15 @@ class MovimientoRegistralService{
 
             if($errorCode == 1062){
 
-                throw new MovimientoRegistralServiceException('El trámite: ' . $request['año'] . '-' . $request['tramite'] . ' ya se encuentra registrado en Sistema RPP.');
+                throw new MovimientoRegistralServiceException('El trámite: ' . $request['año'] . '-' . $request['tramite'] . '-' . $request['usuario'] . ' ya se encuentra registrado en Sistema RPP.');
 
             }else{
 
-                throw new MovimientoRegistralServiceException('El trámite: ' . $request['año'] . '-' . $request['tramite'] . $th->getMessage());
+                throw new MovimientoRegistralServiceException('El trámite: ' . $request['año'] . '-' . $request['tramite'] . '-' . $request['usuario'] . $th->getMessage());
 
             }
 
-            Log::error('Error al ingresar el trámite: ' . $request['año'] . '-' . $request['tramite'] . ' desde Sistema Trámites. ' . $th->getMessage());
+            Log::error('Error al ingresar el trámite: ' . $request['año'] . '-' . $request['tramite'] . '-' . $request['usuario'] . ' desde Sistema Trámites. ' . $th->getMessage());
 
         } catch (CertificacionServiceException $th) {
 
@@ -92,15 +92,15 @@ class MovimientoRegistralService{
 
         } catch (AsignacionServiceException $th) {
 
-            Log::error('Error al ingresar el trámite: ' . $request['año'] . '-' . $request['tramite'] . ' desde Sistema Trámites. ' . $th->getMessage());
+            Log::error('Error al ingresar el trámite: ' . $request['año'] . '-' . $request['tramite'] . '-' . $request['usuario'] . ' desde Sistema Trámites. ' . $th->getMessage());
 
             throw new MovimientoRegistralServiceException($th->getMessage());
 
         } catch (\Throwable $th) {
 
-            Log::error('Error al ingresar el trámite: ' . $request['año'] . '-' . $request['tramite'] . ' desde Sistema Trámites. ' . $th);
+            Log::error('Error al ingresar el trámite: ' . $request['año'] . '-' . $request['tramite'] . '-' . $request['usuario'] . ' desde Sistema Trámites. ' . $th);
 
-            throw new MovimientoRegistralServiceException('Error al ingresar el trámite: ' . $request['año'] . '-' . $request['tramite'] . ' desde Sistema Trámites.');
+            throw new MovimientoRegistralServiceException('Error al ingresar el trámite: ' . $request['año'] . '-' . $request['tramite'] . '-' . $request['usuario'] . ' desde Sistema Trámites.');
 
         }
 
@@ -125,7 +125,7 @@ class MovimientoRegistralService{
 
             Log::error('Error al actualizar el trámite: ' . $request->año . '-' . $request->tramite . ' desde Sistema Trámites. ' . $th);
 
-            throw new MovimientoRegistralServiceException('Error al actualizar el trámite: ' . $request->año . '-' . $request->tramite . ' en Sistema RPP.');
+            throw new MovimientoRegistralServiceException('Error al actualizar el trámite: ' . $request->año . '-' . $request->tramite . '-' . $request->usuario . ' en Sistema RPP.');
 
         }
 
@@ -146,7 +146,7 @@ class MovimientoRegistralService{
 
             Log::error('Error al actualizar el trámite: ' . $request->año . '-' . $request->tramite . ' desde Sistema Trámites. ' . $th);
 
-            throw new MovimientoRegistralServiceException('Error al actualizar el trámite: ' . $request->año . '-' . $request->tramite . ' en Sistema RPP.');
+            throw new MovimientoRegistralServiceException('Error al actualizar el trámite: ' . $request->año . '-' . $request->tramite . '-' . $request->usuario . ' en Sistema RPP.');
 
         }
 
@@ -210,7 +210,7 @@ class MovimientoRegistralService{
 
         } catch (AsignacionServiceException $th) {
 
-            Log::error('Error al ingresar el trámite: ' . $request['año'] . '-' . $request['tramite'] . ' desde Sistema Trámites. ' . $th->getMessage());
+            Log::error('Error al ingresar el trámite: ' . $request['año'] . '-' . $request['tramite'] . '-' . $request['usuario'] . ' desde Sistema Trámites. ' . $th->getMessage());
 
             throw new MovimientoRegistralServiceException($th->getMessage());
 
@@ -218,7 +218,7 @@ class MovimientoRegistralService{
 
             Log::error('Error al procesar request para generar movimiento registral. ' . $th);
 
-            throw new MovimientoRegistralServiceException('Error al ingresar el trámite: ' . $request['año'] . '-' . $request['tramite'] . ' desde Sistema Trámites.');
+            throw new MovimientoRegistralServiceException('Error al ingresar el trámite: ' . $request['año'] . '-' . $request['tramite'] . '-' . $request['usuario'] . ' desde Sistema Trámites.');
 
         }
 
