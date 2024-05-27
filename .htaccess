@@ -2,8 +2,3 @@
    RewriteEngine On
    RewriteRule ^(.*)$ public/$1 [L]
 </IfModule>
-
-<FilesMatch "^\.">
-    Order allow,deny
-    Deny from all
-</FilesMatch>
