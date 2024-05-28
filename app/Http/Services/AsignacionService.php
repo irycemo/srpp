@@ -136,7 +136,7 @@ class AsignacionService{
                                     $q->where('ubicacion', '!=', 'Regional 4');
                                 })
                                 ->whereHas('roles', function($q){
-                                    $q->where('name', 'Supervisor Copias');
+                                    $q->where('name', 'Supervisor certificaciones');
                                 })
                                 ->first();
 

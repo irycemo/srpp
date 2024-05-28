@@ -265,6 +265,7 @@ class Constantes{
         'VARIACIÓN CATASTRAL',
         'PRESCRIPCIÓN POSITIVA',
         'SOCIEDADES',
+        'PERMUTA'
     ];
 
     const ACTOS_INSCRIPCION_GRAVAMEN = [
@@ -274,6 +275,9 @@ class Constantes{
         'FIANZA COMERCIAL',
         'EMBARGO',
         'RESERVA DE DOMINIO',
+        'CONVENIO',
+        'DIVISIÓN DE HIPOTECA',
+        'ADHESIÓN DE HIPOTECA'
     ];
 
 }

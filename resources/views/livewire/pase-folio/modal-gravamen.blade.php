@@ -78,7 +78,9 @@
                         <option value="escritura">Escritura</option>
                         <option value="oficio">Oficio</option>
                         <option value="contrato">Contrato</option>
-                        <option value="embargo">Acto de embargo</option>
+                        <option value="acta de embargo">Acta de embargo</option>
+                        <option value="convenio">Convenio</option>
+                        <option value="fianza">Fianza</option>
 
                     </x-input-select>
 

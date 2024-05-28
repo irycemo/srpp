@@ -60,7 +60,7 @@
 
             </x-input-group>
 
-            @if($tipo_documento == 'oficio')
+            @if($tipo_documento == 'OFICIO')
 
                 <x-input-group for="autoridad_cargo" label="Autoridad cargo" :error="$errors->first('autoridad_cargo')" class="w-full">
 
@@ -110,7 +110,7 @@
 
                 </x-input-group>
 
-            @elseif ($tipo_documento == 'escritura')
+            @elseif ($tipo_documento == 'ESCRITURA PÚBLICA')
 
                 <x-input-group for="escritura_numero" label="Número de escritura" :error="$errors->first('escritura_numero')" class="w-full">
 
