@@ -87,6 +87,7 @@ class RoleSeeder extends Seeder
         Permission::create(['name' => 'Finalizar copias certificadas', 'area' => 'Certificaciones'])->syncRoles([$role1, $role3, $role2]);
         Permission::create(['name' => 'Finalizar consulta', 'area' => 'Certificaciones'])->syncRoles([$role1, $role6]);
         Permission::create(['name' => 'Reactivar trámite', 'area' => 'Certificaciones'])->syncRoles([$role1, $role6]);
+        Permission::create(['name' => 'Certificado gravamen', 'area' => 'Certificaciones'])->syncRoles([$role1, $role6]);
 
         Permission::create(['name' => 'Pase a folio', 'area' => 'Pase a folio'])->syncRoles([$role1, $role7, $role9]);
 

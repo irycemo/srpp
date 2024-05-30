@@ -2,7 +2,7 @@
 
     <div class="mb-6">
 
-        <x-header>Copias Certificadas</x-header>
+        <x-header>Certificados de gravamen</x-header>
 
         <div class="flex justify-between">
 
@@ -44,6 +44,7 @@
 
             <x-slot name="head">
 
+                <x-table.heading sortable wire:click="sortBy('folio_real')" :direction="$sort === 'folio_real' ? $direction : null" >Folio real</x-table.heading>
                 <x-table.heading sortable wire:click="sortBy('año')" :direction="$sort === 'año' ? $direction : null" >Año</x-table.heading>
                 <x-table.heading sortable wire:click="sortBy('tramite')" :direction="$sort === 'tramite' ? $direction : null" ># Control</x-table.heading>
                 <x-table.heading sortable wire:click="sortBy('usuario')" :direction="$sort === 'usuario' ? $direction : null" >Usuario</x-table.heading>
@@ -52,17 +53,10 @@
                 @endif
                 <x-table.heading sortable wire:click="sortBy('tipo_servicio')" :direction="$sort === 'tipo_servicio' ? $direction : null" >Tipo de servicio</x-table.heading>
                 <x-table.heading sortable wire:click="sortBy('solicitante')" :direction="$sort === 'solicitante' ? $direction : null" >Solicitante</x-table.heading>
-                <x-table.heading sortable wire:click="sortBy('tomo')" :direction="$sort === 'tomo' ? $direction : null" >Tomo / Bis</x-table.heading>
-                <x-table.heading sortable wire:click="sortBy('registro')" :direction="$sort === 'registro' ? $direction : null" >Registro / Bis</x-table.heading>
-                <x-table.heading sortable wire:click="sortBy('distrito')" :direction="$sort === 'distrito' ? $direction : null" >Distrito</x-table.heading>
-                <x-table.heading sortable wire:click="sortBy('seccion')" :direction="$sort === 'seccion' ? $direction : null" >Sección</x-table.heading>
-                <x-table.heading >Número de páginas</x-table.heading>
-                @if (!auth()->user()->hasRole('Certificador'))
-                    <x-table.heading >Folio de carpeta</x-table.heading>
+                @if (!auth()->user()->hasRole('Certificador Gravamen'))
                     <x-table.heading sortable wire:click="sortBy('usuario_asignado')" :direction="$sort === 'usuario_asignado' ? $direction : null" >Asignado a</x-table.heading>
                 @endif
-                @if (!auth()->user()->hasRole(['Certificador', 'Supervisor certificaciones']))
-                    <x-table.heading >Fecha de firma</x-table.heading>
+                @if (!auth()->user()->hasRole(['Certificador Gravamen', 'Supervisor certificaciones']))
                     <x-table.heading >Reimpreso en</x-table.heading>
                 @endif
                 <x-table.heading sortable wire:click="sortBy('fecha_entrega')" :direction="$sort === 'fecha_entrega' ? $direction : null">Fecha de entrega</x-table.heading>
@@ -77,15 +71,23 @@
 
             <x-slot name="body">
 
-                @forelse ($copias as $copia)
+                @forelse ($certificados as $certificado)
 
-                    <x-table.row wire:loading.class.delaylongest="opacity-50" wire:key="row-{{ $copia->id }}">
+                    <x-table.row wire:loading.class.delaylongest="opacity-50" wire:key="row-{{ $certificado->id }}">
+
+                        <x-table.cell>
+
+                            <span class="lg:hidden absolute top-0 left-0 bg-blue-300 px-2 py-1 text-xs text-white font-bold uppercase rounded-br-xl">Folio real</span>
+
+                            {{ $certificado->folio }}
+
+                        </x-table.cell>
 
                         <x-table.cell>
 
                             <span class="lg:hidden absolute top-0 left-0 bg-blue-300 px-2 py-1 text-xs text-white font-bold uppercase rounded-br-xl">Año</span>
 
-                            {{ $copia->año }}
+                            {{ $certificado->año }}
 
                         </x-table.cell>
 
@@ -93,7 +95,7 @@
 
                             <span class="lg:hidden absolute top-0 left-0 bg-blue-300 px-2 py-1 text-xs text-white font-bold uppercase rounded-br-xl"># Control</span>
 
-                            {{ $copia->tramite }}
+                            {{ $certificado->tramite }}
 
                         </x-table.cell>
 
@@ -101,7 +103,7 @@
 
                             <span class="lg:hidden absolute top-0 left-0 bg-blue-300 px-2 py-1 text-xs text-white font-bold uppercase rounded-br-xl">Usuario</span>
 
-                            {{ $copia->usuario }}
+                            {{ $certificado->usuario }}
 
                         </x-table.cell>
 
@@ -111,7 +113,7 @@
 
                                 <span class="lg:hidden absolute top-0 left-0 bg-blue-300 px-2 py-1 text-xs text-white font-bold uppercase rounded-br-xl">Estado</span>
 
-                                <span class="bg-{{ $copia->estado_color }} py-1 px-2 rounded-full text-white text-xs">{{ ucfirst($copia->estado) }}</span>
+                                <span class="bg-{{ $certificado->estado_color }} py-1 px-2 rounded-full text-white text-xs">{{ ucfirst($certificado->estado) }}</span>
 
                             </x-table.cell>
 
@@ -121,7 +123,7 @@
 
                             <span class="lg:hidden absolute top-0 left-0 bg-blue-300 px-2 py-1 text-xs text-white font-bold uppercase rounded-br-xl">Tipo de servicio</span>
 
-                            {{ $copia->tipo_servicio }}
+                            {{ $certificado->tipo_servicio }}
 
                         </x-table.cell>
 
@@ -129,85 +131,29 @@
 
                             <span class="lg:hidden absolute top-0 left-0 bg-blue-300 px-2 py-1 text-xs text-white font-bold uppercase rounded-br-xl">Solicitante</span>
 
-                            {{ $copia->solicitante }}
+                            {{ $certificado->solicitante }}
 
                         </x-table.cell>
 
-                        <x-table.cell>
-
-                            <span class="lg:hidden absolute top-0 left-0 bg-blue-300 px-2 py-1 text-xs text-white font-bold uppercase rounded-br-xl">Tomo / Bis</span>
-
-                            {{ $copia->tomo }}
-
-                        </x-table.cell>
-
-                        <x-table.cell>
-
-                            <span class="lg:hidden absolute top-0 left-0 bg-blue-300 px-2 py-1 text-xs text-white font-bold uppercase rounded-br-xl">Registro / Bis</span>
-
-                            {{ $copia->registro }}
-
-                        </x-table.cell>
-
-                        <x-table.cell>
-
-                            <span class="lg:hidden absolute top-0 left-0 bg-blue-300 px-2 py-1 text-xs text-white font-bold uppercase rounded-br-xl">Distrito</span>
-
-                            {{ $copia->distrito }}
-
-                        </x-table.cell>
-
-                        <x-table.cell>
-
-                            <span class="lg:hidden absolute top-0 left-0 bg-blue-300 px-2 py-1 text-xs text-white font-bold uppercase rounded-br-xl">Sección</span>
-
-                            {{ $copia->seccion }}
-
-                        </x-table.cell>
-
-                        <x-table.cell>
-
-                            <span class="lg:hidden absolute top-0 left-0 bg-blue-300 px-2 py-1 text-xs text-white font-bold uppercase rounded-br-xl">Número de páginas</span>
-
-                            {{ $copia->certificacion->numero_paginas }}
-
-                        </x-table.cell>
-
-                        @if (!auth()->user()->hasRole('Certificador'))
+                        @if (!auth()->user()->hasRole('Certificador Gravamen'))
 
                             <x-table.cell>
 
                                 <span class="lg:hidden absolute top-0 left-0 bg-blue-300 px-2 py-1 text-xs text-white font-bold uppercase rounded-br-xl">Folio de carpeta</span>
 
-                                {{ $copia->certificacion->folio_carpeta_copias ?? 'N/A' }}
-
-                            </x-table.cell>
-
-                            <x-table.cell>
-
-                                <span class="lg:hidden absolute top-0 left-0 bg-blue-300 px-2 py-1 text-xs text-white font-bold uppercase rounded-br-xl">Folio de carpeta</span>
-
-                                {{ $copia->asignadoA->name ?? 'N/A' }}
+                                {{ $certificado->asignadoA->name ?? 'N/A' }}
 
                             </x-table.cell>
 
                         @endif
 
-                        @if (!auth()->user()->hasRole(['Certificador', 'Supervisor certificaciones']))
-
-                            <x-table.cell>
-
-                                <span class="lg:hidden absolute top-0 left-0 bg-blue-300 px-2 py-1 text-xs text-white font-bold uppercase rounded-br-xl">Fecha de firma</span>
-
-                                {{ optional($copia->certificacion->firma)->format('d-m-Y H:i:s') ?? 'N/A' }}
-
-                            </x-table.cell>
+                        @if (!auth()->user()->hasRole(['Certificador Gravamen', 'Supervisor certificaciones']))
 
                             <x-table.cell>
 
                                 <span class="lg:hidden absolute top-0 left-0 bg-blue-300 px-2 py-1 text-xs text-white font-bold uppercase rounded-br-xl">Reimpreso en</span>
 
-                                {{ optional($copia->certificacion->reimpreso_en)->format('d-m-Y H:i:s') ?? 'N/A' }}
+                                {{ optional($certificado->certificacion->reimpreso_en)->format('d-m-Y H:i:s') ?? 'N/A' }}
 
                             </x-table.cell>
 
@@ -217,7 +163,7 @@
 
                             <span class="lg:hidden absolute top-0 left-0 bg-blue-300 px-2 py-1 text-xs text-white font-bold uppercase rounded-br-xl">Fecha de entrega</span>
 
-                            {{ optional($copia->fecha_entrega)->format('d-m-Y') ?? 'N/A' }}
+                            {{ optional($certificado->fecha_entrega)->format('d-m-Y') ?? 'N/A' }}
 
                         </x-table.cell>
 
@@ -225,7 +171,7 @@
 
                             <span class="lg:hidden absolute top-0 left-0 bg-blue-300 px-2 py-1 text-xs text-white font-bold uppercase rounded-br-xl">Observaciones</span>
 
-                            {{ $copia->certificacion->observaciones ?? 'N/A' }}
+                            {{ $certificado->certificacion->observaciones ?? 'N/A' }}
 
                         </x-table.cell>
 
@@ -233,15 +179,15 @@
 
                             <span class="lg:hidden absolute top-0 left-0 bg-blue-300 px-2 py-1 text-xs text-white font-bold uppercase rounded-br-xl">Registrado</span>
 
-                            {{ $copia->created_at }}
+                            {{ $certificado->created_at }}
 
                         </x-table.cell>
 
                         <x-table.cell>
 
-                            <span class="font-semibold">@if($copia->actualizadoPor != null)Actualizado por: {{$copia->actualizadoPor->name}} @else Actualizado: @endif</span> <br>
+                            <span class="font-semibold">@if($certificado->actualizadoPor != null)Actualizado por: {{$certificado->actualizadoPor->name}} @else Actualizado: @endif</span> <br>
 
-                            {{ $copia->updated_at }}
+                            {{ $certificado->updated_at }}
 
                         </x-table.cell>
 
@@ -253,30 +199,10 @@
 
                                 <div class="flex flex-col justify-center lg:justify-start gap-2">
 
-                                    @can('Reimprimir documento')
-
-                                        @if ($copia->certificacion->reimpreso_en == null && $copia->certificacion->folio_carpeta_copias != null)
-
-                                            <x-button-red
-                                                wire:click="reimprimir({{ $copia->certificacion->id }})"
-                                                wire:loading.attr="disabled"
-                                            >
-                                                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" class="w-4 h-4 mr-2">
-                                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z" />
-                                                </svg>
-
-                                                <span>Reimprimir</span>
-
-                                            </x-button-red>
-
-                                        @endif
-
-                                    @endcan
-
                                     @can('Rechazar copias certificadas')
 
                                         <x-button-red
-                                            wire:click="abrirModalRechazar({{ $copia->certificacion->id }})"
+                                            wire:click="abrirModalRechazar({{ $certificado->certificacion->id }})"
                                             wire:loading.attr="disabled"
                                         >
                                             <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" class="w-4 h-4 mr-2">
@@ -289,39 +215,13 @@
 
                                     @endcan
 
-                                    @can('Finalizar copias certificadas')
+                                    <x-button-blue
+                                        wire:click="visualizarGravamenes({{ $certificado->id}})"
+                                        wire:loading.attr="disabled">
 
-                                        @if(auth()->user()->hasRole(['Supervisor certificaciones', 'Certificador Oficialia', 'Certificador Juridico']))
+                                        <span>Revisar</span>
 
-                                            <x-button-blue
-                                                wire:click="finalizarSupervisor({{ $copia->certificacion->id }})"
-                                                wire:loading.attr="disabled"
-                                            >
-                                                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" class="w-4 h-4 mr-2">
-                                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z" />
-                                                </svg>
-
-                                                <span>Finalizar</span>
-
-                                            </x-button-blue>
-
-                                        @else
-
-                                            <x-button-blue
-                                                wire:click="abrirModalEditar({{ $copia->certificacion->id }})"
-                                                wire:loading.attr="disabled"
-                                            >
-                                                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" class="w-4 h-4 mr-2">
-                                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z" />
-                                                </svg>
-
-                                                <span>Finalizar</span>
-
-                                            </x-button-blue>
-
-                                        @endif
-
-                                    @endcan
+                                    </x-button-blue>
 
                                 </div>
 
@@ -357,7 +257,7 @@
 
                     <x-table.cell colspan="20" class="bg-gray-50">
 
-                        {{ $copias->links()}}
+                        {{ $certificados->links()}}
 
                     </x-table.cell>
 
@@ -369,40 +269,68 @@
 
     </div>
 
-    <x-dialog-modal wire:model="modal" maxWidth="sm">
+    <x-dialog-modal wire:model="modal" maxWidth="2xl">
 
         <x-slot name="title">
 
-            Finalizar
+            Gravamenes
 
         </x-slot>
 
         <x-slot name="content">
 
-            <div class="flex flex-col md:flex-row justify-between md:space-x-3 mb-5">
+            @if($predio)
 
-                <div class="flex-auto ">
+                @if($gravamenes->count())
 
-                    <div>
+                    @foreach ($gravamenes as $gravamen)
 
-                        <Label>Folio de carpeta</Label>
+                        <div class="p-4 bg-gray-100 mb-2 rounded-lg">
+
+                            <p><strong>Tomo: </strong> {{ $gravamen->movimientoRegistral->tomo_gravamen }} <strong>Registro: </strong>{{ $gravamen->movimientoRegistral->tomo_gravamen }} <strong>Distrito: </strong>{{ $gravamen->movimientoRegistral->distrito }}</p>
+                            <p><strong>Acto: </strong>{{ $gravamen->acto_contenido }}</p>
+                            <p><strong>Tipo: </strong>{{ $gravamen->tipo }}</p>
+                            <p><strong>Valor: </strong>{{ number_format($gravamen->valor_gravamen, 2) }} {{ $gravamen->divisa }}, <strong>Fecha de inscripción: </strong>{{ $gravamen->fecha_inscripcion }}</p>
+
+                            <p><strong>Deudores</strong></p>
+                            @foreach ($gravamen->deudores as $deudor)
+
+                                @if($deudor->actor)
+
+                                    <p>{{ $deudor->actor->persona->nombre }} {{ $deudor->actor->persona->ap_paterno }} {{ $deudor->actor->persona->ap_materno }} {{ $deudor->actor->persona->razon_social }}</p>
+
+                                @else
+
+                                    <p>{{ $deudor->persona->nombre }} {{ $deudor->persona->ap_paterno }} {{ $deudor->persona->ap_materno }} {{ $deudor->persona->razon_social }}</p>
+
+                                @endif
+
+                            @endforeach
+
+                            <p><strong>Acreedores</strong></p>
+                            @foreach ($gravamen->acreedores as $acreedor)
+
+                                <p>{{ $acreedor->persona->nombre }} {{ $acreedor->persona->ap_paterno }} {{ $acreedor->persona->ap_materno }} {{ $acreedor->persona->razon_social }}</p>
+
+                            @endforeach
+
+                            <p><strong>Observaciones: </strong>{{ $gravamen->observaciones }}</p>
+
+                        </div>
+
+                    @endforeach
+
+                @else
+
+                    <div class="p-4 bg-gray-100 mb-2 rounded-lg">
+
+                        <strong>No se encontrarón gravmenes activos</strong>
+
                     </div>
 
-                    <div>
+                @endif
 
-                        <input type="number" class="bg-white rounded text-sm w-full" wire:model="modelo_editar.folio_carpeta_copias">
-
-                    </div>
-
-                    <div>
-
-                        @error('modelo_editar.folio_carpeta_copias') <span class="error text-sm text-red-500">{{ $message }}</span> @enderror
-
-                    </div>
-
-                </div>
-
-            </div>
+            @endif
 
         </x-slot>
 
@@ -411,13 +339,14 @@
             <div class="flex items-center justify-end space-x-3">
 
                 <x-button-blue
-                    wire:click="finalizar"
+                    wire:click="generarCertificado"
                     wire:loading.attr="disabled"
-                    wire:target="finalizar">
+                    wire:target="generarCertificado">
 
-                    <img wire:loading wire:target="finalizar" class="mx-auto h-4 mr-1" src="{{ asset('storage/img/loading3.svg') }}" alt="Loading">
+                    <img wire:loading wire:target="generarCertificado" class="mx-auto h-4 mr-1" src="{{ asset('storage/img/loading3.svg') }}" alt="Loading">
 
-                    <span>Finalizar</span>
+                    <span>Generar certificado</span>
+
                 </x-button-blue>
 
                 <x-button-red
@@ -592,25 +521,11 @@
 
         window.addEventListener('imprimir_documento', event => {
 
-            const documento = event.detail[0].documento;
+            const documento = event.detail[0].gravamen;
 
-            var url = "{{ route('copia_certificada', '')}}" + "/" + documento;
-
-            window.open(url, '_blank');
-
-            window.location.href = "{{ route('copias_certificadas')}}";
-
-        });
-
-        window.addEventListener('imprimir_documento_oficialia', event => {
-
-            const documento = event.detail[0].documento;
-
-            var url = "{{ route('copia_certificada', '')}}" + "/" + documento;
+            var url = "{{ route('certificado_gravamen_pdf', '')}}" + "/" + documento;
 
             window.open(url, '_blank');
-
-            window.location.href = "{{ route('copias_certificadas')}}";
 
         });
 

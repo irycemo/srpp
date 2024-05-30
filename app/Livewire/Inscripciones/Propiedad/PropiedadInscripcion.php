@@ -33,9 +33,11 @@ class PropiedadInscripcion extends Component
 
     public $actor;
 
+    public $transmitentes = [];
     public $propietarios = [];
     public $representados = [];
     public $tipo_propietario;
+    public $porcentaje_propiedad;
     public $porcentaje_nuda;
     public $porcentaje_usufructo;
     public $tipo_persona;
@@ -88,8 +90,9 @@ class PropiedadInscripcion extends Component
             'inscripcion.cc_departamento' => 'required',
             'inscripcion.acto_contenido' => 'required',
             'inscripcion.descripcion_acto' => 'nullable',
-            'porcentaje_nuda' => 'nullable|numeric|gt:0',
-            'porcentaje_usufructo' => 'nullable|numeric|gt:0',
+            'porcentaje_propiedad' => 'nullable|numeric|min:0|max:100',
+            'porcentaje_nuda' => 'nullable|numeric|min:0|max:100',
+            'porcentaje_usufructo' => 'nullable|numeric|min:0|max:100',
             'tipo_persona' => 'required',
             'nombre' => [
                 Rule::requiredIf($this->tipo_persona === 'FISICA')
@@ -123,9 +126,19 @@ class PropiedadInscripcion extends Component
 
     public function updated($property, $value){
 
-        if($value === ''){
+        if(in_array($property, ['porcentaje_nuda', 'porcentaje_usufructo', 'porcentaje_propiedad']) && $value == ''){
 
             $this->$property = null;
+
+        }
+
+        if(in_array($property, ['porcentaje_nuda', 'porcentaje_usufructo'])){
+
+            $this->reset('porcentaje_propiedad');
+
+        }elseif($property == 'porcentaje_propiedad'){
+
+            $this->reset(['porcentaje_nuda', 'porcentaje_usufructo']);
 
         }
 
@@ -216,7 +229,16 @@ class PropiedadInscripcion extends Component
 
         $this->validate();
 
-        $persona = Persona::where('rfc', $this->rfc)->first();
+        $persona = Persona::query()
+                            ->where(function($q){
+                                $q->when($this->nombre, fn($q) => $q->where('nombre', $this->nombre))
+                                    ->when($this->ap_paterno, fn($q) => $q->where('ap_paterno', $this->ap_paterno))
+                                    ->when($this->ap_materno, fn($q) => $q->where('ap_materno', $this->ap_materno));
+                            })
+                            ->when($this->razon_social, fn($q) => $q->orWhere('razon_social', $this->razon_social))
+                            ->when($this->rfc, fn($q) => $q->orWhere('rfc', $this->rfc))
+                            ->when($this->curp, fn($q) => $q->orWhere('curp', $this->curp))
+                            ->first();
 
         if($persona){
 
@@ -234,13 +256,15 @@ class PropiedadInscripcion extends Component
 
         }
 
-        if($this->revisarProcentajes()){
+        if($this->porcentaje_propiedad == 0 && $this->porcentaje_nuda == 0 && $this->porcentaje_usufructo == 0){
 
-            $this->dispatch('mostrarMensaje', ['error', "La suma de los porcentajes no puede exceder el 100%."]);
+            $this->dispatch('mostrarMensaje', ['error', "La suma de los porcentajes no puede ser 0."]);
 
             return;
 
         }
+
+        if($this->revisarProcentajes()) return;
 
         try {
 
@@ -293,29 +317,14 @@ class PropiedadInscripcion extends Component
 
                 }
 
-                if($this->partes_iguales){
-
-                    $porcentaje = $this->repartirPartesIguales(flag: true);
-
-                    $actor = $this->inscripcion->actores()->create([
-                        'persona_id' => $persona->id,
-                        'tipo_actor' => 'propietario',
-                        'porcentaje_nuda' => $porcentaje,
-                        'porcentaje_usufructo' => $porcentaje,
-                        'creado_por' => auth()->id()
-                    ]);
-
-                }else{
-
-                    $actor = $this->inscripcion->actores()->create([
-                        'persona_id' => $persona->id,
-                        'tipo_actor' => 'propietario',
-                        'porcentaje_nuda' => $this->porcentaje_nuda,
-                        'porcentaje_usufructo' => $this->porcentaje_usufructo,
-                        'creado_por' => auth()->id()
-                    ]);
-
-                }
+                $actor = $this->inscripcion->actores()->create([
+                    'persona_id' => $persona->id,
+                    'tipo_actor' => 'propietario',
+                    'porcentaje_propiedad' => $this->porcentaje_propiedad,
+                    'porcentaje_nuda' => $this->porcentaje_nuda,
+                    'porcentaje_usufructo' => $this->porcentaje_usufructo,
+                    'creado_por' => auth()->id()
+                ]);
 
                 $this->dispatch('mostrarMensaje', ['success', "El propietario se guardó con éxito."]);
 
@@ -342,9 +351,11 @@ class PropiedadInscripcion extends Component
 
         $this->validate(['propietario' => 'required']);
 
+        $propietario = Actor::find($this->propietario);
+
         foreach ($this->inscripcion->transmitentes() as $transmitente) {
 
-            if($this->propietario == $transmitente->persona_id){
+            if($propietario->persona_id == $transmitente->persona_id){
 
                 $this->dispatch('mostrarMensaje', ['error', "La persona ya es un transmitente."]);
 
@@ -356,11 +367,14 @@ class PropiedadInscripcion extends Component
 
         try {
 
-            DB::transaction(function () {
+            DB::transaction(function () use($propietario){
 
                 $actor = $this->inscripcion->actores()->create([
-                    'persona_id' => $this->propietario,
+                    'persona_id' => $propietario->persona_id,
                     'tipo_actor' => 'transmitente',
+                    'porcentaje_propiedad' => $propietario->porcentaje_propiedad,
+                    'porcentaje_nuda' => $propietario->porcentaje_nuda,
+                    'porcentaje_usufructo' => $propietario->porcentaje_usufructo,
                     'creado_por' => auth()->id()
                 ]);
 
@@ -641,7 +655,7 @@ class PropiedadInscripcion extends Component
 
     }
 
-    public function repartirPartesIguales($flag = false){
+    /* public function repartirPartesIguales($flag = false){
 
         $propietarios = $flag ? $this->inscripcion->propietarios()->count() + 1 : $this->inscripcion->propietarios()->count();
 
@@ -658,33 +672,68 @@ class PropiedadInscripcion extends Component
 
         return $porcentaje;
 
-    }
+    } */
 
     public function revisarProcentajes($id = null){
 
-        $pn = 0;
+        $pp_transmitentes = 0;
 
-        $pu = 0;
+        $pp_adquirientes = 0;
+
+        $pn_transmitentes = 0;
+
+        $pn_adquirientes = 0;
+
+        $pu_transmitentes = 0;
+
+        $pu_adquirientes = 0;
+
+        foreach($this->inscripcion->transmitentes() as $transmitente){
+
+            $pn_transmitentes = $pn_transmitentes + $transmitente->porcentaje_nuda;
+
+            $pu_transmitentes = $pu_transmitentes + $transmitente->porcentaje_usufructo;
+
+            $pp_transmitentes = $pp_transmitentes + $transmitente->porcentaje_propiedad;
+
+        }
 
         foreach($this->inscripcion->propietarios() as $propietario){
 
             if($id == $propietario->id)
                 continue;
 
-            $pn = $pn + $propietario->porcentaje_nuda;
+            $pn_adquirientes = $pn_adquirientes + $propietario->porcentaje_nuda;
 
-            $pu = $pu + $propietario->porcentaje_usufructo;
+            $pu_adquirientes = $pu_adquirientes + $propietario->porcentaje_usufructo;
+
+            $pp_adquirientes = $pp_adquirientes + $propietario->porcentaje_propiedad;
 
         }
 
-        $pn = $pn + (float)$this->porcentaje_nuda;
+        if(((float)$this->porcentaje_propiedad + $pp_adquirientes) > $pp_transmitentes){
 
-        $pu = $pu + (float)$this->porcentaje_usufructo;
+            $this->dispatch('mostrarMensaje', ['error', "La suma de los porcentajes de propiedad no puede exceder el " . $pp_transmitentes . '%.']);
 
-        if($pn > 100 || $pu > 100)
             return true;
-        else
-            return false;
+
+        }
+
+        if(((float)$this->porcentaje_nuda + $pn_adquirientes) > $pn_transmitentes){
+
+            $this->dispatch('mostrarMensaje', ['error', "La suma de los porcentajes de nuda no puede exceder el " . $pn_transmitentes . '%.']);
+
+            return true;
+
+        }
+
+        if(((float)$this->porcentaje_usufructo + $pu_adquirientes) > $pu_transmitentes){
+
+            $this->dispatch('mostrarMensaje', ['error', "La suma de los porcentajes de usufructo no puede exceder el " . $pu_transmitentes . '%.']);
+
+            return true;
+
+        }
 
     }
 
@@ -725,33 +774,7 @@ class PropiedadInscripcion extends Component
 
         }
 
-        $pn = 0;
-
-        $pu = 0;
-
-        foreach($this->inscripcion->propietarios() as $propietario){
-
-            $pn = $pn + $propietario->porcentaje_nuda;
-
-            $pu = $pu + $propietario->porcentaje_usufructo;
-
-        }
-
-        if($pn < 100){
-
-            $this->dispatch('mostrarMensaje', ['error', "El porcentaje de nuda propiedad no es el 100%."]);
-
-            return true;
-
-        }
-
-        if($pu < 100){
-
-            $this->dispatch('mostrarMensaje', ['error', "El porcentaje de usufructo no es el 100%."]);
-
-            return true;
-
-        }
+        if($this->revisarProcentajes()) return;
 
     }
 
@@ -862,6 +885,19 @@ class PropiedadInscripcion extends Component
         })->first();
 
         if(!$jefe_departamento) abort(500, message:"Es necesario registrar al jefe de Departamento de Registro de Inscripciones.");
+
+        foreach ($this->inscripcion->transmitentes() as $transmitente) {
+            $this->transmitentes[] = [
+                'id' => $transmitente['id'],
+                'nombre' => $transmitente->persona->nombre,
+                'ap_paterno' => $transmitente->persona->ap_paterno,
+                'ap_materno' => $transmitente->persona->ap_materno,
+                'razon_social' => $transmitente->persona->razon_social,
+                'porcentaje_propiedad' => (int)$transmitente->porcentaje_propiedad,
+                'porcentaje_nuda' => (int)$transmitente->porcentaje_nuda,
+                'porcentaje_usufructo' => (int)$transmitente->porcentaje_usufructo,
+            ];
+        }
 
     }
 

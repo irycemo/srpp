@@ -31,23 +31,23 @@ class Gravamen extends Model implements Auditable
     }
 
     public function deudoresUnicos(){
-        return $this->hasMany(Deudor::class)->with('persona')->where('tipo', 'I-DEUDOR ÚNICO');
+        return $this->hasMany(Deudor::class)->with('actor.persona', 'persona')->where('tipo', 'I-DEUDOR ÚNICO');
     }
 
     public function garantesHipotecarios(){
-        return $this->hasMany(Deudor::class)->with('persona')->where('tipo', 'D-GARANTE(S) HIPOTECARIO(S)');
+        return $this->hasMany(Deudor::class)->with('actor.persona', 'persona')->where('tipo', 'D-GARANTE(S) HIPOTECARIO(S)');
     }
 
     public function parteAlicuota(){
-        return $this->hasMany(Deudor::class)->with('persona')->where('tipo', 'P-PARTE ALICUOTA');
+        return $this->hasMany(Deudor::class)->with('actor.persona', 'persona')->where('tipo', 'P-PARTE ALICUOTA');
     }
 
     public function garantesCoopropiedad(){
-        return $this->hasMany(Deudor::class)->with('persona')->where('tipo', 'G-GARANTES EN COOPROPIEDAD');
+        return $this->hasMany(Deudor::class)->with('actor.persona', 'persona')->where('tipo', 'G-GARANTES EN COOPROPIEDAD');
     }
 
     public function fianza(){
-        return $this->hasMany(Deudor::class)->with('persona')->where('tipo', 'F-FIANZA');
+        return $this->hasMany(Deudor::class)->with('actor.persona', 'persona')->where('tipo', 'F-FIANZA');
     }
 
 }

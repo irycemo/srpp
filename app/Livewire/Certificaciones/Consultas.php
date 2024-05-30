@@ -46,7 +46,7 @@ class Consultas extends Component
 
                 $this->modelo_editar->save();
 
-                (new SistemaTramitesService())->finaliarTramite($this->modelo_editar->movimientoRegistral->año, $this->modelo_editar->movimientoRegistral->tramite, 'finalizado');
+                (new SistemaTramitesService())->finaliarTramite($this->modelo_editar->movimientoRegistral->año, $this->modelo_editar->movimientoRegistral->tramite, $this->modelo_editar->movimientoRegistral->usuario, 'finalizado');
 
                 $this->resetearTodo();
 

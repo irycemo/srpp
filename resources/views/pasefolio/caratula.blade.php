@@ -30,7 +30,7 @@
 
 
     body{
-        margin-top: 150px;
+        margin-top: 120px;
         counter-reset: page;
         height: 100%;
         background-image: url("storage/img/escudo_fondo.png");
@@ -39,6 +39,7 @@
         font-weight: normal;
         line-height: 1.5;
         text-transform: uppercase;
+        font-size: 10px;
     }
 
     .center{
@@ -49,7 +50,6 @@
     }
 
     .container{
-        font-size: 12px;
         display: flex;
         align-content: space-around;
     }
@@ -305,7 +305,7 @@
 
                     @foreach ($folioReal->predio->propietarios() as $propietario)
 
-                        <li><strong>Nombre:</strong> {{ $propietario->persona->nombre }} {{ $propietario->persona->ap_paterno }} {{ $propietario->persona->ap_materno }} {{ $propietario->persona->razon_social }}; <strong>porcentaje nuda:</strong> {{ $propietario->porcentaje_nuda }} %; <strong>porcentaje usufructo:</strong> {{ $propietario->porcentaje_usufructo }} %;</li>
+                        <li><strong>Nombre:</strong> {{ $propietario->persona->nombre }} {{ $propietario->persona->ap_paterno }} {{ $propietario->persona->ap_materno }} {{ $propietario->persona->razon_social }}; <strong>porcentaje de propiedad:</strong> {{ $propietario->porcentaje_propiedad }} %; <strong>porcentaje nuda:</strong> {{ $propietario->porcentaje_nuda }} %; <strong>porcentaje usufructo:</strong> {{ $propietario->porcentaje_usufructo }} %.</li>
 
                     @endforeach
 
@@ -327,9 +327,7 @@
 
                 <div class="parrafo">
 
-                    <p><strong>Fecha de pase a folio:</strong> {{ now()->format('d-m-Y H:i:s') }}</p>
-
-                    <p><strong>Registrador:</strong> {{ auth()->user()->name }}</p>
+                    <p><strong>Fecha de pase a folio:</strong> {{ now()->format('d-m-Y H:i:s') }} <strong>Registrador:</strong> {{ auth()->user()->name }}</p>
 
                 </div>
 

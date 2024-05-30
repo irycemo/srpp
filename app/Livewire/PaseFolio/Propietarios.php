@@ -25,8 +25,9 @@ class Propietarios extends Component
     public $propietarios = [];
     public $representados = [];
     public $tipo_propietario;
-    public $porcentaje_nuda;
-    public $porcentaje_usufructo;
+    public $porcentaje_propiedad = 0.00;
+    public $porcentaje_nuda = 0.00;
+    public $porcentaje_usufructo = 0.00;
     public $tipo_persona;
     public $nombre;
     public $ap_paterno;
@@ -62,8 +63,9 @@ class Propietarios extends Component
 
     protected function rules(){
         return [
-            'porcentaje_nuda' => 'nullable|numeric|gt:0',
-            'porcentaje_usufructo' => 'nullable|numeric|gt:0',
+            'porcentaje_propiedad' => 'nullable|numeric|min:0|max:100',
+            'porcentaje_nuda' => 'nullable|numeric|min:0|max:100',
+            'porcentaje_usufructo' => 'nullable|numeric|min:0|max:100',
             'tipo_persona' => 'required',
             'nombre' => [
                 Rule::requiredIf($this->tipo_persona === 'FISICA')
@@ -78,7 +80,7 @@ class Propietarios extends Component
                 'nullable',
                 'regex:/^([A-ZÑ&]{3,4}) ?(?:- ?)?(\d{2}(?:0[1-9]|1[0-2])(?:0[1-9]|[12]\d|3[01])) ?(?:- ?)?([A-Z\d]{2})([A\d])$/'
             ],
-            'razon_social' => Rule::requiredIf($this->tipo_persona === 'MORAL'),
+            'razon_social' => [Rule::requiredIf($this->tipo_persona === 'MORAL'), utf8_encode('regex:/^[áéíóúÁÉÍÓÚñÑa-zA-Z-0-9$#.()\/\-," ]*$/')],
             'fecha_nacimiento' => 'nullable',
             'nacionalidad' => 'nullable|' . utf8_encode('regex:/^[áéíóúÁÉÍÓÚñÑa-zA-Z-0-9$#.() ]*$/'),
             'estado_civil' => 'nullable',
@@ -100,6 +102,7 @@ class Propietarios extends Component
 
         $this->reset([
             'tipo_propietario',
+            'porcentaje_propiedad',
             'porcentaje_nuda',
             'porcentaje_usufructo',
             'tipo_persona',
@@ -135,9 +138,19 @@ class Propietarios extends Component
 
     public function updated($property, $value){
 
-        if($value === ''){
+        if(in_array($property, ['porcentaje_nuda', 'porcentaje_usufructo', 'porcentaje_propiedad']) && $value == ''){
 
             $this->$property = null;
+
+        }
+
+        if(in_array($property, ['porcentaje_nuda', 'porcentaje_usufructo'])){
+
+            $this->reset('porcentaje_propiedad');
+
+        }elseif($property == 'porcentaje_propiedad'){
+
+            $this->reset(['porcentaje_nuda', 'porcentaje_usufructo']);
 
         }
 
@@ -245,6 +258,14 @@ class Propietarios extends Component
 
         $this->validate();
 
+        if($this->porcentaje_propiedad === 0 && $this->porcentaje_nuda === 0 && $this->porcentaje_usufructo === 0){
+
+            $this->dispatch('mostrarMensaje', ['error', "La suma de los porcentajes no puede ser 0."]);
+
+            return;
+
+        }
+
         if($this->revisarProcentajes()){
 
             $this->dispatch('mostrarMensaje', ['error', "La suma de los porcentajes no puede exceder el 100%."]);
@@ -266,11 +287,11 @@ class Propietarios extends Component
 
         if($persona){
 
-            foreach ($this->propiedad->actores() as $propietario) {
+            foreach ($this->propiedad->propietarios() as $propietario) {
 
                 if($persona->id == $propietario->persona_id){
 
-                    $this->dispatch('mostrarMensaje', ['error', "La persona ya actual en el movimiento."]);
+                    $this->dispatch('mostrarMensaje', ['error', "La persona ya es un propietario."]);
 
                     return;
 
@@ -323,7 +344,7 @@ class Propietarios extends Component
 
                 }
 
-                if($this->partes_iguales){
+                /* if($this->partes_iguales){
 
                     $porcentaje = $this->repartirPartesIguales(flag: true);
 
@@ -337,15 +358,18 @@ class Propietarios extends Component
 
                 }else{
 
-                    $actor = $this->propiedad->actores()->create([
-                        'persona_id' => $persona->id,
-                        'tipo_actor' => 'propietario',
-                        'porcentaje_nuda' => $this->porcentaje_nuda,
-                        'porcentaje_usufructo' => $this->porcentaje_usufructo,
-                        'creado_por' => auth()->id()
-                    ]);
 
-                }
+
+                } */
+
+                $actor = $this->propiedad->actores()->create([
+                    'persona_id' => $persona->id,
+                    'tipo_actor' => 'propietario',
+                    'porcentaje_propiedad' => $this->porcentaje_propiedad,
+                    'porcentaje_nuda' => $this->porcentaje_nuda,
+                    'porcentaje_usufructo' => $this->porcentaje_usufructo,
+                    'creado_por' => auth()->id()
+                ]);
 
                 $this->dispatch('mostrarMensaje', ['success', "El propietario se guardó con éxito."]);
 
@@ -368,7 +392,7 @@ class Propietarios extends Component
 
     }
 
-    public function repartirPartesIguales($flag = false){
+    /* public function repartirPartesIguales($flag = false){
 
         $propietarios = $flag ? $this->propiedad->propietarios()->count() + 1 : $this->propiedad->propietarios()->count();
 
@@ -385,7 +409,7 @@ class Propietarios extends Component
 
         return $porcentaje;
 
-    }
+    } */
 
     public function guardarTransmitente(){
 
@@ -405,11 +429,11 @@ class Propietarios extends Component
 
         if($persona){
 
-            foreach ($this->propiedad->actores() as $propietario) {
+            foreach ($this->propiedad->transmitentes() as $propietario) {
 
                 if($persona->id == $propietario->persona_id){
 
-                    $this->dispatch('mostrarMensaje', ['error', "La persona actua en el movimiento."]);
+                    $this->dispatch('mostrarMensaje', ['error', "La persona ya es un transmitente."]);
 
                     return;
 
@@ -507,11 +531,11 @@ class Propietarios extends Component
 
         if($persona){
 
-            foreach ($this->propiedad->actores() as $propietario) {
+            foreach ($this->propiedad->representantes() as $propietario) {
 
                 if($persona->id == $propietario->persona_id){
 
-                    $this->dispatch('mostrarMensaje', ['error', "La persona ya actua en el movimiento."]);
+                    $this->dispatch('mostrarMensaje', ['error', "La persona ya es un representante."]);
 
                     return;
 
@@ -602,6 +626,7 @@ class Propietarios extends Component
         $this->actor = $actor;
 
         $this->tipo_propietario = $actor->tipo_actor;
+        $this->porcentaje_propiedad = $actor->porcentaje_propiedad;
         $this->porcentaje_nuda = $actor->porcentaje_nuda;
         $this->porcentaje_usufructo = $actor->porcentaje_usufructo;
         $this->tipo_persona = $actor->persona->tipo;
@@ -647,6 +672,14 @@ class Propietarios extends Component
 
         $this->validate();
 
+        if($this->porcentaje_propiedad == 0 && $this->porcentaje_nuda == 0 && $this->porcentaje_usufructo == 0){
+
+            $this->dispatch('mostrarMensaje', ['error', "La suma de los porcentajes no puede ser 0."]);
+
+            return;
+
+        }
+
         if($this->revisarProcentajes($this->actor->id)){
 
             $this->dispatch('mostrarMensaje', ['error', "La suma de los porcentajes no puede exceder el 100%."]);
@@ -682,6 +715,7 @@ class Propietarios extends Component
 
                 $this->actor->update([
                     'tipo_propietario' => $this->tipo_propietario,
+                    'porcentaje_propiedad' => $this->porcentaje_propiedad,
                     'porcentaje_nuda' => $this->porcentaje_nuda,
                     'porcentaje_usufructo' => $this->porcentaje_usufructo,
                     'actualizado_por' => auth()->id()
@@ -751,6 +785,8 @@ class Propietarios extends Component
 
     public function revisarProcentajes($id = null){
 
+        $pp = 0;
+
         $pn = 0;
 
         $pu = 0;
@@ -764,11 +800,15 @@ class Propietarios extends Component
 
             $pu = $pu + $propietario->porcentaje_usufructo;
 
+            $pp = $pp + $propietario->porcentaje_propiedad;
+
         }
 
-        $pn = $pn + (float)$this->porcentaje_nuda;
+        $pp = $pp + (float)$this->porcentaje_propiedad;
 
-        $pu = $pu + (float)$this->porcentaje_usufructo;
+        $pn = $pn + (float)$this->porcentaje_nuda + $pp;
+
+        $pu = $pu + (float)$this->porcentaje_usufructo + $pp;
 
         if($pn > 100 || $pu > 100)
             return true;

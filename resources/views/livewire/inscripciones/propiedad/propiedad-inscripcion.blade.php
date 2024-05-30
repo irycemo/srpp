@@ -171,6 +171,9 @@
 
                     <x-slot name="head">
                         <x-table.heading >Nombre / Razón social</x-table.heading>
+                        <x-table.heading >% propiedad</x-table.heading>
+                        <x-table.heading >% nuda</x-table.heading>
+                        <x-table.heading >% usufructo</x-table.heading>
                         <x-table.heading ></x-table.heading>
                     </x-slot>
 
@@ -181,18 +184,11 @@
                             <x-table.row >
 
                                 <x-table.cell>{{ $transmitente->persona->nombre }} {{ $transmitente->persona->ap_paterno }} {{ $transmitente->persona->ap_materno }} {{ $transmitente->persona->razon_social }}</x-table.cell>
+                                <x-table.cell>{{ $transmitente->porcentaje_propiedad }}</x-table.cell>
+                                <x-table.cell>{{ $transmitente->porcentaje_nuda }}</x-table.cell>
+                                <x-table.cell>{{ $transmitente->porcentaje_usufructo }}</x-table.cell>
                                 <x-table.cell>
                                     <div class="flex flex-col items-center gap-3">
-                                        <x-button-blue
-                                            wire:click="editarActor({{ $transmitente->id }}, 'transmitente')"
-                                            wire:loading.attr="disabled"
-                                        >
-
-                                            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-4 h-4">
-                                                <path stroke-linecap="round" stroke-linejoin="round" d="m16.862 4.487 1.687-1.688a1.875 1.875 0 1 1 2.652 2.652L10.582 16.07a4.5 4.5 0 0 1-1.897 1.13L6 18l.8-2.685a4.5 4.5 0 0 1 1.13-1.897l8.932-8.931Zm0 0L19.5 7.125M18 14v4.75A2.25 2.25 0 0 1 15.75 21H5.25A2.25 2.25 0 0 1 3 18.75V8.25A2.25 2.25 0 0 1 5.25 6H10" />
-                                            </svg>
-
-                                        </x-button-blue>
                                         <x-button-red
                                             wire:click="borrarActor({{ $transmitente->id }})"
                                             wire:loading.attr="disabled">
@@ -219,7 +215,7 @@
 
             <div class="mb-3 bg-white rounded-lg p-3 shadow-lg">
 
-                <span class="flex items-center justify-center text-lg text-gray-700 mb-5">Propietarios ({{ $inscripcion->propietarios()->count() }})</span>
+                <span class="flex items-center justify-center text-lg text-gray-700 mb-5">Adquirientes ({{ $inscripcion->propietarios()->count() }})</span>
 
                 <div class="flex justify-end mb-2">
 
@@ -238,7 +234,7 @@
                             wire:target="agregarPropietario">
 
                             <img wire:loading wire:target="agregarPropietario" class="mx-auto h-4 mr-1" src="{{ asset('storage/img/loading3.svg') }}" alt="Loading">
-                            Agregar propietario
+                            Agregar adquiriente
                     </x-button-gray>
 
                 </div>
@@ -247,6 +243,7 @@
 
                     <x-slot name="head">
                         <x-table.heading >Nombre / Razón social</x-table.heading>
+                        <x-table.heading >% propiedad</x-table.heading>
                         <x-table.heading >% nuda</x-table.heading>
                         <x-table.heading >% usufructo</x-table.heading>
                         <x-table.heading ></x-table.heading>
@@ -259,6 +256,7 @@
                             <x-table.row >
 
                                 <x-table.cell>{{ $propietario->persona->nombre }} {{ $propietario->persona->ap_paterno }} {{ $propietario->persona->ap_materno }} {{ $propietario->persona->razon_social }}</x-table.cell>
+                                <x-table.cell>{{ number_format($propietario->porcentaje_propiedad, 2) }}%</x-table.cell>
                                 <x-table.cell>{{ number_format($propietario->porcentaje_nuda, 2) }}%</x-table.cell>
                                 <x-table.cell>{{ number_format($propietario->porcentaje_usufructo, 2) }}%</x-table.cell>
                                 <x-table.cell>
@@ -396,6 +394,59 @@
             </div>
 
         </div>
+
+    </div>
+
+    <div class="bg-white rounded-lg p-3 flex justify-end shadow-lg mb-4">
+
+        <table class="mx-auto">
+
+            <thead class="border-b border-gray-300 ">
+
+                <tr class="text-sm text-gray-500 text-left traling-wider whitespace-nowrap">
+
+                    <th class="px-2">Nombre / Razón social</th>
+                    <th class="px-2">% Porpiedad</th>
+                    <th class="px-2">% Nuda</th>
+                    <th class="px-2">% Usufructo</th>
+
+                </tr>
+
+            </thead>
+
+            <tbody class="divide-y divide-gray-200">
+
+                @foreach ($transmitentes as $key => $transmitente)
+
+                    <tr class="text-gray-500 text-sm leading-relaxed">
+                        <td class=" px-2">(Tra.) {{ $transmitente['nombre'] }} {{ $transmitente['ap_paterno'] }} {{ $transmitente['ap_materno'] }} {{ $transmitente['razon_social'] }}</td>
+                        <td class=" px-2">
+                            <input wire:model.live="transmitentes.{{ $key }}.porcentaje" type="number" class="bg-white text-sm w-full rounded-md p-2 border border-gray-500 outline-none ring-blue-600 focus:ring-1 focus:border-blue-600">
+                        </td>
+                        <td class=" px-2">
+                            <input wire:model.live="transmitentes.{{ $key }}.porcentaje_nuda" type="number" class="bg-white text-sm w-full rounded-md p-2 border border-gray-500 outline-none ring-blue-600 focus:ring-1 focus:border-blue-600">
+                        </td>
+                        <td class=" px-2">
+                            <input wire:model.live="transmitentes.{{ $key }}.porcentaje_usufructo" type="number" class="bg-white text-sm w-full rounded-md p-2 border border-gray-500 outline-none ring-blue-600 focus:ring-1 focus:border-blue-600">
+                        </td>
+                    </tr>
+
+                @endforeach
+
+                @foreach ($this->inscripcion->propietarios() as $adquiriente)
+
+                    <tr class="text-gray-500 text-sm leading-relaxed">
+                        <td class=" px-2">(Adq.){{ $adquiriente->persona->nombre }} {{ $adquiriente->persona->ap_paterno }} {{ $adquiriente->persona->ap_materno }} {{ $adquiriente->persona->razon_social }}</td>
+                        <td class=" px-2">{{ $adquiriente->porcentaje_propiedad ?? '0' }}</td>
+                        <td class=" px-2">{{ $adquiriente->porcentaje_nuda ?? '0' }} </td>
+                        <td class=" px-2">{{ $adquiriente->porcentaje_usufructo ?? '0' }}</td>
+                    </tr>
+
+                @endforeach
+
+            </tbody>
+
+        </table>
 
     </div>
 
@@ -573,21 +624,21 @@
 
                 <span class="flex items-center justify-center text-lg text-gray-700 md:col-span-3 col-span-1 sm:col-span-2">Porcentajes</span>
 
-                <x-input-group for="porcentaje_nuda" label="Nuda propiedad" :error="$errors->first('porcentaje_nuda')" class="w-full">
+                <x-input-group for="porcentaje_propiedad" label="Porcentaje propiedad" :error="$errors->first('porcentaje_propiedad')" class="w-full">
 
-                    <x-input-text type="number" id="porcentaje_nuda" wire:model="porcentaje_nuda" />
-
-                </x-input-group>
-
-                <x-input-group for="porcentaje_usufructo" label="Usufructo" :error="$errors->first('porcentaje_usufructo')" class="w-full">
-
-                    <x-input-text type="number" id="porcentaje_usufructo" wire:model="porcentaje_usufructo" />
+                    <x-input-text type="number" id="porcentaje_propiedad" wire:model.lazy="porcentaje_propiedad" />
 
                 </x-input-group>
 
-                <x-input-group for="partes_iguales" label="Partes iguales" :error="$errors->first('partes_iguales')" class="w-full">
+                <x-input-group for="porcentaje_nuda" label="Porcentaje nuda" :error="$errors->first('porcentaje_nuda')" class="w-full">
 
-                    <input wire:model="partes_iguales" type="checkbox" class="rounded">
+                    <x-input-text type="number" id="porcentaje_nuda" wire:model.lazy="porcentaje_nuda" />
+
+                </x-input-group>
+
+                <x-input-group for="porcentaje_usufructo" label="Porcentaje sufructo" :error="$errors->first('porcentaje_usufructo')" class="w-full">
+
+                    <x-input-text type="number" id="porcentaje_usufructo" wire:model.lazy="porcentaje_usufructo" />
 
                 </x-input-group>
 
@@ -658,7 +709,7 @@
 
                     @foreach ($predio->propietarios() as $propietario)
 
-                        <option value="{{ $propietario->persona->id }}">{{ $propietario->persona->nombre }} {{ $propietario->persona->ap_paterno }} {{ $propietario->persona->ap_materno }} {{ $propietario->persona->razon_social }}</option>
+                        <option value="{{ $propietario->id }}">{{ $propietario->persona->nombre }} {{ $propietario->persona->ap_paterno }} {{ $propietario->persona->ap_materno }} {{ $propietario->persona->razon_social }}</option>
 
                     @endforeach
 

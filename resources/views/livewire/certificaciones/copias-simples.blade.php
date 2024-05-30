@@ -61,7 +61,7 @@
                     <x-table.heading >Folio de carpeta</x-table.heading>
                     <x-table.heading sortable wire:click="sortBy('usuario_asignado')" :direction="$sort === 'usuario_asignado' ? $direction : null" >Asignado a</x-table.heading>
                 @endif
-                @if (!auth()->user()->hasRole(['Certificador', 'Supervisor Copias']))
+                @if (!auth()->user()->hasRole(['Certificador', 'Supervisor certificaciones']))
                     <x-table.heading >Fecha de firma</x-table.heading>
                     <x-table.heading >Reimpreso en</x-table.heading>
                 @endif
@@ -194,7 +194,7 @@
 
                         @endif
 
-                        @if (!auth()->user()->hasRole(['Certificador', 'Supervisor Copias']))
+                        @if (!auth()->user()->hasRole(['Certificador', 'Supervisor certificaciones']))
 
                             <x-table.cell>
 
@@ -292,7 +292,7 @@
 
                                     @can('Finalizar copias certificadas')
 
-                                        @if(auth()->user()->hasRole('Supervisor Copias'))
+                                        @if(auth()->user()->hasRole('Supervisor certificaciones'))
 
                                             <x-button-blue
                                                 wire:click="finalizarSupervisor({{ $copia->certificacion->id }})"

@@ -23,6 +23,7 @@
 
                 <x-slot name="head">
                     <x-table.heading >Nombre / Razón social</x-table.heading>
+                    <x-table.heading >Porcentaje propiedad</x-table.heading>
                     <x-table.heading >Porcentaje nuda</x-table.heading>
                     <x-table.heading >Porcentaje usufructo</x-table.heading>
                     <x-table.heading ></x-table.heading>
@@ -37,6 +38,7 @@
                             <x-table.row >
 
                                 <x-table.cell>{{ $propietario->persona->nombre }} {{ $propietario->persona->ap_paterno }} {{ $propietario->persona->ap_materno }} {{ $propietario->persona->razon_social }}</x-table.cell>
+                                <x-table.cell>{{ number_format($propietario->porcentaje_propiedad, 2) }}%</x-table.cell>
                                 <x-table.cell>{{ number_format($propietario->porcentaje_nuda, 2) }}%</x-table.cell>
                                 <x-table.cell>{{ number_format($propietario->porcentaje_usufructo, 2) }}%</x-table.cell>
                                 <x-table.cell>
@@ -367,23 +369,29 @@
 
                 <span class="flex items-center justify-center text-lg text-gray-700 md:col-span-3 col-span-1 sm:col-span-2">Porcentajes</span>
 
-                <x-input-group for="porcentaje_nuda" label="Nuda propiedad" :error="$errors->first('porcentaje_nuda')" class="w-full">
+                <x-input-group for="porcentaje_propiedad" label="Porcentaje propiedad" :error="$errors->first('porcentaje_propiedad')" class="w-full">
 
-                    <x-input-text type="number" id="porcentaje_nuda" wire:model="porcentaje_nuda" />
-
-                </x-input-group>
-
-                <x-input-group for="porcentaje_usufructo" label="Usufructo" :error="$errors->first('porcentaje_usufructo')" class="w-full">
-
-                    <x-input-text type="number" id="porcentaje_usufructo" wire:model="porcentaje_usufructo" />
+                    <x-input-text type="number" id="porcentaje_propiedad" wire:model.lazy="porcentaje_propiedad" />
 
                 </x-input-group>
 
-                <x-input-group for="partes_iguales" label="Partes iguales" :error="$errors->first('partes_iguales')" class="w-full">
+                <x-input-group for="porcentaje_nuda" label="Porcentaje nuda" :error="$errors->first('porcentaje_nuda')" class="w-full">
+
+                    <x-input-text type="number" id="porcentaje_nuda" wire:model.lazy="porcentaje_nuda" />
+
+                </x-input-group>
+
+                <x-input-group for="porcentaje_usufructo" label="Porcentaje usufructo" :error="$errors->first('porcentaje_usufructo')" class="w-full">
+
+                    <x-input-text type="number" id="porcentaje_usufructo" wire:model.lazy="porcentaje_usufructo" />
+
+                </x-input-group>
+
+                {{-- <x-input-group for="partes_iguales" label="Partes iguales" :error="$errors->first('partes_iguales')" class="w-full">
 
                     <input wire:model="partes_iguales" type="checkbox" class="rounded">
 
-                </x-input-group>
+                </x-input-group> --}}
 
             </div>
 

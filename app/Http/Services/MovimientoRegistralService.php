@@ -278,6 +278,13 @@ class MovimientoRegistralService{
 
         }
 
+        /* Certificaciones: Gravamen */
+        if($servicio == 'DL07'){
+
+            return $this->asignacionService->obtenerCertificadorGravamen($distrito, $solicitante, $tipo_servicio, $random);
+
+        }
+
         $inscripcionesPropiedad = ['D122', 'D114', 'D125', 'D126', 'D124', 'D121', 'D120', 'D119', 'D123', 'D118', 'D116', 'D115', 'D113'];
 
         /* Inscripciones: Propiedad */
@@ -299,7 +306,7 @@ class MovimientoRegistralService{
     public function obtenerSupervisor($servicio, $distrito):int
     {
 
-        $certificaciones = ['DC90', 'DC91', 'DC92', 'DC93', 'DL13', 'DL14'];
+        $certificaciones = ['DC90', 'DC91', 'DC92', 'DC93', 'DL13', 'DL14', 'DL07'];
 
         if(in_array($servicio, $certificaciones)){
 
@@ -324,21 +331,19 @@ class MovimientoRegistralService{
 
     public function calcularFolio($request){
 
-        if(in_array($request['categoria_servicio'], ['Inscripciones - Propiedad', 'Inscripciones - Gravamenes'])){
+        if(in_array($request['servicio'], ['DL13', 'DL14', 'DC90', 'DC91', 'DC92', 'DC93'])){
 
-            if(!isset($request['folio_real'])){
+            return null;
 
-                return 1;
+        }
 
-            }else{
+        if(!isset($request['folio_real'])){
 
-                return FolioReal::find($request['folio_real'])->ultimoFolio() + 1;
-
-            }
+            return 1;
 
         }else{
 
-            return null;
+            return FolioReal::find($request['folio_real'])->ultimoFolio() + 1;
 
         }
 

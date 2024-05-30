@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\Certificaciones\CertificadoGravamenController;
 use App\Livewire\Admin\Roles;
 use App\Livewire\Admin\Ranchos;
 use App\Livewire\Admin\Permisos;
@@ -18,6 +19,7 @@ use App\Livewire\Certificaciones\CopiasCertificadas;
 use App\Http\Controllers\Certificaciones\CopiasController;
 use App\Http\Controllers\InscripcionesPropiedad\TraslativoController;
 use App\Http\Controllers\PaseFolio\PaseFolioController;
+use App\Livewire\Certificaciones\CertificadoGravamen;
 use App\Livewire\Certificaciones\ConsultasCertificaciones;
 use App\Livewire\Consulta\Consulta;
 use App\Livewire\Gravamenes\GravamenIndex;
@@ -79,6 +81,9 @@ Route::group(['middleware' => ['auth', 'esta.activo']], function(){
     Route::get('indices_y_tomos', Consultas::class)->middleware('permission:Indices y tomos')->name('indices_y_tomos');
 
     Route::get('consultas_certificaciones', ConsultasCertificaciones::class)->middleware('permission:Consultas certificaciones')->name('consulta_certificaciones');
+
+    Route::get('certificado_gravamen', CertificadoGravamen::class)->middleware('permission:Certificado gravamen')->name('certificado_gravamen');
+    Route::get('acto/{movimientoRegistral}', [CertificadoGravamenController::class, 'certificadoGravamen'])->middleware('permission:Certificado gravamen')->name('certificado_gravamen_pdf');
 
     /* Inscripciones */
     Route::get('propiedad', PropiedadIndex::class)->middleware('permission:Propiedad')->name('propiedad');
