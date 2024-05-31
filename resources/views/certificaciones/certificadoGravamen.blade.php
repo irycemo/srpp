@@ -162,104 +162,185 @@
             <p class="titulo">DIRECCIÓN DE REGISTRO PÚBLICO DE LA PROPIEDAD</p>
             <p class="titulo">CERTIFICADO DE GRAVAMEN O DE LIBERTAD DE GRAVAMEN</p>
 
-            <p class="fundamento">
-                EL CIUDADANO LICENCIADO EN DERECHO {{ $director }} DIRECTOR DEL REGISTRO PÚBLICO DE LA PROPIEDAD
-            </p>
-
         </div>
 
-        <p style="text-align: center"><strong>FOLIO REAL:</strong> {{ $movimientoRegistral->folioReal->folio }}</p>
-
-        <p style="text-align: center"><strong>SECCIÓN:</strong> {{ $predio->folioReal->seccion_antecedente }}; <strong>DISTRITO:</strong> {{ $predio->folioReal->distrito}}; <strong>TOMO:</strong> {{ $predio->folioReal->tomo_antecedente }}({{ $tomo_numero }}), <strong>REGISTRO:</strong> {{ $predio->folioReal->registro_antecedente }} ({{ $registro_numero }}) DE FECHA {{ $fecha }}.</p>
+        <p class="fundamento informacion">
+            EL CIUDADANO LICENCIADO EN DERECHO {{ $director }}, DIRECTOR DEL REGISTRO PÚBLICO DE LA PROPIEDAD
+            CERTIFICA QUE DEACUERDO A LA BUSQUEDA EN EL INMUEBLE:
+        </p>
 
         <div class="informacion">
 
+            <p style="text-align: center"><strong>FOLIO REAL:</strong> {{ $movimientoRegistral->folioReal->folio }}</p>
+
+            <p style="text-align: center"><strong>SECCIÓN:</strong> {{ $predio->folioReal->seccion_antecedente }}; <strong>DISTRITO:</strong> {{ $predio->folioReal->distrito}}; <strong>TOMO:</strong> {{ $predio->folioReal->tomo_antecedente }}, <strong>REGISTRO:</strong> {{ $predio->folioReal->registro_antecedente }}, <strong>NÚMERO DE PROPIEDAD:</strong> {{ $predio->folioReal->numero_propiedad_antecedente }}.</p>
+
+            <br>
+
             <p class="parrafo">
-                <strong>CERTIFICA</strong> QUE DEACUERDO A LA BUSQUEDA EN EL INMUEBLE:
+
+                <p><strong>UBICACIÓN DEL INMUEBLE:</strong></p>
+
+                <p class="parrafo">
+
+                    <strong>CÓDIGO POSTAL:</strong> {{ $predio->codigo_postal }}; <strong>TIPO DE ASENTAMIENTO:</strong> {{ $predio->tipo_asentamiento }}; <strong>NOMBRE DEL ASENTAMIENTO:</strong> {{ $predio->nombre_asentamiento }}; <strong>MUNICIPIO:</strong> {{ $predio->municipio }};
+
+                    <strong>CIUDAD:</strong> {{ $predio->ciudad }}; <strong>LOCALIDAD:</strong> {{ $predio->localidad }}; <strong>TIPO DE VIALIDAD:</strong> {{ $predio->tipo_vialidad }}; <strong>NOMBRE DE LA VIALIDAD:</strong> {{ $predio->nombre_vialidad }};
+
+                    <strong>NÚMERO EXTERIOR:</strong> {{ $predio->numero_exterior ?? 'SN' }}; <strong>NÚMERO INTERIOR:</strong> {{ $predio->numero_interior ?? 'SN' }};
+
+                    @if ($predio->nombre_edificio)
+                        <strong>EDIFICIO:</strong> {{ $predio->nombre_edificio }};
+                    @endif
+
+                    @if ($predio->clave_edificio)
+                        <strong>clave del edificio:</strong> {{ $predio->clave_edificio }};
+                    @endif
+
+                    @if ($predio->departamento_edificio)
+                        <strong>DEPARTAMENTO:</strong> {{ $predio->departamento_edificio }};
+                    @endif
+
+                    @if ($predio->lote)
+                        <strong>LOTE:</strong> {{ $predio->lote }};
+                    @endif
+
+                    @if ($predio->manzana)
+                        <strong>MANZANA:</strong> {{ $predio->manzana }};
+                    @endif
+
+                    @if ($predio->ejido)
+                        <strong>ejido:</strong> {{ $predio->ejido }};
+                    @endif
+
+                    @if ($predio->parcela)
+                        <strong>parcela:</strong> {{ $predio->parcela }};
+                    @endif
+
+                    @if ($predio->solar)
+                        <strong>solar:</strong> {{ $predio->solar }};
+                    @endif
+
+                    @if ($predio->poblado)
+                        <strong>poblado:</strong> {{ $predio->poblado }};
+                    @endif
+
+                    @if ($predio->numero_exterior)
+                        <strong>número exterior:</strong> {{ $predio->numero_exterior }};
+                    @endif
+
+                    @if ($predio->numero_exterior_2)
+                        <strong>número exterior 2:</strong> {{ $predio->numero_exterior_2 }};
+                    @endif
+
+                    @if ($predio->numero_adicional)
+                        <strong>número adicional:</strong> {{ $predio->numero_adicional }};
+                    @endif
+
+                    @if ($predio->numero_adicional_2)
+                        <strong>número adicional 2:</strong> {{ $predio->numero_adicional_2 }};
+                    @endif
+
+                    @if ($predio->lote_fraccionador)
+                        <strong>lote del fraccionador:</strong> {{ $predio->lote_fraccionador }};
+                    @endif
+
+                    @if ($predio->manzana_fraccionador)
+                        <strong>manzana del fraccionador:</strong> {{ $predio->manzana_fraccionador }};
+                    @endif
+
+                    @if ($predio->etapa_fraccionador)
+                        <strong>etapa del fraccionador:</strong> {{ $predio->etapa_fraccionador }};
+                    @endif
+
+                    @if ($predio->observaciones)
+                        <strong>OBSERVACIONES:</strong> {{ $predio->observaciones }}.
+                    @endif
+
+                </p>
 
                 <br>
 
-                <strong>CÓDIGO POSTAL:</strong> {{ $predio->codigo_postal }}; <strong>TIPO DE ASENTAMIENTO:</strong> {{ $predio->tipo_asentamiento }}; <strong>NOMBRE DEL ASENTAMIENTO:</strong> {{ $predio->nombre_asentamiento }}; <strong>MUNICIPIO:</strong> {{ $predio->municipio }};
+                <p><strong>colindancias:</strong></p>
 
-                <strong>CIUDAD:</strong> {{ $predio->ciudad }}; <strong>LOCALIDAD:</strong> {{ $predio->localidad }}; <strong>TIPO DE VIALIDAD:</strong> {{ $predio->tipo_vialidad }}; <strong>NOMBRE DE LA VIALIDAD:</strong> {{ $predio->nombre_vialidad }};
+                <p class="parrafo">
 
-                <strong>NÚMERO EXTERIOR:</strong> {{ $predio->numero_exterior ?? 'SN' }}; <strong>NÚMERO INTERIOR:</strong> {{ $predio->numero_interior ?? 'SN' }};
+                    <ul>
 
-                @if ($predio->nombre_edificio)
-                    <strong>EDIFICIO:</strong> {{ $predio->nombre_edificio }};
-                @endif
+                        @foreach ($predio->colindancias as $colindancia)
 
-                @if ($predio->clave_edificio)
-                    <strong>clave del edificio:</strong> {{ $predio->clave_edificio }};
-                @endif
+                            <li><strong>viento:</strong> {{ $colindancia->viento }}; <strong>longitud:</strong> {{ $colindancia->longitud }} metros; <strong>descripción:</strong> {{ $colindancia->descripcion }}.</li>
 
-                @if ($predio->departamento_edificio)
-                    <strong>DEPARTAMENTO:</strong> {{ $predio->departamento_edificio }};
-                @endif
+                        @endforeach
 
-                @if ($predio->lote)
-                    <strong>LOTE:</strong> {{ $predio->lote }};
-                @endif
+                    </ul>
 
-                @if ($predio->manzana)
-                    <strong>MANZANA:</strong> {{ $predio->manzana }};
-                @endif
+                </p>
 
-                @if ($predio->ejido)
-                    <strong>ejido:</strong> {{ $predio->ejido }};
-                @endif
+                <p><strong>DESCRIPCIÓN DEL INMUEBLE:</strong></p>
 
-                @if ($predio->parcela)
-                    <strong>parcela:</strong> {{ $predio->parcela }};
-                @endif
+                <p class="parrafo">
+                    @if($predio->cp_localidad)
+                        <strong>Cuenta predial:</strong> {{ $predio->cp_localidad }}-{{ $predio->cp_oficina }}-{{ $predio->cp_tipo_predio }}-{{ $predio->cp_registro }};
+                    @endif
 
-                @if ($predio->solar)
-                    <strong>solar:</strong> {{ $predio->solar }};
-                @endif
+                    @if($predio->cc_region_catastral)
+                        <strong>Clave catastral:</strong> {{ $predio->cc_estado }}-{{ $predio->cc_region_catastral }}-{{ $predio->cc_municipio }}-{{ $predio->cc_zona_catastral }}-{{ $predio->cc_sector }}-{{ $predio->cc_manzana }}-{{ $predio->cc_predio }}-{{ $predio->cc_edificio }}-{{ $predio->cc_departamento }};
+                    @endif
 
-                @if ($predio->poblado)
-                    <strong>poblado:</strong> {{ $predio->poblado }};
-                @endif
+                    <strong>Superficie de terreno:</strong> {{ $predio->superficie_terreno }} {{ $predio->unidad_area }} <strong>Superficie de construcción:</strong> {{ $predio->superficie_construccion }} {{ $predio->unidad_area }} <strong>monto de la transacción:</strong> {{ $predio->monto_transaccion }} {{ $predio->divisa }};
 
-                @if ($predio->numero_exterior)
-                    <strong>número exterior:</strong> {{ $predio->numero_exterior }};
-                @endif
+                    @if ($predio->curt)
+                        <strong>curt:</strong> {{ $predio->curt }};
+                    @endif
 
-                @if ($predio->numero_exterior_2)
-                    <strong>número exterior 2:</strong> {{ $predio->numero_exterior_2 }};
-                @endif
+                    @if ($predio->superficie_judicial)
+                        <strong>superficie judicial:</strong> {{ $predio->superficie_judicial }} {{ $predio->unidad_area }};
+                    @endif
 
-                @if ($predio->numero_adicional)
-                    <strong>número adicional:</strong> {{ $predio->numero_adicional }};
-                @endif
+                    @if ($predio->superficie_notarial)
+                        <strong>superficie notarial:</strong> {{ $predio->superficie_notarial }} {{ $predio->unidad_area }};
+                    @endif
 
-                @if ($predio->numero_adicional_2)
-                    <strong>número adicional 2:</strong> {{ $predio->numero_adicional_2 }};
-                @endif
+                    @if ($predio->area_comun_terreno)
+                        <strong>área de terreno común:</strong> {{ $predio->area_comun_terreno }} {{ $predio->unidad_area }};
+                    @endif
 
-                @if ($predio->lote_fraccionador)
-                    <strong>lote del fraccionador:</strong> {{ $predio->lote_fraccionador }};
-                @endif
+                    @if ($predio->area_comun_construccion)
+                        <strong>área de construcción común:</strong> {{ $predio->area_comun_construccion }} {{ $predio->unidad_area }};
+                    @endif
 
-                @if ($predio->manzana_fraccionador)
-                    <strong>manzana del fraccionador:</strong> {{ $predio->manzana_fraccionador }};
-                @endif
+                    @if ($predio->valor_terreno_comun)
+                        <strong>valor de terreno común:</strong> {{ $predio->valor_terreno_comun }} {{ $predio->divisa }};
+                    @endif
 
-                @if ($predio->etapa_fraccionador)
-                    <strong>etapa del fraccionador:</strong> {{ $predio->etapa_fraccionador }};
-                @endif
+                    @if ($predio->valor_construccion_comun)
+                        <strong>valor de construcción común:</strong> {{ $predio->valor_construccion_comun }} {{ $predio->divisa }};
+                    @endif
 
-                @if ($predio->observaciones)
-                    <strong>OBSERVACIONES:</strong> {{ $predio->observaciones }}.
-                @endif
+                    @if ($predio->valor_catastral)
+                        <strong>valor de construcción común:</strong> {{ $predio->valor_catastral }} {{ $predio->divisa }};
+                    @endif
 
-                DEL MUNICIPIO y DISTRITO DE <strong>{{ $predio->folioReal->distrito }}</strong> Y QUE SE REGISTRA A FAVOR DE:
+                    <strong>Descripción:</strong> {{ $predio->descripcion }}.
 
-                @foreach ($predio->propietarios() as $propietario)
+                </p>
 
-                    <strong>{{ $propietario->persona->nombre }} {{ $propietario->persona->ap_paterno }} {{ $propietario->persona->ap_materno }} {{ $propietario->persona->razon_social }}</strong>
+                <br>
 
-                @endforeach
+                <p><strong>propietarios:</strong></p>
+
+                <p class="parrafo">
+
+                <ul>
+
+                    @foreach ($predio->propietarios() as $propietario)
+
+                        <li><strong>Nombre:</strong> {{ $propietario->persona->nombre }} {{ $propietario->persona->ap_paterno }} {{ $propietario->persona->ap_materno }} {{ $propietario->persona->razon_social }}; <strong>porcentaje de propiedad:</strong> {{ $propietario->porcentaje_propiedad }} %; <strong>porcentaje nuda:</strong> {{ $propietario->porcentaje_nuda }} %; <strong>porcentaje usufructo:</strong> {{ $propietario->porcentaje_usufructo }} %.</li>
+
+                    @endforeach
+
+                </ul>
 
             </p>
 
