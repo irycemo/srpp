@@ -168,10 +168,17 @@
 
         </div>
 
+        <p style="text-align: center"><strong>FOLIO REAL:</strong> {{ $movimientoRegistral->folioReal->folio }}</p>
+
+        <p style="text-align: center"><strong>SECCIÓN:</strong> {{ $predio->folioReal->seccion_antecedente }}; <strong>DISTRITO:</strong> {{ $predio->folioReal->distrito}}; <strong>TOMO:</strong> {{ $predio->folioReal->tomo_antecedente }}({{ $tomo_numero }}), <strong>REGISTRO:</strong> {{ $predio->folioReal->registro_antecedente }} ({{ $registro_numero }}) DE FECHA {{ $fecha }}.</p>
+
         <div class="informacion">
 
             <p class="parrafo">
-                <strong>CERTIFICA</strong> QUE DEACUERDO A LA BUSQUEDA, NO SE ENCONTRO CONSTANCIA DE QUE REPORTE GRAVAMEN ALGUNO, EN EL INMUEBLE:
+                <strong>CERTIFICA</strong> QUE DEACUERDO A LA BUSQUEDA EN EL INMUEBLE:
+
+                <br>
+
                 <strong>CÓDIGO POSTAL:</strong> {{ $predio->codigo_postal }}; <strong>TIPO DE ASENTAMIENTO:</strong> {{ $predio->tipo_asentamiento }}; <strong>NOMBRE DEL ASENTAMIENTO:</strong> {{ $predio->nombre_asentamiento }}; <strong>MUNICIPIO:</strong> {{ $predio->municipio }};
 
                 <strong>CIUDAD:</strong> {{ $predio->ciudad }}; <strong>LOCALIDAD:</strong> {{ $predio->localidad }}; <strong>TIPO DE VIALIDAD:</strong> {{ $predio->tipo_vialidad }}; <strong>NOMBRE DE LA VIALIDAD:</strong> {{ $predio->nombre_vialidad }};
@@ -254,7 +261,6 @@
 
                 @endforeach
 
-                , BAJO EL <strong>REGISTRO NÚMERO</strong> {{ $predio->folioReal->registro_antecedente }} ({{ $registro_numero }}), DEL <strong>TOMO</strong> {{ $predio->folioReal->tomo_antecedente }}({{ $tomo_numero }}) DE FECHA {{ $fecha }}.
             </p>
 
             <br>
