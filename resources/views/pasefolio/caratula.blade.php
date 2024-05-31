@@ -148,7 +148,7 @@
 
                 <p style="text-align: center"><strong>FOLIO REAL:</strong> {{ $folioReal->folio }}</p>
 
-                <p style="text-align: center"><strong>SECCIÓN:</strong> {{ $folioReal->seccion_antecedente }}; <strong>DISTRITO:</strong> {{ $distrito}}; <strong>TOMO:</strong> {{ $folioReal->tomo_antecedente }}, <strong>REGISTRO:</strong> {{ $folioReal->registro_antecedente }}</p>
+                <p style="text-align: center"><strong>SECCIÓN:</strong> {{ $folioReal->seccion_antecedente }}; <strong>DISTRITO:</strong> {{ $distrito}}; <strong>TOMO:</strong> {{ $folioReal->tomo_antecedente }}, <strong>REGISTRO:</strong> {{ $folioReal->registro_antecedente }}, <strong>NÚMERO DE PROPIEDAD:</strong> {{ $predio->folioReal->numero_propiedad_antecedente }}</p>
 
                 <p style="text-align: center"><strong>DATOS DE IDENTIFICACIÓN</strong></p>
 

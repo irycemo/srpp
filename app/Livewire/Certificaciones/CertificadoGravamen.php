@@ -109,7 +109,7 @@ class CertificadoGravamen extends Component
 
         }elseif(auth()->user()->hasRole(['Certificador', 'Certificador Oficialia', 'Certificador Juridico'])){
 
-            $certificados = MovimientoRegistral::with('asignadoA', 'supervisor', 'actualizadoPor', 'certificacion.actualizadoPor')
+            $certificados = MovimientoRegistral::with('asignadoA', 'supervisor', 'actualizadoPor', 'certificacion.actualizadoPor', 'folioReal:id,folio')
                                                 ->where('usuario_asignado', auth()->id())
                                                 ->whereHas('folioReal', function($q){
                                                     $q->where('estado', 'activo');
@@ -147,7 +147,7 @@ class CertificadoGravamen extends Component
 
         }else{
 
-            $certificados = MovimientoRegistral::with('asignadoA', 'supervisor', 'actualizadoPor', 'certificacion.actualizadoPor')
+            $certificados = MovimientoRegistral::with('asignadoA', 'supervisor', 'actualizadoPor', 'certificacion.actualizadoPor', 'folioReal:id,folio')
                                                 ->whereHas('folioReal', function($q){
                                                     $q->where('estado', 'activo');
                                                 })
