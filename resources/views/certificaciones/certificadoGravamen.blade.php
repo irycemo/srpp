@@ -397,7 +397,7 @@
             @endif
 
             <p class="parrafo">
-                A SOLIDITUD DE: <strong>{{ $movimientoRegistral->solicitante }}</strong> EXPEDIDO EL PRESENTE CERTIFICADO EN LA CIUDAD DE MORELIA, MICHOACÁN, A LAS
+                A SOLICITUD DE: <strong>{{ $movimientoRegistral->solicitante }}</strong> EXPEDIDO EL PRESENTE CERTIFICADO EN LA CIUDAD DE MORELIA, MICHOACÁN, A LAS
                 {{ Carbon\Carbon::now()->locale('es')->isoFormat('H:s dddd D \d\e MMMM \d\e\l Y'); }}.
             </p>
 
