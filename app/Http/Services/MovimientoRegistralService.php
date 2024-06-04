@@ -295,7 +295,7 @@ class MovimientoRegistralService{
         }
 
         /* Inscripciones: Gravamen */
-        if($servicio == 'DL64'){
+        if($servicio == 'DL66'){
 
             return $this->asignacionService->obtenerUsuarioGravamen($folioReal, $distrito);
 
@@ -322,7 +322,7 @@ class MovimientoRegistralService{
 
         }
 
-        if($servicio == 'DL64'){
+        if($servicio == 'DL66'){
             return $this->asignacionService->obtenerSupervisorGravamen($distrito);
 
         }

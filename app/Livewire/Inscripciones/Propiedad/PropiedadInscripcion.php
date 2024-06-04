@@ -2,13 +2,12 @@
 
 namespace App\Livewire\Inscripciones\Propiedad;
 
-use App\Constantes\Constantes;
 use App\Models\User;
 use App\Models\Actor;
 use App\Models\Persona;
 use Livewire\Component;
 use App\Models\Propiedad;
-use Barryvdh\DomPDF\Facade\Pdf;
+use App\Constantes\Constantes;
 use Illuminate\Validation\Rule;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
@@ -144,6 +143,18 @@ class PropiedadInscripcion extends Component
 
     }
 
+    public function updatedTransmitentes($value, $index){
+
+        $i = explode('.', $index);
+
+        if($this->transmitentes[$i[0]][$i[1]] == ''){
+
+            $this->transmitentes[$i[0]][$i[1]] = 0;
+
+        }
+
+    }
+
     public function updatedTipoPersona(){
 
         if($this->tipo_persona == 'FISICA'){
@@ -246,7 +257,7 @@ class PropiedadInscripcion extends Component
 
                 if($persona->id == $propietario->persona_id){
 
-                    $this->dispatch('mostrarMensaje', ['error', "La persona ya es un propietario."]);
+                    $this->dispatch('mostrarMensaje', ['error', "La persona ya es un adquiriente."]);
 
                     return;
 
@@ -326,7 +337,7 @@ class PropiedadInscripcion extends Component
                     'creado_por' => auth()->id()
                 ]);
 
-                $this->dispatch('mostrarMensaje', ['success', "El propietario se guardó con éxito."]);
+                $this->dispatch('mostrarMensaje', ['success', "El adquiriente se guardó con éxito."]);
 
                 $this->dispatch('recargar', ['id' => $actor->id, 'description' => $actor->persona->nombre . ' ' . $actor->persona->ap_paterno . ' ' . $actor->persona->ap_materno . ' ' . $actor->persona->razon_social]);
 
@@ -338,7 +349,7 @@ class PropiedadInscripcion extends Component
 
         } catch (\Throwable $th) {
 
-            Log::error("Error al guardar propietario en pase a folio por el usuario: (id: " . auth()->user()->id . ") " . auth()->user()->name . ". " . $th);
+            Log::error("Error al guardar adquiriente en pase a folio por el usuario: (id: " . auth()->user()->id . ") " . auth()->user()->name . ". " . $th);
             $this->dispatch('mostrarMensaje', ['error', "Ha ocurrido un error."]);
 
         }
@@ -377,6 +388,17 @@ class PropiedadInscripcion extends Component
                     'porcentaje_usufructo' => $propietario->porcentaje_usufructo,
                     'creado_por' => auth()->id()
                 ]);
+
+                $this->transmitentes[] = [
+                    'id' => $actor['id'],
+                    'nombre' => $actor->persona->nombre,
+                    'ap_paterno' => $actor->persona->ap_paterno,
+                    'ap_materno' => $actor->persona->ap_materno,
+                    'razon_social' => $actor->persona->razon_social,
+                    'porcentaje_propiedad' => $actor->porcentaje_propiedad,
+                    'porcentaje_nuda' => $actor->porcentaje_nuda,
+                    'porcentaje_usufructo' => $actor->porcentaje_usufructo,
+                ];
 
                 $this->dispatch('mostrarMensaje', ['success', "El transmitente se guardó con éxito."]);
 
@@ -774,7 +796,9 @@ class PropiedadInscripcion extends Component
 
         }
 
-        if($this->revisarProcentajes()) return;
+        if($this->revisarProcentajes()) return true;
+
+        if($this->revisarProcentajesFinal()) return true;
 
     }
 
@@ -803,38 +827,6 @@ class PropiedadInscripcion extends Component
 
     }
 
-    public function crearPdf(){
-
-        $director = User::where('status', 'activo')->whereHas('roles', function($q){
-            $q->where('name', 'Director');
-        })->first()->name;
-
-        $jefe_departamento = User::where('status', 'activo')->whereHas('roles', function($q){
-            $q->where('name', 'Jefe de departamento')->where('area', 'Departamento de Registro de Inscripciones');
-        })->first()->name;
-
-        $pdf = Pdf::loadView('incripciones.propiedad.acto', [
-            'inscripcion' => $this->inscripcion,
-            'director' => $director,
-            'jefe_departamento' => $jefe_departamento,
-            'distrito' => $this->inscripcion->movimientoRegistral->getRawOriginal('distrito'),
-        ]);
-
-        $pdf->render();
-
-        $dom_pdf = $pdf->getDomPDF();
-
-        $canvas = $dom_pdf->get_canvas();
-
-        $canvas->page_text(480, 794, "Página: {PAGE_NUM} de {PAGE_COUNT}", null, 10, array(1, 1, 1));
-
-        return response()->streamDownload(
-            fn () => print($pdf->output()),
-            'inscripcion.pdf'
-        );
-
-    }
-
     public function inscribir(){
 
         if(!Hash::check($this->contraseña, auth()->user()->password)){
@@ -847,8 +839,14 @@ class PropiedadInscripcion extends Component
 
         try {
 
-            $this->inscripcion->actualizado_por = auth()->id();
-            $this->inscripcion->save();
+            DB::transaction(function () {
+
+                $this->procesarPropietarios();
+
+                $this->inscripcion->actualizado_por = auth()->id();
+                $this->inscripcion->save();
+
+            });
 
             $this->dispatch('mostrarMensaje', ['success', "La información se actualizó con éxito."]);
 
@@ -856,11 +854,140 @@ class PropiedadInscripcion extends Component
 
             $this->modalContraseña = false;
 
-            $this->crearPdf();
-
         } catch (\Throwable $th) {
             Log::error("Error al finalizar inscripcion de propiedad por el usuario: (id: " . auth()->user()->id . ") " . auth()->user()->name . ". " . $th);
             $this->dispatch('mostrarMensaje', ['error', "Ha ocurrido un error."]);
+        }
+
+    }
+
+    public function revisarProcentajesFinal(){
+
+        $pn_adquirientes = 0;
+
+        $pn_transmitentes = 0;
+
+        $pu_adquirientes = 0;
+
+        $pu_transmitentes = 0;
+
+        $pp_adquirientes = 0;
+
+        $pp_transmitentes = 0;
+
+        $pu = 0;
+
+        $pp = 0;
+
+        $pn = 0;
+
+        foreach($this->inscripcion->propietarios() as $adquiriente){
+
+            $pn_adquirientes = $pn_adquirientes + $adquiriente['porcentaje_nuda'];
+
+            $pu_adquirientes = $pu_adquirientes + $adquiriente['porcentaje_usufructo'];
+
+            $pp_adquirientes = $pp_adquirientes + $adquiriente['porcentaje_propiedad'];
+
+        }
+
+        foreach($this->inscripcion->transmitentes() as $transmitente){
+
+            $pn_transmitentes = $pn_transmitentes + $transmitente['porcentaje_nuda'];
+
+            $pu_transmitentes = $pu_transmitentes + $transmitente['porcentaje_usufructo'];
+
+            $pp_transmitentes = $pp_transmitentes + $transmitente['porcentaje_propiedad'];
+
+        }
+
+        foreach($this->transmitentes as $transmitente){
+
+            $pn = $pn + $transmitente['porcentaje_nuda'];
+
+            $pu = $pu + $transmitente['porcentaje_usufructo'];
+
+            $pp = $pp + $transmitente['porcentaje_propiedad'];
+
+        }
+
+        $suma = $pp_adquirientes + $pp;
+
+        if(round($suma,2) != round($pp_transmitentes,2)){
+
+            $this->dispatch('mostrarMensaje', ['error', "La suma de los porcentajes de propiedad debe ser " . $pp_transmitentes . '%.']);
+
+            return true;
+
+        }
+
+        $suma = $pn_adquirientes + $pn;
+
+        if(round($suma, 2) != round($pn_transmitentes,2)){
+
+            $this->dispatch('mostrarMensaje', ['error', "La suma de los porcentajes de nuda debe ser " . $pn_transmitentes . '%.']);
+
+            return true;
+
+        }
+
+        $suma = $pu_adquirientes + $pu;
+
+        if(round($suma, 2) != round($pu_transmitentes, 2)){
+
+            $this->dispatch('mostrarMensaje', ['error', "La suma de los porcentajes de usufructo debe ser " . $pu_transmitentes . '%.']);
+
+            return true;
+
+        }
+
+    }
+
+    public function procesarPropietarios(){
+
+        foreach($this->transmitentes as $propietario){
+
+            if($propietario['porcentaje_propiedad'] == 0 && $propietario['porcentaje_nuda'] == 0 && $propietario['porcentaje_usufructo'] == 0){
+
+                $this->predio->actores()->whereHas('persona', function($q) use($propietario){
+                                                                                $q->where('nombre', $propietario['nombre'])
+                                                                                    ->where('ap_paterno', $propietario['ap_paterno'])
+                                                                                    ->where('ap_materno', $propietario['ap_materno'])
+                                                                                    ->where('razon_social', $propietario['razon_social']);
+                                                                                })
+                                                                                ->delete();
+
+            }else{
+
+                 $aux = $this->predio->actores()->whereHas('persona', function($q) use($propietario){
+                                                                                    $q->where('nombre', $propietario['nombre'])
+                                                                                        ->where('ap_paterno', $propietario['ap_paterno'])
+                                                                                        ->where('ap_materno', $propietario['ap_materno'])
+                                                                                        ->where('razon_social', $propietario['razon_social']);
+                                                                                    })
+                                                                                    ->first();
+
+                $aux->update([
+                    'porcentaje_propiedad' => $propietario['porcentaje_propiedad'],
+                    'porcentaje_nuda' => $propietario['porcentaje_nuda'],
+                    'porcentaje_usufructo' => $propietario['porcentaje_usufructo'],
+                ]);
+
+            }
+
+        }
+
+        foreach($this->inscripcion->propietarios() as $adquiriente){
+
+            $this->predio->actores()->create([
+                'persona_id' => $adquiriente->persona->id,
+                'tipo_actor' => 'propietario',
+                'porcentaje_propiedad' => $adquiriente->porcentaje_propiedad,
+                'porcentaje_nuda' => $adquiriente->porcentaje_nuda,
+                'porcentaje_usufructo' => $adquiriente->porcentaje_usufructo,
+                'creado_por' => auth()->id()
+            ]);
+
         }
 
     }
@@ -887,15 +1014,16 @@ class PropiedadInscripcion extends Component
         if(!$jefe_departamento) abort(500, message:"Es necesario registrar al jefe de Departamento de Registro de Inscripciones.");
 
         foreach ($this->inscripcion->transmitentes() as $transmitente) {
+
             $this->transmitentes[] = [
                 'id' => $transmitente['id'],
                 'nombre' => $transmitente->persona->nombre,
                 'ap_paterno' => $transmitente->persona->ap_paterno,
                 'ap_materno' => $transmitente->persona->ap_materno,
                 'razon_social' => $transmitente->persona->razon_social,
-                'porcentaje_propiedad' => (int)$transmitente->porcentaje_propiedad,
-                'porcentaje_nuda' => (int)$transmitente->porcentaje_nuda,
-                'porcentaje_usufructo' => (int)$transmitente->porcentaje_usufructo,
+                'porcentaje_propiedad' => $transmitente->porcentaje_propiedad,
+                'porcentaje_nuda' => $transmitente->porcentaje_nuda,
+                'porcentaje_usufructo' => $transmitente->porcentaje_usufructo,
             ];
         }
 
@@ -903,6 +1031,8 @@ class PropiedadInscripcion extends Component
 
     public function render()
     {
+
+        $this->authorize('view', $this->inscripcion->movimientoRegistral);
 
         if($this->inscripcion->movimientoRegistral->folioReal->estado != 'activo') abort(401, 'El folio real no esta activo');
 

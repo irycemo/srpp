@@ -15,7 +15,7 @@ class MovimientoRegistralPolicy
             return Response::allow();
         }
 
-        return $user->id === $movimientoRegistral->usuario_asignado
+        return in_array($user->id, [$movimientoRegistral->usuario_asignado, $movimientoRegistral->usuario_supervisor])
                 ? Response::allow()
                 : Response::deny('No tienes asignado el movimineto registral.');
     }
@@ -27,7 +27,7 @@ class MovimientoRegistralPolicy
             return Response::allow();
         }
 
-        return $user->id === $movimientoRegistral->usuario_asignado
+        return in_array($user->id, [$movimientoRegistral->usuario_asignado, $movimientoRegistral->usuario_supervisor])
                 ? Response::allow()
                 : Response::deny('No tienes asignado el movimineto registral.');
 

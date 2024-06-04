@@ -4,7 +4,6 @@ namespace App\Http\Controllers\InscripcionesPropiedad;
 
 use App\Models\User;
 use App\Models\Propiedad;
-use Illuminate\Http\Request;
 use Barryvdh\DomPDF\Facade\Pdf;
 use App\Http\Controllers\Controller;
 
@@ -44,6 +43,8 @@ class TraslativoController extends Controller
     public function acto(Propiedad $propiedad)
     {
 
+        $this->authorize('update', $propiedad->movimientoRegistral);
+
         $director = User::where('status', 'activo')->whereHas('roles', function($q){
             $q->where('name', 'Director');
         })->first()->name;
@@ -57,6 +58,7 @@ class TraslativoController extends Controller
             'director' => $director,
             'jefe_departamento' => $jefe_departamento,
             'distrito' => $propiedad->movimientoRegistral->getRawOriginal('distrito'),
+            'predio' => $propiedad->movimientoRegistral->folioReal->predio
         ]);
 
         $pdf->render();

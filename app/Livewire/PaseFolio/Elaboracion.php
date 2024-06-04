@@ -415,7 +415,7 @@ class Elaboracion extends Component
                 ]);
 
 
-                if(auth()->user()->hasRole('Pase a folio')){
+                if(auth()->user()->hasRole(['Pase a folio', 'Administrador'])){
 
                     $usuarios = $this->obtenerUsuarios($role);
 

@@ -397,7 +397,13 @@
 
     </div>
 
-    <div class="bg-white rounded-lg p-3 flex justify-end shadow-lg mb-4">
+    <div class="bg-white rounded-lg p-3 shadow-lg mb-4">
+
+        <div>
+
+            <h4 class="text-lg mb-1 text-center">Distribuición de porcentajes</h4>
+
+        </div>
 
         <table class="mx-auto">
 
@@ -419,14 +425,14 @@
                 @foreach ($transmitentes as $key => $transmitente)
 
                     <tr class="text-gray-500 text-sm leading-relaxed">
-                        <td class=" px-2">(Tra.) {{ $transmitente['nombre'] }} {{ $transmitente['ap_paterno'] }} {{ $transmitente['ap_materno'] }} {{ $transmitente['razon_social'] }}</td>
-                        <td class=" px-2">
-                            <input wire:model.live="transmitentes.{{ $key }}.porcentaje" type="number" class="bg-white text-sm w-full rounded-md p-2 border border-gray-500 outline-none ring-blue-600 focus:ring-1 focus:border-blue-600">
+                        <td class=" p-2">(Tra.) {{ $transmitente['nombre'] }} {{ $transmitente['ap_paterno'] }} {{ $transmitente['ap_materno'] }} {{ $transmitente['razon_social'] }}</td>
+                        <td class=" p-2">
+                            <input wire:model.live="transmitentes.{{ $key }}.porcentaje_propiedad" type="number" class="bg-white text-sm w-full rounded-md p-2 border border-gray-500 outline-none ring-blue-600 focus:ring-1 focus:border-blue-600">
                         </td>
-                        <td class=" px-2">
+                        <td class=" p-2">
                             <input wire:model.live="transmitentes.{{ $key }}.porcentaje_nuda" type="number" class="bg-white text-sm w-full rounded-md p-2 border border-gray-500 outline-none ring-blue-600 focus:ring-1 focus:border-blue-600">
                         </td>
-                        <td class=" px-2">
+                        <td class=" p-2">
                             <input wire:model.live="transmitentes.{{ $key }}.porcentaje_usufructo" type="number" class="bg-white text-sm w-full rounded-md p-2 border border-gray-500 outline-none ring-blue-600 focus:ring-1 focus:border-blue-600">
                         </td>
                     </tr>
@@ -443,6 +449,13 @@
                     </tr>
 
                 @endforeach
+
+                <tr class="text-gray-500 text-sm leading-relaxed">
+                    <td class=" px-2">Totales</td>
+                    <td class=" px-2">{{ collect($transmitentes)->sum('porcentaje_propiedad') + $this->inscripcion->propietarios()->sum('porcentaje_propiedad') }}</td>
+                    <td class=" px-2">{{ collect($transmitentes)->sum('porcentaje_nuda') + $this->inscripcion->propietarios()->sum('porcentaje_nuda') }}</td>
+                    <td class=" px-2">{{ collect($transmitentes)->sum('porcentaje_usufructo') + $this->inscripcion->propietarios()->sum('porcentaje_usufructo') }}</td>
+                </tr>
 
             </tbody>
 
@@ -1066,10 +1079,6 @@
         window.addEventListener('imprimir_documento', event => {
 
             const documento = event.detail[0].inscripcion;
-
-            var url = "{{ route('propiedad.inscripcion.boleta_presentacion', '')}}" + "/" + documento;
-
-            window.open(url, '_blank');
 
             var url = "{{ route('propiedad.inscripcion.acto', '')}}" + "/" + documento;
 

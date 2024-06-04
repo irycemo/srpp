@@ -118,6 +118,11 @@
         page-break-inside: avoid;
     }
 
+    table{
+        margin-bottom: 5px;
+        margin-left: auto;
+        margin-right: auto;
+    }
 
 </style>
 <body>
@@ -148,7 +153,7 @@
 
                 <p style="text-align: center"><strong>FOLIO REAL:</strong> {{ $folioReal->folio }}</p>
 
-                <p style="text-align: center"><strong>SECCIÓN:</strong> {{ $folioReal->seccion_antecedente }}; <strong>DISTRITO:</strong> {{ $distrito}}; <strong>TOMO:</strong> {{ $folioReal->tomo_antecedente }}, <strong>REGISTRO:</strong> {{ $folioReal->registro_antecedente }}, <strong>NÚMERO DE PROPIEDAD:</strong> {{ $predio->folioReal->numero_propiedad_antecedente }}</p>
+                <p style="text-align: center"><strong>SECCIÓN:</strong> {{ $folioReal->seccion_antecedente }}; <strong>DISTRITO:</strong> {{ $distrito}}; <strong>TOMO:</strong> {{ $folioReal->tomo_antecedente }}, <strong>REGISTRO:</strong> {{ $folioReal->registro_antecedente }}, <strong>NÚMERO DE PROPIEDAD:</strong> {{ $folioReal->numero_propiedad_antecedente }}</p>
 
                 <p style="text-align: center"><strong>DATOS DE IDENTIFICACIÓN</strong></p>
 
@@ -156,11 +161,45 @@
 
                 <p class="parrafo">
 
-                    <strong>CÓDIGO POSTAL:</strong> {{ $folioReal->predio->codigo_postal }}; <strong>TIPO DE ASENTAMIENTO:</strong> {{ $folioReal->predio->tipo_asentamiento }}; <strong>NOMBRE DEL ASENTAMIENTO:</strong> {{ $folioReal->predio->nombre_asentamiento }}; <strong>MUNICIPIO:</strong> {{ $folioReal->predio->municipio }};
+                    @if ($folioReal->predio->codigo_postal)
+                        <strong>CÓDIGO POSTAL:</strong> {{ $folioReal->predio->codigo_postal }};
+                    @endif
 
-                    <strong>CIUDAD:</strong> {{ $folioReal->predio->ciudad }}; <strong>LOCALIDAD:</strong> {{ $folioReal->predio->localidad }}; <strong>TIPO DE VIALIDAD:</strong> {{ $folioReal->predio->tipo_vialidad }}; <strong>NOMBRE DE LA VIALIDAD:</strong> {{ $folioReal->predio->nombre_vialidad }};
+                    @if ($folioReal->predio->tipo_asentamiento)
+                        <strong>TIPO DE ASENTAMIENTO:</strong> {{ $folioReal->predio->tipo_asentamiento }};
+                    @endif
 
-                    <strong>NÚMERO EXTERIOR:</strong> {{ $folioReal->predio->numero_exterior ?? 'SN' }}; <strong>NÚMERO INTERIOR:</strong> {{ $folioReal->predio->numero_interior ?? 'SN' }};
+                    @if ($folioReal->predio->nombre_asentamiento)
+                        <strong>NOMBRE DEL ASENTAMIENTO:</strong> {{ $folioReal->predio->nombre_asentamiento }};
+                    @endif
+
+                    @if ($folioReal->predio->municipio)
+                        <strong>MUNICIPIO:</strong> {{ $folioReal->predio->municipio }};
+                    @endif
+
+                    @if ($folioReal->predio->ciudad)
+                        <strong>CIUDAD:</strong> {{ $folioReal->predio->ciudad }};
+                    @endif
+
+                    @if ($folioReal->predio->localidad)
+                        <strong>LOCALIDAD:</strong> {{ $folioReal->predio->localidad }};
+                    @endif
+
+                    @if ($folioReal->predio->tipo_vialidad)
+                        <strong>TIPO DE VIALIDAD:</strong> {{ $folioReal->predio->tipo_vialidad }};
+                    @endif
+
+                    @if ($folioReal->predio->nombre_vialidad)
+                        <strong>NOMBRE DE LA VIALIDAD:</strong> {{ $folioReal->predio->nombre_vialidad }};
+                    @endif
+
+                    @if ($folioReal->predio->numero_exterior)
+                        <strong>NÚMERO EXTERIOR:</strong> {{ $folioReal->predio->numero_exterior ?? 'SN' }};
+                    @endif
+
+                    @if ($folioReal->predio->numero_interior)
+                        <strong>NÚMERO INTERIOR:</strong> {{ $folioReal->predio->numero_interior ?? 'SN' }};
+                    @endif
 
                     @if ($folioReal->predio->nombre_edificio)
                         <strong>EDIFICIO:</strong> {{ $folioReal->predio->nombre_edificio }};
@@ -234,6 +273,40 @@
 
                 <p><strong>colindancias:</strong></p>
 
+                <table>
+
+                    <thead>
+
+                        <tr>
+                            <th>Viento</th>
+                            <th>Longitud</th>
+                            <th>Descripción</th>
+                        </tr>
+
+                    </thead>
+
+                    <tbody>
+
+                        @foreach ($folioReal->predio->colindancias as $colindancia)
+
+                            <tr>
+                                <td style="padding-right: 40px;">
+                                    {{ $colindancia->viento }}
+                                </td>
+                                <td style="padding-right: 40px;">
+                                    {{ number_format($colindancia->longitud, 2) }}
+                                </td>
+                                <td style="padding-right: 40px;">
+                                    {{ $colindancia->descripcion }}
+                                </td>
+                            </tr>
+
+                        @endforeach
+
+                    </tbody>
+
+                </table>
+
                 <p class="parrafo">
 
                     <ul>
@@ -299,19 +372,43 @@
 
                 <p><strong>propietarios:</strong></p>
 
-                <p class="parrafo">
+                <table>
 
-                <ul>
+                    <thead>
 
-                    @foreach ($folioReal->predio->propietarios() as $propietario)
+                        <tr>
+                            <th >Nombre / Razón social</th>
+                            <th >% de propiedad</th>
+                            <th >% de nuda</th>
+                            <th >% de usufructo</th>
+                        </tr>
 
-                        <li><strong>Nombre:</strong> {{ $propietario->persona->nombre }} {{ $propietario->persona->ap_paterno }} {{ $propietario->persona->ap_materno }} {{ $propietario->persona->razon_social }}; <strong>porcentaje de propiedad:</strong> {{ $propietario->porcentaje_propiedad }} %; <strong>porcentaje nuda:</strong> {{ $propietario->porcentaje_nuda }} %; <strong>porcentaje usufructo:</strong> {{ $propietario->porcentaje_usufructo }} %.</li>
+                    </thead>
 
-                    @endforeach
+                    <tbody>
 
-                </ul>
+                        @foreach ($folioReal->predio->propietarios() as $propietario)
 
-                </p>
+                            <tr>
+                                <td style="padding-right: 40px;">
+                                    {{ $propietario->persona->nombre }} {{ $propietario->persona->ap_paterno }} {{ $propietario->persona->ap_materno }} {{ $propietario->persona->razon_social }}
+                                </td>
+                                <td style="padding-right: 40px;">
+                                    {{ $propietario->porcentaje_propiedad ?? '0.00' }} %
+                                </td>
+                                <td style="padding-right: 40px;">
+                                    {{ $propietario->porcentaje_nuda ?? '0.00' }} %;
+                                </td>
+                                <td style="padding-right: 40px;">
+                                    {{ $propietario->porcentaje_usufructo ?? '0.00' }} %;
+                                </td>
+                            </tr>
+
+                        @endforeach
+
+                    </tbody>
+
+                </table>
 
                 <div class="firma no-break">
 
@@ -319,15 +416,18 @@
                         <strong>A T E N T A M E N T E</strong>
                     </p>
 
-                    <p class="borde">
-                        @if($distrito == '02 URUAPAN' )L.A. SANDRO MEDINA MORALES @else {{ $director }} @endif
-                    </p>
+                    @if($distrito == '02 URUAPAN' )
+                        <p class="borde">L.A. SANDRO MEDINA MORALES </p>
+                    @else
+                        <p class="borde" style="margin:0;">{{ $director }}</p>
+                        <p style="margin:0;">Director del registro público de la propiedad</p>
+                    @endif
 
                 </div>
 
                 <div class="parrafo">
 
-                    <p><strong>Fecha de pase a folio:</strong> {{ now()->format('d-m-Y H:i:s') }} <strong>Registrador:</strong> {{ auth()->user()->name }}</p>
+                    <p><strong>Fecha de pase a folio:</strong> {{ Carbon\Carbon::now()->locale('es')->translatedFormat('H:i:s \d\e\l l d \d\e F \d\e\l Y') }} <strong>Registrador:</strong> {{ auth()->user()->name }}</p>
 
                 </div>
 

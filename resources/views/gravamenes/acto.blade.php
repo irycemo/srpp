@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
-    <title>Inscripción de propiedad</title>
+    <title>Gravamen</title>
 </head>
 <style>
 
@@ -146,18 +146,18 @@
             </div>
 
             <div style="text-align: right">
-                <p><strong>FOLIO REAL:</strong>{{ $inscripcion->movimientoRegistral->folioReal->folio }}-{{ $inscripcion->movimientoRegistral->folio }} <strong>DISTRITO:</strong> {{ $distrito}}</p>
+                <p><strong>FOLIO REAL:</strong>{{ $gravamen->movimientoRegistral->folioReal->folio }}-{{ $gravamen->movimientoRegistral->folio }} <strong>DISTRITO:</strong> {{ $distrito}}</p>
             </div>
 
             <div style="text-align: center">
-                <p><strong>{{ $inscripcion->acto_contenido }}</strong></p>
+                <p><strong>{{ $gravamen->acto_contenido }}</strong></p>
             </div>
 
             <div class="parrafo">
 
-                <p><strong>por</strong> {{ $inscripcion->movimientoRegistral->tipo_documento }} <strong>n°</strong> {{ $inscripcion->movimientoRegistral->numero_documento }} <strong>de fecha</strong> {{ Carbon\Carbon::parse($inscripcion->movimientoRegistral->fecha_emision)->format('d-m-Y') }} <strong>otorgado por</strong> {{ $inscripcion->movimientoRegistral->autoridad_cargo }} {{ $inscripcion->movimientoRegistral->autoridad_nombre }}
+                <p><strong>por</strong> {{ $gravamen->movimientoRegistral->tipo_documento }} <strong>n°</strong> {{ $gravamen->movimientoRegistral->numero_documento }} <strong>de fecha</strong> {{ Carbon\Carbon::parse($gravamen->movimientoRegistral->fecha_emision)->format('d-m-Y') }} <strong>otorgado por</strong> {{ $gravamen->movimientoRegistral->autoridad_cargo }} {{ $gravamen->movimientoRegistral->autoridad_nombre }}
                     <strong>consta que </strong>
-                    @foreach ($inscripcion->transmitentes() as $transmitente)
+                    @foreach ($gravamen->transmitentes() as $transmitente)
 
                         {{ $transmitente->persona->nombre }} {{ $transmitente->persona->ap_paterno }} {{ $transmitente->persona->ap_materno }} {{ $transmitente->persona->razon_social }}
 
@@ -168,10 +168,10 @@
                         @endif
 
                     @endforeach
-                    , <strong>comparecio a realizar el acto de </strong> {{ $inscripcion->acto_contenido }}.
+                    , <strong>comparecio a realizar el acto de </strong> {{ $gravamen->acto_contenido }}.
                 </p>
 
-                <p><strong>Descripción del acto:</strong> {{ $inscripcion->descripcion }}.</p>
+                <p><strong>Descripción del acto:</strong> {{ $gravamen->descripcion }}.</p>
 
                 <p><strong>DESCRIPCIÓN DEL INMUEBLE:</strong></p>
 
@@ -337,7 +337,7 @@
                         <tr>
                             <td style="padding-right: 40px; text-align:center; width: 50%; vertical-align: bottom; white-space: nowrap;">
 
-                                <p class="borde">{{ $inscripcion->movimientoRegistral->asignadoA->name }}</p>
+                                <p class="borde">{{ $gravamen->movimientoRegistral->asignadoA->name }}</p>
                                 <p style="margin: 0">REGISTRADOR</p>
 
                             </td>
@@ -367,15 +367,15 @@
                         <tr>
                             <td style="padding-right: 40px; text-align:left; ; vertical-align: bottom; white-space: nowrap;">
 
-                                <p style="margin: 0"><strong>NÚMERO DE CONTROL: </strong>{{ $inscripcion->movimientoRegistral->año }}-{{ $inscripcion->movimientoRegistral->tramite }}-{{ $inscripcion->movimientoRegistral->usuario }}</p>
-                                <p style="margin: 0"><strong>DERECHOS: </strong>${{ number_format($inscripcion->movimientoRegistral->monto, 2) }}</p>
-                                <p style="margin: 0"><strong>Tipo de servicio: </strong>{{ $inscripcion->movimientoRegistral->tipo_servicio }}</p>
+                                <p style="margin: 0"><strong>NÚMERO DE CONTROL: </strong>{{ $gravamen->movimientoRegistral->año }}-{{ $gravamen->movimientoRegistral->tramite }}-{{ $gravamen->movimientoRegistral->usuario }}</p>
+                                <p style="margin: 0"><strong>DERECHOS: </strong>${{ number_format($gravamen->movimientoRegistral->monto, 2) }}</p>
+                                <p style="margin: 0"><strong>Tipo de servicio: </strong>{{ $gravamen->movimientoRegistral->tipo_servicio }}</p>
 
                             </td>
 
                             <td style="padding-right: 40px; text-align:left; ; vertical-align: bottom; white-space: nowrap;">
 
-                                {{-- <p><strong>FECHA DE ENTRADA:</strong>{{ $inscripcion->movimientoRegistral->created_at->format('d-m-Y') }}</p> --}}
+                                {{-- <p><strong>FECHA DE ENTRADA:</strong>{{ $gravamen->movimientoRegistral->created_at->format('d-m-Y') }}</p> --}}
                                 <p style="margin: 0"><strong>Fecha de impresión: </strong>{{ now()->format('d-m-Y H:i:s') }}</p>
                                 <p style="margin: 0"><strong>IMPRESO POR: </strong>{{  auth()->user()->name }}</p>
 

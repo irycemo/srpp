@@ -3,6 +3,7 @@
 namespace App\Livewire\Gravamenes;
 
 use Exception;
+use App\Models\User;
 use App\Models\Deudor;
 use App\Models\Persona;
 use Livewire\Component;
@@ -13,7 +14,6 @@ use Barryvdh\DomPDF\Facade\Pdf;
 use Illuminate\Validation\Rule;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
-use Illuminate\Foundation\Auth\User;
 use Illuminate\Support\Facades\Hash;
 
 class GravamenInscripcion extends Component
@@ -66,16 +66,16 @@ class GravamenInscripcion extends Component
 
     protected function rules(){
         return [
-            'antecente_tomo' => 'required',
-            'antecente_registro' => 'required',
-            'antecente_distrito' => 'required',
+            'antecente_tomo' => 'nullable',
+            'antecente_registro' => 'nullable',
+            'antecente_distrito' => 'nullable',
             'gravamen.tipo' => 'required',
             'gravamen.acto_contenido' => 'required',
             'gravamen.valor_gravamen' => 'required|numeric',
             'gravamen.divisa' => 'required',
             'gravamen.fecha_inscripcion' => 'required',
             'gravamen.estado' => 'required',
-            'gravamen.comentario' => utf8_encode('regex:/^[áéíóúÁÉÍÓÚñÑa-zA-Z-0-9$#.() ]*$/'),
+            'gravamen.observaciones' => utf8_encode('regex:/^[áéíóúÁÉÍÓÚñÑa-zA-Z-0-9$#.() ]*$/'),
          ];
     }
 
@@ -614,7 +614,7 @@ class GravamenInscripcion extends Component
             $this->gravamen->actualizado_por = auth()->id();
             $this->gravamen->save();
 
-            $this->dispatch('imprimir_documento', ['inscripcion' => $this->gravamen->id]);
+            $this->dispatch('imprimir_documento', ['gravamen' => $this->gravamen->id]);
 
             $this->modalContraseña = false;
 
@@ -629,13 +629,18 @@ class GravamenInscripcion extends Component
 
     public function crearPdf(){
 
-        $director = User::where('status', 'activo')->whereHas('roles', function($q){
-            $q->where('name', 'Director');
-        })->first()->name;
+        $director = User::where('status', 'activo')
+                            ->whereHas('roles', function($q){
+                                $q->where('name', 'Director');
+                            })
+                            ->first()->name;
 
-        $jefe_departamento = User::where('status', 'activo')->whereHas('roles', function($q){
-            $q->where('name', 'Jefe de departamento')->where('area', 'Departamento de Registro de Inscripciones');
-        })->first()->name;
+        $jefe_departamento = User::where('status', 'activo')
+                                    ->whereHas('roles', function($q){
+                                        $q->where('name', 'Jefe de departamento')
+                                            ->where('area', 'Departamento de Registro de Inscripciones');
+                                    })
+                                    ->first()->name;
 
         $pdf = Pdf::loadView('incripciones.propiedad.acto', [
             'inscripcion' => $this->gravamen,

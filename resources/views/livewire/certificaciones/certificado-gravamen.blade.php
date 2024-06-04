@@ -216,12 +216,28 @@
                                     @endcan
 
                                     <x-button-blue
-                                        wire:click="visualizarGravamenes({{ $certificado->id}})"
+                                        wire:click="visualizarGravamenes({{ $certificado->certificacion->id }})"
                                         wire:loading.attr="disabled">
 
                                         <span>Revisar</span>
 
                                     </x-button-blue>
+
+                                    @can('Finalizar copias certificadas')
+
+                                        @if($certificado->estado == 'elaborado')
+
+                                            <x-button-blue
+                                                wire:click="finalizarSupervisor({{ $certificado->certificacion->id }})"
+                                                wire:loading.attr="disabled">
+
+                                                <span>Finalizar</span>
+
+                                            </x-button-blue>
+
+                                        @endif
+
+                                    @endcan
 
                                 </div>
 

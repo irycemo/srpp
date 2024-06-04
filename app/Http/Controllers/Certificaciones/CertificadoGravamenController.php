@@ -6,8 +6,6 @@ use Carbon\Carbon;
 use App\Models\User;
 use App\Models\Predio;
 use App\Models\Gravamen;
-use App\Models\FolioReal;
-use Illuminate\Http\Request;
 use Barryvdh\DomPDF\Facade\Pdf;
 use App\Http\Controllers\Controller;
 use App\Models\MovimientoRegistral;
@@ -17,6 +15,8 @@ class CertificadoGravamenController extends Controller
 {
 
     public function certificadoGravamen(MovimientoRegistral $movimientoRegistral){
+
+        $this->authorize('update', $movimientoRegistral);
 
         $formatter = new NumeroALetras();
 

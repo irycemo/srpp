@@ -138,6 +138,10 @@
         border-top: 1px solid;
     }
 
+    .atte{
+        margin-bottom: 40px;
+    }
+
 </style>
 <body >
 
@@ -263,19 +267,39 @@
 
                 <p><strong>colindancias:</strong></p>
 
-                <p class="parrafo">
+                <table>
 
-                    <ul>
+                    <thead>
+
+                        <tr>
+                            <th>Viento</th>
+                            <th>Longitud</th>
+                            <th>Descripción</th>
+                        </tr>
+
+                    </thead>
+
+                    <tbody>
 
                         @foreach ($predio->colindancias as $colindancia)
 
-                            <li><strong>viento:</strong> {{ $colindancia->viento }}; <strong>longitud:</strong> {{ $colindancia->longitud }} metros; <strong>descripción:</strong> {{ $colindancia->descripcion }}.</li>
+                            <tr>
+                                <td style="padding-right: 40px;">
+                                    {{ $colindancia->viento }}
+                                </td>
+                                <td style="padding-right: 40px;">
+                                    {{ number_format($colindancia->longitud, 2) }}
+                                </td>
+                                <td style="padding-right: 40px;">
+                                    {{ $colindancia->descripcion }}
+                                </td>
+                            </tr>
 
                         @endforeach
 
-                    </ul>
+                    </tbody>
 
-                </p>
+                </table>
 
                 <p><strong>DESCRIPCIÓN DEL INMUEBLE:</strong></p>
 
@@ -330,17 +354,43 @@
 
                 <p><strong>propietarios:</strong></p>
 
-                <p class="parrafo">
+                <table>
 
-                <ul>
+                    <thead>
 
-                    @foreach ($predio->propietarios() as $propietario)
+                        <tr>
+                            <th >Nombre / Razón social</th>
+                            <th >% de propiedad</th>
+                            <th >% de nuda</th>
+                            <th >% de usufructo</th>
+                        </tr>
 
-                        <li><strong>Nombre:</strong> {{ $propietario->persona->nombre }} {{ $propietario->persona->ap_paterno }} {{ $propietario->persona->ap_materno }} {{ $propietario->persona->razon_social }}; <strong>porcentaje de propiedad:</strong> {{ $propietario->porcentaje_propiedad }} %; <strong>porcentaje nuda:</strong> {{ $propietario->porcentaje_nuda }} %; <strong>porcentaje usufructo:</strong> {{ $propietario->porcentaje_usufructo }} %.</li>
+                    </thead>
 
-                    @endforeach
+                    <tbody>
 
-                </ul>
+                        @foreach ($predio->propietarios() as $propietario)
+
+                            <tr>
+                                <td style="padding-right: 40px;">
+                                    {{ $propietario->persona->nombre }} {{ $propietario->persona->ap_paterno }} {{ $propietario->persona->ap_materno }} {{ $propietario->persona->razon_social }}
+                                </td>
+                                <td style="padding-right: 40px;">
+                                    {{ $propietario->porcentaje_propiedad ?? '0.00' }} %
+                                </td>
+                                <td style="padding-right: 40px;">
+                                    {{ $propietario->porcentaje_nuda ?? '0.00' }} %;
+                                </td>
+                                <td style="padding-right: 40px;">
+                                    {{ $propietario->porcentaje_usufructo ?? '0.00' }} %;
+                                </td>
+                            </tr>
+
+                        @endforeach
+
+                    </tbody>
+
+                </table>
 
             </p>
 
@@ -398,21 +448,23 @@
 
             <p class="parrafo">
                 A SOLICITUD DE: <strong>{{ $movimientoRegistral->solicitante }}</strong> EXPEDIDO EL PRESENTE CERTIFICADO EN LA CIUDAD DE MORELIA, MICHOACÁN, A LAS
-                {{ Carbon\Carbon::now()->locale('es')->isoFormat('H:s dddd D \d\e MMMM \d\e\l Y'); }}.
+                {{ Carbon\Carbon::now()->locale('es')->translatedFormat('H:i:s \d\e\l l d \d\e F \d\e\l Y'); }}.
             </p>
 
-            <p class="fundamento">datos de control</p>
+        </div>
 
-            <div class="firma">
+        <div class="firma no-break">
 
-                <p class="atte">
-                    <strong>A T E N T A M E N T E</strong>
-                </p>
+            <p class="atte">
+                <strong>A T E N T A M E N T E</strong>
+            </p>
 
-                <p class="borde">{{ $director }}</p>
-                <p style="margin: 0">DIRECTOR DEL REGISTRO PÚBLICO  DE LA PROPIEDAD</p>
+            <p class="borde">{{ $director }}</p>
+            <p style="margin: 0">DIRECTOR DEL REGISTRO PÚBLICO  DE LA PROPIEDAD</p>
 
-            </div>
+        </div>
+
+        <div class="informacion">
 
             <div class="control">
 

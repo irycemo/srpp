@@ -8,7 +8,7 @@
 
     <x-header>Inscripción de gravamen</x-header>
 
-    <div class="p-4 bg-white shadow-xl rounded-xl mb-5">
+    {{-- <div class="p-4 bg-white shadow-xl rounded-xl mb-5">
 
         <span class="flex items-center justify-center  text-gray-700">Antecedente</span>
 
@@ -44,7 +44,7 @@
 
         </div>
 
-    </div>
+    </div> --}}
 
     <div class="p-4 bg-white shadow-xl rounded-xl mb-5">
 
@@ -108,9 +108,9 @@
 
         <div class="flex gap-3 items-center w-full lg:w-1/2 justify-center mx-auto">
 
-            <x-input-group for="gravamen.comentario" label="Comentario del gravámen" :error="$errors->first('gravamen.comentario')" class="w-full">
+            <x-input-group for="gravamen.observaciones" label="Comentario del gravámen" :error="$errors->first('gravamen.observaciones')" class="w-full">
 
-                <textarea rows="3" class="w-full bg-white rounded" wire:model="gravamen.comentario"></textarea>
+                <textarea rows="3" class="w-full bg-white rounded" wire:model="gravamen.observaciones"></textarea>
 
             </x-input-group>
 
@@ -854,5 +854,21 @@
 
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js" integrity="sha512-894YE6QWD5I59HgZOGReFYm4dnWc1Qt5NtvYSaNcOP+u1T9qYdvdihz0PPSiiqn/+/3e7Jo4EaG7TubfWGUrMQ==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
     <script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
+
+    <script>
+
+        window.addEventListener('imprimir_documento', event => {
+
+            const documento = event.detail[0].gravamen;
+
+            var url = "{{ route('gravamen.inscripcion.acto', '')}}" + "/" + documento;
+
+            window.open(url, '_blank');
+
+            window.location.href = "{{ route('gravamen')}}";
+
+        });
+
+    </script>
 
 @endpush
