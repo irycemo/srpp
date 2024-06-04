@@ -124,6 +124,16 @@
         margin-right: auto;
     }
 
+    .separador{
+        text-align: justify;
+        border-bottom: 1px solid black;
+        padding: 0 20px 0 20px;
+        border-radius: 25px;
+        border-color: gray;
+        letter-spacing: 5px;
+        margin: 0 0 5px 0;
+    }
+
 </style>
 <body>
 
@@ -155,9 +165,7 @@
 
                 <p style="text-align: center"><strong>SECCIÓN:</strong> {{ $folioReal->seccion_antecedente }}; <strong>DISTRITO:</strong> {{ $distrito}}; <strong>TOMO:</strong> {{ $folioReal->tomo_antecedente }}, <strong>REGISTRO:</strong> {{ $folioReal->registro_antecedente }}, <strong>NÚMERO DE PROPIEDAD:</strong> {{ $folioReal->numero_propiedad_antecedente }}</p>
 
-                <p style="text-align: center"><strong>DATOS DE IDENTIFICACIÓN</strong></p>
-
-                <p><strong>UBICACIÓN DEL INMUEBLE:</strong></p>
+                <p class="separador">UBICACIÓN DEL INMUEBLE</p>
 
                 <p class="parrafo">
 
@@ -271,7 +279,7 @@
 
                 </p>
 
-                <p><strong>colindancias:</strong></p>
+                <p class="separador">colindancias</p>
 
                 <table>
 
@@ -307,21 +315,7 @@
 
                 </table>
 
-                <p class="parrafo">
-
-                    <ul>
-
-                        @foreach ($folioReal->predio->colindancias as $colindancia)
-
-                            <li><strong>viento:</strong> {{ $colindancia->viento }}; <strong>longitud:</strong> {{ $colindancia->longitud }} metros; <strong>descripción:</strong> {{ $colindancia->descripcion }}.</li>
-
-                        @endforeach
-
-                    </ul>
-
-                </p>
-
-                <p><strong>DESCRIPCIÓN DEL INMUEBLE:</strong></p>
+                <p class="separador">DESCRIPCIÓN DEL INMUEBLE</p>
 
                 <p class="parrafo">
                     @if($folioReal->predio->cp_localidad)
@@ -370,7 +364,7 @@
 
                 </p>
 
-                <p><strong>propietarios:</strong></p>
+                <p class="separador">propietarios</p>
 
                 <table>
 
@@ -427,7 +421,7 @@
 
                 <div class="parrafo">
 
-                    <p><strong>Fecha de pase a folio:</strong> {{ Carbon\Carbon::now()->locale('es')->translatedFormat('H:i:s \d\e\l l d \d\e F \d\e\l Y') }} <strong>Registrador:</strong> {{ auth()->user()->name }}</p>
+                    <p><strong>Fecha de pase a folio:</strong> {{ Carbon\Carbon::now()->locale('es')->translatedFormat('H:i:s \d\e\l l d \d\e F \d\e\l Y') }}. <strong>Registrador:</strong> {{ auth()->user()->name }}</p>
 
                 </div>
 

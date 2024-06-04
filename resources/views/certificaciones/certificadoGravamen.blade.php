@@ -44,6 +44,16 @@
         font-size: 9px;
     }
 
+    .separador{
+        text-align: justify;
+        border-bottom: 1px solid black;
+        padding: 0 20px 0 20px;
+        border-radius: 25px;
+        border-color: gray;
+        letter-spacing: 5px;
+        margin: 0 0 5px 0;
+    }
+
     .parrafo{
         text-align: justify;
     }
@@ -183,7 +193,7 @@
 
             <p class="parrafo">
 
-                <p><strong>UBICACIÓN DEL INMUEBLE:</strong></p>
+                <p class="separador">UBICACIÓN DEL INMUEBLE</p>
 
                 <p class="parrafo">
 
@@ -265,7 +275,7 @@
 
                 <br>
 
-                <p><strong>colindancias:</strong></p>
+                <p class="separador">colindancias</p>
 
                 <table>
 
@@ -301,7 +311,7 @@
 
                 </table>
 
-                <p><strong>DESCRIPCIÓN DEL INMUEBLE:</strong></p>
+                <p class="separador">DESCRIPCIÓN DEL INMUEBLE</p>
 
                 <p class="parrafo">
                     @if($predio->cp_localidad)
@@ -352,7 +362,7 @@
 
                 <br>
 
-                <p><strong>propietarios:</strong></p>
+                <p class="separador">propietarios</p>
 
                 <table>
 
@@ -468,7 +478,7 @@
 
             <div class="control">
 
-                <strong>DATOS DE CONTROL</strong>
+                <p class="separador">DATOS DE CONTROL</p>
 
                 <table style="font-size: 9px">
                     <tbody>

@@ -115,6 +115,22 @@
         page-break-inside: avoid;
     }
 
+    .separador{
+        text-align: justify;
+        border-bottom: 1px solid black;
+        padding: 0 20px 0 20px;
+        border-radius: 25px;
+        border-color: gray;
+        letter-spacing: 5px;
+        margin: 0 0 5px 0;
+    }
+
+    table{
+        margin-bottom: 5px;
+        margin-left: auto;
+        margin-right: auto;
+    }
+
 </style>
 <body>
 
@@ -171,9 +187,11 @@
                     , <strong>comparecio a realizar el acto de </strong> {{ $inscripcion->acto_contenido }}.
                 </p>
 
-                <p><strong>Descripción del acto:</strong> {{ $inscripcion->descripcion }}.</p>
+                <p class="separador">Descripción del acto</p>
 
-                <p><strong>DESCRIPCIÓN DEL INMUEBLE:</strong></p>
+                <p>{{ $inscripcion->descripcion }}.</p>
+
+                <p class="separador">DESCRIPCIÓN DEL INMUEBLE</p>
 
                 <p>
                     @if ($predio->codigo_postal)
@@ -285,33 +303,85 @@
                     @endif.
                 </p>
 
-                <p><strong>colindancias:</strong></p>
+                <p class="separador">colindancias</p>
 
-                <ul>
+                <table>
 
-                    @foreach ($predio->colindancias as $colindancia)
+                    <thead>
 
-                        <li><strong>viento:</strong> {{ $colindancia->viento }}; <strong>longitud:</strong> {{ $colindancia->longitud }} metros; <strong>descripción:</strong> {{ $colindancia->descripcion }}.</li>
+                        <tr>
+                            <th>Viento</th>
+                            <th>Longitud</th>
+                            <th>Descripción</th>
+                        </tr>
 
-                    @endforeach
+                    </thead>
 
-                </ul>
+                    <tbody>
+
+                        @foreach ($predio->colindancias as $colindancia)
+
+                            <tr>
+                                <td style="padding-right: 40px;">
+                                    {{ $colindancia->viento }}
+                                </td>
+                                <td style="padding-right: 40px;">
+                                    {{ number_format($colindancia->longitud, 2) }}
+                                </td>
+                                <td style="padding-right: 40px;">
+                                    {{ $colindancia->descripcion }}
+                                </td>
+                            </tr>
+
+                        @endforeach
+
+                    </tbody>
+
+                </table>
 
             </div>
 
             <div>
 
-                <p><strong>propietarios:</strong></p>
+                <p class="separador">propietarios</p>
 
-                <ul>
+                <table>
 
-                    @foreach ($predio->propietarios() as $propietario)
+                    <thead>
 
-                        <li><strong>Nombre:</strong> {{ $propietario->persona->nombre }} {{ $propietario->persona->ap_paterno }} {{ $propietario->persona->ap_materno }} {{ $propietario->persona->razon_social }}; <strong>porcentaje de propiedad:</strong> {{ $propietario->porcentaje_propiedad ?? '0.00' }} %; <strong>porcentaje nuda:</strong> {{ $propietario->porcentaje_nuda ?? '0.00' }} %; <strong>porcentaje usufructo:</strong> {{ $propietario->porcentaje_usufructo ?? '0.00' }} %.</li>
+                        <tr>
+                            <th >Nombre / Razón social</th>
+                            <th >% de propiedad</th>
+                            <th >% de nuda</th>
+                            <th >% de usufructo</th>
+                        </tr>
 
-                    @endforeach
+                    </thead>
 
-                </ul>
+                    <tbody>
+
+                        @foreach ($predio->propietarios() as $propietario)
+
+                            <tr>
+                                <td style="padding-right: 40px;">
+                                    {{ $propietario->persona->nombre }} {{ $propietario->persona->ap_paterno }} {{ $propietario->persona->ap_materno }} {{ $propietario->persona->razon_social }}
+                                </td>
+                                <td style="padding-right: 40px;">
+                                    {{ $propietario->porcentaje_propiedad ?? '0.00' }} %
+                                </td>
+                                <td style="padding-right: 40px;">
+                                    {{ $propietario->porcentaje_nuda ?? '0.00' }} %;
+                                </td>
+                                <td style="padding-right: 40px;">
+                                    {{ $propietario->porcentaje_usufructo ?? '0.00' }} %;
+                                </td>
+                            </tr>
+
+                        @endforeach
+
+                    </tbody>
+
+                </table>
 
             </div>
 
@@ -360,7 +430,7 @@
 
             <div class="control no-break">
 
-                <strong>DATOS DE CONTROL</strong>
+                <p class="separador">DATOS DE CONTROL</p>
 
                 <table style="font-size: 9px">
                     <tbody>

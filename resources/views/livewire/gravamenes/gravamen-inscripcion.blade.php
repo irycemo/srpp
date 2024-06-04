@@ -489,7 +489,7 @@
 
                 </div>
 
-                <div class=">
+                <div>
 
                     <x-table>
 
