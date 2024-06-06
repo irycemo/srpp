@@ -1,26 +1,28 @@
 <?php
 
-namespace App\Livewire\Gravamenes;
+namespace App\Livewire\Varios;
 
+use App\Models\Vario;
 use Livewire\Component;
-use App\Models\Gravamen;
 use Livewire\WithPagination;
 use App\Traits\ComponentesTrait;
 use App\Models\MovimientoRegistral;
 
-class GravamenIndex extends Component
+class VariosIndex extends Component
 {
 
     use WithPagination;
     use ComponentesTrait;
 
-    public Gravamen $modelo_editar;
+    public Vario $modelo_editar;
 
     public function crearModeloVacio(){
-        $this->modelo_editar = Gravamen::make();
+        $this->modelo_editar = Vario::make();
     }
 
     public function elaborar(MovimientoRegistral $movimientoRegistral){
+
+        return redirect()->route('varios.inscripcion', $movimientoRegistral->vario);
 
         $movimientos = $movimientoRegistral->folioReal->movimientosRegistrales()->where('estado', 'nuevo')->orderBy('folio')->get();
 
@@ -34,13 +36,13 @@ class GravamenIndex extends Component
 
             }else{
 
-                return redirect()->route('gravamen.inscripcion', $movimientoRegistral->gravamen);
+                return redirect()->route('varios.inscripcion', $movimientoRegistral->vario);
 
             }
 
         }else{
 
-            return redirect()->route('gravamen.inscripcion', $movimientoRegistral->gravamen);
+            return redirect()->route('varios.inscripcion', $movimientoRegistral->vario);
 
         }
 
@@ -49,10 +51,9 @@ class GravamenIndex extends Component
     public function render()
     {
 
+        if(auth()->user()->hasRole(['Varios'])){
 
-        if(auth()->user()->hasRole(['Gravamen'])){
-
-            $movimientos = MovimientoRegistral::with('gravamen', 'actualizadoPor', 'folioReal')
+            $movimientos = MovimientoRegistral::with('vario', 'actualizadoPor', 'folioReal')
                                                     ->whereHas('folioReal', function($q){
                                                         $q->where('estado', 'activo');
                                                     })
@@ -63,12 +64,15 @@ class GravamenIndex extends Component
                                                         $q->where('distrito', '!=', 2);
                                                     })
                                                     ->where('usuario_asignado', auth()->id())
+                                                    ->whereHas('vario', function($q){
+                                                        $q->where('servicio', 'DL09');
+                                                    })
                                                     ->orderBy($this->sort, $this->direction)
                                                     ->paginate($this->pagination);
 
         }elseif(auth()->user()->hasRole(['Administrador'])){
 
-            $movimientos = MovimientoRegistral::with('gravamen', 'asignadoA', 'actualizadoPor', 'folioReal')
+            $movimientos = MovimientoRegistral::with('vario', 'asignadoA', 'actualizadoPor', 'folioReal')
                                                     ->whereHas('folioReal', function($q){
                                                         $q->where('estado', 'activo');
                                                     })
@@ -83,16 +87,14 @@ class GravamenIndex extends Component
                                                             ->orWhere('seccion', 'LIKE', '%' . $this->search . '%')
                                                             ->orWhere('tramite', 'LIKE', '%' . $this->search . '%');
                                                     })
-                                                    ->whereHas('gravamen', function($q){
-                                                        $q->where('servicio', 'DL66');
+                                                    ->whereHas('vario', function($q){
+                                                        $q->where('servicio', 'DL09');
                                                     })
                                                     ->orderBy($this->sort, $this->direction)
                                                     ->paginate($this->pagination);
 
         }
 
-        return view('livewire.gravamenes.gravamen-index', compact('movimientos'))->extends('layouts.admin');
-
+        return view('livewire.varios.varios-index', compact('movimientos'))->extends('layouts.admin');
     }
-
 }

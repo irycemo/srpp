@@ -21,7 +21,9 @@ class MovimientoRegistralService{
         public CertificacionesService $certificacionesService,
         public InscripcionesPropiedadService $inscripcionesPropiedadService,
         public InscripcionesGravamenService $inscripcionesGravamenService,
-        public InscripcionesCancelacionService $inscripcionesCancelacionService
+        public InscripcionesCancelacionService $inscripcionesCancelacionService,
+        public VariosService $variosService,
+        public SentenciasService $sentenciasService
     ){}
 
     public function store(MovimientoRegistralRequest $request)
@@ -61,6 +63,20 @@ class MovimientoRegistralService{
 
 
                     $this->inscripcionesCancelacionService->store($request + ['movimiento_registral' => $movimiento_registral->id]);
+
+                }
+
+                if($request['categoria_servicio'] == 'Varios , Arrendamientos, Avisos Preventivos'){
+
+
+                    $this->variosService->store($request + ['movimiento_registral' => $movimiento_registral->id]);
+
+                }
+
+                if($request['categoria_servicio'] == 'Sentencias'){
+
+
+                    $this->sentenciasService->store($request + ['movimiento_registral' => $movimiento_registral->id]);
 
                 }
 
@@ -301,6 +317,27 @@ class MovimientoRegistralService{
 
         }
 
+        /* Inscripciones: Cancelaciones */
+        if($servicio == 'DL66'){
+
+            return $this->asignacionService->obtenerUsuarioCancelacion($folioReal, $distrito);
+
+        }
+
+        /* Inscripciones: Varios */
+        if($servicio == 'DL09'){
+
+            return $this->asignacionService->obtenerUsuarioVarios($folioReal, $distrito);
+
+        }
+
+        /* Inscripciones: Sentencias */
+        if($servicio == 'DL66'){
+
+            return $this->asignacionService->obtenerUsuarioSentencias($folioReal, $distrito);
+
+        }
+
     }
 
     public function obtenerSupervisor($servicio, $distrito):int
@@ -316,14 +353,37 @@ class MovimientoRegistralService{
 
         $inscripcionesPropiedad = ['D122', 'D114', 'D125', 'D126', 'D124', 'D121', 'D120', 'D119', 'D123', 'D118', 'D116', 'D115', 'D113'];
 
+        /* Inscripciones: Propiedad */
         if(in_array($servicio, $inscripcionesPropiedad)){
 
             return $this->asignacionService->obtenerSupervisorPropiedad($distrito);
 
         }
 
+        /* Inscripciones: Gravamen */
         if($servicio == 'DL66'){
             return $this->asignacionService->obtenerSupervisorGravamen($distrito);
+
+        }
+
+        /* Inscripciones: Cancelaciones */
+        if($servicio == 'DL66'){
+
+            return $this->asignacionService->obtenerSupervisorCancelacion($distrito);
+
+        }
+
+        /* Inscripciones: Varios */
+        if($servicio == 'DL09'){
+
+            return $this->asignacionService->obtenerSupervisorVarios($distrito);
+
+        }
+
+        /* Inscripciones: Sentencias */
+        if($servicio == 'DL66'){
+
+            return $this->asignacionService->obtenerSupervisorSentencias($distrito);
 
         }
 
@@ -343,7 +403,7 @@ class MovimientoRegistralService{
 
         }else{
 
-            return FolioReal::find($request['folio_real'])->ultimoFolio() + 1;
+            return FolioReal::where('folio', $request['folio_real'])->first()->ultimoFolio() + 1;
 
         }
 

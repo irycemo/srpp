@@ -12,8 +12,6 @@
                 <x-table.heading sortable wire:click="sortBy('año')" :direction="$sort === 'año' ? $direction : null" >Año</x-table.heading>
                 <x-table.heading sortable wire:click="sortBy('tramite')" :direction="$sort === 'tramite' ? $direction : null" ># control</x-table.heading>
                 <x-table.heading sortable wire:click="sortBy('usuario')" :direction="$sort === 'usuario' ? $direction : null" >Usuario</x-table.heading>
-                <x-table.heading sortable wire:click="sortBy('tomo')" :direction="$sort === 'tomo' ? $direction : null" >Tomo</x-table.heading>
-                <x-table.heading sortable wire:click="sortBy('registro')" :direction="$sort === 'registro' ? $direction : null">Registro</x-table.heading>
                 @if(auth()->user()->hasRole('Administrador'))
                     <x-table.heading sortable wire:click="sortBy('estado')" :direction="$sort === 'estado' ? $direction : null">Estado</x-table.heading>
                     <x-table.heading sortable wire:click="sortBy('usuario_asignado')" :direction="$sort === 'usuario_asignado' ? $direction : null">Usuario asignado</x-table.heading>
@@ -34,7 +32,7 @@
 
                             <span class="lg:hidden absolute top-0 left-0 bg-blue-300 px-2 py-1 text-xs text-white font-bold uppercase rounded-br-xl">Folio Real</span>
 
-                            {{ $movimiento->folioReal->folio }}
+                            {{ $movimiento->folioReal->folio }}-{{ $movimiento->folio }}
 
                         </x-table.cell>
 
@@ -42,7 +40,7 @@
 
                             <span class="lg:hidden absolute top-0 left-0 bg-blue-300 px-2 py-1 text-xs text-white font-bold uppercase rounded-br-xl">Año</span>
 
-                            {{ $movimiento->año }}
+                            {{ $movimiento->año ?? 'N/A' }}
 
                         </x-table.cell>
 
@@ -50,7 +48,7 @@
 
                             <span class="lg:hidden absolute top-0 left-0 bg-blue-300 px-2 py-1 text-xs text-white font-bold uppercase rounded-br-xl">Número de control</span>
 
-                            {{ $movimiento->tramite }}
+                            {{ $movimiento->tramite ?? 'N/A' }}
 
                         </x-table.cell>
 
@@ -58,23 +56,7 @@
 
                             <span class="lg:hidden absolute top-0 left-0 bg-blue-300 px-2 py-1 text-xs text-white font-bold uppercase rounded-br-xl">Usuario</span>
 
-                            {{ $movimiento->usuario }}
-
-                        </x-table.cell>
-
-                        <x-table.cell>
-
-                            <span class="lg:hidden absolute top-0 left-0 bg-blue-300 px-2 py-1 text-xs text-white font-bold uppercase rounded-br-xl">Tomo</span>
-
-                            {{ $movimiento->tomo }}
-
-                        </x-table.cell>
-
-                        <x-table.cell>
-
-                            <span class="lg:hidden absolute top-0 left-0 bg-blue-300 px-2 py-1 text-xs text-white font-bold uppercase rounded-br-xl">Registro</span>
-
-                            {{ $movimiento->registro }}
+                            {{ $movimiento->usuario ?? 'N/A' }}
 
                         </x-table.cell>
 
@@ -118,11 +100,12 @@
 
                             <span class="lg:hidden absolute top-0 left-0 bg-blue-300 px-2 py-1 text-xs text-white font-bold uppercase rounded-br-xl">Acciones</span>
 
-                            <div class="flex justify-center lg:justify-start gap-2">
-
-                                <x-link href="{{ route('gravamen.inscripcion', $movimiento->gravamen->id) }}">Elaborar</x-link>
-
-                            </div>
+                            <x-button-blue
+                                wire:click="elaborar({{  $movimiento->id }})"
+                                wire:loading.attr="disabled"
+                                wire:target="elaborar({{  $movimiento->id }})">
+                                Elaborar
+                            </x-button-blue>
 
                         </x-table.cell>
 

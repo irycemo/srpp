@@ -9,12 +9,17 @@ use App\Models\Persona;
 use Livewire\Component;
 use App\Models\Acreedor;
 use App\Models\Gravamen;
+use App\Models\FolioReal;
 use App\Constantes\Constantes;
 use Barryvdh\DomPDF\Facade\Pdf;
 use Illuminate\Validation\Rule;
 use Illuminate\Support\Facades\DB;
+use App\Models\MovimientoRegistral;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Facades\Http;
+use App\Http\Services\AsignacionService;
+use Illuminate\Http\Client\ConnectionException;
 
 class GravamenInscripcion extends Component
 {
@@ -63,6 +68,11 @@ class GravamenInscripcion extends Component
     public $cp;
     public $entidad;
     public $municipio;
+
+    public $folio_gravamen;
+    public $gravamenHipoteca;
+    public $folio_real_division;
+    public $folios_reales = [];
 
     protected function rules(){
         return [
@@ -562,6 +572,14 @@ class GravamenInscripcion extends Component
 
         $this->validate();
 
+        if($this->gravamen->acto_contenido === 'DIVISIÓN DE HIPOTECA' && count($this->folios_reales) == 0){
+
+            $this->dispatch('mostrarMensaje', ['error', "Debe ingresar los folios reales de la división."]);
+
+            return;
+
+        }
+
         $this->modalContraseña = true;
 
     }
@@ -610,9 +628,60 @@ class GravamenInscripcion extends Component
 
         try {
 
-            $this->gravamen->estado = 'activo';
-            $this->gravamen->actualizado_por = auth()->id();
-            $this->gravamen->save();
+            DB::transaction(function () {
+
+                $this->gravamen->estado = 'activo';
+                $this->gravamen->actualizado_por = auth()->id();
+                $this->gravamen->save();
+
+                /* $this->gravamen->movimientoRegistral->update(['estado' => 'concluido']); */
+
+                if($this->gravamen->acto_contenido === 'DIVISIÓN DE HIPOTECA'){
+
+                    foreach($this->folios_reales as $folio){
+
+                        $movimiento = $folio->movimientosRegistrales()->create([
+                            'estado' => 'nuevo',
+                            'folio' => FolioReal::find($this->gravamen->movimientoRegistral->folio_real)->ultimoFolio() + 1,
+                            'folio_real' => $this->gravamen->movimientoRegistral->folio_real,
+                            'fecha_prelacion' => $this->gravamen->movimientoRegistral->fecha_prelacion,
+                            'fecha_entrega' => $this->gravamen->movimientoRegistral->fecha_entrega,
+                            'fecha_pago' => $this->gravamen->movimientoRegistral->fecha_pago,
+                            'tipo_servicio' => $this->gravamen->movimientoRegistral->tipo_servicio,
+                            'solicitante' => $this->gravamen->movimientoRegistral->solicitante,
+                            'seccion' => $this->gravamen->movimientoRegistral->seccion,
+                            'distrito' => $this->gravamen->movimientoRegistral->distrito,
+                            'tipo_documento' => $this->gravamen->movimientoRegistral->tipo_documento,
+                            'numero_documento' => $this->gravamen->movimientoRegistral->numero_documento,
+                            'numero_propiedad' => $this->gravamen->movimientoRegistral->numero_propiedad,
+                            'autoridad_cargo' => $this->gravamen->movimientoRegistral->autoridad_cargo,
+                            'autoridad_numero' => $this->gravamen->movimientoRegistral->autoridad_numero,
+                            'fecha_emision' => $this->gravamen->movimientoRegistral->fecha_emision,
+                            'fecha_inscripcion' => $this->gravamen->movimientoRegistral->fecha_inscripcion,
+                            'procedencia' => $this->gravamen->movimientoRegistral->procedencia,
+                            'numero_oficio' => $this->gravamen->movimientoRegistral->numero_oficio,
+                            'folio_real' => $this->gravamen->movimientoRegistral->folio_real,
+                            'monto' => $this->gravamen->movimientoRegistral->monto,
+                            'usuario_asignado' => (new AsignacionService())->obtenerUltimoUsuarioConAsignacion($this->obtenerUsuarios()),
+                            'usuario_supervisor' => $this->obtenerSupervisor(),
+                            'movimiento_padre' => $this->gravamen->movimientoRegistral->id
+                        ]);
+
+                        $movimiento->gravamen()->create([
+                            'servicio' => 'DL66',
+                            'fecha_inscripcion' => now(),
+                            'estado' => 'activo',
+                            'acto_contenido' => 'HIPOTECA',
+                            'valor_gravamen' => $this->gravamen->valor_gravamen / count($this->folios_reales),
+                            'divisa' => $this->gravamen->divisa,
+                            'observaciones' => 'Trámite generado por división de hipoteca ' . $this->gravamen->movimientoRegistral->año . '-' . $this->gravamen->movimientoRegistral->tramite . '-' . $this->gravamen->movimientoRegistral->usuario
+                        ]);
+
+                    }
+
+                }
+
+            });
 
             $this->dispatch('imprimir_documento', ['gravamen' => $this->gravamen->id]);
 
@@ -662,6 +731,134 @@ class GravamenInscripcion extends Component
             'inscripcion.pdf'
         );
 
+    }
+
+    public function consultarArchivo(){
+
+        try {
+
+            $response = Http::withToken(env('SISTEMA_TRAMITES_TOKEN'))
+                                ->accept('application/json')
+                                ->asForm()
+                                ->post(env('SISTEMA_TRAMITES_CONSULTAR_ARCHIVO'), [
+                                                                                    'año' => $this->gravamen->movimientoRegistral->año,
+                                                                                    'tramite' => $this->gravamen->movimientoRegistral->tramite,
+                                                                                    'usuario' => $this->gravamen->movimientoRegistral->usuario,
+                                                                                    'estado' => 'nuevo'
+                                                                                ]);
+
+            $data = collect(json_decode($response, true));
+
+            if($response->status() == 200){
+
+                $this->dispatch('ver_documento', ['url' => $data['url']]);
+
+            }else{
+
+                $this->dispatch('mostrarMensaje', ['error', "No se encontro el documento."]);
+
+            }
+
+        } catch (ConnectionException $th) {
+
+            Log::error("Error al cargar archivo en varios: (id: " . auth()->user()->id . ") " . auth()->user()->name . ". " . $th);
+
+            $this->dispatch('mostrarMensaje', ['error', "Ha ocurrido un error."]);
+
+        }
+
+    }
+
+    public function buscarGravamen(){
+
+        $this->reset('folios_reales');
+
+        $this->gravamenHipoteca = MovimientoRegistral::with('gravamen')
+                                                ->where('folio_real', $this->gravamen->movimientoRegistral->folio_real)
+                                                ->where('folio', $this->folio_gravamen)
+                                                ->where('estado', 'concluido')
+                                                ->first();
+
+        if(!$this->gravamenHipoteca){
+
+            $this->dispatch('mostrarMensaje', ['error', "No se encontro el gravamen."]);
+
+            return;
+
+        }
+
+        if(!$this->gravamenHipoteca->gravamen->exists()){
+
+            $this->dispatch('mostrarMensaje', ['error', "No se encontro el gravamen."]);
+
+            return;
+
+        }
+
+    }
+
+    public function agregarFolioReal(){
+
+        $folio_real = FolioReal::where('folio', $this->folio_real_division)
+                                ->where('estado', 'activo')
+                                ->first();
+
+        if(!$folio_real){
+
+            $this->dispatch('mostrarMensaje', ['error', "No se encontro el gravamen."]);
+
+            return;
+
+        }
+
+        if(collect($this->folios_reales)->where('id', $folio_real->id)->first()){
+
+            $this->dispatch('mostrarMensaje', ['error', "El folio ya esta en la lista."]);
+
+            return;
+
+        }
+
+        array_push($this->folios_reales, $folio_real);
+
+    }
+
+    public function quitarFolio($key){
+
+        unset($this->folios_reales[$key]);
+
+    }
+
+    public function obtenerSupervisor(){
+
+        return User::with('ultimoMovimientoRegistralAsignado')
+                            ->where('status', 'activo')
+                            ->when($this->gravamen->movimientoRegistral->getRawOriginal('distrito') == 2, function($q){
+                                $q->where('ubicacion', 'Regional 4');
+                            })
+                            ->when($this->gravamen->movimientoRegistral->getRawOriginal('distrito') != 2, function($q){
+                                $q->where('ubicacion', '!=', 'Regional 4');
+                            })
+                            ->whereHas('roles', function($q){
+                                $q->where('name', 'Supervisor gravamen');
+                            })
+                            ->first()->id;
+    }
+
+    public function obtenerUsuarios(){
+
+        return User::with('ultimoMovimientoRegistralAsignado')
+                            ->where('status', 'activo')
+                            ->when($this->gravamen->movimientoRegistral->getRawOriginal('distrito') == 2, function($q){
+                                $q->where('ubicacion', 'Regional 4');
+                            })
+                            ->when($this->gravamen->movimientoRegistral->getRawOriginal('distrito') != 2, function($q){
+                                $q->where('ubicacion', '!=', 'Regional 4');
+                            })
+                            ->whereHas('roles', function($q){
+                                $q->where('name', 'Gravamen');
+                            })
+                            ->get();
     }
 
     public function render()

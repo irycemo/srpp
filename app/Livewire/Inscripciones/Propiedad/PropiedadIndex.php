@@ -19,6 +19,32 @@ class PropiedadIndex extends Component
         $this->modelo_editar = ModelPropiedad::make();
     }
 
+    public function elaborar(MovimientoRegistral $movimientoRegistral){
+
+        $movimientos = $movimientoRegistral->folioReal->movimientosRegistrales()->where('estado', 'nuevo')->orderBy('folio')->get();
+
+        if($movimientos->count()){
+
+            $primerMovimiento = $movimientos->first();
+
+            if($movimientoRegistral->folio > $primerMovimiento->folio){
+
+                $this->dispatch('mostrarMensaje', ['warning', "El movimiento registral: " . $primerMovimiento->año . '-' . $primerMovimiento->tramite . '-' . $primerMovimiento->usuario . ' debe elaborace primero.']);
+
+            }else{
+
+                return redirect()->route('propiedad.inscripcion', $movimientoRegistral->inscripcionPropiedad);
+
+            }
+
+        }else{
+
+            return redirect()->route('propiedad.inscripcion', $movimientoRegistral->inscripcionPropiedad);
+
+        }
+
+    }
+
     public function render()
     {
 

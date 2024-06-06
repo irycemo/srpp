@@ -733,27 +733,57 @@ class PropiedadInscripcion extends Component
 
         }
 
-        if(((float)$this->porcentaje_propiedad + $pp_adquirientes) > $pp_transmitentes){
+        if($pp_transmitentes == 0){
 
-            $this->dispatch('mostrarMensaje', ['error', "La suma de los porcentajes de propiedad no puede exceder el " . $pp_transmitentes . '%.']);
+            if(((float)$this->porcentaje_propiedad + $pp_adquirientes) > $pp_transmitentes){
 
-            return true;
+                $this->dispatch('mostrarMensaje', ['error', "La suma de los porcentajes de propiedad no puede exceder el " . $pp_transmitentes . '%.']);
 
-        }
+                return true;
 
-        if(((float)$this->porcentaje_nuda + $pn_adquirientes) > $pn_transmitentes){
+            }
 
-            $this->dispatch('mostrarMensaje', ['error', "La suma de los porcentajes de nuda no puede exceder el " . $pn_transmitentes . '%.']);
+            if(((float)$this->porcentaje_nuda + $pn_adquirientes) > $pn_transmitentes){
 
-            return true;
+                $this->dispatch('mostrarMensaje', ['error', "La suma de los porcentajes de nuda no puede exceder el " . $pn_transmitentes . '%.']);
 
-        }
+                return true;
 
-        if(((float)$this->porcentaje_usufructo + $pu_adquirientes) > $pu_transmitentes){
+            }
 
-            $this->dispatch('mostrarMensaje', ['error', "La suma de los porcentajes de usufructo no puede exceder el " . $pu_transmitentes . '%.']);
+            if(((float)$this->porcentaje_usufructo + $pu_adquirientes) > $pu_transmitentes){
 
-            return true;
+                $this->dispatch('mostrarMensaje', ['error', "La suma de los porcentajes de usufructo no puede exceder el " . $pu_transmitentes . '%.']);
+
+                return true;
+
+            }
+
+        }else{
+
+            if(((float)$this->porcentaje_propiedad + $pp_adquirientes) > $pp_transmitentes){
+
+                $this->dispatch('mostrarMensaje', ['error', "La suma de los porcentajes de propiedad no puede exceder el " . $pp_transmitentes . '%.']);
+
+                return true;
+
+            }
+
+            if(((float)$this->porcentaje_nuda + $pn_adquirientes + $pp_adquirientes) > $pp_transmitentes){
+
+                $this->dispatch('mostrarMensaje', ['error', "La suma de los porcentajes de nuda no puede exceder el " . $pn_transmitentes . '%.']);
+
+                return true;
+
+            }
+
+            if(((float)$this->porcentaje_usufructo + $pu_adquirientes + $pp_adquirientes) > $pp_transmitentes){
+
+                $this->dispatch('mostrarMensaje', ['error', "La suma de los porcentajes de usufructo no puede exceder el " . $pu_transmitentes . '%.']);
+
+                return true;
+
+            }
 
         }
 

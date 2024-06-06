@@ -279,7 +279,7 @@ class AsignacionService{
 
     }
 
-    /* Gravamen */
+    /* Inscripciones : Propiedad */
     public function obtenerUsuarioGravamen($folioReal, $distrito):int
     {
 
@@ -344,4 +344,203 @@ class AsignacionService{
         return $supervisor->id;
 
     }
+
+    /* Inscripciones : Cancelacion */
+    public function obtenerUsuarioCancelacion($folioReal, $distrito):int
+    {
+
+        $usuarios = User::with('ultimoMovimientoRegistralAsignado')
+                                ->where('status', 'activo')
+                                ->when($distrito == 2, function($q){
+                                    $q->where('ubicacion', 'Regional 4');
+                                })
+                                ->when($distrito != 2, function($q){
+                                    $q->where('ubicacion', '!=', 'Regional 4');
+                                })
+                                ->when($folioReal != null, function($q){
+                                    $q->whereHas('roles', function($q){
+                                        $q->whereIn('name', ['Cancelación', 'Registrador Cancelación']);
+                                    });
+                                })
+                                ->when($folioReal === null, function($q){
+                                    $q->whereHas('roles', function($q){
+                                        $q->whereIn('name', ['Pase a folio', 'Registrador Cancelación']);
+                                    });
+                                })
+                                ->get();
+
+        if($usuarios->count() == 0){
+
+            throw new AsignacionServiceException('No se encontraron usuarios de cancelación para asignar al movimiento registral.');
+
+        }else if($usuarios->count() == 1){
+
+            return $usuarios->first()->id;
+
+        }else{
+
+            return $this->obtenerUltimoUsuarioConAsignacion($usuarios);
+
+        }
+
+    }
+
+    public function obtenerSupervisorCancelacion($distrito):int
+    {
+
+        $supervisor = User::inRandomOrder()
+                                ->where('status', 'activo')
+                                ->when($distrito == 2, function($q){
+                                    $q->where('ubicacion', 'Regional 4');
+                                })
+                                ->when($distrito != 2, function($q){
+                                    $q->where('ubicacion', '!=', 'Regional 4');
+                                })
+                                ->whereHas('roles', function($q){
+                                    $q->where('name', 'Supervisor cancelación');
+                                })
+                                ->first();
+
+        if(!$supervisor){
+
+            throw new AsignacionServiceException('No se encontraron supervisores de cancelación para asignar al movimiento registral.');
+
+        }
+
+        return $supervisor->id;
+
+    }
+
+    /* Inscripciones : Cancelacion */
+    public function obtenerUsuarioVarios($folioReal, $distrito):int
+    {
+
+        $usuarios = User::with('ultimoMovimientoRegistralAsignado')
+                                ->where('status', 'activo')
+                                ->when($distrito == 2, function($q){
+                                    $q->where('ubicacion', 'Regional 4');
+                                })
+                                ->when($distrito != 2, function($q){
+                                    $q->where('ubicacion', '!=', 'Regional 4');
+                                })
+                                ->when($folioReal != null, function($q){
+                                    $q->whereHas('roles', function($q){
+                                        $q->whereIn('name', ['Varios', 'Registrador Varios']);
+                                    });
+                                })
+                                ->when($folioReal === null, function($q){
+                                    $q->whereHas('roles', function($q){
+                                        $q->whereIn('name', ['Pase a folio', 'Registrador Varios']);
+                                    });
+                                })
+                                ->get();
+
+        if($usuarios->count() == 0){
+
+            throw new AsignacionServiceException('No se encontraron usuarios de varios para asignar al movimiento registral.');
+
+        }else if($usuarios->count() == 1){
+
+            return $usuarios->first()->id;
+
+        }else{
+
+            return $this->obtenerUltimoUsuarioConAsignacion($usuarios);
+
+        }
+
+    }
+
+    public function obtenerSupervisorVarios($distrito):int
+    {
+
+        $supervisor = User::inRandomOrder()
+                                ->where('status', 'activo')
+                                ->when($distrito == 2, function($q){
+                                    $q->where('ubicacion', 'Regional 4');
+                                })
+                                ->when($distrito != 2, function($q){
+                                    $q->where('ubicacion', '!=', 'Regional 4');
+                                })
+                                ->whereHas('roles', function($q){
+                                    $q->where('name', 'Supervisor varios');
+                                })
+                                ->first();
+
+        if(!$supervisor){
+
+            throw new AsignacionServiceException('No se encontraron supervisores de varios para asignar al movimiento registral.');
+
+        }
+
+        return $supervisor->id;
+
+    }
+
+    /* Inscripciones : Sentencias */
+    public function obtenerUsuarioSentencias($folioReal, $distrito):int
+    {
+
+        $usuarios = User::with('ultimoMovimientoRegistralAsignado')
+                                ->where('status', 'activo')
+                                ->when($distrito == 2, function($q){
+                                    $q->where('ubicacion', 'Regional 4');
+                                })
+                                ->when($distrito != 2, function($q){
+                                    $q->where('ubicacion', '!=', 'Regional 4');
+                                })
+                                ->when($folioReal != null, function($q){
+                                    $q->whereHas('roles', function($q){
+                                        $q->whereIn('name', ['Sentencias', 'Registrador Sentencias']);
+                                    });
+                                })
+                                ->when($folioReal === null, function($q){
+                                    $q->whereHas('roles', function($q){
+                                        $q->whereIn('name', ['Pase a folio', 'Registrador Sentencias']);
+                                    });
+                                })
+                                ->get();
+
+        if($usuarios->count() == 0){
+
+            throw new AsignacionServiceException('No se encontraron usuarios de varios para asignar al movimiento registral.');
+
+        }else if($usuarios->count() == 1){
+
+            return $usuarios->first()->id;
+
+        }else{
+
+            return $this->obtenerUltimoUsuarioConAsignacion($usuarios);
+
+        }
+
+    }
+
+    public function obtenerSupervisorSentencias($distrito):int
+    {
+
+        $supervisor = User::inRandomOrder()
+                                ->where('status', 'activo')
+                                ->when($distrito == 2, function($q){
+                                    $q->where('ubicacion', 'Regional 4');
+                                })
+                                ->when($distrito != 2, function($q){
+                                    $q->where('ubicacion', '!=', 'Regional 4');
+                                })
+                                ->whereHas('roles', function($q){
+                                    $q->where('name', 'Supervisor sentencias');
+                                })
+                                ->first();
+
+        if(!$supervisor){
+
+            throw new AsignacionServiceException('No se encontraron supervisores de sentencias para asignar al movimiento registral.');
+
+        }
+
+        return $supervisor->id;
+
+    }
+
 }

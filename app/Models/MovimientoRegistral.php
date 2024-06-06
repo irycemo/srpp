@@ -5,6 +5,7 @@ namespace App\Models;
 use App\Models\Gravamen;
 use App\Models\FolioReal;
 use App\Models\Propiedad;
+use App\Models\Cancelacion;
 use App\Traits\ModelosTrait;
 use App\Constantes\Constantes;
 use Illuminate\Database\Eloquent\Model;
@@ -47,6 +48,10 @@ class MovimientoRegistral extends Model implements Auditable
 
     public function inscripcionPropiedad(){
         return $this->hasOne(Propiedad::class);
+    }
+
+    public function cancelacion(){
+        return $this->hasOne(Cancelacion::class);
     }
 
     public function gravamen(){

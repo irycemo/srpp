@@ -15,6 +15,8 @@ class Certificacion extends Model implements Auditable
     use ModelosTrait;
     use \OwenIt\Auditing\Auditable;
 
+    protected $guarded = ['id', 'created_at', 'updated_At'];
+
     protected $fillable = ['movimiento_registral_id', 'servicio', 'numero_paginas', 'finalizado_en', 'firma', 'reimpreso_en', 'observaciones', 'folio_carpeta_copias'];
 
     protected $casts =[

@@ -7,6 +7,7 @@ use App\Models\Gravamen;
 use Illuminate\Http\Request;
 use Barryvdh\DomPDF\Facade\Pdf;
 use App\Http\Controllers\Controller;
+use App\Models\MovimientoRegistral;
 
 class GravamenController extends Controller
 {
@@ -24,12 +25,23 @@ class GravamenController extends Controller
             $q->where('name', 'Jefe de departamento')->where('area', 'Departamento de Registro de Inscripciones');
         })->first()->name;
 
+        $movimientos = null;
+
+        if($gravamen->acto_contenido === 'DIVISIÓN DE HIPOTECA'){
+
+            $movimientos = MovimientoRegistral::with('folioReal.predio.colindancias')
+                                                ->where('movimiento_padre', $gravamen->movimientoRegistral->id)
+                                                ->get();
+
+        }
+
         $pdf = Pdf::loadView('gravamenes.acto', [
             'gravamen' => $gravamen,
             'director' => $director,
             'jefe_departamento' => $jefe_departamento,
             'distrito' => $gravamen->movimientoRegistral->getRawOriginal('distrito'),
-            'predio' => $gravamen->movimientoRegistral->folioReal->predio
+            'predio' => $gravamen->movimientoRegistral->folioReal->predio,
+            'movimientos' => $movimientos
         ]);
 
         $pdf->render();

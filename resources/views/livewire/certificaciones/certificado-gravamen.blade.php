@@ -79,7 +79,7 @@
 
                             <span class="lg:hidden absolute top-0 left-0 bg-blue-300 px-2 py-1 text-xs text-white font-bold uppercase rounded-br-xl">Folio real</span>
 
-                            {{ $certificado->folioReal->folio }}
+                            {{ $certificado->folioReal->folio }}-{{ $certificado->folio }}
 
                         </x-table.cell>
 
@@ -87,7 +87,7 @@
 
                             <span class="lg:hidden absolute top-0 left-0 bg-blue-300 px-2 py-1 text-xs text-white font-bold uppercase rounded-br-xl">Año</span>
 
-                            {{ $certificado->año }}
+                            {{ $certificado->año ?? 'N/A' }}
 
                         </x-table.cell>
 
@@ -95,7 +95,7 @@
 
                             <span class="lg:hidden absolute top-0 left-0 bg-blue-300 px-2 py-1 text-xs text-white font-bold uppercase rounded-br-xl"># Control</span>
 
-                            {{ $certificado->tramite }}
+                            {{ $certificado->tramite ?? 'N/A' }}
 
                         </x-table.cell>
 
@@ -103,7 +103,7 @@
 
                             <span class="lg:hidden absolute top-0 left-0 bg-blue-300 px-2 py-1 text-xs text-white font-bold uppercase rounded-br-xl">Usuario</span>
 
-                            {{ $certificado->usuario }}
+                            {{ $certificado->usuario ?? 'N/A' }}
 
                         </x-table.cell>
 

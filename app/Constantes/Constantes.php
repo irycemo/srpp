@@ -280,4 +280,9 @@ class Constantes{
         'ADHESIÓN DE HIPOTECA'
     ];
 
+    const ACTOS_INSCRIPCION_VARIOS = [
+        'PRIMER AVISO PREVENTIVO',
+        'SEGUNDO AVISO PREVENTIVO',
+    ];
+
 }

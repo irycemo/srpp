@@ -1,6 +1,6 @@
 <div>
 
-    <x-header>Inscripciones de propiedad</x-header>
+    <x-header>Varios</x-header>
 
     <div class="overflow-x-auto rounded-lg shadow-xl border-t-2 border-t-gray-500">
 
@@ -12,7 +12,6 @@
                 <x-table.heading sortable wire:click="sortBy('año')" :direction="$sort === 'año' ? $direction : null" >Año</x-table.heading>
                 <x-table.heading sortable wire:click="sortBy('tramite')" :direction="$sort === 'tramite' ? $direction : null" ># control</x-table.heading>
                 <x-table.heading sortable wire:click="sortBy('usuario')" :direction="$sort === 'usuario' ? $direction : null" >Usuario</x-table.heading>
-                <x-table.heading sortable wire:click="sortBy('numero_propiedad')" :direction="$sort === 'numero_propiedad' ? $direction : null" ># propiedad</x-table.heading>
                 @if(auth()->user()->hasRole('Administrador'))
                     <x-table.heading sortable wire:click="sortBy('estado')" :direction="$sort === 'estado' ? $direction : null">Estado</x-table.heading>
                     <x-table.heading sortable wire:click="sortBy('usuario_asignado')" :direction="$sort === 'usuario_asignado' ? $direction : null">Usuario asignado</x-table.heading>
@@ -61,14 +60,6 @@
 
                         </x-table.cell>
 
-                        <x-table.cell>
-
-                            <span class="lg:hidden absolute top-0 left-0 bg-blue-300 px-2 py-1 text-xs text-white font-bold uppercase rounded-br-xl">Número de propiedad</span>
-
-                            {{ $movimiento->numero_propiedad }}
-
-                        </x-table.cell>
-
                         @if(auth()->user()->hasRole('Administrador'))
 
                             <x-table.cell>
@@ -109,16 +100,12 @@
 
                             <span class="lg:hidden absolute top-0 left-0 bg-blue-300 px-2 py-1 text-xs text-white font-bold uppercase rounded-br-xl">Acciones</span>
 
-                            <div class="flex justify-center lg:justify-start gap-2">
-
-                                <x-button-blue
-                                    wire:click="elaborar({{  $movimiento->id }})"
-                                    wire:loading.attr="disabled"
-                                    wire:target="elaborar({{  $movimiento->id }})">
-                                    Elaborar
-                                </x-button-blue>
-
-                            </div>
+                            <x-button-blue
+                                wire:click="elaborar({{  $movimiento->id }})"
+                                wire:loading.attr="disabled"
+                                wire:target="elaborar({{  $movimiento->id }})">
+                                Elaborar
+                            </x-button-blue>
 
                         </x-table.cell>
 

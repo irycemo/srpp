@@ -1,34 +1,40 @@
 <?php
 
-use App\Http\Controllers\Certificaciones\CertificadoGravamenController;
 use App\Livewire\Admin\Roles;
 use App\Livewire\Admin\Ranchos;
+use App\Livewire\Varios\Varios;
 use App\Livewire\Admin\Permisos;
 use App\Livewire\Admin\Usuarios;
 use App\Livewire\Admin\Auditoria;
 use App\Livewire\Admin\Distritos;
 use App\Livewire\Admin\Tenencias;
 use App\Livewire\Admin\Municipios;
+use App\Livewire\Consulta\Consulta;
+use App\Livewire\Varios\VariosIndex;
+use App\Livewire\PaseFolio\PaseFolio;
 use Illuminate\Support\Facades\Route;
+use App\Livewire\PaseFolio\Elaboracion;
 use App\Http\Controllers\ManualController;
+use App\Livewire\Gravamenes\GravamenIndex;
+use App\Livewire\Cancelaciones\Cancelacion;
 use App\Livewire\Certificaciones\Consultas;
 use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\SetPasswordController;
 use App\Livewire\Certificaciones\CopiasSimples;
-use App\Livewire\Certificaciones\CopiasCertificadas;
-use App\Http\Controllers\Certificaciones\CopiasController;
-use App\Http\Controllers\Gravamen\GravamenController;
-use App\Http\Controllers\InscripcionesPropiedad\TraslativoController;
-use App\Http\Controllers\PaseFolio\PaseFolioController;
-use App\Livewire\Certificaciones\CertificadoGravamen;
-use App\Livewire\Certificaciones\ConsultasCertificaciones;
-use App\Livewire\Consulta\Consulta;
-use App\Livewire\Gravamenes\GravamenIndex;
+use App\Livewire\Cancelaciones\CancelacionIndex;
 use App\Livewire\Gravamenes\GravamenInscripcion;
+use App\Http\Controllers\Varios\VariosController;
+use App\Livewire\Certificaciones\CopiasCertificadas;
+use App\Http\Controllers\Gravamen\GravamenController;
+use App\Livewire\Certificaciones\CertificadoGravamen;
+use App\Http\Controllers\PaseFolio\PaseFolioController;
 use App\Livewire\Inscripciones\Propiedad\PropiedadIndex;
+use App\Http\Controllers\Certificaciones\CopiasController;
+use App\Livewire\Certificaciones\ConsultasCertificaciones;
+use App\Http\Controllers\Cancelaciones\CancelacionController;
 use App\Livewire\Inscripciones\Propiedad\PropiedadInscripcion;
-use App\Livewire\PaseFolio\Elaboracion;
-use App\Livewire\PaseFolio\PaseFolio;
+use App\Http\Controllers\InscripcionesPropiedad\TraslativoController;
+use App\Http\Controllers\Certificaciones\CertificadoGravamenController;
 
 /*
 |--------------------------------------------------------------------------
@@ -96,6 +102,16 @@ Route::group(['middleware' => ['auth', 'esta.activo']], function(){
     Route::get('gravamen', GravamenIndex::class)->middleware('permission:Gravamen')->name('gravamen');
     Route::get('gravamen/{gravamen}', GravamenInscripcion::class)->middleware('permission:Gravamen inscripción')->name('gravamen.inscripcion');
     Route::get('gravamen_pdf/{gravamen}', [GravamenController::class, 'acto'])->middleware('permission:Gravamen inscripción')->name('gravamen.inscripcion.acto');
+
+    /* Cancelaciones */
+    Route::get('cancelacion', CancelacionIndex::class)->middleware('permission:Cancelación')->name('cancelacion');
+    Route::get('cancelacion/{gravamen}', Cancelacion::class)->middleware('permission:Cancelación inscripción')->name('cancelacion.inscripcion');
+    Route::get('cancelacion_pdf/{gravamen}', [CancelacionController::class, 'acto'])->middleware('permission:Cancelación inscripción')->name('cancelacion.inscripcion.acto');
+
+    /* Varios */
+    Route::get('varios', VariosIndex::class)->middleware('permission:Varios')->name('varios');
+    Route::get('varios/{vario}', Varios::class)->middleware('permission:Varios inscripción')->name('varios.inscripcion');
+    Route::get('varios_pdf/{vario}', [VariosController::class, 'acto'])->middleware('permission:Varios inscripción')->name('varios.inscripcion.acto');
 
     /* Consultas */
     Route::get('consultas', Consulta::class)->middleware('permission:Consultas')->name('consultas');

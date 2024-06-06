@@ -1,6 +1,6 @@
 <div>
 
-    <x-header>Inscripciones de propiedad</x-header>
+    <x-header>Cancelaciones</x-header>
 
     <div class="overflow-x-auto rounded-lg shadow-xl border-t-2 border-t-gray-500">
 
@@ -33,7 +33,7 @@
 
                             <span class="lg:hidden absolute top-0 left-0 bg-blue-300 px-2 py-1 text-xs text-white font-bold uppercase rounded-br-xl">Folio Real</span>
 
-                            {{ $movimiento->folioReal->folio }}-{{ $movimiento->folio }}
+                            {{ $movimiento->folioReal->folio }}
 
                         </x-table.cell>
 
@@ -111,12 +111,7 @@
 
                             <div class="flex justify-center lg:justify-start gap-2">
 
-                                <x-button-blue
-                                    wire:click="elaborar({{  $movimiento->id }})"
-                                    wire:loading.attr="disabled"
-                                    wire:target="elaborar({{  $movimiento->id }})">
-                                    Elaborar
-                                </x-button-blue>
+                                <x-link href="{{ route('propiedad.inscripcion', $movimiento->inscripcionPropiedad->id) }}">Elaborar</x-link>
 
                             </div>
 
