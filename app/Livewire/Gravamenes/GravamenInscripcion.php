@@ -493,7 +493,7 @@ class GravamenInscripcion extends Component
                 'persona_id' => $this->guardarPersona()
             ]);
 
-            $this->dispatch('mostrarMensaje', ['success', "El deudor se guardó con éxito."]);
+            $this->dispatch('mostrarMensaje', ['success', "El acreedor se guardó con éxito."]);
 
             $this->reset(['modal', 'crear', 'title']);
 
@@ -501,7 +501,7 @@ class GravamenInscripcion extends Component
 
         } catch (\Exception $th) {
 
-            Log::error("Error al crear deudor rol por el usuario: (id: " . auth()->user()->id . ") " . auth()->user()->name . ". " . $th);
+            Log::error("Error al crear acreedor rol por el usuario: (id: " . auth()->user()->id . ") " . auth()->user()->name . ". " . $th);
             $this->dispatch('mostrarMensaje', ['error', $th->getMessage()]);
 
         } catch (\Throwable $th) {
@@ -634,7 +634,7 @@ class GravamenInscripcion extends Component
                 $this->gravamen->actualizado_por = auth()->id();
                 $this->gravamen->save();
 
-                /* $this->gravamen->movimientoRegistral->update(['estado' => 'concluido']); */
+                $this->gravamen->movimientoRegistral->update(['estado' => 'concluido']);
 
                 if($this->gravamen->acto_contenido === 'DIVISIÓN DE HIPOTECA'){
 

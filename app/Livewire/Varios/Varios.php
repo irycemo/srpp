@@ -14,7 +14,6 @@ use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Http;
 use App\Http\Services\AsignacionService;
 use Illuminate\Http\Client\ConnectionException;
-use App\Http\Services\MovimientoRegistralService;
 
 class Varios extends Component
 {

@@ -140,7 +140,7 @@ class Propietarios extends Component
 
         if(in_array($property, ['porcentaje_nuda', 'porcentaje_usufructo', 'porcentaje_propiedad']) && $value == ''){
 
-            $this->$property = null;
+            $this->$property = 0;
 
         }
 

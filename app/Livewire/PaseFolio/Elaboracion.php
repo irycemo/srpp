@@ -266,27 +266,54 @@ class Elaboracion extends Component
 
         $pu = 0;
 
+        $pp = 0;
+
         foreach($this->propiedad->propietarios() as $propietario){
 
             $pn = $pn + $propietario->porcentaje_nuda;
 
             $pu = $pu + $propietario->porcentaje_usufructo;
 
-        }
-
-        if(($pn - 100) >= 0.01){
-
-            $this->dispatch('mostrarMensaje', ['error', "El porcentaje de nuda propiedad no es el 100%."]);
-
-            return;
+            $pp = $pp + $propietario->porcentaje_propiedad;
 
         }
 
-        if(($pu - 100) >= 0.01){
+        if($pp == 0){
 
-            $this->dispatch('mostrarMensaje', ['error', "El porcentaje de usufructo no es el 100%."]);
+            if(($pn - 100) >= 0.01){
 
-            return;
+                $this->dispatch('mostrarMensaje', ['error', "El porcentaje de nuda propiedad no es el 100%."]);
+
+                return;
+
+            }
+
+            if(($pu - 100) >= 0.01){
+
+                $this->dispatch('mostrarMensaje', ['error', "El porcentaje de usufructo no es el 100%."]);
+
+                return;
+
+            }
+
+        }else{
+
+
+            if(($pn + $pp - 100) >= 0.01){
+
+                $this->dispatch('mostrarMensaje', ['error', "El porcentaje de nuda propiedad no es el 100%."]);
+
+                return;
+
+            }
+
+            if(($pu + $pp - 100) >= 0.01){
+
+                $this->dispatch('mostrarMensaje', ['error', "El porcentaje de usufructo no es el 100%."]);
+
+                return;
+
+            }
 
         }
 
@@ -405,6 +432,14 @@ class Elaboracion extends Component
             }elseif($this->movimientoRegistral->gravamen){
 
                 $role = 'Gravamen';
+
+            }elseif($this->movimientoRegistral->cancelacion){
+
+                $role = 'Cancelación';
+
+            }elseif($this->movimientoRegistral->sentencia){
+
+                $role = 'Sentencias';
 
             }
 

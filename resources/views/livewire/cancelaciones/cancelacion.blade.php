@@ -2,69 +2,41 @@
 
     <x-header>Cancelación de gravamen</x-header>
 
-    {{-- <div class="p-4 bg-white shadow-xl rounded-xl mb-5">
+    <div class="p-4 bg-white shadow-xl rounded-xl mb-5">
 
-        <span class="flex items-center justify-center  text-gray-700">Antecedente</span>
+        <div class="inline-block">
 
-        <div class="flex gap-3 items-center w-full lg:w-1/2 justify-center mx-auto">
+            <x-button-blue
+                wire:click="consultarArchivo"
+                wire:loading.attr="disabled"
+                wire:target="consultarArchivo">
 
-            <x-input-group for="antecente_tomo" label="Tomo" :error="$errors->first('antecente_tomo')" class="w-full">
+                <img wire:loading wire:target="consultarArchivo" class="mx-auto h-4 mr-1" src="{{ asset('storage/img/loading3.svg') }}" alt="Loading">
 
-                <x-input-text type="number" id="antecente_tomo" wire:model="antecente_tomo" />
-
-            </x-input-group>
-
-            <x-input-group for="antecente_registro" label="Registro" :error="$errors->first('antecente_registro')" class="w-full">
-
-                <x-input-text type="number" id="antecente_registro" wire:model="antecente_registro" />
-
-            </x-input-group>
-
-            <x-input-group for="antecente_distrito" label="Distrito" :error="$errors->first('antecente_distrito')" class="w-full">
-
-                <x-input-select id="antecente_distrito" wire:model="antecente_distrito" class="w-full">
-
-                    <option value="">Seleccione una opción</option>
-
-                    @foreach ($distritos as $key => $distrito)
-
-                        <option value="{{ $key }}">{{ $distrito }}</option>
-
-                    @endforeach
-
-                </x-input-select>
-
-            </x-input-group>
+                Ver documento de entrada
+            </x-button-blue>
 
         </div>
-
-    </div> --}}
-
-    <div class="p-4 bg-white shadow-xl rounded-xl mb-5">
 
         <span class="flex items-center justify-center ext-gray-700">Datos del movimiento</span>
 
         <div class="flex gap-3 items-center w-full lg:w-1/2 justify-center mx-auto mb-4">
 
-            <x-input-group for="vario.acto_contenido" label="Acto contenido" :error="$errors->first('vario.acto_contenido')" class="w-full">
+            <x-input-group for="cancelacion.acto_contenido" label="Acto contenido" :error="$errors->first('cancelacion.acto_contenido')" class="w-full">
 
-                <x-input-select id="vario.acto_contenido" wire:model.live="vario.acto_contenido" class="w-full">
+                <x-input-select id="cancelacion.acto_contenido" wire:model.live="cancelacion.acto_contenido" class="w-full">
 
                     <option value="">Seleccione una opción</option>
-
-                    @foreach ($actos as $acto)
-
-                        <option value="{{ $acto }}">{{ $acto }}</option>
-
-                    @endforeach
+                    <option value="PARCIAL">Parcial</option>
+                    <option value="TOTAL">Total</option>
 
                 </x-input-select>
 
             </x-input-group>
 
-            <x-input-group for="vario.tipo" label="Tipo" :error="$errors->first('vario.tipo')" class="w-full col-span-2">
+            <x-input-group for="cancelacion.tipo" label="Tipo" :error="$errors->first('cancelacion.tipo')" class="w-full col-span-2">
 
-                <x-input-text id="vario.tipo" wire:model="vario.tipo" />
+                <x-input-text id="cancelacion.tipo" wire:model="cancelacion.tipo" />
 
             </x-input-group>
 
@@ -72,11 +44,88 @@
 
         <div class="flex gap-3 items-center w-full lg:w-1/2 justify-center mx-auto">
 
-            <x-input-group for="vario.observaciones" label="Comentario del movimiento" :error="$errors->first('vario.observaciones')" class="w-full">
+            <x-input-group for="cancelacion.observaciones" label="Comentario del movimiento" :error="$errors->first('cancelacion.observaciones')" class="w-full">
 
-                <textarea rows="3" class="w-full bg-white rounded" wire:model="vario.observaciones"></textarea>
+                <textarea rows="3" class="w-full bg-white rounded" wire:model="cancelacion.observaciones"></textarea>
 
             </x-input-group>
+
+        </div>
+
+    </div>
+
+    <div class="p-4 bg-white shadow-xl rounded-xl mb-5">
+
+        <div class="w-full  justify-center mx-auto">
+
+            <div class="flex-auto text-center mb-3 lg:w-1/2 mx-auto">
+
+                <div >
+
+                    <Label class="text-base tracking-widest rounded-xl border-gray-500">Folio del gravmen</Label>
+
+                </div>
+
+                <div class="inline-flex">
+
+                    <input type="number" class="bg-white text-sm w-20 rounded-l focus:ring-0 @error('folio') border-red-500 @enderror" value="{{ $cancelacion?->movimientoRegistral->folioReal->folio }}" readonly>
+
+                    <input type="number" class="bg-white text-sm w-20 border-l-0 rounded-r focus:ring-0 @error('folio_gravamen') border-red-500 @enderror" wire:model="folio_gravamen">
+
+                </div>
+
+                <button
+                    wire:click="buscarGravamen"
+                    wire:loading.attr="disabled"
+                    wire:target="buscarGravamen"
+                    type="button"
+                    class="bg-blue-400 mx-auto mt-3 hover:shadow-lg text-white font-bold px-4 py-2 rounded text-xs hover:bg-blue-700 focus:outline-none flex items-center justify-center focus:outline-blue-400 focus:outline-offset-2">
+
+                    <img wire:loading wire:target="buscarGravamen" class="mx-auto h-4 mr-1" src="{{ asset('storage/img/loading3.svg') }}" alt="Loading">
+
+                    Buscar gravamen
+
+                </button>
+
+            </div>
+
+            @if($gravamenCancelarMovimiento)
+
+                <div class="lg:w-1/2 mx-auto">
+
+                    <div class="flex gap-3 items-center justify-center mx-auto mb-4">
+
+                        <input type="text" value="{{ $gravamenCancelarMovimiento->gravamen->acto_contenido }}" class="bg-white rounded text-sm w-full" readonly>
+
+                        <input type="text" value="{{ $gravamenCancelarMovimiento->gravamen->tipo }}" class="bg-white rounded text-sm w-full" readonly>
+
+                    </div>
+
+                    <div class="flex gap-3 items-center justify-center mx-auto mb-4">
+
+                        <input type="text" value="{{ $gravamenCancelarMovimiento->gravamen->valor_gravamen }}" class="bg-white rounded text-sm w-full" readonly>
+
+                        <input type="text" value="{{ $gravamenCancelarMovimiento->gravamen->fecha_inscripcion }}" class="bg-white rounded text-sm w-full" readonly>
+
+                    </div>
+
+                    <textarea class="bg-white rounded text-sm w-full" readonly>{{ $gravamenCancelarMovimiento->gravamen->observaciones }}</textarea>
+
+                </div>
+
+                @if($cancelacion->acto_contenido == 'PARCIAL')
+
+                    <div class="gap-3 items-center justify-center mx-auto mb-4 w-min">
+
+                        <Label class="text-base tracking-widest rounded-xl border-gray-500">Parcialidad del valor</Label>
+
+                        <input type="number" class="bg-white rounded text-sm w-full" wire:model="valor">
+
+                    </div>
+
+                @endif
+
+            @endif
 
         </div>
 
@@ -170,13 +219,21 @@
 
         window.addEventListener('imprimir_documento', event => {
 
-            const documento = event.detail[0].vario;
+            const documento = event.detail[0].cancelacion;
 
-            var url = "{{ route('varios.inscripcion.acto', '')}}" + "/" + documento;
+            var url = "{{ route('cancelacion.inscripcion.acto', '')}}" + "/" + documento;
 
             window.open(url, '_blank');
 
-            window.location.href = "{{ route('varios')}}";
+            window.location.href = "{{ route('cancelacion')}}";
+
+        });
+
+        window.addEventListener('ver_documento', event => {
+
+            const documento = event.detail[0].url;
+
+            window.open(documento, '_blank');
 
         });
 

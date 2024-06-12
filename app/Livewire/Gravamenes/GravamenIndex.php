@@ -62,7 +62,11 @@ class GravamenIndex extends Component
                                                     ->when(auth()->user()->ubicacion != 'Regional 4', function($q){
                                                         $q->where('distrito', '!=', 2);
                                                     })
+                                                    ->where('estado', 'nuevo')
                                                     ->where('usuario_asignado', auth()->id())
+                                                    ->whereHas('gravamen', function($q){
+                                                        $q->where('servicio', 'DL66');
+                                                    })
                                                     ->orderBy($this->sort, $this->direction)
                                                     ->paginate($this->pagination);
 

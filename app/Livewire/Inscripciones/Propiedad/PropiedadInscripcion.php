@@ -4,6 +4,7 @@ namespace App\Livewire\Inscripciones\Propiedad;
 
 use App\Models\User;
 use App\Models\Actor;
+use App\Models\Deudor;
 use App\Models\Persona;
 use Livewire\Component;
 use App\Models\Propiedad;
@@ -979,13 +980,23 @@ class PropiedadInscripcion extends Component
 
             if($propietario['porcentaje_propiedad'] == 0 && $propietario['porcentaje_nuda'] == 0 && $propietario['porcentaje_usufructo'] == 0){
 
-                $this->predio->actores()->whereHas('persona', function($q) use($propietario){
+                $actor = $this->predio->actores()->whereHas('persona', function($q) use($propietario){
                                                                                 $q->where('nombre', $propietario['nombre'])
                                                                                     ->where('ap_paterno', $propietario['ap_paterno'])
                                                                                     ->where('ap_materno', $propietario['ap_materno'])
                                                                                     ->where('razon_social', $propietario['razon_social']);
                                                                                 })
-                                                                                ->delete();
+                                                                                ->first();
+
+                if(Deudor::where('actor_id', $actor->id)->first()){
+
+                    $this->predio->actores()->detach($actor->id);
+
+                }else{
+
+                    $actor->delete();
+
+                }
 
             }else{
 

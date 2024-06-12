@@ -1,21 +1,20 @@
 <?php
 
-namespace App\Http\Controllers\Cancelaciones;
+namespace App\Http\Controllers\Sentencias;
 
 use App\Models\User;
-use App\Models\Cancelacion;
-use Illuminate\Http\Request;
+use App\Models\Sentencia;
 use Barryvdh\DomPDF\Facade\Pdf;
 use App\Models\MovimientoRegistral;
 use App\Http\Controllers\Controller;
 
-class CancelacionController extends Controller
+class SentenciasController extends Controller
 {
 
-    public function acto(Cancelacion $cancelacion)
+    public function acto(Sentencia $sentencia)
     {
 
-        $this->authorize('update', $cancelacion->movimientoRegistral);
+        $this->authorize('update', $sentencia->movimientoRegistral);
 
         $director = User::where('status', 'activo')->whereHas('roles', function($q){
             $q->where('name', 'Director');
@@ -25,15 +24,23 @@ class CancelacionController extends Controller
             $q->where('name', 'Jefe de departamento')->where('area', 'Departamento de Registro de Inscripciones');
         })->first()->name;
 
-        $movimientoGravamen = MovimientoRegistral::where('movimiento_padre', $cancelacion->movimientoRegistral->id)->first();
+        if($sentencia->acto_contenido == 'CANCELACIÓN DE INSCRIPCIÓN'){
 
-        $pdf = Pdf::loadView('cancelaciones.acto', [
-            'cancelacion' => $cancelacion,
+            $movimientoCancelado = MovimientoRegistral::where('movimiento_padre', $sentencia->movimientoRegistral->id)->first();
+
+        }else{
+
+            $movimientoCancelado = null;
+
+        }
+
+        $pdf = Pdf::loadView('sentencias.acto', [
+            'sentencia' => $sentencia,
             'director' => $director,
             'jefe_departamento' => $jefe_departamento,
-            'distrito' => $cancelacion->movimientoRegistral->getRawOriginal('distrito'),
-            'predio' => $cancelacion->movimientoRegistral->folioReal->predio,
-            'movimientoGravamen' => $movimientoGravamen
+            'distrito' => $sentencia->movimientoRegistral->getRawOriginal('distrito'),
+            'predio' => $sentencia->movimientoRegistral->folioReal->predio,
+            'movimientoCancelado' => $movimientoCancelado
         ]);
 
         $pdf->render();

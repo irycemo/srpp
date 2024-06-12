@@ -29,7 +29,7 @@ class GravamenController extends Controller
 
         if($gravamen->acto_contenido === 'DIVISIÓN DE HIPOTECA'){
 
-            $movimientos = MovimientoRegistral::with('folioReal.predio.colindancias')
+            $movimientos = MovimientoRegistral::with('folioReal.predio.colindancias', 'gravamen')
                                                 ->where('movimiento_padre', $gravamen->movimientoRegistral->id)
                                                 ->get();
 

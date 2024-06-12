@@ -13,11 +13,13 @@ use App\Livewire\Consulta\Consulta;
 use App\Livewire\Varios\VariosIndex;
 use App\Livewire\PaseFolio\PaseFolio;
 use Illuminate\Support\Facades\Route;
+use App\Livewire\Sentencias\Sentencia;
 use App\Livewire\PaseFolio\Elaboracion;
 use App\Http\Controllers\ManualController;
 use App\Livewire\Gravamenes\GravamenIndex;
 use App\Livewire\Cancelaciones\Cancelacion;
 use App\Livewire\Certificaciones\Consultas;
+use App\Livewire\Sentencias\SentenciasIndex;
 use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\SetPasswordController;
 use App\Livewire\Certificaciones\CopiasSimples;
@@ -29,6 +31,7 @@ use App\Http\Controllers\Gravamen\GravamenController;
 use App\Livewire\Certificaciones\CertificadoGravamen;
 use App\Http\Controllers\PaseFolio\PaseFolioController;
 use App\Livewire\Inscripciones\Propiedad\PropiedadIndex;
+use App\Http\Controllers\Sentencias\SentenciasController;
 use App\Http\Controllers\Certificaciones\CopiasController;
 use App\Livewire\Certificaciones\ConsultasCertificaciones;
 use App\Http\Controllers\Cancelaciones\CancelacionController;
@@ -103,10 +106,15 @@ Route::group(['middleware' => ['auth', 'esta.activo']], function(){
     Route::get('gravamen/{gravamen}', GravamenInscripcion::class)->middleware('permission:Gravamen inscripción')->name('gravamen.inscripcion');
     Route::get('gravamen_pdf/{gravamen}', [GravamenController::class, 'acto'])->middleware('permission:Gravamen inscripción')->name('gravamen.inscripcion.acto');
 
+    /* Sentencias */
+    Route::get('sentencias', SentenciasIndex::class)->middleware('permission:Sentencias')->name('sentencias');
+    Route::get('sentencias/{sentencia}', Sentencia::class)->middleware('permission:Sentencias inscripción')->name('sentencias.inscripcion');
+    Route::get('sentencias_pdf/{sentencia}', [SentenciasController::class, 'acto'])->middleware('permission:Sentencias inscripción')->name('sentencias.inscripcion.acto');
+
     /* Cancelaciones */
     Route::get('cancelacion', CancelacionIndex::class)->middleware('permission:Cancelación')->name('cancelacion');
-    Route::get('cancelacion/{gravamen}', Cancelacion::class)->middleware('permission:Cancelación inscripción')->name('cancelacion.inscripcion');
-    Route::get('cancelacion_pdf/{gravamen}', [CancelacionController::class, 'acto'])->middleware('permission:Cancelación inscripción')->name('cancelacion.inscripcion.acto');
+    Route::get('cancelacion/{cancelacion}', Cancelacion::class)->middleware('permission:Cancelación inscripción')->name('cancelacion.inscripcion');
+    Route::get('cancelacion_pdf/{cancelacion}', [CancelacionController::class, 'acto'])->middleware('permission:Cancelación inscripción')->name('cancelacion.inscripcion.acto');
 
     /* Varios */
     Route::get('varios', VariosIndex::class)->middleware('permission:Varios')->name('varios');

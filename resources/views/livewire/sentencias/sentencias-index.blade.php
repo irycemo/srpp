@@ -1,6 +1,6 @@
 <div>
 
-    <x-header>Cancelaciones</x-header>
+    <x-header>Sentencias</x-header>
 
     <div class="overflow-x-auto rounded-lg shadow-xl border-t-2 border-t-gray-500">
 
@@ -111,7 +111,7 @@
 
                             <div class="flex justify-center lg:justify-start gap-2">
 
-                                <x-link href="{{ route('cancelacion.inscripcion', $movimiento->cancelacion->id) }}">Elaborar</x-link>
+                                <x-link href="{{ route('sentencias.inscripcion', $movimiento->sentencia->id) }}">Elaborar</x-link>
 
                             </div>
 

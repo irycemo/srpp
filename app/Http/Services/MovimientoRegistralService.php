@@ -318,7 +318,7 @@ class MovimientoRegistralService{
         }
 
         /* Inscripciones: Cancelaciones */
-        if($servicio == 'DL66'){
+        if($servicio == 'D720'){
 
             return $this->asignacionService->obtenerUsuarioCancelacion($folioReal, $distrito);
 
@@ -332,7 +332,7 @@ class MovimientoRegistralService{
         }
 
         /* Inscripciones: Sentencias */
-        if($servicio == 'DL66'){
+        if($servicio == 'D110'){
 
             return $this->asignacionService->obtenerUsuarioSentencias($folioReal, $distrito);
 
@@ -367,7 +367,7 @@ class MovimientoRegistralService{
         }
 
         /* Inscripciones: Cancelaciones */
-        if($servicio == 'DL66'){
+        if($servicio == 'D720'){
 
             return $this->asignacionService->obtenerSupervisorCancelacion($distrito);
 
@@ -381,7 +381,7 @@ class MovimientoRegistralService{
         }
 
         /* Inscripciones: Sentencias */
-        if($servicio == 'DL66'){
+        if($servicio == 'D110'){
 
             return $this->asignacionService->obtenerSupervisorSentencias($distrito);
 
