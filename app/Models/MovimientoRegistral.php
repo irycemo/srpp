@@ -8,6 +8,7 @@ use App\Models\Propiedad;
 use App\Models\Cancelacion;
 use App\Traits\ModelosTrait;
 use App\Constantes\Constantes;
+use App\Models\FolioRealPersona;
 use Illuminate\Database\Eloquent\Model;
 use OwenIt\Auditing\Contracts\Auditable;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
@@ -40,6 +41,10 @@ class MovimientoRegistral extends Model implements Auditable
 
     public function folioReal(){
         return $this->belongsTo(FolioReal::class, 'folio_real');
+    }
+
+    public function folioRealPersona(){
+        return $this->belongsTo(FolioRealPersona::class, 'folio_real_persona');
     }
 
     public function certificacion(){

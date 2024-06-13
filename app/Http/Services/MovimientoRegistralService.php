@@ -223,12 +223,12 @@ class MovimientoRegistralService{
             isset($request['folio_real']) ? $folioReal = $request['folio_real'] : $folioReal = null;
 
             $documento_entrada = [
-                'tipo_documento' => $request['tipo_documento'],
-                'autoridad_cargo' => $request['autoridad_cargo'],
-                'autoridad_nombre' => $request['autoridad_nombre'],
-                'fecha_emision' => $request['fecha_emision'],
-                'numero_documento' => $request['numero_documento'],
-                'procedencia' => $request['procedencia'],
+                'tipo_documento' => $request['tipo_documento'] ?? null,
+                'autoridad_cargo' => $request['autoridad_cargo'] ?? null,
+                'autoridad_nombre' => $request['autoridad_nombre'] ?? null,
+                'fecha_emision' => $request['fecha_emision'] ?? null,
+                'numero_documento' => $request['numero_documento'] ?? null,
+                'procedencia' => $request['procedencia'] ?? null,
             ];
 
             return $array + [

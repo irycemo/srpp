@@ -289,6 +289,7 @@ class Constantes{
         'CESIÓN DE PODER',
         'CONSTITUCIÓN DE SOCIEDAD CONYUGAL',
         'NOMBRAMIENTO',
+        'PERSONAS MORALES'
     ];
 
     const ACTOS_INSCRIPCION_SENTENCIAS = [

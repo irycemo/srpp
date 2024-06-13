@@ -2,11 +2,15 @@
 
 namespace App\Livewire\Varios;
 
+use Exception;
 use App\Models\User;
+use App\Models\Actor;
 use App\Models\Vario;
+use App\Models\Persona;
 use Livewire\Component;
 use App\Models\FolioReal;
 use App\Constantes\Constantes;
+use App\Models\FolioRealPersona;
 use Illuminate\Support\Facades\DB;
 use App\Models\MovimientoRegistral;
 use Illuminate\Support\Facades\Log;
@@ -25,12 +29,47 @@ class Varios extends Component
 
     public Vario $vario;
 
+    public $denominacion;
+    public $fecha_celebracion;
+    public $fecha_inscripcion;
+    public $notaria;
+    public $nombre_notario;
+    public $numero_hojas;
+    public $numero_escritura;
+    public $descripcion;
+    public $observaciones;
+
+    public $modal = false;
+    public $crear = false;
+    public $editar = false;
+
+    public $rfc;
+    public $razon_social;
+    public $nacionalidad;
+    public $calle;
+    public $ciudad;
+    public $numero_exterior;
+    public $numero_interior;
+    public $colonia;
+    public $cp;
+    public $entidad;
+    public $municipio;
+
     protected function rules(){
         return [
             'vario.acto_contenido' => 'required',
             'vario.descripcion' => 'required',
          ];
     }
+
+    protected $validationAttributes  = [
+        'fecha_inscripcion' => 'fecha de inscripción',
+        'fecha_celebracion' => 'fecha de celebarción',
+        'notaria' => 'número de notaria',
+        'nombre_notario' => 'nombre del notario',
+        'numero_hojas' => 'número de hojas',
+        'numero_escritura' => 'número de escritura',
+    ];
 
     public function consultarArchivo(){
 
@@ -68,9 +107,183 @@ class Varios extends Component
 
     }
 
+    public function abrirModalCrear(){
+
+        $this->resetearPersona();
+
+        $this->modal = true;
+
+        $this->crear = true;
+
+    }
+
+    public function resetearPersona(){
+
+        $this->reset([
+            'rfc',
+            'razon_social',
+            'nacionalidad',
+            'calle',
+            'ciudad',
+            'numero_exterior',
+            'numero_interior',
+            'colonia',
+            'cp',
+            'entidad',
+            'municipio',
+        ]);
+
+    }
+
+    public function guardarPersona(){
+
+        $this->validate([
+            'rfc' => [
+                'required',
+                'regex:/^([A-ZÑ&]{3,4}) ?(?:- ?)?(\d{2}(?:0[1-9]|1[0-2])(?:0[1-9]|[12]\d|3[01])) ?(?:- ?)?([A-Z\d]{2})([A\d])$/'
+            ],
+            'razon_social' => 'required',
+            'nacionalidad' => 'nullable|' . utf8_encode('regex:/^[áéíóúÁÉÍÓÚñÑa-zA-Z-0-9$#.() ]*$/'),
+            'calle' => 'nullable',
+            'numero_exterior' => 'nullable|' . utf8_encode('regex:/^[áéíóúÁÉÍÓÚñÑa-zA-Z-0-9$#.() ]*$/'),
+            'numero_interior' => 'nullable|' . utf8_encode('regex:/^[áéíóúÁÉÍÓÚñÑa-zA-Z-0-9$#.() ]*$/'),
+            'colonia' => 'nullable|' . utf8_encode('regex:/^[áéíóúÁÉÍÓÚñÑa-zA-Z-0-9$#.() ]*$/'),
+            'cp' => 'nullable|numeric',
+            'ciudad' => 'nullable|' . utf8_encode('regex:/^[áéíóúÁÉÍÓÚñÑa-zA-Z-0-9$#.() ]*$/'),
+            'entidad' => 'nullable|' . utf8_encode('regex:/^[áéíóúÁÉÍÓÚñÑa-zA-Z-0-9$#.() ]*$/'),
+            'municipio' => 'nullable|' . utf8_encode('regex:/^[áéíóúÁÉÍÓÚñÑa-zA-Z-0-9$#.() ]*$/'),
+        ]);
+
+        $persona = Persona::where('rfc', $this->rfc)->first();
+
+        if(!$persona){
+
+            $persona = Persona::create([
+                'tipo' => 'MORAL',
+                'rfc' => $this->rfc,
+                'razon_social' => $this->razon_social,
+                'nacionalidad' => $this->nacionalidad,
+                'calle' => $this->calle,
+                'numero_exterior' => $this->numero_exterior,
+                'numero_interior' => $this->numero_interior,
+                'colonia' => $this->colonia,
+                'cp' => $this->cp,
+                'entidad' => $this->entidad,
+                'municipio' => $this->municipio,
+            ]);
+
+            return $persona->id;
+
+        }else{
+
+            if($this->vario->actores()->where('persona_id', $persona->id)->first() && !$this->editar){
+
+                throw new Exception("La persona ya esata en la lista.");
+
+            }
+
+            $persona->update([
+                'razon_social' => $this->razon_social,
+                'nacionalidad' => $this->nacionalidad,
+                'calle' => $this->calle,
+                'numero_exterior' => $this->numero_exterior,
+                'numero_interior' => $this->numero_interior,
+                'colonia' => $this->colonia,
+                'cp' => $this->cp,
+                'entidad' => $this->entidad,
+                'municipio' => $this->municipio,
+            ]);
+
+            return $persona->id;
+
+        }
+
+    }
+
+    public function guardarActor(){
+
+        try {
+
+            $this->vario->actores()->create([
+                'persona_id' => $this->guardarPersona(),
+                'tipo_actor' => 'persona moral'
+            ]);
+
+            $this->dispatch('mostrarMensaje', ['success', "El participante se guardó con éxito."]);
+
+            $this->reset(['modal', 'crear']);
+
+            $this->vario->load('actores.persona');
+
+        } catch (\Exception $th) {
+
+            Log::error("Error al crear participante rol por el usuario: (id: " . auth()->user()->id . ") " . auth()->user()->name . ". " . $th);
+            $this->dispatch('mostrarMensaje', ['error', $th->getMessage()]);
+
+        } catch (\Throwable $th) {
+
+            Log::error("Error al crear participante rol por el usuario: (id: " . auth()->user()->id . ") " . auth()->user()->name . ". " . $th);
+            $this->dispatch('mostrarMensaje', ['error', "Ha ocurrido un error."]);
+
+        }
+
+    }
+
+    public function borrarActor(Actor $actor){
+
+        $this->authorize('update', $this->vario->movimientoRegistral);
+
+        try {
+
+            if(Deudor::where('actor_id', $actor->id)->first()){
+
+                $this->vario->actores()->detach($actor->id);
+
+            }else{
+
+                $actor->delete();
+
+            }
+
+            $this->dispatch('mostrarMensaje', ['success', "La información se eliminó con éxito."]);
+
+            $this->vario->load('actores.persona');
+
+        } catch (\Throwable $th) {
+
+            Log::error("Error al borrar actor en pase a folio por el usuario: (id: " . auth()->user()->id . ") " . auth()->user()->name . ". " . $th);
+            $this->dispatch('mostrarMensaje', ['error', "Ha ocurrido un error."]);
+
+        }
+
+    }
+
     public function finalizar(){
 
         $this->validate();
+
+        if($this->vario->acto_contenido == 'PERSONAS MORALES'){
+
+            $this->validate([
+                'denominacion' => 'required',
+                'fecha_celebracion' => 'required',
+                'fecha_inscripcion' => 'required',
+                'notaria' => 'required',
+                'nombre_notario' => 'required',
+                'numero_hojas' => 'required',
+                'descripcion' => 'required',
+                'observaciones' => 'required',
+            ]);
+
+            if($this->vario->actores->count() == 0){
+
+                $this->dispatch('mostrarMensaje', ['error', "Debe haber participantes."]);
+
+                return;
+
+            }
+
+        }
 
         $this->modalContraseña = true;
 
@@ -132,6 +345,37 @@ class Varios extends Component
 
                 }
 
+                if($this->vario->acto_contenido == 'PERSONAS MORALES'){
+
+                    $folioRealPersona = FolioRealPersona::create([
+                        'folio' => (FolioRealPersona::max('folio') ?? 0) + 1,
+                        'denominacion' => $this->denominacion,
+                        'fecha_celebracion' => $this->fecha_celebracion,
+                        'fecha_inscripcion' => $this->fecha_inscripcion,
+                        'notaria' => $this->notaria,
+                        'nombre_notario' => $this->nombre_notario,
+                        'numero_hojas' => $this->numero_hojas,
+                        'numero_escritura' => $this->numero_escritura,
+                        'descripcion' => $this->descripcion,
+                        'observaciones' => $this->observaciones,
+                        'creado_por' => auth()->id()
+                    ]);
+
+                    $this->vario->movimientoRegistral->update(['folio_real_persona' => $folioRealPersona->id]);
+
+                    foreach($this->vario->actores as $actor){
+
+                        $folioRealPersona->actores()->create([
+                            'persona_id' => $actor->persona_id,
+                            'tipo_actor' => $actor->tipo_actor
+                        ]);
+
+                        $actor->delete();
+
+                    }
+
+                }
+
             });
 
             $this->dispatch('imprimir_documento', ['vario' => $this->vario->id]);
@@ -182,6 +426,8 @@ class Varios extends Component
         $this->link = env('SISTEMA_TRAMITES_CONSULTAR_ARCHIVO');
 
         $this->actos = Constantes::ACTOS_INSCRIPCION_VARIOS;
+
+        $this->vario->load('actores.persona');
 
     }
 

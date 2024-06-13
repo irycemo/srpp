@@ -23,6 +23,12 @@ class VariosController extends Controller
             $q->where('name', 'Jefe de departamento')->where('area', 'Departamento de Registro de Inscripciones');
         })->first()->name;
 
+        if($vario->acto_contenido == 'PERSONAS MORALES'){
+
+            $vario->load('movimientoRegistral.folioRealPersona.actores.persona');
+
+        }
+
         $pdf = Pdf::loadView('varios.acto', [
             'vario' => $vario,
             'director' => $director,

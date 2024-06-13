@@ -12,6 +12,7 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 
 class Deudor extends Model implements Auditable
 {
+
     use HasFactory;
     use ModelosTrait;
     use \OwenIt\Auditing\Auditable;
