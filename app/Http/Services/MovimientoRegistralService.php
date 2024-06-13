@@ -39,46 +39,7 @@ class MovimientoRegistralService{
 
                 $movimiento_registral = MovimientoRegistral::create($this->requestMovimientoCrear($request));
 
-                if($request['categoria_servicio'] == 'Certificaciones'){
-
-                    $this->certificacionesService->store($request + ['movimiento_registral' => $movimiento_registral->id]);
-
-                }
-
-                if($request['categoria_servicio'] == 'Inscripciones - Propiedad'){
-
-
-                    $this->inscripcionesPropiedadService->store($request + ['movimiento_registral' => $movimiento_registral->id]);
-
-                }
-
-                if($request['categoria_servicio'] == 'Inscripciones - Gravamenes'){
-
-
-                    $this->inscripcionesGravamenService->store($request + ['movimiento_registral' => $movimiento_registral->id]);
-
-                }
-
-                if($request['categoria_servicio'] == 'Cancelación - Gravamenes'){
-
-
-                    $this->inscripcionesCancelacionService->store($request + ['movimiento_registral' => $movimiento_registral->id]);
-
-                }
-
-                if($request['categoria_servicio'] == 'Varios , Arrendamientos, Avisos Preventivos'){
-
-
-                    $this->variosService->store($request + ['movimiento_registral' => $movimiento_registral->id]);
-
-                }
-
-                if($request['categoria_servicio'] == 'Sentencias'){
-
-
-                    $this->sentenciasService->store($request + ['movimiento_registral' => $movimiento_registral->id]);
-
-                }
+                $this->crearInscripcion($request, $movimiento_registral->id);
 
                 $data = $movimiento_registral;
 
@@ -117,6 +78,51 @@ class MovimientoRegistralService{
             Log::error('Error al ingresar el trámite: ' . $request['año'] . '-' . $request['tramite'] . '-' . $request['usuario'] . ' desde Sistema Trámites. ' . $th);
 
             throw new MovimientoRegistralServiceException('Error al ingresar el trámite: ' . $request['año'] . '-' . $request['tramite'] . '-' . $request['usuario'] . ' desde Sistema Trámites.');
+
+        }
+
+    }
+
+    public function crearInscripcion($request, $id){
+
+        if($request['categoria_servicio'] == 'Certificaciones'){
+
+            $this->certificacionesService->store($request + ['movimiento_registral' => $id]);
+
+        }
+
+        if($request['categoria_servicio'] == 'Inscripciones - Propiedad'){
+
+
+            $this->inscripcionesPropiedadService->store($request + ['movimiento_registral' => $id]);
+
+        }
+
+        if($request['categoria_servicio'] == 'Inscripciones - Gravamenes'){
+
+
+            $this->inscripcionesGravamenService->store($request + ['movimiento_registral' => $id]);
+
+        }
+
+        if($request['categoria_servicio'] == 'Cancelación - Gravamenes'){
+
+
+            $this->inscripcionesCancelacionService->store($request + ['movimiento_registral' => $id]);
+
+        }
+
+        if($request['categoria_servicio'] == 'Varios , Arrendamientos, Avisos Preventivos'){
+
+
+            $this->variosService->store($request + ['movimiento_registral' => $id]);
+
+        }
+
+        if($request['categoria_servicio'] == 'Sentencias'){
+
+
+            $this->sentenciasService->store($request + ['movimiento_registral' => $id]);
 
         }
 
@@ -216,10 +222,19 @@ class MovimientoRegistralService{
 
             isset($request['folio_real']) ? $folioReal = $request['folio_real'] : $folioReal = null;
 
+            $documento_entrada = [
+                'tipo_documento' => $request['tipo_documento'],
+                'autoridad_cargo' => $request['autoridad_cargo'],
+                'autoridad_nombre' => $request['autoridad_nombre'],
+                'fecha_emision' => $request['fecha_emision'],
+                'numero_documento' => $request['numero_documento'],
+                'procedencia' => $request['procedencia'],
+            ];
+
             return $array + [
                 'folio' => $this->calcularFolio($request),
                 'estado' => 'nuevo',
-                'usuario_asignado' => $this->obtenerUsuarioAsignado($folioReal, $request['servicio'], $request['distrito'], $request['solicitante'], $request['tipo_servicio'], false),
+                'usuario_asignado' => $this->obtenerUsuarioAsignado($documento_entrada, $folioReal, $request['servicio'], $request['distrito'], $request['solicitante'], $request['tipo_servicio'], false),
                 'usuario_supervisor' => $this->obtenerSupervisor($request['servicio'], $request['distrito']),
                 'solicitante' => $request['nombre_solicitante']
             ];
@@ -277,8 +292,22 @@ class MovimientoRegistralService{
 
     }
 
-    public function obtenerUsuarioAsignado($folioReal, $servicio, $distrito, $solicitante, $tipo_servicio, $random):int
+    public function obtenerUsuarioAsignado($documento_entrada, $folioReal, $servicio, $distrito, $solicitante, $tipo_servicio, $random):int
     {
+
+        $movimientoRegistral = MovimientoRegistral::where('tipo_documento', $documento_entrada['tipo_documento'])
+                                                        ->where('autoridad_cargo', $documento_entrada['autoridad_cargo'])
+                                                        ->where('autoridad_nombre', $documento_entrada['autoridad_nombre'])
+                                                        ->where('fecha_emision', $documento_entrada['fecha_emision'])
+                                                        ->where('numero_documento', $documento_entrada['numero_documento'])
+                                                        ->where('procedencia', $documento_entrada['procedencia'])
+                                                        ->first();
+
+        if($movimientoRegistral){
+
+            return $movimientoRegistral->usuario_asignado;
+
+        }
 
         /* Certificaciones: Copias simples, Copias certificadas */
         if($servicio == 'DL13' || $servicio == 'DL14'){

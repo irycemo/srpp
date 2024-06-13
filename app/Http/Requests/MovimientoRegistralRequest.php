@@ -22,14 +22,15 @@ class MovimientoRegistralRequest extends FormRequest
     public function rules(): array
     {
         return [
-            /* Predio */
+            /* Antecedente */
             'folio_real' => 'nullable',
             'tomo' => 'nullable',
             'tomo_bis' => 'nullable',
             'registro' => 'nullable',
             'registro_bis' => 'nullable',
-            'distrito' => 'required',
-            'seccion' => 'required',
+            'distrito' => 'nullable',
+            'seccion' => 'nullable',
+            'numero_propiedad' => 'nullable',
 
             /* Tramite */
             'año' => 'required',
@@ -38,7 +39,7 @@ class MovimientoRegistralRequest extends FormRequest
             'tipo_servicio' => 'required',
             'monto' => 'required',
 
-            /* SOlicitante */
+            /* Solicitante */
             'solicitante' => 'required',
             'nombre_solicitante' => 'required',
 
@@ -54,10 +55,8 @@ class MovimientoRegistralRequest extends FormRequest
             'numero_oficio' => 'nullable',
             'numero_paginas' => 'nullable',
             'numero_inmuebles' => 'nullable',
-            'numero_propiedad' => 'nullable',
             'numero_escritura' => 'nullable',
             'numero_notaria' => 'nullable',
-            'numero_documento' => 'nullable',
 
             'valor_propiedad' => 'nullable',
 
@@ -75,6 +74,7 @@ class MovimientoRegistralRequest extends FormRequest
             'autoridad_cargo' => 'nullable',
             'autoridad_nombre' => 'nullable',
             'fecha_emision' => 'nullable',
+            'numero_documento' => 'nullable',
             'procedencia' => 'nullable',
         ];
     }

@@ -279,7 +279,7 @@ class AsignacionService{
 
     }
 
-    /* Inscripciones : Propiedad */
+    /* Inscripciones : Gravamen */
     public function obtenerUsuarioGravamen($folioReal, $distrito):int
     {
 
@@ -411,7 +411,7 @@ class AsignacionService{
 
     }
 
-    /* Inscripciones : Cancelacion */
+    /* Inscripciones : Varios */
     public function obtenerUsuarioVarios($folioReal, $distrito):int
     {
 

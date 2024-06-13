@@ -641,7 +641,7 @@ class GravamenInscripcion extends Component
                     foreach($this->folios_reales as $folio){
 
                         $movimiento = $folio->movimientosRegistrales()->create([
-                            'estado' => 'nuevo',
+                            'estado' => 'concluido',
                             'folio' => FolioReal::find($this->gravamen->movimientoRegistral->folio_real)->ultimoFolio() + 1,
                             'folio_real' => $this->gravamen->movimientoRegistral->folio_real,
                             'fecha_prelacion' => $this->gravamen->movimientoRegistral->fecha_prelacion,

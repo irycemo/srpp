@@ -483,9 +483,9 @@
 
             </x-input-group>
 
-            <x-input-group for="predio.municipio_ubicacion" label="Municipio" :error="$errors->first('predio.municipio_ubicacion')" class="w-full">
+            <x-input-group for="predio.municipio" label="Municipio" :error="$errors->first('predio.municipio')" class="w-full">
 
-                <x-input-text id="predio.municipio_ubicacion" wire:model="predio.municipio_ubicacion" readonly/>
+                <x-input-text id="predio.municipio" wire:model="predio.municipio" readonly/>
 
             </x-input-group>
 
@@ -501,9 +501,9 @@
 
             </x-input-group>
 
-            <x-input-group for="predio.localidad_ubicacion" label="Localidad" :error="$errors->first('predio.localidad_ubicacion')" class="w-full">
+            <x-input-group for="predio.localidad" label="Localidad" :error="$errors->first('predio.localidad')" class="w-full">
 
-                <x-input-text id="predio.localidad_ubicacion" wire:model="predio.localidad_ubicacion" />
+                <x-input-text id="predio.localidad" wire:model="predio.localidad" />
 
             </x-input-group>
 
@@ -571,9 +571,9 @@
 
             </x-input-group>
 
-            <x-input-group for="predio.manzana_ubicacion" label="Manzana" :error="$errors->first('predio.manzana_ubicacion')" class="w-full">
+            <x-input-group for="predio.manzana" label="Manzana" :error="$errors->first('predio.manzana')" class="w-full">
 
-                <x-input-text id="predio.manzana_ubicacion" wire:model="predio.manzana_ubicacion" />
+                <x-input-text id="predio.manzana" wire:model="predio.manzana" />
 
             </x-input-group>
 
