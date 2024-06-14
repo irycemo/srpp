@@ -550,7 +550,7 @@ class ModalGravamen extends ModalComponent
 
         $this->tipo_deudores = Constantes::TIPO_DEUDOR;
 
-        $this->actos = Acto::where('seccion', 'gravamen')->orderBy('acto')->get();
+        $this->actos = Constantes::ACTOS_INSCRIPCION_GRAVAMEN;
 
         if($this->movimientoRegistral->folio_real){
 

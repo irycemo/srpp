@@ -31,6 +31,7 @@
 
     body{
         margin-top: 120px;
+        margin-bottom: 20px;
         counter-reset: page;
         height: 100%;
         background-image: url("storage/img/escudo_fondo.png");
@@ -59,7 +60,6 @@
     }
 
     .firma{
-        margin-top: 100px;
         text-align: center;
     }
 
@@ -371,10 +371,10 @@
                     <thead>
 
                         <tr>
-                            <th >Nombre / Razón social</th>
-                            <th >% de propiedad</th>
-                            <th >% de nuda</th>
-                            <th >% de usufructo</th>
+                            <th style="padding-right: 10px;">Nombre / Razón social</th>
+                            <th style="padding-right: 10px;">% de propiedad</th>
+                            <th style="padding-right: 10px;">% de nuda</th>
+                            <th style="padding-right: 10px;">% de usufructo</th>
                         </tr>
 
                     </thead>
@@ -403,6 +403,54 @@
                     </tbody>
 
                 </table>
+
+                @if($folioReal->antecedentes->count())
+
+                    <p class="separador">Antecedentes fusionados</p>
+
+                    <table>
+
+                        <thead>
+
+                            <tr>
+                                <th style="padding-right: 10px;">Tomo</th>
+                                <th style="padding-right: 10px;">Registro</th>
+                                <th style="padding-right: 10px;">Numero de propiedad</th>
+                                <th style="padding-right: 10px;">Distrito</th>
+                                <th style="padding-right: 10px;">Sección</th>
+                            </tr>
+
+                        </thead>
+
+                        <tbody>
+
+                            @foreach ($folioReal->antecedentes as $antecedente)
+
+                                <tr>
+                                    <td style="padding-right: 40px;">
+                                        {{ $antecedente->tomo_antecedente }}
+                                    </td>
+                                    <td style="padding-right: 40px;">
+                                        {{ $antecedente->registro_antecedente }}
+                                    </td>
+                                    <td style="padding-right: 40px;">
+                                        {{ $antecedente->numero_propiedad_antecedente }}
+                                    </td>
+                                    <td style="padding-right: 40px;">
+                                        {{ $antecedente->distrito_antecedente }}
+                                    </td>
+                                    <td style="padding-right: 40px;">
+                                        {{ $antecedente->seccion_antecedente }}
+                                    </td>
+                                </tr>
+
+                            @endforeach
+
+                        </tbody>
+
+                    </table>
+
+                @endif
 
                 <div class="firma no-break">
 

@@ -2,11 +2,13 @@
 
 namespace App\Livewire\PaseFolio;
 
+use Exception;
 use App\Models\User;
 use App\Models\Predio;
 use Livewire\Component;
 use App\Models\Escritura;
 use App\Models\FolioReal;
+use App\Models\Antecedente;
 use Livewire\Attributes\On;
 use App\Constantes\Constantes;
 use Illuminate\Validation\Rule;
@@ -15,7 +17,6 @@ use App\Models\MovimientoRegistral;
 use Illuminate\Support\Facades\Log;
 use App\Livewire\PaseFolio\PaseFolio;
 use App\Http\Services\AsignacionService;
-use Exception;
 
 class Elaboracion extends Component
 {
@@ -42,11 +43,19 @@ class Elaboracion extends Component
     public $escritura_observaciones;
 
     public MovimientoRegistral $movimientoRegistral;
-    public Predio $propiedad;
+    public $propiedad;
     public Escritura $escritura;
 
     public $distritos;
     public $estados;
+
+    public $tomo;
+    public $registro;
+    public $numero_propiedad;
+    public $modal = false;
+    public $editar = false;
+    public $crear = false;
+    public $antecedente;
 
     protected function rules(){
         return [
@@ -502,6 +511,148 @@ class Elaboracion extends Component
                                 $q->where('name', $role);
                             })
                             ->get();
+    }
+
+    public function abrirModalCrear(){
+
+        $this->reset(['tomo', 'registro', 'numero_propiedad']);
+
+        $this->modal = true;
+
+        $this->crear = true;
+
+    }
+
+    public function abrirModalEditar(Antecedente $antecedente){
+
+        $this->antecedente = $antecedente;
+
+        $this->tomo = $antecedente->tomo_antecedente;
+
+        $this->registro = $antecedente->registro_antecedente;
+
+        $this->numero_propiedad = $antecedente->numero_propiedad_antecedente;
+
+        $this->modal = true;
+
+        $this->editar = true;
+
+    }
+
+    public function actualizarAntecedente(){
+
+        $this->validate(
+            [
+                'tomo' => 'required',
+                'registro' => 'required',
+                'numero_propiedad' => 'required'
+            ]
+        );
+
+        try {
+
+            $this->antecedente->tomo_antecedente = $this->tomo;
+            $this->antecedente->registro_antecedente = $this->registro;
+            $this->antecedente->numero_propiedad_antecedente = $this->numero_propiedad;
+            $this->antecedente->save();
+
+            $this->movimientoRegistral->load('folioReal.antecedentes');
+
+            $this->dispatch('mostrarMensaje', ['success', "El antecedente se actualizó con éxito."]);
+
+            $this->modal = false;
+
+        } catch (\Throwable $th) {
+            Log::error("Error al crear antecedente en pase a folio por el usuario: (id: " . auth()->user()->id . ") " . auth()->user()->name . ". " . $th);
+            $this->dispatch('mostrarMensaje', ['error', "Ha ocurrido un error."]);
+        }
+
+    }
+
+    public function guardarAntecedente(){
+
+        $this->validate(
+            [
+                'tomo' => 'required',
+                'registro' => 'required',
+                'numero_propiedad' => 'required'
+            ]
+        );
+
+        $antecedente = Antecedente::where('tomo_antecedente', $this->tomo)
+                                    ->where('registro_antecedente', $this->registro)
+                                    ->where('numero_propiedad_antecedente', $this->numero_propiedad)
+                                    ->where('distrito_antecedente', $this->movimientoRegistral->getRawOriginal('distrito'))
+                                    ->where('seccion_antecedente', $this->movimientoRegistral->seccion)
+                                    ->where('folio_real', $this->movimientoRegistral->folio_real)
+                                    ->first();
+
+        if($antecedente){
+
+            $this->dispatch('mostrarMensaje', ['warning', "El antecedente ya se encuentra en la lista."]);
+
+            return;
+
+        }
+
+        $folioReal = FolioReal::where('tomo_antecedente', $this->tomo)
+                                    ->where('registro_antecedente', $this->registro)
+                                    ->where('numero_propiedad_antecedente', $this->numero_propiedad)
+                                    ->where('distrito_antecedente', $this->movimientoRegistral->getRawOriginal('distrito'))
+                                    ->where('seccion_antecedente', $this->movimientoRegistral->seccion)
+                                    ->first();
+
+        if($folioReal){
+
+            $this->dispatch('mostrarMensaje', ['warning', "El antecedente ya tiene folio real."]);
+
+            return;
+
+        }
+
+        try {
+
+            Antecedente::create([
+                'tomo_antecedente' => $this->tomo,
+                'registro_antecedente' => $this->registro,
+                'numero_propiedad_antecedente' => $this->numero_propiedad,
+                'distrito_antecedente' => $this->movimientoRegistral->getRawOriginal('distrito'),
+                'seccion_antecedente' => $this->movimientoRegistral->seccion,
+                'folio_real' => $this->movimientoRegistral->folio_real,
+            ]);
+
+            $this->movimientoRegistral->load('folioReal.antecedentes');
+
+            $this->dispatch('mostrarMensaje', ['success', "El antecedente se eliminó con éxito."]);
+
+            $this->modal = false;
+
+        } catch (\Throwable $th) {
+            Log::error("Error al crear antecedente en pase a folio por el usuario: (id: " . auth()->user()->id . ") " . auth()->user()->name . ". " . $th);
+            $this->dispatch('mostrarMensaje', ['error', "Ha ocurrido un error."]);
+        }
+
+    }
+
+    public function borrarAntecedente(Antecedente $antecedente){
+
+        $this->authorize('update', $this->movimientoRegistral);
+
+        try {
+
+            $antecedente->delete();
+
+            $this->dispatch('mostrarMensaje', ['success', "La información se eliminó con éxito."]);
+
+            $this->movimientoRegistral->load('folioReal.antecedentes');
+
+        } catch (\Throwable $th) {
+
+            Log::error("Error al borrar antecedente en pase a folio por el usuario: (id: " . auth()->user()->id . ") " . auth()->user()->name . ". " . $th);
+            $this->dispatch('mostrarMensaje', ['error', "Ha ocurrido un error."]);
+
+        }
+
     }
 
     public function mount(){

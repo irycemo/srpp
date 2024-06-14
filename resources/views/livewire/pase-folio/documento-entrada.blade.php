@@ -2,47 +2,51 @@
 
     <div class="col-span-2">
 
-        <div class="grid grid-cols-1 md:grid-cols-3 sm:grid-cols-2 gap-3 mb-3 bg-white rounded-lg p-3 shadow-lg">
+        @if($movimientoRegistral->inscripcionPropiedad?->servicio != 'D731')
 
-            <span class="flex items-center justify-center text-lg text-gray-700 md:col-span-3 col-span-1 sm:col-span-2">Antecedente</span>
+            <div class="grid grid-cols-1 md:grid-cols-3 sm:grid-cols-2 gap-3 mb-3 bg-white rounded-lg p-3 shadow-lg">
 
-            <x-input-group for="folio_real" label="Folio real" class="w-full">
+                <span class="flex items-center justify-center text-lg text-gray-700 md:col-span-3 col-span-1 sm:col-span-2">Antecedente</span>
 
-                <x-input-text id="folio_real" value="{{ $movimientoRegistral->folioReal?->folio }}" readonly/>
+                <x-input-group for="folio_real" label="Folio real" class="w-full">
 
-            </x-input-group>
+                    <x-input-text id="folio_real" value="{{ $movimientoRegistral->folioReal?->folio }}" readonly/>
 
-            <x-input-group for="tomo" label="Tomo" class="w-full">
+                </x-input-group>
 
-                <x-input-text id="tomo" value="{{ $movimientoRegistral->tomo }}" readonly/>
+                <x-input-group for="tomo" label="Tomo" class="w-full">
 
-            </x-input-group>
+                    <x-input-text id="tomo" value="{{ $movimientoRegistral->tomo }}" readonly/>
 
-            <x-input-group for="registro" label="Registro" class="w-full">
+                </x-input-group>
 
-                <x-input-text id="registro" value="{{ $movimientoRegistral->registro }}" readonly/>
+                <x-input-group for="registro" label="Registro" class="w-full">
 
-            </x-input-group>
+                    <x-input-text id="registro" value="{{ $movimientoRegistral->registro }}" readonly/>
 
-            <x-input-group for="numero_propiedad" label="Número de propiedad" class="w-full">
+                </x-input-group>
 
-                <x-input-text id="numero_propiedad" value="{{ $movimientoRegistral->numero_propiedad }}" readonly/>
+                <x-input-group for="numero_propiedad" label="Número de propiedad" class="w-full">
 
-            </x-input-group>
+                    <x-input-text id="numero_propiedad" value="{{ $movimientoRegistral->numero_propiedad }}" readonly/>
 
-            <x-input-group for="distrito" label="Distrito" class="w-full">
+                </x-input-group>
 
-                <x-input-text id="distrito" value="{{ $movimientoRegistral->distrito }}" readonly/>
+                <x-input-group for="distrito" label="Distrito" class="w-full">
 
-            </x-input-group>
+                    <x-input-text id="distrito" value="{{ $movimientoRegistral->distrito }}" readonly/>
 
-            <x-input-group for="seccion" label="Sección" class="w-full">
+                </x-input-group>
 
-                <x-input-text id="seccion" value="{{ $movimientoRegistral->seccion }}" readonly/>
+                <x-input-group for="seccion" label="Sección" class="w-full">
 
-            </x-input-group>
+                    <x-input-text id="seccion" value="{{ $movimientoRegistral->seccion }}" readonly/>
 
-        </div >
+                </x-input-group>
+
+            </div >
+
+        @endif
 
         <div class="grid grid-cols-1 md:grid-cols-3 sm:grid-cols-2 gap-3 mb-3 bg-white rounded-lg p-3 shadow-lg">
 
@@ -180,6 +184,78 @@
 
         </div>
 
+        @if($movimientoRegistral->inscripcionPropiedad?->servicio == 'D731' && $movimientoRegistral->folioReal)
+
+        <div class="w-full bg-white rounded-lg p-3 shadow-lg mb-3">
+
+            <span class="flex items-center justify-center text-gray-700">Antecedentes a fusionar</span>
+
+            <div class="">
+
+                <div class="mb-2 flex justify-end">
+
+                    <x-button-blue wire:click="abrirModalCrear">Agregar antecedente</x-button-blue>
+
+                </div>
+
+                <div>
+
+                    <x-table>
+
+                        <x-slot name="head">
+                            <x-table.heading >Tomo</x-table.heading>
+                            <x-table.heading >Registro</x-table.heading>
+                            <x-table.heading ># Propiedad</x-table.heading>
+                            <x-table.heading >Distrito</x-table.heading>
+                            <x-table.heading >Sección</x-table.heading>
+                            <x-table.heading ></x-table.heading>
+                        </x-slot>
+
+                        <x-slot name="body">
+
+                            @foreach ($movimientoRegistral->folioReal->antecedentes as $antecedente)
+
+                                <x-table.row >
+
+                                    <x-table.cell>{{ $antecedente->tomo_antecedente }}</x-table.cell>
+                                    <x-table.cell>{{ $antecedente->registro_antecedente }}</x-table.cell>
+                                    <x-table.cell>{{ $antecedente->numero_propiedad_antecedente }}</x-table.cell>
+                                    <x-table.cell>{{ $antecedente->distrito_antecedente }}</x-table.cell>
+                                    <x-table.cell>{{ $antecedente->seccion_antecedente }}</x-table.cell>
+                                    <x-table.cell>
+                                        <div class="flex items-center gap-3">
+                                            <x-button-blue
+                                                wire:click="abrirModalEditar({{ $antecedente->id }})"
+                                                wire:loading.attr="disabled"
+                                            >
+                                                Editar
+                                            </x-button-blue>
+                                            <x-button-red
+                                                wire:click="borrarAntecedente({{ $antecedente->id }})"
+                                                wire:loading.attr="disabled">
+                                                Borrar
+                                            </x-button-red>
+                                        </div>
+                                    </x-table.cell>
+
+                                </x-table.row>
+
+                            @endforeach
+
+                        </x-slot>
+
+                        <x-slot name="tfoot"></x-slot>
+
+                    </x-table>
+
+                </div>
+
+            </div>
+
+        </div>
+
+        @endif
+
     </div>
 
     <div class="bg-white rounded-lg p-2 mb-3 shadow-lg">
@@ -187,6 +263,90 @@
         <span class="flex items-center justify-center text-lg text-gray-700">Información de la base de datos</span>
 
     </div>
+
+    <x-dialog-modal wire:model="modal">
+
+        <x-slot name="title">
+
+            @if($editar)
+                Editar
+            @else
+                Nuevo
+            @endif
+
+        </x-slot>
+
+        <x-slot name="content">
+
+            <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-3 mb-3 col-span-2 rounded-lg p-3">
+
+                <x-input-group for="tomo" label="Tomo" :error="$errors->first('tomo')" class="w-full">
+
+                    <x-input-text id="tomo" wire:model="tomo" />
+
+                </x-input-group>
+
+                <x-input-group for="registro" label="Registro" :error="$errors->first('registro')" class="w-full">
+
+                    <x-input-text type="number" id="registro" wire:model="registro" />
+
+                </x-input-group>
+
+                <x-input-group for="numero_propiedad" label="Número de propiedad" :error="$errors->first('numero_propiedad')" class="w-full">
+
+                    <x-input-text id="numero_propiedad" wire:model="numero_propiedad" />
+
+                </x-input-group>
+
+            </div>
+
+        </x-slot>
+
+        <x-slot name="footer">
+
+            <div class="flex gap-3">
+
+                @if($crear)
+
+                <x-button-blue
+                    wire:click="guardarAntecedente"
+                    wire:loading.attr="disabled"
+                    wire:target="guardarAntecedente">
+
+                    <img wire:loading wire:target="guardarAntecedente" class="mx-auto h-4 mr-1" src="{{ asset('storage/img/loading3.svg') }}" alt="Loading">
+
+                    <span>Guardar</span>
+
+                </x-button-blue>
+
+                @elseif($editar)
+
+                    <x-button-blue
+                        wire:click="actualizarAntecedente"
+                        wire:loading.attr="disabled"
+                        wire:target="actualizarAntecedente">
+
+                        <img wire:loading wire:target="actualizarAntecedente" class="mx-auto h-4 mr-1" src="{{ asset('storage/img/loading3.svg') }}" alt="Loading">
+
+                        <span>Actualizar</span>
+
+                    </x-button-blue>
+
+                @endif
+
+                <x-button-red
+                    wire:click="$toggle('modal')"
+                    wire:loading.attr="disabled"
+                    wire:target="$toggle('modal')"
+                    type="button">
+                    Cerrar
+                </x-button-red>
+
+            </div>
+
+        </x-slot>
+
+    </x-dialog-modal>
 
 </div>
 

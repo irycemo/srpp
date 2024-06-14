@@ -6,6 +6,7 @@ use Exception;
 use App\Models\User;
 use App\Models\Actor;
 use App\Models\Vario;
+use App\Models\Deudor;
 use App\Models\Persona;
 use Livewire\Component;
 use App\Models\FolioReal;
@@ -251,7 +252,7 @@ class Varios extends Component
 
         } catch (\Throwable $th) {
 
-            Log::error("Error al borrar actor en pase a folio por el usuario: (id: " . auth()->user()->id . ") " . auth()->user()->name . ". " . $th);
+            Log::error("Error al borrar actor envarios por el usuario: (id: " . auth()->user()->id . ") " . auth()->user()->name . ". " . $th);
             $this->dispatch('mostrarMensaje', ['error', "Ha ocurrido un error."]);
 
         }

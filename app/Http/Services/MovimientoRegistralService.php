@@ -330,7 +330,7 @@ class MovimientoRegistralService{
 
         }
 
-        $inscripcionesPropiedad = ['D122', 'D114', 'D125', 'D126', 'D124', 'D121', 'D120', 'D119', 'D123', 'D118', 'D116', 'D115', 'D113'];
+        $inscripcionesPropiedad = ['D122', 'D114', 'D125', 'D126', 'D124', 'D121', 'D120', 'D119', 'D123', 'D118', 'D116', 'D115', 'D113', 'D731'];
 
         /* Inscripciones: Propiedad */
         if(in_array($servicio, $inscripcionesPropiedad)){
@@ -380,7 +380,7 @@ class MovimientoRegistralService{
 
         }
 
-        $inscripcionesPropiedad = ['D122', 'D114', 'D125', 'D126', 'D124', 'D121', 'D120', 'D119', 'D123', 'D118', 'D116', 'D115', 'D113'];
+        $inscripcionesPropiedad = ['D122', 'D114', 'D125', 'D126', 'D124', 'D121', 'D120', 'D119', 'D123', 'D118', 'D116', 'D115', 'D113', 'D731'];
 
         /* Inscripciones: Propiedad */
         if(in_array($servicio, $inscripcionesPropiedad)){

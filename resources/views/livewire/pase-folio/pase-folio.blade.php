@@ -82,7 +82,7 @@
 
                             <span class="lg:hidden absolute top-0 left-0 bg-blue-300 px-2 py-1 text-xs text-white font-bold uppercase rounded-br-xl">Tomo</span>
 
-                            {{ $movimiento->tomo }}
+                            {{ $movimiento->tomo ?? 'N/A' }}
 
                         </x-table.cell>
 
@@ -90,7 +90,7 @@
 
                             <span class="lg:hidden absolute top-0 left-0 bg-blue-300 px-2 py-1 text-xs text-white font-bold uppercase rounded-br-xl">Registro</span>
 
-                            {{ $movimiento->registro }}
+                            {{ $movimiento->registro ?? 'N/A' }}
 
                         </x-table.cell>
 
@@ -98,7 +98,7 @@
 
                             <span class="lg:hidden absolute top-0 left-0 bg-blue-300 px-2 py-1 text-xs text-white font-bold uppercase rounded-br-xl">Número de propiedad</span>
 
-                            {{ $movimiento->numero_propiedad }}
+                            {{ $movimiento->numero_propiedad ?? 'N/A' }}
 
                         </x-table.cell>
 

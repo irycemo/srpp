@@ -6,6 +6,7 @@ use App\Models\Vario;
 use App\Models\Predio;
 use App\Models\Gravamen;
 use App\Models\Sentencia;
+use App\Models\Antecedente;
 use App\Traits\ModelosTrait;
 use App\Constantes\Constantes;
 use App\Models\MovimientoRegistral;
@@ -71,6 +72,10 @@ class FolioReal extends Model implements Auditable
 
     public function folioRealAntecedente(){
         return $this->belongsTo(FolioReal::class, 'antecedente');
+    }
+
+    public function antecedentes(){
+        return $this->hasMany(Antecedente::class, 'folio_real');
     }
 
 }

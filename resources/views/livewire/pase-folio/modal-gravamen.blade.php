@@ -154,11 +154,9 @@
 
                         <option value="">Seleccione una opción</option>
 
-                        <option value="embargo">Embargo</option>
-
                         @foreach ($actos as $acto)
 
-                            <option value="{{ $acto->id }}">{{ $acto->acto }}</option>
+                            <option value="{{ $acto}}">{{ $acto }}</option>
 
                         @endforeach
 

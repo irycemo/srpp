@@ -15,7 +15,7 @@ class PaseFolioController extends Controller
 
     public function caratula(FolioReal $folioReal){
 
-        $folioReal->load('predio');
+        $folioReal->load('predio', 'antecedentes');
 
         $formatter = new NumeroALetras();
 

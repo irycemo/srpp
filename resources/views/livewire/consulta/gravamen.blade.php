@@ -6,7 +6,7 @@
 
             <x-h4>
 
-                Folio: ({{ $gravamen->movimientoRegistral->folio }})
+                Movimiento registral: ({{ $gravamen->movimientoRegistral->folio }})
 
                 <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 float-right" :class="selected == 1 ? 'transform rotate-180' : ''" fill="none" viewBox="0 0 24 24" stroke="gray">
                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1" d="M19 9l-7 7-7-7" />

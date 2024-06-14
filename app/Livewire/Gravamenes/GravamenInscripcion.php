@@ -497,7 +497,7 @@ class GravamenInscripcion extends Component
 
             $this->reset(['modal', 'crear', 'title']);
 
-            $this->gravamen->load('acreedores');
+            $this->gravamen->load('acreedores.persona');
 
         } catch (\Exception $th) {
 
@@ -523,7 +523,7 @@ class GravamenInscripcion extends Component
 
             $this->reset(['modal', 'editar', 'title']);
 
-            $this->gravamen->load('acreedores');
+            $this->gravamen->load('acreedores.persona');
 
         } catch (\Throwable $th) {
 
@@ -597,6 +597,8 @@ class GravamenInscripcion extends Component
         $this->propiedad = $this->gravamen->movimientoRegistral->folioReal->predio;
 
         $this->gravamen->estado = 'nuevo';
+
+        $this->gravamen->load('acreedores.persona');
 
         $this->tipo_deudor = $this->gravamen->deudores()->first()?->tipo;
 
