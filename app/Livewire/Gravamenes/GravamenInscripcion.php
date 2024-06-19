@@ -652,7 +652,7 @@ class GravamenInscripcion extends Component
                             'tipo_servicio' => $this->gravamen->movimientoRegistral->tipo_servicio,
                             'solicitante' => $this->gravamen->movimientoRegistral->solicitante,
                             'seccion' => $this->gravamen->movimientoRegistral->seccion,
-                            'distrito' => $this->gravamen->movimientoRegistral->distrito,
+                            'distrito' => $this->gravamen->movimientoRegistral->getRawOriginal('distrito'),
                             'tipo_documento' => $this->gravamen->movimientoRegistral->tipo_documento,
                             'numero_documento' => $this->gravamen->movimientoRegistral->numero_documento,
                             'numero_propiedad' => $this->gravamen->movimientoRegistral->numero_propiedad,
@@ -689,7 +689,7 @@ class GravamenInscripcion extends Component
 
             $this->modalContraseña = false;
 
-            $this->crearPdf();
+            /* $this->crearPdf(); */
 
         } catch (\Throwable $th) {
             Log::error("Error al finalizar inscripcion de propiedad por el usuario: (id: " . auth()->user()->id . ") " . auth()->user()->name . ". " . $th);

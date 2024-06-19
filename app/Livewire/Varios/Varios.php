@@ -322,7 +322,7 @@ class Varios extends Component
                         'tipo_servicio' => $this->vario->movimientoRegistral->tipo_servicio,
                         'solicitante' => $this->vario->movimientoRegistral->solicitante,
                         'seccion' => $this->vario->movimientoRegistral->seccion,
-                        'distrito' => $this->vario->movimientoRegistral->distrito,
+                        'distrito' => $this->vario->movimientoRegistral->getRawOriginal('distrito'),
                         'tipo_documento' => $this->vario->movimientoRegistral->tipo_documento,
                         'numero_documento' => $this->vario->movimientoRegistral->numero_documento,
                         'numero_propiedad' => $this->vario->movimientoRegistral->numero_propiedad,

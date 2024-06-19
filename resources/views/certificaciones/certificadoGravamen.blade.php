@@ -118,7 +118,6 @@
     }
 
     .firma{
-        margin-top: 100px;
         text-align: center;
     }
 
@@ -416,15 +415,15 @@
                         <strong>Tomo: </strong> {{ $gravamen->movimientoRegistral->tomo_gravamen }}
                         <strong>Registro: </strong>{{ $gravamen->movimientoRegistral->tomo_gravamen }}
                         <strong>Distrito: </strong>{{ $gravamen->movimientoRegistral->distrito }}
-                        CON FECHA DE INSCRIPCIÓN {{ Carbon\Carbon::parse($gravamen->fecha_inscripcion)->format('d-m-Y') }}
-                        RELATIVO A {{ $gravamen->acto_contenido }}
-                        CELEBRADO POR EL(LOS) ACREDOR(ES):
+                        CON <strong>FECHA DE INSCRIPCIÓN: </strong> {{ Carbon\Carbon::parse($gravamen->fecha_inscripcion)->format('d-m-Y') }}
+                        <strong>RELATIVO A: </strong> {{ $gravamen->acto_contenido }}; {{ $gravamen->tipo }}
+                        <strong>CELEBRADO POR EL(LOS) ACREDOR(ES):</strong>
                         @foreach ($gravamen->acreedores as $acreedor)
 
                             {{ $acreedor->persona->nombre }} {{ $acreedor->persona->ap_paterno }} {{ $acreedor->persona->ap_materno }} {{ $acreedor->persona->razon_social }}@if(!$loop->last), @endif
 
                         @endforeach
-                        Y COMO DEUDOR(ES)
+                        <strong>Y COMO DEUDOR(ES)</strong>
                         @foreach ($gravamen->deudores as $deudor)
 
                             @if($deudor->actor)
@@ -438,7 +437,7 @@
                             @endif
 
                         @endforeach
-                        POR LA CANTIDAD DE ${{ number_format($gravamen->valor_gravamen, 2) }} {{ $formatter->toWords($gravamen->valor_gravamen) }}.
+                        <strong>POR LA CANTIDAD DE: </strong> ${{ number_format($gravamen->valor_gravamen, 2) }} {{ $formatter->toWords($gravamen->valor_gravamen) }}, {{ $gravamen->divisa }}.
                     </p>
 
                     <br>

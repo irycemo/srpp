@@ -3,9 +3,11 @@
 namespace App\Livewire\PaseFolio;
 
 use Exception;
+use Carbon\Carbon;
 use App\Models\User;
 use App\Models\Predio;
 use Livewire\Component;
+use App\Models\Gravamen;
 use App\Models\Escritura;
 use App\Models\FolioReal;
 use App\Models\Antecedente;
@@ -248,6 +250,27 @@ class Elaboracion extends Component
 
                 }
 
+                if(!$this->movimientoRegistral->folio_real){
+
+                    $gravamenes = DB::connection('mysql2')->select("call spQGravamen(" .
+                                                                        $this->movimientoRegistral->getRawOriginal('distrito') .
+                                                                        "," . $this->movimientoRegistral->tomo .
+                                                                        "," . ($this->movimientoRegistral->tomo_bis ?? '\'\'') .
+                                                                        "," . $this->movimientoRegistral->registro .
+                                                                        "," . ($this->movimientoRegistral->registro_bis ?? '\'\'') .
+                                                                        "," . $this->movimientoRegistral->numero_propiedad .
+                                                                        ")");
+
+                    foreach($gravamenes as $gravamen){
+
+                        if(isset($gravamen->fcancelacion) && isset($gravamen->stGravamen) && $gravamen->stGravamen == 'P') continue;
+
+                        $this->creargravamen($gravamen);
+
+                    }
+
+                }
+
                 $this->dispatch('mostrarMensaje', ['success', "El documento de entrada se guardó con éxito."]);
 
                 $this->dispatch('cargarPropiedad', id: $this->propiedad->id);
@@ -260,6 +283,41 @@ class Elaboracion extends Component
             $this->dispatch('mostrarMensaje', ['error', "Ha ocurrido un error."]);
 
         }
+
+    }
+
+    public function creargravamen($gravamen){
+
+        $movimientoRegistralGravamenNuevo = MovimientoRegistral::create([
+            'registro_gravamen' => $gravamen->registrog ? ltrim($gravamen->registrog, '0') : null,
+            'tomo_gravamen' => $gravamen->tomog ? ltrim($gravamen->tomog, '0') : null,
+            'seccion' => 'Gravamen',
+            'folio_real' => $this->movimientoRegistral->folio_real,
+            'folio' => $this->movimientoRegistral->folioReal->ultimoFolio() + 1,
+            'distrito' => $this->movimientoRegistral->getRawOriginal('distrito'),
+            'estado' => 'concluido'
+        ]);
+
+        Gravamen::create([
+            'movimiento_registral_id' => $movimientoRegistralGravamenNuevo->id,
+            'fecha_inscripcion' => $gravamen->fechainscripcion ? Carbon::createFromFormat('d/m/Y', $gravamen->fechainscripcion)->toDateString() : null,
+            'estado' => 'activo',
+            'acto_contenido' => $gravamen->descGravamen ?? null,
+            'valor_gravamen' => $gravamen->{'$ transacción'} ?? null,
+            'divisa' => $gravamen->tmoneda ?? null,
+            'observaciones' => "Gravamen ingresado mediante pase a folio: | Tomo gravamen:" . $gravamen->tomog .
+                                " | Registro gravamen: " . $gravamen->registrog . "/" . $gravamen->rbisg .
+                                " | Divisa:" . $gravamen->tmoneda .
+                                " | Monto de la transacción:" . $gravamen->{'$ transacción'} .
+                                " | Acto contenido:" . $gravamen->descGravamen .
+                                " | Fecha de inscripción:" . $gravamen->fechainscripcion .
+                                " | Hora de inscripción:" . $gravamen->horainscripcion .
+                                " | Tipo de deudor:" . $gravamen->stDeudor .
+                                " | Acreedores:" . $gravamen->acreedor .
+                                " | Deudores:" . $gravamen->acreedor .
+                                " | Garantes:" . $gravamen->garantes .
+                                " | Comnetarios:" . $gravamen->comentarios
+        ]);
 
     }
 
@@ -705,7 +763,6 @@ class Elaboracion extends Component
 
     public function render()
     {
-
         $this->authorize('view', $this->movimientoRegistral);
 
         return view('livewire.pase-folio.elaboracion')->extends('layouts.admin');

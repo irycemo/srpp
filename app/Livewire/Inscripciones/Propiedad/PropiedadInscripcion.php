@@ -612,6 +612,7 @@ class PropiedadInscripcion extends Component
                 $this->actor->update([
                     'tipo_propietario' => $this->tipo_propietario,
                     'porcentaje_nuda' => $this->porcentaje_nuda,
+                    'porcentaje_propiedad' => $this->porcentaje_propiedad,
                     'porcentaje_usufructo' => $this->porcentaje_usufructo,
                     'actualizado_por' => auth()->id()
                 ]);

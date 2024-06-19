@@ -23,7 +23,6 @@
 
                 <x-slot name="head">
                     <x-table.heading >Acto contenido</x-table.heading>
-                    <x-table.heading >Tipo</x-table.heading>
                     <x-table.heading >Tomo</x-table.heading>
                     <x-table.heading >Registro</x-table.heading>
                     <x-table.heading >Distrito</x-table.heading>
@@ -39,9 +38,8 @@
                             <x-table.row >
 
                                 <x-table.cell>{{ $gravamen->acto_contenido }}</x-table.cell>
-                                <x-table.cell>{{ $gravamen->tipo }}</x-table.cell>
-                                <x-table.cell>{{ $gravamen->movimientoRegistral->tomo }}</x-table.cell>
-                                <x-table.cell>{{ $gravamen->movimientoRegistral->registro }}</x-table.cell>
+                                <x-table.cell>{{ $gravamen->movimientoRegistral->tomo_gravamen }}</x-table.cell>
+                                <x-table.cell>{{ $gravamen->movimientoRegistral->registro_gravamen }}</x-table.cell>
                                 <x-table.cell>{{ $gravamen->movimientoRegistral->distrito }}</x-table.cell>
                                 <x-table.cell>
                                     <div class="flex items-center gap-3">
@@ -51,11 +49,6 @@
                                         >
                                             Editar
                                         </x-button-blue>
-                                        <x-button-red
-                                            wire:click="abrirModalBorrar({{ $gravamen->id }})"
-                                            wire:loading.attr="disabled">
-                                            Borrar
-                                        </x-button-red>
                                     </div>
                                 </x-table.cell>
 

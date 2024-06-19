@@ -2,18 +2,18 @@
 
 namespace App\Livewire\PaseFolio;
 
-use App\Models\Acto;
 use App\Models\Deudor;
 use App\Models\Predio;
+use App\Models\Acreedor;
 use App\Models\Gravamen;
 use Livewire\Attributes\On;
 use App\Constantes\Constantes;
+use Illuminate\Validation\Rule;
 use Illuminate\Support\Facades\DB;
 use App\Models\MovimientoRegistral;
 use Illuminate\Support\Facades\Log;
 use LivewireUI\Modal\ModalComponent;
 use App\Livewire\PaseFolio\Gravamen as PaseFolioGravamen;
-use App\Models\Acreedor;
 
 class ModalGravamen extends ModalComponent
 {
@@ -55,7 +55,7 @@ class ModalGravamen extends ModalComponent
     public $valor_gravamen = null;
     public $divisa = null;
     public $fecha_inscripcion = null;
-    public $estado = null;
+    public $estado = 'activo';
     public $comentario = null;
 
     public $tipo_deudor;
@@ -213,7 +213,7 @@ class ModalGravamen extends ModalComponent
 
             $this->validate([
                 'tipo' => 'required',
-                'acto_contenido' => 'required',
+                'acto_contenido' => ['required', Rule::in(Constantes::ACTOS_INSCRIPCION_GRAVAMEN)],
                 'valor_gravamen' => 'required',
                 'divisa' => 'required',
                 'fecha_inscripcion' => 'required',
@@ -558,8 +558,8 @@ class ModalGravamen extends ModalComponent
 
             if($this->editar){
 
-                $this->antecente_tomo = $this->movimientoRegistral->tomo;
-                $this->antecente_registro = $this->movimientoRegistral->registro;
+                $this->antecente_tomo = $this->movimientoRegistral->tomo_gravamen;
+                $this->antecente_registro = $this->movimientoRegistral->registro_gravamen;
                 $this->antecente_distrito = $this->distritoMovimineto;
                 $this->tipo_documento = $this->movimientoRegistral->tipo_documento;
                 $this->autoridad_cargo = $this->movimientoRegistral->autoridad_cargo;

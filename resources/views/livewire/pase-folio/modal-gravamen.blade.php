@@ -14,6 +14,16 @@
 
         @if($antecedente)
 
+            @if($gravamen->movimientoRegistral?->estado == 'concluido')
+
+                <x-input-group for="comentario" label="Comentarios del gravamen" :error="$errors->first('comentario')" class="w-full">
+
+                    <textarea rows="5" class="w-full bg-white rounded" wire:model="comentario" readonly></textarea>
+
+                </x-input-group>
+
+            @endif
+
             <div class="grid grid-cols-1 sm:grid-cols-2 gap-3  col-span-2 rounded-lg mb-3" x-transition:enter.duration.500ms x-transition:leave.duration.500ms>
 
                 <span class="flex items-center justify-center  text-gray-700 md:col-span-3 col-span-1 sm:col-span-2">Antecedente</span>
@@ -65,6 +75,16 @@
         @endif
 
         @if($documento_entrada)
+
+            @if($gravamen->movimientoRegistral?->estado == 'concluido')
+
+                <x-input-group for="comentario" label="Comentarios del gravamen" :error="$errors->first('comentario')" class="w-full">
+
+                    <textarea rows="5" class="w-full bg-white rounded" wire:model="comentario" readonly></textarea>
+
+                </x-input-group>
+
+            @endif
 
             <div class="grid grid-cols-1 sm:grid-cols-2 gap-3  col-span-2 rounded-lg mb-3" x-transition:enter.duration.500ms x-transition:leave.duration.500ms>
 
@@ -144,6 +164,16 @@
 
         @if($datos_gravamen)
 
+            @if($gravamen->movimientoRegistral?->estado == 'concluido')
+
+                <x-input-group for="comentario" label="Comentarios del gravamen" :error="$errors->first('comentario')" class="w-full">
+
+                    <textarea rows="5" class="w-full bg-white rounded" wire:model="comentario" readonly></textarea>
+
+                </x-input-group>
+
+            @endif
+
             <div class="grid grid-cols-1 sm:grid-cols-2 gap-3  col-span-2 rounded-lg mb-3" x-transition:enter.duration.500ms x-transition:leave.duration.500ms>
 
                 <span class="flex items-center justify-center ext-gray-700 col-span-3">Datos del gravámen</span>
@@ -196,7 +226,7 @@
 
                 </x-input-group>
 
-                <x-input-group for="estado" label="Estado" :error="$errors->first('estado')" class="w-full">
+                {{-- <x-input-group for="estado" label="Estado" :error="$errors->first('estado')" class="w-full">
 
                     <x-input-select id="estado" wire:model="estado" class="w-full">
 
@@ -208,13 +238,17 @@
 
                     </x-input-select>
 
-                </x-input-group>
+                </x-input-group> --}}
 
-                <x-input-group for="comentario" label="Comentario del gravámen" :error="$errors->first('comentario')" class="col-span-3">
+                @if($gravamen->movimientoRegistral->estado == 'nuevo')
 
-                    <textarea rows="3" class="w-full bg-white rounded" wire:model="comentario"></textarea>
+                    <x-input-group for="comentario" label="Comentario del gravámen" :error="$errors->first('comentario')" class="col-span-3">
 
-                </x-input-group>
+                        <textarea rows="3" class="w-full bg-white rounded" wire:model="comentario"></textarea>
+
+                    </x-input-group>
+
+                @endif
 
                 <div class="flex justify-between items-center w-full col-span-3">
 
@@ -243,6 +277,16 @@
         @endif
 
         @if($deudores)
+
+            @if($gravamen->movimientoRegistral?->estado == 'concluido')
+
+                <x-input-group for="comentario" label="Comentarios del gravamen" :error="$errors->first('comentario')" class="w-full">
+
+                    <textarea rows="5" class="w-full bg-white rounded" wire:model="comentario" readonly></textarea>
+
+                </x-input-group>
+
+            @endif
 
             <div x-transition:enter.duration.500ms x-transition:leave.duration.500ms>
 
@@ -635,6 +679,16 @@
         @endif
 
         @if($acreedores)
+
+            @if($gravamen->movimientoRegistral?->estado == 'concluido')
+
+                <x-input-group for="comentario" label="Comentarios del gravamen" :error="$errors->first('comentario')" class="w-full">
+
+                    <textarea rows="5" class="w-full bg-white rounded" wire:model="comentario" readonly></textarea>
+
+                </x-input-group>
+
+            @endif
 
             <div class="grid grid-cols-1 sm:grid-cols-2 gap-3  col-span-2 rounded-lg mb-3" x-transition:enter.duration.500ms x-transition:leave.duration.500ms>
 

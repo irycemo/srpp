@@ -22,7 +22,7 @@
 
                 </div>
 
-                <div class="space-y-1 sm:col-span-2 lg:col-span-3 mx-auto">
+                {{-- <div class="space-y-1 sm:col-span-2 lg:col-span-3 mx-auto">
 
                     <span class="flex items-center justify-center text-gray-700 col-span-2  ">Clave catastral</span>
 
@@ -46,7 +46,7 @@
 
                     <input title="Departamento" placeholder="Departamento" type="number" class="bg-white rounded text-xs w-28 @error('departamento') border-1 border-red-500 @enderror" wire:model.defer="departamento">
 
-                </div>
+                </div> --}}
 
                 <x-input-group for="superficie_terreno" label="Superficie de terreno" :error="$errors->first('superficie_terreno')" class="w-full relative">
 
