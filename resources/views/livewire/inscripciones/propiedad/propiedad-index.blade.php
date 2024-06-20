@@ -19,7 +19,9 @@
                 @endif
                 <x-table.heading sortable wire:click="sortBy('created_at')" :direction="$sort === 'created_at' ? $direction : null">Registro</x-table.heading>
                 <x-table.heading sortable wire:click="sortBy('updated_at')" :direction="$sort === 'updated_at' ? $direction : null">Actualizado</x-table.heading>
-                <x-table.heading >Acciones</x-table.heading>
+                @if (!auth()->user()->hasRole('Administrador'))
+                    <x-table.heading >Acciones</x-table.heading>
+                @endif
 
             </x-slot>
 
@@ -105,22 +107,26 @@
 
                         </x-table.cell>
 
-                        <x-table.cell>
+                        @if (!auth()->user()->hasRole('Administrador'))
 
-                            <span class="lg:hidden absolute top-0 left-0 bg-blue-300 px-2 py-1 text-xs text-white font-bold uppercase rounded-br-xl">Acciones</span>
+                            <x-table.cell>
 
-                            <div class="flex justify-center lg:justify-start gap-2">
+                                <span class="lg:hidden absolute top-0 left-0 bg-blue-300 px-2 py-1 text-xs text-white font-bold uppercase rounded-br-xl">Acciones</span>
 
-                                <x-button-blue
-                                    wire:click="elaborar({{  $movimiento->id }})"
-                                    wire:loading.attr="disabled"
-                                    wire:target="elaborar({{  $movimiento->id }})">
-                                    Elaborar
-                                </x-button-blue>
+                                <div class="flex justify-center lg:justify-start gap-2">
 
-                            </div>
+                                    <x-button-blue
+                                        wire:click="elaborar({{  $movimiento->id }})"
+                                        wire:loading.attr="disabled"
+                                        wire:target="elaborar({{  $movimiento->id }})">
+                                        Elaborar
+                                    </x-button-blue>
 
-                        </x-table.cell>
+                                </div>
+
+                            </x-table.cell>
+
+                        @endif
 
                     </x-table.row>
 
