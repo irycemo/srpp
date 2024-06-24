@@ -9,7 +9,6 @@ use Illuminate\Support\Facades\DB;
 use App\Models\MovimientoRegistral;
 use Illuminate\Support\Facades\Log;
 use App\Http\Services\SistemaTramitesService;
-use App\Models\FolioReal;
 
 class PaseFolio extends Component
 {
@@ -40,7 +39,7 @@ class PaseFolio extends Component
 
                 $observaciones = auth()->user()->name . ' rechaza el ' . now() . ', con motivo: ' . $this->observaciones ;
 
-                (new SistemaTramitesService())->rechazarTramite($this->modelo_editar->año, $this->modelo_editar->tramite, $observaciones);
+                (new SistemaTramitesService())->rechazarTramite($this->modelo_editar->año, $this->modelo_editar->tramite, $this->modelo_editar->usuario, $observaciones);
 
                 $this->modelo_editar->update(['estado' => 'rechazado', 'actualizado_por' => auth()->user()->id]);
 

@@ -2,7 +2,7 @@
 
     <div class="mb-6">
 
-        <x-header>Pase a folio</x-header>
+        <x-header>Asignación de folio</x-header>
 
         <div class="flex justify-between">
 
