@@ -400,13 +400,13 @@ class Elaboracion extends Component
 
         }
 
-        if(!$this->propiedad->superficie_construccion){
+        /* if(!$this->propiedad->superficie_construccion){
 
             $this->dispatch('mostrarMensaje', ['error', "El predio debe tener superficie de construcción."]);
 
             return;
 
-        }
+        } */
 
         if(!$this->propiedad->monto_transaccion){
 

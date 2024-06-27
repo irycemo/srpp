@@ -231,7 +231,7 @@ class ModalGravamen extends ModalComponent
 
         }elseif($string == 'acreedores'){
 
-            if(!$this->gravamen->deudores->count()){
+            if(!$this->gravamen->deudores->count() && $this->acto_contenido != 'POR ANTECEDENTE'){
 
                 $this->dispatch('mostrarMensaje', ['error', "Debe ingresar la información de deudores."]);
 

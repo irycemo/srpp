@@ -277,7 +277,8 @@ class Constantes{
         'RESERVA DE DOMINIO',
         'CONVENIO',
         'DIVISIÓN DE HIPOTECA',
-        'ADHESIÓN DE HIPOTECA'
+        'ADHESIÓN DE HIPOTECA',
+        'POR ANTECEDENTE'
     ];
 
     const ACTOS_INSCRIPCION_VARIOS = [
