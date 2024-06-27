@@ -416,13 +416,13 @@ class Elaboracion extends Component
 
         }
 
-        if(!$this->propiedad->codigo_postal){
+        /* if(!$this->propiedad->codigo_postal){
 
             $this->dispatch('mostrarMensaje', ['error', "El predio debe tener código postal."]);
 
             return;
 
-        }
+        } */
 
         /* if(!$this->propiedad->nombre_asentamiento){
 
@@ -448,21 +448,21 @@ class Elaboracion extends Component
 
         }
 
-        if(!$this->propiedad->localidad){
+        /* if(!$this->propiedad->localidad){
 
             $this->dispatch('mostrarMensaje', ['error', "El predio debe localidad."]);
 
             return;
 
-        }
+        } */
 
-        if(!$this->propiedad->nombre_vialidad){
+        /* if(!$this->propiedad->nombre_vialidad){
 
             $this->dispatch('mostrarMensaje', ['error', "El predio debe nombre de vialidad."]);
 
             return;
 
-        }
+        } */
 
         /* if(!$this->propiedad->numero_exterior){
 

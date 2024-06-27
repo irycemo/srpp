@@ -163,6 +163,8 @@ class AsignacionService{
 
         }
 
+        info("Entra");
+
         if($certificadores->count() == 0){
 
             Log::error('No se encontraron usuario para asignar la certificación.');
@@ -293,7 +295,7 @@ class AsignacionService{
                                 })
                                 ->when($folioReal != null, function($q){
                                     $q->whereHas('roles', function($q){
-                                        $q->whereIn('name', ['Gravamen', 'Registrador Gravamen']);
+                                        $q->whereIn('name', ['Gravamen']);
                                     });
                                 })
                                 ->when($folioReal === null, function($q){

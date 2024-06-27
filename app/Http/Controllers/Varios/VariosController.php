@@ -13,7 +13,7 @@ class VariosController extends Controller
     public function acto(Vario $vario)
     {
 
-        $this->authorize('update', $vario->movimientoRegistral);
+        /* $this->authorize('update', $vario->movimientoRegistral); */
 
         $director = User::where('status', 'activo')->whereHas('roles', function($q){
             $q->where('name', 'Director');

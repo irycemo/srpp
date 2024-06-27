@@ -168,7 +168,8 @@
             <div class="informacion">
 
                 <div style="text-align: right">
-                    <p><strong>FOLIO REAL:</strong>{{ $predio->folioReal->folio }}-{{ $sentencia->movimientoRegistral->folio }} <strong>DISTRITO:</strong> {{ $distrito}}</p>
+                    <p style="margin:0;"><strong>FOLIO REAL:</strong>{{ $predio->folioReal->folio }}-{{ $sentencia->movimientoRegistral->folio }}</p>
+                    <p style="margin:0;"><strong>DISTRITO:</strong> {{ $sentencia->movimientoRegistral->distrito}}</p>
                 </div>
 
                 <div style="text-align: center">
@@ -373,10 +374,10 @@
                                         {{ $propietario->porcentaje_propiedad ?? '0.00' }} %
                                     </td>
                                     <td style="padding-right: 40px;">
-                                        {{ $propietario->porcentaje_nuda ?? '0.00' }} %;
+                                        {{ $propietario->porcentaje_nuda ?? '0.00' }} %
                                     </td>
                                     <td style="padding-right: 40px;">
-                                        {{ $propietario->porcentaje_usufructo ?? '0.00' }} %;
+                                        {{ $propietario->porcentaje_usufructo ?? '0.00' }} %
                                     </td>
                                 </tr>
 
@@ -390,7 +391,7 @@
 
                 <p class="separador">datos de la inscripción cancelada</p>
 
-                @if($movimientoCancelado->gravamen)
+                @if($movimientoCancelado?->gravamen)
 
                     <p class="parrafo">
                         <strong>Folio:</strong>{{ $movimientoCancelado->folioReal->folio . '-' . $movimientoCancelado->folio }}.
@@ -407,7 +408,7 @@
                         {{ $movimientoCancelado->gravamen->observaciones }}
                     </p>
 
-                @elseif($movimientoCancelado->cancelacion)
+                @elseif($movimientoCancelado?->cancelacion)
 
                     <p class="parrafo">
                         <strong>Folio:</strong>{{ $movimientoCancelado->folioReal->folio . '-' . $movimientoCancelado->folio }}.
@@ -422,7 +423,7 @@
                         {{ $movimientoCancelado->cancelacion->observaciones }}
                     </p>
 
-                @elseif($movimientoCancelado->inscripcionPropiedad)
+                @elseif($movimientoCancelado?->inscripcionPropiedad)
 
                     <p class="parrafo">
                         <strong>Folio:</strong>{{ $movimientoCancelado->folioReal->folio . '-' . $movimientoCancelado->folio }}.
@@ -436,7 +437,7 @@
                         {{ $movimientoCancelado->inscripcionPropiedad->observaciones }}
                     </p>
 
-                @elseif($movimientoCancelado->vario)
+                @elseif($movimientoCancelado?->vario)
 
                     <p class="parrafo">
                         <strong>Folio:</strong>{{ $movimientoCancelado->folioReal->folio . '-' . $movimientoCancelado->folio }}.
@@ -450,7 +451,7 @@
                         {{ $movimientoCancelado->vario->descripcion }}
                     </p>
 
-                @elseif($movimientoCancelado->sentencia)
+                @elseif($movimientoCancelado?->sentencia)
 
                     <p class="parrafo">
                         <strong>Folio:</strong>{{ $movimientoCancelado->folioReal->folio . '-' . $movimientoCancelado->folio }}.
@@ -479,8 +480,13 @@
                     <strong>A T E N T A M E N T E</strong>
                 </p>
 
-                <p class="borde">{{ $director }}</p>
-                <p style="margin: 0">DIRECTOR DEL REGISTRO PÚBLICO  DE LA PROPIEDAD</p>
+                @if($sentencia->movimientoRegistral->distrito == '02 Uruapan' )
+                    <p class="borde">L.A. SANDRO MEDINA MORALES </p>
+                    <p style="margin:0;">coordinador regional 4 purepecha</p>
+                @else
+                    <p class="borde" style="margin:0;">{{ $director }}</p>
+                    <p style="margin:0;">Director del registro público de la propiedad</p>
+                @endif
 
                 <div style="margin-top: 50px;">
 
@@ -494,7 +500,7 @@
 
                                 </td>
 
-                                @if($distrito != '02 URUAPAN' )
+                                @if($sentencia->movimientoRegistral->distrito != '02 Uruapan' )
 
                                     <td style="padding-right: 40px; text-align:center; width: 50%; vertical-align: bottom; white-space: nowrap;">
 

@@ -35,7 +35,7 @@
 
                             <span class="lg:hidden absolute top-0 left-0 bg-blue-300 px-2 py-1 text-xs text-white font-bold uppercase rounded-br-xl">Folio Real</span>
 
-                            {{ $movimiento->folioReal->folio }}
+                            {{ $movimiento->folioReal->folio }}-{{ $movimiento->folio }}
 
                         </x-table.cell>
 
@@ -109,17 +109,52 @@
 
                         @if (!auth()->user()->hasRole('Administrador'))
 
-                            <x-table.cell>
+                            @if (auth()->user()->hasRole(['Supervisor varios', 'Supervisor uruapan']))
 
-                                <span class="lg:hidden absolute top-0 left-0 bg-blue-300 px-2 py-1 text-xs text-white font-bold uppercase rounded-br-xl">Acciones</span>
+                                <x-table.cell>
 
-                                <div class="flex justify-center lg:justify-start gap-2">
+                                    <span class="lg:hidden absolute top-0 left-0 bg-blue-300 px-2 py-1 text-xs text-white font-bold uppercase rounded-br-xl">Acciones</span>
 
-                                    <x-link href="{{ route('cancelacion.inscripcion', $movimiento->cancelacion->id) }}">Elaborar</x-link>
+                                    <div class="flex justify-center lg:justify-start gap-2">
 
-                                </div>
+                                        <x-button-blue
+                                            wire:click="reimprimir({{  $movimiento->id }})"
+                                            wire:loading.attr="disabled"
+                                            wire:target="reimprimir({{  $movimiento->id }})">
+                                            Reimprimir
+                                        </x-button-blue>
 
-                            </x-table.cell>
+                                        <x-button-green
+                                            wire:click="finalizar({{  $movimiento->id }})"
+                                            wire:loading.attr="disabled"
+                                            wire:target="finalizar({{  $movimiento->id }})">
+                                            Finalizar
+                                        </x-button-green>
+
+                                    </div>
+
+                                </x-table.cell>
+
+                            @else
+
+                                <x-table.cell>
+
+                                    <span class="lg:hidden absolute top-0 left-0 bg-blue-300 px-2 py-1 text-xs text-white font-bold uppercase rounded-br-xl">Acciones</span>
+
+                                    <div class="flex justify-center lg:justify-start gap-2">
+
+                                        <x-button-blue
+                                            wire:click="elaborar({{  $movimiento->id }})"
+                                            wire:loading.attr="disabled"
+                                            wire:target="elaborar({{  $movimiento->id }})">
+                                            Elaborar
+                                        </x-button-blue>
+
+                                    </div>
+
+                                </x-table.cell>
+
+                            @endif
 
                         @endif
 
@@ -164,3 +199,17 @@
     </div>
 
 </div>
+
+<script>
+
+    window.addEventListener('imprimir_documento', event => {
+
+        const documento = event.detail[0].cancelacion;
+
+        var url = "{{ route('cancelacion.inscripcion.acto', '')}}" + "/" + documento;
+
+        window.open(url, '_blank');
+
+    });
+
+</script>

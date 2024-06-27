@@ -6,7 +6,10 @@ use Livewire\Component;
 use App\Models\Gravamen;
 use Livewire\WithPagination;
 use App\Traits\ComponentesTrait;
+use Illuminate\Support\Facades\DB;
 use App\Models\MovimientoRegistral;
+use Illuminate\Support\Facades\Log;
+use App\Http\Services\SistemaTramitesService;
 
 class GravamenIndex extends Component
 {
@@ -22,7 +25,7 @@ class GravamenIndex extends Component
 
     public function elaborar(MovimientoRegistral $movimientoRegistral){
 
-        $movimientos = $movimientoRegistral->folioReal->movimientosRegistrales()->where('estado', 'nuevo')->orderBy('folio')->get();
+        $movimientos = $movimientoRegistral->folioReal->movimientosRegistrales()->whereIn('estado', ['nuevo', 'elaborado'])->orderBy('folio')->get();
 
         if($movimientos->count()){
 
@@ -30,7 +33,7 @@ class GravamenIndex extends Component
 
             if($movimientoRegistral->folio > $primerMovimiento->folio){
 
-                $this->dispatch('mostrarMensaje', ['warning', "El movimiento registral: " . $primerMovimiento->año . '-' . $primerMovimiento->tramite . '-' . $primerMovimiento->usuario . ' debe elaborace primero.']);
+                $this->dispatch('mostrarMensaje', ['warning', "El movimiento registral: (" . $movimientoRegistral->folioReal->folio . '-' . $primerMovimiento->folio . ') debe elaborace primero.']);
 
             }else{
 
@@ -41,6 +44,39 @@ class GravamenIndex extends Component
         }else{
 
             return redirect()->route('gravamen.inscripcion', $movimientoRegistral->gravamen);
+
+        }
+
+    }
+
+    public function reimprimir(MovimientoRegistral $movimientoRegistral){
+
+        $this->dispatch('imprimir_documento', ['gravamen' => $movimientoRegistral->gravamen->id]);
+
+    }
+
+    public function finalizar(MovimientoRegistral $modelo){
+
+        try {
+
+            DB::transaction(function () use ($modelo){
+
+                $modelo->actualizado_por = auth()->user()->id;
+
+                $modelo->estado = 'concluido';
+
+                $modelo->save();
+
+                (new SistemaTramitesService())->finaliarTramite($modelo->año, $modelo->tramite, $modelo->usuario, 'concluido');
+
+                $this->dispatch('mostrarMensaje', ['success', "El trámite se finalizó con éxito."]);
+
+            });
+
+        } catch (\Throwable $th) {
+
+            Log::error("Error al finalizar trámite de inscripción de gravamen por el usuario: (id: " . auth()->user()->id . ") " . auth()->user()->name . ". " . $th);
+            $this->dispatch('mostrarMensaje', ['error', "Ha ocurrido un error."]);
 
         }
 
@@ -64,6 +100,25 @@ class GravamenIndex extends Component
                                                     })
                                                     ->where('estado', 'nuevo')
                                                     ->where('usuario_asignado', auth()->id())
+                                                    ->whereHas('gravamen', function($q){
+                                                        $q->where('servicio', 'DL66');
+                                                    })
+                                                    ->orderBy($this->sort, $this->direction)
+                                                    ->paginate($this->pagination);
+
+        }elseif(auth()->user()->hasRole(['Supervisor gravamen', 'Supervisor uruapan'])){
+
+            $movimientos = MovimientoRegistral::with('gravamen', 'actualizadoPor', 'folioReal')
+                                                    ->whereHas('folioReal', function($q){
+                                                        $q->where('estado', 'activo');
+                                                    })
+                                                    ->when(auth()->user()->ubicacion == 'Regional 4', function($q){
+                                                        $q->where('distrito', 2);
+                                                    })
+                                                    ->when(auth()->user()->ubicacion != 'Regional 4', function($q){
+                                                        $q->where('distrito', '!=', 2);
+                                                    })
+                                                    ->where('estado', 'elaborado')
                                                     ->whereHas('gravamen', function($q){
                                                         $q->where('servicio', 'DL66');
                                                     })

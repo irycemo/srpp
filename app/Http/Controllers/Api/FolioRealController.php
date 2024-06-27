@@ -33,6 +33,7 @@ class FolioRealController extends Controller
                                     ->when(isset($validated['folio_real']), function($q) use($validated){
                                         $q->where('folio', $validated['folio_real']);
                                     })
+                                    ->where('estado', 'activo')
                                     ->first();
 
         if($folio_real){

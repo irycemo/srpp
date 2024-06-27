@@ -37,7 +37,7 @@ class ReasignarUsuario extends Command
                                                 ->whereIn('servicio', ['DL14', 'DL13'])
                                                 ->whereHas('movimientoRegistral', function($q){
                                                     $q->where('estado', 'nuevo')
-                                                        ->whereDate('fecha_entrega', '<', now()->toDateString());
+                                                        ->whereDate('fecha_entrega', '<', $this->calcularDia());
                                                 })
                                                 ->get();
 
@@ -75,6 +75,20 @@ class ReasignarUsuario extends Command
         } catch (\Throwable $th) {
             Log::error("Error al reasignar trámites. " . $th);
         }
+
+    }
+
+    public function calcularDia(){
+
+        $fecha = now()->subDays(2);
+
+        while($fecha->isWeekend()){
+
+            $fecha->subDay();
+
+        }
+
+        return $fecha->toDateString();
 
     }
 }

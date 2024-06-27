@@ -8,6 +8,7 @@ use App\Models\Deudor;
 use App\Models\Persona;
 use Livewire\Component;
 use App\Models\Propiedad;
+use App\Models\Colindancia;
 use App\Constantes\Constantes;
 use Illuminate\Validation\Rule;
 use Illuminate\Support\Facades\DB;
@@ -23,6 +24,12 @@ class PropiedadInscripcion extends Component
     public $modalContraseña;
     public $crear = false;
     public $editar = false;
+
+    public $areas;
+    public $divisas;
+    public $vientos;
+    public $tipos_asentamientos;
+    public $medidas = [];
 
     public $actos;
     public $acto;
@@ -121,6 +128,48 @@ class PropiedadInscripcion extends Component
             'entidad' => 'nullable',
             'municipio_propietario' => 'nullable',
             'representados' => Rule::requiredIf($this->modalRepresentante === true),
+            'predio.superficie_terreno' => 'required',
+            'predio.unidad_area' => 'required',
+            'predio.superficie_construccion' => 'required',
+            'predio.monto_transaccion' => 'required',
+            'predio.observaciones' => 'nullable',
+            'predio.curt' => 'nullable',
+            'predio.superficie_judicial' => 'nullable',
+            'predio.superficie_notarial' => 'nullable',
+            'predio.area_comun_terreno' => 'nullable',
+            'predio.area_comun_construccion' => 'nullable',
+            'predio.valor_terreno_comun' => 'nullable',
+            'predio.valor_construccion_comun' => 'nullable',
+            'predio.valor_total_terreno' => 'nullable',
+            'predio.valor_total_construccion' => 'nullable',
+            'predio.valor_catastral' => 'nullable',
+            'predio.codigo_postal' => 'nullable',
+            'predio.nombre_asentamiento' => 'nullable',
+            'predio.municipio' => 'nullable',
+            'predio.ciudad' => 'nullable',
+            'predio.tipo_asentamiento' => 'nullable',
+            'predio.localidad' => 'nullable',
+            'predio.tipo_vialidad' => 'nullable',
+            'predio.nombre_vialidad' => 'nullable',
+            'predio.numero_exterior' => 'nullable',
+            'predio.numero_interior' => 'nullable',
+            'predio.nombre_edificio' => 'nullable',
+            'predio.departamento_edificio' => 'nullable',
+            'predio.departamento_edificio' => 'nullable',
+            'predio.descripcion' => 'nullable',
+            'predio.lote' => 'nullable',
+            'predio.manzana' => 'nullable',
+            'predio.ejido' => 'nullable',
+            'predio.parcela' => 'nullable',
+            'predio.solar' => 'nullable',
+            'predio.poblado' => 'nullable',
+            'predio.numero_exterior_2' => 'nullable',
+            'predio.numero_adicional' => 'nullable',
+            'predio.numero_adicional_2' => 'nullable',
+            'predio.lote_fraccionador' => 'nullable',
+            'predio.manzana_fraccionador' => 'nullable',
+            'predio.etapa_fraccionador' => 'nullable',
+            'predio.clave_edificio' => 'nullable',
          ];
     }
 
@@ -873,10 +922,38 @@ class PropiedadInscripcion extends Component
 
             DB::transaction(function () {
 
+                $this->inscripcion->moviminetoRegistral->update(['estado' => 'elaborado']);
+
+                $this->predio->save();
+
                 $this->procesarPropietarios();
 
                 $this->inscripcion->actualizado_por = auth()->id();
                 $this->inscripcion->save();
+
+                foreach ($this->medidas as $key =>$medida) {
+
+                    if($medida['id'] == null){
+
+                        $aux = $this->predio->colindancias()->create([
+                            'viento' => $medida['viento'],
+                            'longitud' => $medida['longitud'],
+                            'descripcion' => $medida['descripcion'],
+                        ]);
+
+                        $this->medidas[$key]['id'] = $aux->id;
+
+                    }else{
+
+                        Colindancia::find($medida['id'])->update([
+                            'viento' => $medida['viento'],
+                            'longitud' => $medida['longitud'],
+                            'descripcion' => $medida['descripcion'],
+                        ]);
+
+                    }
+
+                }
 
             });
 
@@ -1034,11 +1111,47 @@ class PropiedadInscripcion extends Component
 
     }
 
+    public function agregarColindancia(){
+
+        $this->medidas[] = ['viento' => null, 'longitud' => null, 'descripcion' => null, 'id' => null];
+
+    }
+
+    public function borrarColindancia($index){
+
+        $this->authorize('update',  $this->sentencia->movimientoRegistral);
+
+        try {
+
+            $this->predio->colindancias()->where('id', $this->medidas[$index]['id'])->delete();
+
+        } catch (\Throwable $th) {
+            Log::error("Error al borrar colindancia en sentencia por el usuario: (id: " . auth()->user()->id . ") " . auth()->user()->name . ". " . $th);
+            $this->dispatch('mostrarMensaje', ['error', "Hubo un error."]);
+        }
+
+        unset($this->medidas[$index]);
+
+        $this->medidas = array_values($this->medidas);
+
+    }
+
     public function mount(){
 
         $this->inscripcion = Propiedad::with('actores')->find($this->propiedad);
 
         $this->predio = $this->inscripcion->movimientoRegistral->folioReal->predio;
+
+        foreach ($this->predio->colindancias as $colindancia) {
+
+            $this->medidas[] = [
+                'id' => $colindancia->id,
+                'viento' => $colindancia->viento,
+                'longitud' => $colindancia->longitud,
+                'descripcion' => $colindancia->descripcion,
+            ];
+
+        }
 
         if(in_array($this->inscripcion->servicio, ['D114', 'D116', 'D115', 'D113']))
             $this->actos = Constantes::ACTOS_INSCRIPCION_PROPIEDAD;
@@ -1068,6 +1181,16 @@ class PropiedadInscripcion extends Component
                 'porcentaje_usufructo' => $transmitente->porcentaje_usufructo,
             ];
         }
+
+        $this->areas = Constantes::UNIDADES;
+
+        $this->divisas = Constantes::DIVISAS;
+
+        $this->vientos = Constantes::VIENTOS;
+
+        $this->tipos_vialidades = Constantes::TIPO_VIALIDADES;
+
+        $this->tipos_asentamientos = Constantes::TIPO_ASENTAMIENTO;
 
     }
 

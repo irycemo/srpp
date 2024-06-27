@@ -208,7 +208,7 @@ class Sentencia extends Component
                 $this->predio->actualizado_por = auth()->id();
                 $this->predio->save();
 
-                $this->sentencia->movimientoRegistral->update(['estado' => 'concluido']);
+                $this->sentencia->movimientoRegistral->update(['estado' => 'elaborado']);
 
                 if($this->sentencia->acto_contenido == 'CANCELACIÓN DE INSCRIPCIÓN'){
 

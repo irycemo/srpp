@@ -126,6 +126,12 @@ class CertificadoGravamen extends Component
 
                 $this->moviminetoRegistral->save();
 
+                if(auth()->user()->hasRole(['Supervisor certificaciones', 'Supervisor uruapan'])){
+
+                    $this->modelo_editar->reimpreso_en = now();
+
+                }
+
                 $this->modelo_editar->actualizado_por = auth()->user()->id;
 
                 $this->modelo_editar->save();
@@ -264,7 +270,7 @@ class CertificadoGravamen extends Component
     public function render()
     {
 
-        if(auth()->user()->hasRole('Certificador Gravamen')){
+        if(auth()->user()->hasRole(['Certificador Gravamen', 'Certificador Oficialia', 'Certificador Juridico'])){
 
             $certificados = MovimientoRegistral::with('asignadoA', 'supervisor', 'actualizadoPor', 'certificacion.actualizadoPor', 'folioReal:id,folio')
                                                 ->where('usuario_asignado', auth()->id())
@@ -300,10 +306,9 @@ class CertificadoGravamen extends Component
                                                 ->orderBy($this->sort, $this->direction)
                                                 ->paginate($this->pagination);
 
-        }elseif(auth()->user()->hasRole(['Supervisor certificaciones'])){
+        }elseif(auth()->user()->hasRole(['Supervisor certificaciones', 'Supervisor uruapan'])){
 
             $certificados = MovimientoRegistral::with('asignadoA', 'supervisor', 'actualizadoPor', 'certificacion.actualizadoPor', 'folioReal:id,folio')
-                                                ->where('usuario_supervisor', auth()->id())
                                                 ->whereHas('folioReal', function($q){
                                                     $q->where('estado', 'activo');
                                                 })

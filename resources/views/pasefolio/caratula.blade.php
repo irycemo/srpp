@@ -391,10 +391,10 @@
                                     {{ $propietario->porcentaje_propiedad ?? '0.00' }} %
                                 </td>
                                 <td style="padding-right: 40px;">
-                                    {{ $propietario->porcentaje_nuda ?? '0.00' }} %;
+                                    {{ $propietario->porcentaje_nuda ?? '0.00' }} %
                                 </td>
                                 <td style="padding-right: 40px;">
-                                    {{ $propietario->porcentaje_usufructo ?? '0.00' }} %;
+                                    {{ $propietario->porcentaje_usufructo ?? '0.00' }} %
                                 </td>
                             </tr>
 
@@ -458,8 +458,9 @@
                         <strong>A T E N T A M E N T E</strong>
                     </p>
 
-                    @if($distrito == '02 URUAPAN' )
+                    @if($distrito == '02 Uruapan' )
                         <p class="borde">L.A. SANDRO MEDINA MORALES </p>
+                        <p style="margin:0;">coordinador regional 4 purepecha</p>
                     @else
                         <p class="borde" style="margin:0;">{{ $director }}</p>
                         <p style="margin:0;">Director del registro público de la propiedad</p>
@@ -469,7 +470,8 @@
 
                 <div class="parrafo">
 
-                    <p><strong>Fecha de pase a folio:</strong> {{ Carbon\Carbon::now()->locale('es')->translatedFormat('H:i:s \d\e\l l d \d\e F \d\e\l Y') }}. <strong>Registrador:</strong> {{ auth()->user()->name }}</p>
+                    <p><strong>Fecha de pase a folio:</strong> {{ Carbon\Carbon::now()->locale('es')->translatedFormat('H:i:s \d\e\l l d \d\e F \d\e\l Y') }}.</p>
+                    <p><strong>Registrador:</strong> {{ auth()->user()->name }}.</p>
 
                 </div>
 

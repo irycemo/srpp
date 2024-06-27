@@ -15,7 +15,7 @@ class GravamenController extends Controller
     public function acto(Gravamen $gravamen)
     {
 
-        $this->authorize('update', $gravamen->movimientoRegistral);
+        /* $this->authorize('update', $gravamen->movimientoRegistral); */
 
         $director = User::where('status', 'activo')->whereHas('roles', function($q){
             $q->where('name', 'Director');

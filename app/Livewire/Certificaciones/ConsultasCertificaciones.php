@@ -180,7 +180,7 @@ class ConsultasCertificaciones extends Component
         $this->año = now()->format('Y');
 
         $this->usuarios = User::whereHas('roles', function($q){
-                                        $q->whereIn('name', ['Certificador', 'Certificador Juridico', 'Certificador Oficialia']);
+                                        $q->whereIn('name', ['Certificador', 'Certificador Juridico', 'Certificador Oficialia', 'Certificador Gravamen']);
                                     })
                                     ->orderBy('name')
                                     ->get();

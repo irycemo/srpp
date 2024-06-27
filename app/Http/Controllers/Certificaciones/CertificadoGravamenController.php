@@ -16,14 +16,14 @@ class CertificadoGravamenController extends Controller
 
     public function certificadoGravamen(MovimientoRegistral $movimientoRegistral){
 
-        $this->authorize('update', $movimientoRegistral);
+        /* $this->authorize('update', $movimientoRegistral); */
 
         $formatter = new NumeroALetras();
 
         $predio = Predio::where('folio_real', $movimientoRegistral->folio_real)->first();
 
-        $gravamenes = Gravamen::with('deudores.persona', 'deudores.actor.persona',  'acreedores.persona')
-                                ->withWhereHas('movimientoRegistral', function($q) use($movimientoRegistral){
+        $gravamenes = Gravamen::with('deudores.persona', 'deudores.actor.persona',  'acreedores.persona', 'movimientoRegistral.folioReal')
+                                ->WhereHas('movimientoRegistral', function($q) use($movimientoRegistral){
                                     $q->where('folio_real', $movimientoRegistral->folio_real);
                                 })
                                 ->where('estado', 'activo')
@@ -56,6 +56,8 @@ class CertificadoGravamenController extends Controller
         $canvas = $dom_pdf->get_canvas();
 
         $canvas->page_text(480, 794, "Página: {PAGE_NUM} de {PAGE_COUNT}", null, 10, array(1, 1, 1));
+
+
 
         return $pdf->stream('documento.pdf');
 

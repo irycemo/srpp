@@ -265,7 +265,7 @@
 
                     <x-table.row>
 
-                        <x-table.cell colspan="13" class="bg-gray-50">
+                        <x-table.cell colspan="14" class="bg-gray-50">
 
                         </x-table.cell>
 

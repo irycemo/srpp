@@ -199,7 +199,7 @@
 
                                 <div class="flex flex-col justify-center lg:justify-start gap-2">
 
-                                    @can('Rechazar copias certificadas')
+                                    @if (auth()->user()->hasRole('Certificador Gravamen'))
 
                                         <x-button-red
                                             wire:click="abrirModalRechazar({{ $certificado->certificacion->id }})"
@@ -213,31 +213,41 @@
 
                                         </x-button-red>
 
-                                    @endcan
+                                        <x-button-blue
+                                            wire:click="visualizarGravamenes({{ $certificado->certificacion->id }})"
+                                            wire:loading.attr="disabled">
 
-                                    <x-button-blue
-                                        wire:click="visualizarGravamenes({{ $certificado->certificacion->id }})"
-                                        wire:loading.attr="disabled">
+                                            <span>Revisar</span>
 
-                                        <span>Revisar</span>
+                                        </x-button-blue>
 
-                                    </x-button-blue>
+                                    @else
 
-                                    @can('Finalizar copias certificadas')
-
-                                        @if($certificado->estado == 'elaborado')
+                                        @if ($certificado->certificacion->reimpreso_en == null)
 
                                             <x-button-blue
-                                                wire:click="finalizarSupervisor({{ $certificado->certificacion->id }})"
+                                                wire:click="visualizarGravamenes({{ $certificado->certificacion->id }})"
                                                 wire:loading.attr="disabled">
 
-                                                <span>Finalizar</span>
+                                                <span>Revisar</span>
 
                                             </x-button-blue>
 
                                         @endif
 
-                                    @endcan
+                                        @if($certificado->estado == 'elaborado')
+
+                                            <x-button-green
+                                                wire:click="finalizarSupervisor({{ $certificado->certificacion->id }})"
+                                                wire:loading.attr="disabled">
+
+                                                <span>Finalizar</span>
+
+                                            </x-button-green>
+
+                                        @endif
+
+                                    @endif
 
                                 </div>
 

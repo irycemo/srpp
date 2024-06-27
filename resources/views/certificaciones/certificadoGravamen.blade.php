@@ -177,16 +177,16 @@
 
         </div>
 
-        <p class="fundamento informacion">
-            EL CIUDADANO LICENCIADO EN DERECHO {{ $director }}, DIRECTOR DEL REGISTRO PÚBLICO DE LA PROPIEDAD
-            CERTIFICA QUE DEACUERDO A LA BUSQUEDA EN EL INMUEBLE:
+        <p class="parrafo informacion">
+            EL CIUDADANO LICENCIADO EN DERECHO <strong>{{ $director }}</strong>, DIRECTOR DEL REGISTRO PÚBLICO DE LA PROPIEDAD
+            CERTIFICA QUE DE ACUERDO A LA BUSQUEDA EN EL INMUEBLE:
         </p>
 
         <div class="informacion">
 
-            <p style="text-align: center"><strong>FOLIO REAL:</strong> {{ $movimientoRegistral->folioReal->folio }}</p>
+            <p style="text-align: center; margin:0;"><strong>FOLIO REAL:</strong> {{ $movimientoRegistral->folioReal->folio }}</p>
 
-            <p style="text-align: center"><strong>SECCIÓN:</strong> {{ $predio->folioReal->seccion_antecedente }}; <strong>DISTRITO:</strong> {{ $predio->folioReal->distrito}}; <strong>TOMO:</strong> {{ $predio->folioReal->tomo_antecedente }}, <strong>REGISTRO:</strong> {{ $predio->folioReal->registro_antecedente }}, <strong>NÚMERO DE PROPIEDAD:</strong> {{ $predio->folioReal->numero_propiedad_antecedente }}.</p>
+            <p style="text-align: center; margin:0;"><strong>SECCIÓN:</strong> {{ $predio->folioReal->seccion_antecedente }}; <strong>DISTRITO:</strong> {{ $predio->folioReal->distrito}}; <strong>TOMO:</strong> {{ $predio->folioReal->tomo_antecedente }}, <strong>REGISTRO:</strong> {{ $predio->folioReal->registro_antecedente }}, <strong>NÚMERO DE PROPIEDAD:</strong> {{ $predio->folioReal->numero_propiedad_antecedente }}.</p>
 
             <br>
 
@@ -388,10 +388,10 @@
                                     {{ $propietario->porcentaje_propiedad ?? '0.00' }} %
                                 </td>
                                 <td style="padding-right: 40px;">
-                                    {{ $propietario->porcentaje_nuda ?? '0.00' }} %;
+                                    {{ $propietario->porcentaje_nuda ?? '0.00' }} %
                                 </td>
                                 <td style="padding-right: 40px;">
-                                    {{ $propietario->porcentaje_usufructo ?? '0.00' }} %;
+                                    {{ $propietario->porcentaje_usufructo ?? '0.00' }} %
                                 </td>
                             </tr>
 
@@ -412,9 +412,10 @@
                 @foreach ($gravamenes as $gravamen)
 
                     <p class="parrafo">
-                        <strong>Tomo: </strong> {{ $gravamen->movimientoRegistral->tomo_gravamen }}
+                        <strong>Folio: </strong>{{ $gravamen->movimientoRegistral->folioReal->folio }}-{{ $gravamen->movimientoRegistral->folio }}
+                        <strong>Tomo: </strong>{{ $gravamen->movimientoRegistral->tomo_gravamen }}
                         <strong>Registro: </strong>{{ $gravamen->movimientoRegistral->tomo_gravamen }}
-                        <strong>Distrito: </strong>{{ $gravamen->movimientoRegistral->distrito }}
+                        <strong>Distrito: </strong>{{ $gravamen->movimientoRegistral->distrito }};
                         CON <strong>FECHA DE INSCRIPCIÓN: </strong> {{ Carbon\Carbon::parse($gravamen->fecha_inscripcion)->format('d-m-Y') }}
                         <strong>RELATIVO A: </strong> {{ $gravamen->acto_contenido }}; {{ $gravamen->tipo }}
                         <strong>CELEBRADO POR EL(LOS) ACREDOR(ES):</strong>
@@ -456,7 +457,7 @@
             @endif
 
             <p class="parrafo">
-                A SOLICITUD DE: <strong>{{ $movimientoRegistral->solicitante }}</strong> EXPEDIDO EL PRESENTE CERTIFICADO EN LA CIUDAD DE MORELIA, MICHOACÁN, A LAS
+                A SOLICITUD DE: <strong>{{ $movimientoRegistral->solicitante }}</strong> se expide EL PRESENTE CERTIFICADO EN LA CIUDAD DE MORELIA, MICHOACÁN, A LAS
                 {{ Carbon\Carbon::now()->locale('es')->translatedFormat('H:i:s \d\e\l l d \d\e F \d\e\l Y'); }}.
             </p>
 
@@ -468,8 +469,13 @@
                 <strong>A T E N T A M E N T E</strong>
             </p>
 
-            <p class="borde">{{ $director }}</p>
-            <p style="margin: 0">DIRECTOR DEL REGISTRO PÚBLICO  DE LA PROPIEDAD</p>
+            @if($predio->folioReal->distrito== '02 Uruapan' )
+                <p class="borde">L.A. SANDRO MEDINA MORALES </p>
+                <p style="margin:0;">coordinador regional 4 purepecha</p>
+            @else
+                <p class="borde" style="margin:0;">{{ $director }}</p>
+                <p style="margin:0;">Director del registro público de la propiedad</p>
+            @endif
 
         </div>
 

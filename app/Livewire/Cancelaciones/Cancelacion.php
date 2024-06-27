@@ -137,7 +137,7 @@ class Cancelacion extends Component
                 $this->cancelacion->actualizado_por = auth()->id();
                 $this->cancelacion->save();
 
-                $this->cancelacion->movimientoRegistral->update(['estado' => 'concluido']);
+                $this->cancelacion->movimientoRegistral->update(['estado' => 'elaborado']);
 
             });
 

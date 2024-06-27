@@ -2,6 +2,7 @@
 
 namespace App\Http\Services;
 
+use App\Models\User;
 use App\Models\FolioReal;
 use Illuminate\Support\Facades\DB;
 use App\Models\MovimientoRegistral;
@@ -295,20 +296,6 @@ class MovimientoRegistralService{
     public function obtenerUsuarioAsignado($documento_entrada, $folioReal, $servicio, $distrito, $solicitante, $tipo_servicio, $random):int
     {
 
-        $movimientoRegistral = MovimientoRegistral::where('tipo_documento', $documento_entrada['tipo_documento'])
-                                                        ->where('autoridad_cargo', $documento_entrada['autoridad_cargo'])
-                                                        ->where('autoridad_nombre', $documento_entrada['autoridad_nombre'])
-                                                        ->where('fecha_emision', $documento_entrada['fecha_emision'])
-                                                        ->where('numero_documento', $documento_entrada['numero_documento'])
-                                                        ->where('procedencia', $documento_entrada['procedencia'])
-                                                        ->first();
-
-        if($movimientoRegistral){
-
-            return $movimientoRegistral->usuario_asignado;
-
-        }
-
         /* Certificaciones: Copias simples, Copias certificadas */
         if($servicio == 'DL13' || $servicio == 'DL14'){
 
@@ -327,6 +314,37 @@ class MovimientoRegistralService{
         if($servicio == 'DL07'){
 
             return $this->asignacionService->obtenerCertificadorGravamen($distrito, $solicitante, $tipo_servicio, $random);
+
+        }
+
+        if(isset($documento_entrada['tipo_documento'])
+            && isset($documento_entrada['autoridad_cargo'])
+            && isset($documento_entrada['autoridad_nombre'])
+            && isset($documento_entrada['fecha_emision'])
+            && isset($documento_entrada['numero_documento']))
+        {
+
+           $movimiento =  MovimientoRegistral::when(isset($documento_entrada['tipo_documento']), function($q) use($documento_entrada){
+                                            $q->where('tipo_documento', $documento_entrada['tipo_documento']);
+                                        })
+                                        ->when(isset($documento_entrada['autoridad_cargo']), function($q) use($documento_entrada){
+                                            $q->where('autoridad_cargo', $documento_entrada['autoridad_cargo']);
+                                        })
+                                        ->when(isset($documento_entrada['autoridad_nombre']), function($q) use($documento_entrada){
+                                            $q->where('autoridad_nombre', $documento_entrada['autoridad_nombre']);
+                                        })
+                                        ->when(isset($documento_entrada['fecha_emision']), function($q) use($documento_entrada){
+                                            $q->where('fecha_emision', $documento_entrada['fecha_emision']);
+                                        })
+                                        ->when(isset($documento_entrada['numero_documento']), function($q) use($documento_entrada){
+                                            $q->where('numero_documento', $documento_entrada['numero_documento']);
+                                        })
+                                        ->when(isset($documento_entrada['procedencia']), function($q) use($documento_entrada){
+                                            $q->where('procedencia', $documento_entrada['procedencia']);
+                                        })
+                                        ->first();
+
+            if($movimiento) return $movimiento->usuario_asignado;
 
         }
 
@@ -371,6 +389,18 @@ class MovimientoRegistralService{
 
     public function obtenerSupervisor($servicio, $distrito):int
     {
+
+        if($distrito == 2){
+
+            $supervisor = User::where('status', 'activo')
+                                ->whereHas('roles', function($q){
+                                    $q->where('name', 'Supervisor uruapan');
+                                })
+                                ->first();
+
+            if($supervisor) return $supervisor->id;
+
+        }
 
         $certificaciones = ['DC90', 'DC91', 'DC92', 'DC93', 'DL13', 'DL14', 'DL07'];
 

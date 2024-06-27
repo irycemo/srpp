@@ -348,7 +348,7 @@ class CopiasSimples extends Component
     public function render()
     {
 
-        if(auth()->user()->hasRole('Supervisor certificaciones')){
+        if(auth()->user()->hasRole(['Supervisor certificaciones', 'Supervisor uruapan'])){
 
             $copias = MovimientoRegistral::with('asignadoA', 'supervisor', 'actualizadoPor', 'certificacion.actualizadoPor')
                                             ->where(function($q){

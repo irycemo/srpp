@@ -636,7 +636,7 @@ class GravamenInscripcion extends Component
                 $this->gravamen->actualizado_por = auth()->id();
                 $this->gravamen->save();
 
-                $this->gravamen->movimientoRegistral->update(['estado' => 'concluido']);
+                $this->gravamen->movimientoRegistral->update(['estado' => 'elaborado']);
 
                 if($this->gravamen->acto_contenido === 'DIVISIÓN DE HIPOTECA'){
 
@@ -652,6 +652,9 @@ class GravamenInscripcion extends Component
                             'tipo_servicio' => $this->gravamen->movimientoRegistral->tipo_servicio,
                             'solicitante' => $this->gravamen->movimientoRegistral->solicitante,
                             'seccion' => $this->gravamen->movimientoRegistral->seccion,
+                            'año' => $this->gravamen->movimientoRegistral->año,
+                            'tramite' => $this->gravamen->movimientoRegistral->tramite,
+                            'usuario' => $this->gravamen->movimientoRegistral->usuario,
                             'distrito' => $this->gravamen->movimientoRegistral->getRawOriginal('distrito'),
                             'tipo_documento' => $this->gravamen->movimientoRegistral->tipo_documento,
                             'numero_documento' => $this->gravamen->movimientoRegistral->numero_documento,

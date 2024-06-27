@@ -162,7 +162,8 @@
             </div>
 
             <div style="text-align: right">
-                <p><strong>FOLIO REAL:</strong>{{ $inscripcion->movimientoRegistral->folioReal->folio }}-{{ $inscripcion->movimientoRegistral->folio }} <strong>DISTRITO:</strong> {{ $distrito}}</p>
+                <p style="margin:0"><strong>FOLIO REAL:</strong>{{ $inscripcion->movimientoRegistral->folioReal->folio }}-{{ $inscripcion->movimientoRegistral->folio }}</p>
+                <p style="margin:0"><strong>DISTRITO:</strong> {{ $inscripcion->movimientoRegistral->distrito }}</p>
             </div>
 
             <div style="text-align: center">
@@ -184,7 +185,7 @@
                         @endif
 
                     @endforeach
-                    , <strong>comparecio a realizar el acto de </strong> {{ $inscripcion->acto_contenido }}.
+                    <strong>, comparecio a realizar el acto de </strong> {{ $inscripcion->acto_contenido }}.
                 </p>
 
                 <p class="separador">Descripción del acto</p>
@@ -299,7 +300,7 @@
                     @endif
 
                     @if ($predio->observaciones)
-                        <strong>OBSERVACIONES:</strong> {{ $predio->observaciones }}.
+                        <strong>OBSERVACIONES:</strong> {{ $predio->observaciones }}
                     @endif.
                 </p>
 
@@ -370,10 +371,10 @@
                                     {{ $propietario->porcentaje_propiedad ?? '0.00' }} %
                                 </td>
                                 <td style="padding-right: 40px;">
-                                    {{ $propietario->porcentaje_nuda ?? '0.00' }} %;
+                                    {{ $propietario->porcentaje_nuda ?? '0.00' }} %
                                 </td>
                                 <td style="padding-right: 40px;">
-                                    {{ $propietario->porcentaje_usufructo ?? '0.00' }} %;
+                                    {{ $propietario->porcentaje_usufructo ?? '0.00' }} %
                                 </td>
                             </tr>
 
@@ -391,8 +392,9 @@
                     <strong>A T E N T A M E N T E</strong>
                 </p>
 
-                @if($distrito == '02 URUAPAN' )
+                @if($inscripcion->movimientoRegistral->distrito == '02 Uruapan' )
                     <p class="borde">L.A. SANDRO MEDINA MORALES </p>
+                    <p style="margin:0;">coordinador regional 4 purepecha</p>
                 @else
                     <p class="borde" style="margin:0;">{{ $director }}</p>
                     <p style="margin:0;">Director del registro público de la propiedad</p>
@@ -412,12 +414,12 @@
 
                             </td>
 
-                            @if($distrito != '02 URUAPAN' )
+                            @if($inscripcion->movimientoRegistral->distrito != '02 Uruapan')
 
                                 <td style="padding-right: 40px; text-align:center; width: 50%; vertical-align: bottom; white-space: nowrap;">
 
                                     <p class="borde">{{ $jefe_departamento }}</p>
-                                    <p style="margin: 0">JEFE DE Departamento de Registro de Inscripciones	</p>
+                                    <p style="margin: 0">JEFE DE Departamento de Registro de Inscripciones</p>
                                 </td>
 
                             @endif

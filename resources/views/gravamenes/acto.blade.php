@@ -168,7 +168,8 @@
             <div class="informacion">
 
                 <div style="text-align: right">
-                    <p><strong>FOLIO REAL:</strong>{{ $predio->folioReal->folio }}-{{ $gravamen->movimientoRegistral->folio }} <strong>DISTRITO:</strong> {{ $distrito}}</p>
+                    <p style="margin:0"><strong>FOLIO REAL:</strong>{{ $predio->folioReal->folio }}-{{ $gravamen->movimientoRegistral->folio }}</p>
+                    <p style="margin:0"><strong>DISTRITO:</strong> {{ $gravamen->movimientoRegistral->distrito}}</p>
                 </div>
 
                 <div style="text-align: center">
@@ -393,10 +394,10 @@
                                                 {{ $propietario->porcentaje_propiedad ?? '0.00' }} %
                                             </td>
                                             <td style="padding-right: 40px;">
-                                                {{ $propietario->porcentaje_nuda ?? '0.00' }} %;
+                                                {{ $propietario->porcentaje_nuda ?? '0.00' }} %
                                             </td>
                                             <td style="padding-right: 40px;">
-                                                {{ $propietario->porcentaje_usufructo ?? '0.00' }} %;
+                                                {{ $propietario->porcentaje_usufructo ?? '0.00' }} %
                                             </td>
                                         </tr>
 
@@ -620,10 +621,10 @@
                                             {{ $propietario->porcentaje_propiedad ?? '0.00' }} %
                                         </td>
                                         <td style="padding-right: 40px;">
-                                            {{ $propietario->porcentaje_nuda ?? '0.00' }} %;
+                                            {{ $propietario->porcentaje_nuda ?? '0.00' }} %
                                         </td>
                                         <td style="padding-right: 40px;">
-                                            {{ $propietario->porcentaje_usufructo ?? '0.00' }} %;
+                                            {{ $propietario->porcentaje_usufructo ?? '0.00' }} %
                                         </td>
                                     </tr>
 
@@ -638,7 +639,7 @@
                     <p class="separador">datos del gravamen</p>
 
                     <p class="parrafo">
-                        <strong>Fecha de inscripción:</strong>{{ Carbon\Carbon::parse($gravamen->fecha_inscripcion)->format('d-m-Y') }}. <strong>Valor del gravamen:</strong>${{ number_format($gravamen->valor_gravamen, 2) }} {{ $gravamen->divisa }}.
+                        <strong>Fecha de inscripción:</strong> {{ Carbon\Carbon::parse($gravamen->fecha_inscripcion)->format('d-m-Y') }}. <strong>Valor del gravamen:</strong> ${{ number_format($gravamen->valor_gravamen, 2) }} {{ $gravamen->divisa }}.
                     </p>
 
                     <p class="parrafo">
@@ -649,12 +650,87 @@
                         {{ $gravamen->observaciones }}
                     </p>
 
+                    <p class="separador">deudores</p>
+
+                        <table>
+
+                            <thead>
+
+                                <tr>
+                                    <th >Tipo de deudor</th>
+                                    <th >Nombre / Razón social</th>
+                                </tr>
+
+                            </thead>
+
+                            <tbody>
+
+                                @foreach ($gravamen->deudores as $deudor)
+
+                                    @if($deudor->actor)
+
+                                        <tr>
+                                            <td style="padding-right: 40px;">
+                                                {{ $deudor->tipo }}
+                                            </td>
+                                            <td style="padding-right: 40px;">
+                                                {{ $deudor->actor->persona->nombre }} {{ $deudor->actor->persona->ap_paterno }} {{ $deudor->actor->persona->ap_materno }} {{ $deudor->actor->persona->razon_social }}
+                                            </td>
+                                        </tr>
+
+                                    @else
+
+                                        <tr>
+                                            <td style="padding-right: 40px;">
+                                                {{ $deudor->tipo }}
+                                            </td>
+                                            <td style="padding-right: 40px;">
+                                                {{ $deudor->persona->nombre }} {{ $deudor->persona->ap_paterno }} {{ $deudor->persona->ap_materno }} {{ $deudor->persona->razon_social }}
+                                            </td>
+                                        </tr>
+
+                                    @endif
+
+                                @endforeach
+
+                            </tbody>
+
+                        </table>
+
+                        <p class="separador">acreedores</p>
+
+                        <table>
+
+                            <thead>
+
+                                <tr>
+                                    <th >Nombre / Razón social</th>
+                                </tr>
+
+                            </thead>
+
+                            <tbody>
+
+                                @foreach ($gravamen->acreedores as $acreedor)
+
+                                    <tr>
+                                        <td style="padding-right: 40px;">
+                                            {{ $acreedor->persona->nombre }} {{ $acreedor->persona->ap_paterno }} {{ $acreedor->persona->ap_materno }} {{ $acreedor->persona->razon_social }}
+                                        </td>
+                                    </tr>
+
+                                @endforeach
+
+                            </tbody>
+
+                        </table>
+
                 @endif
 
             </div>
 
             <p class="parrafo">
-                A SOLICITUD DE: <strong>{{ $gravamen->movimientoRegistral->solicitante }}</strong> EXPEDIDO EL PRESENTE CERTIFICADO EN LA CIUDAD DE MORELIA, MICHOACÁN, A LAS
+                A SOLICITUD DE: <strong>{{ $gravamen->movimientoRegistral->solicitante }}</strong> se EXPiDe EL PRESENTE EN LA CIUDAD DE MORELIA, MICHOACÁN, A LAS
                 {{ Carbon\Carbon::now()->locale('es')->translatedFormat('H:i:s \d\e\l l d \d\e F \d\e\l Y'); }}.
             </p>
 
@@ -664,8 +740,13 @@
                     <strong>A T E N T A M E N T E</strong>
                 </p>
 
-                <p class="borde">{{ $director }}</p>
-                <p style="margin: 0">DIRECTOR DEL REGISTRO PÚBLICO  DE LA PROPIEDAD</p>
+                @if($predio->folioReal->distrito== '02 Uruapan' )
+                    <p class="borde">L.A. SANDRO MEDINA MORALES </p>
+                    <p style="margin:0;">coordinador regional 4 purepecha</p>
+                @else
+                    <p class="borde" style="margin:0;">{{ $director }}</p>
+                    <p style="margin:0;">Director del registro público de la propiedad</p>
+                @endif
 
                 <div style="margin-top: 50px;">
 
@@ -679,7 +760,7 @@
 
                                 </td>
 
-                                @if($distrito != '02 URUAPAN' )
+                                @if($predio->folioReal->distrito != '02 Uruapan')
 
                                     <td style="padding-right: 40px; text-align:center; width: 50%; vertical-align: bottom; white-space: nowrap;">
 

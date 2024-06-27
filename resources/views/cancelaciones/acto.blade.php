@@ -168,7 +168,8 @@
             <div class="informacion">
 
                 <div style="text-align: right">
-                    <p><strong>FOLIO REAL:</strong>{{ $predio->folioReal->folio }}-{{ $cancelacion->movimientoRegistral->folio }} <strong>DISTRITO:</strong> {{ $distrito}}</p>
+                    <p style="margin:0;"><strong>FOLIO REAL:</strong>{{ $predio->folioReal->folio }}-{{ $cancelacion->movimientoRegistral->folio }}</p>
+                    <p style="margin:0;"><strong>DISTRITO:</strong> {{ $cancelacion->movimientoRegistral->distrito}}</p>
                 </div>
 
                 <div style="text-align: center">
@@ -418,8 +419,13 @@
                     <strong>A T E N T A M E N T E</strong>
                 </p>
 
-                <p class="borde">{{ $director }}</p>
-                <p style="margin: 0">DIRECTOR DEL REGISTRO PÚBLICO  DE LA PROPIEDAD</p>
+                @if($predio->folioReal->distrito== '02 Uruapan' )
+                    <p class="borde">L.A. SANDRO MEDINA MORALES </p>
+                    <p style="margin:0;">coordinador regional 4 purepecha</p>
+                @else
+                    <p class="borde" style="margin:0;">{{ $director }}</p>
+                    <p style="margin:0;">Director del registro público de la propiedad</p>
+                @endif
 
                 <div style="margin-top: 50px;">
 
@@ -433,7 +439,7 @@
 
                                 </td>
 
-                                @if($distrito != '02 URUAPAN' )
+                                @if($predio->folioReal->distrito != '02 Uruapan')
 
                                     <td style="padding-right: 40px; text-align:center; width: 50%; vertical-align: bottom; white-space: nowrap;">
 

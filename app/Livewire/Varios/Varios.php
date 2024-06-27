@@ -308,7 +308,7 @@ class Varios extends Component
                 $this->vario->actualizado_por = auth()->id();
                 $this->vario->save();
 
-                $this->vario->movimientoRegistral->update(['estado' => 'concluido']);
+                $this->vario->movimientoRegistral->update(['estado' => 'elaborado']);
 
                 if($this->vario->servicio == 'DL09'){
 
@@ -322,6 +322,9 @@ class Varios extends Component
                         'tipo_servicio' => $this->vario->movimientoRegistral->tipo_servicio,
                         'solicitante' => $this->vario->movimientoRegistral->solicitante,
                         'seccion' => $this->vario->movimientoRegistral->seccion,
+                        'año' => $this->vario->movimientoRegistral->año,
+                        'tramite' => $this->vario->movimientoRegistral->tramite,
+                        'usuario' => $this->vario->movimientoRegistral->usuario,
                         'distrito' => $this->vario->movimientoRegistral->getRawOriginal('distrito'),
                         'tipo_documento' => $this->vario->movimientoRegistral->tipo_documento,
                         'numero_documento' => $this->vario->movimientoRegistral->numero_documento,
