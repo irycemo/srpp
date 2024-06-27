@@ -190,7 +190,7 @@
 
                 <p class="separador">Descripción del acto</p>
 
-                <p>{{ $inscripcion->descripcion }}.</p>
+                <p>{{ $inscripcion->descripcion_acto }}.</p>
 
                 <p class="separador">DESCRIPCIÓN DEL INMUEBLE</p>
 

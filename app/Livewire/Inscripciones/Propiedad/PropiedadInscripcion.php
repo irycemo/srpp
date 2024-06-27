@@ -786,7 +786,7 @@ class PropiedadInscripcion extends Component
 
         if($pp_transmitentes == 0){
 
-            if(((float)$this->porcentaje_propiedad + $pp_adquirientes) > $pp_transmitentes){
+            if($pp_adquirientes > $pp_transmitentes){
 
                 $this->dispatch('mostrarMensaje', ['error', "La suma de los porcentajes de propiedad no puede exceder el " . $pp_transmitentes . '%.']);
 
@@ -794,7 +794,7 @@ class PropiedadInscripcion extends Component
 
             }
 
-            if(((float)$this->porcentaje_nuda + $pn_adquirientes) > $pn_transmitentes){
+            if($pn_adquirientes > $pn_transmitentes){
 
                 $this->dispatch('mostrarMensaje', ['error', "La suma de los porcentajes de nuda no puede exceder el " . $pn_transmitentes . '%.']);
 
@@ -802,7 +802,7 @@ class PropiedadInscripcion extends Component
 
             }
 
-            if(((float)$this->porcentaje_usufructo + $pu_adquirientes) > $pu_transmitentes){
+            if($pu_adquirientes > $pu_transmitentes){
 
                 $this->dispatch('mostrarMensaje', ['error', "La suma de los porcentajes de usufructo no puede exceder el " . $pu_transmitentes . '%.']);
 
@@ -812,7 +812,7 @@ class PropiedadInscripcion extends Component
 
         }else{
 
-            if(((float)$this->porcentaje_propiedad + $pp_adquirientes) > $pp_transmitentes){
+            if($pp_adquirientes > $pp_transmitentes){
 
                 $this->dispatch('mostrarMensaje', ['error', "La suma de los porcentajes de propiedad no puede exceder el " . $pp_transmitentes . '%.']);
 
@@ -820,7 +820,7 @@ class PropiedadInscripcion extends Component
 
             }
 
-            if(((float)$this->porcentaje_nuda + $pn_adquirientes + $pp_adquirientes) > $pp_transmitentes){
+            if(($pn_adquirientes + $pp_adquirientes) > $pp_transmitentes){
 
                 $this->dispatch('mostrarMensaje', ['error', "La suma de los porcentajes de nuda no puede exceder el " . $pn_transmitentes . '%.']);
 
@@ -828,7 +828,7 @@ class PropiedadInscripcion extends Component
 
             }
 
-            if(((float)$this->porcentaje_usufructo + $pu_adquirientes + $pp_adquirientes) > $pp_transmitentes){
+            if(($pu_adquirientes + $pp_adquirientes) > $pp_transmitentes){
 
                 $this->dispatch('mostrarMensaje', ['error', "La suma de los porcentajes de usufructo no puede exceder el " . $pu_transmitentes . '%.']);
 
@@ -902,9 +902,66 @@ class PropiedadInscripcion extends Component
             'inscripcion.descripcion_acto' => 'required'
         ]);
 
+        if($this->inscripcion->movimientoRegistral->tipo_servicio == 'ordinario'){
+
+            if(!($this->calcularDiaElaboracion($this->inscripcion) <= now())){
+
+                $this->dispatch('mostrarMensaje', ['error', "El trámite puede finalizarce apartir del " . $this->calcularDiaElaboracion($this->inscripcion)->format('d-m-Y')]);
+
+                return;
+
+            }
+
+        }
+
         if($this->validaciones()) return;
 
         $this->modalContraseña = true;
+
+    }
+
+    public function guardar(){
+
+        try {
+
+            DB::transaction(function () {
+
+                $this->inscripcion->save();
+
+                $this->predio->save();
+
+                foreach ($this->medidas as $key =>$medida) {
+
+                    if($medida['id'] == null){
+
+                        $aux = $this->predio->colindancias()->create([
+                            'viento' => $medida['viento'],
+                            'longitud' => $medida['longitud'],
+                            'descripcion' => $medida['descripcion'],
+                        ]);
+
+                        $this->medidas[$key]['id'] = $aux->id;
+
+                    }else{
+
+                        Colindancia::find($medida['id'])->update([
+                            'viento' => $medida['viento'],
+                            'longitud' => $medida['longitud'],
+                            'descripcion' => $medida['descripcion'],
+                        ]);
+
+                    }
+
+                }
+
+            });
+
+            $this->dispatch('mostrarMensaje', ['success', "La información se guardó con éxito."]);
+
+        } catch (\Throwable $th) {
+            Log::error("Error al guardar inscripcion de propiedad por el usuario: (id: " . auth()->user()->id . ") " . auth()->user()->name . ". " . $th);
+            $this->dispatch('mostrarMensaje', ['error', "Ha ocurrido un error."]);
+        }
 
     }
 
@@ -922,7 +979,7 @@ class PropiedadInscripcion extends Component
 
             DB::transaction(function () {
 
-                $this->inscripcion->moviminetoRegistral->update(['estado' => 'elaborado']);
+                $this->inscripcion->movimientoRegistral->update(['estado' => 'elaborado']);
 
                 $this->predio->save();
 
@@ -1066,9 +1123,19 @@ class PropiedadInscripcion extends Component
                                                                                 })
                                                                                 ->first();
 
-                if(Deudor::where('actor_id', $actor->id)->first()){
+                $deudor = Deudor::where('actor_id', $actor->id)->first();
 
-                    $this->predio->actores()->detach($actor->id);
+                if($deudor){
+
+                    Deudor::create([
+                        'gravamen_id' => $deudor->gravamen_id,
+                        'persona_id' => $actor->persona_id,
+                        'tipo' => $deudor->tipo
+                    ]);
+
+                    $deudor->delete();
+
+                    $this->predio->actores()->where('id', $actor->id)->delete();
 
                 }else{
 
@@ -1133,6 +1200,26 @@ class PropiedadInscripcion extends Component
         unset($this->medidas[$index]);
 
         $this->medidas = array_values($this->medidas);
+
+    }
+
+    public function calcularDiaElaboracion($modelo){
+
+        $diaElaboracion = $modelo->movimientoRegistral->fecha_pago;
+
+        for ($i=0; $i < 2; $i++) {
+
+            $diaElaboracion->addDays(1);
+
+            while($diaElaboracion->isWeekend()){
+
+                $diaElaboracion->addDay();
+
+            }
+
+        }
+
+        return $diaElaboracion;
 
     }
 
