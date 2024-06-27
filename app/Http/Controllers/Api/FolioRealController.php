@@ -33,10 +33,17 @@ class FolioRealController extends Controller
                                     ->when(isset($validated['folio_real']), function($q) use($validated){
                                         $q->where('folio', $validated['folio_real']);
                                     })
-                                    ->where('estado', 'activo')
                                     ->first();
 
         if($folio_real){
+
+            if($folio_real->estado != 'activo'){
+
+                return response()->json([
+                    'folio_real' => null,
+                ], 401);
+
+            }
 
             return (new FolioRealResource($folio_real))->response()->setStatusCode(200);
 
