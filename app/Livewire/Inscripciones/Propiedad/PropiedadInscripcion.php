@@ -786,7 +786,7 @@ class PropiedadInscripcion extends Component
 
         if($pp_transmitentes == 0){
 
-            if($pp_adquirientes > $pp_transmitentes){
+            if(($this->porcentaje_propiedad + $pp_adquirientes) > $pp_transmitentes){
 
                 $this->dispatch('mostrarMensaje', ['error', "La suma de los porcentajes de propiedad no puede exceder el " . $pp_transmitentes . '%.']);
 
@@ -794,7 +794,7 @@ class PropiedadInscripcion extends Component
 
             }
 
-            if($pn_adquirientes > $pn_transmitentes){
+            if(($this->porcentaje_nuda + $pn_adquirientes) > $pn_transmitentes){
 
                 $this->dispatch('mostrarMensaje', ['error', "La suma de los porcentajes de nuda no puede exceder el " . $pn_transmitentes . '%.']);
 
@@ -802,7 +802,7 @@ class PropiedadInscripcion extends Component
 
             }
 
-            if($pu_adquirientes > $pu_transmitentes){
+            if(($this->porcentaje_usufructo + $pu_adquirientes) > $pu_transmitentes){
 
                 $this->dispatch('mostrarMensaje', ['error', "La suma de los porcentajes de usufructo no puede exceder el " . $pu_transmitentes . '%.']);
 
@@ -812,7 +812,7 @@ class PropiedadInscripcion extends Component
 
         }else{
 
-            if($pp_adquirientes > $pp_transmitentes){
+            if(($this->porcentaje_propiedad + $pp_adquirientes) > $pp_transmitentes){
 
                 $this->dispatch('mostrarMensaje', ['error', "La suma de los porcentajes de propiedad no puede exceder el " . $pp_transmitentes . '%.']);
 
@@ -820,7 +820,7 @@ class PropiedadInscripcion extends Component
 
             }
 
-            if(($pn_adquirientes + $pp_adquirientes) > $pp_transmitentes){
+            if(($this->porcentaje_nuda + $pn_adquirientes + $pp_adquirientes) > $pp_transmitentes){
 
                 $this->dispatch('mostrarMensaje', ['error', "La suma de los porcentajes de nuda no puede exceder el " . $pn_transmitentes . '%.']);
 
@@ -828,7 +828,7 @@ class PropiedadInscripcion extends Component
 
             }
 
-            if(($pu_adquirientes + $pp_adquirientes) > $pp_transmitentes){
+            if(($this->porcentaje_usufructo + $pu_adquirientes + $pp_adquirientes) > $pp_transmitentes){
 
                 $this->dispatch('mostrarMensaje', ['error', "La suma de los porcentajes de usufructo no puede exceder el " . $pu_transmitentes . '%.']);
 
@@ -877,7 +877,7 @@ class PropiedadInscripcion extends Component
 
         }
 
-        if($this->revisarProcentajes()) return true;
+        /* if($this->revisarProcentajes()) return true; */
 
         if($this->revisarProcentajesFinal()) return true;
 
