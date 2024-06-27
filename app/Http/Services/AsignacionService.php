@@ -157,13 +157,11 @@ class AsignacionService{
                                             $q->where('ubicacion', '!=', 'Regional 4');
                                         })
                                         ->whereHas('roles', function($q){
-                                            $q->where('name', 'Certificador Gravamen');
+                                            $q->whereIn('name', ['Certificador Gravamen', 'Pase a folio']);
                                         })
                                         ->get();
 
         }
-
-        info("Entra");
 
         if($certificadores->count() == 0){
 

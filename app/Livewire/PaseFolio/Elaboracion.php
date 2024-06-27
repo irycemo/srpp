@@ -508,6 +508,10 @@ class Elaboracion extends Component
 
                 $role = 'Sentencias';
 
+            }elseif($this->movimientoRegistral->certificacion){
+
+                $role = 'Certificador Gravamen';
+
             }
 
             DB::transaction(function () use ($role){
