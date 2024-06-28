@@ -928,7 +928,7 @@ class PropiedadInscripcion extends Component
 
             if(!($this->calcularDiaElaboracion($this->inscripcion) <= now())){
 
-                $this->dispatch('mostrarMensaje', ['error', "El trámite puede finalizarce apartir del " . $this->calcularDiaElaboracion($this->inscripcion)->format('d-m-Y')]);
+                $this->dispatch('mostrarMensaje', ['error', "El trámite puede finalizarse apartir del " . $this->calcularDiaElaboracion($this->inscripcion)->format('d-m-Y')]);
 
                 return;
 

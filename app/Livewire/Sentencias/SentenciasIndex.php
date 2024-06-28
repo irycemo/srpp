@@ -37,13 +37,13 @@ class SentenciasIndex extends Component
 
             }else{
 
-                return redirect()->route('sentencias.inscripcion', $movimientoRegistral->vario);
+                return redirect()->route('sentencias.inscripcion', $movimientoRegistral->sentencia);
 
             }
 
         }else{
 
-            return redirect()->route('sentencias.inscripcion', $movimientoRegistral->vario);
+            return redirect()->route('sentencias.inscripcion', $movimientoRegistral->sentencia);
 
         }
 

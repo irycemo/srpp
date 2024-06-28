@@ -303,4 +303,10 @@ class Constantes{
         'PRESCRIPCIÓN ADQUISITIVA DE DOMINIO'
     ];
 
+    const DOCUMENTOS_DE_ENTRADA = [
+        'ESCRITURA PÚBLICA',
+        'ESCRITURA PRIVADA',
+        'OFICIO'
+    ];
+
 }

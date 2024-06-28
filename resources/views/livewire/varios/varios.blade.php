@@ -405,7 +405,18 @@
 
     @endif
 
-    <div class="bg-white rounded-lg p-3 flex justify-end shadow-lg">
+    <div class="bg-white rounded-lg p-3 flex justify-end shadow-lg gap-3">
+
+        <x-button-blue
+            wire:click="guardar"
+            wire:loading.attr="disabled"
+            wire:target="guardar">
+
+            <img wire:loading wire:target="guardar" class="mx-auto h-4 mr-1" src="{{ asset('storage/img/loading3.svg') }}" alt="Loading">
+
+            Guardar y continuar
+
+        </x-button-blue>
 
         <x-button-green
             wire:click="finalizar"

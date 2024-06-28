@@ -94,6 +94,18 @@ class Cancelacion extends Component
 
         }
 
+        if($this->cancelacion->movimientoRegistral->tipo_servicio == 'ordinario'){
+
+            if(!($this->calcularDiaElaboracion($this->cancelacion) <= now())){
+
+                $this->dispatch('mostrarMensaje', ['error', "El trámite puede finalizarse apartir del " . $this->calcularDiaElaboracion($this->cancelacion)->format('d-m-Y')]);
+
+                return;
+
+            }
+
+        }
+
         $this->modalContraseña = true;
 
     }
@@ -152,6 +164,25 @@ class Cancelacion extends Component
 
     }
 
+    public function guardar(){
+
+        try {
+
+            DB::transaction(function () {
+
+                $this->cancelacion->save();
+
+            });
+
+            $this->dispatch('mostrarMensaje', ['success', "La información se guardó con éxito."]);
+
+        } catch (\Throwable $th) {
+            Log::error("Error al guardar cancelación de gravamen por el usuario: (id: " . auth()->user()->id . ") " . auth()->user()->name . ". " . $th);
+            $this->dispatch('mostrarMensaje', ['error', "Ha ocurrido un error."]);
+        }
+
+    }
+
     public function buscarGravamen(){
 
         $this->gravamenCancelarMovimiento = MovimientoRegistral::with('gravamen')
@@ -168,13 +199,35 @@ class Cancelacion extends Component
 
         }
 
-        if(!$this->gravamenCancelarMovimiento->gravamen->exists()){
+        if(!$this->gravamenCancelarMovimiento->gravamen){
+
+            $this->gravamenCancelarMovimiento = null;
 
             $this->dispatch('mostrarMensaje', ['error', "No se encontro el gravamen."]);
 
             return;
 
         }
+
+    }
+
+    public function calcularDiaElaboracion($modelo){
+
+        $diaElaboracion = $modelo->movimientoRegistral->fecha_pago;
+
+        for ($i=0; $i < 2; $i++) {
+
+            $diaElaboracion->addDays(1);
+
+            while($diaElaboracion->isWeekend()){
+
+                $diaElaboracion->addDay();
+
+            }
+
+        }
+
+        return $diaElaboracion;
 
     }
 

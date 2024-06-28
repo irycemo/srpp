@@ -57,8 +57,12 @@
                 <x-input-select id="tipo_documento" wire:model.live="tipo_documento" class="w-full">
 
                     <option value="">Seleccione una opción</option>
-                    <option value="ESCRITURA PÚBLICA">Escritura Pública</option>
-                    <option value="OFICIO">Oficio</option>
+
+                    @foreach ($documentos_de_entrada as $item)
+
+                        <option value="{{ $item }}">{{ $item }}</option>
+
+                    @endforeach
 
                 </x-input-select>
 
@@ -114,7 +118,7 @@
 
                 </x-input-group>
 
-            @elseif ($tipo_documento == 'ESCRITURA PÚBLICA')
+            @elseif ($tipo_documento == 'ESCRITURA PÚBLICA' || $tipo_documento == 'ESCRITURA PRIVADA')
 
                 <x-input-group for="escritura_numero" label="Número de escritura" :error="$errors->first('escritura_numero')" class="w-full">
 

@@ -82,7 +82,7 @@ class GravamenInscripcion extends Component
             'gravamen.tipo' => 'required',
             'gravamen.acto_contenido' => 'required',
             'gravamen.valor_gravamen' => 'required|numeric',
-            'gravamen.divisa' => 'required',
+            'gravamen.divisa' => ['required', Rule::in($this->divisas)],
             'gravamen.fecha_inscripcion' => 'required',
             'gravamen.estado' => 'required',
             'gravamen.observaciones' => utf8_encode('regex:/^[áéíóúÁÉÍÓÚñÑa-zA-Z-0-9$#.() ]*$/'),
@@ -371,7 +371,7 @@ class GravamenInscripcion extends Component
                 'regex:/^[A-Z]{1}[AEIOUX]{1}[A-Z]{2}[0-9]{2}(0[1-9]|1[0-2])(0[1-9]|1[0-9]|2[0-9]|3[0-1])[HM]{1}(AS|BC|BS|CC|CS|CH|CL|CM|DF|DG|GT|GR|HG|JC|MC|MN|MS|NT|NL|OC|PL|QT|QR|SP|SL|SR|TC|TS|TL|VZ|YN|ZS|NE)[B-DF-HJ-NP-TV-Z]{3}[0-9A-Z]{1}[0-9]{1}$/i'
             ],
             'rfc' => [
-                'required',
+                'nullable',
                 'regex:/^([A-ZÑ&]{3,4}) ?(?:- ?)?(\d{2}(?:0[1-9]|1[0-2])(?:0[1-9]|[12]\d|3[01])) ?(?:- ?)?([A-Z\d]{2})([A\d])$/'
             ],
             'razon_social' => Rule::requiredIf($this->tipo_persona === 'MORAL'),
@@ -580,6 +580,18 @@ class GravamenInscripcion extends Component
 
         }
 
+        if($this->gravamen->movimientoRegistral->tipo_servicio == 'ordinario'){
+
+            if(!($this->calcularDiaElaboracion($this->gravamen) <= now())){
+
+                $this->dispatch('mostrarMensaje', ['error', "El trámite puede finalizarse apartir del " . $this->calcularDiaElaboracion($this->gravamen)->format('d-m-Y')]);
+
+                return;
+
+            }
+
+        }
+
         $this->modalContraseña = true;
 
     }
@@ -696,6 +708,25 @@ class GravamenInscripcion extends Component
 
         } catch (\Throwable $th) {
             Log::error("Error al finalizar inscripcion de propiedad por el usuario: (id: " . auth()->user()->id . ") " . auth()->user()->name . ". " . $th);
+            $this->dispatch('mostrarMensaje', ['error', "Ha ocurrido un error."]);
+        }
+
+    }
+
+    public function guardar(){
+
+        try {
+
+            DB::transaction(function () {
+
+                $this->gravamen->save();
+
+            });
+
+            $this->dispatch('mostrarMensaje', ['success', "La información se guardó con éxito."]);
+
+        } catch (\Throwable $th) {
+            Log::error("Error al guardar gravamen por el usuario: (id: " . auth()->user()->id . ") " . auth()->user()->name . ". " . $th);
             $this->dispatch('mostrarMensaje', ['error', "Ha ocurrido un error."]);
         }
 
@@ -864,6 +895,26 @@ class GravamenInscripcion extends Component
                                 $q->where('name', 'Gravamen');
                             })
                             ->get();
+    }
+
+    public function calcularDiaElaboracion($modelo){
+
+        $diaElaboracion = $modelo->movimientoRegistral->fecha_pago;
+
+        for ($i=0; $i < 2; $i++) {
+
+            $diaElaboracion->addDays(1);
+
+            while($diaElaboracion->isWeekend()){
+
+                $diaElaboracion->addDay();
+
+            }
+
+        }
+
+        return $diaElaboracion;
+
     }
 
     public function render()

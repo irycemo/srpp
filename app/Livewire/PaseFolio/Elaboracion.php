@@ -58,6 +58,7 @@ class Elaboracion extends Component
     public $editar = false;
     public $crear = false;
     public $antecedente;
+    public $documentos_de_entrada;
 
     protected function rules(){
         return [
@@ -147,23 +148,33 @@ class Elaboracion extends Component
                     'numero_propiedad_antecedente' => $this->movimientoRegistral->numero_propiedad,
                     'distrito_antecedente' => $this->movimientoRegistral->getRawOriginal('distrito'),
                     'seccion_antecedente' => $this->movimientoRegistral->seccion,
+                    'tipo_documento' => $this->tipo_documento,
                 ]);
 
                 $this->movimientoRegistral->update(['folio_real' => $folioReal->id]);
 
-                if ($this->tipo_documento == 'escritura'){
+                if (in_array($this->tipo_documento, ['ESCRITURA PÚBLICA', 'ESCRITURA PRIVADA'])){
 
-                    $this->escritura = Escritura::create([
-                        'numero' => $this->escritura_numero,
-                        'fecha_inscripcion' => $this->escritura_fecha_inscripcion,
-                        'fecha_escritura' => $this->escritura_fecha_escritura,
-                        'numero_hojas' => $this->escritura_numero_hojas,
-                        'numero_paginas' => $this->escritura_numero_paginas,
-                        'notaria' => $this->escritura_notaria,
-                        'nombre_notario' => $this->escritura_nombre_notario,
-                        'estado_notario' => $this->escritura_estado_notario,
-                        'comentario' => $this->escritura_observaciones,
-                    ]);
+                    $this->escritura = Escritura::where('numero', $this->escritura_numero)
+                                            ->where('notaria', $this->escritura_notaria)
+                                            ->where('estado_notario', $this->escritura_estado_notario)
+                                            ->first();
+
+                    if(!$this->escritura){
+
+                        $this->escritura = Escritura::create([
+                            'numero' => $this->escritura_numero,
+                            'fecha_inscripcion' => $this->escritura_fecha_inscripcion,
+                            'fecha_escritura' => $this->escritura_fecha_escritura,
+                            'numero_hojas' => $this->escritura_numero_hojas,
+                            'numero_paginas' => $this->escritura_numero_paginas,
+                            'notaria' => $this->escritura_notaria,
+                            'nombre_notario' => $this->escritura_nombre_notario,
+                            'estado_notario' => $this->escritura_estado_notario,
+                            'comentario' => $this->escritura_observaciones,
+                        ]);
+
+                    }
 
                     $this->propiedad = Predio::create([
                         'escritura_id' => $this->escritura->id,
@@ -172,6 +183,16 @@ class Elaboracion extends Component
                     ]);
 
                 }else{
+
+                    $folioReal->update([
+                        'autoridad_cargo' => $this->autoridad_cargo,
+                        'autoridad_nombre' => $this->autoridad_nombre,
+                        'autoridad_numero' => $this->autoridad_numero,
+                        'numero_documento' => $this->numero_documento,
+                        'fecha_emision' => $this->fecha_emision,
+                        'fecha_inscripcion' => $this->fecha_inscripcion,
+                        'procedencia' => $this->procedencia,
+                    ]);
 
                     $this->propiedad = Predio::create([
                         'folio_real' => $folioReal->id,
@@ -762,6 +783,8 @@ class Elaboracion extends Component
             $this->propiedad = Predio::make();
 
         }
+
+        $this->documentos_de_entrada = Constantes::DOCUMENTOS_DE_ENTRADA;
 
     }
 

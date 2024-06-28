@@ -183,6 +183,18 @@ class Sentencia extends Component
 
         $this->validate();
 
+        if($this->sentencia->movimientoRegistral->tipo_servicio == 'ordinario'){
+
+            if(!($this->calcularDiaElaboracion($this->sentencia) <= now())){
+
+                $this->dispatch('mostrarMensaje', ['error', "El trámite puede finalizarse apartir del " . $this->calcularDiaElaboracion($this->sentencia)->format('d-m-Y')]);
+
+                return;
+
+            }
+
+        }
+
         $this->modalContraseña = true;
 
     }
@@ -299,6 +311,51 @@ class Sentencia extends Component
 
         } catch (\Throwable $th) {
             Log::error("Error al finalizar inscripcion de propiedad por el usuario: (id: " . auth()->user()->id . ") " . auth()->user()->name . ". " . $th);
+            $this->dispatch('mostrarMensaje', ['error', "Ha ocurrido un error."]);
+        }
+
+    }
+
+    public function guardar(){
+
+        try {
+
+            DB::transaction(function () {
+
+                $this->sentencia->save();
+
+                $this->predio->save();
+
+                foreach ($this->medidas as $key =>$medida) {
+
+                    if($medida['id'] == null){
+
+                        $aux = $this->predio->colindancias()->create([
+                            'viento' => $medida['viento'],
+                            'longitud' => $medida['longitud'],
+                            'descripcion' => $medida['descripcion'],
+                        ]);
+
+                        $this->medidas[$key]['id'] = $aux->id;
+
+                    }else{
+
+                        Colindancia::find($medida['id'])->update([
+                            'viento' => $medida['viento'],
+                            'longitud' => $medida['longitud'],
+                            'descripcion' => $medida['descripcion'],
+                        ]);
+
+                    }
+
+                }
+
+            });
+
+            $this->dispatch('mostrarMensaje', ['success', "La información se guardó con éxito."]);
+
+        } catch (\Throwable $th) {
+            Log::error("Error al guardar sentencia por el usuario: (id: " . auth()->user()->id . ") " . auth()->user()->name . ". " . $th);
             $this->dispatch('mostrarMensaje', ['error', "Ha ocurrido un error."]);
         }
 
@@ -834,6 +891,26 @@ class Sentencia extends Component
         $this->tipos_vialidades = Constantes::TIPO_VIALIDADES;
 
         $this->tipos_asentamientos = Constantes::TIPO_ASENTAMIENTO;
+
+    }
+
+    public function calcularDiaElaboracion($modelo){
+
+        $diaElaboracion = $modelo->movimientoRegistral->fecha_pago;
+
+        for ($i=0; $i < 2; $i++) {
+
+            $diaElaboracion->addDays(1);
+
+            while($diaElaboracion->isWeekend()){
+
+                $diaElaboracion->addDay();
+
+            }
+
+        }
+
+        return $diaElaboracion;
 
     }
 

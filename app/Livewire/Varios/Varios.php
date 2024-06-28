@@ -286,6 +286,18 @@ class Varios extends Component
 
         }
 
+        if($this->vario->movimientoRegistral->tipo_servicio == 'ordinario'){
+
+            if(!($this->calcularDiaElaboracion($this->vario) <= now())){
+
+                $this->dispatch('mostrarMensaje', ['error', "El trámite puede finalizarse apartir del " . $this->calcularDiaElaboracion($this->vario)->format('d-m-Y')]);
+
+                return;
+
+            }
+
+        }
+
         $this->modalContraseña = true;
 
     }
@@ -393,6 +405,25 @@ class Varios extends Component
 
     }
 
+    public function guardar(){
+
+        try {
+
+            DB::transaction(function () {
+
+                $this->vario->save();
+
+            });
+
+            $this->dispatch('mostrarMensaje', ['success', "La información se guardó con éxito."]);
+
+        } catch (\Throwable $th) {
+            Log::error("Error al guardar inscripción de varios por el usuario: (id: " . auth()->user()->id . ") " . auth()->user()->name . ". " . $th);
+            $this->dispatch('mostrarMensaje', ['error', "Ha ocurrido un error."]);
+        }
+
+    }
+
     public function obtenerSupervisor(){
 
         return User::with('ultimoMovimientoRegistralAsignado')
@@ -432,6 +463,26 @@ class Varios extends Component
         $this->actos = Constantes::ACTOS_INSCRIPCION_VARIOS;
 
         $this->vario->load('actores.persona');
+
+    }
+
+    public function calcularDiaElaboracion($modelo){
+
+        $diaElaboracion = $modelo->movimientoRegistral->fecha_pago;
+
+        for ($i=0; $i < 2; $i++) {
+
+            $diaElaboracion->addDays(1);
+
+            while($diaElaboracion->isWeekend()){
+
+                $diaElaboracion->addDay();
+
+            }
+
+        }
+
+        return $diaElaboracion;
 
     }
 
