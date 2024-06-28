@@ -699,6 +699,8 @@ class PropiedadInscripcion extends Component
 
         $this->authorize('update', $this->inscripcion->movimientoRegistral);
 
+        $tipo = $actor->tipo_actor;
+
         if($actor->representado_por){
 
             $this->dispatch('mostrarMensaje', ['error', "Debe borrar primero al representante."]);
@@ -718,6 +720,26 @@ class PropiedadInscripcion extends Component
             $this->inscripcion->refresh();
 
             $this->inscripcion->load('actores.persona');
+
+            if($tipo == 'transmitente'){
+
+                $this->reset('transmitentes');
+
+                foreach ($this->inscripcion->transmitentes() as $transmitente) {
+
+                    $this->transmitentes[] = [
+                        'id' => $transmitente['id'],
+                        'nombre' => $transmitente->persona->nombre,
+                        'ap_paterno' => $transmitente->persona->ap_paterno,
+                        'ap_materno' => $transmitente->persona->ap_materno,
+                        'razon_social' => $transmitente->persona->razon_social,
+                        'porcentaje_propiedad' => $transmitente->porcentaje_propiedad,
+                        'porcentaje_nuda' => $transmitente->porcentaje_nuda,
+                        'porcentaje_usufructo' => $transmitente->porcentaje_usufructo,
+                    ];
+                }
+
+            }
 
         } catch (\Throwable $th) {
 
