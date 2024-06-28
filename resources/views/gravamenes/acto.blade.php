@@ -652,78 +652,78 @@
 
                     <p class="separador">deudores</p>
 
-                        <table>
+                    <table>
 
-                            <thead>
+                        <thead>
 
-                                <tr>
-                                    <th >Tipo de deudor</th>
-                                    <th >Nombre / Razón social</th>
-                                </tr>
+                            <tr>
+                                <th >Tipo de deudor</th>
+                                <th >Nombre / Razón social</th>
+                            </tr>
 
-                            </thead>
+                        </thead>
 
-                            <tbody>
+                        <tbody>
 
-                                @foreach ($gravamen->deudores as $deudor)
+                            @foreach ($gravamen->deudores as $deudor)
 
-                                    @if($deudor->actor)
-
-                                        <tr>
-                                            <td style="padding-right: 40px;">
-                                                {{ $deudor->tipo }}
-                                            </td>
-                                            <td style="padding-right: 40px;">
-                                                {{ $deudor->actor->persona->nombre }} {{ $deudor->actor->persona->ap_paterno }} {{ $deudor->actor->persona->ap_materno }} {{ $deudor->actor->persona->razon_social }}
-                                            </td>
-                                        </tr>
-
-                                    @else
-
-                                        <tr>
-                                            <td style="padding-right: 40px;">
-                                                {{ $deudor->tipo }}
-                                            </td>
-                                            <td style="padding-right: 40px;">
-                                                {{ $deudor->persona->nombre }} {{ $deudor->persona->ap_paterno }} {{ $deudor->persona->ap_materno }} {{ $deudor->persona->razon_social }}
-                                            </td>
-                                        </tr>
-
-                                    @endif
-
-                                @endforeach
-
-                            </tbody>
-
-                        </table>
-
-                        <p class="separador">acreedores</p>
-
-                        <table>
-
-                            <thead>
-
-                                <tr>
-                                    <th >Nombre / Razón social</th>
-                                </tr>
-
-                            </thead>
-
-                            <tbody>
-
-                                @foreach ($gravamen->acreedores as $acreedor)
+                                @if($deudor->actor)
 
                                     <tr>
                                         <td style="padding-right: 40px;">
-                                            {{ $acreedor->persona->nombre }} {{ $acreedor->persona->ap_paterno }} {{ $acreedor->persona->ap_materno }} {{ $acreedor->persona->razon_social }}
+                                            {{ $deudor->tipo }}
+                                        </td>
+                                        <td style="padding-right: 40px;">
+                                            {{ $deudor->actor->persona->nombre }} {{ $deudor->actor->persona->ap_paterno }} {{ $deudor->actor->persona->ap_materno }} {{ $deudor->actor->persona->razon_social }}
                                         </td>
                                     </tr>
 
-                                @endforeach
+                                @else
 
-                            </tbody>
+                                    <tr>
+                                        <td style="padding-right: 40px;">
+                                            {{ $deudor->tipo }}
+                                        </td>
+                                        <td style="padding-right: 40px;">
+                                            {{ $deudor->persona->nombre }} {{ $deudor->persona->ap_paterno }} {{ $deudor->persona->ap_materno }} {{ $deudor->persona->razon_social }}
+                                        </td>
+                                    </tr>
 
-                        </table>
+                                @endif
+
+                            @endforeach
+
+                        </tbody>
+
+                    </table>
+
+                    <p class="separador">acreedores</p>
+
+                    <table>
+
+                        <thead>
+
+                            <tr>
+                                <th >Nombre / Razón social</th>
+                            </tr>
+
+                        </thead>
+
+                        <tbody>
+
+                            @foreach ($gravamen->acreedores as $acreedor)
+
+                                <tr>
+                                    <td style="padding-right: 40px;">
+                                        {{ $acreedor->persona->nombre }} {{ $acreedor->persona->ap_paterno }} {{ $acreedor->persona->ap_materno }} {{ $acreedor->persona->razon_social }}
+                                    </td>
+                                </tr>
+
+                            @endforeach
+
+                        </tbody>
+
+                    </table>
 
                 @endif
 

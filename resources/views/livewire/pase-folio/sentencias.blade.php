@@ -246,21 +246,9 @@
 
                             @foreach ($actos as $acto)
 
-                                <option value="{{ $acto->id }}">{{ $acto->acto }}</option>
+                                <option value="{{ $acto }}">{{ $acto }}</option>
 
                             @endforeach
-
-                        </x-input-select>
-
-                    </x-input-group>
-
-                    <x-input-group for="estado" label="Estado" :error="$errors->first('estado')" class="w-full">
-
-                        <x-input-select id="estado" wire:model="estado" class="w-full">
-
-                            <option value="">Seleccione una opción</option>
-                            <option value="activo">Activo</option>
-                            <option value="cancelado">Cancelado</option>
 
                         </x-input-select>
 
@@ -292,6 +280,8 @@
         </x-slot>
 
         <x-slot name="footer">
+
+            {{ $errors }}
 
             <div class="flex gap-3">
 

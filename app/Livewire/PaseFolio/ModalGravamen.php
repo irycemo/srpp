@@ -273,6 +273,11 @@ class ModalGravamen extends ModalComponent
                 'registro_gravamen' => $this->antecente_registro,
                 'distrito' => $this->antecente_distrito,
                 'folio_real' => $this->movimientoRegistral->folio_real,
+                'usurio_asignado' => $this->movimientoRegistral->usurio_asignado,
+                'usurio_supervisor' => $this->movimientoRegistral->usurio_supervisor,
+                'año' => $this->movimientoRegistral->año,
+                'tramite' => $this->movimientoRegistral->tramite,
+                'usuario' => $this->movimientoRegistral->usuario,
                 'actualizado_por' => auth()->id()
             ]);
 

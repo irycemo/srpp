@@ -389,81 +389,85 @@
 
                 </p>
 
-                <p class="separador">datos de la inscripción cancelada</p>
+                @if($movimientoCancelado)
 
-                @if($movimientoCancelado?->gravamen)
+                    <p class="separador">datos de la inscripción cancelada</p>
 
-                    <p class="parrafo">
-                        <strong>Folio:</strong>{{ $movimientoCancelado->folioReal->folio . '-' . $movimientoCancelado->folio }}.
-                        <strong>Fecha de inscripción:</strong>{{ Carbon\Carbon::parse($movimientoCancelado->gravamen->fecha_inscripcion)->format('d-m-Y') }}.
-                        <strong>Valor del gravamen:</strong>${{ number_format($movimientoCancelado->gravamen->valor_gravamen, 2) }} {{ $movimientoCancelado->gravamen->divisa }}.
-                    </p>
+                    @if($movimientoCancelado->gravamen)
 
-                    <p class="parrafo">
-                        <strong>Acto contenido:</strong>{{ $movimientoCancelado->gravamen->acto_contenido }}.
-                        <strong>Tipo:</strong>{{ $movimientoCancelado->gravamen->tipo }}
-                    </p>
+                        <p class="parrafo">
+                            <strong>Folio:</strong>{{ $movimientoCancelado->folioReal->folio . '-' . $movimientoCancelado->folio }}.
+                            <strong>Fecha de inscripción:</strong>{{ Carbon\Carbon::parse($movimientoCancelado->gravamen->fecha_inscripcion)->format('d-m-Y') }}.
+                            <strong>Valor del gravamen:</strong>${{ number_format($movimientoCancelado->gravamen->valor_gravamen, 2) }} {{ $movimientoCancelado->gravamen->divisa }}.
+                        </p>
 
-                    <p class="parrafo">
-                        {{ $movimientoCancelado->gravamen->observaciones }}
-                    </p>
+                        <p class="parrafo">
+                            <strong>Acto contenido:</strong>{{ $movimientoCancelado->gravamen->acto_contenido }}.
+                            <strong>Tipo:</strong>{{ $movimientoCancelado->gravamen->tipo }}
+                        </p>
 
-                @elseif($movimientoCancelado?->cancelacion)
+                        <p class="parrafo">
+                            {{ $movimientoCancelado->gravamen->observaciones }}
+                        </p>
 
-                    <p class="parrafo">
-                        <strong>Folio:</strong>{{ $movimientoCancelado->folioReal->folio . '-' . $movimientoCancelado->folio }}.
-                    </p>
+                    @elseif($movimientoCancelado->cancelacion)
 
-                    <p class="parrafo">
-                        <strong>Acto contenido:</strong>{{ $movimientoCancelado->cancelacion->acto_contenido }}.
-                        <strong>Tipo:</strong>{{ $movimientoCancelado->cancelacion->tipo }}
-                    </p>
+                        <p class="parrafo">
+                            <strong>Folio:</strong>{{ $movimientoCancelado->folioReal->folio . '-' . $movimientoCancelado->folio }}.
+                        </p>
 
-                    <p class="parrafo">
-                        {{ $movimientoCancelado->cancelacion->observaciones }}
-                    </p>
+                        <p class="parrafo">
+                            <strong>Acto contenido:</strong>{{ $movimientoCancelado->cancelacion->acto_contenido }}.
+                            <strong>Tipo:</strong>{{ $movimientoCancelado->cancelacion->tipo }}
+                        </p>
 
-                @elseif($movimientoCancelado?->inscripcionPropiedad)
+                        <p class="parrafo">
+                            {{ $movimientoCancelado->cancelacion->observaciones }}
+                        </p>
 
-                    <p class="parrafo">
-                        <strong>Folio:</strong>{{ $movimientoCancelado->folioReal->folio . '-' . $movimientoCancelado->folio }}.
-                    </p>
+                    @elseif($movimientoCancelado->inscripcionPropiedad)
 
-                    <p class="parrafo">
-                        <strong>Acto contenido:</strong>{{ $movimientoCancelado->inscripcionPropiedad->acto_contenido }}.
-                    </p>
+                        <p class="parrafo">
+                            <strong>Folio:</strong>{{ $movimientoCancelado->folioReal->folio . '-' . $movimientoCancelado->folio }}.
+                        </p>
 
-                    <p class="parrafo">
-                        {{ $movimientoCancelado->inscripcionPropiedad->observaciones }}
-                    </p>
+                        <p class="parrafo">
+                            <strong>Acto contenido:</strong>{{ $movimientoCancelado->inscripcionPropiedad->acto_contenido }}.
+                        </p>
 
-                @elseif($movimientoCancelado?->vario)
+                        <p class="parrafo">
+                            {{ $movimientoCancelado->inscripcionPropiedad->observaciones }}
+                        </p>
 
-                    <p class="parrafo">
-                        <strong>Folio:</strong>{{ $movimientoCancelado->folioReal->folio . '-' . $movimientoCancelado->folio }}.
-                    </p>
+                    @elseif($movimientoCancelado->vario)
 
-                    <p class="parrafo">
-                        <strong>Acto contenido:</strong>{{ $movimientoCancelado->vario->acto_contenido }}.
-                    </p>
+                        <p class="parrafo">
+                            <strong>Folio:</strong>{{ $movimientoCancelado->folioReal->folio . '-' . $movimientoCancelado->folio }}.
+                        </p>
 
-                    <p class="parrafo">
-                        {{ $movimientoCancelado->vario->descripcion }}
-                    </p>
+                        <p class="parrafo">
+                            <strong>Acto contenido:</strong>{{ $movimientoCancelado->vario->acto_contenido }}.
+                        </p>
 
-                @elseif($movimientoCancelado?->sentencia)
+                        <p class="parrafo">
+                            {{ $movimientoCancelado->vario->descripcion }}
+                        </p>
 
-                    <p class="parrafo">
-                        <strong>Folio:</strong>{{ $movimientoCancelado->folioReal->folio . '-' . $movimientoCancelado->folio }}.
-                    </p>
+                    @elseif($movimientoCancelado->sentencia)
 
-                    <p class="parrafo">
-                        <strong>Acto contenido:</strong>{{ $movimientoCancelado->sentencia->acto_contenido }}.
-                    </p>
+                        <p class="parrafo">
+                            <strong>Folio:</strong>{{ $movimientoCancelado->folioReal->folio . '-' . $movimientoCancelado->folio }}.
+                        </p>
 
-                    <p class="parrafo">
-                        {{ $movimientoCancelado->sentencia->descripcion }}
-                    </p>
+                        <p class="parrafo">
+                            <strong>Acto contenido:</strong>{{ $movimientoCancelado->sentencia->acto_contenido }}.
+                        </p>
+
+                        <p class="parrafo">
+                            {{ $movimientoCancelado->sentencia->descripcion }}
+                        </p>
+
+                    @endif
 
                 @endif
 

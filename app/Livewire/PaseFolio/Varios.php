@@ -42,7 +42,7 @@ class Varios extends Component
     public $procedencia;
 
     public $acto_contenido;
-    public $estado;
+    public $estado = 'activo';
     public $comentario;
 
     public $label_numero_documento = "Número de documento";
@@ -78,7 +78,6 @@ class Varios extends Component
             'fecha_emision',
             'procedencia',
             'acto_contenido',
-            'estado',
             'comentario',
             'label_numero_documento',
             'selected_id'
@@ -251,7 +250,6 @@ class Varios extends Component
 
         $this->validate([
             'acto_contenido' => 'required',
-            'estado' => 'required',
             'comentario' => 'required'
         ]);
 
@@ -259,7 +257,7 @@ class Varios extends Component
         try {
 
             $this->vario->update([
-                'estado' => $this->estado,
+                'estado' => 'nuevo',
                 'acto_contenido' => $this->acto_contenido,
                 'descripcion' => $this->comentario,
                 'actualizado_por' => auth()->id()
@@ -326,7 +324,7 @@ class Varios extends Component
 
         $this->distritoMovimineto = $this->movimientoRegistral->getRawOriginal('distrito');
 
-        $this->actos = Acto::where('seccion', 'varios')->orderBy('acto')->get();
+        $this->actos = Constantes::ACTOS_INSCRIPCION_VARIOS;
 
         $this->vario = Vario::make();
 

@@ -452,6 +452,167 @@
 
                 @endif
 
+                @if($folioReal->movimientosRegistrales->count() > 1)
+
+                    <p class="separador" style="text-align: center">Movimientos registrales</p>
+
+                    <div style="margin-left: 10px; margin-right: 10px;">
+
+                        @if($folioReal->gravamenes->count())
+
+                            <p class="separador" style="text-align: center">Gravamenes</p>
+
+                            @foreach ($folioReal->gravamenes as $gravamen)
+
+                                <p class="parrafo">
+
+                                    <p class="separador">gravamen ({{ $folioReal->folio }}-{{ $folioReal->movimientosRegistrales()->where('id', $gravamen->movimiento_registral_id)->first()->folio }})</p>
+
+                                    <p class="parrafo">
+                                        <strong>Fecha de inscripción:</strong> {{ Carbon\Carbon::parse($gravamen->fecha_inscripcion)->format('d-m-Y') }}. <strong>Valor del gravamen:</strong> ${{ number_format($gravamen->valor_gravamen, 2) }} {{ $gravamen->divisa }}.
+                                    </p>
+
+                                    <p class="parrafo">
+                                        {{ $gravamen->tipo }}
+                                    </p>
+
+                                    <p class="parrafo">
+                                        {{ $gravamen->observaciones }}
+                                    </p>
+
+                                    <p class="separador">deudores</p>
+
+                                    <table>
+
+                                        <thead>
+
+                                            <tr>
+                                                <th >Tipo de deudor</th>
+                                                <th >Nombre / Razón social</th>
+                                            </tr>
+
+                                        </thead>
+
+                                        <tbody>
+
+                                            @foreach ($gravamen->deudores as $deudor)
+
+                                                @if($deudor->actor)
+
+                                                    <tr>
+                                                        <td style="padding-right: 40px;">
+                                                            {{ $deudor->tipo }}
+                                                        </td>
+                                                        <td style="padding-right: 40px;">
+                                                            {{ $deudor->actor->persona->nombre }} {{ $deudor->actor->persona->ap_paterno }} {{ $deudor->actor->persona->ap_materno }} {{ $deudor->actor->persona->razon_social }}
+                                                        </td>
+                                                    </tr>
+
+                                                @else
+
+                                                    <tr>
+                                                        <td style="padding-right: 40px;">
+                                                            {{ $deudor->tipo }}
+                                                        </td>
+                                                        <td style="padding-right: 40px;">
+                                                            {{ $deudor->persona->nombre }} {{ $deudor->persona->ap_paterno }} {{ $deudor->persona->ap_materno }} {{ $deudor->persona->razon_social }}
+                                                        </td>
+                                                    </tr>
+
+                                                @endif
+
+                                            @endforeach
+
+                                        </tbody>
+
+                                    </table>
+
+                                    <p class="separador">acreedores</p>
+
+                                    <table>
+
+                                        <thead>
+
+                                            <tr>
+                                                <th >Nombre / Razón social</th>
+                                            </tr>
+
+                                        </thead>
+
+                                        <tbody>
+
+                                            @foreach ($gravamen->acreedores as $acreedor)
+
+                                                <tr>
+                                                    <td style="padding-right: 40px;">
+                                                        {{ $acreedor->persona->nombre }} {{ $acreedor->persona->ap_paterno }} {{ $acreedor->persona->ap_materno }} {{ $acreedor->persona->razon_social }}
+                                                    </td>
+                                                </tr>
+
+                                            @endforeach
+
+                                        </tbody>
+
+                                    </table>
+
+                                </p>
+
+                            @endforeach
+
+                        @endif
+
+                        @if($folioReal->sentencias->count())
+
+                            <p class="separador" style="text-align: center">Sentencias</p>
+
+                            @foreach ($folioReal->sentencias as $sentencia)
+
+                                <p class="parrafo">
+
+                                    <p class="separador">Sentencia ({{ $folioReal->folio }}-{{ $folioReal->movimientosRegistrales()->where('id', $sentencia->movimiento_registral_id)->first()->folio }})</p>
+
+                                    <p class="parrafo">
+                                        <strong>Descripción del acto:</strong> {{ $sentencia->acto_contenido }}
+                                    </p>
+
+                                    <p class="parrafo">
+                                        <strong>Descripción del acto:</strong> {{ $sentencia->descripcion }}
+                                    </p>
+
+                                </p>
+
+                            @endforeach
+
+                        @endif
+
+                        @if($folioReal->varios->count())
+
+                            <p class="separador" style="text-align: center">Varios</p>
+
+                            @foreach ($folioReal->varios as $vario)
+
+                                <p class="parrafo">
+
+                                    <p class="separador">Varios ({{ $folioReal->folio }}-{{ $folioReal->movimientosRegistrales()->where('id', $vario->movimiento_registral_id)->first()->folio }})</p>
+
+                                    <p class="parrafo">
+                                        <strong>Descripción del acto:</strong> {{ $vario->acto_contenido }}
+                                    </p>
+
+                                    <p class="parrafo">
+                                        <strong>Descripción del acto:</strong> {{ $vario->descripcion }}
+                                    </p>
+
+                                </p>
+
+                            @endforeach
+
+                        @endif
+
+                    </div>
+
+                @endif
+
                 <div class="firma no-break">
 
                     <p class="atte">

@@ -511,6 +511,8 @@ class Elaboracion extends Component
 
         try {
 
+            $this->procesarMovimientos();
+
             $role = null;
 
             if($this->movimientoRegistral->inscripcionPropiedad){
@@ -733,6 +735,69 @@ class Elaboracion extends Component
 
             Log::error("Error al borrar antecedente en pase a folio por el usuario: (id: " . auth()->user()->id . ") " . auth()->user()->name . ". " . $th);
             $this->dispatch('mostrarMensaje', ['error', "Ha ocurrido un error."]);
+
+        }
+
+    }
+
+    public function procesarMovimientos(){
+
+        $this->movimientoRegistral->folioReal->load('gravamenes.movimientoRegistral', 'sentencias.movimientoRegistral', 'varios.movimientoRegistral');
+
+        if($this->movimientoRegistral->folioReal->gravamenes->count()){
+
+            foreach($this->movimientoRegistral->folioReal->gravamenes as $gravamen){
+
+                $gravamen->movimientoRegistral->update([
+                    'usuario_asignado' => (new AsignacionService())->obtenerUltimoUsuarioConAsignacion($this->obtenerUsuarios('Gravamen')),
+                    'usuario_supervisor' => (new AsignacionService())->obtenerSupervisorGravamen($this->movimientoRegistral->getRawOriginal('distrito')),
+                ]);
+
+                if(!$gravamen->acreedores()->count()){
+
+                    throw new Exception("Debe finalizar los gravamenes.");
+
+                }
+
+            }
+
+        }
+
+        if($this->movimientoRegistral->folioReal->sentencias->count()){
+
+            foreach($this->movimientoRegistral->folioReal->sentencias as $sentencia){
+
+                $sentencia->movimientoRegistral->update([
+                    'usuario_asignado' => (new AsignacionService())->obtenerUltimoUsuarioConAsignacion($this->obtenerUsuarios('Sentencias')),
+                    'usuario_supervisor' => (new AsignacionService())->obtenerSupervisorGravamen($this->movimientoRegistral->getRawOriginal('distrito')),
+                ]);
+
+                if(!$sentencia->acto_contenido){
+
+                    throw new Exception("Debe finalizar las sentencias.");
+
+                }
+
+            }
+
+        }
+
+        if($this->movimientoRegistral->folioReal->varios->count()){
+
+            foreach($this->movimientoRegistral->folioReal->varios as $vario){
+
+                $vario->movimientoRegistral->update([
+                    'usuario_asignado' => (new AsignacionService())->obtenerUltimoUsuarioConAsignacion($this->obtenerUsuarios('Varios')),
+                    'usuario_supervisor' => (new AsignacionService())->obtenerSupervisorGravamen($this->movimientoRegistral->getRawOriginal('distrito')),
+                ]);
+
+                if(!$vario->acto_contenido){
+
+                    throw new Exception("Debe finalizar los varios.");
+
+                }
+
+            }
 
         }
 
