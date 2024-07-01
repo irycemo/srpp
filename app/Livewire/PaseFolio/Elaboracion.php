@@ -749,7 +749,7 @@ class Elaboracion extends Component
             foreach($this->movimientoRegistral->folioReal->gravamenes as $gravamen){
 
                 $gravamen->movimientoRegistral->update([
-                    'usuario_asignado' => (new AsignacionService())->obtenerUltimoUsuarioConAsignacion($this->obtenerUsuarios('Gravamen')),
+                    'usuario_asignado' => auth()->id(),
                     'usuario_supervisor' => (new AsignacionService())->obtenerSupervisorGravamen($this->movimientoRegistral->getRawOriginal('distrito')),
                 ]);
 
@@ -768,7 +768,7 @@ class Elaboracion extends Component
             foreach($this->movimientoRegistral->folioReal->sentencias as $sentencia){
 
                 $sentencia->movimientoRegistral->update([
-                    'usuario_asignado' => (new AsignacionService())->obtenerUltimoUsuarioConAsignacion($this->obtenerUsuarios('Sentencias')),
+                    'usuario_asignado' => auth()->id(),
                     'usuario_supervisor' => (new AsignacionService())->obtenerSupervisorGravamen($this->movimientoRegistral->getRawOriginal('distrito')),
                 ]);
 
@@ -787,7 +787,7 @@ class Elaboracion extends Component
             foreach($this->movimientoRegistral->folioReal->varios as $vario){
 
                 $vario->movimientoRegistral->update([
-                    'usuario_asignado' => (new AsignacionService())->obtenerUltimoUsuarioConAsignacion($this->obtenerUsuarios('Varios')),
+                    'usuario_asignado' => auth()->id(),
                     'usuario_supervisor' => (new AsignacionService())->obtenerSupervisorGravamen($this->movimientoRegistral->getRawOriginal('distrito')),
                 ]);
 
