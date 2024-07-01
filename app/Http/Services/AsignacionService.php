@@ -322,6 +322,16 @@ class AsignacionService{
     public function obtenerSupervisorGravamen($distrito):int
     {
 
+        if($distrito == 2){
+
+            $supervisor = User::inRandomOrder()
+                                ->whereHas('roles', function($q){
+                                    $q->where('name', 'Supervisor uruapan');
+                                })
+                                ->first();
+
+        }
+
         $supervisor = User::inRandomOrder()
                                 ->where('status', 'activo')
                                 ->when($distrito == 2, function($q){
@@ -387,6 +397,16 @@ class AsignacionService{
 
     public function obtenerSupervisorCancelacion($distrito):int
     {
+
+        if($distrito == 2){
+
+            $supervisor = User::inRandomOrder()
+                                ->whereHas('roles', function($q){
+                                    $q->where('name', 'Supervisor uruapan');
+                                })
+                                ->first();
+
+        }
 
         $supervisor = User::inRandomOrder()
                                 ->where('status', 'activo')
@@ -454,6 +474,16 @@ class AsignacionService{
     public function obtenerSupervisorVarios($distrito):int
     {
 
+        if($distrito == 2){
+
+            $supervisor = User::inRandomOrder()
+                                ->whereHas('roles', function($q){
+                                    $q->where('name', 'Supervisor uruapan');
+                                })
+                                ->first();
+
+        }
+
         $supervisor = User::inRandomOrder()
                                 ->where('status', 'activo')
                                 ->when($distrito == 2, function($q){
@@ -519,6 +549,16 @@ class AsignacionService{
 
     public function obtenerSupervisorSentencias($distrito):int
     {
+
+        if($distrito == 2){
+
+            $supervisor = User::inRandomOrder()
+                                ->whereHas('roles', function($q){
+                                    $q->where('name', 'Supervisor uruapan');
+                                })
+                                ->first();
+
+        }
 
         $supervisor = User::inRandomOrder()
                                 ->where('status', 'activo')
