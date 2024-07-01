@@ -38,8 +38,8 @@
                 <x-table.heading sortable wire:click="sortBy('registro')" :direction="$sort === 'registro' ? $direction : null">Registro</x-table.heading>
                 <x-table.heading sortable wire:click="sortBy('numero_propiedad')" :direction="$sort === 'numero_propiedad' ? $direction : null" ># propiedad</x-table.heading>
                 <x-table.heading sortable wire:click="sortBy('distrito')" :direction="$sort === 'distrito' ? $direction : null">Distrito</x-table.heading>
+                <x-table.heading sortable wire:click="sortBy('estado')" :direction="$sort === 'estado' ? $direction : null">Estado</x-table.heading>
                 @if(auth()->user()->hasRole('Administrador'))
-                    <x-table.heading sortable wire:click="sortBy('estado')" :direction="$sort === 'estado' ? $direction : null">Estado</x-table.heading>
                     <x-table.heading sortable wire:click="sortBy('usuario_asignado')" :direction="$sort === 'usuario_asignado' ? $direction : null">Usuario asignado</x-table.heading>
                 @endif
                 <x-table.heading sortable wire:click="sortBy('created_at')" :direction="$sort === 'created_at' ? $direction : null">Registro</x-table.heading>
@@ -112,23 +112,23 @@
 
                         </x-table.cell>
 
+                        <x-table.cell>
+
+                            <span class="lg:hidden absolute top-0 left-0 bg-blue-300 px-2 py-1 text-xs text-white font-bold uppercase rounded-br-xl">Estado</span>
+
+                            @if($movimiento->folio_real)
+
+                                <span class="bg-{{ $movimiento->folioReal?->estado_color }} py-1 px-2 rounded-full text-white text-xs">{{ ucfirst($movimiento->folioReal?->estado) }}</span>
+
+                            @else
+
+                                <span class="bg-blue-400 py-1 px-2 rounded-full text-white text-xs">Nuevo</span>
+
+                            @endif
+
+                        </x-table.cell>
+
                         @if(auth()->user()->hasRole('Administrador'))
-
-                            <x-table.cell>
-
-                                <span class="lg:hidden absolute top-0 left-0 bg-blue-300 px-2 py-1 text-xs text-white font-bold uppercase rounded-br-xl">Estado</span>
-
-                                @if($movimiento->folio_real)
-
-                                    <span class="bg-{{ $movimiento->folioReal?->estado_color }} py-1 px-2 rounded-full text-white text-xs">{{ ucfirst($movimiento->folioReal?->estado) }}</span>
-
-                                @else
-
-                                    <span class="bg-blue-400 py-1 px-2 rounded-full text-white text-xs">Nuevo</span>
-
-                                @endif
-
-                            </x-table.cell>
 
                             <x-table.cell>
 

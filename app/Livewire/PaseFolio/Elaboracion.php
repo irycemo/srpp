@@ -46,7 +46,7 @@ class Elaboracion extends Component
 
     public MovimientoRegistral $movimientoRegistral;
     public $propiedad;
-    public Escritura $escritura;
+    public $escritura;
 
     public $distritos;
     public $estados;
