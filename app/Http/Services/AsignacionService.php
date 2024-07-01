@@ -190,6 +190,19 @@ class AsignacionService{
     public function obtenerSupervisorCertificaciones($distrito):int
     {
 
+        if($distrito == 2){
+
+            $supervisor = User::inRandomOrder()
+                                ->whereHas('roles', function($q){
+                                    $q->where('name', 'Supervisor uruapan');
+                                })
+                                ->first();
+
+            return $supervisor->id;
+
+
+        }
+
         $supervisor = User::inRandomOrder()
                                 ->where('status', 'activo')
                                 ->when($distrito == 2, function($q){
@@ -255,6 +268,19 @@ class AsignacionService{
 
     public function obtenerSupervisorPropiedad($distrito):int
     {
+
+        if($distrito == 2){
+
+            $supervisor = User::inRandomOrder()
+                                ->whereHas('roles', function($q){
+                                    $q->where('name', 'Supervisor uruapan');
+                                })
+                                ->first();
+
+            return $supervisor->id;
+
+
+        }
 
         $supervisor = User::inRandomOrder()
                                 ->where('status', 'activo')
@@ -329,6 +355,9 @@ class AsignacionService{
                                     $q->where('name', 'Supervisor uruapan');
                                 })
                                 ->first();
+
+            return $supervisor->id;
+
 
         }
 
@@ -406,6 +435,9 @@ class AsignacionService{
                                 })
                                 ->first();
 
+            return $supervisor->id;
+
+
         }
 
         $supervisor = User::inRandomOrder()
@@ -482,6 +514,8 @@ class AsignacionService{
                                 })
                                 ->first();
 
+            return $supervisor->id;
+
         }
 
         $supervisor = User::inRandomOrder()
@@ -557,6 +591,8 @@ class AsignacionService{
                                     $q->where('name', 'Supervisor uruapan');
                                 })
                                 ->first();
+
+            return $supervisor->id;
 
         }
 
