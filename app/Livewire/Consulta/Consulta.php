@@ -28,6 +28,7 @@ class Consulta extends Component
     public $municipio;
     public $ciudad;
     public $localidad;
+    public $localidad_ubicacion;
 
     public $distritos;
     public $tipos_asentamientos;
@@ -61,6 +62,35 @@ class Consulta extends Component
             }
 
         }
+
+    }
+
+    public function limpiar(){
+
+        $this->reset([
+            'folio_real',
+            'tomo',
+            'registro',
+            'numero_propiedad',
+            'distrito',
+            'seccion',
+            'tipo_vialidad',
+            'tipo_asentamiento',
+            'nombre_vialidad',
+            'numero_exterior',
+            'nombre_asentamiento',
+            'codigo_postal',
+            'municipio',
+            'ciudad',
+            'localidad',
+            'localidad_ubicacion',
+            'nombre_propietario',
+            'ap_paterno',
+            'ap_materno',
+            'razon_social',
+            'folios_reales',
+            'folioReal',
+        ]);
 
     }
 

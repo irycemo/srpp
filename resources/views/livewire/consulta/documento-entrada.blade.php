@@ -56,7 +56,7 @@
 
     <span class="flex items-center justify-center text-lg text-gray-700 md:col-span-3 col-span-1 sm:col-span-2 lg:col-span-5">Documento de entrada</span>
 
-    @if($folioReal->tipo_documento === 'oficio')
+    @if($folioReal->tipo_documento === 'OFICIO')
 
         <div class="rounded-lg bg-gray-100 py-1 px-2">
 
@@ -115,7 +115,7 @@
 
         </div>
 
-    @elseif($folioReal->tipo_documento === 'escritura')
+    @elseif($folioReal->tipo_documento === 'ESCRITURA PÚBLICA' || $folioReal->tipo_documento === 'ESCRITURA PRIVADA')
 
         <div class="rounded-lg bg-gray-100 py-1 px-2">
 

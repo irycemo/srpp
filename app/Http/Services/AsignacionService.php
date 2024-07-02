@@ -388,6 +388,19 @@ class AsignacionService{
     public function obtenerUsuarioCancelacion($folioReal, $distrito):int
     {
 
+        if($distrito == 2){
+
+            $registradorCancelacion = User::inRandomOrder()
+                                ->whereHas('roles', function($q){
+                                    $q->where('name', 'Registrador Cancelación');
+                                })
+                                ->first();
+
+            return $registradorCancelacion->id;
+
+
+        }
+
         $usuarios = User::with('ultimoMovimientoRegistralAsignado')
                                 ->where('status', 'activo')
                                 ->when($distrito == 2, function($q){

@@ -6,6 +6,8 @@
 
         <div class="grid grid-cols-1 lg:grid-cols-6 md:grid-cols-3 sm:grid-cols-2 gap-3 mb-3 bg-white rounded-lg p-3 shadow-lg items-end">
 
+            <span class="lg:col-span-6 md:col-span-7 sm:col-span- text-center">Antecedente</span>
+
             <x-input-group for="folio_real" label="Folio real" class="w-full">
 
                 <x-input-text id="folio_real" wire:model="folio_real"/>
@@ -51,6 +53,8 @@
                 <x-input-text id="seccion" wire:model="seccion"/>
 
             </x-input-group>
+
+            <span class="lg:col-span-6 md:col-span-7 sm:col-span- text-center">Ubicación</span>
 
             <x-input-group for="codigo_postal" label="Código postal" :error="$errors->first('codigo_postal')" class="w-full">
 
@@ -140,6 +144,8 @@
 
             </x-input-group>
 
+            <span class="lg:col-span-6 md:col-span-7 sm:col-span- text-center">Propietario</span>
+
             <x-input-group for="nombre_propietario" label="Nombre del propietario" :error="$errors->first('nombre_propietario')" class="w-full">
 
                 <x-input-text id="nombre_propietario" wire:model="nombre_propietario" />
@@ -164,7 +170,18 @@
 
             </x-input-group>
 
-            <div class="col-span-1 sm:col-span-2 md:col-span-3 lg:col-span-6 flex justify-end">
+            <div class="col-span-1 sm:col-span-2 md:col-span-3 lg:col-span-6 flex justify-end gap-3">
+
+                <x-button-green
+                    wire:click="limpiar"
+                    wire:loading.attr="disabled"
+                    wire:target="limpiar">
+
+                    <img wire:loading wire:target="limpiar" class="mx-auto h-4 mr-1" src="{{ asset('storage/img/loading3.svg') }}" alt="Loading">
+
+                    Limpiar
+
+                </x-button-green>
 
                 <x-button-blue
                     wire:click="buscar"
