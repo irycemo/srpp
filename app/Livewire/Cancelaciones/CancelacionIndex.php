@@ -85,7 +85,7 @@ class CancelacionIndex extends Component
     public function render()
     {
 
-        if(auth()->user()->hasRole(['Cancelación'])){
+        if(auth()->user()->hasRole(['Cancelación', 'Registrador Cancelación'])){
 
             $movimientos = MovimientoRegistral::with('cancelacion', 'asignadoA', 'actualizadoPor', 'folioReal:id,folio')
                                                     ->where('usuario_asignado', auth()->id())
