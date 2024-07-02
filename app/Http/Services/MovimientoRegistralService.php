@@ -235,7 +235,7 @@ class MovimientoRegistralService{
             return $array + [
                 'folio' => $this->calcularFolio($request),
                 'estado' => 'nuevo',
-                'usuario_asignado' => $this->obtenerUsuarioAsignado($documento_entrada, $folioReal, $request['servicio'], $request['distrito'], $request['solicitante'], $request['tipo_servicio'], false),
+                'usuario_asignado' => $this->obtenerUsuarioAsignado($documento_entrada, $folioReal, $request['servicio'], $request['distrito'], $request['solicitante'], $request['tipo_servicio'],$request['categoria_servicio'], false),
                 'usuario_supervisor' => $this->obtenerSupervisor($request['servicio'], $request['distrito']),
                 'solicitante' => $request['nombre_solicitante']
             ];
@@ -293,7 +293,7 @@ class MovimientoRegistralService{
 
     }
 
-    public function obtenerUsuarioAsignado($documento_entrada, $folioReal, $servicio, $distrito, $solicitante, $tipo_servicio, $random):int
+    public function obtenerUsuarioAsignado($documento_entrada, $folioReal, $servicio, $distrito, $solicitante, $tipo_servicio, $categoria_servicio, $random):int
     {
 
         /* Certificaciones: Copias simples, Copias certificadas */
@@ -358,14 +358,14 @@ class MovimientoRegistralService{
         }
 
         /* Inscripciones: Gravamen */
-        if($servicio == 'DL66'){
+        if($servicio == 'DL66' && $categoria_servicio == 'Inscripciones - Gravamenes'){
 
             return $this->asignacionService->obtenerUsuarioGravamen($folioReal, $distrito);
 
         }
 
         /* Inscripciones: Cancelaciones */
-        if($servicio == 'D720'){
+        if($servicio == 'DL66' && $categoria_servicio == 'Cancelación - Gravamenes'){
 
             return $this->asignacionService->obtenerUsuarioCancelacion($folioReal, $distrito);
 
