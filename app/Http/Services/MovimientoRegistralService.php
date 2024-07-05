@@ -392,7 +392,8 @@ class MovimientoRegistralService{
 
         if($distrito == 2){
 
-            $supervisor = User::where('status', 'activo')
+            $supervisor = User::inRandomOrder()
+                                ->where('status', 'activo')
                                 ->whereHas('roles', function($q){
                                     $q->where('name', 'Supervisor uruapan');
                                 })
@@ -426,7 +427,7 @@ class MovimientoRegistralService{
         }
 
         /* Inscripciones: Cancelaciones */
-        if($servicio == 'D720'){
+        if($servicio == 'DL66'){
 
             return $this->asignacionService->obtenerSupervisorCancelacion($distrito);
 

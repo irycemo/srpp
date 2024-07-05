@@ -58,36 +58,7 @@
 
         <div class="w-full  justify-center mx-auto">
 
-            <div class="flex-auto text-center mb-3 lg:w-1/2 mx-auto">
-
-                <div >
-
-                    <Label class="text-base tracking-widest rounded-xl border-gray-500">Folio del gravmen</Label>
-
-                </div>
-
-                <div class="inline-flex">
-
-                    <input type="number" class="bg-white text-sm w-20 rounded-l focus:ring-0 @error('folio') border-red-500 @enderror" value="{{ $cancelacion?->movimientoRegistral->folioReal->folio }}" readonly>
-
-                    <input type="number" class="bg-white text-sm w-20 border-l-0 rounded-r focus:ring-0 @error('folio_gravamen') border-red-500 @enderror" wire:model="folio_gravamen">
-
-                </div>
-
-                <button
-                    wire:click="buscarGravamen"
-                    wire:loading.attr="disabled"
-                    wire:target="buscarGravamen"
-                    type="button"
-                    class="bg-blue-400 mx-auto mt-3 hover:shadow-lg text-white font-bold px-4 py-2 rounded text-xs hover:bg-blue-700 focus:outline-none flex items-center justify-center focus:outline-blue-400 focus:outline-offset-2">
-
-                    <img wire:loading wire:target="buscarGravamen" class="mx-auto h-4 mr-1" src="{{ asset('storage/img/loading3.svg') }}" alt="Loading">
-
-                    Buscar gravamen
-
-                </button>
-
-            </div>
+            <span class="flex items-center justify-center ext-gray-700 mb-4">Gravamen a cancelar ({{ $cancelacion->movimientoRegistral->folioReal->folio }}-{{ $gravamenCancelarMovimiento->folio }})</span>
 
             @if($gravamenCancelarMovimiento)
 

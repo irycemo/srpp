@@ -284,7 +284,7 @@ class Elaboracion extends Component
 
                     foreach($gravamenes as $gravamen){
 
-                        if(isset($gravamen->fcancelacion) && isset($gravamen->stGravamen) && $gravamen->stGravamen == 'P') continue;
+                        if(isset($gravamen->fcancelacion) && isset($gravamen->stGravamen) && $gravamen->stGravamen == 'C') continue;
 
                         $this->creargravamen($gravamen);
 
@@ -324,18 +324,18 @@ class Elaboracion extends Component
             'fecha_inscripcion' => $gravamen->fechainscripcion ? Carbon::createFromFormat('d/m/Y', $gravamen->fechainscripcion)->toDateString() : null,
             'estado' => 'activo',
             'acto_contenido' => $gravamen->descGravamen ?? null,
-            'valor_gravamen' => $gravamen->{'$ transacción'} ?? null,
+            'valor_gravamen' => $gravamen->{'$ transacci├│n'} ?? null,
             'divisa' => $gravamen->tmoneda ?? null,
             'observaciones' => "Gravamen ingresado mediante pase a folio: | Tomo gravamen:" . $gravamen->tomog .
                                 " | Registro gravamen: " . $gravamen->registrog . "/" . $gravamen->rbisg .
                                 " | Divisa:" . $gravamen->tmoneda .
-                                " | Monto de la transacción:" . $gravamen->{'$ transacción'} .
+                                " | Monto de la transacción:" . $gravamen->{'$ transacci├│n'} .
                                 " | Acto contenido:" . $gravamen->descGravamen .
                                 " | Fecha de inscripción:" . $gravamen->fechainscripcion .
                                 " | Hora de inscripción:" . $gravamen->horainscripcion .
                                 " | Tipo de deudor:" . $gravamen->stDeudor .
-                                " | Acreedores:" . $gravamen->acreedor .
-                                " | Deudores:" . $gravamen->acreedor .
+                                " | Acreedores:" . $gravamen->acreedores .
+                                " | Deudores:" . $gravamen->deudores .
                                 " | Garantes:" . $gravamen->garantes .
                                 " | Comnetarios:" . $gravamen->comentarios
         ]);

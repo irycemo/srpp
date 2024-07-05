@@ -183,34 +183,6 @@ class Cancelacion extends Component
 
     }
 
-    public function buscarGravamen(){
-
-        $this->gravamenCancelarMovimiento = MovimientoRegistral::with('gravamen')
-                                                ->where('folio_real', $this->cancelacion->movimientoRegistral->folio_real)
-                                                ->where('folio', $this->folio_gravamen)
-                                                ->where('estado', 'concluido')
-                                                ->first();
-
-        if(!$this->gravamenCancelarMovimiento){
-
-            $this->dispatch('mostrarMensaje', ['error', "No se encontro el gravamen."]);
-
-            return;
-
-        }
-
-        if(!$this->gravamenCancelarMovimiento->gravamen){
-
-            $this->gravamenCancelarMovimiento = null;
-
-            $this->dispatch('mostrarMensaje', ['error', "No se encontro el gravamen."]);
-
-            return;
-
-        }
-
-    }
-
     public function calcularDiaElaboracion($modelo){
 
         $diaElaboracion = $modelo->movimientoRegistral->fecha_pago;
@@ -234,6 +206,14 @@ class Cancelacion extends Component
     public function mount(){
 
         $this->link = env('SISTEMA_TRAMITES_CONSULTAR_ARCHIVO');
+
+        $this->gravamenCancelarMovimiento = MovimientoRegistral::where('folio_real', $this->cancelacion->movimientoRegistral->folio_real)
+                                                                    ->where('tomo_gravamen', $this->cancelacion->movimientoRegistral->tomo_gravamen)
+                                                                    ->where('registro_gravamen', $this->cancelacion->movimientoRegistral->registro_gravamen)
+                                                                    ->whereHas('gravamen', function($q){
+                                                                        $q->where('estado', 'activo');
+                                                                    })
+                                                                    ->first();
 
     }
 

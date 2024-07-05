@@ -4,6 +4,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Api\CertificacionController;
 use App\Http\Controllers\Api\FolioRealController;
+use App\Http\Controllers\Api\GravamenController;
 use App\Http\Controllers\Api\MovimientoRegistralController;
 
 /*
@@ -28,6 +29,8 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::post('actualizar_paginas', [CertificacionController::class, 'actualizarPaginas']);
 
     Route::post('consultar_folio_real', [FolioRealController::class, 'consultarFolioReal']);
+
+    Route::post('consultar_gravamen', [GravamenController::class, 'consultarGravamen']);
 
 });
 

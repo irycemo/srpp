@@ -8,7 +8,7 @@
 
         @if(session('mensaje'))
 
-            <div class="mb-4 text-rojo">
+            <div class="mb-4">
 
                 <p>{{ session('mensaje') }}</p>
 

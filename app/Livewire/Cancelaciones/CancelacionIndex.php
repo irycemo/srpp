@@ -110,7 +110,7 @@ class CancelacionIndex extends Component
                                                         $q->where('distrito', '!=', 2);
                                                     })
                                                     ->whereHas('cancelacion', function($q){
-                                                        $q->whereIn('servicio', ['D720']);
+                                                        $q->whereIn('servicio', ['DL66']);
                                                     })
                                                     ->where('estado', 'nuevo')
                                                     ->orderBy($this->sort, $this->direction)
@@ -140,7 +140,7 @@ class CancelacionIndex extends Component
                                                         $q->where('distrito', '!=', 2);
                                                     })
                                                     ->whereHas('cancelacion', function($q){
-                                                        $q->whereIn('servicio', ['D720']);
+                                                        $q->whereIn('servicio', ['DL66']);
                                                     })
                                                     ->where('estado', 'elaborado')
                                                     ->orderBy($this->sort, $this->direction)
@@ -164,7 +164,7 @@ class CancelacionIndex extends Component
                                                             ->orWhere('tramite', 'LIKE', '%' . $this->search . '%');
                                                     })
                                                     ->whereHas('cancelacion', function($q){
-                                                        $q->whereIn('servicio', ['D720']);
+                                                        $q->whereIn('servicio', ['DL66']);
                                                     })
                                                     ->orderBy($this->sort, $this->direction)
                                                     ->paginate($this->pagination);
