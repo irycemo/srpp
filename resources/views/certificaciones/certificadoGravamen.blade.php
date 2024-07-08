@@ -184,6 +184,8 @@
 
         <div class="informacion">
 
+            <p style="text-align: right; margin:0;"><strong>Movimiento registral:</strong> {{ $movimientoRegistral->folioReal->folio }}-{{ $movimientoRegistral->folio }}</p>
+
             <p style="text-align: center; margin:0;"><strong>FOLIO REAL:</strong> {{ $movimientoRegistral->folioReal->folio }}</p>
 
             <p style="text-align: center; margin:0;"><strong>SECCIÓN:</strong> {{ $predio->folioReal->seccion_antecedente }}; <strong>DISTRITO:</strong> {{ $predio->folioReal->distrito}}; <strong>TOMO:</strong> {{ $predio->folioReal->tomo_antecedente }}, <strong>REGISTRO:</strong> {{ $predio->folioReal->registro_antecedente }}, <strong>NÚMERO DE PROPIEDAD:</strong> {{ $predio->folioReal->numero_propiedad_antecedente }}.</p>
@@ -198,7 +200,19 @@
 
                     <strong>CÓDIGO POSTAL:</strong> {{ $predio->codigo_postal }}; <strong>TIPO DE ASENTAMIENTO:</strong> {{ $predio->tipo_asentamiento }}; <strong>NOMBRE DEL ASENTAMIENTO:</strong> {{ $predio->nombre_asentamiento }}; <strong>MUNICIPIO:</strong> {{ $predio->municipio }};
 
-                    <strong>CIUDAD:</strong> {{ $predio->ciudad }}; <strong>LOCALIDAD:</strong> {{ $predio->localidad }}; <strong>TIPO DE VIALIDAD:</strong> {{ $predio->tipo_vialidad }}; <strong>NOMBRE DE LA VIALIDAD:</strong> {{ $predio->nombre_vialidad }};
+                    <strong>CIUDAD:</strong> {{ $predio->ciudad }};
+
+                    @if ($predio->localidad)
+                        <strong>LOCALIDAD:</strong> {{ $predio->localidad }};
+                    @endif
+
+                    @if ($predio->tipo_vialidad)
+                        <strong>TIPO DE VIALIDAD:</strong> {{ $predio->tipo_vialidad }};
+                    @endif
+
+                    @if ($predio->nombre_vialidad)
+                        <strong>NOMBRE DE LA VIALIDAD:</strong> {{ $predio->nombre_vialidad }};
+                    @endif
 
                     <strong>NÚMERO EXTERIOR:</strong> {{ $predio->numero_exterior ?? 'SN' }}; <strong>NÚMERO INTERIOR:</strong> {{ $predio->numero_interior ?? 'SN' }};
 
@@ -281,9 +295,9 @@
                     <thead>
 
                         <tr>
-                            <th>Viento</th>
-                            <th>Longitud</th>
-                            <th>Descripción</th>
+                            <th style="padding-right: 40px;">Viento</th>
+                            <th style="padding-right: 40px;">Longitud</th>
+                            <th style="padding-right: 40px;">Descripción</th>
                         </tr>
 
                     </thead>
@@ -321,7 +335,11 @@
                         <strong>Clave catastral:</strong> {{ $predio->cc_estado }}-{{ $predio->cc_region_catastral }}-{{ $predio->cc_municipio }}-{{ $predio->cc_zona_catastral }}-{{ $predio->cc_sector }}-{{ $predio->cc_manzana }}-{{ $predio->cc_predio }}-{{ $predio->cc_edificio }}-{{ $predio->cc_departamento }};
                     @endif
 
-                    <strong>Superficie de terreno:</strong> {{ $predio->superficie_terreno }} {{ $predio->unidad_area }} <strong>Superficie de construcción:</strong> {{ $predio->superficie_construccion }} {{ $predio->unidad_area }} <strong>monto de la transacción:</strong> {{ $predio->monto_transaccion }} {{ $predio->divisa }};
+                    <strong>Superficie de terreno:</strong> {{ $predio->superficie_terreno }} {{ $predio->unidad_area }};
+
+                    <strong>Superficie de construcción:</strong> {{ $predio->superficie_construccion }} {{ $predio->unidad_area }};
+
+                    <strong>valor catastral:</strong> {{ $predio->monto_transaccion }} {{ $predio->divisa }};
 
                     @if ($predio->curt)
                         <strong>curt:</strong> {{ $predio->curt }};
@@ -355,7 +373,9 @@
                         <strong>valor de construcción común:</strong> {{ $predio->valor_catastral }} {{ $predio->divisa }};
                     @endif
 
-                    <strong>Descripción:</strong> {{ $predio->descripcion }}.
+                    @if($predio->descripcion)
+                        <strong>Descripción:</strong> {{ $predio->descripcion }}.
+                    @endif
 
                 </p>
 
@@ -407,38 +427,41 @@
 
             @if($gravamenes->count())
 
-                <p>REPORTA EL(LOS) SIGUIENTE(S) GRAVAMEN(ES):</p>
+                <p><strong>REPORTA EL(LOS) SIGUIENTE(S) GRAVAMEN(ES):</strong></p>
+
+                <br>
 
                 @foreach ($gravamenes as $gravamen)
 
                     <p class="parrafo">
-                        <strong>Folio: </strong>{{ $gravamen->movimientoRegistral->folioReal->folio }}-{{ $gravamen->movimientoRegistral->folio }}
+                        <strong>movimiento registral: </strong>{{ $gravamen->movimientoRegistral->folioReal->folio }}-{{ $gravamen->movimientoRegistral->folio }}
                         <strong>Tomo: </strong>{{ $gravamen->movimientoRegistral->tomo_gravamen }}
-                        <strong>Registro: </strong>{{ $gravamen->movimientoRegistral->tomo_gravamen }}
+                        <strong>Registro: </strong>{{ $gravamen->movimientoRegistral->registro_gravamen }}
                         <strong>Distrito: </strong>{{ $gravamen->movimientoRegistral->distrito }};
-                        CON <strong>FECHA DE INSCRIPCIÓN: </strong> {{ Carbon\Carbon::parse($gravamen->fecha_inscripcion)->format('d-m-Y') }}
-                        <strong>RELATIVO A: </strong> {{ $gravamen->acto_contenido }}; {{ $gravamen->tipo }}
+                        CON <strong>FECHA DE INSCRIPCIÓN: </strong> {{ Carbon\Carbon::parse($gravamen->fecha_inscripcion)->format('d-m-Y') }};
+                        <strong>RELATIVO A: </strong> {{ $gravamen->acto_contenido }};
+                        <strong>Tipo: </strong>{{ $gravamen->tipo }};
                         <strong>CELEBRADO POR EL(LOS) ACREDOR(ES):</strong>
                         @foreach ($gravamen->acreedores as $acreedor)
 
                             {{ $acreedor->persona->nombre }} {{ $acreedor->persona->ap_paterno }} {{ $acreedor->persona->ap_materno }} {{ $acreedor->persona->razon_social }}@if(!$loop->last), @endif
 
                         @endforeach
-                        <strong>Y COMO DEUDOR(ES)</strong>
+                        <strong>Y COMO DEUDOR(ES):</strong>
                         @foreach ($gravamen->deudores as $deudor)
 
                             @if($deudor->actor)
 
-                                {{ $deudor->actor->persona->nombre }} {{ $deudor->actor->persona->ap_paterno }} {{ $deudor->actor->persona->ap_materno }} {{ $deudor->actor->persona->razon_social }}@if(!$loop->last), @endif
+                                {{ $deudor->actor->persona->nombre }} {{ $deudor->actor->persona->ap_paterno }} {{ $deudor->actor->persona->ap_materno }} {{ $deudor->actor->persona->razon_social }}@if(!$loop->last), @else; @endif
 
                             @else
 
-                                {{ $deudor->persona->nombre }} {{ $deudor->persona->ap_paterno }} {{ $deudor->persona->ap_materno }} {{ $deudor->persona->razon_social }}@if(!$loop->last), @endif
+                                {{ $deudor->persona->nombre }} {{ $deudor->persona->ap_paterno }} {{ $deudor->persona->ap_materno }} {{ $deudor->persona->razon_social }}@if(!$loop->last), @else; @endif
 
                             @endif
 
                         @endforeach
-                        <strong>POR LA CANTIDAD DE: </strong> ${{ number_format($gravamen->valor_gravamen, 2) }} {{ $formatter->toWords($gravamen->valor_gravamen) }}, {{ $gravamen->divisa }}.
+                        <strong>POR LA CANTIDAD DE: </strong> ${{ number_format($gravamen->valor_gravamen, 2) }} {{ $formatter->toWords($gravamen->valor_gravamen) }} {{ $gravamen->divisa }}.
                     </p>
 
                     <br>
@@ -457,7 +480,7 @@
             @endif
 
             <p class="parrafo">
-                A SOLICITUD DE: <strong>{{ $movimientoRegistral->solicitante }}</strong> se expide EL PRESENTE CERTIFICADO EN LA CIUDAD DE MORELIA, MICHOACÁN, A LAS
+                A SOLICITUD DE: <strong>{{ $movimientoRegistral->solicitante }}</strong> se expide EL PRESENTE CERTIFICADO EN LA CIUDAD DE @if($predio->folioReal->distrito== '02 Uruapan' ) URUAPAN, @else MORELIA, @endif MICHOACÁN, A LAS
                 {{ Carbon\Carbon::now()->locale('es')->translatedFormat('H:i:s \d\e\l l d \d\e F \d\e\l Y'); }}.
             </p>
 
@@ -507,9 +530,9 @@
 
                             <td style="padding-right: 40px; text-align:left; ; vertical-align: top; white-space: nowrap;">
 
-                                <p style="margin: 0"><strong>Impreso en: </strong>{{ now()->format('d-m-Y H:i:s') }}</p>
+                                <p style="margin: 0"><strong>Impreso en: </strong>{{ now()->format('d/m/Y H:i:s') }}</p>
                                 <p style="margin: 0"><strong>IMPRESO POR: </strong>{{  auth()->user()->name }}</p>
-
+                                <p style="margin: 0"><strong>Movimiento registral:</strong> {{ $movimientoRegistral->folioReal->folio }}-{{ $movimientoRegistral->folio }}</p>
                             </td>
 
                         </tr>
