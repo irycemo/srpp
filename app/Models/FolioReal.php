@@ -7,6 +7,7 @@ use App\Models\Predio;
 use App\Models\Gravamen;
 use App\Models\Sentencia;
 use App\Models\Antecedente;
+use App\Models\Cancelacion;
 use App\Traits\ModelosTrait;
 use App\Constantes\Constantes;
 use App\Models\MovimientoRegistral;
@@ -44,6 +45,10 @@ class FolioReal extends Model implements Auditable
 
     public function sentencias(){
         return $this->hasManyThrough(Sentencia::class, MovimientoRegistral::class, 'folio_real', 'movimiento_registral_id', 'id', 'id');
+    }
+
+    public function cancelaciones(){
+        return $this->hasManyThrough(Cancelacion::class, MovimientoRegistral::class, 'folio_real', 'movimiento_registral_id', 'id', 'id');
     }
 
     public function varios(){

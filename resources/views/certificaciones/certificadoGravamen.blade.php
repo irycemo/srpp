@@ -296,7 +296,7 @@
 
                         <tr>
                             <th style="padding-right: 40px;">Viento</th>
-                            <th style="padding-right: 40px;">Longitud</th>
+                            <th style="padding-right: 40px;">Longitud (mts.)</th>
                             <th style="padding-right: 40px;">Descripción</th>
                         </tr>
 
@@ -405,13 +405,13 @@
                                     {{ $propietario->persona->nombre }} {{ $propietario->persona->ap_paterno }} {{ $propietario->persona->ap_materno }} {{ $propietario->persona->razon_social }}
                                 </td>
                                 <td style="padding-right: 40px;">
-                                    {{ $propietario->porcentaje_propiedad ?? '0.00' }} %
+                                    {{ $propietario->porcentaje_propiedad ?? '0.00' }}%
                                 </td>
                                 <td style="padding-right: 40px;">
-                                    {{ $propietario->porcentaje_nuda ?? '0.00' }} %
+                                    {{ $propietario->porcentaje_nuda ?? '0.00' }}%
                                 </td>
                                 <td style="padding-right: 40px;">
-                                    {{ $propietario->porcentaje_usufructo ?? '0.00' }} %
+                                    {{ $propietario->porcentaje_usufructo ?? '0.00' }}%
                                 </td>
                             </tr>
 
@@ -471,8 +471,7 @@
             @else
 
                 <p class="parrafo">
-                    LA MISMA BUSQUEDA DIO POR RESULTADO QUE A LA FECHA, NO APARECE DECLARATORIA ALGUNA QUE ESTABLEZCA SOBRE EL INMUEBLE DE REFERENCIA, PROVISIONES, DESTINOS, USOS
-                    O RESERVAS CON ARREGLO A LO DISPUESTO POR LA LEY GENERAL DE ASENTAMIENTOS HUMANOS.
+                    <strong style="text-decoration: underline">no se encontro constancia de que reporte grvamen alguno.</strong>
                 </p>
 
                 <br>

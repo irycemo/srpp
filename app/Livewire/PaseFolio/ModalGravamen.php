@@ -508,6 +508,8 @@ class ModalGravamen extends ModalComponent
 
         }
 
+        $this->dispatch('cargarGravamenes');
+
         $this->dispatch('closeModal');
 
     }
@@ -586,7 +588,7 @@ class ModalGravamen extends ModalComponent
                     $this->valor_gravamen = $this->movimientoRegistral->gravamen->valor_gravamen;
                     $this->divisa = $this->movimientoRegistral->gravamen->divisa;
                     $this->fecha_inscripcion = $this->movimientoRegistral->gravamen->fecha_inscripcion;
-                    $this->estado = $this->movimientoRegistral->gravamen->estado;
+                    $this->estado = 'activo';
                     $this->comentario = $this->movimientoRegistral->gravamen->observaciones;
 
                     foreach ($this->gravamen->parteAlicuota as $deudor) {

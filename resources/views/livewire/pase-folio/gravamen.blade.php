@@ -22,6 +22,7 @@
             <x-table>
 
                 <x-slot name="head">
+                    <x-table.heading >Estado</x-table.heading>
                     <x-table.heading >Acto contenido</x-table.heading>
                     <x-table.heading >Tomo</x-table.heading>
                     <x-table.heading >Registro</x-table.heading>
@@ -37,6 +38,21 @@
 
                             <x-table.row >
 
+                                <x-table.cell>
+                                    @if($gravamen->estado == 'activo')
+
+                                        <span class="bg-green-400 py-1 px-2 rounded-full text-white text-xs">{{ ucfirst($gravamen->estado) }}</span>
+
+                                    @elseif(!$gravamen->acreedores()->count())
+
+                                        <span class="bg-yellow-400 py-1 px-2 rounded-full text-white text-xs">Incompleto</span>
+
+                                    @elseif($gravamen->estado == 'cancelado')
+
+                                        <span class="bg-red-400 py-1 px-2 rounded-full text-white text-xs">{{ ucfirst($gravamen->estado) }}</span>
+
+                                    @endif
+                                </x-table.cell>
                                 <x-table.cell>{{ $gravamen->acto_contenido }}</x-table.cell>
                                 <x-table.cell>{{ $gravamen->movimientoRegistral->tomo_gravamen }}</x-table.cell>
                                 <x-table.cell>{{ $gravamen->movimientoRegistral->registro_gravamen }}</x-table.cell>
@@ -49,6 +65,22 @@
                                         >
                                             Editar
                                         </x-button-blue>
+                                        {{-- <x-button-red
+                                                wire:click="abrirModalBorrar({{ $gravamen->id }})"
+                                                wire:loading.attr="disabled"
+                                            >
+                                                Cancelar
+                                        </x-button-red> --}}
+                                        @if($gravamen->acreedores()->count() && $gravamen->estado != 'cancelado')
+
+                                            <x-button-red
+                                                wire:click="abrirModalCancelar({{ $gravamen->id }})"
+                                                wire:loading.attr="disabled"
+                                            >
+                                                Cancelar
+                                            </x-button-red>
+
+                                        @endif
                                     </div>
                                 </x-table.cell>
 
@@ -86,6 +118,67 @@
         </x-button-red>
 
     </div>
+
+    <x-dialog-modal wire:model="modalCancelacion" maxWidth="sm">
+
+        <x-slot name="title">
+
+            Cancelar gravamen
+
+        </x-slot>
+
+        <x-slot name="content">
+
+            <div class="flex flex-col md:flex-row justify-between gap-3 mb-3">
+
+                <x-input-group for="tomo_cancelacion" label="Tomo de cancelación" :error="$errors->first('tomo_cancelacion')" class="w-full">
+
+                    <x-input-text id="tomo_cancelacion" wire:model="tomo_cancelacion" />
+
+                </x-input-group>
+
+                <x-input-group for="folio_cancelacion" label="Folio de cancelación" :error="$errors->first('folio_cancelacion')" class="w-full">
+
+                    <x-input-text id="folio_cancelacion" wire:model="folio_cancelacion" />
+
+                </x-input-group>
+
+            </div>
+
+            <div class="flex flex-col md:flex-row justify-between gap-3 mb-3">
+
+
+
+            </div>
+
+        </x-slot>
+
+        <x-slot name="footer">
+
+            <div class="flex gap-3">
+
+                <x-button-blue
+                    wire:click="cancelar"
+                    wire:loading.attr="disabled"
+                    wire:target="cancelar">
+
+                    <img wire:loading wire:target="cancelar" class="mx-auto h-4 mr-1" src="{{ asset('storage/img/loading3.svg') }}" alt="Loading">
+
+                    <span>Cancelar</span>
+                </x-button-blue>
+
+                <x-button-red
+                    wire:click="$toggle('modalCancelacion')"
+                    wire:target="$toggle('modalCancelacion')"
+                    type="button">
+                    Cerrar
+                </x-button-red>
+
+            </div>
+
+        </x-slot>
+
+    </x-dialog-modal>
 
     <x-confirmation-modal wire:model="modalBorrar" maxWidth="sm">
 

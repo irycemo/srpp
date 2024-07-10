@@ -3,9 +3,10 @@
 namespace App\Models;
 
 use App\Traits\ModelosTrait;
-use Illuminate\Database\Eloquent\Factories\HasFactory;
-use OwenIt\Auditing\Contracts\Auditable;
+use App\Models\MovimientoRegistral;
 use Illuminate\Database\Eloquent\Model;
+use OwenIt\Auditing\Contracts\Auditable;
+use Illuminate\Database\Eloquent\Factories\HasFactory;
 
 class Cancelacion extends Model implements Auditable
 {
@@ -18,6 +19,10 @@ class Cancelacion extends Model implements Auditable
 
     public function movimientoRegistral(){
         return $this->belongsTo(MovimientoRegistral::class);
+    }
+
+    public function gravamen(){
+        return $this->belongsTo(MovimientoRegistral::class, 'gravamen');
     }
 
 }

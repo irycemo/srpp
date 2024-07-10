@@ -128,7 +128,8 @@ class Cancelacion extends Component
 
                     $this->gravamenCancelarMovimiento->gravamen->update([
                         'valor_gravamen' => $this->gravamenCancelarMovimiento->gravamen->valor_gravamen - $this->valor,
-                        'actualizado_por' => auth()->id()
+                        'actualizado_por' => auth()->id(),
+                        'observaciones' => $this->gravamenCancelarMovimiento->gravamen->observaciones . ' ' . 'Cancelado parcialmente mediante movimiento registral: ' . $this->cancelacion->movimientoRegistral->folioReal->folio . '-' . $this->cancelacion->movimientoRegistral->folio,
                     ]);
 
                 }elseif($this->cancelacion->acto_contenido == 'TOTAL'){
@@ -146,6 +147,7 @@ class Cancelacion extends Component
                 ]);
 
                 $this->cancelacion->estado = 'activo';
+                $this->cancelacion->gravamen = $this->gravamenCancelarMovimiento->id;
                 $this->cancelacion->actualizado_por = auth()->id();
                 $this->cancelacion->save();
 

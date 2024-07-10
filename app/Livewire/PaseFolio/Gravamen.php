@@ -16,9 +16,14 @@ class Gravamen extends Component
     public MovimientoRegistral $movimientoRegistral;
 
     public $gravamenes;
+    public $gravamen_seleccionado;
     public $selected_id;
 
     public $modalBorrar = false;
+    public $modalCancelacion = false;
+
+    public $folio_cancelacion;
+    public $tomo_cancelacion;
 
     public Predio $propiedad;
 
@@ -71,6 +76,14 @@ class Gravamen extends Component
 
     }
 
+    public function abrirModalCancelar(GravamenModelo $gravamen){
+
+        $this->modalCancelacion = true;
+
+        $this->gravamen_seleccionado = $gravamen;
+
+    }
+
     public function borrar(){
 
         $this->authorize('update', $this->movimientoRegistral);
@@ -112,6 +125,52 @@ class Gravamen extends Component
         }
 
         MovimientoRegistral::enableAuditing();
+
+    }
+
+    public function cancelar(){
+
+        try {
+
+            DB::transaction(function () {
+
+                $cancelacionMovimiento = $this->movimientoRegistral->replicate();
+
+                $cancelacionMovimiento->folio = $this->movimientoRegistral->folioReal->ultimoFolio() + 1;
+                $cancelacionMovimiento->estado = 'elaborado';
+                $cancelacionMovimiento->save();
+
+                $cancelacionMovimiento->cancelacion()->create([
+                    'estado' => 'activo',
+                    'acto_contenido' => 'Cancelación en captura',
+                    'gravamen' => $this->gravamen_seleccionado->movimientoRegistral->id,
+                    'observaciones' => 'Cancelación en captura de asignación de folio real en base al Tomo de cancelación: ' . $this->tomo_cancelacion . ' Folio de cancelación: ' . $this->folio_cancelacion . '.',
+                    'fecha_inscripcion' => now()->toDateString(),
+                    'actualizado_por' => auth()->id(),
+                ]);
+
+                $this->gravamen_seleccionado->update([
+                    'estado' => 'cancelado',
+                    'actualizado_por' => auth()->id(),
+                    'observaciones' => $this->gravamen_seleccionado->observaciones .  ' Cancelado mediante movimiento registral: ' . $cancelacionMovimiento->folioReal->folio . '-' . $cancelacionMovimiento->folio,
+                ]);
+
+                $this->gravamen_seleccionado->movimientoRegistral->update([
+                    'movimiento_padre' => $cancelacionMovimiento->id,
+                ]);
+
+            });
+
+            $this->reset(['modalCancelacion', 'tomo_cancelacion', 'folio_cancelacion']);
+
+            $this->cargarGravamenes();
+
+            $this->dispatch('mostrarMensaje', ['success', "El gravamen se canceló con éxito."]);
+
+        } catch (\Throwable $th) {
+            Log::error("Error al cancelar gravamen en pase a folio por el usuario: (id: " . auth()->user()->id . ") " . auth()->user()->name . ". " . $th);
+            $this->dispatch('mostrarMensaje', ['error', "Ha ocurrido un error."]);
+        }
 
     }
 

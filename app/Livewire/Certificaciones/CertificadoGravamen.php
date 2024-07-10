@@ -106,6 +106,8 @@ class CertificadoGravamen extends Component
 
     public function generarCertificado(){
 
+        $this->modal = false;
+
         if($this->moviminetoRegistral->tipo_servicio == 'ordinario'){
 
             if(!($this->calcularDiaElaboracion($this->modelo_editar) <= now())){
@@ -140,13 +142,17 @@ class CertificadoGravamen extends Component
 
                 $this->modal = false;
 
+                $this->reset('predio');
+
             });
+
+
 
         } catch (\Throwable $th) {
 
             Log::error("Error al finalizar trámite de copias certificadas por el usuario: (id: " . auth()->user()->id . ") " . auth()->user()->name . ". " . $th);
             $this->dispatch('mostrarMensaje', ['error', "Ha ocurrido un error."]);
-            $this->resetearTodo();
+
         }
 
     }

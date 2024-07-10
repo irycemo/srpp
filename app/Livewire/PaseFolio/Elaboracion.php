@@ -216,28 +216,34 @@ class Elaboracion extends Component
 
         $this->validate();
 
-        if(!$this->movimientoRegistral->folio_real){
-
-            $this->generarFolioReal();
-
-            $this->movimientoRegistral->refresh();
-
-        }
-
         try {
 
             DB::transaction(function () {
 
-                $this->movimientoRegistral->folioReal->update([
-                    'tipo_documento' => $this->tipo_documento,
-                    'autoridad_cargo' => $this->autoridad_cargo,
-                    'autoridad_nombre' => $this->autoridad_nombre,
-                    'autoridad_numero' => $this->autoridad_numero,
-                    'numero_documento' => $this->numero_documento,
-                    'fecha_emision' => $this->fecha_emision,
-                    'fecha_inscripcion' => $this->fecha_inscripcion,
-                    'procedencia' => $this->procedencia,
-                ]);
+                if(!$this->movimientoRegistral->folio_real){
+
+                    $this->generarFolioReal();
+
+                    $this->movimientoRegistral->refresh();
+
+                    $gravamenes = DB::connection('mysql2')->select("call spQGravamen(" .
+                                                                        $this->movimientoRegistral->getRawOriginal('distrito') .
+                                                                        "," . $this->movimientoRegistral->tomo .
+                                                                        "," . ($this->movimientoRegistral->tomo_bis ?? '\'\'') .
+                                                                        "," . $this->movimientoRegistral->registro .
+                                                                        "," . ($this->movimientoRegistral->registro_bis ?? '\'\'') .
+                                                                        "," . $this->movimientoRegistral->numero_propiedad .
+                                                                        ")");
+
+                    foreach($gravamenes as $gravamen){
+
+                        if(isset($gravamen->fcancelacion) && isset($gravamen->stGravamen) && $gravamen->stGravamen == 'C') continue;
+
+                        $this->creargravamen($gravamen);
+
+                    }
+
+                }
 
                 if(!$this->propiedad->escritura_id){
 
@@ -271,26 +277,16 @@ class Elaboracion extends Component
 
                 }
 
-                if(!$this->movimientoRegistral->folio_real){
-
-                    $gravamenes = DB::connection('mysql2')->select("call spQGravamen(" .
-                                                                        $this->movimientoRegistral->getRawOriginal('distrito') .
-                                                                        "," . $this->movimientoRegistral->tomo .
-                                                                        "," . ($this->movimientoRegistral->tomo_bis ?? '\'\'') .
-                                                                        "," . $this->movimientoRegistral->registro .
-                                                                        "," . ($this->movimientoRegistral->registro_bis ?? '\'\'') .
-                                                                        "," . $this->movimientoRegistral->numero_propiedad .
-                                                                        ")");
-
-                    foreach($gravamenes as $gravamen){
-
-                        if(isset($gravamen->fcancelacion) && isset($gravamen->stGravamen) && $gravamen->stGravamen == 'C') continue;
-
-                        $this->creargravamen($gravamen);
-
-                    }
-
-                }
+                $this->movimientoRegistral->folioReal->update([
+                    'tipo_documento' => $this->tipo_documento,
+                    'autoridad_cargo' => $this->autoridad_cargo,
+                    'autoridad_nombre' => $this->autoridad_nombre,
+                    'autoridad_numero' => $this->autoridad_numero,
+                    'numero_documento' => $this->numero_documento,
+                    'fecha_emision' => $this->fecha_emision,
+                    'fecha_inscripcion' => $this->fecha_inscripcion,
+                    'procedencia' => $this->procedencia,
+                ]);
 
                 $this->dispatch('mostrarMensaje', ['success', "El documento de entrada se guardó con éxito."]);
 
@@ -325,7 +321,6 @@ class Elaboracion extends Component
             'estado' => 'activo',
             'acto_contenido' => $gravamen->descGravamen ?? null,
             'valor_gravamen' => $gravamen->{'$ transacci├│n'} ?? null,
-            'divisa' => $gravamen->tmoneda ?? null,
             'observaciones' => "Gravamen ingresado mediante pase a folio: | Tomo gravamen:" . $gravamen->tomog .
                                 " | Registro gravamen: " . $gravamen->registrog . "/" . $gravamen->rbisg .
                                 " | Divisa:" . $gravamen->tmoneda .
@@ -337,7 +332,7 @@ class Elaboracion extends Component
                                 " | Acreedores:" . $gravamen->acreedores .
                                 " | Deudores:" . $gravamen->deudores .
                                 " | Garantes:" . $gravamen->garantes .
-                                " | Comnetarios:" . $gravamen->comentarios
+                                " | Comentarios:" . $gravamen->comentarios
         ]);
 
     }

@@ -473,6 +473,10 @@
                                     </p>
 
                                     <p class="parrafo">
+                                        <strong>Acto contenido:</strong>{{ $gravamen->acto_contenido }}
+                                    </p>
+
+                                    <p class="parrafo">
                                         <strong>Tipo:</strong>{{ $gravamen->tipo }}
                                     </p>
 
@@ -523,7 +527,7 @@
                                     <p class="separador">Sentencia ({{ $folioReal->folio }}-{{ $folioReal->movimientosRegistrales()->where('id', $sentencia->movimiento_registral_id)->first()->folio }})</p>
 
                                     <p class="parrafo">
-                                        <strong>Descripción del acto:</strong> {{ $sentencia->acto_contenido }}
+                                        <strong>Acto contenido:</strong> {{ $sentencia->acto_contenido }}
                                     </p>
 
                                     <p class="parrafo">
@@ -547,11 +551,39 @@
                                     <p class="separador">Varios ({{ $folioReal->folio }}-{{ $folioReal->movimientosRegistrales()->where('id', $vario->movimiento_registral_id)->first()->folio }})</p>
 
                                     <p class="parrafo">
-                                        <strong>Descripción del acto:</strong> {{ $vario->acto_contenido }}
+                                        <strong>Acto contenido:</strong> {{ $vario->acto_contenido }}
                                     </p>
 
                                     <p class="parrafo">
                                         <strong>Descripción del acto:</strong> {{ $vario->descripcion }}
+                                    </p>
+
+                                </p>
+
+                            @endforeach
+
+                        @endif
+
+                        @if($folioReal->cancelaciones->count())
+
+                            <p class="separador" style="text-align: center">Cancelaciones</p>
+
+                            @foreach ($folioReal->cancelaciones as $cancelacion)
+
+                                <p class="parrafo">
+
+                                    <p class="separador">Cancelación ({{ $folioReal->folio }}-{{ $folioReal->movimientosRegistrales()->where('id', $cancelacion->movimiento_registral_id)->first()->folio }})</p>
+
+                                    <p class="parrafo">
+                                        <strong>Gravamen cancelado:</strong> {{ $folioReal->folio }}-{{ $folioReal->movimientosRegistrales()->where('id', $cancelacion->gravamen)->first()->folio }}
+                                    </p>
+
+                                    <p class="parrafo">
+                                        <strong>Acto contenido:</strong> {{ $cancelacion->acto_contenido }}
+                                    </p>
+
+                                    <p class="parrafo">
+                                        <strong>Descripción del acto:</strong> {{ $cancelacion->observaciones }}
                                     </p>
 
                                 </p>
