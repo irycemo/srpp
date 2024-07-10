@@ -89,10 +89,12 @@ class Gravamen extends Component
 
         $this->authorize('update', $this->movimientoRegistral);
 
+        $gravamen = GravamenModelo::find($this->selected_id);
+
         $cancelacion = Cancelacion::whereHas('movimientoRegistral', function($q){
                                         $q->where('folio_real', $this->movimientoRegistral->folio_real);
                                     })
-                                    ->where('gravamen', $this->selected_id)
+                                    ->where('gravamen', $gravamen->movimiento_registral_id)
                                     ->first();
 
         if($cancelacion){
@@ -105,9 +107,7 @@ class Gravamen extends Component
 
         try{
 
-            DB::transaction(function () {
-
-                $gravamen = GravamenModelo::find($this->selected_id);
+            DB::transaction(function () use($gravamen){
 
                 $gravamen->movimientoRegistral->delete();
 
