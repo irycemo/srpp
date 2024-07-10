@@ -226,7 +226,7 @@ class Elaboracion extends Component
 
                     $this->movimientoRegistral->refresh();
 
-                    $gravamenes = DB::connection('mysql2')->select("call spQGravamen(" .
+                    $gravamenes = DB::connection('mysql2')->select("call spTractoGravamenes(" .
                                                                         $this->movimientoRegistral->getRawOriginal('distrito') .
                                                                         "," . $this->movimientoRegistral->tomo .
                                                                         "," . ($this->movimientoRegistral->tomo_bis ?? '\'\'') .
@@ -317,17 +317,16 @@ class Elaboracion extends Component
 
         Gravamen::create([
             'movimiento_registral_id' => $movimientoRegistralGravamenNuevo->id,
-            'fecha_inscripcion' => $gravamen->fechainscripcion ? Carbon::createFromFormat('d/m/Y', $gravamen->fechainscripcion)->toDateString() : null,
+            'fecha_inscripcion' => $gravamen->finscripcion ? Carbon::createFromFormat('Y-m-d', $gravamen->finscripcion)->toDateString() : null,
             'estado' => 'activo',
             'acto_contenido' => $gravamen->descGravamen ?? null,
-            'valor_gravamen' => $gravamen->{'$ transacci├│n'} ?? null,
+            'valor_gravamen' => $gravamen->monto ?? null,
             'observaciones' => "Gravamen ingresado mediante pase a folio: | Tomo gravamen:" . $gravamen->tomog .
                                 " | Registro gravamen: " . $gravamen->registrog . "/" . $gravamen->rbisg .
                                 " | Divisa:" . $gravamen->tmoneda .
-                                " | Monto de la transacción:" . $gravamen->{'$ transacci├│n'} .
+                                " | Monto de la transacción:" . $gravamen->monto .
                                 " | Acto contenido:" . $gravamen->descGravamen .
-                                " | Fecha de inscripción:" . $gravamen->fechainscripcion .
-                                " | Hora de inscripción:" . $gravamen->horainscripcion .
+                                " | Fecha de inscripción:" . $gravamen->finscripcion .
                                 " | Tipo de deudor:" . $gravamen->stDeudor .
                                 " | Acreedores:" . $gravamen->acreedores .
                                 " | Deudores:" . $gravamen->deudores .
