@@ -570,6 +570,8 @@
 
                             @foreach ($folioReal->cancelaciones as $cancelacion)
 
+                                @if($cancelacion->movimientoRegistral->folio == 1) @continue @endif
+
                                 <p class="parrafo">
 
                                     <p class="separador">Cancelación ({{ $folioReal->folio }}-{{ $folioReal->movimientosRegistrales()->where('id', $cancelacion->movimiento_registral_id)->first()->folio }})</p>
