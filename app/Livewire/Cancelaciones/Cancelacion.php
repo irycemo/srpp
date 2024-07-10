@@ -86,6 +86,14 @@ class Cancelacion extends Component
 
         $this->validate();
 
+        if(!$this->gravamenCancelarMovimiento){
+
+            $this->dispatch('mostrarMensaje', ['error', "No se encontro el gravamen a cancelar."]);
+
+            return;
+
+        }
+
         if($this->valor >= $this->gravamenCancelarMovimiento->gravamen->valor_gravamen){
 
             $this->dispatch('mostrarMensaje', ['error', "La parcialidad del valor debe ser menor al valor del gravamen."]);
