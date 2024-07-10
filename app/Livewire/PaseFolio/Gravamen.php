@@ -4,6 +4,7 @@ namespace App\Livewire\PaseFolio;
 
 use App\Models\Predio;
 use Livewire\Component;
+use App\Models\Cancelacion;
 use Livewire\Attributes\On;
 use Illuminate\Support\Facades\DB;
 use App\Models\MovimientoRegistral;
@@ -87,6 +88,20 @@ class Gravamen extends Component
     public function borrar(){
 
         $this->authorize('update', $this->movimientoRegistral);
+
+        $cancelacion = Cancelacion::whereHas('movimientoRegistral', function($q){
+                                        $q->where('folio_real', $this->movimientoRegistral->folio_real);
+                                    })
+                                    ->where('gravamen', $this->selected_id)
+                                    ->first();
+
+        if($cancelacion){
+
+            $this->dispatch('mostrarMensaje', ['error', "El gravamen tiene una cancelación registrada no puede ser eliminado."]);
+
+            return;
+
+        }
 
         try{
 
