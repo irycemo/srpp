@@ -58,9 +58,9 @@
 
         <div class="w-full  justify-center mx-auto">
 
-            <span class="flex items-center justify-center ext-gray-700 mb-4">Gravamen a cancelar ({{ $cancelacion->movimientoRegistral->folioReal->folio }}-{{ $gravamenCancelarMovimiento->folio }})</span>
-
             @if($gravamenCancelarMovimiento)
+
+                <span class="flex items-center justify-center ext-gray-700 mb-4">Gravamen a cancelar ({{ $cancelacion->movimientoRegistral->folioReal->folio }}-{{ $gravamenCancelarMovimiento->folio }})</span>
 
                 <div class="lg:w-1/2 mx-auto">
 
