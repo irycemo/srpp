@@ -65,12 +65,18 @@
                                         >
                                             Editar
                                         </x-button-blue>
-                                        {{-- <x-button-red
-                                                wire:click="abrirModalBorrar({{ $gravamen->id }})"
-                                                wire:loading.attr="disabled"
-                                            >
-                                                Cancelar
-                                        </x-button-red> --}}
+
+                                        @if(auth()->user()->ubicacion == 'Regional 4')
+
+                                            <x-button-red
+                                                    wire:click="abrirModalBorrar({{ $gravamen->id }})"
+                                                    wire:loading.attr="disabled"
+                                                >
+                                                    Eliminar
+                                            </x-button-red>
+
+                                        @endif
+
                                         @if($gravamen->acreedores()->count() && $gravamen->estado != 'cancelado')
 
                                             <x-button-red

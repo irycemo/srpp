@@ -294,6 +294,8 @@ class Elaboracion extends Component
 
             });
 
+            $this->dispatch('cargarGravamenes');
+
         } catch (\Throwable $th) {
 
             Log::error("Error al guardar documento de entrada en pase a folio por el usuario: (id: " . auth()->user()->id . ") " . auth()->user()->name . ". " . $th);
