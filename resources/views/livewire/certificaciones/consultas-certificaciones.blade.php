@@ -179,7 +179,7 @@
 
                             <span class="lg:hidden absolute top-0 left-0 bg-blue-300 px-2 py-1 text-xs text-white font-bold uppercase rounded-br-xl">Observaciones</span>
 
-                            {{ $certificacion->certificacion->observaciones }}
+                            {{ $certificacion->certificacion?->observaciones }}
 
                         </x-table.cell>
 

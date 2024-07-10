@@ -146,6 +146,12 @@ class ConsultasCertificaciones extends Component
 
         }
 
+        if(!$this->certificacion->certificacion){
+
+            $this->dispatch('mostrarMensaje', ['error', "El trámite no es una certificación."]);
+
+        }
+
     }
 
     public function reactivarTramtie(MovimientoRegistral $movimientoRegistral){
