@@ -243,6 +243,8 @@ class Elaboracion extends Component
 
                     }
 
+                    $this->procesarMovimientos();
+
                 }
 
                 if(!$this->propiedad->escritura_id){
