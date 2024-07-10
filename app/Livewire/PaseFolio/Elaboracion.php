@@ -243,8 +243,6 @@ class Elaboracion extends Component
 
                     }
 
-                    $this->procesarMovimientos();
-
                 }
 
                 if(!$this->propiedad->escritura_id){
@@ -316,7 +314,8 @@ class Elaboracion extends Component
             'folio_real' => $this->movimientoRegistral->folio_real,
             'folio' => $this->movimientoRegistral->folioReal->ultimoFolio() + 1,
             'distrito' => $this->movimientoRegistral->getRawOriginal('distrito'),
-            'estado' => 'concluido'
+            'estado' => 'concluido',
+            'usuario_asignado' => auth()->id(),
         ]);
 
         Gravamen::create([
@@ -747,7 +746,6 @@ class Elaboracion extends Component
             foreach($this->movimientoRegistral->folioReal->gravamenes as $gravamen){
 
                 $gravamen->movimientoRegistral->update([
-                    'usuario_asignado' => auth()->id(),
                     'usuario_supervisor' => (new AsignacionService())->obtenerSupervisorGravamen($this->movimientoRegistral->getRawOriginal('distrito')),
                 ]);
 
@@ -766,7 +764,6 @@ class Elaboracion extends Component
             foreach($this->movimientoRegistral->folioReal->sentencias as $sentencia){
 
                 $sentencia->movimientoRegistral->update([
-                    'usuario_asignado' => auth()->id(),
                     'usuario_supervisor' => (new AsignacionService())->obtenerSupervisorGravamen($this->movimientoRegistral->getRawOriginal('distrito')),
                 ]);
 
@@ -785,7 +782,6 @@ class Elaboracion extends Component
             foreach($this->movimientoRegistral->folioReal->varios as $vario){
 
                 $vario->movimientoRegistral->update([
-                    'usuario_asignado' => auth()->id(),
                     'usuario_supervisor' => (new AsignacionService())->obtenerSupervisorGravamen($this->movimientoRegistral->getRawOriginal('distrito')),
                 ]);
 
