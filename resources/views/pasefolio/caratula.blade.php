@@ -564,7 +564,7 @@
 
                         @endif
 
-                        @if($folioReal->cancelaciones->count())
+                        @if($folioReal->cancelaciones->count() && $folioReal->cancelaciones->first()->movimientoRegistral->folio != 1)
 
                             <p class="separador" style="text-align: center">Cancelaciones</p>
 
