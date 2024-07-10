@@ -458,7 +458,7 @@
 
                     <div style="margin-left: 10px; margin-right: 10px;">
 
-                        @if($folioReal->gravamenes->count())
+                        @if($folioReal->gravamenes->count() && $folioReal->gravamenes->first()->movimientoRegistral->folio != 1)
 
                             <p class="separador" style="text-align: center">Gravamenes</p>
 
@@ -516,7 +516,7 @@
 
                         @endif
 
-                        @if($folioReal->sentencias->count())
+                        @if($folioReal->sentencias->count() && $folioReal->sentencias->first()->movimientoRegistral->folio != 1)
 
                             <p class="separador" style="text-align: center">Sentencias</p>
 
@@ -540,7 +540,7 @@
 
                         @endif
 
-                        @if($folioReal->varios->count())
+                        @if($folioReal->varios->count() && $folioReal->varios->first()->movimientoRegistral->folio != 1)
 
                             <p class="separador" style="text-align: center">Varios</p>
 
