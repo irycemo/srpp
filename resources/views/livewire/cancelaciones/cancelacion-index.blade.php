@@ -12,7 +12,10 @@
                 <x-table.heading sortable wire:click="sortBy('año')" :direction="$sort === 'año' ? $direction : null" >Año</x-table.heading>
                 <x-table.heading sortable wire:click="sortBy('tramite')" :direction="$sort === 'tramite' ? $direction : null" ># control</x-table.heading>
                 <x-table.heading sortable wire:click="sortBy('usuario')" :direction="$sort === 'usuario' ? $direction : null" >Usuario</x-table.heading>
-                <x-table.heading sortable wire:click="sortBy('numero_propiedad')" :direction="$sort === 'numero_propiedad' ? $direction : null" ># propiedad</x-table.heading>
+                <x-table.heading sortable wire:click="sortBy('tomo_gravamen')" :direction="$sort === 'tomo_gravamen' ? $direction : null" >Tomo gravamen</x-table.heading>
+                <x-table.heading sortable wire:click="sortBy('registro_gravamen')" :direction="$sort === 'registro_gravamen' ? $direction : null" >Registro gravamen</x-table.heading>
+                <x-table.heading sortable wire:click="sortBy('distrito')" :direction="$sort === 'distrito' ? $direction : null" >Distrito</x-table.heading>
+                <x-table.heading sortable wire:click="sortBy('fecha_entrega')" :direction="$sort === 'fecha_entrega' ? $direction : null" >Fecha de entrega</x-table.heading>
                 @if(auth()->user()->hasRole('Administrador'))
                     <x-table.heading sortable wire:click="sortBy('estado')" :direction="$sort === 'estado' ? $direction : null">Estado</x-table.heading>
                     <x-table.heading sortable wire:click="sortBy('usuario_asignado')" :direction="$sort === 'usuario_asignado' ? $direction : null">Usuario asignado</x-table.heading>
@@ -49,7 +52,7 @@
 
                         <x-table.cell>
 
-                            <span class="lg:hidden absolute top-0 left-0 bg-blue-300 px-2 py-1 text-xs text-white font-bold uppercase rounded-br-xl">Número de control</span>
+                            <span class="lg:hidden absolute top-0 left-0 bg-blue-300 px-2 py-1 text-xs text-white font-bold uppercase rounded-br-xl">Tramite</span>
 
                             {{ $movimiento->tramite }}
 
@@ -65,9 +68,33 @@
 
                         <x-table.cell>
 
-                            <span class="lg:hidden absolute top-0 left-0 bg-blue-300 px-2 py-1 text-xs text-white font-bold uppercase rounded-br-xl">Número de propiedad</span>
+                            <span class="lg:hidden absolute top-0 left-0 bg-blue-300 px-2 py-1 text-xs text-white font-bold uppercase rounded-br-xl">Tomo gravamen</span>
 
-                            {{ $movimiento->numero_propiedad }}
+                            {{ $movimiento->tomo_gravamen }}
+
+                        </x-table.cell>
+
+                        <x-table.cell>
+
+                            <span class="lg:hidden absolute top-0 left-0 bg-blue-300 px-2 py-1 text-xs text-white font-bold uppercase rounded-br-xl">Registro gravamen</span>
+
+                            {{ $movimiento->registro_gravamen }}
+
+                        </x-table.cell>
+
+                        <x-table.cell>
+
+                            <span class="lg:hidden absolute top-0 left-0 bg-blue-300 px-2 py-1 text-xs text-white font-bold uppercase rounded-br-xl">Distrito</span>
+
+                            {{ $movimiento->distrito }}
+
+                        </x-table.cell>
+
+                        <x-table.cell>
+
+                            <span class="lg:hidden absolute top-0 left-0 bg-blue-300 px-2 py-1 text-xs text-white font-bold uppercase rounded-br-xl">Fecha de entrega</span>
+
+                            {{ $movimiento->fecha_entrega->format('d-m-Y') }}
 
                         </x-table.cell>
 
@@ -109,7 +136,7 @@
 
                         @if (!auth()->user()->hasRole('Administrador'))
 
-                            @if (auth()->user()->hasRole(['Supervisor varios', 'Supervisor uruapan']))
+                            @if (auth()->user()->hasRole(['Supervisor cancelación', 'Supervisor uruapan']))
 
                                 <x-table.cell>
 

@@ -96,9 +96,73 @@
 
                 @endif
 
+            @else
+
+                    <div class="rounded-lg bg-red-200 lg:w-1/2 mx-auto text-center text-red-700 py-3">
+
+                        El folio real no tiene el gravamen con tomo {{ $this->cancelacion->movimientoRegistral->tomo_gravamen }} folio {{ $this->cancelacion->movimientoRegistral->registro_gravamen }}
+
+                    </div>
+
             @endif
 
         </div>
+
+    </div>
+
+    @if(count($errors) > 0)
+
+        <div class="mb-5 bg-white rounded-lg p-2 shadow-lg flex gap-2 flex-wrap ">
+
+            <ul class="flex gap-2 felx flex-wrap list-disc ml-5">
+            @foreach ($errors->all() as $error)
+
+                <li class="text-red-500 text-xs md:text-sm ml-5">
+                    {{ $error }}
+                </li>
+
+            @endforeach
+
+        </ul>
+
+        </div>
+
+    @endif
+
+    <div class="bg-white rounded-lg p-3 flex justify-end shadow-lg gap-3">
+
+        <x-button-red
+            wire:click="$toggle('modalRechazar')"
+            wire:loading.attr="disabled"
+            wire:target="$toggle('modalRechazar')">
+
+            <img wire:loading wire:target="$toggle('modalRechazar')" class="mx-auto h-4 mr-1" src="{{ asset('storage/img/loading3.svg') }}" alt="Loading">
+
+            Rechazar
+
+        </x-button-red>
+
+        <x-button-blue
+            wire:click="guardar"
+            wire:loading.attr="disabled"
+            wire:target="guardar">
+
+            <img wire:loading wire:target="guardar" class="mx-auto h-4 mr-1" src="{{ asset('storage/img/loading3.svg') }}" alt="Loading">
+
+            Guardar y continuar
+
+        </x-button-blue>
+
+        <x-button-green
+            wire:click="finalizar"
+            wire:loading.attr="disabled"
+            wire:target="finalizar">
+
+            <img wire:loading wire:target="finalizar" class="mx-auto h-4 mr-1" src="{{ asset('storage/img/loading3.svg') }}" alt="Loading">
+
+            Finalizar inscripción
+
+        </x-button-green>
 
     </div>
 
@@ -148,50 +212,51 @@
 
     </x-dialog-modal>
 
-    @if(count($errors) > 0)
+    <x-dialog-modal wire:model="modalRechazar" maxWidth="sm">
 
-        <div class="mb-5 bg-white rounded-lg p-2 shadow-lg flex gap-2 flex-wrap ">
+        <x-slot name="title">
 
-            <ul class="flex gap-2 felx flex-wrap list-disc ml-5">
-            @foreach ($errors->all() as $error)
+            Rechazar
 
-                <li class="text-red-500 text-xs md:text-sm ml-5">
-                    {{ $error }}
-                </li>
+        </x-slot>
 
-            @endforeach
+        <x-slot name="content">
 
-        </ul>
+            <x-input-group for="motivo_rechazo" label="Motivo del rechazo" :error="$errors->first('motivo_rechazo')" class="w-full">
 
-        </div>
+                <textarea rows="5" class="bg-white rounded text-sm w-full" wire:model="motivo_rechazo"></textarea>
 
-    @endif
+            </x-input-group>
 
-    <div class="bg-white rounded-lg p-3 flex justify-end shadow-lg gap-3">
+        </x-slot>
 
-        <x-button-blue
-            wire:click="guardar"
-            wire:loading.attr="disabled"
-            wire:target="guardar">
+        <x-slot name="footer">
 
-            <img wire:loading wire:target="guardar" class="mx-auto h-4 mr-1" src="{{ asset('storage/img/loading3.svg') }}" alt="Loading">
+            <div class="flex gap-3">
 
-            Guardar y continuar
+                <x-button-blue
+                    wire:click="rechazar"
+                    wire:loading.attr="disabled"
+                    wire:target="rechazar">
 
-        </x-button-blue>
+                    <img wire:loading wire:target="rechazar" class="mx-auto h-4 mr-1" src="{{ asset('storage/img/loading3.svg') }}" alt="Loading">
 
-        <x-button-green
-            wire:click="finalizar"
-            wire:loading.attr="disabled"
-            wire:target="finalizar">
+                    <span>Rechazar</span>
+                </x-button-blue>
 
-            <img wire:loading wire:target="finalizar" class="mx-auto h-4 mr-1" src="{{ asset('storage/img/loading3.svg') }}" alt="Loading">
+                <x-button-red
+                    wire:click="$toggle('modalRechazar')"
+                    wire:loading.attr="disabled"
+                    wire:target="$toggle('modalRechazar')"
+                    type="button">
+                    Cerrar
+                </x-button-red>
 
-            Finalizar inscripción
+            </div>
 
-        </x-button-green>
+        </x-slot>
 
-    </div>
+    </x-dialog-modal>
 
 </div>
 

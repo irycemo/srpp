@@ -15,7 +15,17 @@ class PaseFolioController extends Controller
 
     public function caratula(FolioReal $folioReal){
 
-        $folioReal->load('predio', 'antecedentes', 'gravamenes.deudores.persona', 'gravamenes.deudores.actor.persona', 'gravamenes.acreedores.persona', 'gravamenes.movimientoRegistral', 'sentencias.movimientoRegistral', 'varios.movimientoRegistral', 'cancelaciones.movimientoRegistral');
+        $folioReal->load(
+            'predio',
+            'antecedentes',
+            'gravamenes.deudores.persona',
+            'gravamenes.deudores.actor.persona',
+            'gravamenes.acreedores.persona',
+            'gravamenes.movimientoRegistral',
+            'sentencias.movimientoRegistral',
+            'varios.movimientoRegistral',
+            'cancelaciones.movimientoRegistral'
+        );
 
         $formatter = new NumeroALetras();
 

@@ -9,6 +9,7 @@ use App\Models\MovimientoRegistral;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Http;
+use App\Http\Services\SistemaTramitesService;
 use App\Models\Cancelacion as ModelCancelacion;
 use Illuminate\Http\Client\ConnectionException;
 
@@ -16,12 +17,15 @@ class Cancelacion extends Component
 {
 
     public $modalContraseña = false;
+    public $modalRechazar = false;
     public $link;
     public $contraseña;
 
     public $gravamenCancelarMovimiento;
     public $folio_gravamen;
     public $valor;
+
+    public $motivo_rechazo;
 
     public ModelCancelacion $cancelacion;
 
@@ -37,7 +41,8 @@ class Cancelacion extends Component
 
     protected $validationAttributes  = [
         'gravamenCancelarMovimiento' => 'folio del gravamen',
-        'valor' => 'parcialidad del valor'
+        'valor' => 'parcialidad del valor',
+        'motivo_rechazo' => 'motivo del rechazo'
     ];
 
     public function updatedCancelacionActoContenido(){
@@ -210,6 +215,41 @@ class Cancelacion extends Component
         }
 
         return $diaElaboracion;
+
+    }
+
+    public function rechazar(){
+
+        $this->validate([
+            'motivo_rechazo' => 'required'
+        ]);
+
+        try {
+
+            DB::transaction(function (){
+
+                $observaciones = auth()->user()->name . ' rechaza el ' . now() . ', con motivo: ' . $this->motivo_rechazo ;
+
+                (new SistemaTramitesService())->rechazarTramite($this->cancelacion->movimientoRegistral->año, $this->cancelacion->movimientoRegistral->tramite, $this->cancelacion->movimientoRegistral->usuario, $observaciones);
+
+                $this->cancelacion->movimientoRegistral->update(['estado' => 'rechazado', 'actualizado_por' => auth()->user()->id]);
+
+                $this->cancelacion->actualizado_por = auth()->user()->id;
+
+                $this->cancelacion->observaciones = $this->cancelacion->observaciones . $observaciones;
+
+                $this->cancelacion->save();
+
+                $this->dispatch('mostrarMensaje', ['success', "El trámite se rechazó con éxito."]);
+
+                $this->modalRechazar = false;
+
+            });
+
+        } catch (\Throwable $th) {
+            Log::error("Error al rechazar inscripción de cancelación por el usuario: (id: " . auth()->user()->id . ") " . auth()->user()->name . ". " . $th);
+            $this->dispatch('mostrarMensaje', ['error', "Ha ocurrido un error."]);
+        }
 
     }
 
