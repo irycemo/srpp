@@ -242,7 +242,7 @@ class Cancelacion extends Component
 
                 $this->dispatch('mostrarMensaje', ['success', "El trámite se rechazó con éxito."]);
 
-                $this->modalRechazar = false;
+                return redirect()->route('cancelacion');
 
             });
 
