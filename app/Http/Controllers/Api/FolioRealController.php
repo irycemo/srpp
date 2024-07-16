@@ -35,13 +35,6 @@ class FolioRealController extends Controller
                                     })
                                     ->first();
 
-        if(!isset($validated['folio_real']) && !$folio_real){
-
-            return response()->json([
-                'folio_real' => null,
-            ], 404);
-
-        }
 
         if($folio_real){
 
@@ -54,6 +47,18 @@ class FolioRealController extends Controller
             }
 
             return (new FolioRealResource($folio_real))->response()->setStatusCode(200);
+
+        }elseif(isset($validated['folio_real']) && !$folio_real){
+
+            return response()->json([
+                'folio_real' => null,
+            ], 404);
+
+        }elseif(!$folio_real){
+
+            return response()->json([
+                'folio_real' => null,
+            ], 204);
 
         }
 
