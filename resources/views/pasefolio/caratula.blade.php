@@ -458,11 +458,13 @@
 
                     <div style="margin-left: 10px; margin-right: 10px;">
 
-                        @if($folioReal->gravamenes->count())
+                        @if($folioReal->gravamenes->count() > 1)
 
                             <p class="separador" style="text-align: center">Gravamenes</p>
 
                             @foreach ($folioReal->gravamenes as $gravamen)
+
+                                @if($gravamen->movimientoRegistral->folio == 1) @continue @endif
 
                                 <p class="parrafo">
 
@@ -516,11 +518,13 @@
 
                         @endif
 
-                        @if($folioReal->sentencias->count())
+                        @if($folioReal->sentencias->count() > 1)
 
                             <p class="separador" style="text-align: center">Sentencias</p>
 
                             @foreach ($folioReal->sentencias as $sentencia)
+
+                                @if($sentencia->movimientoRegistral->folio == 1) @continue @endif
 
                                 <p class="parrafo">
 
@@ -540,11 +544,13 @@
 
                         @endif
 
-                        @if($folioReal->varios->count())
+                        @if($folioReal->varios->count() > 1)
 
                             <p class="separador" style="text-align: center">Varios</p>
 
                             @foreach ($folioReal->varios as $vario)
+
+                                @if($vario->movimientoRegistral->folio == 1) @continue @endif
 
                                 <p class="parrafo">
 
@@ -564,7 +570,7 @@
 
                         @endif
 
-                        @if($folioReal->cancelaciones->count())
+                        @if($folioReal->cancelaciones->count() > 1)
 
                             <p class="separador" style="text-align: center">Cancelaciones</p>
 

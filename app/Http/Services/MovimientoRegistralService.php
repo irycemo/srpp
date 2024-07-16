@@ -183,7 +183,6 @@ class MovimientoRegistralService{
             $array = [];
 
             $fields = [
-                'folio_real',
                 'numero_propiedad',
                 'tomo',
                 'tomo_bis',
@@ -221,7 +220,15 @@ class MovimientoRegistralService{
 
             }
 
-            isset($request['folio_real']) ? $folioReal = $request['folio_real'] : $folioReal = null;
+            if(isset($request['folio_real'])){
+
+                $folioReal = FolioReal::where('folio', $request['folio_real'])->first();
+
+            }else{
+
+                $folioReal = null;
+
+            }
 
             $documento_entrada = [
                 'tipo_documento' => $request['tipo_documento'] ?? null,
@@ -233,6 +240,7 @@ class MovimientoRegistralService{
             ];
 
             return $array + [
+                'folio_real' => $folioReal ? $folioReal->id : null,
                 'folio' => $this->calcularFolio($request),
                 'estado' => 'nuevo',
                 'usuario_asignado' => $this->obtenerUsuarioAsignado($documento_entrada, $folioReal, $request['servicio'], $request['distrito'], $request['solicitante'], $request['tipo_servicio'],$request['categoria_servicio'], false),
@@ -313,7 +321,14 @@ class MovimientoRegistralService{
         /* Certificaciones: Gravamen */
         if($servicio == 'DL07'){
 
-            return $this->asignacionService->obtenerCertificadorGravamen($distrito, $solicitante, $tipo_servicio, $random);
+            return $this->asignacionService->obtenerCertificadorGravamen($distrito, $solicitante, $tipo_servicio, $random, $folioReal);
+
+        }
+
+        /* Certificaciones: Propiedad */
+        if($servicio == 'DL10' || $servicio == 'DL11'){
+
+            return $this->asignacionService->obtenerCertificadorPropiedad($distrito, $solicitante, $tipo_servicio, $random, $folioReal);
 
         }
 

@@ -747,6 +747,7 @@ class Elaboracion extends Component
 
                 $gravamen->movimientoRegistral->update([
                     'usuario_supervisor' => (new AsignacionService())->obtenerSupervisorGravamen($this->movimientoRegistral->getRawOriginal('distrito')),
+                    'estado' => 'concluido'
                 ]);
 
                 if(!$gravamen->acreedores()->count()){
@@ -765,6 +766,7 @@ class Elaboracion extends Component
 
                 $sentencia->movimientoRegistral->update([
                     'usuario_supervisor' => (new AsignacionService())->obtenerSupervisorGravamen($this->movimientoRegistral->getRawOriginal('distrito')),
+                    'estado' => 'concluido'
                 ]);
 
                 if(!$sentencia->acto_contenido){
@@ -783,6 +785,7 @@ class Elaboracion extends Component
 
                 $vario->movimientoRegistral->update([
                     'usuario_supervisor' => (new AsignacionService())->obtenerSupervisorGravamen($this->movimientoRegistral->getRawOriginal('distrito')),
+                    'estado' => 'concluido'
                 ]);
 
                 if(!$vario->acto_contenido){

@@ -1,0 +1,59 @@
+<?php
+
+namespace App\Http\Controllers\Certificaciones;
+
+use Carbon\Carbon;
+use App\Models\User;
+use App\Models\Predio;
+use Illuminate\Http\Request;
+use Barryvdh\DomPDF\Facade\Pdf;
+use App\Models\MovimientoRegistral;
+use App\Http\Controllers\Controller;
+use Luecano\NumeroALetras\NumeroALetras;
+
+class CertificadoPropiedadController extends Controller
+{
+
+    public function certificadoPropiedad(MovimientoRegistral $movimientoRegistral){
+
+        /* $this->authorize('update', $movimientoRegistral); */
+
+        $formatter = new NumeroALetras();
+
+        $predio = Predio::where('folio_real', $movimientoRegistral->folio_real)->first();
+
+        Carbon::setLocale(config('app.locale'));
+        setlocale(LC_ALL, 'es_MX', 'es', 'ES', 'es_MX.utf8');
+
+        $fecha = Carbon::parse($predio->folioReal->fecha_inscripcion);
+
+        $año = $fecha->format('Y');
+
+        $fecha = now()->formatLocalized('%d DE %B DE ') . $formatter->toWords($año);
+
+        $director = User::where('status', 'activo')
+                            ->whereHas('roles', function($q){
+                                $q->where('name', 'Director');
+                            })->first()->name;
+
+        $registro_numero = $formatter->toWords($predio->folioReal->registro_antecedente);
+
+        $tomo_numero = $formatter->toWords($predio->folioReal->tomo_antecedente);
+
+        $pdf = Pdf::loadView('certificaciones.certificadoGravamen', compact('predio', 'director', 'movimientoRegistral', 'gravamenes', 'fecha', 'registro_numero', 'tomo_numero', 'formatter'));
+
+        $pdf->render();
+
+        $dom_pdf = $pdf->getDomPDF();
+
+        $canvas = $dom_pdf->get_canvas();
+
+        $canvas->page_text(480, 794, "Página: {PAGE_NUM} de {PAGE_COUNT}", null, 9, array(1, 1, 1));
+
+        $canvas->page_text(35, 794, $movimientoRegistral->folioReal->folio  .'-' . $movimientoRegistral->folio, null, 9, array(1, 1, 1));
+
+        return $pdf->stream('documento.pdf');
+
+    }
+
+}

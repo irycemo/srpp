@@ -381,4 +381,5 @@ class CertificadoGravamen extends Component
 
         return view('livewire.certificaciones.certificado-gravamen', compact('certificados'))->extends('layouts.admin');
     }
+
 }

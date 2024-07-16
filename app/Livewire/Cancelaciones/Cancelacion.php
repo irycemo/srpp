@@ -240,11 +240,11 @@ class Cancelacion extends Component
 
                 $this->cancelacion->save();
 
-                $this->dispatch('mostrarMensaje', ['success', "El trámite se rechazó con éxito."]);
-
-                return redirect()->route('cancelacion');
-
             });
+
+            $this->dispatch('mostrarMensaje', ['success', "El trámite se rechazó con éxito."]);
+
+            return redirect()->route('cancelacion');
 
         } catch (\Throwable $th) {
             Log::error("Error al rechazar inscripción de cancelación por el usuario: (id: " . auth()->user()->id . ") " . auth()->user()->name . ". " . $th);

@@ -211,6 +211,9 @@
                 wire:loading.attr="disabled"
                 wire:target="borrar"
             >
+
+                <img wire:loading wire:target="borrar" class="mx-auto h-4 mr-1" src="{{ asset('storage/img/loading3.svg') }}" alt="Loading">
+
                 Borrar
             </x-danger-button>
 

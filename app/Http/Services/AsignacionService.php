@@ -124,8 +124,16 @@ class AsignacionService{
 
     }
 
-    public function obtenerCertificadorGravamen($distrito, $solicitante, $tipo_servicio, $random):int
+    public function obtenerCertificadorGravamen($distrito, $solicitante, $tipo_servicio, $random, $folioReal):int
     {
+
+        if(!$folioReal){
+
+            $roles = ['Certificador Gravamen', 'Pase a folio'];
+        }else{
+
+            $roles = ['Certificador Gravamen'];
+        }
 
         if($distrito != 2 && $solicitante == 'Oficialia de partes'){
 
@@ -156,8 +164,80 @@ class AsignacionService{
                                         ->when($distrito != 2, function($q){
                                             $q->where('ubicacion', '!=', 'Regional 4');
                                         })
+                                        ->whereHas('roles', function($q) use($roles){
+                                            $q->whereIn('name', $roles);
+                                        })
+                                        ->get();
+
+        }
+
+        if($certificadores->count() == 0){
+
+            Log::error('No se encontraron usuario para asignar la certificación.');
+
+            throw new AsignacionServiceException('No se encontraron certificadores para asignar al movimiento registral.');
+
+        }else if($random){
+
+            $certificador = $certificadores->shuffle()->first();
+
+            return $certificador->id;
+
+        }else if($certificadores->count() == 1){
+
+            return $certificadores->first()->id;
+
+        }else{
+
+            return $this->obtenerUltimoUsuarioConAsignacion($certificadores);
+
+        }
+
+    }
+
+    public function obtenerCertificadorPropiedad($distrito, $solicitante, $tipo_servicio, $random, $folioReal):int
+    {
+
+        if(!$folioReal){
+
+            $roles = ['Certificador Propiedad', 'Pase a folio'];
+
+        }else{
+
+            $roles = ['Certificador Propiedad'];
+        }
+
+        if($distrito != 2 && $solicitante == 'Oficialia de partes'){
+
+            if($tipo_servicio == 'ordinario')
+
+                $certificadores = User::with('ultimoMovimientoRegistralAsignado')
+                                        ->where('status', 'activo')
                                         ->whereHas('roles', function($q){
-                                            $q->whereIn('name', ['Certificador Gravamen', 'Pase a folio']);
+                                            $q->where('name', 'Certificador Oficialia');
+                                        })
+                                        ->get();
+            else
+
+                $certificadores = User::with('ultimoMovimientoRegistralAsignado')
+                                        ->where('status', 'activo')
+                                        ->whereHas('roles', function($q){
+                                            $q->where('name', 'Certificador Juridico');
+                                        })
+                                        ->get();
+
+        }else{
+
+            $certificadores = User::with('ultimoMovimientoRegistralAsignado')
+                                        ->where('status', 'activo')
+                                        ->when($distrito == 2, function($q){
+                                            $q->where('ubicacion', 'Regional 4');
+                                        })
+                                        ->when($distrito != 2, function($q){
+                                            $q->where('ubicacion', '!=', 'Regional 4');
+                                        })
+                                        ->whereHas('roles', function($q) use($roles){
+                                            $q->whereIn('name', $roles);
                                         })
                                         ->get();
 
@@ -391,6 +471,7 @@ class AsignacionService{
         if($distrito == 2){
 
             $registradorCancelacion = User::inRandomOrder()
+                                ->where('ubicacion', 'Regional 4')
                                 ->whereHas('roles', function($q){
                                     $q->where('name', 'Registrador Cancelación');
                                 })

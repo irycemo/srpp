@@ -189,6 +189,27 @@ class Gravamen extends Component
 
     }
 
+    public function inactivar(GravamenModelo $gravamen){
+
+        try {
+
+            $gravamen->update([
+                'estado' => 'inactivo',
+                'actualizado_por' => auth()->id(),
+                'observaciones' => $this->gravamen_seleccionado->observaciones .  ' Inactivado por ' . auth()->user()->name . ' mediante pase a folio.',
+            ]);
+
+            $this->cargarGravamenes();
+
+            $this->dispatch('mostrarMensaje', ['success', "El gravamen se inactivó con éxito."]);
+
+        } catch (\Throwable $th) {
+            Log::error("Error al inactivar gravamen en pase a folio por el usuario: (id: " . auth()->user()->id . ") " . auth()->user()->name . ". " . $th);
+            $this->dispatch('mostrarMensaje', ['error', "Ha ocurrido un error."]);
+        }
+
+    }
+
     public function mount(){
 
         if($this->movimientoRegistral->folio_real){
