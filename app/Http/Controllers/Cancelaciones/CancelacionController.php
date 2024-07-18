@@ -15,7 +15,7 @@ class CancelacionController extends Controller
     public function acto(Cancelacion $cancelacion)
     {
 
-        $this->authorize('update', $cancelacion->movimientoRegistral);
+        $this->authorize('view', $cancelacion->movimientoRegistral);
 
         $director = User::where('status', 'activo')->whereHas('roles', function($q){
             $q->where('name', 'Director');

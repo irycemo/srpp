@@ -19,6 +19,7 @@ use App\Models\MovimientoRegistral;
 use Illuminate\Support\Facades\Log;
 use App\Livewire\PaseFolio\PaseFolio;
 use App\Http\Services\AsignacionService;
+use App\Http\Services\SistemaTramitesService;
 
 class Elaboracion extends Component
 {
@@ -522,6 +523,8 @@ class Elaboracion extends Component
 
             }elseif($this->movimientoRegistral->cancelacion){
 
+                $this->revisarCancelaciones();
+
                 $role = 'Cancelación';
 
             }elseif($this->movimientoRegistral->sentencia){
@@ -797,6 +800,20 @@ class Elaboracion extends Component
             }
 
         }
+
+    }
+
+    public function revisarCancelaciones(){
+
+        $cancelacion = $this->movimientoRegistral->folioReal->movimientosRegistrales->where('tomo_gravamen', $this->movimientoRegistral->tomo_gravamen)
+                                                                                        ->where('registro_gravamen', $this->movimientoRegistral->registro_gravamen)
+                                                                                        ->where('folio', '>', 1)
+                                                                                        ->first();
+
+        if(!$cancelacion)
+            (new SistemaTramitesService())->rechazarTramite($this->movimientoRegistral->año, $this->movimientoRegistral->tramite, $this->movimientoRegistral->usuario, 'Se rechaza en pase a folio debido a que el folio real no tiene gravamenes con la información ingresada.');
+
+        $this->movimientoRegistral->update(['estado' => 'rechazado']);
 
     }
 

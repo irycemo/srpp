@@ -100,7 +100,7 @@
 
                     <div class="rounded-lg bg-red-200 lg:w-1/2 mx-auto text-center text-red-700 py-3">
 
-                        El folio real no tiene el gravamen con tomo {{ $this->cancelacion->movimientoRegistral->tomo_gravamen }} folio {{ $this->cancelacion->movimientoRegistral->registro_gravamen }}
+                        El folio real no tiene el gravamen con tomo {{ $this->cancelacion->movimientoRegistral->tomo_gravamen }} registro {{ $this->cancelacion->movimientoRegistral->registro_gravamen }}
 
                     </div>
 

@@ -177,14 +177,14 @@
 
         </div>
 
+        <p style="text-align: right; margin:0;"><strong>Movimiento registral:</strong> {{ $movimientoRegistral->folioReal->folio }}-{{ $movimientoRegistral->folio }}</p>
+
         <p class="parrafo informacion">
             EL CIUDADANO LICENCIADO EN DERECHO <strong>{{ $director }}</strong>, DIRECTOR DEL REGISTRO PÚBLICO DE LA PROPIEDAD
             CERTIFICA QUE DE ACUERDO A LA BUSQUEDA EN EL INMUEBLE:
         </p>
 
         <div class="informacion">
-
-            <p style="text-align: right; margin:0;"><strong>Movimiento registral:</strong> {{ $movimientoRegistral->folioReal->folio }}-{{ $movimientoRegistral->folio }}</p>
 
             <p style="text-align: center; margin:0;"><strong>FOLIO REAL:</strong> {{ $movimientoRegistral->folioReal->folio }}</p>
 
@@ -444,19 +444,19 @@
                         <strong>CELEBRADO POR EL(LOS) ACREDOR(ES):</strong>
                         @foreach ($gravamen->acreedores as $acreedor)
 
-                            {{ $acreedor->persona->nombre }} {{ $acreedor->persona->ap_paterno }} {{ $acreedor->persona->ap_materno }} {{ $acreedor->persona->razon_social }}@if(!$loop->last), @endif
+                            {{ $acreedor->persona->nombre }} {{ $acreedor->persona->ap_paterno }} {{ $acreedor->persona->ap_materno }}{{ $acreedor->persona->razon_social }}@if(!$loop->last), @endif
 
                         @endforeach
-                        <strong>Y COMO DEUDOR(ES):</strong>
+                        <strong> Y COMO DEUDOR(ES):</strong>
                         @foreach ($gravamen->deudores as $deudor)
 
                             @if($deudor->actor)
 
-                                {{ $deudor->actor->persona->nombre }} {{ $deudor->actor->persona->ap_paterno }} {{ $deudor->actor->persona->ap_materno }} {{ $deudor->actor->persona->razon_social }}@if(!$loop->last), @else; @endif
+                                {{ $deudor->actor->persona->nombre }} {{ $deudor->actor->persona->ap_paterno }} {{ $deudor->actor->persona->ap_materno }}{{ $deudor->actor->persona->razon_social }}@if(!$loop->last), @else; @endif
 
                             @else
 
-                                {{ $deudor->persona->nombre }} {{ $deudor->persona->ap_paterno }} {{ $deudor->persona->ap_materno }} {{ $deudor->persona->razon_social }}@if(!$loop->last), @else; @endif
+                                {{ $deudor->persona->nombre }} {{ $deudor->persona->ap_paterno }} {{ $deudor->persona->ap_materno }}{{ $deudor->persona->razon_social }}@if(!$loop->last), @else; @endif
 
                             @endif
 

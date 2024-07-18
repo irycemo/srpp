@@ -269,6 +269,7 @@ class Constantes{
     ];
 
     const ACTOS_INSCRIPCION_GRAVAMEN = [
+        'CREDITO HIPOTECARIO',
         'HIPOTECA',
         'FIANZA JUDICIAL',
         'FIANZA ADMINISTRATIVA',

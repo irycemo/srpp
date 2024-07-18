@@ -438,13 +438,63 @@
 
     <script>
 
-        window.addEventListener('imprimir_documento', event => {
+        window.addEventListener('imprimir_negativo_propiedad', event => {
+
+            const documento = event.detail[0].certificacion;
+
+            var url = "{{ route('certificado_negativo_propiedad_pdf', '')}}" + "/" + documento;
+
+            window.open(url, '_blank');
+
+            window.location.href = "{{ route('certificados_propiedad')}}";
+
+        });
+
+        window.addEventListener('imprimir_propiedad', event => {
 
             const documento = event.detail[0].certificacion;
 
             var url = "{{ route('certificado_propiedad_pdf', '')}}" + "/" + documento;
 
             window.open(url, '_blank');
+
+            window.location.href = "{{ route('certificados_propiedad')}}";
+
+        });
+
+        window.addEventListener('imprimir_unico_propiedad', event => {
+
+            const documento = event.detail[0].certificacion;
+
+            var url = "{{ route('certificado_unico_propiedad_pdf', '')}}" + "/" + documento;
+
+            window.open(url, '_blank');
+
+            window.location.href = "{{ route('certificados_propiedad')}}";
+
+        });
+
+        window.addEventListener('imprimir_unico_propiedad', event => {
+
+            const documento = event.detail[0].certificacion;
+
+            var url = "{{ route('certificado_propiedad_colindancias_pdf', '')}}" + "/" + documento;
+
+            window.open(url, '_blank');
+
+            window.location.href = "{{ route('certificados_propiedad')}}";
+
+        });
+
+        window.addEventListener('imprimir_negativo', event => {
+
+            const documento = event.detail[0].certificacion;
+
+            var url = "{{ route('certificado_negativo_pdf', '')}}" + "/" + documento;
+
+            window.open(url, '_blank');
+
+            window.location.href = "{{ route('certificados_propiedad')}}";
 
         });
 

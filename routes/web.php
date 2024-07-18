@@ -100,7 +100,11 @@ Route::group(['middleware' => ['auth', 'esta.activo']], function(){
 
     Route::get('certificado_propiedad', CertificadoPropiedadIndex::class)->middleware('permission:Certificado propiedad')->name('certificados_propiedad');
     Route::get('certificado_propiedad/{certificacion}', CertificadoPropiedad::class)->middleware('permission:Certificado propiedad')->name('certificado_propiedad');
+    Route::get('certificado_negativo_propiedad_pdf/{movimientoRegistral}', [CertificadoPropiedadController::class, 'certificadoNegativoPropiedad'])->middleware('permission:Certificado propiedad')->name('certificado_negativo_propiedad_pdf');
     Route::get('certificado_propiedad_pdf/{movimientoRegistral}', [CertificadoPropiedadController::class, 'certificadoPropiedad'])->middleware('permission:Certificado propiedad')->name('certificado_propiedad_pdf');
+    Route::get('certificado_unico_propiedad_pdf/{movimientoRegistral}', [CertificadoPropiedadController::class, 'certificadoUnicoPropiedad'])->middleware('permission:Certificado propiedad')->name('certificado_unico_propiedad_pdf');
+    Route::get('certificado_propiedad_colindancias_pdf/{movimientoRegistral}', [CertificadoPropiedadController::class, 'certificadoPropiedadColindancias'])->middleware('permission:Certificado propiedad')->name('certificado_propiedad_colindancias_pdf');
+    Route::get('certificado_negativo_pdf/{movimientoRegistral}', [CertificadoPropiedadController::class, 'certificadoNegativo'])->middleware('permission:Certificado propiedad')->name('certificado_negativo_pdf');
 
     /* Inscripciones */
     Route::get('propiedad', PropiedadIndex::class)->middleware('permission:Propiedad')->name('propiedad');

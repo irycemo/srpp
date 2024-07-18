@@ -25,15 +25,23 @@ class CertificadoPropiedadIndex extends Component
 
     public function elaborar(MovimientoRegistral $movimientoRegistral){
 
-        $movimientos = $movimientoRegistral->folioReal->movimientosRegistrales()->whereIn('estado', ['nuevo', 'elaborado'])->orderBy('folio')->get();
+        if($movimientoRegistral->folioReal){
 
-        if($movimientos->count()){
+            $movimientos = $movimientoRegistral->folioReal->movimientosRegistrales()->whereIn('estado', ['nuevo', 'elaborado'])->orderBy('folio')->get();
 
-            $primerMovimiento = $movimientos->first();
+            if($movimientos->count()){
 
-            if($movimientoRegistral->folio > $primerMovimiento->folio){
+                $primerMovimiento = $movimientos->first();
 
-                $this->dispatch('mostrarMensaje', ['warning', "El movimiento registral: (" . $movimientoRegistral->folioReal->folio . '-' . $primerMovimiento->folio . ') debe elaborace primero.']);
+                if($movimientoRegistral->folio > $primerMovimiento->folio){
+
+                    $this->dispatch('mostrarMensaje', ['warning', "El movimiento registral: (" . $movimientoRegistral->folioReal->folio . '-' . $primerMovimiento->folio . ') debe elaborace primero.']);
+
+                }else{
+
+                    return redirect()->route('certificado_propiedad', $movimientoRegistral->certificacion);
+
+                }
 
             }else{
 
@@ -51,7 +59,19 @@ class CertificadoPropiedadIndex extends Component
 
     public function reimprimir(MovimientoRegistral $movimientoRegistral){
 
-        $this->dispatch('imprimir_documento', ['certificacion' => $movimientoRegistral->certificacion->id]);
+        if($movimientoRegistral->certificacion->tipo_certificado == 1){
+
+            $this->dispatch('imprimir_negativo_propiedad', ['certificacion' => $movimientoRegistral->certificacion->id]);
+
+        }elseif($movimientoRegistral->certificacion->tipo_certificado == 2){
+
+            $this->dispatch('imprimir_propiedad', ['certificacion' => $movimientoRegistral->certificacion->id]);
+
+        }if($movimientoRegistral->certificacion->tipo_certificado == 3){
+
+            $this->dispatch('imprimir_unico_propiedad', ['certificacion' => $movimientoRegistral->certificacion->id]);
+
+        }
 
     }
 

@@ -3,6 +3,7 @@
 namespace App\Models;
 
 use App\Traits\ModelosTrait;
+use App\Models\CertificadoPersona;
 use App\Models\MovimientoRegistral;
 use Illuminate\Database\Eloquent\Model;
 use OwenIt\Auditing\Contracts\Auditable;
@@ -27,6 +28,10 @@ class Certificacion extends Model implements Auditable
 
     public function movimientoRegistral(){
         return $this->belongsTo(MovimientoRegistral::class);
+    }
+
+    public function personas(){
+        return $this->hasMany(CertificadoPersona::class);
     }
 
 }

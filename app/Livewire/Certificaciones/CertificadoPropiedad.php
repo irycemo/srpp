@@ -2,6 +2,7 @@
 
 namespace App\Livewire\Certificaciones;
 
+use App\Models\Actor;
 use App\Models\Predio;
 use App\Models\Persona;
 use Livewire\Component;
@@ -12,13 +13,14 @@ use App\Models\Certificacion;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
 use App\Http\Services\SistemaTramitesService;
+use App\Models\CertificadoPersona;
 
 class CertificadoPropiedad extends Component
 {
 
     public Certificacion $certificacion;
 
-    public $moviminetoRegistral;
+    public $movimientoRegistral;
 
     public $modalRechazar = false;
 
@@ -32,14 +34,33 @@ class CertificadoPropiedad extends Component
     public $propietarioOld;
     public $predio;
     public $predioOld;
+    public $flagPropietario = false;
 
-    public function abrirModalRechazar(Certificacion $modelo){
+    public $observaciones;
+
+    public function updated($property, $value){
+
+        if(in_array($property, ['nombre', 'ap_paterno', 'ap_materno'])){
+
+            $this->reset(['propietario', 'propietarioOld', 'predio', 'predioOld', 'flagPropietario', 'razon_social']);
+
+        }
+
+        if($property == 'razon_social'){
+
+            $this->reset(['propietario', 'propietarioOld', 'predio', 'predioOld', 'flagPropietario', 'nombre', 'ap_paterno', 'ap_materno']);
+
+        }
+
+    }
+
+    public function abrirModalRechazar(){
 
         if(!auth()->user()->hasRole(['Certificador Juridico', 'Certificador Oficialia'])){
 
-            if($modelo->movimientoRegistral->tipo_servicio == 'ordinario'){
+            if($this->certificacion->movimientoRegistral->tipo_servicio == 'ordinario'){
 
-                if(!($this->calcularDiaElaboracion($modelo) <= now())){
+                if(!($this->calcularDiaElaboracion($this->certificacion) <= now())){
 
                     $this->dispatch('mostrarMensaje', ['error', "El trámite puede elaborarse apartir del " . $this->calcularDiaElaboracion($modelo)->format('d-m-Y')]);
 
@@ -51,16 +72,13 @@ class CertificadoPropiedad extends Component
 
         }
 
-        $this->resetearTodo();
-            $this->modalRechazar = true;
-            $this->editar = true;
-
-        if($this->modelo_editar->isNot($modelo))
-            $this->modelo_editar = $modelo;
+        $this->modalRechazar = true;
 
     }
 
     public function buscarPropietario(){
+
+        $this->reset(['propietario', 'propietarioOld', 'predio', 'predioOld', 'flagPropietario']);
 
         $this->validate([
             'nombre' => 'required',
@@ -75,7 +93,7 @@ class CertificadoPropiedad extends Component
                             ->first();
 
         if($persona)
-            $this->propietario = Propietario::where('persona_id', $persona->id)->first();
+            $this->propietario = Actor::where('persona_id', $persona->id)->where('tipo_actor', 'propietario')->first();
 
         if(!$this->propietario){
 
@@ -87,21 +105,29 @@ class CertificadoPropiedad extends Component
                         ->where('materno', $this->ap_materno)
                         ->first();
 
-            if(!$this->propietarioOld){
+            if($this->propietarioOld)
+                $this->predioOld = PropiedadOld::where('distrito', $this->propietarioOld->distrito)
+                                                ->where('tomo', $this->propietarioOld->tomo)
+                                                ->where('registro', $this->propietarioOld->registro)
+                                                ->where('noprop', $this->propietarioOld->noprop)
+                                                ->where('status', '!=', 'V')
+                                                ->first();
 
-                $this->dispatch('mostrarMensaje', ['error', "Sin resultados"]);
+            if(!$this->predioOld){
+
+                $this->reset(['propietario', 'propietarioOld', 'predio', 'predioOld', 'flagPropietario']);
+
+                $this->flagPropietario = true;
+
+                $this->dispatch('mostrarMensaje', ['success', "Sin resultados"]);
 
                 return;
-
-            }else{
-
-                $this->predioOld = Propiedadold::find($this->propietarioOld->idPropiedad);
 
             }
 
         }else{
 
-            $this->predio = Predio::find($this->propietario->predio_id);
+            $this->predio = Predio::find($this->propietario->actorable_id);
 
         }
 
@@ -169,15 +195,13 @@ class CertificadoPropiedad extends Component
 
     }
 
-    public function generarCertificado(){
+    public function generarCertificado($tipo){
 
-        $this->modal = false;
+        if($this->certificacion->movimientoRegistral->tipo_servicio == 'ordinario'){
 
-        if($this->moviminetoRegistral->tipo_servicio == 'ordinario'){
+            if(!($this->calcularDiaElaboracion($this->certificacion) <= now())){
 
-            if(!($this->calcularDiaElaboracion($this->modelo_editar) <= now())){
-
-                $this->dispatch('mostrarMensaje', ['error', "El trámite puede elaborarse apartir del " . $this->calcularDiaElaboracion($this->modelo_editar)->format('d-m-Y')]);
+                $this->dispatch('mostrarMensaje', ['error', "El trámite puede elaborarse apartir del " . $this->calcularDiaElaboracion($this->certificacion)->format('d-m-Y')]);
 
                 return;
 
@@ -187,31 +211,66 @@ class CertificadoPropiedad extends Component
 
         try{
 
-            DB::transaction(function (){
+            DB::transaction(function () use ($tipo){
 
-                $this->moviminetoRegistral->estado = 'elaborado';
+                $this->certificacion->movimientoRegistral->estado = 'elaborado';
 
-                $this->moviminetoRegistral->save();
+                $this->certificacion->movimientoRegistral->save();
 
                 if(auth()->user()->hasRole(['Supervisor certificaciones', 'Supervisor uruapan'])){
 
-                    $this->modelo_editar->reimpreso_en = now();
+                    $this->certificacion->reimpreso_en = now();
 
                 }
 
-                $this->modelo_editar->actualizado_por = auth()->user()->id;
+                $this->certificacion->actualizado_por = auth()->user()->id;
+                $this->certificacion->tipo_certificado = $tipo;
+                $this->certificacion->save();
 
-                $this->modelo_editar->save();
+                if($tipo == 5){
 
-                $this->dispatch('imprimir_documento', ['gravamen' => $this->moviminetoRegistral->id]);
+                    $persona = Persona::firstOrCreate(
+                                                        [
+                                                            'tipo' => 'FISICA',
+                                                            'nombre' => $this->nombre,
+                                                            'ap_paterno' => $this->ap_paterno,
+                                                            'ap_materno' => $this->ap_materno
+                                                        ],
+                                                        [
+                                                            'tipo' => 'FISICA',
+                                                            'nombre' => $this->nombre,
+                                                            'ap_paterno' => $this->ap_paterno,
+                                                            'ap_materno' => $this->ap_materno
+                                                        ]
+                                                    );
 
-                $this->modal = false;
+                    CertificadoPersona::create(['certificacion_id' => $this->certificacion->id, 'persona_id' => $persona->id]);
 
-                $this->reset('predio');
+                }
 
             });
 
+            if($tipo == 1){
 
+                $this->dispatch('imprimir_negativo_propiedad', ['certificacion' => $this->certificacion->movimientoRegistral->id]);
+
+            }elseif($tipo == 2){
+
+                $this->dispatch('imprimir_propiedad', ['certificacion' => $this->certificacion->movimientoRegistral->id]);
+
+            }if($tipo == 3){
+
+                $this->dispatch('imprimir_unico_propiedad', ['certificacion' => $this->certificacion->movimientoRegistral->id]);
+
+            }if($tipo == 4){
+
+                $this->dispatch('imprimir_propiedad_colindancias', ['certificacion' => $this->certificacion->movimientoRegistral->id]);
+
+            }if($tipo == 5){
+
+                $this->dispatch('imprimir_negativo', ['certificacion' => $this->certificacion->movimientoRegistral->id]);
+
+            }
 
         } catch (\Throwable $th) {
 
@@ -223,9 +282,6 @@ class CertificadoPropiedad extends Component
     }
 
     public function finalizarSupervisor(Certificacion $modelo){
-
-        if($this->modelo_editar->isNot($modelo))
-            $this->modelo_editar = $modelo;
 
         if($modelo->movimientoRegistral->tipo_servicio == 'ordinario'){
 
@@ -243,19 +299,19 @@ class CertificadoPropiedad extends Component
 
             DB::transaction(function () use ($modelo){
 
-                $this->modelo_editar->finalizado_en = now();
+                $this->certificacion->finalizado_en = now();
 
-                $this->modelo_editar->firma = now();
+                $this->certificacion->firma = now();
 
-                $this->modelo_editar->actualizado_por = auth()->user()->id;
+                $this->certificacion->actualizado_por = auth()->user()->id;
 
-                $this->modelo_editar->movimientoRegistral->estado = 'concluido';
+                $this->certificacion->movimientoRegistral->estado = 'concluido';
 
-                $this->modelo_editar->movimientoRegistral->save();
+                $this->certificacion->movimientoRegistral->save();
 
-                $this->modelo_editar->save();
+                $this->certificacion->save();
 
-                (new SistemaTramitesService())->finaliarTramite($this->modelo_editar->movimientoRegistral->año, $this->modelo_editar->movimientoRegistral->tramite, $this->modelo_editar->movimientoRegistral->usuario, 'concluido');
+                (new SistemaTramitesService())->finaliarTramite($this->certificacion->movimientoRegistral->año, $this->certificacion->movimientoRegistral->tramite, $this->certificacion->movimientoRegistral->usuario, 'concluido');
 
                 $this->resetearTodo();
 
@@ -277,7 +333,7 @@ class CertificadoPropiedad extends Component
 
         if(!auth()->user()->hasRole(['Certificador Juridico', 'Certificador Oficialia'])){
 
-            if($this->modelo_editar->movimientoRegistral->tipo_servicio == 'ordinario'){
+            if($this->certificacion->movimientoRegistral->tipo_servicio == 'ordinario'){
 
                 if(!($this->calcularDiaElaboracion($this->modelo_editar) <= now())){
 
@@ -301,21 +357,19 @@ class CertificadoPropiedad extends Component
 
                 $observaciones = auth()->user()->name . ' rechaza el ' . now() . ', con motivo: ' . $this->observaciones ;
 
-                (new SistemaTramitesService())->rechazarTramite($this->modelo_editar->movimientoRegistral->año, $this->modelo_editar->movimientoRegistral->tramite, $this->modelo_editar->movimientoRegistral->usuario, $observaciones);
+                (new SistemaTramitesService())->rechazarTramite($this->certificacion->movimientoRegistral->año, $this->certificacion->movimientoRegistral->tramite, $this->certificacion->movimientoRegistral->usuario, $observaciones);
 
-                $this->modelo_editar->movimientoRegistral->update(['estado' => 'rechazado', 'actualizado_por' => auth()->user()->id]);
+                $this->certificacion->movimientoRegistral->update(['estado' => 'rechazado', 'actualizado_por' => auth()->user()->id]);
 
-                $this->modelo_editar->actualizado_por = auth()->user()->id;
+                $this->certificacion->actualizado_por = auth()->user()->id;
 
-                $this->modelo_editar->observaciones = $this->modelo_editar->observaciones . $observaciones;
+                $this->certificacion->observaciones = $this->certificacion->observaciones . $observaciones;
 
-                $this->modelo_editar->save();
-
-                $this->dispatch('mostrarMensaje', ['success', "El trámite se rechazó con éxito."]);
-
-                $this->resetearTodo();
+                $this->certificacion->save();
 
             });
+
+            return redirect()->route('certificados_propiedad');
 
         } catch (\Throwable $th) {
 

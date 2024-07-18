@@ -24,7 +24,7 @@ class GravamenController extends Controller
                                                             $q->where('registro_gravamen', $data['registro_gravamen']);
                                                         })
                                                         ->where('distrito', $data['distrito'])
-                                                        ->where('seccion', $data['seccion'])
+                                                        ->where('seccion', 'Gravamen')
                                                         ->whereHas('folioReal', function($q) use($data){
                                                             $q->where('folio', $data['folio_real']);
                                                         })

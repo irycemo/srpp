@@ -418,7 +418,7 @@ class MovimientoRegistralService{
 
         }
 
-        $certificaciones = ['DC90', 'DC91', 'DC92', 'DC93', 'DL13', 'DL14', 'DL07'];
+        $certificaciones = ['DC90', 'DC91', 'DC92', 'DC93', 'DL13', 'DL14', 'DL07', 'DL10', 'DL11'];
 
         if(in_array($servicio, $certificaciones)){
 
