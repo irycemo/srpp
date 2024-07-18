@@ -14,7 +14,7 @@ class Kernel extends ConsoleKernel
     {
         $schedule->command('expirar:consultas')->daily();
         $schedule->command('expirar:copias')->daily();
-        $schedule->command('reasignar:usuario')->daily();
+        /* $schedule->command('reasignar:usuario')->daily(); */
     }
 
     /**
