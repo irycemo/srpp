@@ -144,6 +144,8 @@ class ConsultasCertificaciones extends Component
 
             $this->dispatch('mostrarMensaje', ['error', "No se encontro el trámite."]);
 
+            return;
+
         }
 
         if(!$this->certificacion->certificacion){
