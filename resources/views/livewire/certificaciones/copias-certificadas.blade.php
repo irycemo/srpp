@@ -47,7 +47,7 @@
                 <x-table.heading sortable wire:click="sortBy('año')" :direction="$sort === 'año' ? $direction : null" >Año</x-table.heading>
                 <x-table.heading sortable wire:click="sortBy('tramite')" :direction="$sort === 'tramite' ? $direction : null" ># Control</x-table.heading>
                 <x-table.heading sortable wire:click="sortBy('usuario')" :direction="$sort === 'usuario' ? $direction : null" >Usuario</x-table.heading>
-                @if (auth()->user()->hasRole('Administrador'))
+                @if (auth()->user()->hasRole(['Administrador', 'Jefe de departamento']))
                     <x-table.heading sortable wire:click="sortBy('estado')" :direction="$sort === 'estado' ? $direction : null" >Estado</x-table.heading>
                 @endif
                 <x-table.heading sortable wire:click="sortBy('tipo_servicio')" :direction="$sort === 'tipo_servicio' ? $direction : null" >Tipo de servicio</x-table.heading>
@@ -105,7 +105,7 @@
 
                         </x-table.cell>
 
-                        @if (auth()->user()->hasRole('Administrador'))
+                        @if (auth()->user()->hasRole(['Administrador', 'Jefe de departamento']))
 
                             <x-table.cell>
 

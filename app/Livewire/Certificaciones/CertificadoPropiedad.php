@@ -36,7 +36,24 @@ class CertificadoPropiedad extends Component
     public $predioOld;
     public $flagPropietario = false;
 
+    public $propietarios = [];
+
     public $observaciones;
+
+    protected function rules(){
+        return [
+            'propietarios.*' => 'required',
+            'propietarios.*.nombre' => 'required|string',
+            'propietarios.*.ap_paterno' => 'required|string',
+            'propietarios.*.ap_materno' => 'required|string',
+         ];
+    }
+
+    protected $validationAttributes  = [
+        'propietarios.*.nombre' => 'nombre',
+        'propietarios.*.ap_paterno' => 'apellido paterno',
+        'propietarios.*.ap_materno' => 'apellido materno',
+    ];
 
     public function updated($property, $value){
 
@@ -197,6 +214,8 @@ class CertificadoPropiedad extends Component
 
     public function generarCertificado($tipo){
 
+        $this->validate();
+
         if($this->certificacion->movimientoRegistral->tipo_servicio == 'ordinario'){
 
             if(!($this->calcularDiaElaboracion($this->certificacion) <= now())){
@@ -227,24 +246,19 @@ class CertificadoPropiedad extends Component
                 $this->certificacion->tipo_certificado = $tipo;
                 $this->certificacion->save();
 
+                if($tipo == 2){
+
+                    foreach ($this->propietarios as $propietario) {
+
+                        $this->procesarPersona($propietario['nombre'], $propietario['ap_paterno'], $propietario['ap_materno']);
+
+                    }
+
+                }
+
                 if($tipo == 5){
 
-                    $persona = Persona::firstOrCreate(
-                                                        [
-                                                            'tipo' => 'FISICA',
-                                                            'nombre' => $this->nombre,
-                                                            'ap_paterno' => $this->ap_paterno,
-                                                            'ap_materno' => $this->ap_materno
-                                                        ],
-                                                        [
-                                                            'tipo' => 'FISICA',
-                                                            'nombre' => $this->nombre,
-                                                            'ap_paterno' => $this->ap_paterno,
-                                                            'ap_materno' => $this->ap_materno
-                                                        ]
-                                                    );
-
-                    CertificadoPersona::create(['certificacion_id' => $this->certificacion->id, 'persona_id' => $persona->id]);
+                    $this->procesarPersona($this->nombre, $this->ap_paterno, $this->ap_materno);
 
                 }
 
@@ -375,6 +389,37 @@ class CertificadoPropiedad extends Component
 
             Log::error("Error al rechazar certificado de gravamen por el usuario: (id: " . auth()->user()->id . ") " . auth()->user()->name . ". " . $th);
             $this->dispatch('mostrarMensaje', ['error', "Ha ocurrido un error."]);
+        }
+
+    }
+
+    public function procesarPersona($nombre, $ap_paterno, $ap_materno){
+
+        $persona = Persona::firstOrCreate(
+            [
+                'tipo' => 'FISICA',
+                'nombre' => $nombre,
+                'ap_paterno' => $ap_paterno,
+                'ap_materno' => $ap_materno
+            ],
+            [
+                'tipo' => 'FISICA',
+                'nombre' => $nombre,
+                'ap_paterno' => $ap_paterno,
+                'ap_materno' => $ap_materno
+            ]
+        );
+
+        CertificadoPersona::create(['certificacion_id' => $this->certificacion->id, 'persona_id' => $persona->id]);
+
+    }
+
+    public function mount(){
+
+        for ($i=0; $i < $this->certificacion->numero_paginas; $i++) {
+
+            $this->propietarios [] = ['nombre' => null, 'ap_paterno' => null, 'ap_materno' => null];
+
         }
 
     }

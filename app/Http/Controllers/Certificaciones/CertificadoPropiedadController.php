@@ -6,11 +6,12 @@ use Carbon\Carbon;
 use App\Models\User;
 use App\Models\Predio;
 use Illuminate\Http\Request;
+use App\Constantes\Constantes;
 use Barryvdh\DomPDF\Facade\Pdf;
+use App\Models\CertificadoPersona;
 use App\Models\MovimientoRegistral;
 use App\Http\Controllers\Controller;
 use Luecano\NumeroALetras\NumeroALetras;
-use App\Constantes\Constantes;
 
 class CertificadoPropiedadController extends Controller
 {
@@ -87,7 +88,9 @@ class CertificadoPropiedadController extends Controller
 
         $distrito = Constantes::DISTRITOS[$movimientoRegistral->folioReal->distrito_antecedente];
 
-        $pdf = Pdf::loadView('certificaciones.certificadoPropiedad', compact('predio', 'distrito', 'director', 'movimientoRegistral', 'fecha', 'registro_numero', 'tomo_numero', 'formatter'));
+        $personas = CertificadoPersona::with('persona')->where('certificacion_id', $movimientoRegistral->certificacion->id)->get();
+
+        $pdf = Pdf::loadView('certificaciones.certificadoPropiedad', compact('predio', 'distrito', 'director', 'movimientoRegistral', 'fecha', 'registro_numero', 'tomo_numero', 'formatter', 'personas'));
 
         $pdf->render();
 

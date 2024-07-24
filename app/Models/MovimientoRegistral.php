@@ -7,6 +7,7 @@ use App\Models\FolioReal;
 use App\Models\Propiedad;
 use App\Models\Cancelacion;
 use App\Traits\ModelosTrait;
+use App\Models\Certificacion;
 use App\Constantes\Constantes;
 use App\Models\FolioRealPersona;
 use Illuminate\Database\Eloquent\Model;

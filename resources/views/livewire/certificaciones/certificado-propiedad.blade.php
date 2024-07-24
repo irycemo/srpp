@@ -26,6 +26,42 @@
 
             <div class="bg-white rounded-lg p-4 shadow-lg w-full  mx-auto mb-5">
 
+                <div class="lg:w-1/2 mx-auto mb-5">
+
+                    <p class="text-center"><strong>Propietarios</strong></p>
+
+                    @foreach ($propietarios as $index => $propietario)
+
+                        <div class="flex gap-3 justify-center items-center">
+
+                            <x-input-group for="nombre" label="Nombre" :error="$errors->first('propietarios.{{ $index }}.nombre')" class="w-full">
+
+                                <x-input-text id="nombre" wire:model.live.debounce="propietarios.{{ $index }}.nombre" />
+
+                            </x-input-group>
+
+                            <x-input-group for="ap_paterno" label="Apellido paterno" :error="$errors->first('propietarios.{{ $index }}.ap_paterno')" class="w-full">
+
+                                <x-input-text id="ap_paterno" wire:model.live.debounce="propietarios.{{ $index }}.ap_paterno" />
+
+                            </x-input-group>
+
+                            <x-input-group for="ap_materno" label="Apellido materno" :error="$errors->first('propietarios.{{ $index }}.ap_materno')" class="w-full">
+
+                                <x-input-text id="ap_materno" wire:model.live.debounce="propietarios.{{ $index }}.ap_materno" />
+
+                            </x-input-group>
+
+                        </div>
+
+                    @endforeach
+
+                </div>
+
+            </div>
+
+            <div class="bg-white rounded-lg p-4 shadow-lg w-full  mx-auto mb-5">
+
                 <p class="text-center"><strong>Ubicación del inmueble</strong></p>
 
                 <div class="text-gray-500 text-sm leading-relaxed lg:w-1/2 mx-auto mb-5">

@@ -61,15 +61,15 @@ class CertificadoPropiedadIndex extends Component
 
         if($movimientoRegistral->certificacion->tipo_certificado == 1){
 
-            $this->dispatch('imprimir_negativo_propiedad', ['certificacion' => $movimientoRegistral->certificacion->id]);
+            $this->dispatch('imprimir_negativo_propiedad', ['certificacion' => $movimientoRegistral->id]);
 
         }elseif($movimientoRegistral->certificacion->tipo_certificado == 2){
 
-            $this->dispatch('imprimir_propiedad', ['certificacion' => $movimientoRegistral->certificacion->id]);
+            $this->dispatch('imprimir_propiedad', ['certificacion' => $movimientoRegistral->id]);
 
         }if($movimientoRegistral->certificacion->tipo_certificado == 3){
 
-            $this->dispatch('imprimir_unico_propiedad', ['certificacion' => $movimientoRegistral->certificacion->id]);
+            $this->dispatch('imprimir_unico_propiedad', ['certificacion' => $movimientoRegistral->id]);
 
         }
 

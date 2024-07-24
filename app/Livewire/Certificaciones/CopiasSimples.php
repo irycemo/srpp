@@ -411,7 +411,7 @@ class CopiasSimples extends Component
                                             ->orderBy($this->sort, $this->direction)
                                             ->paginate($this->pagination);
 
-        }else{
+        }elseif(auth()->user()->hasRole(['Administrador', 'Jefe de departamento'])){
 
             $copias = MovimientoRegistral::with('asignadoA', 'supervisor', 'actualizadoPor', 'certificacion.actualizadoPor')
                                             ->where(function($q){
