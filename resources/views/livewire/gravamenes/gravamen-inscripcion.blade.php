@@ -24,7 +24,7 @@
 
         </div>
 
-        <span class="flex items-center justify-center ext-gray-700">Datos del gravamen</span>
+        <span class="flex items-center justify-center text-gray-700">Datos del gravamen</span>
 
         <div class="flex gap-3 items-center w-full lg:w-1/2 justify-center mx-auto mb-4">
 
@@ -43,6 +43,10 @@
                 </x-input-select>
 
             </x-input-group>
+
+        </div>
+
+        <div class="flex gap-3 items-center w-full lg:w-1/2 justify-center mx-auto mb-4">
 
             <x-input-group for="gravamen.tipo" label="Tipo" :error="$errors->first('gravamen.tipo')" class="w-full col-span-2">
 
@@ -73,12 +77,6 @@
                     </x-input-select>
 
                 </div>
-
-            </x-input-group>
-
-            <x-input-group for="gravamen.fecha_inscripcion" label="Fecha de inscripción" :error="$errors->first('gravamen.fecha_inscripcion')" class="w-full">
-
-                <x-input-text type="date" id="gravamen.fecha_inscripcion" wire:model="gravamen.fecha_inscripcion" />
 
             </x-input-group>
 

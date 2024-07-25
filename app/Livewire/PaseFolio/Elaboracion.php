@@ -773,6 +773,8 @@ class Elaboracion extends Component
 
             foreach($this->movimientoRegistral->folioReal->sentencias as $sentencia){
 
+                if($sentencia->movimientoRegistral->folio == 1) continue;
+
                 $sentencia->movimientoRegistral->update([
                     'usuario_supervisor' => (new AsignacionService())->obtenerSupervisorGravamen($this->movimientoRegistral->getRawOriginal('distrito')),
                     'estado' => 'concluido'
@@ -791,6 +793,8 @@ class Elaboracion extends Component
         if($this->movimientoRegistral->folioReal->varios->count()){
 
             foreach($this->movimientoRegistral->folioReal->varios as $vario){
+
+                if($vario->movimientoRegistral->folio == 1) continue;
 
                 $vario->movimientoRegistral->update([
                     'usuario_supervisor' => (new AsignacionService())->obtenerSupervisorGravamen($this->movimientoRegistral->getRawOriginal('distrito')),

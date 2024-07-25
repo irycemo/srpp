@@ -83,7 +83,6 @@ class GravamenInscripcion extends Component
             'gravamen.acto_contenido' => 'required',
             'gravamen.valor_gravamen' => 'required|numeric',
             'gravamen.divisa' => ['required', Rule::in($this->divisas)],
-            'gravamen.fecha_inscripcion' => 'required',
             'gravamen.estado' => 'required',
             'gravamen.observaciones' => utf8_encode('regex:/^[áéíóúÁÉÍÓÚñÑa-zA-Z-0-9$#.() ]*$/'),
          ];
@@ -388,7 +387,16 @@ class GravamenInscripcion extends Component
             'municipio' => 'nullable|' . utf8_encode('regex:/^[áéíóúÁÉÍÓÚñÑa-zA-Z-0-9$#.() ]*$/'),
         ]);
 
-        $persona = Persona::where('rfc', $this->rfc)->first();
+        $persona = Persona::query()
+                    ->where(function($q){
+                        $q->when($this->nombre, fn($q) => $q->where('nombre', $this->nombre))
+                            ->when($this->ap_paterno, fn($q) => $q->where('ap_paterno', $this->ap_paterno))
+                            ->when($this->ap_materno, fn($q) => $q->where('ap_materno', $this->ap_materno));
+                    })
+                    ->when($this->razon_social, fn($q) => $q->orWhere('razon_social', $this->razon_social))
+                    ->when($this->rfc, fn($q) => $q->orWhere('rfc', $this->rfc))
+                    ->when($this->curp, fn($q) => $q->orWhere('curp', $this->curp))
+                    ->first();
 
         if(!$persona){
 
@@ -645,6 +653,7 @@ class GravamenInscripcion extends Component
             DB::transaction(function () {
 
                 $this->gravamen->estado = 'activo';
+                $this->gravamen->fecha_inscripcion = now()->toDateString();
                 $this->gravamen->actualizado_por = auth()->id();
                 $this->gravamen->save();
 
