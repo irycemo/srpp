@@ -168,7 +168,7 @@
             <div class="informacion">
 
                 <div style="text-align: right">
-                    <p style="margin:0;"><strong>FOLIO REAL:</strong>{{ $predio->folioReal->folio }}-{{ $vario->movimientoRegistral->folio }}</p>
+                    <p style="margin:0;"><strong>movimiento registral:</strong>{{ $predio->folioReal->folio }}-{{ $vario->movimientoRegistral->folio }}</p>
                     <p style="margin:0;"><strong>DISTRITO:</strong> {{ $vario->movimientoRegistral->distrito}}</p>
                 </div>
 
@@ -459,7 +459,7 @@
 
 
                 <p class="parrafo">
-                    A SOLICITUD DE: <strong>{{ $vario->movimientoRegistral->solicitante }}</strong> EXPEDIDO EL PRESENTE CERTIFICADO EN LA CIUDAD DE MORELIA, MICHOACÁN, A LAS
+                    A SOLICITUD DE: <strong>{{ $vario->movimientoRegistral->solicitante }}</strong> EXPEDIDO EL PRESENTE CERTIFICADO EN LA CIUDAD DE @if($predio->folioReal->distrito== '02 Uruapan' ) uruapan @else MORELIA @endif, MICHOACÁN, A LAS
                     {{ Carbon\Carbon::now()->locale('es')->translatedFormat('H:i:s \d\e\l l d \d\e F \d\e\l Y'); }}.
                 </p>
 
@@ -527,7 +527,7 @@
                             <td style="padding-right: 40px; text-align:left; ; vertical-align: bottom; white-space: nowrap;">
 
                                 {{-- <p><strong>FECHA DE ENTRADA:</strong>{{ $vario->movimientoRegistral->created_at->format('d-m-Y') }}</p> --}}
-                                <p style="margin: 0"><strong>Fecha de impresión: </strong>{{ now()->format('d-m-Y H:i:s') }}</p>
+                                <p style="margin: 0"><strong>Fecha de impresión: </strong>{{ now()->format('d/m/Y H:i:s') }}</p>
                                 <p style="margin: 0"><strong>IMPRESO POR: </strong>{{  auth()->user()->name }}</p>
 
                             </td>

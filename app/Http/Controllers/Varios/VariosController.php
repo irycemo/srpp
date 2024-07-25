@@ -45,6 +45,8 @@ class VariosController extends Controller
 
         $canvas->page_text(480, 794, "Página: {PAGE_NUM} de {PAGE_COUNT}", null, 10, array(1, 1, 1));
 
+        $canvas->page_text(35, 794, $vario->movimientoRegistral->folioReal->folio  .'-' . $vario->movimientoRegistral->folio, null, 9, array(1, 1, 1));
+
         return $pdf->stream('documento.pdf');
 
     }
