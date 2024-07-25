@@ -86,7 +86,7 @@ class GravamenIndex extends Component
     {
 
 
-        if(auth()->user()->hasRole(['Gravamen'])){
+        if(auth()->user()->hasRole(['Gravamen', 'Registrador Gravamen'])){
 
             $movimientos = MovimientoRegistral::with('gravamen', 'actualizadoPor', 'folioReal')
                                                     ->whereHas('folioReal', function($q){

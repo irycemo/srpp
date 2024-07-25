@@ -752,6 +752,8 @@ class Elaboracion extends Component
 
             foreach($this->movimientoRegistral->folioReal->gravamenes as $gravamen){
 
+                if($gravamen->movimientoRegistral->folio == 1) continue;
+
                 $gravamen->movimientoRegistral->update([
                     'usuario_supervisor' => (new AsignacionService())->obtenerSupervisorGravamen($this->movimientoRegistral->getRawOriginal('distrito')),
                     'estado' => 'concluido'
