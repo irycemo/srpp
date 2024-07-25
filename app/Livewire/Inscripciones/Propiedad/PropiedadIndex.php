@@ -24,6 +24,14 @@ class PropiedadIndex extends Component
 
     public function elaborar(MovimientoRegistral $movimientoRegistral){
 
+        if($movimientoRegistral->folioReal->avisoPreventivo()){
+
+            $this->dispatch('mostrarMensaje', ['warning', "El folio real tiene un aviso preventivo vigente."]);
+
+            return;
+
+        }
+
         $movimientos = $movimientoRegistral->folioReal->movimientosRegistrales()->whereIn('estado', ['nuevo', 'elaborado'])->orderBy('folio')->get();
 
         if($movimientos->count()){

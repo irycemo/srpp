@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use Carbon\Carbon;
 use App\Models\Vario;
 use App\Models\Predio;
 use App\Models\Gravamen;
@@ -81,6 +82,34 @@ class FolioReal extends Model implements Auditable
 
     public function antecedentes(){
         return $this->hasMany(Antecedente::class, 'folio_real');
+    }
+
+    public function avisoPreventivo(){
+
+        $primerAviso = $this->movimientosRegistrales()
+                                        ->whereHas('vario', function($q){
+                                            $q->whereIn('servicio', ['DL09']);
+                                        })
+                                        ->orderBy('created_at', 'desc')
+                                        ->first();
+
+        if($primerAviso) {
+
+            if(now() > Carbon::parse($primerAviso->created_at)->addDays(30)){
+
+                return null;
+
+            }else{
+
+                return $primerAviso->vario;
+
+            }
+
+        }else{
+
+            return null;
+        }
+
     }
 
 }

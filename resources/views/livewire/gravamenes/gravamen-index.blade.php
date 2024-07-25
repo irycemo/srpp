@@ -102,7 +102,7 @@
 
                         @if (!auth()->user()->hasRole('Administrador'))
 
-                            @if (auth()->user()->hasRole(['Supervisor propiedad', 'Supervisor uruapan']))
+                            @if (auth()->user()->hasRole(['Supervisor gravamen', 'Supervisor uruapan']))
 
                                 <x-table.cell>
 

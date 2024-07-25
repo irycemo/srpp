@@ -170,9 +170,14 @@
 
     <main>
 
-        <div>
+        <div style="text-align: center; font-weight: bold; font-size: 11px;">
+            <p style="margin: 0">GOBIERNO DEL ESTADO DE MICHOACÁN DE OCAMPO</p>
+            <P style="margin: 0">SECRETARÍA DE FINANZAS Y ADMINISTRACIÓN</P>
+            <P style="margin: 0">INSTITUTO REGISTRAL Y CATASTRAL DEL ESTADO DE MICHOACÁN</P>
+            <P style="margin: 0">DIRECCIÓN DEL REGISTRO PÚBLICO  DE LA PROPIEDAD</P>
+        </div>
 
-            <p class="titulo">DIRECCIÓN DE REGISTRO PÚBLICO DE LA PROPIEDAD</p>
+        <div>
             <p class="titulo">CERTIFICADO DE GRAVAMEN O DE LIBERTAD DE GRAVAMEN</p>
 
         </div>
@@ -472,6 +477,28 @@
 
                 <p class="parrafo">
                     <strong style="text-decoration: underline">no se encontro constancia de que reporte grvamen alguno.</strong>
+                </p>
+
+                <br>
+
+            @endif
+
+            @if($aviso)
+
+                <p><strong>REPORTA un aviso preventivo:</strong></p>
+
+                <br>
+
+                <p class="parrafo">
+                    <strong>acto: </strong>{{ $aviso->acto_contenido }}
+                </p>
+
+                <p class="parrafo">
+                    <strong>movimiento registral: </strong>{{ $aviso->movimientoRegistral->folioReal->folio }}-{{ $aviso->movimientoRegistral->folio }}
+                </p>
+
+                <p class="parrafo">
+                    <strong>descripción: </strong>{{ $aviso->descripcion }}
                 </p>
 
                 <br>

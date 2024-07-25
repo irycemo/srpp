@@ -47,7 +47,9 @@ class CertificadoGravamenController extends Controller
 
         $tomo_numero = $formatter->toWords($predio->folioReal->tomo_antecedente);
 
-        $pdf = Pdf::loadView('certificaciones.certificadoGravamen', compact('predio', 'director', 'movimientoRegistral', 'gravamenes', 'fecha', 'registro_numero', 'tomo_numero', 'formatter'));
+        $aviso = $movimientoRegistral->FolioReal->avisoPreventivo();
+
+        $pdf = Pdf::loadView('certificaciones.certificadoGravamen', compact('predio', 'director', 'movimientoRegistral', 'gravamenes', 'fecha', 'registro_numero', 'tomo_numero', 'formatter', 'aviso'));
 
         $pdf->render();
 
