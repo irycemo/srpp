@@ -426,18 +426,26 @@ class Varios extends Component
 
     public function obtenerSupervisor(){
 
-        return User::with('ultimoMovimientoRegistralAsignado')
+        if($this->vario->movimientoRegistral->getRawOriginal('distrito') == 2){
+
+            return User::with('ultimoMovimientoRegistralAsignado')
                             ->where('status', 'activo')
-                            ->when($this->vario->movimientoRegistral->getRawOriginal('distrito') == 2, function($q){
-                                $q->where('ubicacion', 'Regional 4');
+                            ->whereHas('roles', function($q){
+                                $q->where('name', 'Supervisor uruapan');
                             })
-                            ->when($this->vario->movimientoRegistral->getRawOriginal('distrito') != 2, function($q){
-                                $q->where('ubicacion', '!=', 'Regional 4');
-                            })
+                            ->first()->id;
+
+        }else{
+
+            return User::with('ultimoMovimientoRegistralAsignado')
+                            ->where('status', 'activo')
                             ->whereHas('roles', function($q){
                                 $q->where('name', 'Supervisor certificaciones');
                             })
                             ->first()->id;
+
+        }
+
     }
 
     public function obtenerUsuarios(){
