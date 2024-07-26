@@ -323,6 +323,8 @@ class Sentencia extends Component
 
             DB::transaction(function () {
 
+                $this->sentencia->movimientoRegistral->update(['estado', 'captura']);
+
                 $this->sentencia->save();
 
                 $this->predio->save();

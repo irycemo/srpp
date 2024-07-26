@@ -728,6 +728,8 @@ class GravamenInscripcion extends Component
 
             DB::transaction(function () {
 
+                $this->gravamen->movimientoRegistral->update(['estado', 'captura']);
+
                 $this->gravamen->save();
 
             });

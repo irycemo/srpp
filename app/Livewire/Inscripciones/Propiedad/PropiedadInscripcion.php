@@ -948,6 +948,8 @@ class PropiedadInscripcion extends Component
 
             DB::transaction(function () {
 
+                $this->inscripcion->movimientoRegistral->update(['estado', 'captura']);
+
                 $this->inscripcion->save();
 
                 $this->predio->save();

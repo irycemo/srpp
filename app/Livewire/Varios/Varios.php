@@ -412,6 +412,8 @@ class Varios extends Component
 
             DB::transaction(function () {
 
+                $this->vario->movimientoRegistral->update(['estado', 'captura']);
+
                 $this->vario->save();
 
             });

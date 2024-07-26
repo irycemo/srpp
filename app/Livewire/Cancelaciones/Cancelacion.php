@@ -186,6 +186,8 @@ class Cancelacion extends Component
 
             DB::transaction(function () {
 
+                $this->cancelacion->movimientoRegistral->update(['estado', 'captura']);
+
                 $this->cancelacion->save();
 
             });
