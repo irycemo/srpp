@@ -7,9 +7,12 @@ use App\Models\Sentencia;
 use Barryvdh\DomPDF\Facade\Pdf;
 use App\Models\MovimientoRegistral;
 use App\Http\Controllers\Controller;
+use App\Traits\NombreServicioTrait;
 
 class SentenciasController extends Controller
 {
+
+    use NombreServicioTrait;
 
     public function acto(Sentencia $sentencia)
     {
@@ -34,13 +37,16 @@ class SentenciasController extends Controller
 
         }
 
+        $servicio = $this->nombreServicio($sentencia->servicio);
+
         $pdf = Pdf::loadView('sentencias.acto', [
             'sentencia' => $sentencia,
             'director' => $director,
             'jefe_departamento' => $jefe_departamento,
             'distrito' => $sentencia->movimientoRegistral->getRawOriginal('distrito'),
             'predio' => $sentencia->movimientoRegistral->folioReal->predio,
-            'movimientoCancelado' => $movimientoCancelado
+            'movimientoCancelado' => $movimientoCancelado,
+            'servicio' => $servicio
         ]);
 
         $pdf->render();

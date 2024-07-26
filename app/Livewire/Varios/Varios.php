@@ -318,6 +318,7 @@ class Varios extends Component
 
                 $this->vario->estado = 'activo';
                 $this->vario->actualizado_por = auth()->id();
+                $this->vario->fecha_inscripcion = now()->toDateString();
                 $this->vario->save();
 
                 $this->vario->movimientoRegistral->update(['estado' => 'elaborado']);

@@ -8,9 +8,12 @@ use Illuminate\Http\Request;
 use Barryvdh\DomPDF\Facade\Pdf;
 use App\Http\Controllers\Controller;
 use App\Models\MovimientoRegistral;
+use App\Traits\NombreServicioTrait;
 
 class GravamenController extends Controller
 {
+
+    use NombreServicioTrait;
 
     public function acto(Gravamen $gravamen)
     {
@@ -35,13 +38,16 @@ class GravamenController extends Controller
 
         }
 
+        $servicio = $this->nombreServicio($gravamen->servicio);
+
         $pdf = Pdf::loadView('gravamenes.acto', [
             'gravamen' => $gravamen,
             'director' => $director,
             'jefe_departamento' => $jefe_departamento,
             'distrito' => $gravamen->movimientoRegistral->getRawOriginal('distrito'),
             'predio' => $gravamen->movimientoRegistral->folioReal->predio,
-            'movimientos' => $movimientos
+            'movimientos' => $movimientos,
+            'servicio' => $servicio
         ]);
 
         $pdf->render();

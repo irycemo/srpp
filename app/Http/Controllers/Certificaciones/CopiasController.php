@@ -8,6 +8,7 @@ use App\Models\Certificacion;
 use Barryvdh\DomPDF\Facade\Pdf;
 use Endroid\QrCode\Builder\Builder;
 use App\Http\Controllers\Controller;
+use App\Traits\NombreServicioTrait;
 use Endroid\QrCode\Writer\PngWriter;
 use Endroid\QrCode\Encoding\Encoding;
 use Endroid\QrCode\RoundBlockSizeMode;
@@ -18,6 +19,8 @@ use Luecano\NumeroALetras\NumeroALetras;
 
 class CopiasController extends Controller
 {
+
+    use NombreServicioTrait;
 
     public function copiaCertificada(Certificacion $certificacion){
 
@@ -89,6 +92,8 @@ class CopiasController extends Controller
 
         $numero_oficio = $certificacion->movimientoRegistral->numero_oficio;
 
+        $servicio = $this->nombreServicio($movimientoRegistral->certificacion->servicio);
+
         if(auth()->user()->hasRole(['Certificador Oficialia', 'Certificador Juridico'])){
 
             $pdf = Pdf::loadView('certificaciones.copiaCertificadaOficialia', compact(
@@ -121,7 +126,8 @@ class CopiasController extends Controller
                 'fecha_entrega',
                 'tipo_servicio',
                 'seccion',
-                'qr'
+                'qr',
+                'servicio'
             ));
 
         }else{
@@ -155,7 +161,8 @@ class CopiasController extends Controller
                 'fecha_entrega',
                 'tipo_servicio',
                 'seccion',
-                'qr'
+                'qr',
+                'servicio'
             ));
 
         }
@@ -232,6 +239,8 @@ class CopiasController extends Controller
 
         $qr = $this->generadorQr();
 
+        $servicio = $this->nombreServicio($movimientoRegistral->certificacion->servicio);
+
         $pdf = Pdf::loadView('certificaciones.copiaSimple', compact(
             'distrito',
             'director',
@@ -261,7 +270,8 @@ class CopiasController extends Controller
             'fecha_entrega',
             'tipo_servicio',
             'seccion',
-            'qr'
+            'qr',
+            'servicio'
         ));
 
         return $pdf->stream('documento.pdf');

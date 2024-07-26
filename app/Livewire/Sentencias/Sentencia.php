@@ -215,6 +215,7 @@ class Sentencia extends Component
 
                 $this->sentencia->estado = 'activo';
                 $this->sentencia->actualizado_por = auth()->id();
+                $this->sentencia->fecha_inscripcion = now()->toDateString();
                 $this->sentencia->save();
 
                 $this->predio->actualizado_por = auth()->id();

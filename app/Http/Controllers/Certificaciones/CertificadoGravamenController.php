@@ -9,10 +9,13 @@ use App\Models\Gravamen;
 use Barryvdh\DomPDF\Facade\Pdf;
 use App\Http\Controllers\Controller;
 use App\Models\MovimientoRegistral;
+use App\Traits\NombreServicioTrait;
 use Luecano\NumeroALetras\NumeroALetras;
 
 class CertificadoGravamenController extends Controller
 {
+
+    use NombreServicioTrait;
 
     public function certificadoGravamen(MovimientoRegistral $movimientoRegistral){
 
@@ -49,7 +52,9 @@ class CertificadoGravamenController extends Controller
 
         $aviso = $movimientoRegistral->FolioReal->avisoPreventivo();
 
-        $pdf = Pdf::loadView('certificaciones.certificadoGravamen', compact('predio', 'director', 'movimientoRegistral', 'gravamenes', 'fecha', 'registro_numero', 'tomo_numero', 'formatter', 'aviso'));
+        $servicio = $this->nombreServicio($movimientoRegistral->certificacion->servicio);
+
+        $pdf = Pdf::loadView('certificaciones.certificadoGravamen', compact('predio', 'director', 'movimientoRegistral', 'gravamenes', 'fecha', 'registro_numero', 'tomo_numero', 'formatter', 'aviso', 'servicio'));
 
         $pdf->render();
 

@@ -1007,6 +1007,7 @@ class PropiedadInscripcion extends Component
 
                 $this->procesarPropietarios();
 
+                $this->inscripcion->fecha_inscripcion = now()->toDateString();
                 $this->inscripcion->actualizado_por = auth()->id();
                 $this->inscripcion->save();
 

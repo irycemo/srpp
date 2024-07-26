@@ -6,9 +6,12 @@ use App\Models\User;
 use App\Models\Vario;
 use Barryvdh\DomPDF\Facade\Pdf;
 use App\Http\Controllers\Controller;
+use App\Traits\NombreServicioTrait;
 
 class VariosController extends Controller
 {
+
+    use NombreServicioTrait;
 
     public function acto(Vario $vario)
     {
@@ -29,12 +32,15 @@ class VariosController extends Controller
 
         }
 
+        $servicio = $this->nombreServicio($vario->servicio);
+
         $pdf = Pdf::loadView('varios.acto', [
             'vario' => $vario,
             'director' => $director,
             'jefe_departamento' => $jefe_departamento,
             'distrito' => $vario->movimientoRegistral->getRawOriginal('distrito'),
-            'predio' => $vario->movimientoRegistral->folioReal->predio
+            'predio' => $vario->movimientoRegistral->folioReal->predio,
+            'servicio' => $servicio
         ]);
 
         $pdf->render();

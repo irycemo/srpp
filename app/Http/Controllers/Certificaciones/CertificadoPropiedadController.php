@@ -5,16 +5,18 @@ namespace App\Http\Controllers\Certificaciones;
 use Carbon\Carbon;
 use App\Models\User;
 use App\Models\Predio;
-use Illuminate\Http\Request;
 use App\Constantes\Constantes;
 use Barryvdh\DomPDF\Facade\Pdf;
 use App\Models\CertificadoPersona;
 use App\Models\MovimientoRegistral;
 use App\Http\Controllers\Controller;
+use App\Traits\NombreServicioTrait;
 use Luecano\NumeroALetras\NumeroALetras;
 
 class CertificadoPropiedadController extends Controller
 {
+
+    use NombreServicioTrait;
 
     public function certificadoNegativoPropiedad(MovimientoRegistral $movimientoRegistral){
 
@@ -44,7 +46,9 @@ class CertificadoPropiedadController extends Controller
 
         $distrito = Constantes::DISTRITOS[$movimientoRegistral->folioReal->distrito_antecedente];
 
-        $pdf = Pdf::loadView('certificaciones.certificadoNegativoPropiedad', compact('predio', 'distrito', 'director', 'movimientoRegistral', 'fecha', 'registro_numero', 'tomo_numero', 'formatter'));
+        $servicio = $this->nombreServicio($movimientoRegistral->certificacion->servicio);
+
+        $pdf = Pdf::loadView('certificaciones.certificadoNegativoPropiedad', compact('predio', 'distrito', 'director', 'movimientoRegistral', 'fecha', 'registro_numero', 'tomo_numero', 'formatter', 'servicio'));
 
         $pdf->render();
 
@@ -90,7 +94,9 @@ class CertificadoPropiedadController extends Controller
 
         $personas = CertificadoPersona::with('persona')->where('certificacion_id', $movimientoRegistral->certificacion->id)->get();
 
-        $pdf = Pdf::loadView('certificaciones.certificadoPropiedad', compact('predio', 'distrito', 'director', 'movimientoRegistral', 'fecha', 'registro_numero', 'tomo_numero', 'formatter', 'personas'));
+        $servicio = $this->nombreServicio($movimientoRegistral->certificacion->servicio);
+
+        $pdf = Pdf::loadView('certificaciones.certificadoPropiedad', compact('predio', 'distrito', 'director', 'movimientoRegistral', 'fecha', 'registro_numero', 'tomo_numero', 'formatter', 'personas', 'servicio'));
 
         $pdf->render();
 
@@ -134,7 +140,9 @@ class CertificadoPropiedadController extends Controller
 
         $distrito = Constantes::DISTRITOS[$movimientoRegistral->folioReal->distrito_antecedente];
 
-        $pdf = Pdf::loadView('certificaciones.certificadoUnicoPropiedad', compact('predio', 'distrito', 'director', 'movimientoRegistral', 'fecha', 'registro_numero', 'tomo_numero', 'formatter'));
+        $servicio = $this->nombreServicio($movimientoRegistral->certificacion->servicio);
+
+        $pdf = Pdf::loadView('certificaciones.certificadoUnicoPropiedad', compact('predio', 'distrito', 'director', 'movimientoRegistral', 'fecha', 'registro_numero', 'tomo_numero', 'formatter', 'servicio'));
 
         $pdf->render();
 
@@ -178,7 +186,9 @@ class CertificadoPropiedadController extends Controller
 
         $distrito = Constantes::DISTRITOS[$movimientoRegistral->folioReal->distrito_antecedente];
 
-        $pdf = Pdf::loadView('certificaciones.certificadoPropiedadColindancias', compact('predio', 'distrito', 'director', 'movimientoRegistral', 'fecha', 'registro_numero', 'tomo_numero', 'formatter'));
+        $servicio = $this->nombreServicio($movimientoRegistral->certificacion->servicio);
+
+        $pdf = Pdf::loadView('certificaciones.certificadoPropiedadColindancias', compact('predio', 'distrito', 'director', 'movimientoRegistral', 'fecha', 'registro_numero', 'tomo_numero', 'formatter', 'servicio'));
 
         $pdf->render();
 
@@ -214,7 +224,9 @@ class CertificadoPropiedadController extends Controller
                     $movimientoRegistral->certificacion->personas()->first()->persona->ap_paterno . ' ' .
                     $movimientoRegistral->certificacion->personas()->first()->persona->ap_materno;
 
-        $pdf = Pdf::loadView('certificaciones.certificadoNegativo', compact('distrito', 'director', 'movimientoRegistral', 'persona'));
+        $servicio = $this->nombreServicio($movimientoRegistral->certificacion->servicio);
+
+        $pdf = Pdf::loadView('certificaciones.certificadoNegativo', compact('distrito', 'director', 'movimientoRegistral', 'persona', 'servicio'));
 
         $pdf->render();
 

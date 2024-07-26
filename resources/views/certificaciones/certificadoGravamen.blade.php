@@ -551,6 +551,7 @@
 
                                 <p style="margin: 0"><strong>DERECHOS: </strong>${{ number_format($movimientoRegistral->monto, 2) }}</p>
                                 <p style="margin: 0"><strong>Tipo de servicio: </strong>{{ $movimientoRegistral->tipo_servicio }}</p>
+                                <p style="margin: 0"><strong>Servicio: </strong>{{ $servicio }}</p>
 
                             </td>
 

@@ -6,9 +6,12 @@ use App\Models\User;
 use App\Models\Propiedad;
 use Barryvdh\DomPDF\Facade\Pdf;
 use App\Http\Controllers\Controller;
+use App\Traits\NombreServicioTrait;
 
 class TraslativoController extends Controller
 {
+
+    use NombreServicioTrait;
 
     public function boleta_presentacion(Propiedad $propiedad)
     {
@@ -21,11 +24,14 @@ class TraslativoController extends Controller
             $q->where('name', 'Jefe de departamento')->where('area', 'Departamento de Registro de Inscripciones');
         })->first()->name;
 
+        $servicio = $this->nombreServicio($propiedad->servicio);
+
         $pdf = Pdf::loadView('incripciones.propiedad.transmitivo', [
             'inscripcion' => $propiedad,
             'director' => $director,
             'jefe_departamento' => $jefe_departamento,
             'distrito' => $propiedad->movimientoRegistral->getRawOriginal('distrito'),
+            'servicio' => $servicio
         ]);
 
         $pdf->render();

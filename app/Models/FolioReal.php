@@ -90,7 +90,7 @@ class FolioReal extends Model implements Auditable
                                         ->whereHas('vario', function($q){
                                             $q->whereIn('servicio', ['DL09']);
                                         })
-                                        ->orderBy('created_at', 'desc')
+                                        ->orderBy('fecha_inscripcion', 'desc')
                                         ->first();
 
         if($primerAviso) {

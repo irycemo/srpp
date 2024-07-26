@@ -162,6 +162,7 @@ class Cancelacion extends Component
                 $this->cancelacion->estado = 'activo';
                 $this->cancelacion->gravamen = $this->gravamenCancelarMovimiento->id;
                 $this->cancelacion->actualizado_por = auth()->id();
+                $this->cancelacion->fecha_inscripcion = now()->toDateString();
                 $this->cancelacion->save();
 
                 $this->cancelacion->movimientoRegistral->update(['estado' => 'elaborado']);
