@@ -110,7 +110,7 @@
 
                         </x-table.cell>
 
-                        @if (!auth()->user()->hasRole('Certificador Gravamen'))
+                        @if (!auth()->user()->hasRole(['Certificador Gravamen', 'Supervisor certificaciones', 'Administrador']))
 
                             <x-table.cell>
 

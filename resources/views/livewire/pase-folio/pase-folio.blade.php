@@ -30,10 +30,7 @@
         <x-table>
 
             <x-slot name="head">
-
-                <x-table.heading sortable wire:click="sortBy('año')" :direction="$sort === 'año' ? $direction : null" >Año</x-table.heading>
-                <x-table.heading sortable wire:click="sortBy('tramite')" :direction="$sort === 'tramite' ? $direction : null" ># control</x-table.heading>
-                <x-table.heading sortable wire:click="sortBy('usuario')" :direction="$sort === 'usuario' ? $direction : null" >Usuario</x-table.heading>
+                <x-table.heading># Control</x-table.heading>
                 <x-table.heading sortable wire:click="sortBy('tomo')" :direction="$sort === 'tomo' ? $direction : null" >Tomo</x-table.heading>
                 <x-table.heading sortable wire:click="sortBy('registro')" :direction="$sort === 'registro' ? $direction : null">Registro</x-table.heading>
                 <x-table.heading sortable wire:click="sortBy('numero_propiedad')" :direction="$sort === 'numero_propiedad' ? $direction : null" ># propiedad</x-table.heading>
@@ -58,25 +55,9 @@
 
                         <x-table.cell>
 
-                            <span class="lg:hidden absolute top-0 left-0 bg-blue-300 px-2 py-1 text-xs text-white font-bold uppercase rounded-br-xl">Año</span>
-
-                            {{ $movimiento->año }}
-
-                        </x-table.cell>
-
-                        <x-table.cell>
-
                             <span class="lg:hidden absolute top-0 left-0 bg-blue-300 px-2 py-1 text-xs text-white font-bold uppercase rounded-br-xl">Número de control</span>
 
-                            {{ $movimiento->tramite }}
-
-                        </x-table.cell>
-
-                        <x-table.cell>
-
-                            <span class="lg:hidden absolute top-0 left-0 bg-blue-300 px-2 py-1 text-xs text-white font-bold uppercase rounded-br-xl">Usuario</span>
-
-                            {{ $movimiento->usuario }}
+                            {{ $movimiento->año }}-{{ $movimiento->tramite }}-{{ $movimiento->usuario }}
 
                         </x-table.cell>
 
