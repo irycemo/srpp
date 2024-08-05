@@ -52,7 +52,7 @@
                 @if (auth()->user()->hasRole(['Certificador Gravamen', 'Supervisor certificaciones', 'Administrador']))
                     <x-table.heading sortable wire:click="sortBy('usuario_asignado')" :direction="$sort === 'usuario_asignado' ? $direction : null" >Asignado a</x-table.heading>
                 @endif
-                @if (!auth()->user()->hasRole('Administrador'))
+                @if (auth()->user()->hasRole('Administrador'))
                     <x-table.heading >Reimpreso en</x-table.heading>
                 @endif
                 <x-table.heading sortable wire:click="sortBy('fecha_entrega')" :direction="$sort === 'fecha_entrega' ? $direction : null">Fecha de entrega</x-table.heading>
@@ -122,7 +122,7 @@
 
                         @endif
 
-                        @if (!auth()->user()->hasRole('Administrador'))
+                        @if (auth()->user()->hasRole('Administrador'))
 
                             <x-table.cell>
 
