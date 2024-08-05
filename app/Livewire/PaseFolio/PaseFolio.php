@@ -43,10 +43,6 @@ class PaseFolio extends Component
 
                 $this->modelo_editar->update(['estado' => 'rechazado', 'actualizado_por' => auth()->user()->id]);
 
-                $this->modelo_editar->inscripcionPropiedad->actualizado_por = auth()->user()->id;
-
-                $this->modelo_editar->inscripcionPropiedad->observaciones = $this->modelo_editar->inscripcionPropiedad->observaciones . $observaciones;
-
                 $this->modelo_editar->save();
 
                 $this->dispatch('mostrarMensaje', ['success', "El trámite se rechazó con éxito."]);
