@@ -109,7 +109,7 @@
 
                         @if (!auth()->user()->hasRole('Administrador'))
 
-                            @if (auth()->user()->hasRole(['Supervisor varios', 'Supervisor uruapan']))
+                            @if (auth()->user()->hasRole(['Supervisor sentencias', 'Supervisor uruapan']))
 
                                 <x-table.cell>
 
@@ -125,9 +125,9 @@
                                         </x-button-blue>
 
                                         <x-button-green
-                                            wire:click="finalizar({{  $movimiento->id }})"
+                                            wire:click="abrirModalFinalizar({{  $movimiento->id }})"
                                             wire:loading.attr="disabled"
-                                            wire:target="finalizar({{  $movimiento->id }})">
+                                            wire:target="abrirModalFinalizar({{  $movimiento->id }})">
                                             Finalizar
                                         </x-button-green>
 

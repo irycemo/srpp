@@ -903,6 +903,7 @@ class Elaboracion extends Component
     public function render()
     {
         $this->authorize('view', $this->movimientoRegistral);
+        $this->authorize('view', $this->movimientoRegistral->folioReal);
 
         return view('livewire.pase-folio.elaboracion')->extends('layouts.admin');
     }

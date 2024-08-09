@@ -525,12 +525,12 @@
                                 <p style="margin: 0"><strong>NÚMERO DE CONTROL: </strong>{{ $vario->movimientoRegistral->año }}-{{ $vario->movimientoRegistral->tramite }}-{{ $vario->movimientoRegistral->usuario }}</p>
                                 <p style="margin: 0"><strong>DERECHOS: </strong>${{ number_format($vario->movimientoRegistral->monto, 2) }}</p>
                                 <p style="margin: 0"><strong>Tipo de servicio: </strong>{{ $vario->movimientoRegistral->tipo_servicio }}</p>
+                                <p style="margin: 0"><strong>Servicio: </strong>{{ $servicio }}</p>
 
                             </td>
 
-                            <td style="padding-right: 40px; text-align:left; ; vertical-align: bottom; white-space: nowrap;">
+                            <td style="padding-right: 40px; text-align:left; ; vertical-align: tom; white-space: nowrap;">
 
-                                {{-- <p><strong>FECHA DE ENTRADA:</strong>{{ $vario->movimientoRegistral->created_at->format('d-m-Y') }}</p> --}}
                                 <p style="margin: 0"><strong>Fecha de impresión: </strong>{{ now()->format('d/m/Y H:i:s') }}</p>
                                 <p style="margin: 0"><strong>IMPRESO POR: </strong>{{  auth()->user()->name }}</p>
 

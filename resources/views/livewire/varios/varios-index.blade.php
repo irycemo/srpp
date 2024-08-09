@@ -125,9 +125,9 @@
                                         </x-button-blue>
 
                                         <x-button-green
-                                            wire:click="finalizar({{  $movimiento->id }})"
+                                            wire:click="abrirModalFinalizar({{  $movimiento->id }})"
                                             wire:loading.attr="disabled"
-                                            wire:target="finalizar({{  $movimiento->id }})">
+                                            wire:target="abrirModalFinalizar({{  $movimiento->id }})">
                                             Finalizar
                                         </x-button-green>
 

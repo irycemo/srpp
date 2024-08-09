@@ -110,22 +110,40 @@ class FolioReal extends Model implements Auditable
 
     public function avisoPreventivo(){
 
-        $primerAviso = $this->movimientosRegistrales()
+        $movimiento = $this->movimientosRegistrales()
                                         ->whereHas('vario', function($q){
-                                            $q->whereIn('servicio', ['DL09']);
+                                            $q->whereIn('servicio', ['DL09'])
+                                                ->where('estado', 'activo');
                                         })
+                                        ->where('estado', 'concluido')
                                         ->orderBy('fecha_inscripcion', 'desc')
                                         ->first();
 
-        if($primerAviso) {
+        if($movimiento) {
 
-            if(now() > Carbon::parse($primerAviso->created_at)->addDays(30)){
+            if($movimiento->vario->acto_contenido == "SEGUNDO AVISO PREVENTIVO"){
 
-                return null;
+                if(now() > Carbon::parse($movimiento->vario->fecha_inscripcion)->addDays(60)){
 
-            }else{
+                    return null;
 
-                return $primerAviso->vario;
+                }else{
+
+                    return $movimiento->vario;
+
+                }
+
+            }else if($movimiento->vario->acto_contenido == "PRIMER AVISO PREVENTIVO"){
+
+                if(now() > Carbon::parse($movimiento->vario->fecha_inscripcion)->addDays(30)){
+
+                    return null;
+
+                }else{
+
+                    return $movimiento->vario;
+
+                }
 
             }
 

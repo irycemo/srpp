@@ -2,14 +2,15 @@
 
 namespace App\Livewire\Varios;
 
+use App\Models\File;
 use Livewire\Component;
 use Livewire\WithPagination;
+use Livewire\WithFileUploads;
 use App\Traits\ComponentesTrait;
 use Illuminate\Support\Facades\DB;
 use App\Models\MovimientoRegistral;
 use Illuminate\Support\Facades\Log;
 use App\Http\Services\SistemaTramitesService;
-use Livewire\WithFileUploads;
 
 class VariosIndex extends Component
 {
@@ -100,6 +101,15 @@ class VariosIndex extends Component
         try {
 
             DB::transaction(function (){
+
+                $pdf = $this->documento->store('/', 'caratulas');
+
+                File::create([
+                    'fileable_id' => $this->modelo_editar->id,
+                    'fileable_type' => 'App\Models\MovimientoRegistral',
+                    'descripcion' => 'caratula',
+                    'url' => $pdf
+                ]);
 
                 $this->modelo_editar->actualizado_por = auth()->user()->id;
 

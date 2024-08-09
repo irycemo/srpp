@@ -114,7 +114,7 @@ class MovimientoRegistralService{
 
         }
 
-        if($request['categoria_servicio'] == 'Varios , Arrendamientos, Avisos Preventivos'){
+        if($request['categoria_servicio'] == 'Varios, Arrendamientos, Avisos Preventivos'){
 
 
             $this->variosService->store($request + ['movimiento_registral' => $id]);
