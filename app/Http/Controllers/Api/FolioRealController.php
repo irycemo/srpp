@@ -39,13 +39,26 @@ class FolioRealController extends Controller
                                         })
                                         ->first();
 
-            if(isset($validated['tomo']) && isset($validated['registro']) && isset($validated['distrito']) && isset($validated['seccion']) && isset($validated['numero_propiedad']))
-                $propiedad = Propiedadold::where('distrito', $validated['distrito'])
-                                            ->where('tomo', $validated['tomo'])
-                                            ->where('registro', $validated['registro'])
-                                            ->where('noprop', $validated['numero_propiedad'])
-                                            ->where('status', 'V')
-                                            ->first();
+
+            if(
+                isset($validated['tomo']) &&
+                isset($validated['registro']) &&
+                isset($validated['distrito']) &&
+                isset($validated['seccion']) &&
+                isset($validated['numero_propiedad'])
+            ){
+
+                    $propiedad = Propiedadold::where('distrito', $validated['distrito'])
+                                                ->where('tomo', $validated['tomo'])
+                                                ->where('registro', $validated['registro'])
+                                                ->where('noprop', $validated['numero_propiedad'])
+                                                ->where('status', 'V')
+                                                ->first();
+
+                }else{
+
+                    $propiedad = null;
+                }
 
 
             if($folio_real){
