@@ -145,23 +145,27 @@
 
                                 <div class="flex justify-center lg:justify-start gap-2">
 
-                                    @if(in_array($movimiento->folioReal->estado, ['nuevo', 'captura']))
+                                    @if($movimiento->folioReal)
+
+                                        @if($movimiento->folioReal->estado = 'elaborado')
+
+                                            <x-button-green
+                                                wire:click="abrirModalFinalizar({{ $movimiento->id }})">
+                                                Finalizar
+                                            </x-button-green>
+
+                                        @endif
+
+                                    @else
 
                                         <x-link href="{{ route('elaboracion_folio', $movimiento->id) }}">Elaborar</x-link>
 
-                                        <x-button-red
-                                            wire:click="abrirModalRechazar({{ $movimiento->id }})">
-                                            Rechazar
-                                        </x-button-red>
-
-                                    @elseif($movimiento->folioReal->estado = 'elaborado')
-
-                                        <x-button-green
-                                            wire:click="abrirModalFinalizar({{ $movimiento->id }})">
-                                            Finalizar
-                                        </x-button-green>
-
                                     @endif
+
+                                    <x-button-red
+                                        wire:click="abrirModalRechazar({{ $movimiento->id }})">
+                                        Rechazar
+                                    </x-button-red>
 
                                 </div>
 
