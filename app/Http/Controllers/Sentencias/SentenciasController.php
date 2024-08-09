@@ -17,7 +17,7 @@ class SentenciasController extends Controller
     public function acto(Sentencia $sentencia)
     {
 
-        $this->authorize('update', $sentencia->movimientoRegistral);
+        /* $this->authorize('update', $sentencia->movimientoRegistral); */
 
         $director = User::where('status', 'activo')->whereHas('roles', function($q){
             $q->where('name', 'Director');

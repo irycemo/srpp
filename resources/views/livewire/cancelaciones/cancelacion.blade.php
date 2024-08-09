@@ -4,19 +4,28 @@
 
     <div class="p-4 bg-white shadow-xl rounded-xl mb-5">
 
-        <div class="inline-block">
+        @if(!$cancelacion->movimientoRegistral->documentoEntrada())
 
             <x-button-blue
-                wire:click="consultarArchivo"
+                wire:click="abrirModalFinalizar"
                 wire:loading.attr="disabled"
-                wire:target="consultarArchivo">
+                wire:target="abrirModalFinalizar">
 
-                <img wire:loading wire:target="consultarArchivo" class="mx-auto h-4 mr-1" src="{{ asset('storage/img/loading3.svg') }}" alt="Loading">
+                <img wire:loading wire:target="abrirModalFinalizar" class="mx-auto h-4 mr-1" src="{{ asset('storage/img/loading3.svg') }}" alt="Loading">
 
-                Ver documento de entrada
+                Subir documento de entrada
+
             </x-button-blue>
 
-        </div>
+        @else
+
+            <div class="inline-block">
+
+                <x-link-blue target="_blank" href="{{ $cancelacion->movimientoRegistral->documentoEntrada() }}">Documento de entrada</x-link-blue>
+
+            </div>
+
+        @endif
 
         <span class="flex items-center justify-center ext-gray-700">Datos del movimiento</span>
 
@@ -250,6 +259,57 @@
                     wire:target="$toggle('modalRechazar')"
                     type="button">
                     Cerrar
+                </x-button-red>
+
+            </div>
+
+        </x-slot>
+
+    </x-dialog-modal>
+
+    <x-dialog-modal wire:model="modalDocumento" maxWidth="sm">
+
+        <x-slot name="title">
+
+            Subir archivo
+
+        </x-slot>
+
+        <x-slot name="content">
+
+            <x-filepond wire:model.live="documento" accept="['application/pdf']"/>
+
+            <div>
+
+                @error('documento') <span class="error text-sm text-red-500">{{ $message }}</span> @enderror
+
+            </div>
+
+        </x-slot>
+
+        <x-slot name="footer">
+
+            <div class="flex gap-3">
+
+                <x-button-blue
+                    wire:click="guardarDocumento"
+                    wire:loading.attr="disabled"
+                    wire:target="guardarDocumento">
+
+                    <img wire:loading wire:target="guardarDocumento" class="mx-auto h-4 mr-1" src="{{ asset('storage/img/loading3.svg') }}" alt="Loading">
+
+                    <span>Guardar</span>
+
+                </x-button-blue>
+
+                <x-button-red
+                    wire:click="$toggle('modalDocumento')"
+                    wire:loading.attr="disabled"
+                    wire:target="$toggle('modalDocumento')"
+                    type="button">
+
+                    <span>Cerrar</span>
+
                 </x-button-red>
 
             </div>

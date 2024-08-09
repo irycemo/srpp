@@ -312,9 +312,11 @@
 
         <x-h4 class="mb-5">Folio real: {{ $folioReal->folio }}</x-h4>
 
-        <div x-data="{ activeTab: 4 }">
+        <div x-data="{ activeTab: 8 }">
 
             <div class="flex px-4 gap-4 justify-center items-center">
+
+                <x-button-pill @click="activeTab = 8" x-bind:class="{ 'bg-gray-300 bg-opacity-5 text-black ': activeTab === 8 }">Folio Real</x-button-pill>
 
                 <x-button-pill @click="activeTab = 4" x-bind:class="{ 'bg-gray-300 bg-opacity-5 text-black ': activeTab === 4 }">Propiedad</x-button-pill>
 
@@ -323,6 +325,22 @@
                 <x-button-pill @click="activeTab = 6" x-bind:class="{ 'bg-gray-300 bg-opacity-5 text-black ': activeTab === 6 }">Sentencias</x-button-pill>
 
                 <x-button-pill @click="activeTab = 7" x-bind:class="{ 'bg-gray-300 bg-opacity-5 text-black ': activeTab === 7 }">Varios</x-button-pill>
+
+                <x-button-pill @click="activeTab = 9" x-bind:class="{ 'bg-gray-300 bg-opacity-5 text-black ': activeTab === 9 }">Cancelaciones</x-button-pill>
+
+                <x-button-pill @click="activeTab = 10" x-bind:class="{ 'bg-gray-300 bg-opacity-5 text-black ': activeTab === 10 }">Certificaciones</x-button-pill>
+
+            </div>
+
+            <div class="tab-panel rounded-lg" :class="{ 'active': activeTab === 8 }" x-show.transition.in.opacity.duration.800="activeTab === 8" x-cloak>
+
+                @include('livewire.consulta.documento-entrada')
+
+                @include('livewire.consulta.ubicacion')
+
+                @include('livewire.consulta.descripcion')
+
+                @include('livewire.consulta.propietarios')
 
             </div>
 
@@ -340,51 +358,25 @@
 
             <div class="tab-panel" :class="{ 'active': activeTab === 4 }" x-show.transition.in.opacity.duration.800="activeTab === 4">
 
-                <div x-data="{ activeTab:  0 }">
-
-                    <div class="flex px-4 gap-4 justify-center items-center  p-3 rounded-lg">
-
-                        <x-button-pill  @click="activeTab = 0" x-bind:class="{ 'bg-gray-300 bg-opacity-5 text-black ': activeTab === 0 }">Documento de entrada</x-button-pill>
-
-                        <x-button-pill  @click="activeTab = 2" x-bind:class="{ 'bg-gray-300 bg-opacity-5 text-black ': activeTab === 2 }">Descripción del predio</x-button-pill>
-
-                        <x-button-pill  @click="activeTab = 1" x-bind:class="{ 'bg-gray-300 bg-opacity-5 text-black ': activeTab === 1 }">Ubicación del predio</x-button-pill>
-
-                        <x-button-pill  @click="activeTab = 3" x-bind:class="{ 'bg-gray-300 bg-opacity-5 text-black ': activeTab === 3 }">Propietarios</x-button-pill>
-
-                    </div>
-
-                    <div class="tab-panel rounded-lg" :class="{ 'active ': activeTab === 0 }" x-show.transition.in.opacity.duration.800="activeTab === 0">
-
-                        @include('livewire.consulta.documento-entrada')
-
-                    </div>
-
-                    <div class="tab-panel rounded-lg" :class="{ 'active': activeTab === 1 }" x-show.transition.in.opacity.duration.800="activeTab === 1">
-
-                        @include('livewire.consulta.ubicacion')
-
-                    </div>
-
-                    <div class="tab-panel rounded-lg" :class="{ 'active': activeTab === 2 }" x-show.transition.in.opacity.duration.800="activeTab === 2">
-
-                        @include('livewire.consulta.descripcion')
-
-                    </div>
-
-                    <div class="tab-panel rounded-lg" :class="{ 'active': activeTab === 3 }" x-show.transition.in.opacity.duration.800="activeTab === 3">
-
-                        @include('livewire.consulta.propietarios')
-
-                    </div>
-
-                </div>
+                @include('livewire.consulta.propiedad')
 
             </div>
 
             <div class="tab-panel rounded-lg" :class="{ 'active': activeTab === 5 }" x-show.transition.in.opacity.duration.800="activeTab === 5" x-cloak>
 
                 @include('livewire.consulta.gravamen')
+
+            </div>
+
+            <div class="tab-panel" :class="{ 'active': activeTab === 9 }" x-show.transition.in.opacity.duration.800="activeTab === 9">
+
+                @include('livewire.consulta.cancelaciones')
+
+            </div>
+
+            <div class="tab-panel" :class="{ 'active': activeTab === 10 }" x-show.transition.in.opacity.duration.800="activeTab === 10">
+
+                @include('livewire.consulta.certificaciones')
 
             </div>
 

@@ -22,6 +22,8 @@ class Gravamen extends Component
 
     public $modalBorrar = false;
     public $modalCancelacion = false;
+    public $modalInactivar = false;
+    public $contraseña;
 
     public $folio_cancelacion;
     public $tomo_cancelacion;
@@ -81,6 +83,14 @@ class Gravamen extends Component
     public function abrirModalCancelar(GravamenModelo $gravamen){
 
         $this->modalCancelacion = true;
+
+        $this->gravamen_seleccionado = $gravamen;
+
+    }
+
+    public function abrirModalInactivar(GravamenModelo $gravamen){
+
+        $this->modalInactivar = true;
 
         $this->gravamen_seleccionado = $gravamen;
 
@@ -190,19 +200,25 @@ class Gravamen extends Component
 
     }
 
-    public function inactivar(GravamenModelo $gravamen){
+    public function inactivar(){
 
         try {
 
-            $gravamen->update([
-                'estado' => 'inactivo',
-                'actualizado_por' => auth()->id(),
-                'observaciones' => $this->gravamen_seleccionado->observaciones .  ' Inactivado por ' . auth()->user()->name . ' mediante pase a folio.',
-            ]);
+            DB::transaction(function () {
+
+                $this->gravamen_seleccionado->update([
+                    'estado' => 'inactivo',
+                    'actualizado_por' => auth()->id(),
+                    'observaciones' => $this->gravamen_seleccionado->observaciones .  ' Inactivado mediante pase a folio',
+                ]);
+
+            });
+
+            $this->reset(['modalInactivar', 'contraseña']);
 
             $this->cargarGravamenes();
 
-            $this->dispatch('mostrarMensaje', ['success', "El gravamen se inactivó con éxito."]);
+            $this->dispatch('mostrarMensaje', ['success', "El gravamen se canceló con éxito."]);
 
         } catch (\Throwable $th) {
             Log::error("Error al inactivar gravamen en pase a folio por el usuario: (id: " . auth()->user()->id . ") " . auth()->user()->name . ". " . $th);

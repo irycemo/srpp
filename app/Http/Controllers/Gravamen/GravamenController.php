@@ -4,7 +4,6 @@ namespace App\Http\Controllers\Gravamen;
 
 use App\Models\User;
 use App\Models\Gravamen;
-use Illuminate\Http\Request;
 use Barryvdh\DomPDF\Facade\Pdf;
 use App\Http\Controllers\Controller;
 use App\Models\MovimientoRegistral;

@@ -145,12 +145,23 @@
 
                                 <div class="flex justify-center lg:justify-start gap-2">
 
-                                    <x-link href="{{ route('elaboracion_folio', $movimiento->id) }}">Elaborar</x-link>
+                                    @if(in_array($movimiento->folioReal->estado, ['nuevo', 'captura']))
 
-                                    <x-button-red
-                                        wire:click="abrirModalRechazar({{ $movimiento->id }})">
-                                        Rechazar
-                                    </x-button-red>
+                                        <x-link href="{{ route('elaboracion_folio', $movimiento->id) }}">Elaborar</x-link>
+
+                                        <x-button-red
+                                            wire:click="abrirModalRechazar({{ $movimiento->id }})">
+                                            Rechazar
+                                        </x-button-red>
+
+                                    @elseif($movimiento->folioReal->estado = 'elaborado')
+
+                                        <x-button-green
+                                            wire:click="abrirModalFinalizar({{ $movimiento->id }})">
+                                            Finalizar
+                                        </x-button-green>
+
+                                    @endif
 
                                 </div>
 
@@ -255,6 +266,57 @@
                     wire:target="$toggle('modal')"
                     type="button">
                     <span>Cerrar</span>
+                </x-button-red>
+
+            </div>
+
+        </x-slot>
+
+    </x-dialog-modal>
+
+    <x-dialog-modal wire:model="modalFinalizar" maxWidth="sm">
+
+        <x-slot name="title">
+
+            Subir archivo
+
+        </x-slot>
+
+        <x-slot name="content">
+
+            <x-filepond wire:model.live="documento" accept="['application/pdf']"/>
+
+            <div>
+
+                @error('documento') <span class="error text-sm text-red-500">{{ $message }}</span> @enderror
+
+            </div>
+
+        </x-slot>
+
+        <x-slot name="footer">
+
+            <div class="flex gap-3">
+
+                <x-button-blue
+                    wire:click="finalizar"
+                    wire:loading.attr="disabled"
+                    wire:target="finalizar">
+
+                    <img wire:loading wire:target="finalizar" class="mx-auto h-4 mr-1" src="{{ asset('storage/img/loading3.svg') }}" alt="Loading">
+
+                    <span>Finalizar</span>
+
+                </x-button-blue>
+
+                <x-button-red
+                    wire:click="$toggle('modalFinalizar')"
+                    wire:loading.attr="disabled"
+                    wire:target="$toggle('modalFinalizar')"
+                    type="button">
+
+                    <span>Cerrar</span>
+
                 </x-button-red>
 
             </div>

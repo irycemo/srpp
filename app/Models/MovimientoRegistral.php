@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use App\Models\File;
 use App\Models\Gravamen;
 use App\Models\FolioReal;
 use App\Models\Propiedad;
@@ -11,6 +12,7 @@ use App\Models\Certificacion;
 use App\Constantes\Constantes;
 use App\Models\FolioRealPersona;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Support\Facades\Storage;
 use OwenIt\Auditing\Contracts\Auditable;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 
@@ -79,6 +81,23 @@ class MovimientoRegistral extends Model implements Auditable
 
     public function asignadoA(){
         return $this->belongsTo(User::class, 'usuario_asignado');
+    }
+
+    public function archivos(){
+        return $this->morphMany(File::class, 'fileable');
+    }
+
+    public function caratula(){
+
+        return $this->archivos()->where('descripcion', 'caratula')->first()
+                ? Storage::disk('caratulas')->url($this->archivos()->where('descripcion', 'caratula')->first()->url)
+                : null;
+    }
+
+    public function documentoEntrada(){
+        return $this->archivos()->where('descripcion', 'documento_entrada')->first()
+                ? Storage::disk('documento_entrada')->url($this->archivos()->where('descripcion', 'documento_entrada')->first()->url)
+                : null;
     }
 
     public function getDistritoAttribute(){

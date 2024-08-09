@@ -3,6 +3,7 @@
 namespace App\Livewire\Gravamenes;
 
 use Exception;
+use App\Models\File;
 use App\Models\User;
 use App\Models\Deudor;
 use App\Models\Persona;
@@ -18,11 +19,15 @@ use App\Models\MovimientoRegistral;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Http;
+use Illuminate\Support\Facades\Storage;
 use App\Http\Services\AsignacionService;
 use Illuminate\Http\Client\ConnectionException;
+use Livewire\WithFileUploads;
 
 class GravamenInscripcion extends Component
 {
+
+    use WithFileUploads;
 
     public $distritos;
     public $actos;
@@ -38,7 +43,9 @@ class GravamenInscripcion extends Component
     public $editar = false;
     public $modal = false;
     public $modalContraseña = false;
+    public $modalDocumento = false;
     public $title;
+    public $documento;
 
     public $contraseña;
 
@@ -600,41 +607,15 @@ class GravamenInscripcion extends Component
 
         }
 
-        $this->modalContraseña = true;
+        if(!$this->gravamen->movimientoRegistral->documentoEntrada()){
 
-    }
+            $this->dispatch('mostrarMensaje', ['error', "Debe subir el documento de entrada."]);
 
-    public function mount(){
-
-        $this->distritos = Constantes::DISTRITOS;
-
-        $this->actos = Constantes::ACTOS_INSCRIPCION_GRAVAMEN;
-
-        $this->divisas = Constantes::DIVISAS;
-
-        $this->tipo_deudores = Constantes::TIPO_DEUDOR;
-
-        $this->propiedad = $this->gravamen->movimientoRegistral->folioReal->predio;
-
-        $this->gravamen->estado = 'nuevo';
-
-        $this->gravamen->load('acreedores.persona');
-
-        $this->tipo_deudor = $this->gravamen->deudores()->first()?->tipo;
-
-        if($this->tipo_deudor === 'I-DEUDOR ÚNICO'){
-
-            $this->propietario = $this->gravamen->deudores()->first()->actor_id;
-
-        }elseif($this->tipo_deudor === 'P-PARTE ALICUOTA'){
-
-            foreach($this->gravamen->parteAlicuota as $deudor){
-
-                array_push($this->propietarios_alicuotas, (string)($deudor->id));
-
-            }
+            return;
 
         }
+
+        $this->modalContraseña = true;
 
     }
 
@@ -728,7 +709,7 @@ class GravamenInscripcion extends Component
 
             DB::transaction(function () {
 
-                $this->gravamen->movimientoRegistral->update(['estado', 'captura']);
+                $this->gravamen->movimientoRegistral->update(['estado' => 'captura']);
 
                 $this->gravamen->save();
 
@@ -777,42 +758,6 @@ class GravamenInscripcion extends Component
             fn () => print($pdf->output()),
             'inscripcion.pdf'
         );
-
-    }
-
-    public function consultarArchivo(){
-
-        try {
-
-            $response = Http::withToken(env('SISTEMA_TRAMITES_TOKEN'))
-                                ->accept('application/json')
-                                ->asForm()
-                                ->post(env('SISTEMA_TRAMITES_CONSULTAR_ARCHIVO'), [
-                                                                                    'año' => $this->gravamen->movimientoRegistral->año,
-                                                                                    'tramite' => $this->gravamen->movimientoRegistral->tramite,
-                                                                                    'usuario' => $this->gravamen->movimientoRegistral->usuario,
-                                                                                    'estado' => 'nuevo'
-                                                                                ]);
-
-            $data = collect(json_decode($response, true));
-
-            if($response->status() == 200){
-
-                $this->dispatch('ver_documento', ['url' => $data['url']]);
-
-            }else{
-
-                $this->dispatch('mostrarMensaje', ['error', "No se encontro el documento."]);
-
-            }
-
-        } catch (ConnectionException $th) {
-
-            Log::error("Error al cargar archivo en varios: (id: " . auth()->user()->id . ") " . auth()->user()->name . ". " . $th);
-
-            $this->dispatch('mostrarMensaje', ['error', "Ha ocurrido un error."]);
-
-        }
 
     }
 
@@ -928,8 +873,128 @@ class GravamenInscripcion extends Component
 
     }
 
+    public function abrirModalFinalizar(){
+
+        $this->reset('documento');
+
+        $this->dispatch('removeFiles');
+
+        $this->modalDocumento = true;
+
+    }
+
+    public function guardarDocumento(){
+
+        $this->validate(['documento' => 'required']);
+
+        try {
+
+            DB::transaction(function (){
+
+                $pdf = $this->documento->store('/', 'documento_entrada');
+
+                File::create([
+                    'fileable_id' => $this->gravamen->movimientoRegistral->id,
+                    'fileable_type' => 'App\Models\MovimientoRegistral',
+                    'descripcion' => 'documento_entrada',
+                    'url' => $pdf
+                ]);
+
+                $this->modalDocumento = false;
+
+            });
+
+        } catch (\Throwable $th) {
+
+            Log::error("Error al finalizar trámite de inscripción de gravamen por el usuario: (id: " . auth()->user()->id . ") " . auth()->user()->name . ". " . $th);
+            $this->dispatch('mostrarMensaje', ['error', "Ha ocurrido un error."]);
+
+        }
+
+    }
+
+    public function mount(){
+
+        if(!$this->gravamen->movimientoRegistral->documentoEntrada()){
+
+            try {
+
+                $response = Http::withToken(env('SISTEMA_TRAMITES_TOKEN'))
+                                    ->accept('application/json')
+                                    ->asForm()
+                                    ->post(env('SISTEMA_TRAMITES_CONSULTAR_ARCHIVO'), [
+                                                                                        'año' => $this->gravamen->movimientoRegistral->año,
+                                                                                        'tramite' => $this->gravamen->movimientoRegistral->tramite,
+                                                                                        'usuario' => $this->gravamen->movimientoRegistral->usuario,
+                                                                                        'estado' => 'nuevo'
+                                                                                    ]);
+
+                $data = collect(json_decode($response, true));
+
+                if($response->status() == 200){
+
+                    $contents = file_get_contents($data['url']);
+
+                    $filename = basename($data['url']);
+
+                    Storage::disk('documento_entrada')->put($filename, $contents);
+
+                    File::create([
+                        'fileable_id' => $this->gravamen->movimientoRegistral->id,
+                        'fileable_type' => 'App\Models\MovimientoRegistral',
+                        'descripcion' => 'documento_entrada',
+                        'url' => $filename
+                    ]);
+
+                }
+
+            } catch (ConnectionException $th) {
+
+                Log::error("Error al cargar archivo en gravamen: (id: " . auth()->user()->id . ") " . auth()->user()->name . ". " . $th);
+
+                $this->dispatch('mostrarMensaje', ['error', "Ha ocurrido un error."]);
+
+            }
+
+        }
+
+        $this->distritos = Constantes::DISTRITOS;
+
+        $this->actos = Constantes::ACTOS_INSCRIPCION_GRAVAMEN;
+
+        $this->divisas = Constantes::DIVISAS;
+
+        $this->tipo_deudores = Constantes::TIPO_DEUDOR;
+
+        $this->propiedad = $this->gravamen->movimientoRegistral->folioReal->predio;
+
+        $this->gravamen->estado = 'nuevo';
+
+        $this->gravamen->load('acreedores.persona');
+
+        $this->tipo_deudor = $this->gravamen->deudores()->first()?->tipo;
+
+        if($this->tipo_deudor === 'I-DEUDOR ÚNICO'){
+
+            $this->propietario = $this->gravamen->deudores()->first()->actor_id;
+
+        }elseif($this->tipo_deudor === 'P-PARTE ALICUOTA'){
+
+            foreach($this->gravamen->parteAlicuota as $deudor){
+
+                array_push($this->propietarios_alicuotas, (string)($deudor->id));
+
+            }
+
+        }
+
+    }
+
     public function render()
     {
+
+        $this->authorize('view', $this->gravamen->movimientoRegistral);
+
         return view('livewire.gravamenes.gravamen-inscripcion')->extends('layouts.admin');
     }
 

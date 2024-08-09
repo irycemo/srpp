@@ -47,6 +47,10 @@
 
                                         <span class="bg-yellow-400 py-1 px-2 rounded-full text-white text-xs">Incompleto</span>
 
+                                    @elseif($gravamen->estado == 'inactivo')
+
+                                        <span class="bg-yellow-400 py-1 px-2 rounded-full text-white text-xs">{{ ucfirst($gravamen->estado) }}</span>
+
                                     @elseif($gravamen->estado == 'cancelado')
 
                                         <span class="bg-red-400 py-1 px-2 rounded-full text-white text-xs">{{ ucfirst($gravamen->estado) }}</span>
@@ -85,6 +89,13 @@
                                             >
                                                 Cancelar
                                             </x-button-red>
+
+                                            <x-button-blue
+                                                wire:click="abrirModalInactivar({{ $gravamen->id }})"
+                                                wire:loading.attr="disabled"
+                                            >
+                                                Inactivar
+                                            </x-button-blue>
 
                                         @endif
                                     </div>
@@ -220,5 +231,51 @@
         </x-slot>
 
     </x-confirmation-modal>
+
+    <x-dialog-modal wire:model="modalInactivar" maxWidth="sm">
+
+        <x-slot name="title">
+
+            Ingresa tu contraseña
+
+        </x-slot>
+
+        <x-slot name="content">
+
+            <x-input-group for="contraseña" label="Contraseña" :error="$errors->first('contraseña')" class="w-full">
+
+                <x-input-text type="password" id="contraseña" wire:model="contraseña" />
+
+            </x-input-group>
+
+        </x-slot>
+
+        <x-slot name="footer">
+
+            <div class="flex gap-3">
+
+                <x-button-blue
+                    wire:click="inactivar"
+                    wire:loading.attr="disabled"
+                    wire:target="inactivar">
+
+                    <img wire:loading wire:target="inactivar" class="mx-auto h-4 mr-1" src="{{ asset('storage/img/loading3.svg') }}" alt="Loading">
+
+                    <span>Ingresar contraseña</span>
+                </x-button-blue>
+
+                <x-button-red
+                    wire:click="$toggle('modalInactivar')"
+                    wire:loading.attr="disabled"
+                    wire:target="$toggle('modalInactivar')"
+                    type="button">
+                    Cerrar
+                </x-button-red>
+
+            </div>
+
+        </x-slot>
+
+    </x-dialog-modal>
 
 </div>

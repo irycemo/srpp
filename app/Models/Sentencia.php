@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use App\Models\Predio;
 use App\Traits\ModelosTrait;
 use App\Models\MovimientoRegistral;
 use Illuminate\Database\Eloquent\Model;
@@ -19,6 +20,10 @@ class Sentencia extends Model implements Auditable
 
     public function movimientoRegistral(){
         return $this->belongsTo(MovimientoRegistral::class);
+    }
+
+    public function predio(){
+        return $this->belongsTo(Predio::class, 'predio_id');
     }
 
 }

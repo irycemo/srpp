@@ -134,8 +134,6 @@
 
         <div class="flex justify-end gap-3">
 
-            {{ $errors }}
-
             @if($crear)
 
                 <x-button-blue

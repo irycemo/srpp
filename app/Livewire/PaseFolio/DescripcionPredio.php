@@ -84,11 +84,11 @@ class DescripcionPredio extends Component
             'medidas.*' => 'nullable',
             'medidas.*.viento' => 'nullable|string',
             'medidas.*.longitud' => [
-                                        'required',
+                                        'nullable',
                                         'numeric',
                                         'min:0',
                                     ],
-            'medidas.*.descripcion' => 'required|'. utf8_encode('regex:/^[áéíóúÁÉÍÓÚñÑa-zA-Z-0-9$#.()\/\-,;" ]*$/'),
+            'medidas.*.descripcion' => 'nullable',
             'predio' => 'nullable',
             'unidad_area' => 'required'
          ];

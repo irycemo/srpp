@@ -1,4 +1,4 @@
-<div class=" gap-3  col-span-2">
+<div class="mb-3">
 
     <div class="mb-3 bg-white rounded-lg p-3 shadow-lg">
 
@@ -40,7 +40,13 @@
 
     </div>
 
-    <div class="mb-3 bg-white rounded-lg p-3 shadow-lg">
+    <div class="bg-white p-4 rounded-lg mb-3 flex gap-3 items-center justify-end">
+
+        <x-link-blue target="_blank" href="{{ $folioReal->caratula() }}">Documento de entrada</x-link-blue>
+
+    </div>
+
+    {{-- <div class="mb-3 bg-white rounded-lg p-3 shadow-lg">
 
         <span class="flex items-center justify-center text-lg text-gray-700 mb-5">Transmitentes</span>
 
@@ -116,6 +122,6 @@
 
         </div>
 
-    @endif
+    @endif --}}
 
 </div>

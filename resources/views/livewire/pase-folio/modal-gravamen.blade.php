@@ -8,8 +8,6 @@
             Nuevo Gravamen
         @endif
 
-        {{ $errors }}
-
     </div>
 
     <div>

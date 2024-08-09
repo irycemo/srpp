@@ -10,33 +10,19 @@
 
                 <x-input-group for="codigo_postal" label="Código postal" :error="$errors->first('codigo_postal')" class="w-full">
 
-                    <x-input-text type="number" id="codigo_postal" wire:model.lazy="codigo_postal" />
+                    <x-input-text type="number" id="codigo_postal" wire:model="codigo_postal" />
 
                 </x-input-group>
 
                 <x-input-group for="nombre_asentamiento" label="Nombre del asentamiento" :error="$errors->first('nombre_asentamiento')" class="w-full">
 
-                    <x-input-select id="nombre_asentamiento" wire:model.live="nombre_asentamiento" class="w-full">
-
-                        <option value="">Seleccione una opción</option>
-
-                        @if($nombres_asentamientos)
-
-                            @foreach ($nombres_asentamientos as $nombre)
-
-                                <option value="{{ $nombre }}">{{ $nombre }}</option>
-
-                            @endforeach
-
-                        @endif
-
-                    </x-input-select>
+                    <x-input-text type="number" id="nombre_asentamiento" wire:model="nombre_asentamiento" />
 
                 </x-input-group>
 
                 <x-input-group for="municipio_ubicacion" label="Municipio" :error="$errors->first('municipio_ubicacion')" class="w-full">
 
-                    <x-input-text id="municipio_ubicacion" wire:model="municipio_ubicacion" readonly/>
+                    <x-input-text id="municipio_ubicacion" wire:model="municipio_ubicacion"/>
 
                 </x-input-group>
 
@@ -48,7 +34,17 @@
 
                 <x-input-group for="tipo_asentamiento" label="Tipo de asentamiento" :error="$errors->first('tipo_asentamiento')" class="w-full">
 
-                    <x-input-text id="tipo_asentamiento" wire:model="tipo_asentamiento" readonly/>
+                    <x-input-select id="tipo_asentamiento" wire:model.live="tipo_asentamiento" class="w-full">
+
+                        <option value="">Seleccione una opción</option>
+
+                        @foreach ($tipos_asentamientos as $asentamiento)
+
+                            <option value="{{ $asentamiento }}">{{ $asentamiento }}</option>
+
+                        @endforeach
+
+                    </x-input-select>
 
                 </x-input-group>
 

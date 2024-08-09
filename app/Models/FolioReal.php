@@ -3,16 +3,20 @@
 namespace App\Models;
 
 use Carbon\Carbon;
+use App\Models\File;
 use App\Models\Vario;
 use App\Models\Predio;
 use App\Models\Gravamen;
+use App\Models\Propiedad;
 use App\Models\Sentencia;
 use App\Models\Antecedente;
 use App\Models\Cancelacion;
 use App\Traits\ModelosTrait;
+use App\Models\Certificacion;
 use App\Constantes\Constantes;
 use App\Models\MovimientoRegistral;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Support\Facades\Storage;
 use OwenIt\Auditing\Contracts\Auditable;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 
@@ -33,6 +37,7 @@ class FolioReal extends Model implements Auditable
             'rechazado' => 'red-400',
             'activo' => 'green-400',
             'bloqueado' => 'black',
+            'elaborado' => 'green-400',
         ][$this->estado] ?? 'gray-400';
     }
 
@@ -54,6 +59,14 @@ class FolioReal extends Model implements Auditable
 
     public function varios(){
         return $this->hasManyThrough(Vario::class, MovimientoRegistral::class, 'folio_real', 'movimiento_registral_id', 'id', 'id');
+    }
+
+    public function propiedad(){
+        return $this->hasManyThrough(Propiedad::class, MovimientoRegistral::class, 'folio_real', 'movimiento_registral_id', 'id', 'id');
+    }
+
+    public function certificaciones(){
+        return $this->hasManyThrough(Certificacion::class, MovimientoRegistral::class, 'folio_real', 'movimiento_registral_id', 'id', 'id');
     }
 
     public function predio(){
@@ -82,6 +95,17 @@ class FolioReal extends Model implements Auditable
 
     public function antecedentes(){
         return $this->hasMany(Antecedente::class, 'folio_real');
+    }
+
+    public function archivos(){
+        return $this->morphMany(File::class, 'fileable');
+    }
+
+    public function caratula(){
+
+        return $this->archivos()->where('descripcion', 'caratula')->first()
+                ? Storage::disk('caratulas')->url($this->archivos()->where('descripcion', 'caratula')->first()->url)
+                : null;
     }
 
     public function avisoPreventivo(){

@@ -56,6 +56,22 @@ return [
             'throw' => false,
         ],
 
+        'caratulas' => [
+            'driver' => 'local',
+            'root' => storage_path('app/caratulas'),
+            'url' => env('APP_URL').'/caratulas',
+            'visibility' => 'private',
+            'throw' => false,
+        ],
+
+        'documento_entrada' => [
+            'driver' => 'local',
+            'root' => storage_path('app/documento_entrada'),
+            'url' => env('APP_URL').'/documento_entrada',
+            'visibility' => 'public',
+            'throw' => false,
+        ],
+
     ],
 
     /*
@@ -71,6 +87,8 @@ return [
 
     'links' => [
         public_path('storage') => storage_path('app/public'),
+        public_path('caratulas') => storage_path('app/caratulas'),
+        public_path('documento_entrada') => storage_path('app/documento_entrada'),
     ],
 
 ];

@@ -13,6 +13,7 @@ use App\Exceptions\CertificacionServiceException;
 use App\Http\Requests\MovimientoRegistralRequest;
 use App\Http\Services\InscripcionesCancelacionService;
 use App\Exceptions\MovimientoRegistralServiceException;
+use App\Http\Requests\MovimientoRegistralUpdateRequest;
 use App\Http\Requests\MovimientoRegistralCambiarTipoServicioRequest;
 
 class MovimientoRegistralService{
@@ -129,7 +130,7 @@ class MovimientoRegistralService{
 
     }
 
-    public function update(MovimientoRegistralRequest $request):void
+    public function update(MovimientoRegistralUpdateRequest $request):void
     {
 
         try {
@@ -373,7 +374,7 @@ class MovimientoRegistralService{
         }
 
         /* Inscripciones: Gravamen */
-        if($servicio == 'DL66' && $categoria_servicio == 'Inscripciones - Gravamenes'){
+        if($servicio == 'DL64' && $categoria_servicio == 'Inscripciones - Gravamenes'){
 
             return $this->asignacionService->obtenerUsuarioGravamen($folioReal, $distrito);
 
@@ -436,7 +437,7 @@ class MovimientoRegistralService{
         }
 
         /* Inscripciones: Gravamen */
-        if($servicio == 'DL66'){
+        if($servicio == 'DL64'){
             return $this->asignacionService->obtenerSupervisorGravamen($distrito);
 
         }

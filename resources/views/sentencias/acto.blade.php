@@ -262,41 +262,45 @@
 
                     </p>
 
-                    <p class="separador">colindancias</p>
+                    @if($predio->colindancias->count())
 
-                    <table>
+                        <p class="separador">colindancias</p>
 
-                        <thead>
+                        <table>
 
-                            <tr>
-                                <th>Viento</th>
-                                <th>Longitud</th>
-                                <th>Descripción</th>
-                            </tr>
-
-                        </thead>
-
-                        <tbody>
-
-                            @foreach ($predio->colindancias as $colindancia)
+                            <thead>
 
                                 <tr>
-                                    <td style="padding-right: 40px;">
-                                        {{ $colindancia->viento }}
-                                    </td>
-                                    <td style="padding-right: 40px;">
-                                        {{ number_format($colindancia->longitud, 2) }}
-                                    </td>
-                                    <td style="padding-right: 40px;">
-                                        {{ $colindancia->descripcion }}
-                                    </td>
+                                    <th>Viento</th>
+                                    <th>Longitud</th>
+                                    <th>Descripción</th>
                                 </tr>
 
-                            @endforeach
+                            </thead>
 
-                        </tbody>
+                            <tbody>
 
-                    </table>
+                                @foreach ($predio->colindancias as $colindancia)
+
+                                    <tr>
+                                        <td style="padding-right: 40px;">
+                                            {{ $colindancia->viento }}
+                                        </td>
+                                        <td style="padding-right: 40px;">
+                                            {{ number_format($colindancia->longitud, 2) }}
+                                        </td>
+                                        <td style="padding-right: 40px;">
+                                            {{ $colindancia->descripcion }}
+                                        </td>
+                                    </tr>
+
+                                @endforeach
+
+                            </tbody>
+
+                        </table>
+
+                    @endif
 
                     <p class="separador">DESCRIPCIÓN DEL INMUEBLE</p>
 

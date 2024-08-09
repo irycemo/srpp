@@ -7,6 +7,7 @@ use App\Http\Controllers\Controller;
 use App\Http\Requests\MovimientoRegistralRequest;
 use App\Exceptions\MovimientoRegistralServiceException;
 use App\Http\Requests\MovimientoRegistralCambiarTipoServicioRequest;
+use App\Http\Requests\MovimientoRegistralUpdateRequest;
 use App\Http\Services\MovimientoRegistralService;
 
 
@@ -49,7 +50,7 @@ class MovimientoRegistralController extends Controller
 
     }
 
-    public function update(MovimientoRegistralRequest $request){
+    public function update(MovimientoRegistralUpdateRequest $request){
 
         try {
 

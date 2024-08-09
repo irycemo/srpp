@@ -168,7 +168,7 @@
             <div class="informacion">
 
                 <div style="text-align: right">
-                    <p style="margin:0;"><strong>FOLIO REAL:</strong>{{ $predio->folioReal->folio }}-{{ $cancelacion->movimientoRegistral->folio }}</p>
+                    <p style="margin:0;"><strong>Movimiento registral:</strong>{{ $predio->folioReal->folio }}-{{ $cancelacion->movimientoRegistral->folio }}</p>
                     <p style="margin:0;"><strong>DISTRITO:</strong> {{ $cancelacion->movimientoRegistral->distrito}}</p>
                 </div>
 
@@ -262,41 +262,45 @@
 
                     </p>
 
-                    <p class="separador">colindancias</p>
+                    @if($predio->colindancias->count())
 
-                    <table>
+                        <p class="separador">colindancias</p>
 
-                        <thead>
+                        <table>
 
-                            <tr>
-                                <th>Viento</th>
-                                <th>Longitud</th>
-                                <th>Descripción</th>
-                            </tr>
-
-                        </thead>
-
-                        <tbody>
-
-                            @foreach ($predio->colindancias as $colindancia)
+                            <thead>
 
                                 <tr>
-                                    <td style="padding-right: 40px;">
-                                        {{ $colindancia->viento }}
-                                    </td>
-                                    <td style="padding-right: 40px;">
-                                        {{ number_format($colindancia->longitud, 2) }}
-                                    </td>
-                                    <td style="padding-right: 40px;">
-                                        {{ $colindancia->descripcion }}
-                                    </td>
+                                    <th>Viento</th>
+                                    <th>Longitud</th>
+                                    <th>Descripción</th>
                                 </tr>
 
-                            @endforeach
+                            </thead>
 
-                        </tbody>
+                            <tbody>
 
-                    </table>
+                                @foreach ($predio->colindancias as $colindancia)
+
+                                    <tr>
+                                        <td style="padding-right: 40px;">
+                                            {{ $colindancia->viento }}
+                                        </td>
+                                        <td style="padding-right: 40px;">
+                                            {{ number_format($colindancia->longitud, 2) }}
+                                        </td>
+                                        <td style="padding-right: 40px;">
+                                            {{ $colindancia->descripcion }}
+                                        </td>
+                                    </tr>
+
+                                @endforeach
+
+                            </tbody>
+
+                        </table>
+
+                    @endif
 
                     <p class="separador">DESCRIPCIÓN DEL INMUEBLE</p>
 
@@ -475,7 +479,7 @@
                             <td style="padding-right: 40px; text-align:left; ; vertical-align: bottom; white-space: nowrap;">
 
                                 {{-- <p><strong>FECHA DE ENTRADA:</strong>{{ $cancelacion->movimientoRegistral->created_at->format('d-m-Y') }}</p> --}}
-                                <p style="margin: 0"><strong>Fecha de impresión: </strong>{{ now()->format('d-m-Y H:i:s') }}</p>
+                                <p style="margin: 0"><strong>Fecha de impresión: </strong>{{ now()->format('d/m/Y H:i:s') }}</p>
                                 <p style="margin: 0"><strong>IMPRESO POR: </strong>{{  auth()->user()->name }}</p>
 
                             </td>

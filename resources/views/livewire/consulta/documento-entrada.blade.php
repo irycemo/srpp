@@ -1,4 +1,4 @@
-<div class="bg-white rounded-lg p-4 shadow-xl grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-4 text-sm mb-3">
+<div class="bg-white rounded-lg p-4 shadow-xl grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-4 text-sm my-3">
 
     <span class="flex items-center justify-center text-lg text-gray-700 md:col-span-3 col-span-1 sm:col-span-2 lg:col-span-6">Antecedente</span>
 
@@ -52,7 +52,7 @@
 
 </div>
 
-<div class="bg-white rounded-lg p-4 shadow-xl grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-4 text-sm">
+<div class="bg-white rounded-lg p-4 shadow-xl grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-4 text-sm mb-3">
 
     <span class="flex items-center justify-center text-lg text-gray-700 md:col-span-3 col-span-1 sm:col-span-2 lg:col-span-5">Documento de entrada</span>
 

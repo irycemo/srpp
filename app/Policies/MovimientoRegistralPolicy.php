@@ -11,6 +11,7 @@ class MovimientoRegistralPolicy
 
     public function view(User $user, MovimientoRegistral $movimientoRegistral): Response
     {
+
         if ($user->hasRole('Administrador')) {
             return Response::allow();
         }
@@ -22,6 +23,12 @@ class MovimientoRegistralPolicy
 
     public function update(User $user, MovimientoRegistral $movimientoRegistral): Response
     {
+
+        if(!in_array($movimientoRegistral->estado, ['nuevo', 'captura'])){
+
+            return Response::deny('El movimiento registral no puede ser modificado.');
+
+        }
 
         if ($user->hasRole('Administrador')) {
             return Response::allow();

@@ -286,41 +286,45 @@
 
                 </p>
 
-                <p class="separador">colindancias</p>
+                @if($folioReal->predio->colindancias->count())
 
-                <table>
+                    <p class="separador">colindancias</p>
 
-                    <thead>
+                    <table>
 
-                        <tr>
-                            <th>Viento</th>
-                            <th>Longitud</th>
-                            <th>Descripción</th>
-                        </tr>
-
-                    </thead>
-
-                    <tbody>
-
-                        @foreach ($folioReal->predio->colindancias as $colindancia)
+                        <thead>
 
                             <tr>
-                                <td style="padding-right: 40px;">
-                                    {{ $colindancia->viento }}
-                                </td>
-                                <td style="padding-right: 40px;">
-                                    {{ number_format($colindancia->longitud, 2) }}
-                                </td>
-                                <td style="padding-right: 40px;">
-                                    {{ $colindancia->descripcion }}
-                                </td>
+                                <th>Viento</th>
+                                <th>Longitud</th>
+                                <th>Descripción</th>
                             </tr>
 
-                        @endforeach
+                        </thead>
 
-                    </tbody>
+                        <tbody>
 
-                </table>
+                            @foreach ($folioReal->predio->colindancias as $colindancia)
+
+                                <tr>
+                                    <td style="padding-right: 40px;">
+                                        {{ $colindancia->viento }}
+                                    </td>
+                                    <td style="padding-right: 40px;">
+                                        {{ number_format($colindancia->longitud, 2) }}
+                                    </td>
+                                    <td style="padding-right: 40px;">
+                                        {{ $colindancia->descripcion }}
+                                    </td>
+                                </tr>
+
+                            @endforeach
+
+                        </tbody>
+
+                    </table>
+
+                @endif
 
                 <p class="separador">DESCRIPCIÓN DEL INMUEBLE</p>
 
@@ -627,10 +631,13 @@
 
                 </div>
 
+                <p class="separador">datos de control</p>
+
                 <div class="parrafo">
 
-                    <p><strong>Fecha de pase a folio:</strong> {{ Carbon\Carbon::now()->locale('es')->translatedFormat('H:i:s \d\e\l l d \d\e F \d\e\l Y') }}.</p>
+                    <p><strong>Fecha de asignación de folio:</strong> {{ Carbon\Carbon::now()->locale('es')->translatedFormat('H:i:s \d\e\l l d \d\e F \d\e\l Y') }}.</p>
                     <p><strong>Registrador:</strong> {{ auth()->user()->name }}.</p>
+                    <p><strong>número de control:</strong> {{ $folioReal->movimientosRegistrales->where('folio', 1)->first()->año }}-{{ $folioReal->movimientosRegistrales->where('folio', 1)->first()->tramite }}-{{ $folioReal->movimientosRegistrales->where('folio', 1)->first()->usuario }}.</p>
 
                 </div>
 

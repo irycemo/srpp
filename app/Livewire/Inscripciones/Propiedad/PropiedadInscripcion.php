@@ -2,6 +2,7 @@
 
 namespace App\Livewire\Inscripciones\Propiedad;
 
+use App\Models\File;
 use App\Models\User;
 use App\Models\Actor;
 use App\Models\Deudor;
@@ -14,9 +15,15 @@ use Illuminate\Validation\Rule;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Facades\Http;
+use Illuminate\Support\Facades\Storage;
+use Illuminate\Http\Client\ConnectionException;
+use Livewire\WithFileUploads;
 
 class PropiedadInscripcion extends Component
 {
+
+    use WithFileUploads;
 
     public $modalPropietario;
     public $modalTransmitente;
@@ -24,6 +31,8 @@ class PropiedadInscripcion extends Component
     public $modalContraseña;
     public $crear = false;
     public $editar = false;
+    public $modalDocumento = false;
+    public $documento;
 
     public $areas;
     public $divisas;
@@ -87,89 +96,58 @@ class PropiedadInscripcion extends Component
             'inscripcion.cp_oficina' => 'required',
             'inscripcion.cp_tipo_predio' => 'required',
             'inscripcion.cp_registro' => 'required',
-            'inscripcion.cc_region_catastral' => 'required',
+            /* 'inscripcion.cc_region_catastral' => 'required',
             'inscripcion.cc_municipio' => 'required',
             'inscripcion.cc_zona_catastral' => 'required',
             'inscripcion.cc_sector' => 'required',
             'inscripcion.cc_manzana' => 'required',
             'inscripcion.cc_predio' => 'required',
             'inscripcion.cc_edificio' => 'required',
-            'inscripcion.cc_departamento' => 'required',
+            'inscripcion.cc_departamento' => 'required', */
             'inscripcion.acto_contenido' => 'required',
             'inscripcion.descripcion_acto' => 'nullable',
-            'porcentaje_propiedad' => 'nullable|numeric|min:0|max:100',
-            'porcentaje_nuda' => 'nullable|numeric|min:0|max:100',
-            'porcentaje_usufructo' => 'nullable|numeric|min:0|max:100',
-            'tipo_persona' => 'required',
-            'nombre' => [
-                Rule::requiredIf($this->tipo_persona === 'FISICA')
-            ],
-            'ap_paterno' => Rule::requiredIf($this->tipo_persona === 'FISICA'),
-            'ap_materno' => Rule::requiredIf($this->tipo_persona === 'FISICA'),
-            'curp' => [
-                'nullable',
-                /* Rule::requiredIf($this->tipo_persona === 'FISICA'), */
-                'regex:/^[A-Z]{1}[AEIOUX]{1}[A-Z]{2}[0-9]{2}(0[1-9]|1[0-2])(0[1-9]|1[0-9]|2[0-9]|3[0-1])[HM]{1}(AS|BC|BS|CC|CS|CH|CL|CM|DF|DG|GT|GR|HG|JC|MC|MN|MS|NT|NL|OC|PL|QT|QR|SP|SL|SR|TC|TS|TL|VZ|YN|ZS|NE)[B-DF-HJ-NP-TV-Z]{3}[0-9A-Z]{1}[0-9]{1}$/i'
-            ],
-            'rfc' => [
-                'nullable',
-                'regex:/^([A-ZÑ&]{3,4}) ?(?:- ?)?(\d{2}(?:0[1-9]|1[0-2])(?:0[1-9]|[12]\d|3[01])) ?(?:- ?)?([A-Z\d]{2})([A\d])$/'
-            ],
-            'razon_social' => ['nullable', /* Rule::requiredIf($this->tipo_persona === 'MORAL') */],
-            'fecha_nacimiento' => 'nullable',
-            'nacionalidad' => 'nullable|' . utf8_encode('regex:/^[áéíóúÁÉÍÓÚñÑa-zA-Z-0-9$#.() ]*$/'),
-            'estado_civil' => 'nullable',
-            'calle' => 'nullable',
-            'numero_exterior_propietario' => 'nullable|' . utf8_encode('regex:/^[áéíóúÁÉÍÓÚñÑa-zA-Z-0-9$#.() ]*$/'),
-            'numero_interior_propietario' => 'nullable|' . utf8_encode('regex:/^[áéíóúÁÉÍÓÚñÑa-zA-Z-0-9$#.() ]*$/'),
-            'colonia' => 'nullable|' . utf8_encode('regex:/^[áéíóúÁÉÍÓÚñÑa-zA-Z-0-9$#.() ]*$/'),
-            'cp' => 'nullable|numeric',
-            'ciudad' => 'nullable',
-            'entidad' => 'nullable',
-            'municipio_propietario' => 'nullable',
-            'representados' => Rule::requiredIf($this->modalRepresentante === true),
-            'predio.superficie_terreno' => 'required',
-            'predio.unidad_area' => 'required',
-            'predio.superficie_construccion' => 'required',
-            'predio.monto_transaccion' => 'required',
-            'predio.observaciones' => 'nullable',
-            'predio.curt' => 'nullable',
-            'predio.superficie_judicial' => 'nullable',
-            'predio.superficie_notarial' => 'nullable',
-            'predio.area_comun_terreno' => 'nullable',
-            'predio.area_comun_construccion' => 'nullable',
-            'predio.valor_terreno_comun' => 'nullable',
-            'predio.valor_construccion_comun' => 'nullable',
-            'predio.valor_total_terreno' => 'nullable',
-            'predio.valor_total_construccion' => 'nullable',
-            'predio.valor_catastral' => 'nullable',
-            'predio.codigo_postal' => 'nullable',
-            'predio.nombre_asentamiento' => 'nullable',
-            'predio.municipio' => 'nullable',
-            'predio.ciudad' => 'nullable',
-            'predio.tipo_asentamiento' => 'nullable',
-            'predio.localidad' => 'nullable',
-            'predio.tipo_vialidad' => 'nullable',
-            'predio.nombre_vialidad' => 'nullable',
-            'predio.numero_exterior' => 'nullable',
-            'predio.numero_interior' => 'nullable',
-            'predio.nombre_edificio' => 'nullable',
-            'predio.departamento_edificio' => 'nullable',
-            'predio.departamento_edificio' => 'nullable',
-            'predio.descripcion' => 'nullable',
-            'predio.lote' => 'nullable',
-            'predio.manzana' => 'nullable',
-            'predio.ejido' => 'nullable',
-            'predio.parcela' => 'nullable',
-            'predio.solar' => 'nullable',
-            'predio.poblado' => 'nullable',
-            'predio.numero_exterior_2' => 'nullable',
-            'predio.numero_adicional' => 'nullable',
-            'predio.numero_adicional_2' => 'nullable',
-            'predio.lote_fraccionador' => 'nullable',
-            'predio.manzana_fraccionador' => 'nullable',
-            'predio.etapa_fraccionador' => 'nullable',
-            'predio.clave_edificio' => 'nullable',
+            'inscripcion.superficie_terreno' => 'required',
+            'inscripcion.unidad_area' => 'required',
+            'inscripcion.superficie_construccion' => 'required',
+            'inscripcion.monto_transaccion' => 'required',
+            'inscripcion.observaciones' => 'nullable',
+            'inscripcion.divisa' => 'nullable',
+            'inscripcion.superficie_judicial' => 'nullable',
+            'inscripcion.superficie_notarial' => 'nullable',
+            'inscripcion.area_comun_terreno' => 'nullable',
+            'inscripcion.area_comun_construccion' => 'nullable',
+            'inscripcion.valor_terreno_comun' => 'nullable',
+            'inscripcion.valor_construccion_comun' => 'nullable',
+            'inscripcion.valor_total_terreno' => 'nullable',
+            'inscripcion.valor_total_construccion' => 'nullable',
+            'inscripcion.valor_catastral' => 'nullable',
+            'inscripcion.codigo_postal' => 'nullable',
+            'inscripcion.nombre_asentamiento' => 'nullable',
+            'inscripcion.municipio' => 'nullable',
+            'inscripcion.ciudad' => 'nullable',
+            'inscripcion.tipo_asentamiento' => 'nullable',
+            'inscripcion.localidad' => 'nullable',
+            'inscripcion.tipo_vialidad' => 'nullable',
+            'inscripcion.nombre_vialidad' => 'nullable',
+            'inscripcion.numero_exterior' => 'nullable',
+            'inscripcion.numero_interior' => 'nullable',
+            'inscripcion.nombre_edificio' => 'nullable',
+            'inscripcion.departamento_edificio' => 'nullable',
+            'inscripcion.departamento_edificio' => 'nullable',
+            'inscripcion.descripcion' => 'nullable',
+            'inscripcion.lote' => 'nullable',
+            'inscripcion.manzana' => 'nullable',
+            'inscripcion.ejido' => 'nullable',
+            'inscripcion.parcela' => 'nullable',
+            'inscripcion.solar' => 'nullable',
+            'inscripcion.poblado' => 'nullable',
+            'inscripcion.numero_exterior_2' => 'nullable',
+            'inscripcion.numero_adicional' => 'nullable',
+            'inscripcion.numero_adicional_2' => 'nullable',
+            'inscripcion.lote_fraccionador' => 'nullable',
+            'inscripcion.manzana_fraccionador' => 'nullable',
+            'inscripcion.etapa_fraccionador' => 'nullable',
+            'inscripcion.clave_edificio' => 'nullable',
          ];
     }
 
@@ -277,6 +255,8 @@ class PropiedadInscripcion extends Component
 
     public function agregarRepresentante(){
 
+        $this->reset('representados');
+
         $this->modalPropietario = false;
         $this->modalTransmitente = false;
         $this->modalRepresentante = true;
@@ -288,7 +268,38 @@ class PropiedadInscripcion extends Component
 
         $this->authorize('update', $this->inscripcion->movimientoRegistral);
 
-        $this->validate();
+        $this->validate([
+            'porcentaje_propiedad' => 'nullable|numeric|min:0|max:100',
+            'porcentaje_nuda' => 'nullable|numeric|min:0|max:100',
+            'porcentaje_usufructo' => 'nullable|numeric|min:0|max:100',
+            'tipo_persona' => 'required',
+            'nombre' => [
+                Rule::requiredIf($this->tipo_persona === 'FISICA')
+            ],
+            'ap_paterno' => Rule::requiredIf($this->tipo_persona === 'FISICA'),
+            'ap_materno' => Rule::requiredIf($this->tipo_persona === 'FISICA'),
+            'curp' => [
+                'nullable',
+                /* Rule::requiredIf($this->tipo_persona === 'FISICA'), */
+                'regex:/^[A-Z]{1}[AEIOUX]{1}[A-Z]{2}[0-9]{2}(0[1-9]|1[0-2])(0[1-9]|1[0-9]|2[0-9]|3[0-1])[HM]{1}(AS|BC|BS|CC|CS|CH|CL|CM|DF|DG|GT|GR|HG|JC|MC|MN|MS|NT|NL|OC|PL|QT|QR|SP|SL|SR|TC|TS|TL|VZ|YN|ZS|NE)[B-DF-HJ-NP-TV-Z]{3}[0-9A-Z]{1}[0-9]{1}$/i'
+            ],
+            'rfc' => [
+                'nullable',
+                'regex:/^([A-ZÑ&]{3,4}) ?(?:- ?)?(\d{2}(?:0[1-9]|1[0-2])(?:0[1-9]|[12]\d|3[01])) ?(?:- ?)?([A-Z\d]{2})([A\d])$/'
+            ],
+            'razon_social' => ['nullable', /* Rule::requiredIf($this->tipo_persona === 'MORAL') */],
+            'fecha_nacimiento' => 'nullable',
+            'nacionalidad' => 'nullable|',
+            'estado_civil' => 'nullable',
+            'calle' => 'nullable',
+            'numero_exterior_propietario' => 'nullable|',
+            'numero_interior_propietario' => 'nullable|',
+            'colonia' => 'nullable|',
+            'cp' => 'nullable|numeric',
+            'ciudad' => 'nullable',
+            'entidad' => 'nullable',
+            'municipio_propietario' => 'nullable',
+        ]);
 
         $persona = Persona::query()
                             ->where(function($q){
@@ -473,7 +484,39 @@ class PropiedadInscripcion extends Component
 
         $this->authorize('update', $this->inscripcion->movimientoRegistral);
 
-        $this->validate();
+        $this->validate([
+            'porcentaje_propiedad' => 'nullable|numeric|min:0|max:100',
+            'porcentaje_nuda' => 'nullable|numeric|min:0|max:100',
+            'porcentaje_usufructo' => 'nullable|numeric|min:0|max:100',
+            'tipo_persona' => 'required',
+            'nombre' => [
+                Rule::requiredIf($this->tipo_persona === 'FISICA')
+            ],
+            'ap_paterno' => Rule::requiredIf($this->tipo_persona === 'FISICA'),
+            'ap_materno' => Rule::requiredIf($this->tipo_persona === 'FISICA'),
+            'curp' => [
+                'nullable',
+                /* Rule::requiredIf($this->tipo_persona === 'FISICA'), */
+                'regex:/^[A-Z]{1}[AEIOUX]{1}[A-Z]{2}[0-9]{2}(0[1-9]|1[0-2])(0[1-9]|1[0-9]|2[0-9]|3[0-1])[HM]{1}(AS|BC|BS|CC|CS|CH|CL|CM|DF|DG|GT|GR|HG|JC|MC|MN|MS|NT|NL|OC|PL|QT|QR|SP|SL|SR|TC|TS|TL|VZ|YN|ZS|NE)[B-DF-HJ-NP-TV-Z]{3}[0-9A-Z]{1}[0-9]{1}$/i'
+            ],
+            'rfc' => [
+                'nullable',
+                'regex:/^([A-ZÑ&]{3,4}) ?(?:- ?)?(\d{2}(?:0[1-9]|1[0-2])(?:0[1-9]|[12]\d|3[01])) ?(?:- ?)?([A-Z\d]{2})([A\d])$/'
+            ],
+            'razon_social' => ['nullable', /* Rule::requiredIf($this->tipo_persona === 'MORAL') */],
+            'fecha_nacimiento' => 'nullable',
+            'nacionalidad' => 'nullable|',
+            'estado_civil' => 'nullable',
+            'calle' => 'nullable',
+            'numero_exterior_propietario' => 'nullable|',
+            'numero_interior_propietario' => 'nullable|',
+            'colonia' => 'nullable|',
+            'cp' => 'nullable|numeric',
+            'ciudad' => 'nullable',
+            'entidad' => 'nullable',
+            'municipio_propietario' => 'nullable',
+            'representados' => Rule::requiredIf($this->modalRepresentante === true),
+        ]);
 
         $persona = Persona::where('rfc', $this->rfc)->first();
 
@@ -580,6 +623,7 @@ class PropiedadInscripcion extends Component
         $this->actor = $actor;
 
         $this->tipo_propietario = $actor->tipo_actor;
+        $this->porcentaje_propiedad = $actor->porcentaje_propiedad;
         $this->porcentaje_nuda = $actor->porcentaje_nuda;
         $this->porcentaje_usufructo = $actor->porcentaje_usufructo;
         $this->tipo_persona = $actor->persona->tipo;
@@ -623,7 +667,39 @@ class PropiedadInscripcion extends Component
 
     public function actualizarActor(){
 
-        $this->validate();
+        $this->validate([
+            'porcentaje_propiedad' => 'nullable|numeric|min:0|max:100',
+            'porcentaje_nuda' => 'nullable|numeric|min:0|max:100',
+            'porcentaje_usufructo' => 'nullable|numeric|min:0|max:100',
+            'tipo_persona' => 'required',
+            'nombre' => [
+                Rule::requiredIf($this->tipo_persona === 'FISICA')
+            ],
+            'ap_paterno' => Rule::requiredIf($this->tipo_persona === 'FISICA'),
+            'ap_materno' => Rule::requiredIf($this->tipo_persona === 'FISICA'),
+            'curp' => [
+                'nullable',
+                /* Rule::requiredIf($this->tipo_persona === 'FISICA'), */
+                'regex:/^[A-Z]{1}[AEIOUX]{1}[A-Z]{2}[0-9]{2}(0[1-9]|1[0-2])(0[1-9]|1[0-9]|2[0-9]|3[0-1])[HM]{1}(AS|BC|BS|CC|CS|CH|CL|CM|DF|DG|GT|GR|HG|JC|MC|MN|MS|NT|NL|OC|PL|QT|QR|SP|SL|SR|TC|TS|TL|VZ|YN|ZS|NE)[B-DF-HJ-NP-TV-Z]{3}[0-9A-Z]{1}[0-9]{1}$/i'
+            ],
+            'rfc' => [
+                'nullable',
+                'regex:/^([A-ZÑ&]{3,4}) ?(?:- ?)?(\d{2}(?:0[1-9]|1[0-2])(?:0[1-9]|[12]\d|3[01])) ?(?:- ?)?([A-Z\d]{2})([A\d])$/'
+            ],
+            'razon_social' => ['nullable', /* Rule::requiredIf($this->tipo_persona === 'MORAL') */],
+            'fecha_nacimiento' => 'nullable',
+            'nacionalidad' => 'nullable|',
+            'estado_civil' => 'nullable',
+            'calle' => 'nullable',
+            'numero_exterior_propietario' => 'nullable|',
+            'numero_interior_propietario' => 'nullable|',
+            'colonia' => 'nullable|',
+            'cp' => 'nullable|numeric',
+            'ciudad' => 'nullable',
+            'entidad' => 'nullable',
+            'municipio_propietario' => 'nullable',
+            'representados' => Rule::requiredIf($this->modalRepresentante === true),
+        ]);
 
         if($this->revisarProcentajes($this->actor->id)){
 
@@ -749,25 +825,6 @@ class PropiedadInscripcion extends Component
         }
 
     }
-
-    /* public function repartirPartesIguales($flag = false){
-
-        $propietarios = $flag ? $this->inscripcion->propietarios()->count() + 1 : $this->inscripcion->propietarios()->count();
-
-        $porcentaje = 100 / $propietarios;
-
-        foreach ($this->inscripcion->propietarios() as $propietario) {
-
-            $propietario->update([
-                'porcentaje_nuda' => $porcentaje,
-                'porcentaje_usufructo' => $porcentaje
-            ]);
-
-        }
-
-        return $porcentaje;
-
-    } */
 
     public function revisarProcentajes($id = null){
 
@@ -907,22 +964,7 @@ class PropiedadInscripcion extends Component
 
     public function finalizar(){
 
-        $this->validate([
-            'inscripcion.cp_localidad' => 'required',
-            'inscripcion.cp_oficina' => 'required',
-            'inscripcion.cp_tipo_predio' => 'required',
-            'inscripcion.cp_registro' => 'required',
-            'inscripcion.cc_region_catastral' => 'required',
-            'inscripcion.cc_municipio' => 'required',
-            'inscripcion.cc_zona_catastral' => 'required',
-            'inscripcion.cc_sector' => 'required',
-            'inscripcion.cc_manzana' => 'required',
-            'inscripcion.cc_predio' => 'required',
-            'inscripcion.cc_edificio' => 'required',
-            'inscripcion.cc_departamento' => 'required',
-            'inscripcion.acto_contenido' => 'required',
-            'inscripcion.descripcion_acto' => 'required'
-        ]);
+        $this->validate();
 
         if($this->inscripcion->movimientoRegistral->tipo_servicio == 'ordinario'){
 
@@ -933,6 +975,14 @@ class PropiedadInscripcion extends Component
                 return;
 
             }
+
+        }
+
+        if(!$this->inscripcion->movimientoRegistral->documentoEntrada()){
+
+            $this->dispatch('mostrarMensaje', ['error', "Debe subir el documento de entrada."]);
+
+            return;
 
         }
 
@@ -948,7 +998,7 @@ class PropiedadInscripcion extends Component
 
             DB::transaction(function () {
 
-                $this->inscripcion->movimientoRegistral->update(['estado', 'captura']);
+                $this->inscripcion->movimientoRegistral->update(['estado' => 'captura']);
 
                 $this->inscripcion->save();
 
@@ -1003,8 +1053,6 @@ class PropiedadInscripcion extends Component
 
             DB::transaction(function () {
 
-                $this->inscripcion->movimientoRegistral->update(['estado' => 'elaborado']);
-
                 $this->predio->save();
 
                 $this->procesarPropietarios();
@@ -1012,6 +1060,54 @@ class PropiedadInscripcion extends Component
                 $this->inscripcion->fecha_inscripcion = now()->toDateString();
                 $this->inscripcion->actualizado_por = auth()->id();
                 $this->inscripcion->save();
+
+                $this->predio->cp_localidad = $this->inscripcion->cp_localidad;
+                $this->predio->cp_oficina = $this->inscripcion->cp_oficina;
+                $this->predio->cp_tipo_predio = $this->inscripcion->cp_tipo_predio;
+                $this->predio->cp_registro = $this->inscripcion->cp_registro;
+                $this->predio->superficie_terreno = $this->inscripcion->superficie_terreno;
+                $this->predio->unidad_area = $this->inscripcion->unidad_area;
+                $this->predio->superficie_construccion = $this->inscripcion->superficie_construccion;
+                $this->predio->monto_transaccion = $this->inscripcion->monto_transaccion;
+                $this->predio->observaciones = $this->inscripcion->observaciones;
+                $this->predio->superficie_judicial = $this->inscripcion->superficie_judicial;
+                $this->predio->superficie_notarial = $this->inscripcion->superficie_notarial;
+                $this->predio->area_comun_terreno = $this->inscripcion->area_comun_terreno;
+                $this->predio->area_comun_construccion = $this->inscripcion->area_comun_construccion;
+                $this->predio->valor_terreno_comun = $this->inscripcion->valor_terreno_comun;
+                $this->predio->valor_construccion_comun = $this->inscripcion->valor_construccion_comun;
+                $this->predio->valor_total_terreno = $this->inscripcion->valor_total_terreno;
+                $this->predio->valor_total_construccion = $this->inscripcion->valor_total_construccion;
+                $this->predio->valor_catastral = $this->inscripcion->valor_catastral;
+                $this->predio->codigo_postal = $this->inscripcion->codigo_postal;
+                $this->predio->nombre_asentamiento = $this->inscripcion->nombre_asentamiento;
+                $this->predio->municipio = $this->inscripcion->municipio;
+                $this->predio->ciudad = $this->inscripcion->ciudad;
+                $this->predio->tipo_asentamiento = $this->inscripcion->tipo_asentamiento;
+                $this->predio->localidad = $this->inscripcion->localidad;
+                $this->predio->tipo_vialidad = $this->inscripcion->tipo_vialidad;
+                $this->predio->nombre_vialidad = $this->inscripcion->nombre_vialidad;
+                $this->predio->numero_exterior = $this->inscripcion->numero_exterior;
+                $this->predio->numero_interior = $this->inscripcion->numero_interior;
+                $this->predio->nombre_edificio = $this->inscripcion->nombre_edificio;
+                $this->predio->departamento_edificio = $this->inscripcion->departamento_edificio;
+                $this->predio->departamento_edificio = $this->inscripcion->departamento_edificio;
+                $this->predio->descripcion = $this->inscripcion->descripcion;
+                $this->predio->lote = $this->inscripcion->lote;
+                $this->predio->manzana = $this->inscripcion->manzana;
+                $this->predio->ejido = $this->inscripcion->ejido;
+                $this->predio->parcela = $this->inscripcion->parcela;
+                $this->predio->solar = $this->inscripcion->solar;
+                $this->predio->poblado = $this->inscripcion->poblado;
+                $this->predio->numero_exterior_2 = $this->inscripcion->numero_exterior_2;
+                $this->predio->numero_adicional = $this->inscripcion->numero_adicional;
+                $this->predio->numero_adicional_2 = $this->inscripcion->numero_adicional_2;
+                $this->predio->lote_fraccionador = $this->inscripcion->lote_fraccionador;
+                $this->predio->manzana_fraccionador = $this->inscripcion->manzana_fraccionador;
+                $this->predio->etapa_fraccionador = $this->inscripcion->etapa_fraccionador;
+                $this->predio->clave_edificio = $this->inscripcion->clave_edificio;
+                $this->predio->actualizado_por = auth()->id();
+                $this->predio->save();
 
                 foreach ($this->medidas as $key =>$medida) {
 
@@ -1037,13 +1133,11 @@ class PropiedadInscripcion extends Component
 
                 }
 
+                $this->inscripcion->movimientoRegistral->update(['estado' => 'elaborado']);
+
             });
 
-            $this->dispatch('mostrarMensaje', ['success', "La información se actualizó con éxito."]);
-
             $this->dispatch('imprimir_documento', ['inscripcion' => $this->inscripcion->id]);
-
-            $this->modalContraseña = false;
 
         } catch (\Throwable $th) {
             Log::error("Error al finalizar inscripcion de propiedad por el usuario: (id: " . auth()->user()->id . ") " . auth()->user()->name . ". " . $th);
@@ -1148,17 +1242,21 @@ class PropiedadInscripcion extends Component
                                                                                 })
                                                                                 ->first();
 
-                $deudor = Deudor::where('actor_id', $actor->id)->first();
+                $deudores = Deudor::where('actor_id', $actor->id)->get();
 
-                if($deudor){
+                if($deudores->count()){
 
-                    Deudor::create([
-                        'gravamen_id' => $deudor->gravamen_id,
-                        'persona_id' => $actor->persona_id,
-                        'tipo' => $deudor->tipo
-                    ]);
+                    foreach ($deudores as $deudor) {
 
-                    $deudor->delete();
+                        Deudor::create([
+                            'gravamen_id' => $deudor->gravamen_id,
+                            'persona_id' => $actor->persona_id,
+                            'tipo' => $deudor->tipo
+                        ]);
+
+                        $deudor->delete();
+
+                    }
 
                     $this->predio->actores()->where('id', $actor->id)->delete();
 
@@ -1248,9 +1346,92 @@ class PropiedadInscripcion extends Component
 
     }
 
+    public function abrirModalDocumento(){
+
+        $this->reset('documento');
+
+        $this->dispatch('removeFiles');
+
+        $this->modalDocumento = true;
+
+    }
+
+    public function guardarDocumento(){
+
+        $this->validate(['documento' => 'required']);
+
+        try {
+
+            DB::transaction(function (){
+
+                $pdf = $this->documento->store('/', 'documento_entrada');
+
+                File::create([
+                    'fileable_id' => $this->inscripcion->movimientoRegistral->id,
+                    'fileable_type' => 'App\Models\MovimientoRegistral',
+                    'descripcion' => 'documento_entrada',
+                    'url' => $pdf
+                ]);
+
+                $this->modalDocumento = false;
+
+            });
+
+        } catch (\Throwable $th) {
+
+            Log::error("Error al guardar documento de entrada en inscripción de propiedad por el usuario: (id: " . auth()->user()->id . ") " . auth()->user()->name . ". " . $th);
+            $this->dispatch('mostrarMensaje', ['error', "Ha ocurrido un error."]);
+
+        }
+
+    }
+
     public function mount(){
 
         $this->inscripcion = Propiedad::with('actores')->find($this->propiedad);
+
+        if(!$this->inscripcion->movimientoRegistral->documentoEntrada()){
+
+            try {
+
+                $response = Http::withToken(env('SISTEMA_TRAMITES_TOKEN'))
+                                    ->accept('application/json')
+                                    ->asForm()
+                                    ->post(env('SISTEMA_TRAMITES_CONSULTAR_ARCHIVO'), [
+                                                                                        'año' => $this->inscripcion->movimientoRegistral->año,
+                                                                                        'tramite' => $this->inscripcion->movimientoRegistral->tramite,
+                                                                                        'usuario' => $this->inscripcion->movimientoRegistral->usuario,
+                                                                                        'estado' => 'nuevo'
+                                                                                    ]);
+
+                $data = collect(json_decode($response, true));
+
+                if($response->status() == 200){
+
+                    $contents = file_get_contents($data['url']);
+
+                    $filename = basename($data['url']);
+
+                    Storage::disk('documento_entrada')->put($filename, $contents);
+
+                    File::create([
+                        'fileable_id' => $this->inscripcion->movimientoRegistral->id,
+                        'fileable_type' => 'App\Models\MovimientoRegistral',
+                        'descripcion' => 'documento_entrada',
+                        'url' => $filename
+                    ]);
+
+                }
+
+            } catch (ConnectionException $th) {
+
+                Log::error("Error al cargar archivo en cancelación: (id: " . auth()->user()->id . ") " . auth()->user()->name . ". " . $th);
+
+                $this->dispatch('mostrarMensaje', ['error', "Ha ocurrido un error."]);
+
+            }
+
+        }
 
         $this->predio = $this->inscripcion->movimientoRegistral->folioReal->predio;
 

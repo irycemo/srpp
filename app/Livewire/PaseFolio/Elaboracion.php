@@ -217,6 +217,21 @@ class Elaboracion extends Component
 
         $this->validate();
 
+        $folioRealExistente = FolioReal::where('tomo_antecedente', $this->movimientoRegistral->tomo)
+                                            ->where('registro_antecedente', $this->movimientoRegistral->registro)
+                                            ->where('numero_propiedad_antecedente', $this->movimientoRegistral->numero_propiedad)
+                                            ->where('distrito_antecedente', $this->movimientoRegistral->getRawOriginal('distrito'))
+                                            ->where('seccion_antecedente', $this->movimientoRegistral->seccion)
+                                            ->first();
+
+        if($folioRealExistente){
+
+            $this->dispatch('mostrarMensaje', ['error', "Ya existe un folio real con el mismo antecedente."]);
+
+            return;
+
+        }
+
         try {
 
             DB::transaction(function () {
@@ -323,16 +338,24 @@ class Elaboracion extends Component
             'usuario_asignado' => auth()->id(),
         ]);
 
+        $monto = null;
+
+        if($gravamen->monto){
+
+            $monto = $gravamen->monto / 100;
+
+        }
+
         Gravamen::create([
             'movimiento_registral_id' => $movimientoRegistralGravamenNuevo->id,
             'fecha_inscripcion' => $gravamen->finscripcion ? Carbon::createFromFormat('Y-m-d', $gravamen->finscripcion)->toDateString() : null,
             'estado' => 'activo',
             'acto_contenido' => $gravamen->descGravamen ?? null,
-            'valor_gravamen' => $gravamen->monto ?? null,
+            'valor_gravamen' => $monto,
             'observaciones' => "Gravamen ingresado mediante pase a folio: | Tomo gravamen:" . $gravamen->tomog .
                                 " | Registro gravamen: " . $gravamen->registrog . "/" . $gravamen->rbisg .
                                 " | Divisa:" . $gravamen->tmoneda .
-                                " | Monto de la transacción:" . $gravamen->monto .
+                                " | Monto de la transacción:" . $monto .
                                 " | Acto contenido:" . $gravamen->descGravamen .
                                 " | Fecha de inscripción:" . $gravamen->finscripcion .
                                 " | Tipo de deudor:" . $gravamen->stDeudor .
@@ -407,13 +430,13 @@ class Elaboracion extends Component
 
         }
 
-        if($this->propiedad->colindancias->count() == 0){
+        /* if($this->propiedad->colindancias->count() == 0){
 
             $this->dispatch('mostrarMensaje', ['error', "El predio debe tener al menos una colindancia."]);
 
             return;
 
-        }
+        } */
 
         if(!$this->propiedad->superficie_terreno){
 
@@ -544,7 +567,7 @@ class Elaboracion extends Component
             DB::transaction(function () use ($role){
 
                 $this->movimientoRegistral->folioReal->update([
-                    'estado' => 'activo'
+                    'estado' => 'elaborado'
                 ]);
 
 

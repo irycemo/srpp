@@ -10,7 +10,30 @@
 
     <div class="bg-white rounded-lg p-2 shadow-xl grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-1 text-sm mb-3">
 
-        <span class="flex items-center justify-center text-base text-gray-700 md:col-span-3 col-span-1 sm:col-span-2 lg:col-span-6">Antecedente</span>
+        @if(!$inscripcion->movimientoRegistral->documentoEntrada())
+
+            <x-button-blue
+                wire:click="abrirModalDocumento"
+                wire:loading.attr="disabled"
+                wire:target="abrirModalDocumento">
+
+                <img wire:loading wire:target="abrirModalDocumento" class="mx-auto h-4 mr-1" src="{{ asset('storage/img/loading3.svg') }}" alt="Loading">
+
+                Subir documento de entrada
+
+            </x-button-blue>
+
+        @else
+
+            <div class="inline-block">
+
+                <x-link-blue target="_blank" href="{{ $inscripcion->movimientoRegistral->documentoEntrada() }}">Documento de entrada</x-link-blue>
+
+            </div>
+
+        @endif
+
+        {{-- <span class="flex items-center justify-center text-base text-gray-700 md:col-span-3 col-span-1 sm:col-span-2 lg:col-span-6">Antecedente</span>
 
         <div class="rounded-lg bg-gray-100 py-1 px-2">
 
@@ -78,7 +101,7 @@
 
             <p><strong>Procedencia:</strong> {{ $inscripcion->movimientoRegistral->procedencia }}</p>
 
-        </div>
+        </div> --}}
 
     </div>
 
@@ -118,11 +141,11 @@
 
             </div>
 
-            <div class="space-y-1 sm:col-span-2 lg:col-span-3 mx-auto text-center">
+            {{-- <div class="space-y-1 sm:col-span-2 lg:col-span-3 mx-auto text-center">
 
                 <span class="flex items-center justify-center text-gray-700">Clave catastral</span>
 
-                <input placeholder="Estado" type="number" class="bg-white rounded text-xs w-10" title="Estado" value="16" readonly>
+                <input placeholder="Estado" type="number" class="bg-white rounded text-xs w-10" title="Estado" value="16">
 
                 <input title="Región catastral" placeholder="Región" type="number" class="bg-white rounded text-xs w-16  @error('inscripcion.cc_region_catastral') border-1 border-red-500 @enderror" wire:model.defer="inscripcion.cc_region_catastral">
 
@@ -142,7 +165,7 @@
 
                 <input title="Departamento" placeholder="Departamento" type="number" class="bg-white rounded text-xs w-28 @error('inscripcion.cc_departamento') border-1 border-red-500 @enderror" wire:model.defer="inscripcion.cc_departamento">
 
-            </div>
+            </div> --}}
 
     </div>
 
@@ -152,13 +175,13 @@
 
             <span class="flex items-center justify-center text-lg text-gray-700  md:col-span-3 col-span-1 sm:col-span-2">Descripción del predio</span>
 
-            <x-input-group for="predio.superficie_terreno" label="Superficie de terreno" :error="$errors->first('predio.superficie_terreno')" class="w-full relative">
+            <x-input-group for="inscripcion.superficie_terreno" label="Superficie de terreno" :error="$errors->first('inscripcion.superficie_terreno')" class="w-full relative">
 
-                <x-input-text type="number" id="predio.superficie_terreno" wire:model="predio.superficie_terreno" />
+                <x-input-text type="number" id="inscripcion.superficie_terreno" wire:model="inscripcion.superficie_terreno" />
 
                 <div class="absolute right-0 top-6">
 
-                    <x-input-select id="predio.unidad_area" wire:model="predio.unidad_area">
+                    <x-input-select id="inscripcion.unidad_area" wire:model="inscripcion.unidad_area">
 
                         @foreach ($areas as $unidad)
 
@@ -172,13 +195,13 @@
 
             </x-input-group>
 
-            <x-input-group for="predio.superficie_construccion" label="Superficie de construcción" :error="$errors->first('predio.superficie_construccion')" class="w-full relative">
+            <x-input-group for="inscripcion.superficie_construccion" label="Superficie de construcción" :error="$errors->first('inscripcion.superficie_construccion')" class="w-full relative">
 
-                <x-input-text type="number" id="predio.superficie_construccion" wire:model="predio.superficie_construccion" />
+                <x-input-text type="number" id="inscripcion.superficie_construccion" wire:model="inscripcion.superficie_construccion" />
 
                 <div class="absolute right-0 top-6">
 
-                    <x-input-select id="predio.unidad_area" wire:model="predio.unidad_area">
+                    <x-input-select id="inscripcion.unidad_area" wire:model="inscripcion.unidad_area">
 
                         @foreach ($areas as $unidad)
 
@@ -192,13 +215,13 @@
 
             </x-input-group>
 
-            <x-input-group for="predio.monto_transaccion" label="Monto de la transacción" :error="$errors->first('predio.monto_transaccion')" class="w-full relative">
+            <x-input-group for="inscripcion.monto_transaccion" label="Monto de la transacción" :error="$errors->first('inscripcion.monto_transaccion')" class="w-full relative">
 
-                <x-input-text type="number" id="predio.monto_transaccion" wire:model="predio.monto_transaccion" />
+                <x-input-text type="number" id="inscripcion.monto_transaccion" wire:model="inscripcion.monto_transaccion" />
 
                 <div class="absolute right-0 top-6">
 
-                    <x-input-select id="predio.divisa" wire:model="predio.divisa">
+                    <x-input-select id="inscripcion.divisa" wire:model="inscripcion.divisa">
 
                         @foreach ($divisas as $divisa)
 
@@ -212,9 +235,9 @@
 
             </x-input-group>
 
-            <x-input-group for="predio.descripcion" label="Descripción" :error="$errors->first('predio.descripcion')" class="sm:col-span-2 lg:col-span-3">
+            <x-input-group for="inscripcion.descripcion" label="Descripción" :error="$errors->first('inscripcion.descripcion')" class="sm:col-span-2 lg:col-span-3">
 
-                <textarea rows="3" class="w-full bg-white rounded text-sm" wire:model="predio.descripcion"></textarea>
+                <textarea rows="3" class="w-full bg-white rounded text-sm" wire:model="inscripcion.descripcion"></textarea>
 
             </x-input-group>
 
@@ -224,19 +247,13 @@
 
             <span class="flex items-center justify-center text-lg text-gray-700 md:col-span-5 col-span-1 sm:col-span-2">Datos Complementarios</span>
 
-            <x-input-group for="predio.curt" label="CURT" :error="$errors->first('predio.curt')" class="w-full">
+            <x-input-group for="inscripcion.superficie_judicial" label="Superficie judicial" :error="$errors->first('inscripcion.superficie_judicial')" class="w-full relative">
 
-                <x-input-text id="predio.curt" wire:model="predio.curt" />
-
-            </x-input-group>
-
-            <x-input-group for="predio.superficie_judicial" label="Superficie judicial" :error="$errors->first('predio.superficie_judicial')" class="w-full relative">
-
-                <x-input-text type="number" id="predio.superficie_judicial" wire:model="predio.superficie_judicial" />
+                <x-input-text type="number" id="inscripcion.superficie_judicial" wire:model="inscripcion.superficie_judicial" />
 
                 <div class="absolute right-0 top-6">
 
-                    <x-input-select id="predio.unidad_area" wire:model="predio.unidad_area">
+                    <x-input-select id="inscripcion.unidad_area" wire:model="inscripcion.unidad_area">
 
                         @foreach ($areas as $unidad)
 
@@ -250,13 +267,13 @@
 
             </x-input-group>
 
-            <x-input-group for="predio.superficie_notarial" label="Superficie notarial" :error="$errors->first('predio.superficie_notarial')" class="w-full relative">
+            <x-input-group for="inscripcion.superficie_notarial" label="Superficie notarial" :error="$errors->first('inscripcion.superficie_notarial')" class="w-full relative">
 
-                <x-input-text type="number" id="predio.superficie_notarial" wire:model="predio.superficie_notarial" />
+                <x-input-text type="number" id="inscripcion.superficie_notarial" wire:model="inscripcion.superficie_notarial" />
 
                 <div class="absolute right-0 top-6">
 
-                    <x-input-select id="predio.unidad_area" wire:model="predio.unidad_area">
+                    <x-input-select id="inscripcion.unidad_area" wire:model="inscripcion.unidad_area">
 
                         @foreach ($areas as $unidad)
 
@@ -270,13 +287,13 @@
 
             </x-input-group>
 
-            <x-input-group for="predio.area_comun_terreno" label="Área de terreno común" :error="$errors->first('predio.area_comun_terreno')" class="w-full relative">
+            <x-input-group for="inscripcion.area_comun_terreno" label="Área de terreno común" :error="$errors->first('inscripcion.area_comun_terreno')" class="w-full relative">
 
-                <x-input-text type="number" id="predio.area_comun_terreno" wire:model="predio.area_comun_terreno" />
+                <x-input-text type="number" id="inscripcion.area_comun_terreno" wire:model="inscripcion.area_comun_terreno" />
 
                 <div class="absolute right-0 top-6">
 
-                    <x-input-select id="predio.unidad_area" wire:model="predio.unidad_area">
+                    <x-input-select id="inscripcion.unidad_area" wire:model="inscripcion.unidad_area">
 
                         @foreach ($areas as $unidad)
 
@@ -290,13 +307,13 @@
 
             </x-input-group>
 
-            <x-input-group for="predio.area_comun_construccion" label="Área de contrucción común" :error="$errors->first('predio.area_comun_construccion')" class="w-full relative">
+            <x-input-group for="inscripcion.area_comun_construccion" label="Área de contrucción común" :error="$errors->first('inscripcion.area_comun_construccion')" class="w-full relative">
 
-                <x-input-text type="number" id="predio.area_comun_construccion" wire:model="predio.area_comun_construccion" />
+                <x-input-text type="number" id="inscripcion.area_comun_construccion" wire:model="inscripcion.area_comun_construccion" />
 
                 <div class="absolute right-0 top-6">
 
-                    <x-input-select id="predio.unidad_area" wire:model="predio.unidad_area">
+                    <x-input-select id="inscripcion.unidad_area" wire:model="inscripcion.unidad_area">
 
                         @foreach ($areas as $unidad)
 
@@ -310,33 +327,33 @@
 
             </x-input-group>
 
-            <x-input-group for="predio.valor_terreno_comun" label="Valor de terreno común" :error="$errors->first('predio.valor_terreno_comun')" class="w-full">
+            <x-input-group for="inscripcion.valor_terreno_comun" label="Valor de terreno común" :error="$errors->first('inscripcion.valor_terreno_comun')" class="w-full">
 
-                <x-input-text type="number" id="predio.valor_terreno_comun" wire:model="predio.valor_terreno_comun" />
-
-            </x-input-group>
-
-            <x-input-group for="predio.valor_construccion_comun" label="Valor de construcción común" :error="$errors->first('predio.valor_construccion_comun')" class="w-full">
-
-                <x-input-text type="number" id="predio.valor_construccion_comun" wire:model="predio.valor_construccion_comun" />
+                <x-input-text type="number" id="inscripcion.valor_terreno_comun" wire:model="inscripcion.valor_terreno_comun" />
 
             </x-input-group>
 
-            <x-input-group for="predio.valor_total_terreno" label="Valor total del terreno" :error="$errors->first('predio.valor_total_terreno')" class="w-full">
+            <x-input-group for="inscripcion.valor_construccion_comun" label="Valor de construcción común" :error="$errors->first('inscripcion.valor_construccion_comun')" class="w-full">
 
-                <x-input-text type="number" id="predio.valor_total_terreno" wire:model="valor_total_terreno" />
-
-            </x-input-group>
-
-            <x-input-group for="predio.valor_total_construccion" label="Valor total de la contrucción" :error="$errors->first('predio.valor_total_construccion')" class="w-full">
-
-                <x-input-text type="number" id="predio.valor_total_construccion" wire:model="predio.valor_total_construccion" />
+                <x-input-text type="number" id="inscripcion.valor_construccion_comun" wire:model="inscripcion.valor_construccion_comun" />
 
             </x-input-group>
 
-            <x-input-group for="predio.valor_catastral" label="Valor catastral" :error="$errors->first('predio.valor_catastral')" class="w-full">
+            <x-input-group for="inscripcion.valor_total_terreno" label="Valor total del terreno" :error="$errors->first('inscripcion.valor_total_terreno')" class="w-full">
 
-                <x-input-text type="number" id="predio.valor_catastral" wire:model="predio.valor_catastral" />
+                <x-input-text type="number" id="inscripcion.valor_total_terreno" wire:model="valor_total_terreno" />
+
+            </x-input-group>
+
+            <x-input-group for="inscripcion.valor_total_construccion" label="Valor total de la contrucción" :error="$errors->first('inscripcion.valor_total_construccion')" class="w-full">
+
+                <x-input-text type="number" id="inscripcion.valor_total_construccion" wire:model="inscripcion.valor_total_construccion" />
+
+            </x-input-group>
+
+            <x-input-group for="inscripcion.valor_catastral" label="Valor catastral" :error="$errors->first('inscripcion.valor_catastral')" class="w-full">
+
+                <x-input-text type="number" id="inscripcion.valor_catastral" wire:model="inscripcion.valor_catastral" />
 
             </x-input-group>
 
@@ -478,45 +495,45 @@
 
             <span class="flex items-center justify-center text-lg text-gray-700 md:col-span-5 col-span-1 sm:col-span-2">Ubicación del predio</span>
 
-            <x-input-group for="predio.codigo_postal" label="Código postal" :error="$errors->first('predio.codigo_postal')" class="w-full">
+            <x-input-group for="inscripcion.codigo_postal" label="Código postal" :error="$errors->first('inscripcion.codigo_postal')" class="w-full">
 
-                <x-input-text type="number" id="predio.codigo_postal" wire:model.lazy="predio.codigo_postal" />
-
-            </x-input-group>
-
-            <x-input-group for="predio.nombre_asentamiento" label="Nombre del asentamiento" :error="$errors->first('predio.nombre_asentamiento')" class="w-full">
-
-                <x-input-text id="predio.nombre_asentamiento" wire:model="predio.nombre_asentamiento" readonly/>
+                <x-input-text type="number" id="inscripcion.codigo_postal" wire:model.lazy="inscripcion.codigo_postal" />
 
             </x-input-group>
 
-            <x-input-group for="predio.municipio" label="Municipio" :error="$errors->first('predio.municipio')" class="w-full">
+            <x-input-group for="inscripcion.nombre_asentamiento" label="Nombre del asentamiento" :error="$errors->first('inscripcion.nombre_asentamiento')" class="w-full">
 
-                <x-input-text id="predio.municipio" wire:model="predio.municipio" readonly/>
-
-            </x-input-group>
-
-            <x-input-group for="predio.ciudad" label="Ciudad" :error="$errors->first('predio.ciudad')" class="w-full">
-
-                <x-input-text id="predio.ciudad" wire:model="predio.ciudad"/>
+                <x-input-text id="inscripcion.nombre_asentamiento" wire:model="inscripcion.nombre_asentamiento"/>
 
             </x-input-group>
 
-            <x-input-group for="predio.tipo_asentamiento" label="Tipo de asentamiento" :error="$errors->first('predio.tipo_asentamiento')" class="w-full">
+            <x-input-group for="inscripcion.municipio" label="Municipio" :error="$errors->first('inscripcion.municipio')" class="w-full">
 
-                <x-input-text id="predio.tipo_asentamiento" wire:model="predio.tipo_asentamiento" readonly/>
-
-            </x-input-group>
-
-            <x-input-group for="predio.localidad" label="Localidad" :error="$errors->first('predio.localidad')" class="w-full">
-
-                <x-input-text id="predio.localidad" wire:model="predio.localidad" />
+                <x-input-text id="inscripcion.municipio" wire:model="inscripcion.municipio"/>
 
             </x-input-group>
 
-            <x-input-group for="predio.tipo_vialidad" label="Tipo de vialidad" :error="$errors->first('predio.tipo_vialidad')" class="w-full">
+            <x-input-group for="inscripcion.ciudad" label="Ciudad" :error="$errors->first('inscripcion.ciudad')" class="w-full">
 
-                <x-input-select id="predio.tipo_vialidad" wire:model.live="predio.tipo_vialidad" class="w-full">
+                <x-input-text id="inscripcion.ciudad" wire:model="inscripcion.ciudad"/>
+
+            </x-input-group>
+
+            <x-input-group for="inscripcion.tipo_asentamiento" label="Tipo de asentamiento" :error="$errors->first('inscripcion.tipo_asentamiento')" class="w-full">
+
+                <x-input-text id="inscripcion.tipo_asentamiento" wire:model="inscripcion.tipo_asentamiento"/>
+
+            </x-input-group>
+
+            <x-input-group for="inscripcion.localidad" label="Localidad" :error="$errors->first('inscripcion.localidad')" class="w-full">
+
+                <x-input-text id="inscripcion.localidad" wire:model="inscripcion.localidad" />
+
+            </x-input-group>
+
+            <x-input-group for="inscripcion.tipo_vialidad" label="Tipo de vialidad" :error="$errors->first('inscripcion.tipo_vialidad')" class="w-full">
+
+                <x-input-select id="inscripcion.tipo_vialidad" wire:model.live="inscripcion.tipo_vialidad" class="w-full">
 
                     <option value="">Seleccione una opción</option>
 
@@ -530,39 +547,39 @@
 
             </x-input-group>
 
-            <x-input-group for="predio.nombre_vialidad" label="Nombre de la vialidad" :error="$errors->first('predio.nombre_vialidad')" class="w-full">
+            <x-input-group for="inscripcion.nombre_vialidad" label="Nombre de la vialidad" :error="$errors->first('inscripcion.nombre_vialidad')" class="w-full">
 
-                <x-input-text id="predio.nombre_vialidad" wire:model="predio.nombre_vialidad" />
-
-            </x-input-group>
-
-            <x-input-group for="predio.numero_exterior" label="Número exterior" :error="$errors->first('predio.numero_exterior')" class="w-full">
-
-                <x-input-text id="predio.numero_exterior" wire:model="predio.numero_exterior" />
+                <x-input-text id="inscripcion.nombre_vialidad" wire:model="inscripcion.nombre_vialidad" />
 
             </x-input-group>
 
-            <x-input-group for="predio.numero_interior" label="Número interior" :error="$errors->first('predio.numero_interior')" class="w-full">
+            <x-input-group for="inscripcion.numero_exterior" label="Número exterior" :error="$errors->first('inscripcion.numero_exterior')" class="w-full">
 
-                <x-input-text id="predio.numero_interior" wire:model="predio.numero_interior" />
-
-            </x-input-group>
-
-            <x-input-group for="predio.nombre_edificio" label="Edificio" :error="$errors->first('predio.nombre_edificio')" class="w-full">
-
-                <x-input-text id="predio.nombre_edificio" wire:model="predio.nombre_edificio" />
+                <x-input-text id="inscripcion.numero_exterior" wire:model="inscripcion.numero_exterior" />
 
             </x-input-group>
 
-            <x-input-group for="predio.departamento_edificio" label="Departamento" :error="$errors->first('predio.departamento_edificio')" class="w-full">
+            <x-input-group for="inscripcion.numero_interior" label="Número interior" :error="$errors->first('inscripcion.numero_interior')" class="w-full">
 
-                <x-input-text id="predio.departamento_edificio" wire:model="predio.departamento_edificio" />
+                <x-input-text id="inscripcion.numero_interior" wire:model="inscripcion.numero_interior" />
 
             </x-input-group>
 
-            <x-input-group for="predio.observaciones" label="Observaciones" :error="$errors->first('predio.observaciones')" class="md:col-span-5 col-span-1 sm:col-span-2">
+            <x-input-group for="inscripcion.nombre_edificio" label="Edificio" :error="$errors->first('inscripcion.nombre_edificio')" class="w-full">
 
-                <textarea rows="3" class="w-full bg-white rounded" wire:model="predio.observaciones"></textarea>
+                <x-input-text id="inscripcion.nombre_edificio" wire:model="inscripcion.nombre_edificio" />
+
+            </x-input-group>
+
+            <x-input-group for="inscripcion.departamento_edificio" label="Departamento" :error="$errors->first('inscripcion.departamento_edificio')" class="w-full">
+
+                <x-input-text id="inscripcion.departamento_edificio" wire:model="inscripcion.departamento_edificio" />
+
+            </x-input-group>
+
+            <x-input-group for="inscripcion.observaciones" label="Observaciones" :error="$errors->first('inscripcion.observaciones')" class="md:col-span-5 col-span-1 sm:col-span-2">
+
+                <textarea rows="3" class="w-full bg-white rounded" wire:model="inscripcion.observaciones"></textarea>
 
             </x-input-group>
 
@@ -572,81 +589,81 @@
 
             <span class="flex items-center justify-center text-lg text-gray-700 md:col-span-5 col-span-1 sm:col-span-2">Datos Complementarios</span>
 
-            <x-input-group for="predio.lote" label="Lote" :error="$errors->first('predio.lote')" class="w-full">
+            <x-input-group for="inscripcion.lote" label="Lote" :error="$errors->first('inscripcion.lote')" class="w-full">
 
-                <x-input-text id="predio.lote" wire:model="predio.lote" />
-
-            </x-input-group>
-
-            <x-input-group for="predio.manzana" label="Manzana" :error="$errors->first('predio.manzana')" class="w-full">
-
-                <x-input-text id="predio.manzana" wire:model="predio.manzana" />
+                <x-input-text id="inscripcion.lote" wire:model="inscripcion.lote" />
 
             </x-input-group>
 
-            <x-input-group for="predio.ejido" label="Ejido" :error="$errors->first('predio.ejido')" class="w-full">
+            <x-input-group for="inscripcion.manzana" label="Manzana" :error="$errors->first('inscripcion.manzana')" class="w-full">
 
-                <x-input-text id="predio.ejido" wire:model="predio.ejido" />
-
-            </x-input-group>
-
-            <x-input-group for="predio.parcela" label="Parcela" :error="$errors->first('predio.parcela')" class="w-full">
-
-                <x-input-text id="predio.parcela" wire:model="predio.parcela" />
+                <x-input-text id="inscripcion.manzana" wire:model="inscripcion.manzana" />
 
             </x-input-group>
 
-            <x-input-group for="predio.solar" label="Solar" :error="$errors->first('predio.solar')" class="w-full">
+            <x-input-group for="inscripcion.ejido" label="Ejido" :error="$errors->first('inscripcion.ejido')" class="w-full">
 
-                <x-input-text id="predio.solar" wire:model="predio.solar" />
-
-            </x-input-group>
-
-            <x-input-group for="predio.poblado" label="Poblado" :error="$errors->first('predio.poblado')" class="w-full">
-
-                <x-input-text id="predio.poblado" wire:model="predio.poblado" />
+                <x-input-text id="inscripcion.ejido" wire:model="inscripcion.ejido" />
 
             </x-input-group>
 
-            <x-input-group for="predio.numero_exterior_2" label="Número exterior 2" :error="$errors->first('predio.numero_exterior_2')" class="w-full">
+            <x-input-group for="inscripcion.parcela" label="Parcela" :error="$errors->first('inscripcion.parcela')" class="w-full">
 
-                <x-input-text id="predio.numero_exterior_2" wire:model="predio.numero_exterior_2" />
-
-            </x-input-group>
-
-            <x-input-group for="predio.numero_adicional" label="Número adicional" :error="$errors->first('predio.numero_adicional')" class="w-full">
-
-                <x-input-text id="predio.numero_adicional" wire:model="predio.numero_adicional" />
+                <x-input-text id="inscripcion.parcela" wire:model="inscripcion.parcela" />
 
             </x-input-group>
 
-            <x-input-group for="predio.numero_adicional_2" label="Número adicional 2" :error="$errors->first('predio.numero_adicional_2')" class="w-full">
+            <x-input-group for="inscripcion.solar" label="Solar" :error="$errors->first('inscripcion.solar')" class="w-full">
 
-                <x-input-text id="predio.numero_adicional_2" wire:model="predio.numero_adicional_2" />
-
-            </x-input-group>
-
-            <x-input-group for="predio.lote_fraccionador" label="Lote del fraccionador" :error="$errors->first('predio.lote_fraccionador')" class="w-full">
-
-                <x-input-text id="predio.lote_fraccionador" wire:model="predio.lote_fraccionador" />
+                <x-input-text id="inscripcion.solar" wire:model="inscripcion.solar" />
 
             </x-input-group>
 
-            <x-input-group for="predio.manzana_fraccionador" label="Manzana del fraccionador" :error="$errors->first('predio.manzana_fraccionador')" class="w-full">
+            <x-input-group for="inscripcion.poblado" label="Poblado" :error="$errors->first('inscripcion.poblado')" class="w-full">
 
-                <x-input-text id="predio.manzana_fraccionador" wire:model="predio.manzana_fraccionador" />
-
-            </x-input-group>
-
-            <x-input-group for="predio.etapa_fraccionador" label="Etapa del fraccionador" :error="$errors->first('predio.etapa_fraccionador')" class="w-full">
-
-                <x-input-text id="predio.etapa_fraccionador" wire:model="predio.etapa_fraccionador" />
+                <x-input-text id="inscripcion.poblado" wire:model="inscripcion.poblado" />
 
             </x-input-group>
 
-            <x-input-group for="predio.clave_edificio" label="Clave del edificio" :error="$errors->first('predio.clave_edificio')" class="w-full">
+            <x-input-group for="inscripcion.numero_exterior_2" label="Número exterior 2" :error="$errors->first('inscripcion.numero_exterior_2')" class="w-full">
 
-                <x-input-text id="predio.clave_edificio" wire:model="predio.clave_edificio" />
+                <x-input-text id="inscripcion.numero_exterior_2" wire:model="inscripcion.numero_exterior_2" />
+
+            </x-input-group>
+
+            <x-input-group for="inscripcion.numero_adicional" label="Número adicional" :error="$errors->first('inscripcion.numero_adicional')" class="w-full">
+
+                <x-input-text id="inscripcion.numero_adicional" wire:model="inscripcion.numero_adicional" />
+
+            </x-input-group>
+
+            <x-input-group for="inscripcion.numero_adicional_2" label="Número adicional 2" :error="$errors->first('inscripcion.numero_adicional_2')" class="w-full">
+
+                <x-input-text id="inscripcion.numero_adicional_2" wire:model="inscripcion.numero_adicional_2" />
+
+            </x-input-group>
+
+            <x-input-group for="inscripcion.lote_fraccionador" label="Lote del fraccionador" :error="$errors->first('inscripcion.lote_fraccionador')" class="w-full">
+
+                <x-input-text id="inscripcion.lote_fraccionador" wire:model="inscripcion.lote_fraccionador" />
+
+            </x-input-group>
+
+            <x-input-group for="inscripcion.manzana_fraccionador" label="Manzana del fraccionador" :error="$errors->first('inscripcion.manzana_fraccionador')" class="w-full">
+
+                <x-input-text id="inscripcion.manzana_fraccionador" wire:model="inscripcion.manzana_fraccionador" />
+
+            </x-input-group>
+
+            <x-input-group for="inscripcion.etapa_fraccionador" label="Etapa del fraccionador" :error="$errors->first('inscripcion.etapa_fraccionador')" class="w-full">
+
+                <x-input-text id="inscripcion.etapa_fraccionador" wire:model="inscripcion.etapa_fraccionador" />
+
+            </x-input-group>
+
+            <x-input-group for="inscripcion.clave_edificio" label="Clave del edificio" :error="$errors->first('inscripcion.clave_edificio')" class="w-full">
+
+                <x-input-text id="inscripcion.clave_edificio" wire:model="inscripcion.clave_edificio" />
 
             </x-input-group>
 
@@ -656,7 +673,7 @@
 
     <div class="grid grid-cols-1 md:grid-cols-3 gap-1 mb-2">
 
-        @if($propiedad)
+        @if($inscripcion)
 
             <div class="mb-3 bg-white rounded-lg p-3 shadow-lg">
 
@@ -1021,9 +1038,9 @@
         <x-slot name="title">
 
             @if($crear)
-                Nuevo Propietario
+                Nuevo Adquiriente
             @elseif($editar)
-                Editar Propietario
+                Editar Adquiriente
             @endif
 
         </x-slot>
@@ -1576,6 +1593,57 @@
                     wire:target="resetear"
                     type="button">
                     Cerrar
+                </x-button-red>
+
+            </div>
+
+        </x-slot>
+
+    </x-dialog-modal>
+
+    <x-dialog-modal wire:model="modalDocumento" maxWidth="sm">
+
+        <x-slot name="title">
+
+            Subir archivo
+
+        </x-slot>
+
+        <x-slot name="content">
+
+            <x-filepond wire:model.live="documento" accept="['application/pdf']"/>
+
+            <div>
+
+                @error('documento') <span class="error text-sm text-red-500">{{ $message }}</span> @enderror
+
+            </div>
+
+        </x-slot>
+
+        <x-slot name="footer">
+
+            <div class="flex gap-3">
+
+                <x-button-blue
+                    wire:click="guardarDocumento"
+                    wire:loading.attr="disabled"
+                    wire:target="guardarDocumento">
+
+                    <img wire:loading wire:target="guardarDocumento" class="mx-auto h-4 mr-1" src="{{ asset('storage/img/loading3.svg') }}" alt="Loading">
+
+                    <span>Guardar</span>
+
+                </x-button-blue>
+
+                <x-button-red
+                    wire:click="$toggle('modalDocumento')"
+                    wire:loading.attr="disabled"
+                    wire:target="$toggle('modalDocumento')"
+                    type="button">
+
+                    <span>Cerrar</span>
+
                 </x-button-red>
 
             </div>

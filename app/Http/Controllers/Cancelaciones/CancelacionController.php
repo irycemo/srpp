@@ -15,7 +15,7 @@ class CancelacionController extends Controller
     public function acto(Cancelacion $cancelacion)
     {
 
-        $this->authorize('view', $cancelacion->movimientoRegistral);
+        /* $this->authorize('view', $cancelacion->movimientoRegistral); */
 
         $director = User::where('status', 'activo')->whereHas('roles', function($q){
             $q->where('name', 'Director');
@@ -43,6 +43,8 @@ class CancelacionController extends Controller
         $canvas = $dom_pdf->get_canvas();
 
         $canvas->page_text(480, 794, "Página: {PAGE_NUM} de {PAGE_COUNT}", null, 10, array(1, 1, 1));
+
+        $canvas->page_text(35, 794, $cancelacion->movimientoRegistral->folioReal->folio  .'-' . $cancelacion->movimientoRegistral->folio, null, 9, array(1, 1, 1));
 
         return $pdf->stream('documento.pdf');
 

@@ -177,12 +177,15 @@
             <P style="margin: 0">DIRECCIÓN DEL REGISTRO PÚBLICO  DE LA PROPIEDAD</P>
         </div>
 
+        <div style="text-align: right">
+            <p style="margin:0;"><strong>Movimiento registral:</strong>{{ $predio->folioReal->folio }}-{{ $movimientoRegistral->folio }}</p>
+            <p style="margin:0;"><strong>DISTRITO:</strong> {{ $movimientoRegistral->distrito}}</p>
+        </div>
+
         <div>
             <p class="titulo">CERTIFICADO DE GRAVAMEN O DE LIBERTAD DE GRAVAMEN</p>
 
         </div>
-
-        <p style="text-align: right; margin:0;"><strong>Movimiento registral:</strong> {{ $movimientoRegistral->folioReal->folio }}-{{ $movimientoRegistral->folio }}</p>
 
         <p class="parrafo informacion">
             EL CIUDADANO LICENCIADO EN DERECHO <strong>{{ $director }}</strong>, DIRECTOR DEL REGISTRO PÚBLICO DE LA PROPIEDAD
@@ -293,41 +296,45 @@
 
                 <br>
 
-                <p class="separador">colindancias</p>
+                @if($predio->colindancias->count())
 
-                <table>
+                    <p class="separador">colindancias</p>
 
-                    <thead>
+                    <table>
 
-                        <tr>
-                            <th style="padding-right: 40px;">Viento</th>
-                            <th style="padding-right: 40px;">Longitud (mts.)</th>
-                            <th style="padding-right: 40px;">Descripción</th>
-                        </tr>
-
-                    </thead>
-
-                    <tbody>
-
-                        @foreach ($predio->colindancias as $colindancia)
+                        <thead>
 
                             <tr>
-                                <td style="padding-right: 40px;">
-                                    {{ $colindancia->viento }}
-                                </td>
-                                <td style="padding-right: 40px;">
-                                    {{ number_format($colindancia->longitud, 2) }}
-                                </td>
-                                <td style="padding-right: 40px;">
-                                    {{ $colindancia->descripcion }}
-                                </td>
+                                <th style="padding-right: 40px;">Viento</th>
+                                <th style="padding-right: 40px;">Longitud (mts.)</th>
+                                <th style="padding-right: 40px;">Descripción</th>
                             </tr>
 
-                        @endforeach
+                        </thead>
 
-                    </tbody>
+                        <tbody>
 
-                </table>
+                            @foreach ($predio->colindancias as $colindancia)
+
+                                <tr>
+                                    <td style="padding-right: 40px;">
+                                        {{ $colindancia->viento }}
+                                    </td>
+                                    <td style="padding-right: 40px;">
+                                        {{ number_format($colindancia->longitud, 2) }}
+                                    </td>
+                                    <td style="padding-right: 40px;">
+                                        {{ $colindancia->descripcion }}
+                                    </td>
+                                </tr>
+
+                            @endforeach
+
+                        </tbody>
+
+                    </table>
+
+                @endif
 
                 <p class="separador">DESCRIPCIÓN DEL INMUEBLE</p>
 
@@ -539,16 +546,7 @@
                         <tr>
                             <td style="padding-right: 40px; text-align:left; vertical-align: bottom;">
 
-                                @if($movimientoRegistral->año)
-
-                                    <p style="margin: 0"><strong>NÚMERO DE CONTROL: </strong>{{ $movimientoRegistral->año }}-{{ $movimientoRegistral->tramite }}-{{ $movimientoRegistral->usuario }}</p>
-
-                                @else
-
-                                    <p style="margin: 0"><strong>NÚMERO DE CONTROL: </strong>{{ $movimientoRegistral->certificacion->observaciones }}</p>
-
-                                @endif
-
+                                <p style="margin: 0"><strong>NÚMERO DE CONTROL: </strong>{{ $movimientoRegistral->año }}-{{ $movimientoRegistral->tramite }}-{{ $movimientoRegistral->usuario }}</p>
                                 <p style="margin: 0"><strong>DERECHOS: </strong>${{ number_format($movimientoRegistral->monto, 2) }}</p>
                                 <p style="margin: 0"><strong>Tipo de servicio: </strong>{{ $movimientoRegistral->tipo_servicio }}</p>
                                 <p style="margin: 0"><strong>Servicio: </strong>{{ $servicio }}</p>

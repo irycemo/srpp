@@ -282,41 +282,45 @@
 
                             </p>
 
-                            <p class="separador">colindancias</p>
+                            @if($movimiento->folioReal->predio->colindancias->count())
 
-                            <table>
+                                <p class="separador">colindancias</p>
 
-                                <thead>
+                                <table>
 
-                                    <tr>
-                                        <th>Viento</th>
-                                        <th>Longitud</th>
-                                        <th>Descripción</th>
-                                    </tr>
-
-                                </thead>
-
-                                <tbody>
-
-                                    @foreach ($movimiento->folioReal->predio->colindancias as $colindancia)
+                                    <thead>
 
                                         <tr>
-                                            <td style="padding-right: 40px;">
-                                                {{ $colindancia->viento }}
-                                            </td>
-                                            <td style="padding-right: 40px;">
-                                                {{ number_format($colindancia->longitud, 2) }}
-                                            </td>
-                                            <td style="padding-right: 40px;">
-                                                {{ $colindancia->descripcion }}
-                                            </td>
+                                            <th>Viento</th>
+                                            <th>Longitud</th>
+                                            <th>Descripción</th>
                                         </tr>
 
-                                    @endforeach
+                                    </thead>
 
-                                </tbody>
+                                    <tbody>
 
-                            </table>
+                                        @foreach ($movimiento->folioReal->predio->colindancias as $colindancia)
+
+                                            <tr>
+                                                <td style="padding-right: 40px;">
+                                                    {{ $colindancia->viento }}
+                                                </td>
+                                                <td style="padding-right: 40px;">
+                                                    {{ number_format($colindancia->longitud, 2) }}
+                                                </td>
+                                                <td style="padding-right: 40px;">
+                                                    {{ $colindancia->descripcion }}
+                                                </td>
+                                            </tr>
+
+                                        @endforeach
+
+                                    </tbody>
+
+                                </table>
+
+                            @endif
 
                             <p class="separador">DESCRIPCIÓN DEL INMUEBLE</p>
 
@@ -790,12 +794,12 @@
                                 <p style="margin: 0"><strong>NÚMERO DE CONTROL: </strong>{{ $gravamen->movimientoRegistral->año }}-{{ $gravamen->movimientoRegistral->tramite }}-{{ $gravamen->movimientoRegistral->usuario }}</p>
                                 <p style="margin: 0"><strong>DERECHOS: </strong>${{ number_format($gravamen->movimientoRegistral->monto, 2) }}</p>
                                 <p style="margin: 0"><strong>Tipo de servicio: </strong>{{ $gravamen->movimientoRegistral->tipo_servicio }}</p>
+                                <p style="margin: 0"><strong>Servicio: </strong>{{ $servicio }}</p>
 
                             </td>
 
-                            <td style="padding-right: 40px; text-align:left; ; vertical-align: bottom; white-space: nowrap;">
+                            <td style="padding-right: 40px; text-align:left; ; vertical-align: top; white-space: nowrap;">
 
-                                {{-- <p><strong>FECHA DE ENTRADA:</strong>{{ $gravamen->movimientoRegistral->created_at->format('d-m-Y') }}</p> --}}
                                 <p style="margin: 0"><strong>Fecha de impresión: </strong>{{ now()->format('d/m/Y H:i:s') }}</p>
                                 <p style="margin: 0"><strong>IMPRESO POR: </strong>{{  auth()->user()->name }}</p>
 

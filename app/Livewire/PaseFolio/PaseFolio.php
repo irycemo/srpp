@@ -2,8 +2,10 @@
 
 namespace App\Livewire\PaseFolio;
 
+use App\Models\File;
 use Livewire\Component;
 use Livewire\WithPagination;
+use Livewire\WithFileUploads;
 use App\Traits\ComponentesTrait;
 use Illuminate\Support\Facades\DB;
 use App\Models\MovimientoRegistral;
@@ -15,9 +17,12 @@ class PaseFolio extends Component
 
     use ComponentesTrait;
     use WithPagination;
+    use WithFileUploads;
 
     public $observaciones;
     public $modal = false;
+    public $modalFinalizar = false;
+    public $documento;
 
     public MovimientoRegistral $modelo_editar;
 
@@ -69,6 +74,55 @@ class PaseFolio extends Component
 
     }
 
+    public function abrirModalFinalizar(MovimientoRegistral $modelo){
+
+        $this->reset('documento');
+
+        $this->dispatch('removeFiles');
+
+        if($this->modelo_editar->isNot($modelo))
+            $this->modelo_editar = $modelo;
+
+        $this->modalFinalizar = true;
+
+    }
+
+    public function finalizar(){
+
+        $this->validate(['documento' => 'required']);
+
+        try {
+
+            DB::transaction(function (){
+
+                $pdf = $this->documento->store('/', 'caratulas');
+
+                File::create([
+                    'fileable_id' => $this->modelo_editar->folioReal->id,
+                    'fileable_type' => 'App\Models\FolioReal',
+                    'descripcion' => 'caratula',
+                    'url' => $pdf
+                ]);
+
+                $this->modelo_editar->folioReal->update([
+                    'estado' => 'activo'
+                ]);
+
+                $this->dispatch('mostrarMensaje', ['success', "El folio se finalizó con éxito."]);
+
+                $this->modalFinalizar = false;
+
+            });
+
+        } catch (\Throwable $th) {
+
+            Log::error("Error al subir archivo de folio real por el usuario: (id: " . auth()->user()->id . ") " . auth()->user()->name . ". " . $th);
+            $this->dispatch('mostrarMensaje', ['error', "Ha ocurrido un error."]);
+
+        }
+
+    }
+
     public function render()
     {
 
@@ -83,10 +137,10 @@ class PaseFolio extends Component
                                                             });
                                                     })
                                                     ->where(function($q){
-                                                        $q->where('tomo', 'LIKE', '%' . $this->search . '%')
+                                                        $q->where('tramite', 'LIKE', '%' . $this->search . '%')
+                                                            ->orWhere('usuario', 'LIKE', '%' . $this->search . '%')
+                                                            ->orWhere('tomo', 'LIKE', '%' . $this->search . '%')
                                                             ->orWhere('registro', 'LIKE', '%' . $this->search . '%')
-                                                            ->orWhere('distrito', 'LIKE', '%' . $this->search . '%')
-                                                            ->orWhere('seccion', 'LIKE', '%' . $this->search . '%')
                                                             ->orWhereHas('asignadoA', function($q){
                                                                 $q->where('name', 'LIKE', '%' . $this->search . '%');
                                                             });
@@ -102,14 +156,14 @@ class PaseFolio extends Component
                                                     ->where(function($q){
                                                         $q->whereNull('folio_real')
                                                             ->orWhereHas('folioReal', function($q){
-                                                                $q->whereIn('estado', ['nuevo', 'captura']);
+                                                                $q->whereIn('estado', ['nuevo', 'captura', 'elaborado']);
                                                             });
                                                     })
                                                     ->where(function($q){
-                                                        $q->where('tomo', 'LIKE', '%' . $this->search . '%')
-                                                            ->orWhere('registro', 'LIKE', '%' . $this->search . '%')
-                                                            ->orWhere('seccion', 'LIKE', '%' . $this->search . '%')
-                                                            ->orWhere('distrito', 'LIKE', '%' . $this->search . '%');
+                                                        $q->where('tramite', 'LIKE', '%' . $this->search . '%')
+                                                            ->orWhere('usuario', 'LIKE', '%' . $this->search . '%')
+                                                            ->orWhere('tomo', 'LIKE', '%' . $this->search . '%')
+                                                            ->orWhere('registro', 'LIKE', '%' . $this->search . '%');
                                                     })
                                                     ->where('usuario_asignado', auth()->user()->id)
                                                     ->orderBy($this->sort, $this->direction)

@@ -245,6 +245,8 @@ class Propietarios extends Component
 
         }
 
+        $this->reset('representados');
+
         $this->modalPropietario = false;
         $this->modalTransmitente = false;
         $this->modalRepresentante = true;

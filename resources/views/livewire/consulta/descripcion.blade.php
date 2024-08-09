@@ -176,7 +176,7 @@
 
 </div>
 
-<div class="bg-white rounded-lg p-4 shadow-xl text-sm">
+<div class="bg-white rounded-lg p-4 shadow-xl text-sm mb-3">
 
     <span class="flex items-center justify-center text-lg text-gray-700">Colindancias</span>
 

@@ -205,7 +205,7 @@
                                         @if($certificado->estado == 'elaborado')
 
                                             <x-button-green
-                                                wire:click="finalizarSupervisor({{ $certificado->certificacion->id }})"
+                                                wire:click="abrirModalFinalizar({{ $certificado->certificacion->id }})"
                                                 wire:loading.attr="disabled">
 
                                                 <span>Finalizar</span>
@@ -498,6 +498,57 @@
                     wire:loading.attr="disabled"
                     wire:target="resetearTodo">
                     <span>Cerrar</span>
+                </x-button-red>
+
+            </div>
+
+        </x-slot>
+
+    </x-dialog-modal>
+
+    <x-dialog-modal wire:model="modalFinalizar" maxWidth="sm">
+
+        <x-slot name="title">
+
+            Subir archivo
+
+        </x-slot>
+
+        <x-slot name="content">
+
+            <x-filepond wire:model.live="documento" accept="['application/pdf']"/>
+
+            <div>
+
+                @error('documento') <span class="error text-sm text-red-500">{{ $message }}</span> @enderror
+
+            </div>
+
+        </x-slot>
+
+        <x-slot name="footer">
+
+            <div class="flex gap-3">
+
+                <x-button-blue
+                    wire:click="finalizarSupervisor"
+                    wire:loading.attr="disabled"
+                    wire:target="finalizarSupervisor">
+
+                    <img wire:loading wire:target="finalizarSupervisor" class="mx-auto h-4 mr-1" src="{{ asset('storage/img/loading3.svg') }}" alt="Loading">
+
+                    <span>Finalizar</span>
+
+                </x-button-blue>
+
+                <x-button-red
+                    wire:click="$toggle('modalFinalizar')"
+                    wire:loading.attr="disabled"
+                    wire:target="$toggle('modalFinalizar')"
+                    type="button">
+
+                    <span>Cerrar</span>
+
                 </x-button-red>
 
             </div>

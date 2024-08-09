@@ -2,9 +2,10 @@
 
 namespace App\Livewire\Gravamenes;
 
+use App\Models\File;
 use Livewire\Component;
-use App\Models\Gravamen;
 use Livewire\WithPagination;
+use Livewire\WithFileUploads;
 use App\Traits\ComponentesTrait;
 use Illuminate\Support\Facades\DB;
 use App\Models\MovimientoRegistral;
@@ -15,15 +16,32 @@ class GravamenIndex extends Component
 {
 
     use WithPagination;
+    use WithFileUploads;
     use ComponentesTrait;
 
-    public Gravamen $modelo_editar;
+    public MovimientoRegistral $modelo_editar;
+
+    public $modalFinalizar = false;
+    public $documento;
 
     public function crearModeloVacio(){
-        $this->modelo_editar = Gravamen::make();
+        $this->modelo_editar = MovimientoRegistral::make();
     }
 
     public function elaborar(MovimientoRegistral $movimientoRegistral){
+
+        $movimientoAsignado = MovimientoRegistral::whereIn('estado', ['nuevo', 'captura'])
+                                                        ->where('usuario_Asignado', auth()->id())
+                                                        ->orderBy('created_at')
+                                                        ->first();
+
+        if($movimientoAsignado && $movimientoRegistral->id != $movimientoAsignado->id){
+
+            $this->dispatch('mostrarMensaje', ['error', "Debe elaborar el movimiento registral " . $movimientoAsignado->folioReal->folio . '-' . $movimientoAsignado->folio . ' primero.']);
+
+            return;
+
+        }
 
         if($movimientoRegistral->folioReal->avisoPreventivo()){
 
@@ -41,7 +59,7 @@ class GravamenIndex extends Component
 
             if($movimientoRegistral->folio > $primerMovimiento->folio){
 
-                $this->dispatch('mostrarMensaje', ['warning', "El movimiento registral: (" . $movimientoRegistral->folioReal->folio . '-' . $primerMovimiento->folio . ') debe elaborace primero.']);
+                $this->dispatch('mostrarMensaje', ['warning', "El movimiento registral: (" . $movimientoRegistral->folioReal->folio . '-' . $primerMovimiento->folio . ') debe elaborarce primero.']);
 
             }else{
 
@@ -63,21 +81,47 @@ class GravamenIndex extends Component
 
     }
 
-    public function finalizar(MovimientoRegistral $modelo){
+    public function abrirModalFinalizar(MovimientoRegistral $modelo){
+
+        $this->reset('documento');
+
+        $this->dispatch('removeFiles');
+
+        if($this->modelo_editar->isNot($modelo))
+            $this->modelo_editar = $modelo;
+
+        $this->modalFinalizar = true;
+
+    }
+
+    public function finalizar(){
+
+        $this->validate(['documento' => 'required']);
 
         try {
 
-            DB::transaction(function () use ($modelo){
+            DB::transaction(function (){
 
-                $modelo->actualizado_por = auth()->user()->id;
+                $pdf = $this->documento->store('/', 'caratulas');
 
-                $modelo->estado = 'concluido';
+                File::create([
+                    'fileable_id' => $this->modelo_editar->id,
+                    'fileable_type' => 'App\Models\MovimientoRegistral',
+                    'descripcion' => 'caratula',
+                    'url' => $pdf
+                ]);
 
-                $modelo->save();
+                $this->modelo_editar->actualizado_por = auth()->user()->id;
 
-                (new SistemaTramitesService())->finaliarTramite($modelo->año, $modelo->tramite, $modelo->usuario, 'concluido');
+                $this->modelo_editar->estado = 'concluido';
+
+                $this->modelo_editar->save();
+
+                (new SistemaTramitesService())->finaliarTramite($this->modelo_editar->año, $this->modelo_editar->tramite, $this->modelo_editar->usuario, 'concluido');
 
                 $this->dispatch('mostrarMensaje', ['success', "El trámite se finalizó con éxito."]);
+
+                $this->modalFinalizar = false;
 
             });
 
@@ -106,17 +150,17 @@ class GravamenIndex extends Component
                                                     ->when(auth()->user()->ubicacion != 'Regional 4', function($q){
                                                         $q->where('distrito', '!=', 2);
                                                     })
-                                                    ->where('estado', 'nuevo')
+                                                    ->whereIn('estado', ['nuevo', 'captura'])
                                                     ->where('usuario_asignado', auth()->id())
                                                     ->whereHas('gravamen', function($q){
-                                                        $q->where('servicio', 'DL66');
+                                                        $q->where('servicio', 'DL64');
                                                     })
                                                     ->orderBy($this->sort, $this->direction)
                                                     ->paginate($this->pagination);
 
         }elseif(auth()->user()->hasRole(['Supervisor gravamen', 'Supervisor uruapan'])){
 
-            $movimientos = MovimientoRegistral::with('gravamen', 'actualizadoPor', 'folioReal')
+            $movimientos = MovimientoRegistral::with('gravamen', 'actualizadoPor', 'folioReal', 'asignadoA')
                                                     ->whereHas('folioReal', function($q){
                                                         $q->where('estado', 'activo');
                                                     })
@@ -128,7 +172,7 @@ class GravamenIndex extends Component
                                                     })
                                                     ->where('estado', 'elaborado')
                                                     ->whereHas('gravamen', function($q){
-                                                        $q->where('servicio', 'DL66');
+                                                        $q->where('servicio', 'DL64');
                                                     })
                                                     ->orderBy($this->sort, $this->direction)
                                                     ->paginate($this->pagination);
@@ -151,7 +195,7 @@ class GravamenIndex extends Component
                                                             ->orWhere('tramite', 'LIKE', '%' . $this->search . '%');
                                                     })
                                                     ->whereHas('gravamen', function($q){
-                                                        $q->where('servicio', 'DL66');
+                                                        $q->where('servicio', 'DL64');
                                                     })
                                                     ->orderBy($this->sort, $this->direction)
                                                     ->paginate($this->pagination);

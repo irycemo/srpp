@@ -14,7 +14,7 @@ return new class extends Migration
         Schema::create('predios', function (Blueprint $table) {
             $table->id();
             $table->string('status');
-            $table->foreignId('folio_real')->references('id')->on('folio_reals');
+            $table->foreignId('folio_real')->nullable()->references('id')->on('folio_reals');
             $table->foreignId('escritura_id')->nullable()->references('id')->on('escrituras');
 
             $table->string('curt')->nullable();

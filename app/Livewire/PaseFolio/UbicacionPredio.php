@@ -99,7 +99,7 @@ class UbicacionPredio extends Component
         'localidad_ubicacion' => 'localidad',
     ];
 
-    public function updatedCodigoPostal(){
+    /* public function updatedCodigoPostal(){
 
         $this->codigos_postales = CodigoPostal::where('codigo', $this->codigo_postal)->get();
 
@@ -122,7 +122,7 @@ class UbicacionPredio extends Component
 
         $this->tipo_asentamiento = $this->codigos_postales->where('nombre_asentamiento', $this->nombre_asentamiento)->first()->tipo_asentamiento;
 
-    }
+    } */
 
     #[On('cargarPropiedad')]
     public function cargarPropiedad($id){

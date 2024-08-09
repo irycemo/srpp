@@ -2,12 +2,14 @@
 
 namespace App\Livewire\Certificaciones;
 
+use App\Models\File;
 use App\Models\User;
 use App\Models\Predio;
 use Livewire\Component;
 use App\Models\Gravamen;
 use Livewire\WithPagination;
 use App\Models\Certificacion;
+use Livewire\WithFileUploads;
 use App\Traits\ComponentesTrait;
 use Illuminate\Support\Facades\DB;
 use App\Models\MovimientoRegistral;
@@ -18,6 +20,7 @@ class CertificadoGravamen extends Component
 {
 
     use WithPagination;
+    use WithFileUploads;
     use ComponentesTrait;
 
     public Certificacion $modelo_editar;
@@ -31,6 +34,10 @@ class CertificadoGravamen extends Component
     public $director;
 
     public $modalRechazar = false;
+
+    public $modalFinalizar = false;
+
+    public $documento;
 
     public $observaciones;
 
@@ -71,6 +78,31 @@ class CertificadoGravamen extends Component
 
         $this->moviminetoRegistral = $modelo->movimientoRegistral;
 
+        if($this->moviminetoRegistral->tipo_servicio == 'ordinario'){
+
+            if(!($this->calcularDiaElaboracion($this->modelo_editar) <= now())){
+
+                $this->dispatch('mostrarMensaje', ['error', "El trámite puede elaborarse apartir del " . $this->calcularDiaElaboracion($this->modelo_editar)->format('d-m-Y')]);
+
+                return;
+
+            }
+
+        }
+
+        $movimientoAsignado = MovimientoRegistral::whereIn('estado', ['nuevo', 'captura'])
+                                                        ->where('usuario_Asignado', auth()->id())
+                                                        ->orderBy('created_at')
+                                                        ->first();
+
+        if($movimientoAsignado && $this->moviminetoRegistral->id != $movimientoAsignado->id){
+
+            $this->dispatch('mostrarMensaje', ['error', "Debe elaborar el movimiento registral " . $movimientoAsignado->folioReal->folio . '-' . $movimientoAsignado->folio . ' primero.']);
+
+            return;
+
+        }
+
         $this->predio = Predio::where('folio_real', $this->moviminetoRegistral->folio_real)->first();
 
         $this->gravamenes = Gravamen::with('deudores.persona', 'deudores.actor.persona',  'acreedores.persona')
@@ -107,18 +139,6 @@ class CertificadoGravamen extends Component
     public function generarCertificado(){
 
         $this->modal = false;
-
-        if($this->moviminetoRegistral->tipo_servicio == 'ordinario'){
-
-            if(!($this->calcularDiaElaboracion($this->modelo_editar) <= now())){
-
-                $this->dispatch('mostrarMensaje', ['error', "El trámite puede elaborarse apartir del " . $this->calcularDiaElaboracion($this->modelo_editar)->format('d-m-Y')]);
-
-                return;
-
-            }
-
-        }
 
         try{
 
@@ -157,16 +177,28 @@ class CertificadoGravamen extends Component
 
     }
 
-    public function finalizarSupervisor(Certificacion $modelo){
+    public function abrirModalFinalizar(Certificacion $modelo){
+
+        $this->reset('documento');
+
+        $this->dispatch('removeFiles');
 
         if($this->modelo_editar->isNot($modelo))
             $this->modelo_editar = $modelo;
 
-        if($modelo->movimientoRegistral->tipo_servicio == 'ordinario'){
+        $this->modalFinalizar = true;
 
-            if(!($this->calcularDiaElaboracion($modelo) <= now())){
+    }
 
-                $this->dispatch('mostrarMensaje', ['error', "El trámite puede elaborarse apartir del " . $this->calcularDiaElaboracion($modelo)->format('d-m-Y')]);
+    public function finalizarSupervisor(){
+
+        $this->validate(['documento' => 'required']);
+
+        if($this->modelo_editar->movimientoRegistral->tipo_servicio == 'ordinario'){
+
+            if(!($this->calcularDiaElaboracion($this->modelo_editar) <= now())){
+
+                $this->dispatch('mostrarMensaje', ['error', "El trámite puede elaborarse apartir del " . $this->calcularDiaElaboracion($this->modelo_editar)->format('d-m-Y')]);
 
                 return;
 
@@ -176,7 +208,16 @@ class CertificadoGravamen extends Component
 
         try {
 
-            DB::transaction(function () use ($modelo){
+            DB::transaction(function (){
+
+                $pdf = $this->documento->store('/', 'caratulas');
+
+                File::create([
+                    'fileable_id' => $this->modelo_editar->movimientoRegistral->id,
+                    'fileable_type' => 'App\Models\MovimientoRegistral',
+                    'descripcion' => 'caratula',
+                    'url' => $pdf
+                ]);
 
                 $this->modelo_editar->finalizado_en = now();
 
@@ -195,6 +236,8 @@ class CertificadoGravamen extends Component
                 $this->resetearTodo();
 
                 $this->dispatch('mostrarMensaje', ['success', "El trámite se finalizó con éxito."]);
+
+                $this->modalFinalizar = false;
 
             });
 
@@ -341,9 +384,7 @@ class CertificadoGravamen extends Component
                                                     $q->where('distrito', '!=', 2);
                                                 })
                                                 ->whereHas('certificacion', function($q){
-                                                    $q->where('servicio', 'DL07')
-                                                        ->whereNull('finalizado_en')
-                                                        ->whereNull('folio_carpeta_copias');
+                                                    $q->where('servicio', 'DL07');
                                                 })
 
                                                 ->orderBy($this->sort, $this->direction)

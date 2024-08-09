@@ -2,6 +2,7 @@
 
 namespace App\Livewire\Cancelaciones;
 
+use App\Models\File;
 use Livewire\Component;
 use Illuminate\Validation\Rule;
 use Illuminate\Support\Facades\DB;
@@ -9,17 +10,23 @@ use App\Models\MovimientoRegistral;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Http;
+use Illuminate\Support\Facades\Storage;
 use App\Http\Services\SistemaTramitesService;
 use App\Models\Cancelacion as ModelCancelacion;
 use Illuminate\Http\Client\ConnectionException;
+use Livewire\WithFileUploads;
 
 class Cancelacion extends Component
 {
 
+    use WithFileUploads;
+
     public $modalContraseña = false;
     public $modalRechazar = false;
+    public $modalDocumento = false;
     public $link;
     public $contraseña;
+    public $documento;
 
     public $gravamenCancelarMovimiento;
     public $folio_gravamen;
@@ -119,6 +126,14 @@ class Cancelacion extends Component
 
         }
 
+        if(!$this->cancelacion->movimientoRegistral->documentoEntrada()){
+
+            $this->dispatch('mostrarMensaje', ['error', "Debe subir el documento de entrada."]);
+
+            return;
+
+        }
+
         $this->modalContraseña = true;
 
     }
@@ -186,7 +201,7 @@ class Cancelacion extends Component
 
             DB::transaction(function () {
 
-                $this->cancelacion->movimientoRegistral->update(['estado', 'captura']);
+                $this->cancelacion->movimientoRegistral->update(['estado' => 'captura']);
 
                 $this->cancelacion->save();
 
@@ -256,9 +271,90 @@ class Cancelacion extends Component
 
     }
 
+    public function abrirModalFinalizar(){
+
+        $this->reset('documento');
+
+        $this->dispatch('removeFiles');
+
+        $this->modalDocumento = true;
+
+    }
+
+    public function guardarDocumento(){
+
+        $this->validate(['documento' => 'required']);
+
+        try {
+
+            DB::transaction(function (){
+
+                $pdf = $this->documento->store('/', 'documento_entrada');
+
+                File::create([
+                    'fileable_id' => $this->cancelacion->movimientoRegistral->id,
+                    'fileable_type' => 'App\Models\MovimientoRegistral',
+                    'descripcion' => 'documento_entrada',
+                    'url' => $pdf
+                ]);
+
+                $this->modalDocumento = false;
+
+            });
+
+        } catch (\Throwable $th) {
+
+            Log::error("Error al finalizar trámite de inscripción de cancelación por el usuario: (id: " . auth()->user()->id . ") " . auth()->user()->name . ". " . $th);
+            $this->dispatch('mostrarMensaje', ['error', "Ha ocurrido un error."]);
+
+        }
+
+    }
+
     public function mount(){
 
-        $this->link = env('SISTEMA_TRAMITES_CONSULTAR_ARCHIVO');
+        if(!$this->cancelacion->movimientoRegistral->documentoEntrada()){
+
+            try {
+
+                $response = Http::withToken(env('SISTEMA_TRAMITES_TOKEN'))
+                                    ->accept('application/json')
+                                    ->asForm()
+                                    ->post(env('SISTEMA_TRAMITES_CONSULTAR_ARCHIVO'), [
+                                                                                        'año' => $this->cancelacion->movimientoRegistral->año,
+                                                                                        'tramite' => $this->cancelacion->movimientoRegistral->tramite,
+                                                                                        'usuario' => $this->cancelacion->movimientoRegistral->usuario,
+                                                                                        'estado' => 'nuevo'
+                                                                                    ]);
+
+                $data = collect(json_decode($response, true));
+
+                if($response->status() == 200){
+
+                    $contents = file_get_contents($data['url']);
+
+                    $filename = basename($data['url']);
+
+                    Storage::disk('documento_entrada')->put($filename, $contents);
+
+                    File::create([
+                        'fileable_id' => $this->cancelacion->movimientoRegistral->id,
+                        'fileable_type' => 'App\Models\MovimientoRegistral',
+                        'descripcion' => 'documento_entrada',
+                        'url' => $filename
+                    ]);
+
+                }
+
+            } catch (ConnectionException $th) {
+
+                Log::error("Error al cargar archivo en cancelación: (id: " . auth()->user()->id . ") " . auth()->user()->name . ". " . $th);
+
+                $this->dispatch('mostrarMensaje', ['error', "Ha ocurrido un error."]);
+
+            }
+
+        }
 
         $this->gravamenCancelarMovimiento = MovimientoRegistral::where('folio_real', $this->cancelacion->movimientoRegistral->folio_real)
                                                                     ->where('tomo_gravamen', $this->cancelacion->movimientoRegistral->tomo_gravamen)
@@ -272,6 +368,10 @@ class Cancelacion extends Component
 
     public function render()
     {
+
+        $this->authorize('view', $this->cancelacion->movimientoRegistral);
+
         return view('livewire.cancelaciones.cancelacion')->extends('layouts.admin');
+
     }
 }

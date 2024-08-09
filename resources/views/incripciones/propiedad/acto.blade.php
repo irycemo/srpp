@@ -162,7 +162,7 @@
             </div>
 
             <div style="text-align: right">
-                <p style="margin:0"><strong>FOLIO REAL:</strong>{{ $inscripcion->movimientoRegistral->folioReal->folio }}-{{ $inscripcion->movimientoRegistral->folio }}</p>
+                <p style="margin:0"><strong>movimiento registral:</strong>{{ $inscripcion->movimientoRegistral->folioReal->folio }}-{{ $inscripcion->movimientoRegistral->folio }}</p>
                 <p style="margin:0"><strong>DISTRITO:</strong> {{ $inscripcion->movimientoRegistral->distrito }}</p>
             </div>
 
@@ -172,7 +172,11 @@
 
             <div class="parrafo">
 
-                <p><strong>por</strong> {{ $inscripcion->movimientoRegistral->tipo_documento }} <strong>n°</strong> {{ $inscripcion->movimientoRegistral->numero_documento }} <strong>de fecha</strong> {{ Carbon\Carbon::parse($inscripcion->movimientoRegistral->fecha_emision)->format('d-m-Y') }} <strong>otorgado por</strong> {{ $inscripcion->movimientoRegistral->autoridad_cargo }} {{ $inscripcion->movimientoRegistral->autoridad_nombre }}
+                <p>
+                    <strong>por</strong> {{ $inscripcion->movimientoRegistral->tipo_documento }} <strong>n°</strong>
+                    {{ $inscripcion->movimientoRegistral->numero_documento }}
+                    <strong>de fecha</strong> {{ Carbon\Carbon::parse($inscripcion->movimientoRegistral->fecha_emision)->format('d-m-Y') }}
+                    <strong>otorgado por</strong> {{ $inscripcion->movimientoRegistral->autoridad_cargo }} {{ $inscripcion->movimientoRegistral->autoridad_nombre }}
                     <strong>consta que </strong>
                     @foreach ($inscripcion->transmitentes() as $transmitente)
 
@@ -192,28 +196,13 @@
 
                 <p>{{ $inscripcion->descripcion_acto }}.</p>
 
-                <p class="separador">DESCRIPCIÓN DEL INMUEBLE</p>
+                <p class="separador">UBICACIÓN DEL INMUEBLE</p>
 
-                <p>
-                    @if ($predio->codigo_postal)
-                        <strong>CÓDIGO POSTAL:</strong> {{ $predio->codigo_postal }};
-                    @endif
+                <p class="parrafo">
 
-                    @if ($predio->tipo_asentamiento)
-                        <strong>TIPO DE ASENTAMIENTO:</strong> {{ $predio->tipo_asentamiento }};
-                    @endif
+                    <strong>CÓDIGO POSTAL:</strong> {{ $predio->codigo_postal }}; <strong>TIPO DE ASENTAMIENTO:</strong> {{ $predio->tipo_asentamiento }}; <strong>NOMBRE DEL ASENTAMIENTO:</strong> {{ $predio->nombre_asentamiento }}; <strong>MUNICIPIO:</strong> {{ $predio->municipio }};
 
-                    @if ($predio->nombre_asentamiento)
-                        <strong>NOMBRE DEL ASENTAMIENTO:</strong> {{ $predio->nombre_asentamiento }};
-                    @endif
-
-                    @if ($predio->municipio)
-                        <strong>MUNICIPIO:</strong> {{ $predio->municipio }};
-                    @endif
-
-                    @if ($predio->ciudad)
-                        <strong>CIUDAD:</strong> {{ $predio->ciudad }};
-                    @endif
+                    <strong>CIUDAD:</strong> {{ $predio->ciudad }};
 
                     @if ($predio->localidad)
                         <strong>LOCALIDAD:</strong> {{ $predio->localidad }};
@@ -227,13 +216,7 @@
                         <strong>NOMBRE DE LA VIALIDAD:</strong> {{ $predio->nombre_vialidad }};
                     @endif
 
-                    @if ($predio->numero_exterior)
-                        <strong>NÚMERO EXTERIOR:</strong> {{ $predio->numero_exterior ?? 'SN' }};
-                    @endif
-
-                    @if ($predio->numero_interior)
-                        <strong>NÚMERO INTERIOR:</strong> {{ $predio->numero_interior ?? 'SN' }};
-                    @endif
+                    <strong>NÚMERO EXTERIOR:</strong> {{ $predio->numero_exterior ?? 'SN' }}; <strong>NÚMERO INTERIOR:</strong> {{ $predio->numero_interior ?? 'SN' }};
 
                     @if ($predio->nombre_edificio)
                         <strong>EDIFICIO:</strong> {{ $predio->nombre_edificio }};
@@ -300,45 +283,101 @@
                     @endif
 
                     @if ($predio->observaciones)
-                        <strong>OBSERVACIONES:</strong> {{ $predio->observaciones }}
-                    @endif.
+                        <strong>OBSERVACIONES:</strong> {{ $predio->observaciones }}.
+                    @endif
+
                 </p>
 
-                <p class="separador">colindancias</p>
+                <br>
 
-                <table>
+                @if($predio->colindancias->count())
 
-                    <thead>
+                    <p class="separador">colindancias</p>
 
-                        <tr>
-                            <th>Viento</th>
-                            <th>Longitud</th>
-                            <th>Descripción</th>
-                        </tr>
+                    <table>
 
-                    </thead>
-
-                    <tbody>
-
-                        @foreach ($predio->colindancias as $colindancia)
+                        <thead>
 
                             <tr>
-                                <td style="padding-right: 40px;">
-                                    {{ $colindancia->viento }}
-                                </td>
-                                <td style="padding-right: 40px;">
-                                    {{ number_format($colindancia->longitud, 2) }}
-                                </td>
-                                <td style="padding-right: 40px;">
-                                    {{ $colindancia->descripcion }}
-                                </td>
+                                <th>Viento</th>
+                                <th>Longitud</th>
+                                <th>Descripción</th>
                             </tr>
 
-                        @endforeach
+                        </thead>
 
-                    </tbody>
+                        <tbody>
 
-                </table>
+                            @foreach ($predio->colindancias as $colindancia)
+
+                                <tr>
+                                    <td style="padding-right: 40px;">
+                                        {{ $colindancia->viento }}
+                                    </td>
+                                    <td style="padding-right: 40px;">
+                                        {{ number_format($colindancia->longitud, 2) }}
+                                    </td>
+                                    <td style="padding-right: 40px;">
+                                        {{ $colindancia->descripcion }}
+                                    </td>
+                                </tr>
+
+                            @endforeach
+
+                        </tbody>
+
+                    </table>
+
+                @endif
+
+                <p class="separador">DESCRIPCIÓN DEL INMUEBLE</p>
+
+                <p class="parrafo">
+                    @if($predio->cp_localidad)
+                        <strong>Cuenta predial:</strong> {{ $predio->cp_localidad }}-{{ $predio->cp_oficina }}-{{ $predio->cp_tipo_predio }}-{{ $predio->cp_registro }};
+                    @endif
+
+                    @if($predio->cc_region_catastral)
+                        <strong>Clave catastral:</strong> {{ $predio->cc_estado }}-{{ $predio->cc_region_catastral }}-{{ $predio->cc_municipio }}-{{ $predio->cc_zona_catastral }}-{{ $predio->cc_sector }}-{{ $predio->cc_manzana }}-{{ $predio->cc_predio }}-{{ $predio->cc_edificio }}-{{ $predio->cc_departamento }};
+                    @endif
+
+                    <strong>Superficie de terreno:</strong> {{ $predio->superficie_terreno }} {{ $predio->unidad_area }} <strong>Superficie de construcción:</strong> {{ $predio->superficie_construccion }} {{ $predio->unidad_area }} <strong>monto de la transacción:</strong> {{ $predio->monto_transaccion }} {{ $predio->divisa }};
+
+                    @if ($predio->curt)
+                        <strong>curt:</strong> {{ $predio->curt }};
+                    @endif
+
+                    @if ($predio->superficie_judicial)
+                        <strong>superficie judicial:</strong> {{ $predio->superficie_judicial }} {{ $predio->unidad_area }};
+                    @endif
+
+                    @if ($predio->superficie_notarial)
+                        <strong>superficie notarial:</strong> {{ $predio->superficie_notarial }} {{ $predio->unidad_area }};
+                    @endif
+
+                    @if ($predio->area_comun_terreno)
+                        <strong>área de terreno común:</strong> {{ $predio->area_comun_terreno }} {{ $predio->unidad_area }};
+                    @endif
+
+                    @if ($predio->area_comun_construccion)
+                        <strong>área de construcción común:</strong> {{ $predio->area_comun_construccion }} {{ $predio->unidad_area }};
+                    @endif
+
+                    @if ($predio->valor_terreno_comun)
+                        <strong>valor de terreno común:</strong> {{ $predio->valor_terreno_comun }} {{ $predio->divisa }};
+                    @endif
+
+                    @if ($predio->valor_construccion_comun)
+                        <strong>valor de construcción común:</strong> {{ $predio->valor_construccion_comun }} {{ $predio->divisa }};
+                    @endif
+
+                    @if ($predio->valor_catastral)
+                        <strong>valor de construcción común:</strong> {{ $predio->valor_catastral }} {{ $predio->divisa }};
+                    @endif
+
+                    <strong>Descripción:</strong> {{ $predio->descripcion }}.
+
+                </p>
 
             </div>
 
@@ -386,6 +425,11 @@
 
             </div>
 
+            <p class="parrafo">
+                A SOLICITUD DE: <strong>{{ $inscripcion->movimientoRegistral->solicitante }}</strong> se EXPiDe EL PRESENTE EN LA CIUDAD DE @if($predio->folioReal->distrito== '02 Uruapan' ) uruapan @else MORELIA @endif, MICHOACÁN, A LAS
+                {{ Carbon\Carbon::now()->locale('es')->translatedFormat('H:i:s \d\e\l l d \d\e F \d\e\l Y'); }}.
+            </p>
+
             <div class="firma no-break">
 
                 <p class="atte">
@@ -400,33 +444,33 @@
                     <p style="margin:0;">Director del registro público de la propiedad</p>
                 @endif
 
-            </div>
+                <div style="margin-top: 50px;">
 
-            <div style="margin-top: 50px;">
-
-                <table class="tabla" >
-                    <tbody sty>
-                        <tr>
-                            <td style="padding-right: 40px; text-align:center; width: 50%; vertical-align: bottom; white-space: nowrap;">
-
-                                <p class="borde">{{ $inscripcion->movimientoRegistral->asignadoA->name }}</p>
-                                <p style="margin: 0">REGISTRADOR</p>
-
-                            </td>
-
-                            @if($inscripcion->movimientoRegistral->distrito != '02 Uruapan')
-
+                    <table class="tabla" >
+                        <tbody sty>
+                            <tr>
                                 <td style="padding-right: 40px; text-align:center; width: 50%; vertical-align: bottom; white-space: nowrap;">
 
-                                    <p class="borde">{{ $jefe_departamento }}</p>
-                                    <p style="margin: 0">JEFE DE Departamento de Registro de Inscripciones</p>
+                                    <p class="borde">{{ $inscripcion->movimientoRegistral->asignadoA->name }}</p>
+                                    <p style="margin: 0">REGISTRADOR</p>
+
                                 </td>
 
-                            @endif
+                                @if($inscripcion->movimientoRegistral->distrito != '02 Uruapan')
 
-                        </tr>
-                    </tbody>
-                </table>
+                                    <td style="padding-right: 40px; text-align:center; width: 50%; vertical-align: bottom; white-space: nowrap;">
+
+                                        <p class="borde">{{ $jefe_departamento }}</p>
+                                        <p style="margin: 0">JEFE DE Departamento de Registro de Inscripciones</p>
+                                    </td>
+
+                                @endif
+
+                            </tr>
+                        </tbody>
+                    </table>
+
+                </div>
 
             </div>
 
@@ -442,13 +486,13 @@
                                 <p style="margin: 0"><strong>NÚMERO DE CONTROL: </strong>{{ $inscripcion->movimientoRegistral->año }}-{{ $inscripcion->movimientoRegistral->tramite }}-{{ $inscripcion->movimientoRegistral->usuario }}</p>
                                 <p style="margin: 0"><strong>DERECHOS: </strong>${{ number_format($inscripcion->movimientoRegistral->monto, 2) }}</p>
                                 <p style="margin: 0"><strong>Tipo de servicio: </strong>{{ $inscripcion->movimientoRegistral->tipo_servicio }}</p>
+                                <p style="margin: 0"><strong>Servicio: </strong>{{ $servicio }}</p>
 
                             </td>
 
-                            <td style="padding-right: 40px; text-align:left; ; vertical-align: bottom; white-space: nowrap;">
+                            <td style="padding-right: 40px; text-align:left; ; vertical-align: top; white-space: nowrap;">
 
-                                {{-- <p><strong>FECHA DE ENTRADA:</strong>{{ $inscripcion->movimientoRegistral->created_at->format('d-m-Y') }}</p> --}}
-                                <p style="margin: 0"><strong>Fecha de impresión: </strong>{{ now()->format('d-m-Y H:i:s') }}</p>
+                                <p style="margin: 0"><strong>Fecha de impresión: </strong>{{ now()->format('d/m/Y H:i:s') }}</p>
                                 <p style="margin: 0"><strong>IMPRESO POR: </strong>{{  auth()->user()->name }}</p>
 
                             </td>
