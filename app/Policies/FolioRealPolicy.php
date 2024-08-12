@@ -14,6 +14,9 @@ class FolioRealPolicy
 
         if (!in_array($folioReal->estado, ['nuevo', 'captura'])) {
             return Response::deny('El folio real no puede ser modificado.');
+        }else{
+
+            return Response::allow();
         }
 
     }
