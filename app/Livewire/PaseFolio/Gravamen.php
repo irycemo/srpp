@@ -98,7 +98,7 @@ class Gravamen extends Component
 
     public function borrar(){
 
-        $this->authorize('update', $this->movimientoRegistral);
+        /* $this->authorize('update', $this->movimientoRegistral); */
 
         $gravamen = GravamenModelo::find($this->selected_id);
 
