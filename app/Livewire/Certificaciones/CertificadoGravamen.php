@@ -293,6 +293,8 @@ class CertificadoGravamen extends Component
 
                 $this->resetearTodo();
 
+                $this->modalRechazar = false;
+
             });
 
         } catch (\Throwable $th) {

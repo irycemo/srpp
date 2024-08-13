@@ -5,7 +5,6 @@ namespace App\Livewire\PaseFolio;
 use App\Models\Predio;
 use Livewire\Component;
 use Livewire\Attributes\On;
-use App\Models\CodigoPostal;
 use App\Constantes\Constantes;
 use Illuminate\Support\Facades\DB;
 use App\Models\MovimientoRegistral;
