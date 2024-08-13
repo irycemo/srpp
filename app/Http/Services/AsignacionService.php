@@ -280,7 +280,6 @@ class AsignacionService{
 
             return $supervisor->id;
 
-
         }
 
         $supervisor = User::inRandomOrder()

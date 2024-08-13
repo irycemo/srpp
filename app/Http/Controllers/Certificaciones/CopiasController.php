@@ -92,7 +92,7 @@ class CopiasController extends Controller
 
         $numero_oficio = $certificacion->movimientoRegistral->numero_oficio;
 
-        $servicio = $this->nombreServicio($movimientoRegistral->certificacion->servicio);
+        $servicio = $this->nombreServicio($certificacion->servicio);
 
         if(auth()->user()->hasRole(['Certificador Oficialia', 'Certificador Juridico'])){
 
@@ -239,7 +239,7 @@ class CopiasController extends Controller
 
         $qr = $this->generadorQr();
 
-        $servicio = $this->nombreServicio($movimientoRegistral->certificacion->servicio);
+        $servicio = $this->nombreServicio($certificacion->servicio);
 
         $pdf = Pdf::loadView('certificaciones.copiaSimple', compact(
             'distrito',
