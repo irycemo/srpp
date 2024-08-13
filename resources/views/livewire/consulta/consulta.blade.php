@@ -310,7 +310,7 @@
 
     @if ($folioReal)
 
-        <x-h4 class="mb-5">Folio real: {{ $folioReal->folio }}</x-h4>
+        <x-h4 class="mb-5">Folio real: {{ $folioReal->folio }} <span>({{ $folioReal->estado }})</span></x-h4>
 
         <div x-data="{ activeTab: 8 }">
 
