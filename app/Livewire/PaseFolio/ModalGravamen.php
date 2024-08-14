@@ -553,8 +553,6 @@ class ModalGravamen extends ModalComponent
 
         $this->divisas = Constantes::DIVISAS;
 
-        $this->divisa = $this->divisas[0];
-
         $this->tipo_deudores = Constantes::TIPO_DEUDOR;
 
         $this->actos = Constantes::ACTOS_INSCRIPCION_GRAVAMEN;

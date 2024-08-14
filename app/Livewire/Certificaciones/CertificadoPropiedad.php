@@ -42,7 +42,7 @@ class CertificadoPropiedad extends Component
 
     protected function rules(){
         return [
-            'propietarios.*' => 'required',
+            'propietarios.*' => 'nullable',
             'propietarios.*.nombre' => 'required|string',
             'propietarios.*.ap_paterno' => 'required|string',
             'propietarios.*.ap_materno' => 'required|string',
@@ -79,7 +79,7 @@ class CertificadoPropiedad extends Component
 
                 if(!($this->calcularDiaElaboracion($this->certificacion) <= now())){
 
-                    $this->dispatch('mostrarMensaje', ['error', "El trámite puede elaborarse apartir del " . $this->calcularDiaElaboracion($modelo)->format('d-m-Y')]);
+                    $this->dispatch('mostrarMensaje', ['error', "El trámite puede elaborarse apartir del " . $this->calcularDiaElaboracion($this->certificacion)->format('d-m-Y')]);
 
                     return;
 

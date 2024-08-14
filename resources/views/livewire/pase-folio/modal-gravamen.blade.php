@@ -208,6 +208,8 @@
 
                         <x-input-select id="divisa" wire:model="divisa">
 
+                            <option value="">-</option>
+
                             @foreach ($divisas as $divisa)
 
                                 <option value="{{ $divisa }}">{{ $divisa }}</option>

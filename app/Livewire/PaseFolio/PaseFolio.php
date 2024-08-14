@@ -48,6 +48,8 @@ class PaseFolio extends Component
 
                 $this->modelo_editar->update(['estado' => 'rechazado', 'actualizado_por' => auth()->user()->id]);
 
+                $this->modelo_editar->folioReal->update(['estado' => 'rechazado', 'actualizado_por' => auth()->user()->id]);
+
                 $this->modelo_editar->save();
 
                 $this->dispatch('mostrarMensaje', ['success', "El trámite se rechazó con éxito."]);
@@ -133,7 +135,7 @@ class PaseFolio extends Component
                                                     ->where(function($q){
                                                         $q->whereNull('folio_real')
                                                             ->orWhereHas('folioReal', function($q){
-                                                                $q->whereIn('estado', ['nuevo', 'captura', 'elaborado']);
+                                                                $q->whereIn('estado', ['nuevo', 'captura', 'elaborado', 'rechazado']);
                                                             });
                                                     })
                                                     ->where(function($q){
