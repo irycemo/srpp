@@ -57,17 +57,52 @@ trait InscripcionesIndex{
 
             }else{
 
-                return redirect()->route('propiedad.inscripcion', $movimientoRegistral->inscripcionPropiedad);
+                $this->ruta($movimientoRegistral);
 
             }
 
         }else{
 
-            return redirect()->route('propiedad.inscripcion', $movimientoRegistral->inscripcionPropiedad);
+            $this->ruta($movimientoRegistral);
 
         }
 
     }
+
+    public function ruta($movimientoRegistral){
+
+        if($movimientoRegistral->propiedad){
+
+            return redirect()->route('propiedad.inscripcion', $movimientoRegistral->inscripcionPropiedad);
+
+        }
+
+        if($movimientoRegistral->gravamen){
+
+            return redirect()->route('gravamen.inscripcion', $movimientoRegistral->gravamen);
+
+        }
+
+        if($movimientoRegistral->vario){
+
+            return redirect()->route('vario.inscripcion', $movimientoRegistral->vario);
+
+        }
+
+        if($movimientoRegistral->cancelacion){
+
+            return redirect()->route('cancelacion.inscripcion', $movimientoRegistral->cancelacion);
+
+        }
+
+        if($movimientoRegistral->sentencia){
+
+            return redirect()->route('sentencia.inscripcion', $movimientoRegistral->sentencia);
+
+        }
+
+    }
+
 
     public function reimprimir(MovimientoRegistral $movimientoRegistral){
 
