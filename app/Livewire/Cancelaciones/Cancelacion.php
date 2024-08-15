@@ -154,11 +154,16 @@ class Cancelacion extends Component
 
                 if($this->cancelacion->acto_contenido == 'PARCIAL'){
 
-                    $this->gravamenCancelarMovimiento->gravamen->update([
-                        'valor_gravamen' => $this->gravamenCancelarMovimiento->gravamen->valor_gravamen - $this->valor,
-                        'actualizado_por' => auth()->id(),
-                        'observaciones' => $this->gravamenCancelarMovimiento->gravamen->observaciones . ' ' . 'Cancelado parcialmente mediante movimiento registral: ' . $this->cancelacion->movimientoRegistral->folioReal->folio . '-' . $this->cancelacion->movimientoRegistral->folio,
-                    ]);
+                    $this->gravamenCancelarMovimiento->gravamen->valor_gravamen = $this->gravamenCancelarMovimiento->gravamen->valor_gravamen - $this->valor;
+                    $this->gravamenCancelarMovimiento->gravamen->actualizado_por = auth()->id();
+                    $this->gravamenCancelarMovimiento->gravamen->observaciones = $this->gravamenCancelarMovimiento->gravamen->observaciones . ' ' . 'Cancelado parcialmente mediante movimiento registral: ' . $this->cancelacion->movimientoRegistral->folioReal->folio . '-' . $this->cancelacion->movimientoRegistral->folio;
+
+                    if($this->gravamenCancelarMovimiento->gravamen->valor_gravamen <= 0){
+
+                        $this->gravamenCancelarMovimiento->gravamen->estado = 'cancelado';
+                    }
+
+                    $this->gravamenCancelarMovimiento->gravamen->save();
 
                 }elseif($this->cancelacion->acto_contenido == 'TOTAL'){
 
