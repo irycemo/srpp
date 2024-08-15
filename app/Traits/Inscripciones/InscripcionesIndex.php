@@ -71,7 +71,7 @@ trait InscripcionesIndex{
 
     public function ruta($movimientoRegistral){
 
-        if($movimientoRegistral->propiedad){
+        if($movimientoRegistral->inscripcionPropiedad){
 
             return redirect()->route('propiedad.inscripcion', $movimientoRegistral->inscripcionPropiedad);
 
