@@ -85,7 +85,7 @@ trait InscripcionesIndex{
 
         if($movimientoRegistral->vario){
 
-            return redirect()->route('vario.inscripcion', $movimientoRegistral->vario);
+            return redirect()->route('varios.inscripcion', $movimientoRegistral->vario);
 
         }
 
@@ -97,7 +97,7 @@ trait InscripcionesIndex{
 
         if($movimientoRegistral->sentencia){
 
-            return redirect()->route('sentencia.inscripcion', $movimientoRegistral->sentencia);
+            return redirect()->route('sentencias.inscripcion', $movimientoRegistral->sentencia);
 
         }
 
