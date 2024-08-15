@@ -36,7 +36,7 @@ class GravamenIndex extends Component
                                                     ->whereIn('estado', ['nuevo', 'captura'])
                                                     ->where('usuario_asignado', auth()->id())
                                                     ->whereHas('gravamen', function($q){
-                                                        $q->where('servicio', 'DL64');
+                                                        $q->where('servicio', 'D150');
                                                     })
                                                     ->orderBy($this->sort, $this->direction)
                                                     ->paginate($this->pagination);
@@ -55,7 +55,7 @@ class GravamenIndex extends Component
                                                     })
                                                     ->where('estado', 'elaborado')
                                                     ->whereHas('gravamen', function($q){
-                                                        $q->where('servicio', 'DL64');
+                                                        $q->where('servicio', 'D150');
                                                     })
                                                     ->orderBy($this->sort, $this->direction)
                                                     ->paginate($this->pagination);
@@ -78,7 +78,7 @@ class GravamenIndex extends Component
                                                             ->orWhere('tramite', 'LIKE', '%' . $this->search . '%');
                                                     })
                                                     ->whereHas('gravamen', function($q){
-                                                        $q->where('servicio', 'DL64');
+                                                        $q->where('servicio', 'D150');
                                                     })
                                                     ->orderBy($this->sort, $this->direction)
                                                     ->paginate($this->pagination);

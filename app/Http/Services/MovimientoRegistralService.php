@@ -374,7 +374,7 @@ class MovimientoRegistralService{
         }
 
         /* Inscripciones: Gravamen */
-        if($servicio == 'DL64' && $categoria_servicio == 'Inscripciones - Gravamenes'){
+        if($servicio == 'D150' && $categoria_servicio == 'Inscripciones - Gravamenes'){
 
             return $this->asignacionService->obtenerUsuarioGravamen($folioReal, $distrito);
 
@@ -437,7 +437,7 @@ class MovimientoRegistralService{
         }
 
         /* Inscripciones: Gravamen */
-        if($servicio == 'DL64'){
+        if($servicio == 'D150'){
             return $this->asignacionService->obtenerSupervisorGravamen($distrito);
 
         }
