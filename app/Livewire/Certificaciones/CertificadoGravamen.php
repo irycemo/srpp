@@ -92,6 +92,9 @@ class CertificadoGravamen extends Component
 
         $movimientoAsignado = MovimientoRegistral::whereIn('estado', ['nuevo', 'captura'])
                                                         ->where('usuario_Asignado', auth()->id())
+                                                        ->whereHas('folioReal', function($q){
+                                                            $q->where('estado', 'activo');
+                                                        })
                                                         ->orderBy('created_at')
                                                         ->first();
 
