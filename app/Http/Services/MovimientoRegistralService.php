@@ -381,7 +381,7 @@ class MovimientoRegistralService{
         }
 
         /* Inscripciones: Cancelaciones */
-        if($servicio == 'DL66' && $categoria_servicio == 'Cancelación - Gravamenes'){
+        if($servicio == 'DL56' && $categoria_servicio == 'Cancelación - Gravamenes'){
 
             return $this->asignacionService->obtenerUsuarioCancelacion($folioReal, $distrito);
 
@@ -443,7 +443,7 @@ class MovimientoRegistralService{
         }
 
         /* Inscripciones: Cancelaciones */
-        if($servicio == 'DL66'){
+        if($servicio == 'DL56'){
 
             return $this->asignacionService->obtenerSupervisorCancelacion($distrito);
 
