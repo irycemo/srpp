@@ -39,7 +39,6 @@ class FolioRealController extends Controller
                                         })
                                         ->first();
 
-
             if(
                 isset($validated['tomo']) &&
                 isset($validated['registro']) &&

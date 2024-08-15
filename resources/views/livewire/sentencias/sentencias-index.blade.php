@@ -255,7 +255,7 @@
 
     window.addEventListener('imprimir_documento', event => {
 
-        const documento = event.detail[0].sentencia;
+        const documento = event.detail[0].caratula;
 
         var url = "{{ route('sentencias.inscripcion.acto', '')}}" + "/" + documento;
 

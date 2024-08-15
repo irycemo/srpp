@@ -146,6 +146,28 @@ class Usuarios extends Component
 
     }
 
+    public function resetearPassword($id){
+
+        try{
+
+            $usuario = User::find($id);
+
+            $usuario->password = bcrypt('sistema');
+            $usuario->save();
+
+            $this->resetearTodo($borrado = true);
+
+            $this->dispatch('mostrarMensaje', ['success', "La contraseña se reestableció con éxito."]);
+
+        } catch (\Throwable $th) {
+
+            Log::error("Error al resetear contraseña por el usuario: (id: " . auth()->user()->id . ") " . auth()->user()->name . ". " . $th);
+            $this->dispatch('mostrarMensaje', ['error', "Ha ocurrido un error."]);
+            $this->resetearTodo();
+        }
+
+    }
+
     public function mount(){
 
         $this->crearModeloVacio();

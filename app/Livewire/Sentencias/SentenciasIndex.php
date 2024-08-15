@@ -2,15 +2,12 @@
 
 namespace App\Livewire\Sentencias;
 
-use App\Models\File;
 use Livewire\Component;
 use Livewire\WithPagination;
 use Livewire\WithFileUploads;
 use App\Traits\ComponentesTrait;
-use Illuminate\Support\Facades\DB;
 use App\Models\MovimientoRegistral;
-use Illuminate\Support\Facades\Log;
-use App\Http\Services\SistemaTramitesService;
+use App\Traits\Inscripciones\InscripcionesIndex;
 
 class SentenciasIndex extends Component
 {
@@ -18,121 +15,7 @@ class SentenciasIndex extends Component
     use WithPagination;
     use WithFileUploads;
     use ComponentesTrait;
-
-    public MovimientoRegistral $modelo_editar;
-
-    public $modalFinalizar = false;
-    public $documento;
-
-    public function crearModeloVacio(){
-        $this->modelo_editar = MovimientoRegistral::make();
-    }
-
-    public function elaborar(MovimientoRegistral $movimientoRegistral){
-
-        $movimientoAsignado = MovimientoRegistral::whereIn('estado', ['nuevo', 'captura'])
-                                                        ->where('usuario_Asignado', auth()->id())
-                                                        ->orderBy('created_at')
-                                                        ->first();
-
-        if($movimientoAsignado && $movimientoRegistral->id != $movimientoAsignado->id){
-
-            $this->dispatch('mostrarMensaje', ['error', "Debe elaborar el movimiento registral " . $movimientoAsignado->folioReal->folio . '-' . $movimientoAsignado->folio . ' primero.']);
-
-            return;
-
-        }
-
-        if($movimientoRegistral->folioReal->avisoPreventivo()){
-
-            $this->dispatch('mostrarMensaje', ['warning', "El folio real tiene un aviso preventivo vigente."]);
-
-            return;
-
-        }
-
-        $movimientos = $movimientoRegistral->folioReal->movimientosRegistrales()->whereIn('estado', ['nuevo', 'elaborado'])->orderBy('folio')->get();
-
-        if($movimientos->count()){
-
-            $primerMovimiento = $movimientos->first();
-
-            if($movimientoRegistral->folio > $primerMovimiento->folio){
-
-                $this->dispatch('mostrarMensaje', ['warning', "El movimiento registral: (" . $movimientoRegistral->folioReal->folio . '-' . $primerMovimiento->folio . ') debe elaborarce primero.']);
-
-            }else{
-
-                return redirect()->route('sentencias.inscripcion', $movimientoRegistral->sentencia);
-
-            }
-
-        }else{
-
-            return redirect()->route('sentencias.inscripcion', $movimientoRegistral->sentencia);
-
-        }
-
-    }
-
-    public function reimprimir(MovimientoRegistral $movimientoRegistral){
-
-        $this->dispatch('imprimir_documento', ['sentencia' => $movimientoRegistral->sentencia->id]);
-
-    }
-
-    public function abrirModalFinalizar(MovimientoRegistral $modelo){
-
-        $this->reset('documento');
-
-        $this->dispatch('removeFiles');
-
-        if($this->modelo_editar->isNot($modelo))
-            $this->modelo_editar = $modelo;
-
-        $this->modalFinalizar = true;
-
-    }
-
-    public function finalizar(){
-
-        $this->validate(['documento' => 'required']);
-
-        try {
-
-            DB::transaction(function (){
-
-                $pdf = $this->documento->store('/', 'caratulas');
-
-                File::create([
-                    'fileable_id' => $this->modelo_editar->id,
-                    'fileable_type' => 'App\Models\MovimientoRegistral',
-                    'descripcion' => 'caratula',
-                    'url' => $pdf
-                ]);
-
-                $this->modelo_editar->actualizado_por = auth()->user()->id;
-
-                $this->modelo_editar->estado = 'concluido';
-
-                $this->modelo_editar->save();
-
-                (new SistemaTramitesService())->finaliarTramite($this->modelo_editar->año, $this->modelo_editar->tramite, $this->modelo_editar->usuario, 'concluido');
-
-                $this->dispatch('mostrarMensaje', ['success', "El trámite se finalizó con éxito."]);
-
-                $this->modalFinalizar = false;
-
-            });
-
-        } catch (\Throwable $th) {
-
-            Log::error("Error al finalizar trámite de inscripción de sentencia por el usuario: (id: " . auth()->user()->id . ") " . auth()->user()->name . ". " . $th);
-            $this->dispatch('mostrarMensaje', ['error', "Ha ocurrido un error."]);
-
-        }
-
-    }
+    use InscripcionesIndex;
 
     public function render()
     {

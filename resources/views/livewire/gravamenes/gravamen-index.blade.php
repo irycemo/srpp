@@ -257,7 +257,7 @@
 
     window.addEventListener('imprimir_documento', event => {
 
-        const documento = event.detail[0].gravamen;
+        const documento = event.detail[0].caratula;
 
         var url = "{{ route('gravamen.inscripcion.acto', '')}}" + "/" + documento;
 

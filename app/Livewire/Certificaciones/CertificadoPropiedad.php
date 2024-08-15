@@ -10,10 +10,11 @@ use App\Models\Personaold;
 use App\Models\Propietario;
 use App\Models\Propiedadold;
 use App\Models\Certificacion;
+use Illuminate\Validation\Rule;
+use App\Models\CertificadoPersona;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
 use App\Http\Services\SistemaTramitesService;
-use App\Models\CertificadoPersona;
 
 class CertificadoPropiedad extends Component
 {
@@ -42,10 +43,10 @@ class CertificadoPropiedad extends Component
 
     protected function rules(){
         return [
-            'propietarios.*' => 'nullable',
-            'propietarios.*.nombre' => 'required|string',
-            'propietarios.*.ap_paterno' => 'required|string',
-            'propietarios.*.ap_materno' => 'required|string',
+            'propietarios.*' => ['nullable', Rule::requiredIf($this->certificacion->numero_paginas > 1)],
+            'propietarios.*.nombre' => ['nullable', 'string', Rule::requiredIf($this->certificacion->numero_paginas > 1)],
+            'propietarios.*.ap_paterno' => ['nullable', 'string', Rule::requiredIf($this->certificacion->numero_paginas > 1)],
+            'propietarios.*.ap_materno' => ['nullable', 'string', Rule::requiredIf($this->certificacion->numero_paginas > 1)],
          ];
     }
 

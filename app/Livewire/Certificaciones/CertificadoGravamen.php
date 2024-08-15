@@ -95,7 +95,7 @@ class CertificadoGravamen extends Component
                                                         ->orderBy('created_at')
                                                         ->first();
 
-        if($movimientoAsignado && $this->moviminetoRegistral->id != $movimientoAsignado->id){
+        if($movimientoAsignado->folio && $this->moviminetoRegistral->id != $movimientoAsignado->id){
 
             $this->dispatch('mostrarMensaje', ['error', "Debe elaborar el movimiento registral " . $movimientoAsignado->folioReal->folio . '-' . $movimientoAsignado->folio . ' primero.']);
 

@@ -200,7 +200,7 @@ class AsignacionService{
 
         if(!$folioReal){
 
-            $roles = ['Certificador Propiedad', 'Pase a folio'];
+            $roles = ['Certificador Propiedad'];
 
         }else{
 
