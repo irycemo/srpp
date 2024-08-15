@@ -215,7 +215,7 @@ class ModalGravamen extends ModalComponent
                 'tipo' => 'required',
                 'acto_contenido' => ['required', Rule::in(Constantes::ACTOS_INSCRIPCION_GRAVAMEN)],
                 'valor_gravamen' => 'required',
-                'divisa' => 'required',
+                'divisa' => ['required' , Rule::in(Constantes::DIVISAS)],
                 'fecha_inscripcion' => 'required',
                 'estado' => 'required',
                 'comentario' => 'required',
