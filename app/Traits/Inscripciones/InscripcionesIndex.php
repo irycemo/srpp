@@ -11,7 +11,9 @@ use App\Http\Services\SistemaTramitesService;
 trait InscripcionesIndex{
 
     public $modalFinalizar = false;
+    public $modalRechazar = false;
     public $documento;
+    public $observaciones;
 
     public MovimientoRegistral $modelo_editar;
 
@@ -103,7 +105,6 @@ trait InscripcionesIndex{
 
     }
 
-
     public function reimprimir(MovimientoRegistral $movimientoRegistral){
 
         $this->dispatch('imprimir_documento', ['caratula' => $movimientoRegistral->inscripcionPropiedad->id]);
@@ -159,6 +160,36 @@ trait InscripcionesIndex{
             Log::error("Error al finalizar trámite de inscripción de propiedad por el usuario: (id: " . auth()->user()->id . ") " . auth()->user()->name . ". " . $th);
             $this->dispatch('mostrarMensaje', ['error', "Ha ocurrido un error."]);
 
+        }
+
+    }
+
+    public function rechazar(MovimientoRegistral $movimientoRegistral){
+
+        $this->validate([
+            'observaciones' => 'required'
+        ]);
+
+        try {
+
+            DB::transaction(function () use ($movimientoRegistral){
+
+                $observaciones = auth()->user()->name . ' rechaza el ' . now() . ', con motivo: ' . $this->observaciones ;
+
+                (new SistemaTramitesService())->rechazarTramite($movimientoRegistral->año, $movimientoRegistral->tramite, $movimientoRegistral->usuario, $observaciones);
+
+                $movimientoRegistral->update(['estado' => 'rechazado', 'actualizado_por' => auth()->user()->id]);
+
+                $this->dispatch('mostrarMensaje', ['success', "El trámite se rechazó con éxito."]);
+
+                $this->modalRechazar = false;
+
+            });
+
+        } catch (\Throwable $th) {
+
+            Log::error("Error al rechazar certificado de gravamen por el usuario: (id: " . auth()->user()->id . ") " . auth()->user()->name . ". " . $th);
+            $this->dispatch('mostrarMensaje', ['error', "Ha ocurrido un error."]);
         }
 
     }
