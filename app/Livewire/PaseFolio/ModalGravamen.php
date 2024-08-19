@@ -620,7 +620,7 @@ class ModalGravamen extends ModalComponent
                     $this->estado = 'activo';
                     $this->comentario = $this->movimientoRegistral->gravamen->observaciones;
 
-                    $this->tipo_deudor = $this->gravamen->deudores()->first()->tipo_deudor;
+                    $this->tipo_deudor = $this->gravamen->deudores()->first()?->tipo_deudor;
 
                 }
 
