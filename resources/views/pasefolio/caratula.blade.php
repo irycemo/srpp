@@ -469,7 +469,7 @@
 
                     <div style="margin-left: 10px; margin-right: 10px;">
 
-                        @if($folioReal->gravamenes->count() > 1)
+                        @if($folioReal->gravamenes->count() >= 1)
 
                             <p class="separador" style="text-align: center">Gravamenes</p>
 
@@ -501,15 +501,7 @@
                                         <strong>deudores:</strong>
                                         @foreach ($gravamen->deudores as $deudor)
 
-                                            @if($deudor->actor)
-
-                                                {{ $deudor->actor->persona->nombre }} {{ $deudor->actor->persona->ap_paterno }} {{ $deudor->actor->persona->ap_materno }} {{ $deudor->actor->persona->razon_social }}
-
-                                            @else
-
-                                                {{ $deudor->persona->nombre }} {{ $deudor->persona->ap_paterno }} {{ $deudor->persona->ap_materno }} {{ $deudor->persona->razon_social }}
-
-                                            @endif
+                                            {{ $deudor->persona->nombre }} {{ $deudor->persona->ap_paterno }} {{ $deudor->persona->ap_materno }} {{ $deudor->persona->razon_social }}@if(!$loop->last), @endif
 
                                         @endforeach
                                     </p>
@@ -518,7 +510,7 @@
                                         <strong>acreedores:</strong>
                                         @foreach ($gravamen->acreedores as $acreedor)
 
-                                            {{ $acreedor->persona->nombre }} {{ $acreedor->persona->ap_paterno }} {{ $acreedor->persona->ap_materno }} {{ $acreedor->persona->razon_social }}
+                                            {{ $acreedor->persona->nombre }} {{ $acreedor->persona->ap_paterno }} {{ $acreedor->persona->ap_materno }} {{ $acreedor->persona->razon_social }}@if(!$loop->last), @endif
 
                                         @endforeach
                                     </p>
@@ -529,7 +521,7 @@
 
                         @endif
 
-                        @if($folioReal->sentencias->count() > 1)
+                        @if($folioReal->sentencias->count() >= 1)
 
                             <p class="separador" style="text-align: center">Sentencias</p>
 
@@ -555,7 +547,7 @@
 
                         @endif
 
-                        @if($folioReal->varios->count() > 1)
+                        @if($folioReal->varios->count() >= 1)
 
                             <p class="separador" style="text-align: center">Varios</p>
 
@@ -581,7 +573,7 @@
 
                         @endif
 
-                        @if($folioReal->cancelaciones->count() > 1)
+                        @if($folioReal->cancelaciones->count() >= 1)
 
                             <p class="separador" style="text-align: center">Cancelaciones</p>
 
