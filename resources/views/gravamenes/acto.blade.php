@@ -647,11 +647,11 @@
                     </p>
 
                     <p class="parrafo">
-                        {{ $gravamen->tipo }}
+                        <strong>Tipo de gravamen:</strong> {{ $gravamen->tipo }}
                     </p>
 
                     <p class="parrafo">
-                        {{ $gravamen->observaciones }}
+                        <strong>Descripción del gravamen:</strong> {{ $gravamen->observaciones }}
                     </p>
 
                     <p class="separador">deudores</p>
@@ -671,29 +671,14 @@
 
                             @foreach ($gravamen->deudores as $deudor)
 
-                                @if($deudor->actor)
-
-                                    <tr>
-                                        <td style="padding-right: 40px;">
-                                            {{ $deudor->tipo }}
-                                        </td>
-                                        <td style="padding-right: 40px;">
-                                            {{ $deudor->actor->persona->nombre }} {{ $deudor->actor->persona->ap_paterno }} {{ $deudor->actor->persona->ap_materno }} {{ $deudor->actor->persona->razon_social }}
-                                        </td>
-                                    </tr>
-
-                                @else
-
-                                    <tr>
-                                        <td style="padding-right: 40px;">
-                                            {{ $deudor->tipo }}
-                                        </td>
-                                        <td style="padding-right: 40px;">
-                                            {{ $deudor->persona->nombre }} {{ $deudor->persona->ap_paterno }} {{ $deudor->persona->ap_materno }} {{ $deudor->persona->razon_social }}
-                                        </td>
-                                    </tr>
-
-                                @endif
+                            <tr>
+                                <td style="padding-right: 40px;">
+                                    {{ $deudor->tipo_deudor }}
+                                </td>
+                                <td style="padding-right: 40px;">
+                                    {{ $deudor->persona->nombre }} {{ $deudor->persona->ap_paterno }} {{ $deudor->persona->ap_materno }} {{ $deudor->persona->razon_social }}
+                                </td>
+                            </tr>
 
                             @endforeach
 

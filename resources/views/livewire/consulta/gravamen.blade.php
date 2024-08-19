@@ -182,7 +182,7 @@
 
                                 <x-table.row >
 
-                                    <x-table.cell>{{ $deudor->tipo }}</x-table.cell>
+                                    <x-table.cell>{{ $deudor->tipo_deudor }}</x-table.cell>
                                     @if($deudor->persona)
 
                                         <x-table.cell>{{ $deudor->persona->nombre }} {{ $deudor->persona->ap_paterno }} {{ $deudor->persona->ap_materno }} {{ $deudor->persona->razon_social }}</x-table.cell>

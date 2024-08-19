@@ -4,7 +4,6 @@ namespace App\Livewire\PaseFolio;
 
 use Exception;
 use Carbon\Carbon;
-use App\Models\User;
 use App\Models\Predio;
 use Livewire\Component;
 use App\Models\Gravamen;
@@ -131,82 +130,67 @@ class Elaboracion extends Component
 
     public function generarFolioReal(){
 
-        $this->authorize('update', $this->movimientoRegistral);
+        $folioReal = FolioReal::create([
+            'estado' => 'captura',
+            'folio' => (FolioReal::max('folio') ?? 0) + 1,
+            'tomo_antecedente' => $this->movimientoRegistral->tomo,
+            'tomo_antecedente_bis' => $this->movimientoRegistral->tomo_bis,
+            'registro_antecedente' => $this->movimientoRegistral->registro,
+            'registro_antecedente_bis' => $this->movimientoRegistral->registro_bis,
+            'numero_propiedad_antecedente' => $this->movimientoRegistral->numero_propiedad,
+            'distrito_antecedente' => $this->movimientoRegistral->getRawOriginal('distrito'),
+            'seccion_antecedente' => $this->movimientoRegistral->seccion,
+            'tipo_documento' => $this->tipo_documento,
+        ]);
 
-        $this->validate();
+        $this->movimientoRegistral->update(['folio_real' => $folioReal->id]);
 
-        try {
+        if (in_array($this->tipo_documento, ['ESCRITURA PÚBLICA', 'ESCRITURA PRIVADA'])){
 
-            DB::transaction(function () {
+            $this->escritura = Escritura::where('numero', $this->escritura_numero)
+                                    ->where('notaria', $this->escritura_notaria)
+                                    ->where('estado_notario', $this->escritura_estado_notario)
+                                    ->first();
 
-                $folioReal = FolioReal::create([
-                    'estado' => 'captura',
-                    'folio' => (FolioReal::max('folio') ?? 0) + 1,
-                    'tomo_antecedente' => $this->movimientoRegistral->tomo,
-                    'tomo_antecedente_bis' => $this->movimientoRegistral->tomo_bis,
-                    'registro_antecedente' => $this->movimientoRegistral->registro,
-                    'registro_antecedente_bis' => $this->movimientoRegistral->registro_bis,
-                    'numero_propiedad_antecedente' => $this->movimientoRegistral->numero_propiedad,
-                    'distrito_antecedente' => $this->movimientoRegistral->getRawOriginal('distrito'),
-                    'seccion_antecedente' => $this->movimientoRegistral->seccion,
-                    'tipo_documento' => $this->tipo_documento,
+            if(!$this->escritura){
+
+                $this->escritura = Escritura::create([
+                    'numero' => $this->escritura_numero,
+                    'fecha_inscripcion' => $this->escritura_fecha_inscripcion,
+                    'fecha_escritura' => $this->escritura_fecha_escritura,
+                    'numero_hojas' => $this->escritura_numero_hojas,
+                    'numero_paginas' => $this->escritura_numero_paginas,
+                    'notaria' => $this->escritura_notaria,
+                    'nombre_notario' => $this->escritura_nombre_notario,
+                    'estado_notario' => $this->escritura_estado_notario,
+                    'comentario' => $this->escritura_observaciones,
                 ]);
 
-                $this->movimientoRegistral->update(['folio_real' => $folioReal->id]);
+            }
 
-                if (in_array($this->tipo_documento, ['ESCRITURA PÚBLICA', 'ESCRITURA PRIVADA'])){
+            $this->propiedad = Predio::create([
+                'escritura_id' => $this->escritura->id,
+                'folio_real' => $folioReal->id,
+                'status' => 'nuevo'
+            ]);
 
-                    $this->escritura = Escritura::where('numero', $this->escritura_numero)
-                                            ->where('notaria', $this->escritura_notaria)
-                                            ->where('estado_notario', $this->escritura_estado_notario)
-                                            ->first();
+        }else{
 
-                    if(!$this->escritura){
+            $folioReal->update([
+                'autoridad_cargo' => $this->autoridad_cargo,
+                'autoridad_nombre' => $this->autoridad_nombre,
+                'autoridad_numero' => $this->autoridad_numero,
+                'numero_documento' => $this->numero_documento,
+                'fecha_emision' => $this->fecha_emision,
+                'fecha_inscripcion' => $this->fecha_inscripcion,
+                'procedencia' => $this->procedencia,
+            ]);
 
-                        $this->escritura = Escritura::create([
-                            'numero' => $this->escritura_numero,
-                            'fecha_inscripcion' => $this->escritura_fecha_inscripcion,
-                            'fecha_escritura' => $this->escritura_fecha_escritura,
-                            'numero_hojas' => $this->escritura_numero_hojas,
-                            'numero_paginas' => $this->escritura_numero_paginas,
-                            'notaria' => $this->escritura_notaria,
-                            'nombre_notario' => $this->escritura_nombre_notario,
-                            'estado_notario' => $this->escritura_estado_notario,
-                            'comentario' => $this->escritura_observaciones,
-                        ]);
+            $this->propiedad = Predio::create([
+                'folio_real' => $folioReal->id,
+                'status' => 'nuevo'
+            ]);
 
-                    }
-
-                    $this->propiedad = Predio::create([
-                        'escritura_id' => $this->escritura->id,
-                        'folio_real' => $folioReal->id,
-                        'status' => 'nuevo'
-                    ]);
-
-                }else{
-
-                    $folioReal->update([
-                        'autoridad_cargo' => $this->autoridad_cargo,
-                        'autoridad_nombre' => $this->autoridad_nombre,
-                        'autoridad_numero' => $this->autoridad_numero,
-                        'numero_documento' => $this->numero_documento,
-                        'fecha_emision' => $this->fecha_emision,
-                        'fecha_inscripcion' => $this->fecha_inscripcion,
-                        'procedencia' => $this->procedencia,
-                    ]);
-
-                    $this->propiedad = Predio::create([
-                        'folio_real' => $folioReal->id,
-                        'status' => 'nuevo'
-                    ]);
-
-                }
-
-            });
-
-        } catch (\Throwable $th) {
-            Log::error("Error al generar folio real en pase a folio por el usuario: (id: " . auth()->user()->id . ") " . auth()->user()->name . ". " . $th);
-            $this->dispatch('mostrarMensaje', ['error', "Ha ocurrido un error."]);
         }
 
     }
@@ -217,18 +201,22 @@ class Elaboracion extends Component
 
         $this->validate();
 
-        $folioRealExistente = FolioReal::where('tomo_antecedente', $this->movimientoRegistral->tomo)
+        if(!$this->movimientoRegistral->folio_real){
+
+            $folioRealExistente = FolioReal::where('tomo_antecedente', $this->movimientoRegistral->tomo)
                                             ->where('registro_antecedente', $this->movimientoRegistral->registro)
                                             ->where('numero_propiedad_antecedente', $this->movimientoRegistral->numero_propiedad)
                                             ->where('distrito_antecedente', $this->movimientoRegistral->getRawOriginal('distrito'))
                                             ->where('seccion_antecedente', $this->movimientoRegistral->seccion)
                                             ->first();
 
-        if($folioRealExistente){
+            if($folioRealExistente){
 
-            $this->dispatch('mostrarMensaje', ['error', "Ya existe un folio real con el mismo antecedente."]);
+                $this->dispatch('mostrarMensaje', ['error', "Ya existe un folio real con el mismo antecedente."]);
 
-            return;
+                return;
+
+            }
 
         }
 
@@ -236,36 +224,36 @@ class Elaboracion extends Component
 
             DB::transaction(function () {
 
-                if(!$this->movimientoRegistral->inscripcionPropiedad && $this->movimientoRegistral->inscripcionPropiedad?->servicio != 'D731'){
+                if(!$this->movimientoRegistral->folio_real) {
 
-                    if(!$this->movimientoRegistral->folio_real){
+                    $this->generarFolioReal();
 
-                        $this->generarFolioReal();
+                    $this->movimientoRegistral->refresh();
 
-                        $this->movimientoRegistral->refresh();
+                }
 
-                        $gravamenes = DB::connection('mysql2')->select("call spTractoGravamenes(" .
-                                                                            $this->movimientoRegistral->getRawOriginal('distrito') .
-                                                                            "," . $this->movimientoRegistral->tomo .
-                                                                            "," . ($this->movimientoRegistral->tomo_bis ?? '\'\'') .
-                                                                            "," . $this->movimientoRegistral->registro .
-                                                                            "," . ($this->movimientoRegistral->registro_bis ?? '\'\'') .
-                                                                            "," . $this->movimientoRegistral->numero_propiedad .
-                                                                            ")");
+                if(!in_array($this->movimientoRegistral->inscripcionPropiedad?->servicio, ['D114', 'D113', 'D116', 'D115'])){
 
-                        foreach($gravamenes as $gravamen){
+                    $gravamenes = DB::connection('mysql2')->select("call spTractoGravamenes(" .
+                                                                        $this->movimientoRegistral->getRawOriginal('distrito') .
+                                                                        "," . $this->movimientoRegistral->tomo .
+                                                                        "," . ($this->movimientoRegistral->tomo_bis ?? '\'\'') .
+                                                                        "," . $this->movimientoRegistral->registro .
+                                                                        "," . ($this->movimientoRegistral->registro_bis ?? '\'\'') .
+                                                                        "," . $this->movimientoRegistral->numero_propiedad .
+                                                                        ")");
 
-                            if(isset($gravamen->fcancelacion) && isset($gravamen->stGravamen) && $gravamen->stGravamen == 'C') continue;
+                    foreach($gravamenes as $gravamen){
 
-                            $this->creargravamen($gravamen);
+                        if(isset($gravamen->fcancelacion) && isset($gravamen->stGravamen) && $gravamen->stGravamen == 'C') continue;
 
-                        }
+                        $this->creargravamen($gravamen);
 
                     }
 
                 }
 
-                if(!$this->propiedad->escritura_id){
+                if(!$this->propiedad->escritura_id && in_array($this->tipo_documento, ['ESCRITURA PÚBLICA', 'ESCRITURA PRIVADA'])){
 
                     $this->escritura = Escritura::Create([
                         'numero' => $this->escritura_numero,
@@ -281,7 +269,7 @@ class Elaboracion extends Component
 
                     $this->propiedad->update(['escritura_id' => $this->escritura->id]);
 
-                }else{
+                }elseif($this->propiedad->escritura_id){
 
                     $this->escritura->update([
                         'numero' => $this->escritura_numero,
@@ -372,8 +360,7 @@ class Elaboracion extends Component
 
         $this->authorize('update', $this->movimientoRegistral);
 
-        if($this->propiedad)
-            $this->propiedad->refresh();
+        if($this->propiedad) $this->propiedad->refresh();
 
         $pn = 0;
 
@@ -393,7 +380,7 @@ class Elaboracion extends Component
 
         if($pp == 0){
 
-            if(($pn - 100) >= 0.01){
+            if($pn <= 99.99){
 
                 $this->dispatch('mostrarMensaje', ['error', "El porcentaje de nuda propiedad no es el 100%."]);
 
@@ -401,7 +388,7 @@ class Elaboracion extends Component
 
             }
 
-            if(($pu - 100) >= 0.01){
+            if($pu <= 99.99){
 
                 $this->dispatch('mostrarMensaje', ['error', "El porcentaje de usufructo no es el 100%."]);
 
@@ -412,7 +399,7 @@ class Elaboracion extends Component
         }else{
 
 
-            if(($pn + $pp - 100) >= 0.01){
+            if(($pn + $pp) <= 99.99){
 
                 $this->dispatch('mostrarMensaje', ['error', "El porcentaje de nuda propiedad no es el 100%."]);
 
@@ -420,7 +407,7 @@ class Elaboracion extends Component
 
             }
 
-            if(($pu + $pp - 100) >= 0.01){
+            if(($pu + $pp) <= 99.99){
 
                 $this->dispatch('mostrarMensaje', ['error', "El porcentaje de usufructo no es el 100%."]);
 
@@ -536,58 +523,20 @@ class Elaboracion extends Component
 
         try {
 
-            $this->procesarMovimientos();
+            DB::transaction(function (){
 
-            $role = null;
+                $this->procesarMovimientos();
 
-            if($this->movimientoRegistral->inscripcionPropiedad){
+                if($this->movimientoRegistral->inscripcionPropiedad){
+                    $this->revisarInscripcionPropiedad();
 
-                $role = 'Propiedad';
+                }elseif($this->movimientoRegistral->cancelacion){
 
-            }elseif($this->movimientoRegistral->gravamen){
-
-                $role = 'Gravamen';
-
-            }elseif($this->movimientoRegistral->cancelacion){
-
-                $this->revisarCancelaciones();
-
-                $role = 'Cancelación';
-
-            }elseif($this->movimientoRegistral->sentencia){
-
-                $role = 'Sentencias';
-
-            }elseif($this->movimientoRegistral->certificacion){
-
-                $role = 'Certificador Gravamen';
-
-            }
-
-            DB::transaction(function () use ($role){
-
-                $this->movimientoRegistral->folioReal->update([
-                    'estado' => 'elaborado'
-                ]);
-
-
-                if(auth()->user()->hasRole(['Pase a folio', 'Administrador'])){
-
-                    $usuarios = $this->obtenerUsuarios($role);
-
-                    if($usuarios->count() === 0){
-
-                        $this->dispatch('mostrarMensaje', ['error', "No hay usuarios con rol de " . $role . " disponibles."]);
-
-                        throw new Exception("No hay usuarios con rol de " . $role . " disponibles.");
-
-                    }
-
-                    $id = (new AsignacionService())->obtenerUltimoUsuarioConAsignacion($usuarios);
-
-                    $this->movimientoRegistral->update(['usuario_asignado' => $id]);
+                    $this->revisarCancelaciones();
 
                 }
+
+                $this->movimientoRegistral->folioReal->update(['estado' => 'elaborado']);
 
                 $this->dispatch('imprimir_documento', ['documento' => $this->movimientoRegistral->folio_real]);
 
@@ -607,22 +556,6 @@ class Elaboracion extends Component
 
         }
 
-    }
-
-    public function obtenerUsuarios($role){
-
-        return User::with('ultimoMovimientoRegistralAsignado')
-                            ->where('status', 'activo')
-                            ->when($this->movimientoRegistral->getRawOriginal('distrito') == 2, function($q){
-                                $q->where('ubicacion', 'Regional 4');
-                            })
-                            ->when($this->movimientoRegistral->getRawOriginal('distrito') != 2, function($q){
-                                $q->where('ubicacion', '!=', 'Regional 4');
-                            })
-                            ->whereHas('roles', function($q) use ($role){
-                                $q->where('name', $role);
-                            })
-                            ->get();
     }
 
     public function abrirModalCrear(){
@@ -847,6 +780,21 @@ class Elaboracion extends Component
             (new SistemaTramitesService())->rechazarTramite($this->movimientoRegistral->año, $this->movimientoRegistral->tramite, $this->movimientoRegistral->usuario, 'Se rechaza en pase a folio debido a que el folio real no tiene gravamenes con la información ingresada.');
 
         $this->movimientoRegistral->update(['estado' => 'rechazado']);
+
+    }
+
+    public function revisarInscripcionPropiedad(){
+
+        if(
+            in_array($this->movimientoRegistral->inscripcionPropiedad->servicio, ['D114', 'D113', 'D116', 'D115']) &&
+            $this->movimientoRegistral->tomo == null &&
+            $this->movimientoRegistral->registro == null &&
+            $this->movimientoRegistral->numero_propiedad == null
+        ){
+
+            $this->movimientoRegistral->update(['estado' => 'concluido']);
+
+        }
 
     }
 

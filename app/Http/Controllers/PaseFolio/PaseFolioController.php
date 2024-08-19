@@ -18,9 +18,8 @@ class PaseFolioController extends Controller
         $folioReal->load(
             'predio',
             'antecedentes',
-            'gravamenes.deudores.persona',
-            'gravamenes.deudores.actor.persona',
-            'gravamenes.acreedores.persona',
+            'gravamenes.deudores',
+            'gravamenes.acreedores',
             'gravamenes.movimientoRegistral',
             'sentencias.movimientoRegistral',
             'varios.movimientoRegistral',

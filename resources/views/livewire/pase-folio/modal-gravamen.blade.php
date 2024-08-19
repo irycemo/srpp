@@ -401,117 +401,99 @@
 
                     <div x-show="$wire.tipo_deudor === 'P-PARTE ALICUOTA'" class="col-span-3 mb-4">
 
-                        <x-input-group for="propietario" label="Propietarios" :error="$errors->first('propietarios_alicuotas')" class="w-full">
+                        <x-input-group for="persona_id" label="Propietarios" :error="$errors->first('persona_id')" class="mb-3 w-full">
 
-                            <div
-                                x-data = "{ model: @entangle('propietarios_alicuotas') }"
-                                x-init =
-                                "
-                                    select2 = $($refs.select)
-                                        .select2({
-                                            placeholder: 'Propietarios',
-                                            width: '100%',
-                                        })
+                            <x-input-select id="persona_id" wire:model.live="persona_id" class="w-full">
 
-                                    select2.on('change', function(){
-                                        $wire.set('propietarios_alicuotas', $(this).val())
-                                    })
+                                <option value="">Seleccione una opción</option>
 
-                                    select2.on('select2:unselect', function(e){
-                                        $wire.borrarParteAlicuota(e.params.data.id)
-                                    })
+                                @if($propiedad)
 
-                                    select2.on('keyup', function(e) {
-                                        if (e.keyCode === 13){
-                                            $wire.set('propietarios_alicuotas', $('.select2').val())
-                                        }
-                                    });
+                                    @foreach ($propiedad->propietarios() as $propietario)
 
-                                    $watch('model', (value) => {
-                                        select2.val(value).trigger('change');
-                                    });
-                                "
-                                x-on:reload.window="x-init"
-                                wire:ignore>
+                                        <option value="{{ $propietario->persona_id }}">{{ $propietario->persona->nombre }} {{ $propietario->persona->ap_paterno }} {{ $propietario->persona->ap_materno }} {{ $propietario->persona->razon_social }}</option>
 
-                                <select
-                                    class="bg-white rounded text-sm w-full z-50"
-                                    wire:model.live="propietarios_alicuotas"
-                                    x-ref="select"
-                                    multiple="multiple">
+                                    @endforeach
 
-                                    @if($propiedad)
+                                @endif
 
-                                        @foreach ($propiedad->propietarios() as $propietario)
+                            </x-input-select>
 
-                                            <option value="{{ $propietario->id }}">{{ $propietario->persona->nombre }} {{ $propietario->persona->ap_paterno }} {{ $propietario->persona->ap_materno }} {{ $propietario->persona->razon_social }}</option>
+                        </x-input-group>
+
+                        <div class="col-span-3">
+
+                            @if($gravamen)
+
+                                <x-table>
+
+                                    <x-slot name="head">
+                                        <x-table.heading >Deudor</x-table.heading>
+                                        <x-table.heading ></x-table.heading>
+                                    </x-slot>
+
+                                    <x-slot name="body">
+
+                                        @foreach ($gravamen->parteAlicuota as $garante)
+
+                                            @if($garante->persona_id)
+
+                                                <x-table.row >
+
+                                                    <x-table.cell>
+                                                        @if($garante->persona)
+
+                                                            {{ $garante->persona->nombre }} {{ $garante->persona->ap_paterno }} {{ $garante->persona->ap_materno }} {{ $garante->persona->razon_social }}
+
+                                                        @endif
+                                                    </x-table.cell>
+                                                    <x-table.cell>
+                                                        <div class="flex items-center gap-3">
+                                                            <x-button-red
+                                                                wire:click="borrarDeudor({{ $garante->id }})"
+                                                                wire:loading.attr="disabled">
+                                                                Borrar
+                                                            </x-button-red>
+                                                        </div>
+                                                    </x-table.cell>
+
+                                                </x-table.row>
+
+                                            @endif
 
                                         @endforeach
 
-                                    @endif
+                                    </x-slot>
 
-                                </select>
+                                    <x-slot name="tfoot"></x-slot>
 
-                            </div>
+                                </x-table>
 
-                        </x-input-group>
+                            @endif
+
+                        </div>
 
                     </div>
 
                     <div x-show="$wire.tipo_deudor === 'G-GARANTES EN COOPROPIEDAD'" class="col-span-3 mb-4">
 
-                        <x-input-group for="propietario" label="Propietarios" :error="$errors->first('propietarios_garantes')" class="w-full mb-3">
+                        <x-input-group for="persona_id" label="Propietarios" :error="$errors->first('persona_id')" class="mb-3 w-full">
 
-                            <div
-                                x-data = "{ model: @entangle('propietarios_garantes') }"
-                                x-init =
-                                "
-                                    select2 = $($refs.select)
-                                        .select2({
-                                            placeholder: 'Propietarios',
-                                            width: '100%',
-                                        })
+                            <x-input-select id="persona_id" wire:model.live="persona_id" class="w-full">
 
-                                    select2.on('change', function(){
-                                        $wire.set('propietarios_garantes', $(this).val())
-                                    })
+                                <option value="">Seleccione una opción</option>
 
-                                    select2.on('select2:unselect', function(e){
-                                        $wire.borrarParteAlicuota(e.params.data.id)
-                                    })
+                                @if($propiedad)
 
-                                    select2.on('keyup', function(e) {
-                                        if (e.keyCode === 13){
-                                            $wire.set('propietarios_garantes', $('.select2').val())
-                                        }
-                                    });
+                                    @foreach ($propiedad->propietarios() as $propietario)
 
-                                    $watch('model', (value) => {
-                                        select2.val(value).trigger('change');
-                                    });
-                                "
-                                x-on:reload.window="x-init"
-                                wire:ignore>
+                                        <option value="{{ $propietario->persona_id }}">{{ $propietario->persona->nombre }} {{ $propietario->persona->ap_paterno }} {{ $propietario->persona->ap_materno }} {{ $propietario->persona->razon_social }}</option>
 
-                                <select
-                                    class="bg-white rounded text-sm w-full z-50"
-                                    wire:model.live="propietarios_garantes"
-                                    x-ref="select"
-                                    multiple="multiple">
+                                    @endforeach
 
-                                    @if($propiedad)
+                                @endif
 
-                                        @foreach ($propiedad->propietarios() as $propietario)
-
-                                            <option value="{{ $propietario->id }}">{{ $propietario->persona->nombre }} {{ $propietario->persona->ap_paterno }} {{ $propietario->persona->ap_materno }} {{ $propietario->persona->razon_social }}</option>
-
-                                        @endforeach
-
-                                    @endif
-
-                                </select>
-
-                            </div>
+                            </x-input-select>
 
                         </x-input-group>
 
@@ -554,10 +536,9 @@
                                                     </x-table.cell>
                                                     <x-table.cell>
                                                         <div class="flex items-center gap-3">
-                                                            @if($garante->persona)
-
+                                                            @if(!$this->propiedad->propietarios()->where('persona_id', $garante->persona_id)->first())
                                                                 <x-button-blue
-                                                                    wire:click="$dispatch('openModal', { component: 'modals.crear-persona', arguments: { editar: true, title: 'Garante', id:{{ $garante->persona->id }} } } )"
+                                                                    wire:click="$dispatch('openModal', { component: 'modals.crear-persona', arguments: { editar: true, title: 'Afianzador', id:{{ $garante->persona->id }} } } )"
                                                                     wire:loading.attr="disabled"
                                                                 >
                                                                     Editar

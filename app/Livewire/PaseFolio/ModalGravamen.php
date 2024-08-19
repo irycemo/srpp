@@ -2,9 +2,8 @@
 
 namespace App\Livewire\PaseFolio;
 
-use App\Models\Deudor;
+use App\Models\Actor;
 use App\Models\Predio;
-use App\Models\Acreedor;
 use App\Models\Gravamen;
 use Livewire\Attributes\On;
 use App\Constantes\Constantes;
@@ -61,7 +60,7 @@ class ModalGravamen extends ModalComponent
     public $tipo_deudor;
     public $propietario;
     public $propietarios_alicuotas = [];
-    public $propietarios_garantes = [];
+    public $persona_id;
     public $garante_coopropiedad;
 
     public $modalD = false;
@@ -103,17 +102,35 @@ class ModalGravamen extends ModalComponent
 
         if($this->propietario === "") return;
 
-        $this->agregarDeudor(actor: $this->propietario);
+        $this->resetearDeudores();
+
+        $actor = Actor::find($this->propietario);
+
+        Actor::create([
+            'actorable_type' => 'App\Models\Gravamen',
+            'actorable_id' => $this->gravamen->id,
+            'tipo_actor' => 'deudor',
+            'persona_id' => $actor->persona_id,
+            'tipo_deudor' => $this->tipo_deudor
+        ]);
 
     }
 
     public function updatedPropietariosAlicuotas(){
 
-        foreach($this->propietarios_alicuotas as $propietario){
+        foreach($this->propietarios_alicuotas as $persona){
 
-            if(!$this->gravamen->deudores()->where('actor_id', (int)$propietario)->first()){
+            if(!$this->gravamen->deudores()->where('persona_id', (int)$persona)->where('tipo_deudor', 'P-PARTE ALICUOTA')->first()){
 
-                $this->agregarDeudor(actor: $propietario);
+                $this->resetearDeudores();
+
+                Actor::create([
+                    'actorable_type' => 'App\Models\Gravamen',
+                    'actorable_id' => $this->gravamen->id,
+                    'tipo_actor' => 'deudor',
+                    'persona_id' => $persona,
+                    'tipo_deudor' => $this->tipo_deudor
+                ]);
 
             }
 
@@ -135,13 +152,29 @@ class ModalGravamen extends ModalComponent
 
     }
 
-    public function updatedGaranteCoopropiedad(){
+    public function updatedPersonaId(){
 
+        if(!$this->gravamen->deudores()->where('persona_id', $this->persona_id)->where('tipo_deudor', $this->tipo_deudor)->first()){
 
-        if($this->garante_coopropiedad === "") return;
+            $this->resetearDeudores();
 
-        $this->agregarDeudor(actor: $this->garante_coopropiedad);
+            Actor::create([
+                'actorable_type' => 'App\Models\Gravamen',
+                'actorable_id' => $this->gravamen->id,
+                'tipo_actor' => 'deudor',
+                'persona_id' => $this->persona_id,
+                'tipo_deudor' => $this->tipo_deudor
+            ]);
 
+            $this->actualizarDeudores();
+
+        }
+
+    }
+
+    public function updatedTipoDeudor(){
+
+        $this->reset('persona_id');
 
     }
 
@@ -325,34 +358,30 @@ class ModalGravamen extends ModalComponent
     public function actualizarDeudores(){
 
         $this->gravamen->load(
-            'deudoresUnicos.persona',
-            'garantesHipotecarios.persona',
-            'parteAlicuota.persona',
-            'garantesCoopropiedad.persona',
-            'fianza.persona',
-            'deudoresUnicos.actor.persona',
-            'garantesHipotecarios.actor.persona',
-            'parteAlicuota.actor.persona',
-            'garantesCoopropiedad.actor.persona',
-            'fianza.actor.persona'
+            'deudoresUnicos',
+            'garantesHipotecarios',
+            'parteAlicuota',
+            'garantesCoopropiedad',
+            'fianza',
         );
 
     }
 
     #[On('agregarDeudor')]
-    public function agregarDeudor($persona = null, $actor = null){
+    public function agregarDeudor($persona = null){
 
         try {
 
-            DB::transaction(function () use($persona, $actor){
+            DB::transaction(function () use($persona){
 
                 $this->resetearDeudores();
 
-                Deudor::create([
-                    'gravamen_id' => $this->gravamen->id,
+                Actor::create([
+                    'actorable_type' => 'App\Models\Gravamen',
+                    'actorable_id' => $this->gravamen->id,
+                    'tipo_actor' => 'deudor',
                     'persona_id' => $persona,
-                    'actor_id' => $actor,
-                    'tipo' => $this->tipo_deudor
+                    'tipo_deudor' => $this->tipo_deudor
                 ]);
 
                 $this->actualizarDeudores();
@@ -373,9 +402,11 @@ class ModalGravamen extends ModalComponent
 
             DB::transaction(function () use($persona, $actor){
 
-                Acreedor::create([
-                    'gravamen_id' => $this->gravamen->id,
-                    'persona_id' => $persona
+                Actor::create([
+                    'actorable_type' => 'App\Models\Gravamen',
+                    'actorable_id' => $this->gravamen->id,
+                    'tipo_actor' => 'acreedor',
+                    'persona_id' => $persona,
                 ]);
 
                 $this->gravamen->load('acreedores.persona');
@@ -451,7 +482,7 @@ class ModalGravamen extends ModalComponent
 
         try {
 
-            $this->gravamen->deudores()->where('actor_id', $id)->first()->delete();
+            $this->gravamen->deudores()->where('id', $id)->first()->delete();
 
             $this->gravamen->load('deudoresUnicos.persona', 'garantesHipotecarios.persona', 'parteAlicuota.persona', 'garantesCoopropiedad.persona', 'fianza.persona');
 
@@ -468,7 +499,7 @@ class ModalGravamen extends ModalComponent
 
         try {
 
-            Deudor::destroy($id);
+            Actor::destroy($id);
 
             $this->actualizarDeudores();
 
@@ -485,7 +516,7 @@ class ModalGravamen extends ModalComponent
 
         try {
 
-            Acreedor::destroy($id);
+            Actor::destroy($id);
 
             $this->gravamen->load('acreedores');
 
@@ -579,7 +610,7 @@ class ModalGravamen extends ModalComponent
 
                     $this->actualizarDeudores();
 
-                    $this->gravamen->load('acreedores.persona');
+                    $this->gravamen->load('acreedores');
 
                     $this->tipo = $this->movimientoRegistral->gravamen->tipo;
                     $this->acto_contenido = $this->movimientoRegistral->gravamen->acto_contenido;
@@ -589,18 +620,7 @@ class ModalGravamen extends ModalComponent
                     $this->estado = 'activo';
                     $this->comentario = $this->movimientoRegistral->gravamen->observaciones;
 
-                    foreach ($this->gravamen->parteAlicuota as $deudor) {
-
-                        array_push($this->propietarios_alicuotas, $deudor->actor_id);
-
-                    }
-
-                    foreach ($this->gravamen->garantesCoopropiedad as $deudor) {
-
-                        if($deudor->actor_id)
-                            array_push($this->propietarios_garantes, $deudor->actor_id);
-
-                    }
+                    $this->tipo_deudor = $this->gravamen->deudores()->first()->tipo_deudor;
 
                 }
 

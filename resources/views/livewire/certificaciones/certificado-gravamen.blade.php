@@ -408,9 +408,9 @@
                 </x-button-blue>
 
                 <x-button-red
-                    wire:click="resetearTodo"
+                    wire:click="$toggle('modalRechazar')"
                     wire:loading.attr="disabled"
-                    wire:target="resetearTodo"
+                    wire:target="$toggle('modalRechazar')"
                     type="button">
                     <span>Cerrar</span>
                 </x-button-red>
@@ -494,9 +494,9 @@
                 </x-button-blue>
 
                 <x-button-red
-                    wire:click="resetearTodo"
+                    wire:click="$toggle('modalCarga')"
                     wire:loading.attr="disabled"
-                    wire:target="resetearTodo">
+                    wire:target="$toggle('modalCarga')">
                     <span>Cerrar</span>
                 </x-button-red>
 

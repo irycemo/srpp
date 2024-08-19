@@ -2,8 +2,7 @@
 
 namespace App\Models;
 
-use App\Models\Deudor;
-use App\Models\Acreedor;
+use App\Models\Actor;
 use App\Traits\ModelosTrait;
 use App\Models\MovimientoRegistral;
 use Illuminate\Database\Eloquent\Model;
@@ -22,32 +21,36 @@ class Gravamen extends Model implements Auditable
         return $this->belongsTo(MovimientoRegistral::class);
     }
 
+    public function actores(){
+        return $this->morphMany(Actor::class, 'actorable');
+    }
+
     public function acreedores(){
-        return $this->hasMany(Acreedor::class);
+        return $this->actores()->with('persona')->where('tipo_actor', 'acreedor');
     }
 
     public function deudores(){
-        return $this->hasMany(Deudor::class);
+        return $this->actores()->with('persona')->where('tipo_actor', 'deudor');
     }
 
     public function deudoresUnicos(){
-        return $this->hasMany(Deudor::class)->with('actor.persona', 'persona')->where('tipo', 'I-DEUDOR ÚNICO');
+        return $this->actores()->with('persona')->where('tipo_deudor', 'I-DEUDOR ÚNICO');
     }
 
     public function garantesHipotecarios(){
-        return $this->hasMany(Deudor::class)->with('actor.persona', 'persona')->where('tipo', 'D-GARANTE(S) HIPOTECARIO(S)');
+        return $this->actores()->with('persona')->where('tipo_deudor', 'D-GARANTE(S) HIPOTECARIO(S)');
     }
 
     public function parteAlicuota(){
-        return $this->hasMany(Deudor::class)->with('actor.persona', 'persona')->where('tipo', 'P-PARTE ALICUOTA');
+        return $this->actores()->with('persona')->where('tipo_deudor', 'P-PARTE ALICUOTA');
     }
 
     public function garantesCoopropiedad(){
-        return $this->hasMany(Deudor::class)->with('actor.persona', 'persona')->where('tipo', 'G-GARANTES EN COOPROPIEDAD');
+        return $this->actores()->with('persona')->where('tipo_deudor', 'G-GARANTES EN COOPROPIEDAD');
     }
 
     public function fianza(){
-        return $this->hasMany(Deudor::class)->with('actor.persona', 'persona')->where('tipo', 'F-FIANZA');
+        return $this->actores()->with('persona')->where('tipo_deudor', 'F-FIANZA');
     }
 
 }

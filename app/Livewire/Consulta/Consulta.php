@@ -184,9 +184,8 @@ class Consulta extends Component
             'certificaciones.movimientoRegistral',
             'cancelaciones.movimientoRegistral',
             'gravamenes.movimientoRegistral',
-            'gravamenes.deudores.persona',
-            'gravamenes.deudores.actor.persona',
-            'gravamenes.acreedores.persona',
+            'gravamenes.deudores',
+            'gravamenes.acreedores',
         );
 
     }

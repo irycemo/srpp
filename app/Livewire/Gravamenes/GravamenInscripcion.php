@@ -5,12 +5,14 @@ namespace App\Livewire\Gravamenes;
 use Exception;
 use App\Models\File;
 use App\Models\User;
+use App\Models\Actor;
 use App\Models\Deudor;
 use App\Models\Persona;
 use Livewire\Component;
 use App\Models\Acreedor;
 use App\Models\Gravamen;
 use App\Models\FolioReal;
+use Livewire\WithFileUploads;
 use App\Constantes\Constantes;
 use Barryvdh\DomPDF\Facade\Pdf;
 use Illuminate\Validation\Rule;
@@ -22,7 +24,6 @@ use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Facades\Storage;
 use App\Http\Services\AsignacionService;
 use Illuminate\Http\Client\ConnectionException;
-use Livewire\WithFileUploads;
 
 class GravamenInscripcion extends Component
 {
@@ -134,11 +135,19 @@ class GravamenInscripcion extends Component
 
     public function updatedPropietariosAlicuotas(){
 
-        foreach($this->propietarios_alicuotas as $propietario){
+        foreach($this->propietarios_alicuotas as $persona){
 
-            if(!$this->gravamen->deudores()->where('actor_id', (int)$propietario)->where('tipo', 'P-PARTE ALICUOTA')->first()){
+            if(!$this->gravamen->deudores()->where('persona_id', (int)$persona)->where('tipo_deudor', 'P-PARTE ALICUOTA')->first()){
 
-                $this->guardarDeudor(null, $propietario);
+                $this->resetearDeudores();
+
+                Actor::create([
+                    'actorable_type' => 'App\Models\Gravamen',
+                    'actorable_id' => $this->gravamen->id,
+                    'tipo_actor' => 'deudor',
+                    'persona_id' => $persona,
+                    'tipo_deudor' => $this->tipo_deudor
+                ]);
 
             }
 
@@ -148,11 +157,19 @@ class GravamenInscripcion extends Component
 
     public function updatedPropietariosGarantesCoopropiedad(){
 
-        foreach($this->propietarios_garantes_coopropiedad as $propietario){
+        foreach($this->propietarios_garantes_coopropiedad as $persona){
 
-            if(!$this->gravamen->deudores()->where('actor_id', (int)$propietario)->where('tipo', 'G-GARANTES EN COOPROPIEDAD')->first()){
+            if(!$this->gravamen->deudores()->where('persona_id', (int)$persona)->where('tipo_deudor', 'G-GARANTES EN COOPROPIEDAD')->first()){
 
-                $this->guardarDeudor(null, $propietario);
+                $this->resetearDeudores();
+
+                Actor::create([
+                    'actorable_type' => 'App\Models\Gravamen',
+                    'actorable_id' => $this->gravamen->id,
+                    'tipo_actor' => 'deudor',
+                    'persona_id' => $persona,
+                    'tipo_deudor' => $this->tipo_deudor
+                ]);
 
             }
 
@@ -255,7 +272,7 @@ class GravamenInscripcion extends Component
 
     }
 
-    public function abrirModalEditar($string, Deudor $deudor){
+    public function abrirModalEditar($string, Actor $deudor){
 
         $this->resetearPersona();
 
@@ -286,7 +303,7 @@ class GravamenInscripcion extends Component
 
     }
 
-    public function abrirModalEditarAcreedor($string, Acreedor $acreedor){
+    public function abrirModalEditarAcreedor($string, Actor $acreedor){
 
         $this->resetearPersona();
 
@@ -329,13 +346,18 @@ class GravamenInscripcion extends Component
 
                     $persona_id = $this->guardarPersona();
 
+                }else{
+
+                    $persona_id = Actor::Find($actor)->persona->id;
+
                 }
 
-                Deudor::create([
-                    'gravamen_id' => $this->gravamen->id,
+                Actor::create([
+                    'actorable_type' => 'App\Models\Gravamen',
+                    'actorable_id' => $this->gravamen->id,
+                    'tipo_actor' => 'deudor',
                     'persona_id' => $persona_id,
-                    'actor_id' => $actor,
-                    'tipo' => $this->tipo_deudor
+                    'tipo_deudor' => $this->tipo_deudor
                 ]);
 
             });
@@ -504,8 +526,11 @@ class GravamenInscripcion extends Component
 
         try {
 
-            $this->gravamen->acreedores()->create([
-                'persona_id' => $this->guardarPersona()
+            Actor::create([
+                'actorable_type' => 'App\Models\Gravamen',
+                'actorable_id' => $this->gravamen->id,
+                'tipo_actor' => 'acreedor',
+                'persona_id' => $this->guardarPersona(),
             ]);
 
             $this->dispatch('mostrarMensaje', ['success', "El acreedor se guardó con éxito."]);
@@ -553,7 +578,7 @@ class GravamenInscripcion extends Component
 
         try {
 
-            Acreedor::find($id)->delete();
+            Actor::find($id)->delete();
 
             $this->dispatch('mostrarMensaje', ['success', "El acreedor se eliminó con éxito."]);
 
@@ -574,11 +599,10 @@ class GravamenInscripcion extends Component
             'parteAlicuota',
             'garantesCoopropiedad',
             'fianza',
-            'deudoresUnicos.actor.persona',
-            'garantesHipotecarios.actor.persona',
-            'parteAlicuota.actor.persona',
-            'garantesCoopropiedad.actor.persona',
-            'fianza.actor.persona'
+            'deudoresUnicos',
+            'garantesHipotecarios',
+            'parteAlicuota',
+            'garantesCoopropiedad',
         );
 
     }
@@ -721,43 +745,6 @@ class GravamenInscripcion extends Component
             Log::error("Error al guardar gravamen por el usuario: (id: " . auth()->user()->id . ") " . auth()->user()->name . ". " . $th);
             $this->dispatch('mostrarMensaje', ['error', "Ha ocurrido un error."]);
         }
-
-    }
-
-    public function crearPdf(){
-
-        $director = User::where('status', 'activo')
-                            ->whereHas('roles', function($q){
-                                $q->where('name', 'Director');
-                            })
-                            ->first()->name;
-
-        $jefe_departamento = User::where('status', 'activo')
-                                    ->whereHas('roles', function($q){
-                                        $q->where('name', 'Jefe de departamento')
-                                            ->where('area', 'Departamento de Registro de Inscripciones');
-                                    })
-                                    ->first()->name;
-
-        $pdf = Pdf::loadView('incripciones.propiedad.acto', [
-            'inscripcion' => $this->gravamen,
-            'director' => $director,
-            'jefe_departamento' => $jefe_departamento,
-            'distrito' => $this->gravamen->movimientoRegistral->getRawOriginal('distrito'),
-        ]);
-
-        $pdf->render();
-
-        $dom_pdf = $pdf->getDomPDF();
-
-        $canvas = $dom_pdf->get_canvas();
-
-        $canvas->page_text(480, 794, "Página: {PAGE_NUM} de {PAGE_COUNT}", null, 10, array(1, 1, 1));
-
-        return response()->streamDownload(
-            fn () => print($pdf->output()),
-            'inscripcion.pdf'
-        );
 
     }
 
@@ -970,13 +957,13 @@ class GravamenInscripcion extends Component
 
         $this->gravamen->estado = 'nuevo';
 
-        $this->gravamen->load('acreedores.persona');
+        $this->gravamen->load('acreedores');
 
-        $this->tipo_deudor = $this->gravamen->deudores()->first()?->tipo;
+        $this->tipo_deudor = $this->gravamen->deudores()->first()?->tipo_deudor;
 
         if($this->tipo_deudor === 'I-DEUDOR ÚNICO'){
 
-            $this->propietario = $this->gravamen->deudores()->first()->actor_id;
+            $this->propietario = $this->gravamen->deudores()->first()->id;
 
         }elseif($this->tipo_deudor === 'P-PARTE ALICUOTA'){
 
