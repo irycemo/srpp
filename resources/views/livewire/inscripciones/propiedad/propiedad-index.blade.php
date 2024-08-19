@@ -132,11 +132,11 @@
                                         </x-button-green>
 
                                         <x-button-red
-                                            wire:click="$toggle('modalRechazar')"
+                                            wire:click="abrirModalRechazar({{  $movimiento->id }})"
                                             wire:loading.attr="disabled"
-                                            wire:target="$toggle('modalRechazar')">
+                                            wire:target="abrirModalRechazar({{  $movimiento->id }})">
 
-                                            <img wire:loading wire:target="$toggle('modalRechazar')" class="mx-auto h-4 mr-1" src="{{ asset('storage/img/loading3.svg') }}" alt="Loading">
+                                            <img wire:loading wire:target="abrirModalRechazar({{  $movimiento->id }})" class="mx-auto h-4 mr-1" src="{{ asset('storage/img/loading3.svg') }}" alt="Loading">
 
                                             Rechazar
 
@@ -162,11 +162,11 @@
                                         </x-button-blue>
 
                                         <x-button-red
-                                            wire:click="$toggle('modalRechazar')"
+                                            wire:click="abrirModalRechazar({{  $movimiento->id }})"
                                             wire:loading.attr="disabled"
-                                            wire:target="$toggle('modalRechazar')">
+                                            wire:target="abrirModalRechazar({{  $movimiento->id }})">
 
-                                            <img wire:loading wire:target="$toggle('modalRechazar')" class="mx-auto h-4 mr-1" src="{{ asset('storage/img/loading3.svg') }}" alt="Loading">
+                                            <img wire:loading wire:target="abrirModalRechazar({{  $movimiento->id }})" class="mx-auto h-4 mr-1" src="{{ asset('storage/img/loading3.svg') }}" alt="Loading">
 
                                             Rechazar
 

@@ -124,6 +124,17 @@ trait InscripcionesIndex{
 
     }
 
+    public function abrirModalRechazar(MovimientoRegistral $modelo){
+
+        $this->reset('observaciones');
+
+        if($this->modelo_editar->isNot($modelo))
+            $this->modelo_editar = $modelo;
+
+        $this->modalRechazar = true;
+
+    }
+
     public function finalizar(){
 
         $this->validate(['documento' => 'required']);
@@ -164,7 +175,7 @@ trait InscripcionesIndex{
 
     }
 
-    public function rechazar(MovimientoRegistral $movimientoRegistral){
+    public function rechazar(){
 
         $this->validate([
             'observaciones' => 'required'
@@ -172,13 +183,13 @@ trait InscripcionesIndex{
 
         try {
 
-            DB::transaction(function () use ($movimientoRegistral){
+            DB::transaction(function () {
 
                 $observaciones = auth()->user()->name . ' rechaza el ' . now() . ', con motivo: ' . $this->observaciones ;
 
-                (new SistemaTramitesService())->rechazarTramite($movimientoRegistral->año, $movimientoRegistral->tramite, $movimientoRegistral->usuario, $observaciones);
+                (new SistemaTramitesService())->rechazarTramite($this->modelo_editar->año, $this->modelo_editar->tramite, $this->modelo_editar->usuario, $observaciones);
 
-                $movimientoRegistral->update(['estado' => 'rechazado', 'actualizado_por' => auth()->user()->id]);
+                $this->modelo_editar->update(['estado' => 'rechazado', 'actualizado_por' => auth()->user()->id]);
 
                 $this->dispatch('mostrarMensaje', ['success', "El trámite se rechazó con éxito."]);
 
