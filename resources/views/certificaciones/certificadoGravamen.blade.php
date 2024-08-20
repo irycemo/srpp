@@ -462,15 +462,7 @@
                         <strong> Y COMO DEUDOR(ES):</strong>
                         @foreach ($gravamen->deudores as $deudor)
 
-                            @if($deudor->actor)
-
-                                {{ $deudor->actor->persona->nombre }} {{ $deudor->actor->persona->ap_paterno }} {{ $deudor->actor->persona->ap_materno }}{{ $deudor->actor->persona->razon_social }}@if(!$loop->last), @else; @endif
-
-                            @else
-
-                                {{ $deudor->persona->nombre }} {{ $deudor->persona->ap_paterno }} {{ $deudor->persona->ap_materno }}{{ $deudor->persona->razon_social }}@if(!$loop->last), @else; @endif
-
-                            @endif
+                        {{ $deudor->persona->nombre }} {{ $deudor->persona->ap_paterno }} {{ $deudor->persona->ap_materno }}{{ $deudor->persona->razon_social }}@if(!$loop->last), @else; @endif
 
                         @endforeach
                         <strong>POR LA CANTIDAD DE: </strong> ${{ number_format($gravamen->valor_gravamen, 2) }} {{ $formatter->toWords($gravamen->valor_gravamen) }} {{ $gravamen->divisa }}.
