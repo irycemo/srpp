@@ -384,7 +384,7 @@
 
                         <p class="text-center"><strong>Propietarios</strong></p>
 
-                        @foreach ($propietarios as $index => $propietario)
+                        @foreach ($propietarios as $index => $value)
 
                             <div class="flex gap-3 justify-center items-center">
 
