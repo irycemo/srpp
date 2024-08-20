@@ -2,15 +2,12 @@
 
 namespace App\Livewire\Varios;
 
-use App\Models\File;
 use Livewire\Component;
 use Livewire\WithPagination;
 use Livewire\WithFileUploads;
+use App\Constantes\Constantes;
 use App\Traits\ComponentesTrait;
-use Illuminate\Support\Facades\DB;
 use App\Models\MovimientoRegistral;
-use Illuminate\Support\Facades\Log;
-use App\Http\Services\SistemaTramitesService;
 use App\Traits\Inscripciones\InscripcionesIndex;
 
 class VariosIndex extends Component
@@ -20,6 +17,14 @@ class VariosIndex extends Component
     use WithFileUploads;
     use ComponentesTrait;
     use InscripcionesIndex;
+
+    public function mount(){
+
+        $this->crearModeloVacio();
+
+        $this->motivos = Constantes::RECHAZO_MOTIVOS;
+
+    }
 
     public function render()
     {

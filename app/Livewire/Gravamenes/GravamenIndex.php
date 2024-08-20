@@ -5,6 +5,7 @@ namespace App\Livewire\Gravamenes;
 use Livewire\Component;
 use Livewire\WithPagination;
 use Livewire\WithFileUploads;
+use App\Constantes\Constantes;
 use App\Traits\ComponentesTrait;
 use App\Models\MovimientoRegistral;
 use App\Traits\Inscripciones\InscripcionesIndex;
@@ -16,6 +17,14 @@ class GravamenIndex extends Component
     use WithFileUploads;
     use ComponentesTrait;
     use InscripcionesIndex;
+
+    public function mount(){
+
+        $this->crearModeloVacio();
+
+        $this->motivos = Constantes::RECHAZO_MOTIVOS;
+
+    }
 
     public function render()
     {
