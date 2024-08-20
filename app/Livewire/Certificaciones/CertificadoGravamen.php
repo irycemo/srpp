@@ -108,7 +108,7 @@ class CertificadoGravamen extends Component
 
         $this->predio = Predio::where('folio_real', $this->moviminetoRegistral->folio_real)->first();
 
-        $this->gravamenes = Gravamen::with('deudores.persona', 'deudores.actor.persona',  'acreedores.persona')
+        $this->gravamenes = Gravamen::with('deudores.persona', 'deudores',  'acreedores')
                                         ->withWhereHas('movimientoRegistral', function($q) {
                                             $q->where('folio_real', $this->moviminetoRegistral->folio_real);
                                         })
