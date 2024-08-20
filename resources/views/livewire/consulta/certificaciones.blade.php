@@ -6,7 +6,11 @@
 
             Movimiento registral: ({{ $certificado->movimientoRegistral->folio }})
 
-            <x-link-blue target="_blank" href="{{ $certificado->movimientoRegistral->caratula() }}">Caratula</x-link-blue>
+            @if($certificado->movimientoRegistral->caratula())
+
+                <x-link-blue target="_blank" href="{{ $certificado->movimientoRegistral->caratula() }}">Caratula</x-link-blue>
+
+            @endif
 
         </x-h4>
 

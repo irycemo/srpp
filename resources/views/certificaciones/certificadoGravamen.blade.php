@@ -178,7 +178,7 @@
         </div>
 
         <div style="text-align: right">
-            <p style="margin:0;"><strong>Movimiento registral:</strong>{{ $predio->folioReal->folio }}-{{ $movimientoRegistral->folio }}</p>
+            <p style="margin:0;"><strong>Movimiento registral:</strong> {{ $predio->folioReal->folio }}-{{ $movimientoRegistral->folio }}</p>
             <p style="margin:0;"><strong>DISTRITO:</strong> {{ $movimientoRegistral->distrito}}</p>
         </div>
 

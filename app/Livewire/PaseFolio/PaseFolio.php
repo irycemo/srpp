@@ -196,6 +196,20 @@ class PaseFolio extends Component
                             ->get();
     }
 
+    public function pasarCaptura(MovimientoRegistral $modelo){
+
+        try {
+
+            $modelo->update(['estado' => 'captura']);
+
+        } catch (\Throwable $th) {
+
+            Log::error("Error al pasar a captura el folio real por el usuario: (id: " . auth()->user()->id . ") " . auth()->user()->name . ". " . $th);
+            $this->dispatch('mostrarMensaje', ['error', "Ha ocurrido un error."]);
+
+        }
+    }
+
     public function render()
     {
 
@@ -235,7 +249,6 @@ class PaseFolio extends Component
                                                             ->orWhere('tomo', 'LIKE', '%' . $this->search . '%')
                                                             ->orWhere('registro', 'LIKE', '%' . $this->search . '%');
                                                     })
-                                                    ->where('usuario_supervisor', auth()->id())
                                                     ->orderBy($this->sort, $this->direction)
                                                     ->paginate($this->pagination);
 

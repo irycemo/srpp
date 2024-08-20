@@ -167,6 +167,11 @@
 
                                         @if($movimiento->folioReal->estado == 'elaborado')
 
+                                            <x-button-yellow
+                                                wire:click="pasarCaptura({{ $movimiento->id }})">
+                                                Corregir
+                                            </x-button-yellow>
+
                                             <x-button-green
                                                 wire:click="abrirModalFinalizar({{ $movimiento->id }})">
                                                 Finalizar
