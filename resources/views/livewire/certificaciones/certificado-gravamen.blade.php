@@ -288,15 +288,7 @@
                             <p><strong>Deudores</strong></p>
                             @foreach ($gravamen->deudores as $deudor)
 
-                                @if($deudor->actor)
-
-                                    <p>{{ $deudor->actor->persona->nombre }} {{ $deudor->actor->persona->ap_paterno }} {{ $deudor->actor->persona->ap_materno }} {{ $deudor->actor->persona->razon_social }}</p>
-
-                                @else
-
-                                    <p>{{ $deudor->persona->nombre }} {{ $deudor->persona->ap_paterno }} {{ $deudor->persona->ap_materno }} {{ $deudor->persona->razon_social }}</p>
-
-                                @endif
+                                <p>{{ $deudor->persona->nombre }} {{ $deudor->persona->ap_paterno }} {{ $deudor->persona->ap_materno }} {{ $deudor->persona->razon_social }}</p>
 
                             @endforeach
 
