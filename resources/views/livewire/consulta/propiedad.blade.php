@@ -261,9 +261,17 @@
 
                 <div class="bg-white p-4 rounded-lg mb-3 flex gap-3 items-center justify-end">
 
-                    <x-link-blue target="_blank" href="{{ $inscripcion->movimientoRegistral->documentoEntrada() }}">Documento de entrada</x-link-blue>
+                    @if($inscripcion->movimientoRegistral->documentoEntrada())
 
-                    <x-link-blue target="_blank" href="{{ $inscripcion->movimientoRegistral->caratula() }}">Caratula</x-link-blue>
+                        <x-link-blue target="_blank" href="{{ $inscripcion->movimientoRegistral->documentoEntrada() }}">Documento de entrada</x-link-blue>
+
+                    @endif
+
+                    @if($inscripcion->movimientoRegistral->caratula())
+
+                        <x-link-blue target="_blank" href="{{ $inscripcion->movimientoRegistral->caratula() }}">Caratula</x-link-blue>
+
+                    @endif
 
                 </div>
 
