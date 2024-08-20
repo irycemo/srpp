@@ -2,6 +2,7 @@
 
 namespace App\Livewire\Inscripciones\Propiedad;
 
+use App\Constantes\Constantes;
 use Livewire\Component;
 use Livewire\WithPagination;
 use Livewire\WithFileUploads;
@@ -15,6 +16,14 @@ class PropiedadIndex extends Component
     use WithFileUploads;
     use ComponentesTrait;
     use InscripcionesIndex;
+
+    public function mount(){
+
+        $this->crearModeloVacio();
+
+        $this->motivos = Constantes::RECHAZO_MOTIVOS;
+
+    }
 
     public function render()
     {

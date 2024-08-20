@@ -3,6 +3,7 @@
 namespace App\Traits\Inscripciones;
 
 use App\Models\File;
+use Barryvdh\DomPDF\Facade\Pdf;
 use Illuminate\Support\Facades\DB;
 use App\Models\MovimientoRegistral;
 use Illuminate\Support\Facades\Log;
@@ -14,6 +15,8 @@ trait InscripcionesIndex{
     public $modalRechazar = false;
     public $documento;
     public $observaciones;
+    public $motivos;
+    public $motivo;
 
     public MovimientoRegistral $modelo_editar;
 
@@ -126,7 +129,7 @@ trait InscripcionesIndex{
 
     public function abrirModalRechazar(MovimientoRegistral $modelo){
 
-        $this->reset('observaciones');
+        $this->reset(['observaciones', 'motivo']);
 
         if($this->modelo_editar->isNot($modelo))
             $this->modelo_editar = $modelo;
@@ -187,21 +190,39 @@ trait InscripcionesIndex{
 
                 $observaciones = auth()->user()->name . ' rechaza el ' . now() . ', con motivo: ' . $this->observaciones ;
 
-                (new SistemaTramitesService())->rechazarTramite($this->modelo_editar->año, $this->modelo_editar->tramite, $this->modelo_editar->usuario, $observaciones);
+                (new SistemaTramitesService())->rechazarTramite($this->modelo_editar->año, $this->modelo_editar->tramite, $this->modelo_editar->usuario, $this->motivo . ' ' . $observaciones);
 
                 $this->modelo_editar->update(['estado' => 'rechazado', 'actualizado_por' => auth()->user()->id]);
 
-                $this->dispatch('mostrarMensaje', ['success', "El trámite se rechazó con éxito."]);
-
-                $this->modalRechazar = false;
-
             });
+
+            $this->dispatch('mostrarMensaje', ['success', "El trámite se rechazó con éxito."]);
+
+            $this->modalRechazar = false;
+
+            $pdf = Pdf::loadView('rechazos.rechazo', [
+                'movimientoRegistral' => $this->modelo_editar,
+                'motivo' => $this->motivo,
+                'observaciones' => $this->observaciones
+            ])->output();
+
+            return response()->streamDownload(
+                fn () => print($pdf),
+                'rechazo.pdf'
+            );
 
         } catch (\Throwable $th) {
 
             Log::error("Error al rechazar certificado de gravamen por el usuario: (id: " . auth()->user()->id . ") " . auth()->user()->name . ". " . $th);
             $this->dispatch('mostrarMensaje', ['error', "Ha ocurrido un error."]);
+
         }
+
+    }
+
+    public function seleccionarMotivo($key){
+
+        $this->motivo = $this->motivos[$key];
 
     }
 
