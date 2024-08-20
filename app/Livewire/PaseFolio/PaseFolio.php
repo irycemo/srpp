@@ -237,7 +237,7 @@ class PaseFolio extends Component
 
         }elseif(auth()->user()->hasRole(['Supervisor sentencias', 'Supervisor varios', 'Supervisor cancelación', 'Supervisor gravamen', 'Supervisor propiedad', 'Supervisor Copias', 'Supervisor uruapan', 'Supervisor certificaciones'])){
 
-            $movimientos = MovimientoRegistral::with('actualizadoPor', 'folioReal')
+            $movimientos = MovimientoRegistral::with('actualizadoPor', 'folioReal', 'asignadoA')
                                                     ->where('folio', 1)
                                                     ->whereIn('estado', ['elaborado', 'concluido', 'nuevo'])
                                                     ->whereHas('folioReal', function($q){
@@ -254,7 +254,7 @@ class PaseFolio extends Component
 
         }else{
 
-            $movimientos = MovimientoRegistral::with('actualizadoPor', 'folioReal')
+            $movimientos = MovimientoRegistral::with('actualizadoPor', 'folioReal', 'asignadoA')
                                                     ->where('folio', 1)
                                                     ->where('estado', 'nuevo')
                                                     ->where(function($q){
