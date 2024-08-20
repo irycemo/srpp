@@ -247,7 +247,7 @@ class CertificadoPropiedad extends Component
                 $this->certificacion->tipo_certificado = $tipo;
                 $this->certificacion->save();
 
-                if($tipo == 2){
+                if($this->certificacion->numero_paginas > 1){
 
                     foreach ($this->propietarios as $propietario) {
 
