@@ -664,8 +664,6 @@
 
             @elseif($flagPropietario)
 
-            {{ $errors }}
-
                 <div class="bg-white rounded-lg p-4 shadow-lg w-full  mx-auto mb-5 text-center">
 
                     <span class="">No se encontraron propiedades a nombre de algun propietario con los campos ingresados</span>

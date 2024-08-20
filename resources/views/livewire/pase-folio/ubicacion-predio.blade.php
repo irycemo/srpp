@@ -16,7 +16,7 @@
 
                 <x-input-group for="nombre_asentamiento" label="Nombre del asentamiento" :error="$errors->first('nombre_asentamiento')" class="w-full">
 
-                    <x-input-text type="number" id="nombre_asentamiento" wire:model="nombre_asentamiento" />
+                    <x-input-text  id="nombre_asentamiento" wire:model="nombre_asentamiento" />
 
                 </x-input-group>
 

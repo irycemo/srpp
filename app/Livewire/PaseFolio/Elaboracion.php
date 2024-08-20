@@ -230,24 +230,24 @@ class Elaboracion extends Component
 
                     $this->movimientoRegistral->refresh();
 
-                }
+                    if(!in_array($this->movimientoRegistral->inscripcionPropiedad?->servicio, ['D114', 'D113', 'D116', 'D115'])){
 
-                if(!in_array($this->movimientoRegistral->inscripcionPropiedad?->servicio, ['D114', 'D113', 'D116', 'D115'])){
+                        $gravamenes = DB::connection('mysql2')->select("call spTractoGravamenes(" .
+                                                                            $this->movimientoRegistral->getRawOriginal('distrito') .
+                                                                            "," . $this->movimientoRegistral->tomo .
+                                                                            "," . ($this->movimientoRegistral->tomo_bis ?? '\'\'') .
+                                                                            "," . $this->movimientoRegistral->registro .
+                                                                            "," . ($this->movimientoRegistral->registro_bis ?? '\'\'') .
+                                                                            "," . $this->movimientoRegistral->numero_propiedad .
+                                                                            ")");
 
-                    $gravamenes = DB::connection('mysql2')->select("call spTractoGravamenes(" .
-                                                                        $this->movimientoRegistral->getRawOriginal('distrito') .
-                                                                        "," . $this->movimientoRegistral->tomo .
-                                                                        "," . ($this->movimientoRegistral->tomo_bis ?? '\'\'') .
-                                                                        "," . $this->movimientoRegistral->registro .
-                                                                        "," . ($this->movimientoRegistral->registro_bis ?? '\'\'') .
-                                                                        "," . $this->movimientoRegistral->numero_propiedad .
-                                                                        ")");
+                        foreach($gravamenes as $gravamen){
 
-                    foreach($gravamenes as $gravamen){
+                            if(isset($gravamen->fcancelacion) && isset($gravamen->stGravamen) && $gravamen->stGravamen == 'C') continue;
 
-                        if(isset($gravamen->fcancelacion) && isset($gravamen->stGravamen) && $gravamen->stGravamen == 'C') continue;
+                            $this->creargravamen($gravamen);
 
-                        $this->creargravamen($gravamen);
+                        }
 
                     }
 
