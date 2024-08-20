@@ -48,7 +48,9 @@ class CertificadoPropiedadController extends Controller
 
         $servicio = $this->nombreServicio($movimientoRegistral->certificacion->servicio);
 
-        $pdf = Pdf::loadView('certificaciones.certificadoNegativoPropiedad', compact('predio', 'distrito', 'director', 'movimientoRegistral', 'fecha', 'registro_numero', 'tomo_numero', 'formatter', 'servicio'));
+        $personas = $movimientoRegistral->certificacion->personas;
+
+        $pdf = Pdf::loadView('certificaciones.certificadoNegativoPropiedad', compact('predio', 'distrito', 'director', 'movimientoRegistral', 'fecha', 'registro_numero', 'tomo_numero', 'formatter', 'servicio', 'personas'));
 
         $pdf->render();
 
