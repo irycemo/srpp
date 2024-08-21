@@ -36,24 +36,23 @@
 
                     <p class="text-center"><strong>Propietarios</strong></p>
 
-                    {{ $errors }}
                     @foreach ($propietarios as $index => $propietario)
 
-                        <div class="flex gap-3 justify-center items-center">
+                        <div class="flex gap-3 justify-center items-top">
 
-                            <x-input-group for="nombre" label="Nombre" :error="$errors->first('propietarios.{{ $index }}.nombre')" class="w-full">
+                            <x-input-group for="nombre" label="Nombre" :error="$errors->first('propietarios.' . $index . '.nombre')" class="w-full">
 
                                 <x-input-text id="nombre" wire:model="propietarios.{{ $index }}.nombre" />
 
                             </x-input-group>
 
-                            <x-input-group for="ap_paterno" label="Apellido paterno" :error="$errors->first('propietarios' . $index . 'ap_paterno')" class="w-full">
+                            <x-input-group for="ap_paterno" label="Apellido paterno" :error="$errors->first('propietarios.' . $index . '.ap_paterno')" class="w-full">
 
                                 <x-input-text id="ap_paterno" wire:model="propietarios.{{ $index }}.ap_paterno" />
 
                             </x-input-group>
 
-                            <x-input-group for="ap_materno" label="Apellido materno" :error="$errors->first('propietarios' . $index . 'ap_materno')" class="w-full">
+                            <x-input-group for="ap_materno" label="Apellido materno" :error="$errors->first('propietarios.' . $index . '.ap_materno')" class="w-full">
 
                                 <x-input-text id="ap_materno" wire:model="propietarios.{{ $index }}.ap_materno" />
 
@@ -64,13 +63,13 @@
                     @endforeach
 
                     <button
-                        wire:click="buscarPropietarios"
+                        wire:click="buscarProppietariosEnFolio"
                         wire:loading.attr="disabled"
-                        wire:target="buscarPropietarios"
+                        wire:target="buscarProppietariosEnFolio"
                         type="button"
                         class="mt-3 bg-blue-400 hover:shadow-lg text-white mx-auto font-bold px-4 py-2 rounded text-xs hover:bg-blue-700 focus:outline-none flex items-center justify-center focus:outline-blue-400 focus:outline-offset-2">
 
-                        <img wire:loading wire:target="buscarPropietarios" class="mx-auto h-4 mr-1" src="{{ asset('storage/img/loading3.svg') }}" alt="Loading">
+                        <img wire:loading wire:target="buscarProppietariosEnFolio" class="mx-auto h-4 mr-1" src="{{ asset('storage/img/loading3.svg') }}" alt="Loading">
 
                         Buscar
 

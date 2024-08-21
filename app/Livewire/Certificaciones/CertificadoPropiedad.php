@@ -88,15 +88,38 @@ class CertificadoPropiedad extends Component
 
     }
 
+    public function buscarProppietariosEnFolio(){
+
+        $this->validate();
+
+        $predio = $this->certificacion->movimientoRegistral->folioReal->predio;
+
+        $todosExisten = true;
+
+        foreach ($this->propietarios as $propietario) {
+
+            $existe = $predio->propietarios()->where('nombre', $propietario['nombre'])
+                                            ->where('ap_paterno', $propietario['ap_paterno'])
+                                            ->where('ap_materno', $propietario['ap_materno'])
+                                            ->first();
+
+            if(!$existe) {
+
+                $this->dispatch('mostrarMensaje', ['warning', $propietario['nombre'] . ' ' . $propietario['ap_paterno'] . ' ' . $propietario['ap_materno']. ' no es propietario.']);
+
+                $todosExisten = false;
+
+            }
+
+        }
+
+    }
+
     public function buscarPropietarios(){
 
         $this->reset(['propietario', 'propietarioOld', 'predio', 'predioOld', 'flagPropietario']);
 
-        $this->validate();
-
-        $this->dispatch('mostrarMensaje', ['error', $this->propietarios[0]['nombre']]);
-
-        /* $persona = Persona::where('tipo', 'FISICA')
+        $persona = Persona::where('tipo', 'FISICA')
                             ->where('nombre', $this->nombre)
                             ->where('ap_paterno', $this->ap_paterno)
                             ->where('ap_materno', $this->ap_materno)
@@ -139,7 +162,7 @@ class CertificadoPropiedad extends Component
 
             $this->predio = Predio::find($this->propietario->actorable_id);
 
-        } */
+        }
 
     }
 
