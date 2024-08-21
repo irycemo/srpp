@@ -200,7 +200,7 @@ class PaseFolio extends Component
 
         try {
 
-            $modelo->update(['estado' => 'captura']);
+            $modelo->folioReal->update(['estado' => 'captura']);
 
         } catch (\Throwable $th) {
 
