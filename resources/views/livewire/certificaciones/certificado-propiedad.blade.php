@@ -14,7 +14,13 @@
 
                     <p class="text-center">{{ $certificacion->movimientoRegistral->solicitante }}</p>
 
-                    <p class="text-justify">Observaciones: {{ $certificacion->observaciones }}</p>
+                </div>
+
+                <p class="text-center"><strong>Observaciones</strong></p>
+
+                <div class="text-gray-500 text-sm leading-relaxed mx-auto mb-5">
+
+                    <p class="text-justify">{{ $certificacion->observaciones }}</p>
 
                 </div>
 
@@ -30,31 +36,45 @@
 
                     <p class="text-center"><strong>Propietarios</strong></p>
 
+                    {{ $errors }}
                     @foreach ($propietarios as $index => $propietario)
 
                         <div class="flex gap-3 justify-center items-center">
 
                             <x-input-group for="nombre" label="Nombre" :error="$errors->first('propietarios.{{ $index }}.nombre')" class="w-full">
 
-                                <x-input-text id="nombre" wire:model.live.debounce="propietarios.{{ $index }}.nombre" />
+                                <x-input-text id="nombre" wire:model="propietarios.{{ $index }}.nombre" />
 
                             </x-input-group>
 
-                            <x-input-group for="ap_paterno" label="Apellido paterno" :error="$errors->first('propietarios.{{ $index }}.ap_paterno')" class="w-full">
+                            <x-input-group for="ap_paterno" label="Apellido paterno" :error="$errors->first('propietarios' . $index . 'ap_paterno')" class="w-full">
 
-                                <x-input-text id="ap_paterno" wire:model.live.debounce="propietarios.{{ $index }}.ap_paterno" />
+                                <x-input-text id="ap_paterno" wire:model="propietarios.{{ $index }}.ap_paterno" />
 
                             </x-input-group>
 
-                            <x-input-group for="ap_materno" label="Apellido materno" :error="$errors->first('propietarios.{{ $index }}.ap_materno')" class="w-full">
+                            <x-input-group for="ap_materno" label="Apellido materno" :error="$errors->first('propietarios' . $index . 'ap_materno')" class="w-full">
 
-                                <x-input-text id="ap_materno" wire:model.live.debounce="propietarios.{{ $index }}.ap_materno" />
+                                <x-input-text id="ap_materno" wire:model="propietarios.{{ $index }}.ap_materno" />
 
                             </x-input-group>
 
                         </div>
 
                     @endforeach
+
+                    <button
+                        wire:click="buscarPropietarios"
+                        wire:loading.attr="disabled"
+                        wire:target="buscarPropietarios"
+                        type="button"
+                        class="mt-3 bg-blue-400 hover:shadow-lg text-white mx-auto font-bold px-4 py-2 rounded text-xs hover:bg-blue-700 focus:outline-none flex items-center justify-center focus:outline-blue-400 focus:outline-offset-2">
+
+                        <img wire:loading wire:target="buscarPropietarios" class="mx-auto h-4 mr-1" src="{{ asset('storage/img/loading3.svg') }}" alt="Loading">
+
+                        Buscar
+
+                    </button>
 
                 </div>
 
@@ -376,82 +396,44 @@
 
         @else
 
-            @if($certificacion->numero_paginas > 1)
+            <div class="bg-white rounded-lg p-4 shadow-lg w-full  mx-auto mb-5">
 
-                <div class="bg-white rounded-lg p-4 shadow-lg w-full  mx-auto mb-5">
+                <div class="lg:w-1/2 mx-auto mb-5">
 
-                    <div class="lg:w-1/2 mx-auto mb-5">
+                    <p class="text-center"><strong>Propietarios</strong></p>
 
-                        <p class="text-center"><strong>Propietarios</strong></p>
+                    @foreach ($propietarios as $index => $value)
 
-                        @foreach ($propietarios as $index => $value)
+                        <div class="flex gap-3 justify-center items-center">
 
-                            <div class="flex gap-3 justify-center items-center">
+                            <x-input-group for="nombre" label="Nombre" :error="$errors->first('propietarios.{{ $index }}.nombre')" class="w-full">
 
-                                <x-input-group for="nombre" label="Nombre" :error="$errors->first('propietarios.{{ $index }}.nombre')" class="w-full">
+                                <x-input-text id="nombre" wire:model.live.debounce="propietarios.{{ $index }}.nombre" />
 
-                                    <x-input-text id="nombre" wire:model.live.debounce="propietarios.{{ $index }}.nombre" />
+                            </x-input-group>
 
-                                </x-input-group>
+                            <x-input-group for="ap_paterno" label="Apellido paterno" :error="$errors->first('propietarios.{{ $index }}.ap_paterno')" class="w-full">
 
-                                <x-input-group for="ap_paterno" label="Apellido paterno" :error="$errors->first('propietarios.{{ $index }}.ap_paterno')" class="w-full">
+                                <x-input-text id="ap_paterno" wire:model.live.debounce="propietarios.{{ $index }}.ap_paterno" />
 
-                                    <x-input-text id="ap_paterno" wire:model.live.debounce="propietarios.{{ $index }}.ap_paterno" />
+                            </x-input-group>
 
-                                </x-input-group>
+                            <x-input-group for="ap_materno" label="Apellido materno" :error="$errors->first('propietarios.{{ $index }}.ap_materno')" class="w-full">
 
-                                <x-input-group for="ap_materno" label="Apellido materno" :error="$errors->first('propietarios.{{ $index }}.ap_materno')" class="w-full">
+                                <x-input-text id="ap_materno" wire:model.live.debounce="propietarios.{{ $index }}.ap_materno" />
 
-                                    <x-input-text id="ap_materno" wire:model.live.debounce="propietarios.{{ $index }}.ap_materno" />
+                            </x-input-group>
 
-                                </x-input-group>
+                        </div>
 
-                            </div>
-
-                        @endforeach
-
-                    </div>
-
-                </div>
-
-            @else
-
-                <div class="bg-white rounded-lg p-4 shadow-lg w-full  mx-auto mb-5">
-
-                    <div class="flex flex-col lg:flex-row gap-3 mb-5 lg:w-1/2 mx-auto">
-
-                        <x-input-group for="nombre" label="Nombre" :error="$errors->first('nombre')" class="w-full">
-
-                            <x-input-text id="nombre" wire:model.live.debounce="nombre" />
-
-                        </x-input-group>
-
-                        <x-input-group for="ap_paterno" label="Apellido paterno" :error="$errors->first('ap_paterno')" class="w-full">
-
-                            <x-input-text id="ap_paterno" wire:model.live.debounce="ap_paterno" />
-
-                        </x-input-group>
-
-                        <x-input-group for="ap_materno" label="Apellido materno" :error="$errors->first('ap_materno')" class="w-full">
-
-                            <x-input-text id="ap_materno" wire:model.live.debounce="ap_materno" />
-
-                        </x-input-group>
-
-                        {{-- <x-input-group for="razon_social" label="Razón social" :error="$errors->first('razon_social')" class="w-full">
-
-                            <x-input-text id="razon_social" wire:model.live.debounce="razon_social" />
-
-                        </x-input-group> --}}
-
-                    </div>
+                    @endforeach
 
                     <button
                         wire:click="buscarPropietario"
                         wire:loading.attr="disabled"
                         wire:target="buscarPropietario"
                         type="button"
-                        class="bg-blue-400 hover:shadow-lg text-white mx-auto font-bold px-4 py-2 rounded text-xs hover:bg-blue-700 focus:outline-none flex items-center justify-center focus:outline-blue-400 focus:outline-offset-2">
+                        class="mt-3 bg-blue-400 hover:shadow-lg text-white mx-auto font-bold px-4 py-2 rounded text-xs hover:bg-blue-700 focus:outline-none flex items-center justify-center focus:outline-blue-400 focus:outline-offset-2">
 
                         <img wire:loading wire:target="buscarPropietario" class="mx-auto h-4 mr-1" src="{{ asset('storage/img/loading3.svg') }}" alt="Loading">
 
@@ -461,7 +443,7 @@
 
                 </div>
 
-            @endif
+            </div>
 
             @if($propietario)
 

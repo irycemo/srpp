@@ -270,7 +270,7 @@
 
                             <div>
 
-                                <select class="bg-white rounded text-xs w-full" wire:model.defer="medidas.{{ $index }}.viento">
+                                <select class="bg-white rounded text-xs w-full" wire:model="medidas.{{ $index }}.viento">
 
                                     <option value="" selected>Seleccione una opción</option>
 

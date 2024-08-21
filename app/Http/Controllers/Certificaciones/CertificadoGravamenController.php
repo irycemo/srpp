@@ -25,7 +25,7 @@ class CertificadoGravamenController extends Controller
 
         $predio = Predio::where('folio_real', $movimientoRegistral->folio_real)->first();
 
-        $gravamenes = Gravamen::with('deudores.persona', 'deudores.actor.persona',  'acreedores.persona', 'movimientoRegistral.folioReal')
+        $gravamenes = Gravamen::with('deudores', 'acreedores', 'movimientoRegistral.folioReal')
                                 ->WhereHas('movimientoRegistral', function($q) use($movimientoRegistral){
                                     $q->where('folio_real', $movimientoRegistral->folio_real);
                                 })

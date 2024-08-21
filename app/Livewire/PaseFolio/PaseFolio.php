@@ -217,11 +217,8 @@ class PaseFolio extends Component
 
             $movimientos = MovimientoRegistral::with('actualizadoPor', 'asignadoA', 'folioReal', 'supervisor')
                                                     ->where('folio', 1)
-                                                    ->where(function($q){
-                                                        $q->whereNull('folio_real')
-                                                            ->orWhereHas('folioReal', function($q){
-                                                                $q->whereIn('estado', ['nuevo', 'captura', 'elaborado', 'rechazado']);
-                                                            });
+                                                    ->whereHas('folioReal', function($q){
+                                                        $q->whereIn('estado', ['nuevo', 'captura', 'elaborado', 'rechazado']);
                                                     })
                                                     ->where(function($q){
                                                         $q->where('tramite', 'LIKE', '%' . $this->search . '%')
@@ -257,11 +254,8 @@ class PaseFolio extends Component
             $movimientos = MovimientoRegistral::with('actualizadoPor', 'folioReal', 'asignadoA')
                                                     ->where('folio', 1)
                                                     ->where('estado', 'nuevo')
-                                                    ->where(function($q){
-                                                        $q->whereNull('folio_real')
-                                                            ->orWhereHas('folioReal', function($q){
-                                                                $q->whereIn('estado', ['nuevo', 'captura']);
-                                                            });
+                                                    ->whereHas('folioReal', function($q){
+                                                        $q->whereIn('estado', ['nuevo', 'captura']);
                                                     })
                                                     ->where(function($q){
                                                         $q->where('tramite', 'LIKE', '%' . $this->search . '%')

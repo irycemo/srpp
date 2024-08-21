@@ -2,7 +2,6 @@
 
 namespace App\Livewire\Certificaciones;
 
-use App\Models\Actor;
 use App\Models\Predio;
 use App\Models\Persona;
 use Livewire\Component;
@@ -10,7 +9,6 @@ use App\Models\Personaold;
 use App\Models\Propietario;
 use App\Models\Propiedadold;
 use App\Models\Certificacion;
-use Illuminate\Validation\Rule;
 use App\Models\CertificadoPersona;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
@@ -26,10 +24,6 @@ class CertificadoPropiedad extends Component
     public $modalRechazar = false;
 
     public $radio;
-    public $nombre;
-    public $ap_paterno;
-    public $ap_materno;
-    public $razon_social;
 
     public $propietario;
     public $propietarioOld;
@@ -43,10 +37,10 @@ class CertificadoPropiedad extends Component
 
     protected function rules(){
         return [
-            'propietarios.*' => ['nullable', Rule::requiredIf($this->certificacion->numero_paginas > 1)],
-            'propietarios.*.nombre' => ['nullable', 'string', Rule::requiredIf($this->certificacion->numero_paginas > 1)],
-            'propietarios.*.ap_paterno' => ['nullable', 'string', Rule::requiredIf($this->certificacion->numero_paginas > 1)],
-            'propietarios.*.ap_materno' => ['nullable', 'string', Rule::requiredIf($this->certificacion->numero_paginas > 1)],
+            'propietarios.*' => ['required'],
+            'propietarios.*.nombre' => ['required', 'string'],
+            'propietarios.*.ap_paterno' => ['required', 'string'],
+            'propietarios.*.ap_materno' => ['required', 'string'],
          ];
     }
 
@@ -94,17 +88,15 @@ class CertificadoPropiedad extends Component
 
     }
 
-    public function buscarPropietario(){
+    public function buscarPropietarios(){
 
         $this->reset(['propietario', 'propietarioOld', 'predio', 'predioOld', 'flagPropietario']);
 
-        $this->validate([
-            'nombre' => 'required',
-            'ap_paterno' => 'required',
-            'ap_materno' => 'required',
-        ]);
+        $this->validate();
 
-        $persona = Persona::where('tipo', 'FISICA')
+        $this->dispatch('mostrarMensaje', ['error', $this->propietarios[0]['nombre']]);
+
+        /* $persona = Persona::where('tipo', 'FISICA')
                             ->where('nombre', $this->nombre)
                             ->where('ap_paterno', $this->ap_paterno)
                             ->where('ap_materno', $this->ap_materno)
@@ -147,7 +139,7 @@ class CertificadoPropiedad extends Component
 
             $this->predio = Predio::find($this->propietario->actorable_id);
 
-        }
+        } */
 
     }
 
