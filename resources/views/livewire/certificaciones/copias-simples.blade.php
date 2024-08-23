@@ -148,7 +148,7 @@
 
                         </x-table.cell>
 
-                        @if (!auth()->user()->hasRole('Certificador'))
+                        @if (!auth()->user()->hasRole(['Supervisor certificaciones','Administrador']))
 
                             <x-table.cell>
 
