@@ -506,9 +506,9 @@ class CertificadoPropiedad extends Component
 
             if($this->certificacion->movimientoRegistral->tipo_servicio == 'ordinario'){
 
-                if(!($this->calcularDiaElaboracion($this->modelo_editar) <= now())){
+                if(!($this->calcularDiaElaboracion($this->certificacion) <= now())){
 
-                    $this->dispatch('mostrarMensaje', ['error', "El trámite puede elaborarse apartir del " . $this->calcularDiaElaboracion($this->modelo_editar)->format('d-m-Y')]);
+                    $this->dispatch('mostrarMensaje', ['error', "El trámite puede elaborarse apartir del " . $this->calcularDiaElaboracion($this->certificacion)->format('d-m-Y')]);
 
                     return;
 
