@@ -49,6 +49,7 @@
                 <x-table.heading sortable wire:click="sortBy('estado')" :direction="$sort === 'estado' ? $direction : null" >Estado</x-table.heading>
                 <x-table.heading sortable wire:click="sortBy('tipo_servicio')" :direction="$sort === 'tipo_servicio' ? $direction : null" >Tipo de servicio</x-table.heading>
                 <x-table.heading sortable wire:click="sortBy('distrito')" :direction="$sort === 'distrito' ? $direction : null" >Distrito</x-table.heading>
+                <x-table.heading>Solicitante</x-table.heading>
                 @if (auth()->user()->hasRole(['Certificador Propiedad', 'Supervisor certificaciones', 'Administrador']))
                     <x-table.heading sortable wire:click="sortBy('usuario_asignado')" :direction="$sort === 'usuario_asignado' ? $direction : null" >Asignado a</x-table.heading>
                 @endif
@@ -67,6 +68,8 @@
             <x-slot name="body">
 
                 @forelse ($certificados as $certificado)
+
+                    @if($certificado->tomo && $certificado->registro && $certificado->numero_propiedad && !$certificado->folio_real) @continue @endif
 
                     <x-table.row wire:loading.class.delaylongest="opacity-50" wire:key="row-{{ $certificado->id }}">
 
@@ -107,6 +110,14 @@
                             <span class="lg:hidden absolute top-0 left-0 bg-blue-300 px-2 py-1 text-xs text-white font-bold uppercase rounded-br-xl">Distrito</span>
 
                             {{ $certificado->distrito }}
+
+                        </x-table.cell>
+
+                        <x-table.cell>
+
+                            <span class="lg:hidden absolute top-0 left-0 bg-blue-300 px-2 py-1 text-xs text-white font-bold uppercase rounded-br-xl">Solicitante</span>
+
+                            {{ $certificado->solicitante }}
 
                         </x-table.cell>
 
@@ -175,12 +186,25 @@
                                             Reimprimir
                                         </x-button-blue>
 
-                                        <x-button-green
-                                            wire:click="finalizar({{  $certificado->id }})"
-                                            wire:loading.attr="disabled"
-                                            wire:target="finalizar({{  $certificado->id }})">
-                                            Finalizar
-                                        </x-button-green>
+                                        @if($certificado->folio_real)
+
+                                            <x-button-green
+                                                wire:click="abrirModalFinalizar({{  $certificado->id }})"
+                                                wire:loading.attr="disabled"
+                                                wire:target="abrirModalFinalizar({{  $certificado->id }})">
+                                                Finalizar
+                                            </x-button-green>
+
+                                        @else
+
+                                            <x-button-green
+                                                wire:click="finalizar({{  $certificado->id }})"
+                                                wire:loading.attr="disabled"
+                                                wire:target="finalizar({{  $certificado->id }})">
+                                                Finalizar
+                                            </x-button-green>
+
+                                        @endif
 
                                     </div>
 
@@ -399,6 +423,57 @@
 
     </x-dialog-modal>
 
+    <x-dialog-modal wire:model="modalFinalizar" maxWidth="sm">
+
+        <x-slot name="title">
+
+            Subir archivo
+
+        </x-slot>
+
+        <x-slot name="content">
+
+            <x-filepond wire:model.live="documento" accept="['application/pdf']"/>
+
+            <div>
+
+                @error('documento') <span class="error text-sm text-red-500">{{ $message }}</span> @enderror
+
+            </div>
+
+        </x-slot>
+
+        <x-slot name="footer">
+
+            <div class="flex gap-3">
+
+                <x-button-blue
+                    wire:click="finalizarMovimientoFolio"
+                    wire:loading.attr="disabled"
+                    wire:target="finalizarMovimientoFolio">
+
+                    <img wire:loading wire:target="finalizarMovimientoFolio" class="mx-auto h-4 mr-1" src="{{ asset('storage/img/loading3.svg') }}" alt="Loading">
+
+                    <span>Finalizar</span>
+
+                </x-button-blue>
+
+                <x-button-red
+                    wire:click="$toggle('modalFinalizar')"
+                    wire:loading.attr="disabled"
+                    wire:target="$toggle('modalFinalizar')"
+                    type="button">
+
+                    <span>Cerrar</span>
+
+                </x-button-red>
+
+            </div>
+
+        </x-slot>
+
+    </x-dialog-modal>
+
 </div>
 
 @push('scripts')
@@ -441,7 +516,7 @@
 
         });
 
-        window.addEventListener('imprimir_unico_propiedad', event => {
+        window.addEventListener('imprimir_certificado_colindancias', event => {
 
             const documento = event.detail[0].certificacion;
 

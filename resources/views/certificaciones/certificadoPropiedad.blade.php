@@ -164,16 +164,23 @@
 
             <div>
 
+                <div style="text-align: center; font-weight: bold; font-size: 11px;">
+                    <p style="margin: 0">GOBIERNO DEL ESTADO DE MICHOACÁN DE OCAMPO</p>
+                    <P style="margin: 0">SECRETARÍA DE FINANZAS Y ADMINISTRACIÓN</P>
+                    <P style="margin: 0">INSTITUTO REGISTRAL Y CATASTRAL DEL ESTADO DE MICHOACÁN</P>
+                    <P style="margin: 0">DIRECCIÓN DEL REGISTRO PÚBLICO  DE LA PROPIEDAD</P>
+                </div>
+
+                <div style="text-align: right">
+                    <p style="margin:0;"><strong>DISTRITO:</strong> {{ $movimientoRegistral->distrito}}</p>
+                </div>
+
                 <p class="titulo">
                     certificado de propiedad
                 </p>
 
                 <p class="parrafo">
-                    EL DIRECTOR DEL REGISTRO PÚBLICO DE LA PROPIEDAD @if($distrito == '02 Uruapan' ) <strong>L.A. SANDRO MEDINA MORALES</strong> @else <strong>{{ $director }}</strong>, @endif certifica que habiendose examinado los indices alfabeticos correspondientes al distrito de {{ $distrito}} se encontro que esta registrado a nombre de:
-                    @foreach ($personas as $persona)
-                        <strong>{{ $persona->persona->nombre }} {{ $persona->persona->ap_paterno }} {{ $persona->persona->ap_materno }}</strong>@if(!$loop->last),@endif
-                    @endforeach
-                    la siguiente propiedad.
+                    EL DIRECTOR DEL REGISTRO PÚBLICO DE LA PROPIEDAD @if($distrito == '02 Uruapan' ) <strong>L.A. SANDRO MEDINA MORALES</strong> @else <strong>{{ $director }}</strong>, @endif certifica que habiendose examinado los indices alfabeticos correspondientes al distrito de {{ $distrito}} se encontro registro de la siguiente propiedad:
                 </p>
 
                 <p style="text-align: center"><strong>FOLIO REAL:</strong> {{ $movimientoRegistral->folioReal->folio }}</p>
@@ -442,7 +449,7 @@
 
                 <div class="informacion">
 
-                    <div class="control">
+                    <div class="control no-break">
 
                         <p class="separador">DATOS DE CONTROL</p>
 

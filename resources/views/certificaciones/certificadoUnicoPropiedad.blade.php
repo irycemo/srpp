@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
-    <title>Certificado negativo de propiedad</title>
+    <title>Certificado único de propiedad</title>
 </head>
 <style>
 
@@ -164,12 +164,24 @@
 
             <div>
 
+                <div style="text-align: center; font-weight: bold; font-size: 11px;">
+                    <p style="margin: 0">GOBIERNO DEL ESTADO DE MICHOACÁN DE OCAMPO</p>
+                    <P style="margin: 0">SECRETARÍA DE FINANZAS Y ADMINISTRACIÓN</P>
+                    <P style="margin: 0">INSTITUTO REGISTRAL Y CATASTRAL DEL ESTADO DE MICHOACÁN</P>
+                    <P style="margin: 0">DIRECCIÓN DEL REGISTRO PÚBLICO  DE LA PROPIEDAD</P>
+                </div>
+
+                <div style="text-align: right">
+                    <p style="margin:0"><strong>movimiento registral:</strong>{{ $predio->folioReal->folio }}-{{ $movimientoRegistral->folio }}</p>
+                    <p style="margin:0;"><strong>DISTRITO:</strong> {{ $movimientoRegistral->distrito}}</p>
+                </div>
+
                 <p class="titulo">
                     certificado único de propiedad
                 </p>
 
                 <p class="parrafo">
-                    EL DIRECTOR DEL REGISTRO PÚBLICO DE LA PROPIEDAD @if($distrito == '02 Uruapan' ) <strong>L.A. SANDRO MEDINA MORALES</strong> @else <strong>{{ $director }}</strong>, @endif certifica que habiendose examinado los indices alfabeticos correspondientes al distrito de {{ $distrito}} no se encontro constancia de que se registre a nombre de: <strong>{{ $movimientoRegistral->solicitante }}</strong> como unico propietario de la siguiente propiedad.
+                    EL DIRECTOR DEL REGISTRO PÚBLICO DE LA PROPIEDAD @if($distrito == '02 Uruapan' ) <strong>L.A. SANDRO MEDINA MORALES</strong> @else <strong>{{ $director }}</strong>, @endif certifica que habiendose examinado los indices alfabeticos correspondientes al distrito de {{ $distrito}} no se encontro constancia de que se registre a nombre de: <strong>{{ $movimientoRegistral->solicitante }}</strong> como único propietario de la siguiente propiedad.
                 </p>
 
                 <p style="text-align: center"><strong>FOLIO REAL:</strong> {{ $movimientoRegistral->folioReal->folio }}</p>
@@ -438,7 +450,7 @@
 
                 <div class="informacion">
 
-                    <div class="control">
+                    <div class="control no-break">
 
                         <p class="separador">DATOS DE CONTROL</p>
 

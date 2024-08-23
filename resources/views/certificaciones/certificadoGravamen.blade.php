@@ -529,7 +529,7 @@
 
         <div class="informacion">
 
-            <div class="control">
+            <div class="control no-break">
 
                 <p class="separador">DATOS DE CONTROL</p>
 

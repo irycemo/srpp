@@ -164,6 +164,17 @@
 
             <div>
 
+                <div style="text-align: center; font-weight: bold; font-size: 11px;">
+                    <p style="margin: 0">GOBIERNO DEL ESTADO DE MICHOACÁN DE OCAMPO</p>
+                    <P style="margin: 0">SECRETARÍA DE FINANZAS Y ADMINISTRACIÓN</P>
+                    <P style="margin: 0">INSTITUTO REGISTRAL Y CATASTRAL DEL ESTADO DE MICHOACÁN</P>
+                    <P style="margin: 0">DIRECCIÓN DEL REGISTRO PÚBLICO  DE LA PROPIEDAD</P>
+                </div>
+
+                <div style="text-align: right">
+                    <p style="margin:0;"><strong>DISTRITO:</strong> {{ $movimientoRegistral->distrito}}</p>
+                </div>
+
                 <p class="titulo">
                     certificado negativo de propiedad
                 </p>
@@ -171,6 +182,14 @@
                 <p class="parrafo">
                     EL DIRECTOR DEL REGISTRO PÚBLICO DE LA PROPIEDAD @if($distrito == '02 Uruapan' ) <strong>L.A. SANDRO MEDINA MORALES</strong> @else <strong>{{ $director }}</strong>, @endif certifica que habiendose examinado los indices alfabeticos correspondientes al distrito de {{ $distrito}} no se encontro registro alguno a nombre de: <strong>{{ $persona }}</strong>.
                 </p>
+
+                @if($movimientoRegistral->certificacion->observaciones_certificado)
+
+                    <p class="parrafo">
+                        {{ $movimientoRegistral->certificacion->observaciones_certificado }}
+                    </p>
+
+                @endif
 
                 <p class="parrafo">
                     A SOLICITUD DE: <strong>{{ $movimientoRegistral->solicitante }}</strong> se expide EL PRESENTE CERTIFICADO EN LA CIUDAD DE @if($distrito == '02 Uruapan' ) URUAPAN, @else MORELIA, @endif MICHOACÁN, A LAS
@@ -195,7 +214,7 @@
 
                 <div class="informacion">
 
-                    <div class="control">
+                    <div class="control no-break">
 
                         <p class="separador">DATOS DE CONTROL</p>
 

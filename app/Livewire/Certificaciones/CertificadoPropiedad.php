@@ -2,65 +2,65 @@
 
 namespace App\Livewire\Certificaciones;
 
+use App\Models\Actor;
 use App\Models\Predio;
 use App\Models\Persona;
 use Livewire\Component;
 use App\Models\Personaold;
-use App\Models\Propietario;
 use App\Models\Propiedadold;
 use App\Models\Certificacion;
 use App\Models\CertificadoPersona;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
 use App\Http\Services\SistemaTramitesService;
+use App\Models\FolioReal;
 
 class CertificadoPropiedad extends Component
 {
 
     public Certificacion $certificacion;
 
-    public $movimientoRegistral;
-
     public $modalRechazar = false;
 
     public $radio;
+    public $propiedad_radio;
+    public $negativo_radio;
 
-    public $propietario;
-    public $propietarioOld;
-    public $predio;
-    public $predioOld;
-    public $flagPropietario = false;
+    public $nombre;
+    public $ap_paterno;
+    public $ap_materno;
 
-    public $propietarios = [];
+    public $predios = [];
+    public $prediosOld = [];
+
+    public $flagNegativo = false;
 
     public $observaciones;
 
     protected function rules(){
         return [
-            'propietarios.*' => ['required'],
-            'propietarios.*.nombre' => ['required', 'string'],
-            'propietarios.*.ap_paterno' => ['required', 'string'],
-            'propietarios.*.ap_materno' => ['required', 'string'],
+            'nombre' => ['required', 'string'],
+            'ap_paterno' => ['required', 'string'],
+            'ap_materno' => ['required', 'string'],
          ];
     }
 
-    protected $validationAttributes  = [
-        'propietarios.*.nombre' => 'nombre',
-        'propietarios.*.ap_paterno' => 'apellido paterno',
-        'propietarios.*.ap_materno' => 'apellido materno',
+    protected $validationAttributes = [
+        'ap_paterno' => 'apellido paterno',
+        'ap_materno' => 'apellido materno',
     ];
 
     public function updated($property, $value){
 
-        if(in_array($property, ['nombre', 'ap_paterno', 'ap_materno'])){
+        if(in_array($property, ['radio', 'propiedad_radio', 'negativo_radio'])){
 
-            $this->reset(['propietario', 'propietarioOld', 'predio', 'predioOld', 'flagPropietario', 'razon_social']);
+            $this->reset(['nombre', 'ap_paterno', 'ap_materno','predios', 'prediosOld', 'flagNegativo', 'observaciones']);
 
         }
 
-        if($property == 'razon_social'){
+        if(in_array($property, ['nombre', 'ap_paterno', 'ap_materno'])){
 
-            $this->reset(['propietario', 'propietarioOld', 'predio', 'predioOld', 'flagPropietario', 'nombre', 'ap_paterno', 'ap_materno']);
+            $this->reset(['predios', 'prediosOld', 'flagNegativo', 'observaciones']);
 
         }
 
@@ -88,36 +88,11 @@ class CertificadoPropiedad extends Component
 
     }
 
-    public function buscarProppietariosEnFolio(){
+    public function buscarPropietarioUnico(){
 
         $this->validate();
 
-        $predio = $this->certificacion->movimientoRegistral->folioReal->predio;
-
-        $todosExisten = true;
-
-        foreach ($this->propietarios as $propietario) {
-
-            $existe = $predio->propietarios()->where('nombre', $propietario['nombre'])
-                                            ->where('ap_paterno', $propietario['ap_paterno'])
-                                            ->where('ap_materno', $propietario['ap_materno'])
-                                            ->first();
-
-            if(!$existe) {
-
-                $this->dispatch('mostrarMensaje', ['warning', $propietario['nombre'] . ' ' . $propietario['ap_paterno'] . ' ' . $propietario['ap_materno']. ' no es propietario.']);
-
-                $todosExisten = false;
-
-            }
-
-        }
-
-    }
-
-    public function buscarPropietarios(){
-
-        $this->reset(['propietario', 'propietarioOld', 'predio', 'predioOld', 'flagPropietario']);
+        $this->reset(['predios', 'prediosOld']);
 
         $persona = Persona::where('tipo', 'FISICA')
                             ->where('nombre', $this->nombre)
@@ -125,34 +100,34 @@ class CertificadoPropiedad extends Component
                             ->where('ap_materno', $this->ap_materno)
                             ->first();
 
-        if($persona)
-            $this->propietario = Actor::where('persona_id', $persona->id)->where('tipo_actor', 'propietario')->first();
+        if(!$persona){
 
-        if(!$this->propietario){
-
-            $this->propietarioOld = Personaold::where(function($q){
-                            $q->where('nombre2', 'LIKE', '%' . $this->nombre . '%')
-                                ->orWhere('nombre1', 'LIKE', '%' . $this->nombre . '%');
+            $propietariosOld = Personaold::where(function($q){
+                            $q->where('nombre2', 'LIKE', '%' . 'nombre' . '%')
+                                ->orWhere('nombre1', 'LIKE', '%' . 'nombre' . '%');
                         })
-                        ->where('paterno', $this->ap_paterno)
-                        ->where('materno', $this->ap_materno)
-                        ->first();
+                        ->where('paterno', 'ap_paterno')
+                        ->where('materno', 'ap_materno')
+                        ->get();
 
-            if($this->propietarioOld)
-                $this->predioOld = PropiedadOld::where('distrito', $this->propietarioOld->distrito)
-                                                ->where('tomo', $this->propietarioOld->tomo)
-                                                ->where('registro', $this->propietarioOld->registro)
-                                                ->where('noprop', $this->propietarioOld->noprop)
-                                                ->where('status', '!=', 'V')
-                                                ->first();
+            foreach ($propietariosOld as $propietario) {
 
-            if(!$this->predioOld){
+                $predio = PropiedadOld::where('distrito', $propietario->distrito)
+                                            ->where('tomo', $propietario->tomo)
+                                            ->where('registro', $propietario->registro)
+                                            ->where('noprop', $propietario->noprop)
+                                            ->where('status', '!=', 'V')
+                                            ->first();
 
-                $this->reset(['propietario', 'propietarioOld', 'predio', 'predioOld', 'flagPropietario']);
+                array_push($this->prediosOld, $predio);
 
-                $this->flagPropietario = true;
+            }
 
-                $this->dispatch('mostrarMensaje', ['success', "Sin resultados"]);
+            if(count($this->predios) == 0){
+
+                $this->flagNegativo = true;
+
+                $this->dispatch('mostrarMensaje', ['warning', "No se encontraron resultados con la información ingresada."]);
 
                 return;
 
@@ -160,49 +135,273 @@ class CertificadoPropiedad extends Component
 
         }else{
 
-            $this->predio = Predio::find($this->propietario->actorable_id);
+            $propietarios = Actor::where('persona_id', $persona->id)->where('tipo_actor', 'propietario')->get();
+
+            if($propietarios->count()){
+
+                foreach ($propietarios as $propietario) {
+
+                    $predio = Predio::wherekey($propietario->actorable_id)
+                                        ->whereHas('folioReal', function($q){
+                                            $q->where('estado', 'activo');
+                                        })
+                                        ->first();
+
+                    if($predio) array_push($this->predios, $predio);
+
+                }
+
+                if(count($this->predios) == 0){
+
+                    $this->flagNegativo = true;
+
+                    $this->dispatch('mostrarMensaje', ['warning', "No se encontraron resultados con la información ingresada."]);
+
+                }
+
+            }else{
+
+                $this->flagNegativo = true;
+
+                $this->dispatch('mostrarMensaje', ['warning', "No se encontraron resultados con la información ingresada."]);
+
+            }
 
         }
 
     }
 
-    public function buscarPropietarioMoral(){
+    public function generarCertificadoPropiedadUnico(){
 
-        $this->validate([
-            'razon_social' => 'required',
-        ]);
+        $this->validate();
 
-        $persona = Persona::where('tipo', 'MORAL')
-                            ->where('razon_social', $this->nombre)
-                            ->first();
+        if($this->certificacion->movimientoRegistral->tipo_servicio == 'ordinario'){
 
-        $this->propietario = Propietario::where('persona_id', $persona->id)->first();
+            if(!($this->calcularDiaElaboracion($this->certificacion) <= now())){
 
-        if(!$this->propietario){
-
-            $this->propietarioOld = Personaold::where(function($q){
-                            $q->where('nombre2', 'LIKE', '%' . $this->nombre . '%')
-                                ->orWhere('nombre1', 'LIKE', '%' . $this->nombre . '%');
-                        })
-                        ->orWhere('paterno', 'LIKE', '%' . $this->ap_paterno . '%')
-                        ->orWhere('materno', 'LIKE', '%' . $this->ap_materno . '%')
-                        ->first();
-
-            if(!$this->propietarioOld){
-
-                $this->dispatch('mostrarMensaje', ['error', "Sin resultados"]);
+                $this->dispatch('mostrarMensaje', ['error', "El trámite puede elaborarse apartir del " . $this->calcularDiaElaboracion($this->certificacion)->format('d-m-Y')]);
 
                 return;
 
-            }else{
+            }
 
-                $this->predioOld = Propiedadold::find($this->propietarioOld->idPropiedad);
+        }
+
+        try{
+
+            DB::transaction(function (){
+
+                $folioReal = FolioReal::find($this->predios[0]->folio_real);
+
+                $this->certificacion->movimientoRegistral->folio_real = $folioReal->id;
+                $this->certificacion->movimientoRegistral->folio = $folioReal->ultimoFolio() + 1;
+                $this->certificacion->movimientoRegistral->estado = 'elaborado';
+                $this->certificacion->movimientoRegistral->save();
+
+                $this->certificacion->actualizado_por = auth()->user()->id;
+                $this->certificacion->tipo_certificado = 3;
+                $this->certificacion->save();
+
+                $this->procesarPersona($this->nombre, $this->ap_paterno, $this->ap_materno);
+
+            });
+
+            $this->dispatch('imprimir_unico_propiedad', ['certificacion' => $this->certificacion->movimientoRegistral->id]);
+
+        } catch (\Throwable $th) {
+
+            Log::error("Error al generar certificado de propiedad único por el usuario: (id: " . auth()->user()->id . ") " . auth()->user()->name . ". " . $th);
+            $this->dispatch('mostrarMensaje', ['error', "Ha ocurrido un error."]);
+
+        }
+
+    }
+
+    public function generarCertificadoColindancias(){
+
+        if($this->certificacion->movimientoRegistral->tipo_servicio == 'ordinario'){
+
+            if(!($this->calcularDiaElaboracion($this->certificacion) <= now())){
+
+                $this->dispatch('mostrarMensaje', ['error', "El trámite puede elaborarse apartir del " . $this->calcularDiaElaboracion($this->certificacion)->format('d-m-Y')]);
+
+                return;
 
             }
 
+        }
+
+        try{
+
+            DB::transaction(function (){
+
+                $this->certificacion->movimientoRegistral->estado = 'elaborado';
+                $this->certificacion->movimientoRegistral->save();
+
+                $this->certificacion->actualizado_por = auth()->user()->id;
+                $this->certificacion->tipo_certificado = 4;
+                $this->certificacion->save();
+
+                $this->procesarPersona($this->nombre, $this->ap_paterno, $this->ap_materno);
+
+            });
+
+            $this->dispatch('imprimir_propiedad_colindancias', ['certificacion' => $this->certificacion->movimientoRegistral->id]);
+
+        } catch (\Throwable $th) {
+
+            Log::error("Error al generar certificado con colindancias por el usuario: (id: " . auth()->user()->id . ") " . auth()->user()->name . ". " . $th);
+            $this->dispatch('mostrarMensaje', ['error', "Ha ocurrido un error."]);
+
+        }
+
+    }
+
+    public function generarCertificadoPropiedad(){
+
+        if($this->certificacion->movimientoRegistral->tipo_servicio == 'ordinario'){
+
+            if(!($this->calcularDiaElaboracion($this->certificacion) <= now())){
+
+                $this->dispatch('mostrarMensaje', ['error', "El trámite puede elaborarse apartir del " . $this->calcularDiaElaboracion($this->certificacion)->format('d-m-Y')]);
+
+                return;
+
+            }
+
+        }
+
+        try{
+
+            DB::transaction(function (){
+
+                $this->certificacion->movimientoRegistral->estado = 'elaborado';
+                $this->certificacion->movimientoRegistral->save();
+
+                $this->certificacion->actualizado_por = auth()->user()->id;
+                $this->certificacion->tipo_certificado = 2;
+                $this->certificacion->save();
+
+                $this->procesarPersona($this->nombre, $this->ap_paterno, $this->ap_materno);
+
+            });
+
+            $this->dispatch('imprimir_propiedad', ['certificacion' => $this->certificacion->movimientoRegistral->id]);
+
+        } catch (\Throwable $th) {
+
+            Log::error("Error al generar certificado con colindancias por el usuario: (id: " . auth()->user()->id . ") " . auth()->user()->name . ". " . $th);
+            $this->dispatch('mostrarMensaje', ['error', "Ha ocurrido un error."]);
+
+        }
+
+    }
+
+    public function generarCertificadoNegativo(){
+
+        if($this->certificacion->movimientoRegistral->tipo_servicio == 'ordinario'){
+
+            if(!($this->calcularDiaElaboracion($this->certificacion) <= now())){
+
+                $this->dispatch('mostrarMensaje', ['error', "El trámite puede elaborarse apartir del " . $this->calcularDiaElaboracion($this->certificacion)->format('d-m-Y')]);
+
+                return;
+
+            }
+
+        }
+
+        try{
+
+            DB::transaction(function (){
+
+                $this->certificacion->movimientoRegistral->estado = 'elaborado';
+                $this->certificacion->movimientoRegistral->save();
+
+                $this->certificacion->actualizado_por = auth()->user()->id;
+                $this->certificacion->tipo_certificado = 5;
+                $this->certificacion->observaciones_certificado = $this->observaciones;
+                $this->certificacion->save();
+
+                $this->procesarPersona($this->nombre, $this->ap_paterno, $this->ap_materno);
+
+            });
+
+            $this->dispatch('imprimir_negativo', ['certificacion' => $this->certificacion->movimientoRegistral->id]);
+
+        } catch (\Throwable $th) {
+
+            Log::error("Error al generar certificado con colindancias por el usuario: (id: " . auth()->user()->id . ") " . auth()->user()->name . ". " . $th);
+            $this->dispatch('mostrarMensaje', ['error', "Ha ocurrido un error."]);
+
+        }
+
+    }
+
+    public function generarCertificadoNegativoPropiedad(){
+
+        if($this->certificacion->movimientoRegistral->tipo_servicio == 'ordinario'){
+
+            if(!($this->calcularDiaElaboracion($this->certificacion) <= now())){
+
+                $this->dispatch('mostrarMensaje', ['error', "El trámite puede elaborarse apartir del " . $this->calcularDiaElaboracion($this->certificacion)->format('d-m-Y')]);
+
+                return;
+
+            }
+
+        }
+
+        try{
+
+            DB::transaction(function (){
+
+                $this->certificacion->movimientoRegistral->estado = 'elaborado';
+                $this->certificacion->movimientoRegistral->save();
+
+                $this->certificacion->actualizado_por = auth()->user()->id;
+                $this->certificacion->tipo_certificado = 1;
+                $this->certificacion->save();
+
+                $this->procesarPersona($this->nombre, $this->ap_paterno, $this->ap_materno);
+
+            });
+
+            $this->dispatch('imprimir_negativo_propiedad', ['certificacion' => $this->certificacion->movimientoRegistral->id]);
+
+        } catch (\Throwable $th) {
+
+            Log::error("Error al generar certificado con colindancias por el usuario: (id: " . auth()->user()->id . ") " . auth()->user()->name . ". " . $th);
+            $this->dispatch('mostrarMensaje', ['error', "Ha ocurrido un error."]);
+
+        }
+
+    }
+
+    public function buscarProppietariosEnFolio(){
+
+        $this->validate();
+
+        $predio = $this->certificacion->movimientoRegistral->folioReal->predio;
+
+        $existe = $predio->propietarios()->filter(function ($user){
+
+                                            return
+                                                strtolower($user->persona->nombre) == strtolower($this->nombre) &&
+                                                strtolower($user->persona->ap_paterno) == strtolower($this->ap_paterno) &&
+                                                strtolower($user->persona->ap_materno) == strtolower($this->ap_materno);
+
+                                        })->first();
+
+        if(!$existe) {
+
+            $this->dispatch('mostrarMensaje', ['success', $this->nombre  . ' ' . $this->ap_paterno  . ' ' . $this->ap_materno . ' no es propietario.']);
+
+            $this->flagNegativo = true;
+
         }else{
 
-            $this->predio = Predio::find($this->propietario->predio_id);
+            $this->dispatch('mostrarMensaje', ['warning', $this->nombre  . ' ' . $this->ap_paterno  . ' ' . $this->ap_materno . ' es propietario.']);
 
         }
 
@@ -262,19 +461,9 @@ class CertificadoPropiedad extends Component
                 $this->certificacion->tipo_certificado = $tipo;
                 $this->certificacion->save();
 
-                if($this->certificacion->numero_paginas > 1){
+                foreach ($this->propietarios as $propietario) {
 
-                    foreach ($this->propietarios as $propietario) {
-
-                        $this->procesarPersona($propietario['nombre'], $propietario['ap_paterno'], $propietario['ap_materno']);
-
-                    }
-
-                }
-
-                if($tipo == 5){
-
-                    $this->procesarPersona($this->nombre, $this->ap_paterno, $this->ap_materno);
+                    $this->procesarPersona($propietario['nombre'], $propietario['ap_paterno'], $propietario['ap_materno']);
 
                 }
 
@@ -294,7 +483,7 @@ class CertificadoPropiedad extends Component
 
             }if($tipo == 4){
 
-                $this->dispatch('imprimir_propiedad_colindancias', ['certificacion' => $this->certificacion->movimientoRegistral->id]);
+
 
             }if($tipo == 5){
 
@@ -306,54 +495,6 @@ class CertificadoPropiedad extends Component
 
             Log::error("Error al finalizar trámite de copias certificadas por el usuario: (id: " . auth()->user()->id . ") " . auth()->user()->name . ". " . $th);
             $this->dispatch('mostrarMensaje', ['error', "Ha ocurrido un error."]);
-
-        }
-
-    }
-
-    public function finalizarSupervisor(Certificacion $modelo){
-
-        if($modelo->movimientoRegistral->tipo_servicio == 'ordinario'){
-
-            if(!($this->calcularDiaElaboracion($modelo) <= now())){
-
-                $this->dispatch('mostrarMensaje', ['error', "El trámite puede elaborarse apartir del " . $this->calcularDiaElaboracion($modelo)->format('d-m-Y')]);
-
-                return;
-
-            }
-
-        }
-
-        try {
-
-            DB::transaction(function () use ($modelo){
-
-                $this->certificacion->finalizado_en = now();
-
-                $this->certificacion->firma = now();
-
-                $this->certificacion->actualizado_por = auth()->user()->id;
-
-                $this->certificacion->movimientoRegistral->estado = 'concluido';
-
-                $this->certificacion->movimientoRegistral->save();
-
-                $this->certificacion->save();
-
-                (new SistemaTramitesService())->finaliarTramite($this->certificacion->movimientoRegistral->año, $this->certificacion->movimientoRegistral->tramite, $this->certificacion->movimientoRegistral->usuario, 'concluido');
-
-                $this->resetearTodo();
-
-                $this->dispatch('mostrarMensaje', ['success', "El trámite se finalizó con éxito."]);
-
-            });
-
-        } catch (\Throwable $th) {
-
-            Log::error("Error al finalizar trámite de copias certificadas por el usuario: (id: " . auth()->user()->id . ") " . auth()->user()->name . ". " . $th);
-            $this->dispatch('mostrarMensaje', ['error', "Ha ocurrido un error."]);
-            $this->resetearTodo();
 
         }
 
@@ -427,16 +568,6 @@ class CertificadoPropiedad extends Component
         );
 
         CertificadoPersona::create(['certificacion_id' => $this->certificacion->id, 'persona_id' => $persona->id]);
-
-    }
-
-    public function mount(){
-
-        for ($i=0; $i < $this->certificacion->numero_paginas; $i++) {
-
-            $this->propietarios [] = ['nombre' => null, 'ap_paterno' => null, 'ap_materno' => null];
-
-        }
 
     }
 

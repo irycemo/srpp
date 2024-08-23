@@ -467,9 +467,28 @@ class MovimientoRegistralService{
 
     public function calcularFolio($request){
 
+        /* Certificaciones */
         if(in_array($request['servicio'], ['DL13', 'DL14', 'DC90', 'DC91', 'DC92', 'DC93'])){
 
             return null;
+
+        }
+
+        /* Certificados de propiedad o negativos, sin antecedente */
+        if($request['servicio'] == 'DL10'){
+
+            if(!isset($request['folio_real'])){
+
+                if(isset($request['tomo']) && isset($request['registro']) && isset($request['numero_propiedad'])){
+
+                    return 1;
+
+                }else{
+
+                    return null;
+                }
+
+            }
 
         }
 

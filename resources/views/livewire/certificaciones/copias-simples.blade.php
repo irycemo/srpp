@@ -50,6 +50,7 @@
                 <x-table.heading sortable wire:click="sortBy('registro')" :direction="$sort === 'registro' ? $direction : null" >Registro / Bis</x-table.heading>
                 <x-table.heading sortable wire:click="sortBy('distrito')" :direction="$sort === 'distrito' ? $direction : null" >Distrito</x-table.heading>
                 <x-table.heading sortable wire:click="sortBy('seccion')" :direction="$sort === 'seccion' ? $direction : null" >Sección</x-table.heading>
+                <x-table.heading>Solicitante</x-table.heading>
                 <x-table.heading >Número de páginas</x-table.heading>
                 @if (auth()->user()->hasRole(['Supervisor certificaciones','Administrador']))
                     <x-table.heading >Folio de carpeta</x-table.heading>
@@ -128,6 +129,14 @@
                             <span class="lg:hidden absolute top-0 left-0 bg-blue-300 px-2 py-1 text-xs text-white font-bold uppercase rounded-br-xl">Sección</span>
 
                             {{ $copia->seccion }}
+
+                        </x-table.cell>
+
+                        <x-table.cell>
+
+                            <span class="lg:hidden absolute top-0 left-0 bg-blue-300 px-2 py-1 text-xs text-white font-bold uppercase rounded-br-xl">Solicitante</span>
+
+                            {{ $certificado->solicitante }}
 
                         </x-table.cell>
 

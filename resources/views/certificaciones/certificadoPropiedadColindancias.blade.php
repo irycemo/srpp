@@ -164,6 +164,18 @@
 
             <div>
 
+                <div style="text-align: center; font-weight: bold; font-size: 11px;">
+                    <p style="margin: 0">GOBIERNO DEL ESTADO DE MICHOACÁN DE OCAMPO</p>
+                    <P style="margin: 0">SECRETARÍA DE FINANZAS Y ADMINISTRACIÓN</P>
+                    <P style="margin: 0">INSTITUTO REGISTRAL Y CATASTRAL DEL ESTADO DE MICHOACÁN</P>
+                    <P style="margin: 0">DIRECCIÓN DEL REGISTRO PÚBLICO  DE LA PROPIEDAD</P>
+                </div>
+
+                <div style="text-align: right">
+                    <p style="margin:0;"><strong>Movimiento registral:</strong> {{ $predio->folioReal->folio }}-{{ $movimientoRegistral->folio }}</p>
+                    <p style="margin:0;"><strong>DISTRITO:</strong> {{ $movimientoRegistral->distrito}}</p>
+                </div>
+
                 <p class="titulo">
                     certificado de propiedad con medidas y linderos
                 </p>
@@ -438,7 +450,7 @@
 
                 <div class="informacion">
 
-                    <div class="control">
+                    <div class="control no-break">
 
                         <p class="separador">DATOS DE CONTROL</p>
 

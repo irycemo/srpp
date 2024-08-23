@@ -1198,7 +1198,7 @@ class PropiedadInscripcion extends Component
 
         $suma = $pp_adquirientes + $pp;
 
-        if(round($suma,2) < round(($pp_transmitentes - 0.01),2)){
+        if(round($suma,2) < round(($pp_transmitentes - 0.01), 2)){
 
             $this->dispatch('mostrarMensaje', ['error', "La suma de los porcentajes de propiedad debe ser " . $pp_transmitentes . '%.']);
 
@@ -1208,7 +1208,7 @@ class PropiedadInscripcion extends Component
 
         $suma = $pn_adquirientes + $pn;
 
-        if(round($suma, 2) < round(($pn_transmitentes - 0.01),2)){
+        if(round($suma, 2) < round(($pn_transmitentes -0.01), 2)){
 
             $this->dispatch('mostrarMensaje', ['error', "La suma de los porcentajes de nuda debe ser " . $pn_transmitentes . '%.']);
 
@@ -1218,7 +1218,7 @@ class PropiedadInscripcion extends Component
 
         $suma = $pu_adquirientes + $pu;
 
-        if(round($suma, 2) < round(($pu_transmitentes - 0.01), 2)){
+        if(round($suma, 2) < round(($pu_transmitentes -0.01), 2)){
 
             $this->dispatch('mostrarMensaje', ['error', "La suma de los porcentajes de usufructo debe ser " . $pu_transmitentes . '%.']);
 
@@ -1446,7 +1446,7 @@ class PropiedadInscripcion extends Component
 
         }
 
-        if(in_array($this->inscripcion->servicio, ['D114', 'D116', 'D115', 'D113']))
+        /* if(in_array($this->inscripcion->servicio, ['D114', 'D116', 'D115', 'D113'])) */
             $this->actos = Constantes::ACTOS_INSCRIPCION_PROPIEDAD;
 
         $director = User::where('status', 'activo')->whereHas('roles', function($q){

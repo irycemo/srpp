@@ -18,7 +18,8 @@ class Constantes{
         'Certificaciones',
         'Inscripciones',
         'Pase a folio',
-        'Consultas'
+        'Consultas',
+        'Propiedades'
     ];
 
     /* USUARIOS */

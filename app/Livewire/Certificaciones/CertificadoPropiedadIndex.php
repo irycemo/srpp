@@ -2,6 +2,7 @@
 
 namespace App\Livewire\Certificaciones;
 
+use App\Models\File;
 use Livewire\Component;
 use Livewire\WithPagination;
 use App\Models\Certificacion;
@@ -10,17 +11,22 @@ use Illuminate\Support\Facades\DB;
 use App\Models\MovimientoRegistral;
 use Illuminate\Support\Facades\Log;
 use App\Http\Services\SistemaTramitesService;
+use Livewire\WithFileUploads;
 
 class CertificadoPropiedadIndex extends Component
 {
 
     use WithPagination;
+    use WithFileUploads;
     use ComponentesTrait;
 
-    public Certificacion $modelo_editar;
+    public MovimientoRegistral $modelo_editar;
+
+    public $documento;
+    public $modalFinalizar = false;
 
     public function crearModeloVacio(){
-        $this->modelo_editar = Certificacion::make();
+        $this->modelo_editar = MovimientoRegistral::make();
     }
 
     public function elaborar(MovimientoRegistral $movimientoRegistral){
@@ -71,6 +77,63 @@ class CertificadoPropiedadIndex extends Component
 
             $this->dispatch('imprimir_unico_propiedad', ['certificacion' => $movimientoRegistral->id]);
 
+        }if($movimientoRegistral->certificacion->tipo_certificado == 5){
+
+            $this->dispatch('imprimir_negativo', ['certificacion' => $movimientoRegistral->id]);
+
+        }
+
+    }
+
+    public function abrirModalFinalizar(MovimientoRegistral $modelo){
+
+        $this->reset('documento');
+
+        $this->dispatch('removeFiles');
+
+        if($this->modelo_editar->isNot($modelo))
+            $this->modelo_editar = $modelo;
+
+        $this->modalFinalizar = true;
+
+    }
+
+    public function finalizarMovimientoFolio(){
+
+        $this->validate(['documento' => 'required']);
+
+        try {
+
+            DB::transaction(function () {
+
+                $pdf = $this->documento->store('/', 'caratulas');
+
+                File::create([
+                    'fileable_id' => $this->modelo_editar->id,
+                    'fileable_type' => 'App\Models\MovimientoRegistral',
+                    'descripcion' => 'caratula',
+                    'url' => $pdf
+                ]);
+
+                $this->modelo_editar->actualizado_por = auth()->user()->id;
+
+                $this->modelo_editar->estado = 'concluido';
+
+                $this->modelo_editar->save();
+
+                (new SistemaTramitesService())->finaliarTramite($this->modelo_editar->año, $this->modelo_editar->tramite, $this->modelo_editar->usuario, 'concluido');
+
+                $this->dispatch('mostrarMensaje', ['success', "El trámite se finalizó con éxito."]);
+
+                $this->modalFinalizar = false;
+
+            });
+
+        } catch (\Throwable $th) {
+
+            Log::error("Error al finalizar trámite de inscripción de gravamen por el usuario: (id: " . auth()->user()->id . ") " . auth()->user()->name . ". " . $th);
+            $this->dispatch('mostrarMensaje', ['error', "Ha ocurrido un error."]);
+
         }
 
     }
@@ -109,9 +172,6 @@ class CertificadoPropiedadIndex extends Component
 
             $certificados = MovimientoRegistral::with('asignadoA', 'supervisor', 'actualizadoPor', 'certificacion.actualizadoPor', 'folioReal:id,folio')
                                                 ->where('usuario_asignado', auth()->id())
-                                                /* ->whereHas('folioReal', function($q){
-                                                    $q->where('estado', 'activo');
-                                                }) */
                                                 ->where(function($q){
                                                     $q->where('solicitante', 'LIKE', '%' . $this->search . '%')
                                                         ->orWhere('tomo', 'LIKE', '%' . $this->search . '%')

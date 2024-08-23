@@ -9,6 +9,7 @@ use App\Livewire\Admin\Auditoria;
 use App\Livewire\Admin\Distritos;
 use App\Livewire\Admin\Tenencias;
 use App\Livewire\Admin\Municipios;
+use App\Livewire\Admin\Propiedades;
 use App\Livewire\Consulta\Consulta;
 use App\Livewire\Varios\VariosIndex;
 use App\Livewire\PaseFolio\PaseFolio;
@@ -27,21 +28,21 @@ use App\Livewire\Cancelaciones\CancelacionIndex;
 use App\Livewire\Gravamenes\GravamenInscripcion;
 use App\Http\Controllers\Varios\VariosController;
 use App\Livewire\Certificaciones\CopiasCertificadas;
+use App\Livewire\Inscripciones\ConsultarInscripcion;
 use App\Http\Controllers\Gravamen\GravamenController;
 use App\Livewire\Certificaciones\CertificadoGravamen;
+use App\Livewire\Certificaciones\CertificadoPropiedad;
 use App\Http\Controllers\PaseFolio\PaseFolioController;
 use App\Livewire\Inscripciones\Propiedad\PropiedadIndex;
 use App\Http\Controllers\Sentencias\SentenciasController;
 use App\Http\Controllers\Certificaciones\CopiasController;
 use App\Livewire\Certificaciones\ConsultasCertificaciones;
+use App\Livewire\Certificaciones\CertificadoPropiedadIndex;
 use App\Http\Controllers\Cancelaciones\CancelacionController;
 use App\Livewire\Inscripciones\Propiedad\PropiedadInscripcion;
 use App\Http\Controllers\InscripcionesPropiedad\TraslativoController;
 use App\Http\Controllers\Certificaciones\CertificadoGravamenController;
 use App\Http\Controllers\Certificaciones\CertificadoPropiedadController;
-use App\Livewire\Certificaciones\CertificadoPropiedad;
-use App\Livewire\Certificaciones\CertificadoPropiedadIndex;
-use App\Livewire\Inscripciones\ConsultarInscripcion;
 
 /*
 |--------------------------------------------------------------------------
@@ -68,6 +69,8 @@ Route::group(['middleware' => ['auth', 'esta.activo']], function(){
     Route::get('permisos', Permisos::class)->middleware('permission:Lista de permisos')->name('permisos');
 
     Route::get('usuarios', Usuarios::class)->middleware('permission:Lista de usuarios')->name('usuarios');
+
+    Route::get('propiedades', Propiedades::class)->middleware('permission:Lista de propiedades')->name('propiedades');
 
     Route::get('distritos', Distritos::class)->middleware('permission:Lista de distritos')->name('distritos');
 
