@@ -52,12 +52,11 @@
                 <x-table.heading sortable wire:click="sortBy('seccion')" :direction="$sort === 'seccion' ? $direction : null" >Sección</x-table.heading>
                 <x-table.heading>Solicitante</x-table.heading>
                 <x-table.heading >Número de páginas</x-table.heading>
-                @if (auth()->user()->hasRole(['Supervisor certificaciones','Administrador']))
+                @if (auth()->user()->hasRole(['Supervisor certificaciones', 'Administrador', 'Supervisor uruapan']))
                     <x-table.heading >Folio de carpeta</x-table.heading>
                     <x-table.heading sortable wire:click="sortBy('usuario_asignado')" :direction="$sort === 'usuario_asignado' ? $direction : null" >Asignado a</x-table.heading>
                 @endif
-                @if (!auth()->user()->hasRole(['Certificador', 'Supervisor certificaciones']))
-                    <x-table.heading >Fecha de firma</x-table.heading>
+                @if (auth()->user()->hasRole('Administrador'))
                     <x-table.heading >Reimpreso en</x-table.heading>
                 @endif
                 <x-table.heading sortable wire:click="sortBy('fecha_entrega')" :direction="$sort === 'fecha_entrega' ? $direction : null">Fecha de entrega</x-table.heading>
@@ -148,7 +147,7 @@
 
                         </x-table.cell>
 
-                        @if (!auth()->user()->hasRole(['Supervisor certificaciones','Administrador']))
+                        @if (auth()->user()->hasRole(['Supervisor certificaciones', 'Administrador', 'Supervisor uruapan']))
 
                             <x-table.cell>
 
@@ -168,15 +167,7 @@
 
                         @endif
 
-                        @if (!auth()->user()->hasRole(['Certificador', 'Supervisor certificaciones']))
-
-                            <x-table.cell>
-
-                                <span class="lg:hidden absolute top-0 left-0 bg-blue-300 px-2 py-1 text-xs text-white font-bold uppercase rounded-br-xl">Fecha de firma</span>
-
-                                {{ optional($copia->certificacion->firma)->format('d-m-Y H:i:s') ?? 'N/A' }}
-
-                            </x-table.cell>
+                        @if (auth()->user()->hasRole('Administrador'))
 
                             <x-table.cell>
 
