@@ -804,7 +804,7 @@ class Elaboracion extends Component
     public function revisarInscripcionPropiedad(){
 
         if(
-            in_array($this->movimientoRegistral->inscripcionPropiedad->servicio, ['D114', 'D113', 'D116', 'D115']) &&
+            in_array($this->movimientoRegistral->inscripcionPropiedad->servicio, ['D114', 'D113', 'D116', 'D115', 'D731']) &&
             $this->movimientoRegistral->tomo == null &&
             $this->movimientoRegistral->registro == null &&
             $this->movimientoRegistral->numero_propiedad == null
