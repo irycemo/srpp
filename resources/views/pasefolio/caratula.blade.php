@@ -165,7 +165,7 @@
                 </div>
 
                 <div style="text-align: right">
-                    <p style="margin:0"><strong>DISTRITO:</strong> {{ $gravamen->movimientoRegistral->distrito}}</p>
+                    <p style="margin:0"><strong>DISTRITO:</strong> {{ $distrito}}</p>
                 </div>
 
                 <p class="parrafo">
