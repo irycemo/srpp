@@ -634,7 +634,13 @@ class Elaboracion extends Component
             ]
         );
 
-        if($this->movimientoRegistral->inscripcionPropiedad->numero)
+        if($this->movimientoRegistral->inscripcionPropiedad->numero_inmuebles == $this->movimientoRegistral->folioReal->antecedentes->count()){
+
+            $this->dispatch('mostrarMensaje', ['warning', "No puede agregar mas antecedentes a fusionar."]);
+
+            return;
+
+        }
 
         $antecedente = Antecedente::where('tomo_antecedente', $this->tomo)
                                     ->where('registro_antecedente', $this->registro)
