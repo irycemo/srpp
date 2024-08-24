@@ -45,6 +45,7 @@ class InscripcionesPropiedadService{
         }
 
         return $array +  [
+            'numero_inmuebles' => $request['servicio'],
             'servicio' => $request['servicio'],
             'movimiento_registral_id' => $request['movimiento_registral'],
         ];

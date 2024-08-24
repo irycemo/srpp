@@ -201,7 +201,13 @@ class Elaboracion extends Component
 
         $this->validate();
 
-        if(!$this->movimientoRegistral->folio_real){
+        if
+        (
+            !$this->movimientoRegistral->folio_real&&
+            $this->movimientoRegistral->tomo &&
+            $this->movimientoRegistral->registro &&
+            $this->movimientoRegistral->numero_propiedad
+        ){
 
             $folioRealExistente = FolioReal::where('tomo_antecedente', $this->movimientoRegistral->tomo)
                                             ->where('registro_antecedente', $this->movimientoRegistral->registro)
@@ -627,6 +633,8 @@ class Elaboracion extends Component
                 'numero_propiedad' => 'required'
             ]
         );
+
+        if($this->movimientoRegistral->inscripcionPropiedad->numero)
 
         $antecedente = Antecedente::where('tomo_antecedente', $this->tomo)
                                     ->where('registro_antecedente', $this->registro)
