@@ -538,6 +538,7 @@ class Elaboracion extends Component
                 $this->procesarMovimientos();
 
                 if($this->movimientoRegistral->inscripcionPropiedad){
+
                     $this->revisarInscripcionPropiedad();
 
                 }elseif($this->movimientoRegistral->cancelacion){
@@ -801,6 +802,7 @@ class Elaboracion extends Component
 
     }
 
+
     public function revisarInscripcionPropiedad(){
 
         if(
@@ -811,6 +813,8 @@ class Elaboracion extends Component
         ){
 
             $this->movimientoRegistral->update(['estado' => 'concluido']);
+
+            (new SistemaTramitesService())->finaliarTramite($this->modelo_editar->año, $this->modelo_editar->tramite, $this->modelo_editar->usuario, 'concluido');
 
         }
 
