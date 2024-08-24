@@ -164,13 +164,67 @@
                     <P style="margin: 0">DIRECCIÓN DEL REGISTRO PÚBLICO  DE LA PROPIEDAD</P>
                 </div>
 
+                <div style="text-align: right">
+                    <p style="margin:0"><strong>DISTRITO:</strong> {{ $gravamen->movimientoRegistral->distrito}}</p>
+                </div>
+
                 <p class="parrafo">
                     EL DIRECTOR DEL REGISTRO PÚBLICO DE LA PROPIEDAD <strong>{{ $director }}</strong>, AUTORIZA EL PRESENTE FOLIO REAL PARA LOS ASIENTOS RELATIVOS AL INMUEBLE QUE ACONTINUACIÓN SE DESCRIBE:
                 </p>
 
                 <p style="text-align: center"><strong>FOLIO REAL:</strong> {{ $folioReal->folio }}</p>
 
-                <p style="text-align: center"><strong>SECCIÓN:</strong> {{ $folioReal->seccion_antecedente }}; <strong>DISTRITO:</strong> {{ $distrito}}; <strong>TOMO:</strong> {{ $folioReal->tomo_antecedente }}, <strong>REGISTRO:</strong> {{ $folioReal->registro_antecedente }}, <strong>NÚMERO DE PROPIEDAD:</strong> {{ $folioReal->numero_propiedad_antecedente }}</p>
+                @if($folioReal->antecedentes->count())
+
+                    <p class="separador">Antecedentes fusionados</p>
+
+                    <table>
+
+                        <thead>
+
+                            <tr>
+                                <th style="padding-right: 10px;">Tomo</th>
+                                <th style="padding-right: 10px;">Registro</th>
+                                <th style="padding-right: 10px;">Numero de propiedad</th>
+                                <th style="padding-right: 10px;">Distrito</th>
+                                <th style="padding-right: 10px;">Sección</th>
+                            </tr>
+
+                        </thead>
+
+                        <tbody>
+
+                            @foreach ($folioReal->antecedentes as $antecedente)
+
+                                <tr>
+                                    <td style="padding-right: 40px;">
+                                        {{ $antecedente->tomo_antecedente }}
+                                    </td>
+                                    <td style="padding-right: 40px;">
+                                        {{ $antecedente->registro_antecedente }}
+                                    </td>
+                                    <td style="padding-right: 40px;">
+                                        {{ $antecedente->numero_propiedad_antecedente }}
+                                    </td>
+                                    <td style="padding-right: 40px;">
+                                        {{ $antecedente->distrito_antecedente }}
+                                    </td>
+                                    <td style="padding-right: 40px;">
+                                        {{ $antecedente->seccion_antecedente }}
+                                    </td>
+                                </tr>
+
+                            @endforeach
+
+                        </tbody>
+
+                    </table>
+
+                @else
+
+                    <p style="text-align: center"><strong>SECCIÓN:</strong> {{ $folioReal->seccion_antecedente }}; <strong>DISTRITO:</strong> {{ $distrito}}; <strong>TOMO:</strong> {{ $folioReal->tomo_antecedente }}, <strong>REGISTRO:</strong> {{ $folioReal->registro_antecedente }}, <strong>NÚMERO DE PROPIEDAD:</strong> {{ $folioReal->numero_propiedad_antecedente }}</p>
+
+                @endif
 
                 <p class="separador">UBICACIÓN DEL INMUEBLE</p>
 
@@ -414,54 +468,6 @@
                     </tbody>
 
                 </table>
-
-                @if($folioReal->antecedentes->count())
-
-                    <p class="separador">Antecedentes fusionados</p>
-
-                    <table>
-
-                        <thead>
-
-                            <tr>
-                                <th style="padding-right: 10px;">Tomo</th>
-                                <th style="padding-right: 10px;">Registro</th>
-                                <th style="padding-right: 10px;">Numero de propiedad</th>
-                                <th style="padding-right: 10px;">Distrito</th>
-                                <th style="padding-right: 10px;">Sección</th>
-                            </tr>
-
-                        </thead>
-
-                        <tbody>
-
-                            @foreach ($folioReal->antecedentes as $antecedente)
-
-                                <tr>
-                                    <td style="padding-right: 40px;">
-                                        {{ $antecedente->tomo_antecedente }}
-                                    </td>
-                                    <td style="padding-right: 40px;">
-                                        {{ $antecedente->registro_antecedente }}
-                                    </td>
-                                    <td style="padding-right: 40px;">
-                                        {{ $antecedente->numero_propiedad_antecedente }}
-                                    </td>
-                                    <td style="padding-right: 40px;">
-                                        {{ $antecedente->distrito_antecedente }}
-                                    </td>
-                                    <td style="padding-right: 40px;">
-                                        {{ $antecedente->seccion_antecedente }}
-                                    </td>
-                                </tr>
-
-                            @endforeach
-
-                        </tbody>
-
-                    </table>
-
-                @endif
 
                 @if($folioReal->movimientosRegistrales->count() > 1)
 
