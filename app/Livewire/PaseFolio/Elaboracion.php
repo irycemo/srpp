@@ -230,7 +230,11 @@ class Elaboracion extends Component
 
                     $this->movimientoRegistral->refresh();
 
-                    if(!in_array($this->movimientoRegistral->inscripcionPropiedad?->servicio, ['D114', 'D113', 'D116', 'D115'])){
+                    if(
+                        $this->movimientoRegistral->tomo &&
+                        $this->movimientoRegistral->registro &&
+                        $this->movimientoRegistral->numero_propiedad
+                    ){
 
                         $gravamenes = DB::connection('mysql2')->select("call spTractoGravamenes(" .
                                                                             $this->movimientoRegistral->getRawOriginal('distrito') .
