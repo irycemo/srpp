@@ -177,11 +177,11 @@
                 </div>
 
                 <p class="titulo">
-                    certificado único de propiedad
+                    certificado de única propiedad
                 </p>
 
                 <p class="parrafo">
-                    EL DIRECTOR DEL REGISTRO PÚBLICO DE LA PROPIEDAD @if($distrito == '02 Uruapan' ) <strong>L.A. SANDRO MEDINA MORALES</strong> @else <strong>{{ $director }}</strong>, @endif certifica que habiendose examinado los indices alfabeticos correspondientes al distrito de {{ $distrito}} no se encontro constancia de que se registre a nombre de: <strong>{{ $movimientoRegistral->solicitante }}</strong> como único propietario de la siguiente propiedad.
+                    EL DIRECTOR DEL REGISTRO PÚBLICO DE LA PROPIEDAD @if($distrito == '02 Uruapan' ) <strong>L.A. SANDRO MEDINA MORALES</strong> @else <strong>{{ $director }}</strong>, @endif certifica que habiendose examinado el acervo registral correspondientes al distrito de {{ $distrito}}, la propiedad que acontinuación se describe es la única que se registra a nombre de: <strong>{{ $persona }}</strong> como único propietario de la siguiente propiedad.
                 </p>
 
                 <p style="text-align: center"><strong>FOLIO REAL:</strong> {{ $movimientoRegistral->folioReal->folio }}</p>
@@ -387,7 +387,7 @@
 
                 </p>
 
-                <p class="separador">propietarios</p>
+                {{-- <p class="separador">propietarios</p>
 
                 <table>
 
@@ -425,7 +425,7 @@
 
                     </tbody>
 
-                </table>
+                </table> --}}
 
                 <p class="parrafo">
                     A SOLICITUD DE: <strong>{{ $movimientoRegistral->solicitante }}</strong> se expide EL PRESENTE CERTIFICADO EN LA CIUDAD DE @if($predio->folioReal->distrito== '02 Uruapan' ) URUAPAN, @else MORELIA, @endif MICHOACÁN, A LAS

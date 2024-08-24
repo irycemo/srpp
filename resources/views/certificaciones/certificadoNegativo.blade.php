@@ -180,13 +180,13 @@
                 </p>
 
                 <p class="parrafo">
-                    EL DIRECTOR DEL REGISTRO PÚBLICO DE LA PROPIEDAD @if($distrito == '02 Uruapan' ) <strong>L.A. SANDRO MEDINA MORALES</strong> @else <strong>{{ $director }}</strong>, @endif certifica que habiendose examinado los indices alfabeticos correspondientes al distrito de {{ $distrito}} no se encontro registro alguno a nombre de: <strong>{{ $persona }}</strong>.
+                    EL DIRECTOR DEL REGISTRO PÚBLICO DE LA PROPIEDAD @if($distrito == '02 Uruapan' ) <strong>L.A. SANDRO MEDINA MORALES</strong> @else <strong>{{ $director }}</strong>, @endif certifica que habiendose examinado el acervo regsitral correspondiente al distrito  {{ $distrito}} no se encontro registrado a nombre de: <strong>{{ $persona }}</strong>.
                 </p>
 
                 @if($movimientoRegistral->certificacion->observaciones_certificado)
 
                     <p class="parrafo">
-                        {{ $movimientoRegistral->certificacion->observaciones_certificado }}
+                        <strong>Descripción de la propiedad:</strong> {{ $movimientoRegistral->certificacion->observaciones_certificado }}
                     </p>
 
                 @endif
