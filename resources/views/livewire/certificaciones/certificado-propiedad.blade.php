@@ -364,18 +364,22 @@
 
                 @include('livewire.certificaciones.comun.propietario')
 
-                <button
-                    wire:click="buscarProppietariosEnFolio"
-                    wire:loading.attr="disabled"
-                    wire:target="buscarProppietariosEnFolio"
-                    type="button"
-                    class="mt-3 bg-blue-400 hover:shadow-lg text-white mx-auto font-bold px-4 py-2 rounded text-xs hover:bg-blue-700 focus:outline-none flex items-center justify-center focus:outline-blue-400 focus:outline-offset-2">
+                @if($certificacion->movimientoRegistral->folioReal)
 
-                    <img wire:loading wire:target="buscarProppietariosEnFolio" class="mx-auto h-4 mr-1" src="{{ asset('storage/img/loading3.svg') }}" alt="Loading">
+                    <button
+                        wire:click="buscarProppietariosEnFolio"
+                        wire:loading.attr="disabled"
+                        wire:target="buscarProppietariosEnFolio"
+                        type="button"
+                        class="mt-3 bg-blue-400 hover:shadow-lg text-white mx-auto font-bold px-4 py-2 rounded text-xs hover:bg-blue-700 focus:outline-none flex items-center justify-center focus:outline-blue-400 focus:outline-offset-2">
 
-                    Buscar
+                        <img wire:loading wire:target="buscarProppietariosEnFolio" class="mx-auto h-4 mr-1" src="{{ asset('storage/img/loading3.svg') }}" alt="Loading">
 
-                </button>
+                        Buscar
+
+                    </button>
+
+                @endif
 
                 </div>
 
@@ -835,9 +839,9 @@
                 </x-button-blue>
 
                 <x-button-red
-                    wire:click="resetearTodo"
+                    wire:click="$toggle('modalRechazar')"
                     wire:loading.attr="disabled"
-                    wire:target="resetearTodo"
+                    wire:target="$toggle('modalRechazar')"
                     type="button">
                     <span>Cerrar</span>
                 </x-button-red>

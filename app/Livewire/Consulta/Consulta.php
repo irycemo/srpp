@@ -99,7 +99,7 @@ class Consulta extends Component
 
     public function buscar(){
 
-        $this->reset(['folioReal', 'folios_reales']);
+        $this->reset(['folioReal']);
 
         $this->folios_reales = FolioReal::with('predio')
                             ->where('folio', $this->folio_real)
@@ -121,10 +121,10 @@ class Consulta extends Component
 
         if($this->nombre_propietario || $this->ap_paterno || $this->ap_materno || $this->razon_social){
 
-            $personas = Persona::when($this->nombre_propietario, fn($q, $nombre_propietario) => $q->where('nombre', $nombre_propietario))
-                                ->when($this->ap_paterno, fn($q, $ap_paterno) => $q->where('ap_paterno', $ap_paterno))
-                                ->when($this->ap_materno, fn($q, $ap_materno) => $q->where('ap_materno', $ap_materno))
-                                ->when($this->razon_social, fn($q, $razon_social) => $q->where('razon_social', $razon_social))
+            $personas = Persona::when($this->nombre_propietario, fn($q, $nombre_propietario) => $q->where('nombre', 'like' , '%' . $nombre_propietario . '%'))
+                                ->when($this->ap_paterno, fn($q, $ap_paterno) => $q->where('ap_paterno', 'like' , '%' . $ap_paterno . '%'))
+                                ->when($this->ap_materno, fn($q, $ap_materno) => $q->where('ap_materno', 'like' , '%' . $ap_materno . '%'))
+                                ->when($this->razon_social, fn($q, $razon_social) => $q->where('razon_social', 'like' , '%' . $razon_social . '%'))
                                 ->pluck('id');
 
             $predios = Actor::whereIn('persona_id', $personas)->where('actorable_type', 'App\Models\Predio')->where('tipo_actor', 'propietario')->pluck('actorable_id');
