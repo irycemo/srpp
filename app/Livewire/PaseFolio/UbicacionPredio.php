@@ -63,7 +63,7 @@ class UbicacionPredio extends Component
             'numero_interior' => 'nullable',
             'lote' => 'nullable',
             'manzana_ubicacion' => 'nullable',
-            'codigo_postal' => 'required|numeric',
+            'codigo_postal' => 'nullable|numeric',
             'lote_fraccionador' => 'nullable',
             'manzana_fraccionador' => 'nullable',
             'etapa_fraccionador' => 'nullable',

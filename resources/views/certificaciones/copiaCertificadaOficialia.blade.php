@@ -162,7 +162,7 @@
                 </p>
 
                 <p class="borde">
-                    @if($distrito == '02 URUAPAN' )L.A. SANDRO MEDINA MORALES @else {{ $director }} @endif
+                    @if($distrito == '02 URUAPAN' )Lic. SANDRO MEDINA MORALES @else {{ $director }} @endif
                 </p>
 
             </div>

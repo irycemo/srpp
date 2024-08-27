@@ -203,7 +203,7 @@
                     </p>
 
                     @if($distrito == '02 Uruapan' )
-                        <p class="borde">L.A. SANDRO MEDINA MORALES </p>
+                        <p class="borde">Lic. SANDRO MEDINA MORALES </p>
                         <p style="margin:0;">coordinador regional 4 purepecha</p>
                     @else
                         <p class="borde" style="margin:0;">{{ $director }}</p>

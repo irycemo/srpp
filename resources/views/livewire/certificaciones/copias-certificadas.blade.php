@@ -52,7 +52,7 @@
                 <x-table.heading sortable wire:click="sortBy('seccion')" :direction="$sort === 'seccion' ? $direction : null" >Sección</x-table.heading>
                 <x-table.heading>Solicitante</x-table.heading>
                 <x-table.heading >Número de páginas</x-table.heading>
-                @if (auth()->user()->hasRole(['Supervisor certificaciones', 'Administrador', 'Supervisor uruapan']))
+                @if (auth()->user()->hasRole(['Supervisor certificaciones', 'Administrador', 'Supervisor uruapan', 'Jefe de departamento']))
                     <x-table.heading >Folio de carpeta</x-table.heading>
                     <x-table.heading sortable wire:click="sortBy('usuario_asignado')" :direction="$sort === 'usuario_asignado' ? $direction : null" >Asignado a</x-table.heading>
                 @endif
@@ -145,7 +145,7 @@
 
                         </x-table.cell>
 
-                        @if (auth()->user()->hasRole(['Supervisor certificaciones', 'Administrador', 'Supervisor uruapan']))
+                        @if (auth()->user()->hasRole(['Supervisor certificaciones', 'Administrador', 'Supervisor uruapan', 'Jefe de departamento']))
 
                             <x-table.cell>
 
