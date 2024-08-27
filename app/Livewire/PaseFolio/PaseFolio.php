@@ -158,6 +158,8 @@ class PaseFolio extends Component
 
         } catch (Exception $ex) {
 
+            Log::error("Error al subir archivo de folio real por el usuario: (id: " . auth()->user()->id . ") " . auth()->user()->name . ". " . $ex);
+
             $this->dispatch('mostrarMensaje', ['error', $ex->getMessage()]);
 
         }catch (\Throwable $th) {

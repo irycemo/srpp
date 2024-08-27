@@ -78,7 +78,7 @@ class ConsultarInscripcion extends Component
 
             DB::transaction(function (){
 
-                $this->certificacion->update(['usuario_asignado' => $this->usuario]);
+                $this->movimientoRegistral->update(['usuario_asignado' => $this->usuario]);
 
                 $this->dispatch('mostrarMensaje', ['success', "El trámite se reasigno con éxito."]);
 
@@ -115,31 +115,6 @@ class ConsultarInscripcion extends Component
 
             $this->dispatch('mostrarMensaje', ['error', "El trámite no es una inscripción."]);
 
-        }
-
-    }
-
-    public function reactivarTramtie(MovimientoRegistral $movimientoRegistral){
-
-        try {
-
-            if($movimientoRegistral->certificacion->folio_carpeta_copias){
-
-                $movimientoRegistral->update(['estado' => 'elaborado']);
-
-            }else{
-
-                $movimientoRegistral->update(['estado' => 'nuevo']);
-
-            }
-
-            $this->certificacion = $movimientoRegistral;
-
-            $this->dispatch('mostrarMensaje', ['success', "El trámite se reactivó con éxito."]);
-
-        } catch (\Throwable $th) {
-            Log::error("Error al reactivar trámite por el usuario: (id: " . auth()->user()->id . ") " . auth()->user()->name . ". " . $th);
-            $this->dispatch('mostrarMensaje', ['error', "Ha ocurrido un error."]);
         }
 
     }
