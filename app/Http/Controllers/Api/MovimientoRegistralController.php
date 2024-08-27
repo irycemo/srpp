@@ -25,7 +25,8 @@ class MovimientoRegistralController extends Controller
 
             return response()->json([
                 'result' => 'success',
-                'data' => $data
+                'data' => $data,
+                'usuario_asignado' => $data?->asignadoA->name
             ], 200);
 
         } catch (MovimientoRegistralServiceException $th) {
