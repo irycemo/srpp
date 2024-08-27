@@ -6,15 +6,12 @@ use Exception;
 use App\Models\File;
 use App\Models\User;
 use App\Models\Actor;
-use App\Models\Deudor;
 use App\Models\Persona;
 use Livewire\Component;
-use App\Models\Acreedor;
 use App\Models\Gravamen;
 use App\Models\FolioReal;
 use Livewire\WithFileUploads;
 use App\Constantes\Constantes;
-use Barryvdh\DomPDF\Facade\Pdf;
 use Illuminate\Validation\Rule;
 use Illuminate\Support\Facades\DB;
 use App\Models\MovimientoRegistral;
@@ -878,14 +875,49 @@ class GravamenInscripcion extends Component
 
             DB::transaction(function (){
 
-                $pdf = $this->documento->store('/', 'documento_entrada');
+                if(env('LOCAL') == "1"){
 
-                File::create([
-                    'fileable_id' => $this->gravamen->movimientoRegistral->id,
-                    'fileable_type' => 'App\Models\MovimientoRegistral',
-                    'descripcion' => 'documento_entrada',
-                    'url' => $pdf
-                ]);
+                    $pdf = $this->documento->store('srpp/documento_entrada', 's3');
+
+                    File::create([
+                        'fileable_id' => $this->gravamen->movimientoRegistral->id,
+                        'fileable_type' => 'App\Models\MovimientoRegistral',
+                        'descripcion' => 'documento_entrada_s3',
+                        'url' => $pdf
+                    ]);
+
+                }elseif(env('LOCAL') == "0"){
+
+                    $pdf = $this->documento->store('/', 'documento_entrada');
+
+                    File::create([
+                        'fileable_id' => $this->gravamen->movimientoRegistral->id,
+                        'fileable_type' => 'App\Models\MovimientoRegistral',
+                        'descripcion' => 'documento_entrada',
+                        'url' => $pdf
+                    ]);
+
+                }elseif(env('LOCAL') == "2"){
+
+                    $pdf = $this->documento->store('srpp/documento_entrada', 's3');
+
+                    File::create([
+                        'fileable_id' => $this->gravamen->movimientoRegistral->id,
+                        'fileable_type' => 'App\Models\MovimientoRegistral',
+                        'descripcion' => 'documento_entrada_s3',
+                        'url' => $pdf
+                    ]);
+
+                    $pdf = $this->documento->store('/', 'documento_entrada');
+
+                    File::create([
+                        'fileable_id' => $this->gravamen->movimientoRegistral->id,
+                        'fileable_type' => 'App\Models\MovimientoRegistral',
+                        'descripcion' => 'documento_entrada',
+                        'url' => $pdf
+                    ]);
+
+                }
 
                 $this->modalDocumento = false;
 

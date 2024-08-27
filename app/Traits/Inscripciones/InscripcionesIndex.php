@@ -146,14 +146,49 @@ trait InscripcionesIndex{
 
             DB::transaction(function (){
 
-                $pdf = $this->documento->store('/', 'caratulas');
+                if(env('LOCAL') == "0"){
 
-                File::create([
-                    'fileable_id' => $this->modelo_editar->id,
-                    'fileable_type' => 'App\Models\MovimientoRegistral',
-                    'descripcion' => 'caratula',
-                    'url' => $pdf
-                ]);
+                    $pdf = $this->documento->store('srpp/caratulas', 's3');
+
+                    File::create([
+                        'fileable_id' => $this->modelo_editar->id,
+                        'fileable_type' => 'App\Models\MovimientoRegistral',
+                        'descripcion' => 'caratula',
+                        'url' => $pdf
+                    ]);
+
+                }elseif(env('LOCAL') == "1"){
+
+                    $pdf = $this->documento->store('/', 'caratulas');
+
+                    File::create([
+                        'fileable_id' => $this->modelo_editar->id,
+                        'fileable_type' => 'App\Models\MovimientoRegistral',
+                        'descripcion' => 'caratula_s3',
+                        'url' => $pdf
+                    ]);
+
+                }elseif(env('LOCAL') == "2"){
+
+                    $pdf = $this->documento->store('srpp/caratulas', 's3');
+
+                    File::create([
+                        'fileable_id' => $this->modelo_editar->id,
+                        'fileable_type' => 'App\Models\MovimientoRegistral',
+                        'descripcion' => 'caratula_s3',
+                        'url' => $pdf
+                    ]);
+
+                    $pdf = $this->documento->store('/', 'caratulas');
+
+                    File::create([
+                        'fileable_id' => $this->modelo_editar->id,
+                        'fileable_type' => 'App\Models\MovimientoRegistral',
+                        'descripcion' => 'caratula',
+                        'url' => $pdf
+                    ]);
+
+                }
 
                 $this->modelo_editar->actualizado_por = auth()->user()->id;
 

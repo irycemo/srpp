@@ -1078,14 +1078,49 @@ class Sentencia extends Component
 
             DB::transaction(function (){
 
-                $pdf = $this->documento->store('/', 'documento_entrada');
+                if(env('LOCAL') == "1"){
 
-                File::create([
-                    'fileable_id' => $this->sentencia->movimientoRegistral->id,
-                    'fileable_type' => 'App\Models\MovimientoRegistral',
-                    'descripcion' => 'documento_entrada',
-                    'url' => $pdf
-                ]);
+                    $pdf = $this->documento->store('srpp/documento_entrada', 's3');
+
+                    File::create([
+                        'fileable_id' => $this->sentencia->movimientoRegistral->id,
+                        'fileable_type' => 'App\Models\MovimientoRegistral',
+                        'descripcion' => 'documento_entrada_s3',
+                        'url' => $pdf
+                    ]);
+
+                }elseif(env('LOCAL') == "0"){
+
+                    $pdf = $this->documento->store('/', 'documento_entrada');
+
+                    File::create([
+                        'fileable_id' => $this->sentencia->movimientoRegistral->id,
+                        'fileable_type' => 'App\Models\MovimientoRegistral',
+                        'descripcion' => 'documento_entrada',
+                        'url' => $pdf
+                    ]);
+
+                }elseif(env('LOCAL') == "2"){
+
+                    $pdf = $this->documento->store('srpp/documento_entrada', 's3');
+
+                    File::create([
+                        'fileable_id' => $this->sentencia->movimientoRegistral->id,
+                        'fileable_type' => 'App\Models\MovimientoRegistral',
+                        'descripcion' => 'documento_entrada_s3',
+                        'url' => $pdf
+                    ]);
+
+                    $pdf = $this->documento->store('/', 'documento_entrada');
+
+                    File::create([
+                        'fileable_id' => $this->sentencia->movimientoRegistral->id,
+                        'fileable_type' => 'App\Models\MovimientoRegistral',
+                        'descripcion' => 'documento_entrada',
+                        'url' => $pdf
+                    ]);
+
+                }
 
                 $this->modalDocumento = false;
 

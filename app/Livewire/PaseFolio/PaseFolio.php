@@ -100,14 +100,49 @@ class PaseFolio extends Component
 
             DB::transaction(function (){
 
-                $pdf = $this->documento->store('/', 'caratulas');
+                if(env('LOCAL') == "0"){
 
-                File::create([
-                    'fileable_id' => $this->modelo_editar->folioReal->id,
-                    'fileable_type' => 'App\Models\FolioReal',
-                    'descripcion' => 'caratula',
-                    'url' => $pdf
-                ]);
+                    $pdf = $this->documento->store('srpp/caratulas', 's3');
+
+                    File::create([
+                        'fileable_id' => $this->modelo_editar->folioReal->id,
+                        'fileable_type' => 'App\Models\FolioReal',
+                        'descripcion' => 'caratula',
+                        'url' => $pdf
+                    ]);
+
+                }elseif(env('LOCAL') == "1"){
+
+                    $pdf = $this->documento->store('/', 'caratulas');
+
+                    File::create([
+                        'fileable_id' => $this->modelo_editar->folioReal->id,
+                        'fileable_type' => 'App\Models\FolioReal',
+                        'descripcion' => 'caratula_s3',
+                        'url' => $pdf
+                    ]);
+
+                }elseif(env('LOCAL') == "2"){
+
+                    $pdf = $this->documento->store('srpp/caratulas', 's3');
+
+                    File::create([
+                        'fileable_id' => $this->modelo_editar->folioReal->id,
+                        'fileable_type' => 'App\Models\FolioReal',
+                        'descripcion' => 'caratula_s3',
+                        'url' => $pdf
+                    ]);
+
+                    $pdf = $this->documento->store('/', 'caratulas');
+
+                    File::create([
+                        'fileable_id' => $this->modelo_editar->folioReal->id,
+                        'fileable_type' => 'App\Models\FolioReal',
+                        'descripcion' => 'caratula',
+                        'url' => $pdf
+                    ]);
+
+                }
 
                 $this->modelo_editar->folioReal->update([
                     'estado' => 'activo'
@@ -235,11 +270,11 @@ class PaseFolio extends Component
                                                     ->orderBy($this->sort, $this->direction)
                                                     ->paginate($this->pagination);
 
-        }elseif(auth()->user()->hasRole(['Supervisor sentencias', 'Supervisor varios', 'Supervisor cancelación', 'Supervisor gravamen', 'Supervisor propiedad', 'Supervisor Copias', 'Supervisor uruapan', 'Supervisor certificaciones', 'Supervisor uruapan'])){
+        }elseif(auth()->user()->hasRole(['Supervisor sentencias', 'Supervisor varios', 'Supervisor cancelación', 'Supervisor gravamen', 'Supervisor propiedad', 'Supervisor uruapan', 'Supervisor certificaciones', 'Supervisor uruapan'])){
 
             $movimientos = MovimientoRegistral::with('actualizadoPor', 'folioReal', 'asignadoA')
                                                     ->where('folio', 1)
-                                                    ->whereIn('estado', ['elaborado', 'concluido', 'nuevo'])
+                                                    ->whereIn('estado', ['elaborado', 'concluido', 'nuevo', 'captura'])
                                                     ->whereHas('folioReal', function($q){
                                                         $q->whereIn('estado', ['nuevo', 'captura', 'elaborado', 'rechazado']);
                                                     })

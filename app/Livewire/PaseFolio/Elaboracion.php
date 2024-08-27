@@ -477,7 +477,7 @@ class Elaboracion extends Component
 
         if(!$this->propiedad->municipio){
 
-            $this->dispatch('mostrarMensaje', ['error', "El predio debe municipio."]);
+            $this->dispatch('mostrarMensaje', ['error', "El predio debe tener municipio."]);
 
             return;
 
@@ -485,7 +485,7 @@ class Elaboracion extends Component
 
         if(!$this->propiedad->tipo_asentamiento){
 
-            $this->dispatch('mostrarMensaje', ['error', "El predio debe tipo de asentamiento."]);
+            $this->dispatch('mostrarMensaje', ['error', "El predio debe tener tipo de asentamiento."]);
 
             return;
 
