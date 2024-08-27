@@ -241,7 +241,7 @@ class PaseFolio extends Component
                                                     ->where('folio', 1)
                                                     ->whereIn('estado', ['elaborado', 'concluido', 'nuevo'])
                                                     ->whereHas('folioReal', function($q){
-                                                        $q->where('estado', 'elaborado');
+                                                        $q->whereIn('estado', ['nuevo', 'captura', 'elaborado', 'rechazado']);
                                                     })
                                                     ->where(function($q){
                                                         $q->where('tramite', 'LIKE', '%' . $this->search . '%')

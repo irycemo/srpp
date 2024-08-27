@@ -519,7 +519,7 @@
 
             @if($predio->folioReal->distrito== '02 Uruapan' )
                 <p class="borde">Lic. SANDRO MEDINA MORALES </p>
-                <p style="margin:0;">coordinador regional 4 purepecha</p>
+                <p style="margin:0;">COORDINADOR REGIONAL 4 PURHÉPECHA (URUAPAN)</p>
             @else
                 <p class="borde" style="margin:0;">{{ $director }}</p>
                 <p style="margin:0;">Director del registro público de la propiedad</p>

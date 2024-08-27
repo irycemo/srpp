@@ -162,7 +162,12 @@
                 </p>
 
                 <p class="borde">
-                    @if($distrito == '02 URUAPAN' )Lic. SANDRO MEDINA MORALES @else {{ $director }} @endif
+                    @if($distrito == '02 URUAPAN' )
+
+                        <p class="borde">Lic. SANDRO MEDINA MORALES </p>
+                        <p style="margin:0;">COORDINADOR REGIONAL 4 PURHÉPECHA (URUAPAN)</p>
+
+                    @else {{ $director }} @endif
                 </p>
 
             </div>
