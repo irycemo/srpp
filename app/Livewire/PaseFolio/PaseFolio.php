@@ -193,7 +193,7 @@ class PaseFolio extends Component
 
         }elseif($this->modelo_editar->certificacion){
 
-            $role = 'Certificador Gravamen';
+            $role = 'Certificador gravamen';
 
         }
 
