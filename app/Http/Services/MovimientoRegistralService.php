@@ -242,7 +242,7 @@ class MovimientoRegistralService{
 
             $auxArray = [];
 
-            if($request['tomo'] && $request['registro'] && $request['numero_propiedad']){
+            if(isset($request['tomo']) && isset($request['registro']) && isset($request['numero_propiedad'])){
 
                 $mRegsitral = MovimientoRegistral::where('tomo', $request['tomo'])
                                                     ->where('registro', $request['registro'])
