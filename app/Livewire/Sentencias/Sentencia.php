@@ -192,18 +192,6 @@ class Sentencia extends Component
 
         $this->validate();
 
-        if($this->sentencia->movimientoRegistral->tipo_servicio == 'ordinario'){
-
-            if(!($this->calcularDiaElaboracion($this->sentencia) <= now())){
-
-                $this->dispatch('mostrarMensaje', ['error', "El trámite puede finalizarse apartir del " . $this->calcularDiaElaboracion($this->sentencia)->format('d-m-Y')]);
-
-                return;
-
-            }
-
-        }
-
         if(!$this->sentencia->movimientoRegistral->documentoEntrada()){
 
             $this->dispatch('mostrarMensaje', ['error', "Debe subir el documento de entrada."]);
@@ -880,26 +868,6 @@ class Sentencia extends Component
             $this->observaciones = $this->movimientoCancelar->gravamen->descripcion;
 
         }
-
-    }
-
-    public function calcularDiaElaboracion($modelo){
-
-        $diaElaboracion = $modelo->movimientoRegistral->fecha_pago;
-
-        for ($i=0; $i < 2; $i++) {
-
-            $diaElaboracion->addDays(1);
-
-            while($diaElaboracion->isWeekend()){
-
-                $diaElaboracion->addDay();
-
-            }
-
-        }
-
-        return $diaElaboracion;
 
     }
 

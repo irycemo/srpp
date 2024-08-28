@@ -114,18 +114,6 @@ class Cancelacion extends Component
 
         }
 
-        if($this->cancelacion->movimientoRegistral->tipo_servicio == 'ordinario'){
-
-            if(!($this->calcularDiaElaboracion($this->cancelacion) <= now())){
-
-                $this->dispatch('mostrarMensaje', ['error', "El trámite puede finalizarse apartir del " . $this->calcularDiaElaboracion($this->cancelacion)->format('d-m-Y')]);
-
-                return;
-
-            }
-
-        }
-
         if(!$this->cancelacion->movimientoRegistral->documentoEntrada()){
 
             $this->dispatch('mostrarMensaje', ['error', "Debe subir el documento de entrada."]);
@@ -218,26 +206,6 @@ class Cancelacion extends Component
             Log::error("Error al guardar cancelación de gravamen por el usuario: (id: " . auth()->user()->id . ") " . auth()->user()->name . ". " . $th);
             $this->dispatch('mostrarMensaje', ['error', "Ha ocurrido un error."]);
         }
-
-    }
-
-    public function calcularDiaElaboracion($modelo){
-
-        $diaElaboracion = $modelo->movimientoRegistral->fecha_pago;
-
-        for ($i=0; $i < 2; $i++) {
-
-            $diaElaboracion->addDays(1);
-
-            while($diaElaboracion->isWeekend()){
-
-                $diaElaboracion->addDay();
-
-            }
-
-        }
-
-        return $diaElaboracion;
 
     }
 

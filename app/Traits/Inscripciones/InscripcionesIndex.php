@@ -116,6 +116,18 @@ trait InscripcionesIndex{
 
     public function abrirModalFinalizar(MovimientoRegistral $modelo){
 
+        if($modelo->tipo_servicio == 'ordinario'){
+
+            if(!($this->calcularDiaElaboracion($modelo) <= now())){
+
+                $this->dispatch('mostrarMensaje', ['error', "El trámite puede finalizarse apartir del " . $this->calcularDiaElaboracion($modelo)->format('d-m-Y')]);
+
+                return;
+
+            }
+
+        }
+
         $this->reset('documento');
 
         $this->dispatch('removeFiles');
@@ -258,6 +270,26 @@ trait InscripcionesIndex{
     public function seleccionarMotivo($key){
 
         $this->motivo = $this->motivos[$key];
+
+    }
+
+    public function calcularDiaElaboracion($modelo){
+
+        $diaElaboracion = $modelo->fecha_pago;
+
+        for ($i=0; $i < 2; $i++) {
+
+            $diaElaboracion->addDays(1);
+
+            while($diaElaboracion->isWeekend()){
+
+                $diaElaboracion->addDay();
+
+            }
+
+        }
+
+        return $diaElaboracion;
 
     }
 

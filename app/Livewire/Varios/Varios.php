@@ -293,18 +293,6 @@ class Varios extends Component
 
         }
 
-        if($this->vario->movimientoRegistral->tipo_servicio == 'ordinario'){
-
-            if(!($this->calcularDiaElaboracion($this->vario) <= now())){
-
-                $this->dispatch('mostrarMensaje', ['error', "El trámite puede finalizarse apartir del " . $this->calcularDiaElaboracion($this->vario)->format('d-m-Y')]);
-
-                return;
-
-            }
-
-        }
-
         if(!$this->vario->movimientoRegistral->documentoEntrada()){
 
             $this->dispatch('mostrarMensaje', ['error', "Debe subir el documento de entrada."]);
@@ -554,26 +542,6 @@ class Varios extends Component
             $this->dispatch('mostrarMensaje', ['error', "Ha ocurrido un error."]);
 
         }
-
-    }
-
-    public function calcularDiaElaboracion($modelo){
-
-        $diaElaboracion = $modelo->movimientoRegistral->fecha_pago;
-
-        for ($i=0; $i < 2; $i++) {
-
-            $diaElaboracion->addDays(1);
-
-            while($diaElaboracion->isWeekend()){
-
-                $diaElaboracion->addDay();
-
-            }
-
-        }
-
-        return $diaElaboracion;
 
     }
 

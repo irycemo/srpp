@@ -144,6 +144,8 @@ class PaseFolio extends Component
 
                 }
 
+                $this->revisarMovimientosPrecalificacion();
+
                 $this->modelo_editar->folioReal->update([
                     'estado' => 'activo'
                 ]);
@@ -193,7 +195,7 @@ class PaseFolio extends Component
 
         }elseif($this->modelo_editar->certificacion){
 
-            $role = 'Certificador gravamen';
+            $role = 'Certificador Gravamen';
 
         }
 
@@ -245,6 +247,27 @@ class PaseFolio extends Component
             $this->dispatch('mostrarMensaje', ['error', "Ha ocurrido un error."]);
 
         }
+    }
+
+    public function revisarMovimientosPrecalificacion(){
+
+        $mRegsitrales = MovimientoRegistral::where('tomo', $this->modelo_editar->tomo)
+                                            ->where('registro', $this->modelo_editar->registro)
+                                            ->where('numero_propiedad', $this->modelo_editar->numero_propiedad)
+                                            ->where('distrito', $this->modelo_editar->getRawOriginal('distrito'))
+                                            ->whereNull('folio_real')
+                                            ->where('estado', 'precalificacion')
+                                            ->get();
+
+        foreach ($mRegsitrales as $movimiento) {
+
+            $movimiento->update([
+                'estado' => 'nuevo',
+                'folio_real' => $this->modelo_editar->folio_real
+            ]);
+
+        }
+
     }
 
     public function render()

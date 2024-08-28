@@ -240,10 +240,51 @@ class MovimientoRegistralService{
                 'procedencia' => $request['procedencia'] ?? null,
             ];
 
-            return $array + [
-                'folio_real' => $folioReal ? $folioReal->id : null,
-                'folio' => $this->calcularFolio($request),
-                'estado' => 'nuevo',
+            if($request['tomo'] && $request['registro'] && $request['numero_propiedad']){
+
+                $mRegsitral = MovimientoRegistral::where('tomo', $request['tomo'])
+                                                    ->where('registro', $request['registro'])
+                                                    ->where('numero_propiedad', $request['numero_propiedad'])
+                                                    ->where('distrito', $request['distrito'])
+                                                    ->whereNull('folio_real')
+                                                    ->first();
+
+                if($mRegsitral){
+
+                    $maxFolio = MovimientoRegistral::where('tomo', $request['tomo'])
+                                                    ->where('registro', $request['registro'])
+                                                    ->where('numero_propiedad', $request['numero_propiedad'])
+                                                    ->where('distrito', $request['distrito'])
+                                                    ->whereNull('folio_real')
+                                                    ->max('folio');
+
+                    $auxArray = $array + [
+                        'folio_real' => $folioReal ? $folioReal->id : null,
+                        'folio' => $maxFolio + 1,
+                        'estado' => 'precalificacion'
+                    ];
+
+                }else{
+
+                    $auxArray = $array + [
+                        'folio_real' => $folioReal ? $folioReal->id : null,
+                        'folio' => $this->calcularFolio($request),
+                        'estado' => 'nuevo',
+                    ];
+
+                }
+
+            }else{
+
+                $auxArray = $array + [
+                    'folio_real' => $folioReal ? $folioReal->id : null,
+                    'folio' => $this->calcularFolio($request),
+                    'estado' => 'nuevo',
+                ];
+
+            }
+
+            return $auxArray + $array + [
                 'usuario_asignado' => $this->obtenerUsuarioAsignado($documento_entrada, $folioReal, $request['servicio'], $request['distrito'], $request['solicitante'], $request['tipo_servicio'],$request['categoria_servicio'], false),
                 'usuario_supervisor' => $this->obtenerSupervisor($request['servicio'], $request['distrito']),
                 'solicitante' => $request['nombre_solicitante']

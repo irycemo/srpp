@@ -475,7 +475,7 @@
             @else
 
                 <p class="parrafo">
-                    <strong style="text-decoration: underline">no se encontro constancia de que reporte grvamen alguno.</strong>
+                    <strong style="text-decoration: underline">no se encontro constancia de que reporte gravamen alguno.</strong>
                 </p>
 
                 <br>
@@ -505,7 +505,7 @@
             @endif
 
             <p class="parrafo">
-                A SOLICITUD DE: <strong>{{ $movimientoRegistral->solicitante }}</strong> se expide EL PRESENTE CERTIFICADO EN LA CIUDAD DE @if($predio->folioReal->distrito== '02 Uruapan' ) URUAPAN, @else MORELIA, @endif MICHOACÁN, A LAS
+                A SOLICITUD DE: <strong>{{ $movimientoRegistral->solicitante }} </strong> se expide EL PRESENTE CERTIFICADO EN LA CIUDAD DE @if($predio->folioReal->distrito== '02 Uruapan' ) URUAPAN, @else MORELIA, @endif MICHOACÁN, A LAS
                 {{ Carbon\Carbon::now()->locale('es')->translatedFormat('H:i:s \d\e\l l d \d\e F \d\e\l Y'); }}.
             </p>
 

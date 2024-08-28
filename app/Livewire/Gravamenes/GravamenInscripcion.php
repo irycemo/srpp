@@ -616,18 +616,6 @@ class GravamenInscripcion extends Component
 
         }
 
-        if($this->gravamen->movimientoRegistral->tipo_servicio == 'ordinario'){
-
-            if(!($this->calcularDiaElaboracion($this->gravamen) <= now())){
-
-                $this->dispatch('mostrarMensaje', ['error', "El trámite puede finalizarse apartir del " . $this->calcularDiaElaboracion($this->gravamen)->format('d-m-Y')]);
-
-                return;
-
-            }
-
-        }
-
         if(!$this->gravamen->movimientoRegistral->documentoEntrada()){
 
             $this->dispatch('mostrarMensaje', ['error', "Debe subir el documento de entrada."]);
@@ -835,26 +823,6 @@ class GravamenInscripcion extends Component
                                 $q->where('name', 'Gravamen');
                             })
                             ->get();
-    }
-
-    public function calcularDiaElaboracion($modelo){
-
-        $diaElaboracion = $modelo->movimientoRegistral->fecha_pago;
-
-        for ($i=0; $i < 2; $i++) {
-
-            $diaElaboracion->addDays(1);
-
-            while($diaElaboracion->isWeekend()){
-
-                $diaElaboracion->addDay();
-
-            }
-
-        }
-
-        return $diaElaboracion;
-
     }
 
     public function abrirModalFinalizar(){

@@ -966,18 +966,6 @@ class PropiedadInscripcion extends Component
 
         $this->validate();
 
-        if($this->inscripcion->movimientoRegistral->tipo_servicio == 'ordinario'){
-
-            if(!($this->calcularDiaElaboracion($this->inscripcion) <= now())){
-
-                $this->dispatch('mostrarMensaje', ['error', "El trámite puede finalizarse apartir del " . $this->calcularDiaElaboracion($this->inscripcion)->format('d-m-Y')]);
-
-                return;
-
-            }
-
-        }
-
         if(!$this->inscripcion->movimientoRegistral->documentoEntrada()){
 
             $this->dispatch('mostrarMensaje', ['error', "Debe subir el documento de entrada."]);
@@ -1323,26 +1311,6 @@ class PropiedadInscripcion extends Component
         unset($this->medidas[$index]);
 
         $this->medidas = array_values($this->medidas);
-
-    }
-
-    public function calcularDiaElaboracion($modelo){
-
-        $diaElaboracion = $modelo->movimientoRegistral->fecha_pago;
-
-        for ($i=0; $i < 2; $i++) {
-
-            $diaElaboracion->addDays(1);
-
-            while($diaElaboracion->isWeekend()){
-
-                $diaElaboracion->addDay();
-
-            }
-
-        }
-
-        return $diaElaboracion;
 
     }
 
