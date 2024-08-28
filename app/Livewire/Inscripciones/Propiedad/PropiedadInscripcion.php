@@ -1125,7 +1125,7 @@ class PropiedadInscripcion extends Component
 
             });
 
-            $this->dispatch('imprimir_documento', ['inscripcion' => $this->inscripcion->id]);
+            return redirect()->route('propiedad');
 
         } catch (\Throwable $th) {
             Log::error("Error al finalizar inscripcion de propiedad por el usuario: (id: " . auth()->user()->id . ") " . auth()->user()->name . ". " . $th);

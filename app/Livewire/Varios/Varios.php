@@ -398,9 +398,7 @@ class Varios extends Component
 
             });
 
-            $this->dispatch('imprimir_documento', ['vario' => $this->vario->id]);
-
-            $this->modalContraseña = false;
+            return redirect()->route('varios');
 
         } catch (\Throwable $th) {
             Log::error("Error al finalizar inscripcion de propiedad por el usuario: (id: " . auth()->user()->id . ") " . auth()->user()->name . ". " . $th);

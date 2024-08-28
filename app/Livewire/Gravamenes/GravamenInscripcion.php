@@ -699,11 +699,7 @@ class GravamenInscripcion extends Component
 
             });
 
-            $this->dispatch('imprimir_documento', ['gravamen' => $this->gravamen->id]);
-
-            $this->modalContraseña = false;
-
-            /* $this->crearPdf(); */
+            return redirect()->route('gravamen');
 
         } catch (\Throwable $th) {
             Log::error("Error al finalizar inscripcion de propiedad por el usuario: (id: " . auth()->user()->id . ") " . auth()->user()->name . ". " . $th);

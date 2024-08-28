@@ -62,7 +62,7 @@ class GravamenIndex extends Component
                                                     ->when(auth()->user()->ubicacion != 'Regional 4', function($q){
                                                         $q->where('distrito', '!=', 2);
                                                     })
-                                                    ->where('estado', 'elaborado')
+                                                    ->where('estado', 'finalizado')
                                                     ->whereHas('gravamen', function($q){
                                                         $q->where('servicio', 'D150');
                                                     })

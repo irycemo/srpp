@@ -177,9 +177,7 @@ class Cancelacion extends Component
 
             });
 
-            $this->dispatch('imprimir_documento', ['cancelacion' => $this->cancelacion->id]);
-
-            $this->modalContraseña = false;
+            return redirect()->route('cancelacion');
 
         } catch (\Throwable $th) {
             Log::error("Error al finalizar inscripcion de propiedad por el usuario: (id: " . auth()->user()->id . ") " . auth()->user()->name . ". " . $th);

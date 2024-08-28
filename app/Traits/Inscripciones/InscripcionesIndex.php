@@ -13,6 +13,7 @@ trait InscripcionesIndex{
 
     public $modalFinalizar = false;
     public $modalRechazar = false;
+    public $modalConcluir = false;
     public $documento;
     public $observaciones;
     public $motivos;
@@ -26,7 +27,7 @@ trait InscripcionesIndex{
 
     public function elaborar(MovimientoRegistral $movimientoRegistral){
 
-        $movimientoAsignado = MovimientoRegistral::whereIn('estado', ['nuevo', 'captura'])
+        /* $movimientoAsignado = MovimientoRegistral::whereIn('estado', ['nuevo', 'captura'])
                                                         ->where('usuario_Asignado', auth()->id())
                                                         ->whereHas('folioReal', function($q){
                                                             $q->where('estado', 'activo');
@@ -40,7 +41,7 @@ trait InscripcionesIndex{
 
             return;
 
-        }
+        } */
 
         if($movimientoRegistral->folioReal->avisoPreventivo()){
 
@@ -108,21 +109,53 @@ trait InscripcionesIndex{
 
     }
 
-    public function reimprimir(MovimientoRegistral $movimientoRegistral){
+    public function imprimir(MovimientoRegistral $movimientoRegistral){
 
-        $this->dispatch('imprimir_documento', ['caratula' => $movimientoRegistral->inscripcionPropiedad->id]);
+        if($movimientoRegistral->inscripcionPropiedad){
+
+            $this->dispatch('imprimir_documento', ['caratula' => $movimientoRegistral->inscripcionPropiedad->id]);
+
+        }
+
+        if($movimientoRegistral->gravamen){
+
+            $this->dispatch('imprimir_documento', ['caratula' => $movimientoRegistral->gravamen->id]);
+
+        }
+
+        if($movimientoRegistral->vario){
+
+            $this->dispatch('imprimir_documento', ['caratula' => $movimientoRegistral->vario->id]);
+
+        }
+
+        if($movimientoRegistral->cancelacion){
+
+            $this->dispatch('imprimir_documento', ['caratula' => $movimientoRegistral->cancelacion->id]);
+
+        }
+
+        if($movimientoRegistral->sentencia){
+
+            $this->dispatch('imprimir_documento', ['caratula' => $movimientoRegistral->sentencia->id]);
+
+        }
 
     }
 
     public function abrirModalFinalizar(MovimientoRegistral $modelo){
 
-        if($modelo->tipo_servicio == 'ordinario'){
+        if($modelo->getRawOriginal('distrito') != 2){
 
-            if(!($this->calcularDiaElaboracion($modelo) <= now())){
+            if($modelo->tipo_servicio == 'ordinario'){
 
-                $this->dispatch('mostrarMensaje', ['error', "El trámite puede finalizarse apartir del " . $this->calcularDiaElaboracion($modelo)->format('d-m-Y')]);
+                if(!($this->calcularDiaElaboracion($modelo) <= now())){
 
-                return;
+                    $this->dispatch('mostrarMensaje', ['error', "El trámite puede finalizarse apartir del " . $this->calcularDiaElaboracion($modelo)->format('d-m-Y')]);
+
+                    return;
+
+                }
 
             }
 
@@ -147,6 +180,15 @@ trait InscripcionesIndex{
             $this->modelo_editar = $modelo;
 
         $this->modalRechazar = true;
+
+    }
+
+    public function abrirModalConcluir(MovimientoRegistral $modelo){
+
+        if($this->modelo_editar->isNot($modelo))
+            $this->modelo_editar = $modelo;
+
+        $this->modalConcluir = true;
 
     }
 
@@ -204,11 +246,9 @@ trait InscripcionesIndex{
 
                 $this->modelo_editar->actualizado_por = auth()->user()->id;
 
-                $this->modelo_editar->estado = 'concluido';
+                $this->modelo_editar->estado = 'finalizado';
 
                 $this->modelo_editar->save();
-
-                (new SistemaTramitesService())->finaliarTramite($this->modelo_editar->año, $this->modelo_editar->tramite, $this->modelo_editar->usuario, 'concluido');
 
                 $this->dispatch('mostrarMensaje', ['success', "El trámite se finalizó con éxito."]);
 
@@ -218,7 +258,32 @@ trait InscripcionesIndex{
 
         } catch (\Throwable $th) {
 
-            Log::error("Error al finalizar trámite de inscripción de propiedad por el usuario: (id: " . auth()->user()->id . ") " . auth()->user()->name . ". " . $th);
+            Log::error("Error al finalizar trámite de inscripción por el usuario: (id: " . auth()->user()->id . ") " . auth()->user()->name . ". " . $th);
+            $this->dispatch('mostrarMensaje', ['error', "Ha ocurrido un error."]);
+
+        }
+
+    }
+
+    public function concluir(){
+
+        try {
+
+            $this->modelo_editar->actualizado_por = auth()->user()->id;
+
+            $this->modelo_editar->estado = 'concluido';
+
+            $this->modelo_editar->save();
+
+            (new SistemaTramitesService())->finaliarTramite($this->modelo_editar->año, $this->modelo_editar->tramite, $this->modelo_editar->usuario, 'concluido');
+
+            $this->dispatch('mostrarMensaje', ['success', "El trámite se concluyó con éxito."]);
+
+            $this->modalConcluir = false;
+
+        } catch (\Throwable $th) {
+
+            Log::error("Error al concluir inscripción por el usuario: (id: " . auth()->user()->id . ") " . auth()->user()->name . ". " . $th);
             $this->dispatch('mostrarMensaje', ['error', "Ha ocurrido un error."]);
 
         }

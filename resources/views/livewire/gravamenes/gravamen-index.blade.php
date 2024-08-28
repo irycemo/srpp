@@ -120,29 +120,18 @@
                                     <div class="flex justify-center lg:justify-start gap-2">
 
                                         <x-button-blue
-                                            wire:click="reimprimir({{  $movimiento->id }})"
+                                            wire:click="imprimir({{  $movimiento->id }})"
                                             wire:loading.attr="disabled"
-                                            wire:target="reimprimir({{  $movimiento->id }})">
-                                            Reimprimir
+                                            wire:target="imprimir({{  $movimiento->id }})">
+                                            Imprimir
                                         </x-button-blue>
 
                                         <x-button-green
-                                            wire:click="abrirModalFinalizar({{  $movimiento->id }})"
+                                            wire:click="abrirModalConcluir({{  $movimiento->id }})"
                                             wire:loading.attr="disabled"
-                                            wire:target="abrirModalFinalizar({{  $movimiento->id }})">
+                                            wire:target="abrirModalConcluir({{  $movimiento->id }})">
                                             Finalizar
                                         </x-button-green>
-
-                                        <x-button-red
-                                            wire:click="abrirModalRechazar({{  $movimiento->id }})"
-                                            wire:loading.attr="disabled"
-                                            wire:target="abrirModalRechazar({{  $movimiento->id }})">
-
-                                            <img wire:loading wire:target="abrirModalRechazar({{  $movimiento->id }})" class="mx-auto h-4 mr-1" src="{{ asset('storage/img/loading3.svg') }}" alt="Loading">
-
-                                            Rechazar
-
-                                        </x-button-red>
 
                                     </div>
 
@@ -156,23 +145,43 @@
 
                                     <div class="flex justify-center lg:justify-start gap-2">
 
-                                        <x-button-blue
-                                            wire:click="elaborar({{  $movimiento->id }})"
-                                            wire:loading.attr="disabled"
-                                            wire:target="elaborar({{  $movimiento->id }})">
-                                            Elaborar
-                                        </x-button-blue>
+                                        @if(in_array($movimiento->estado, ['nuevo', 'captura']))
 
-                                        <x-button-red
-                                            wire:click="abrirModalRechazar({{  $movimiento->id }})"
-                                            wire:loading.attr="disabled"
-                                            wire:target="abrirModalRechazar({{  $movimiento->id }})">
+                                            <x-button-blue
+                                                wire:click="elaborar({{  $movimiento->id }})"
+                                                wire:loading.attr="disabled"
+                                                wire:target="elaborar({{  $movimiento->id }})">
+                                                Elaborar
+                                            </x-button-blue>
 
-                                            <img wire:loading wire:target="abrirModalRechazar({{  $movimiento->id }})" class="mx-auto h-4 mr-1" src="{{ asset('storage/img/loading3.svg') }}" alt="Loading">
+                                            <x-button-red
+                                                wire:click="abrirModalRechazar({{  $movimiento->id }})"
+                                                wire:loading.attr="disabled"
+                                                wire:target="abrirModalRechazar({{  $movimiento->id }})">
 
-                                            Rechazar
+                                                <img wire:loading wire:target="abrirModalRechazar({{  $movimiento->id }})" class="mx-auto h-4 mr-1" src="{{ asset('storage/img/loading3.svg') }}" alt="Loading">
 
-                                        </x-button-red>
+                                                Rechazar
+
+                                            </x-button-red>
+
+                                        @elseif($movimiento->estado == 'elaborado')
+
+                                            <x-button-green
+                                                wire:click="imprimir({{  $movimiento->id }})"
+                                                wire:loading.attr="disabled"
+                                                wire:target="imprimir({{  $movimiento->id }})">
+                                                Imprimir
+                                            </x-button-green>
+
+                                            <x-button-green
+                                                wire:click="abrirModalFinalizar({{  $movimiento->id }})"
+                                                wire:loading.attr="disabled"
+                                                wire:target="abrirModalFinalizar({{  $movimiento->id }})">
+                                                Finalizar
+                                            </x-button-green>
+
+                                        @endif
 
                                     </div>
 
@@ -351,6 +360,38 @@
         </x-slot>
 
     </x-dialog-modal>
+
+    <x-confirmation-modal wire:model="modalConcluir" maxWidth="sm">
+
+        <x-slot name="title">
+            Concluir movimiento registral
+        </x-slot>
+
+        <x-slot name="content">
+            ¿Esta seguro que desea concluir el movimiento registral?
+        </x-slot>
+
+        <x-slot name="footer">
+
+            <x-secondary-button
+                wire:click="$toggle('modalConcluir')"
+                wire:loading.attr="disabled"
+            >
+                No
+            </x-secondary-button>
+
+            <x-danger-button
+                class="ml-2"
+                wire:click="concluir"
+                wire:loading.attr="disabled"
+                wire:target="concluir"
+            >
+                Concluir
+            </x-danger-button>
+
+        </x-slot>
+
+    </x-confirmation-modal>
 
 </div>
 

@@ -309,9 +309,7 @@ class Sentencia extends Component
 
             });
 
-            $this->dispatch('imprimir_documento', ['sentencia' => $this->sentencia->id]);
-
-            $this->modalContraseña = false;
+            return redirect()->route('sentencias');
 
         } catch (\Throwable $th) {
             Log::error("Error al finalizar inscripcion de propiedad por el usuario: (id: " . auth()->user()->id . ") " . auth()->user()->name . ". " . $th);

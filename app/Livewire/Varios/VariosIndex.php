@@ -64,7 +64,7 @@ class VariosIndex extends Component
                                                     ->whereHas('vario', function($q){
                                                         $q->where('servicio', 'DL09');
                                                     })
-                                                    ->where('estado', 'elaborado')
+                                                    ->where('estado', 'finalizado')
                                                     ->orderBy($this->sort, $this->direction)
                                                     ->paginate($this->pagination);
 
