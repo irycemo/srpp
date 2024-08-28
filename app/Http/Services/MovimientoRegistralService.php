@@ -240,6 +240,8 @@ class MovimientoRegistralService{
                 'procedencia' => $request['procedencia'] ?? null,
             ];
 
+            $auxArray = [];
+
             if($request['tomo'] && $request['registro'] && $request['numero_propiedad']){
 
                 $mRegsitral = MovimientoRegistral::where('tomo', $request['tomo'])
@@ -247,6 +249,7 @@ class MovimientoRegistralService{
                                                     ->where('numero_propiedad', $request['numero_propiedad'])
                                                     ->where('distrito', $request['distrito'])
                                                     ->whereNull('folio_real')
+                                                    ->where('folio', '>=', 1)
                                                     ->first();
 
                 if($mRegsitral){
@@ -256,6 +259,7 @@ class MovimientoRegistralService{
                                                     ->where('numero_propiedad', $request['numero_propiedad'])
                                                     ->where('distrito', $request['distrito'])
                                                     ->whereNull('folio_real')
+                                                    ->where('folio', '>=', 1)
                                                     ->max('folio');
 
                     $auxArray = $array + [
