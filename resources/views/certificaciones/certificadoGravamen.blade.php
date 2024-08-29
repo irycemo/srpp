@@ -32,11 +32,12 @@
 
     body{
         margin-top: 120px;
-        margin-bottom: 20px;
+        margin-bottom: 40px;
         counter-reset: page;
         height: 100%;
         background-image: url("storage/img/escudo_fondo.png");
         background-size: cover;
+        background-position: 0 -50px !important;
         font-family: sans-serif;
         font-weight: normal;
         line-height: 1.5;
@@ -527,7 +528,7 @@
 
         </div>
 
-        <div class="informacion">
+        <div class="informacion no-break">
 
             <div class="control no-break">
 
