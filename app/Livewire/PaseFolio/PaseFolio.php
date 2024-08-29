@@ -8,6 +8,8 @@ use App\Models\User;
 use Livewire\Component;
 use Livewire\WithPagination;
 use Livewire\WithFileUploads;
+use App\Constantes\Constantes;
+use Barryvdh\DomPDF\Facade\Pdf;
 use App\Traits\ComponentesTrait;
 use Illuminate\Support\Facades\DB;
 use App\Models\MovimientoRegistral;
@@ -25,7 +27,10 @@ class PaseFolio extends Component
     public $observaciones;
     public $modal = false;
     public $modalFinalizar = false;
+    public $modalRechazar = false;
     public $documento;
+    public $motivos;
+    public $motivo;
 
     public MovimientoRegistral $modelo_editar;
 
@@ -47,19 +52,28 @@ class PaseFolio extends Component
 
                 $observaciones = auth()->user()->name . ' rechaza el ' . now() . ', con motivo: ' . $this->observaciones ;
 
-                (new SistemaTramitesService())->rechazarTramite($this->modelo_editar->año, $this->modelo_editar->tramite, $this->modelo_editar->usuario, $observaciones);
+                (new SistemaTramitesService())->rechazarTramite($this->modelo_editar->año, $this->modelo_editar->tramite, $this->modelo_editar->usuario, $this->motivo . ' ' . $observaciones);
 
                 $this->modelo_editar->update(['estado' => 'rechazado', 'actualizado_por' => auth()->user()->id]);
 
-                $this->modelo_editar->folioReal->update(['estado' => 'rechazado', 'actualizado_por' => auth()->user()->id]);
-
-                $this->modelo_editar->save();
-
-                $this->dispatch('mostrarMensaje', ['success', "El trámite se rechazó con éxito."]);
-
-                $this->reset(['modal', 'observaciones']);
+                $this->modelo_editar->folioReal?->update(['estado' => 'rechazado', 'actualizado_por' => auth()->user()->id]);
 
             });
+
+            $this->dispatch('mostrarMensaje', ['success', "El trámite se rechazó con éxito."]);
+
+            $this->reset(['modal', 'observaciones']);
+
+            $pdf = Pdf::loadView('rechazos.rechazo', [
+                'movimientoRegistral' => $this->modelo_editar,
+                'motivo' => $this->motivo,
+                'observaciones' => $this->observaciones
+            ])->output();
+
+            return response()->streamDownload(
+                fn () => print($pdf),
+                'rechazo.pdf'
+            );
 
         } catch (\Throwable $th) {
 
@@ -72,10 +86,12 @@ class PaseFolio extends Component
 
     public function abrirModalRechazar(MovimientoRegistral $movimientoRegistral){
 
-        $this->modal = true;
+        $this->reset(['observaciones', 'motivo']);
 
         if($this->modelo_editar->isNot($movimientoRegistral))
             $this->modelo_editar = $movimientoRegistral;
+
+        $this->modalRechazar = true;
 
     }
 
@@ -267,6 +283,20 @@ class PaseFolio extends Component
             ]);
 
         }
+
+    }
+
+    public function seleccionarMotivo($key){
+
+        $this->motivo = $this->motivos[$key];
+
+    }
+
+    public function mount(){
+
+        $this->crearModeloVacio();
+
+        $this->motivos = Constantes::RECHAZO_MOTIVOS;
 
     }
 
