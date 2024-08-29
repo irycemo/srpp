@@ -62,13 +62,13 @@ class PaseFolio extends Component
 
             $this->dispatch('mostrarMensaje', ['success', "El trámite se rechazó con éxito."]);
 
-            $this->reset(['modal', 'observaciones']);
-
             $pdf = Pdf::loadView('rechazos.rechazo', [
                 'movimientoRegistral' => $this->modelo_editar,
                 'motivo' => $this->motivo,
                 'observaciones' => $this->observaciones
             ])->output();
+
+            $this->reset(['modalRechazar', 'observaciones']);
 
             return response()->streamDownload(
                 fn () => print($pdf),

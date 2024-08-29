@@ -100,10 +100,10 @@
                                 <p>Rechaza</p>
                                 <p class="borde" style="font-weight: 400; vertical-align: top">{{ auth()->user()->name }}</p>
                             </th>
-                            <th>
+                            {{-- <th>
                                 <p>Autoriza</p>
                                 <p class="borde" style="font-weight: 400; vertical-align: top">{{ auth()->user()->name }}</p>
-                            </th>
+                            </th> --}}
                         </tr>
 
                     </thead>
