@@ -150,6 +150,8 @@ class ConsultasCertificaciones extends Component
 
         if(!$this->certificacion->certificacion){
 
+            $this->certificacion = null;
+
             $this->dispatch('mostrarMensaje', ['error', "El trámite no es una certificación."]);
 
         }

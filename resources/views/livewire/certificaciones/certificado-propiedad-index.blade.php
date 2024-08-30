@@ -423,56 +423,37 @@
 
     </x-dialog-modal>
 
-    <x-dialog-modal wire:model="modalFinalizar" maxWidth="sm">
+    <x-confirmation-modal wire:model="modalFinalizar" maxWidth="sm">
 
         <x-slot name="title">
-
-            Subir archivo
-
+            Finalizar
         </x-slot>
 
         <x-slot name="content">
-
-            <x-filepond wire:model.live="documento" accept="['application/pdf']"/>
-
-            <div>
-
-                @error('documento') <span class="error text-sm text-red-500">{{ $message }}</span> @enderror
-
-            </div>
-
+            ¿Esta seguro que desea finalizar?
         </x-slot>
 
         <x-slot name="footer">
 
-            <div class="flex gap-3">
+            <x-secondary-button
+                wire:click="$toggle('modalFinalizar')"
+                wire:loading.attr="disabled"
+            >
+                No
+            </x-secondary-button>
 
-                <x-button-blue
-                    wire:click="finalizarMovimientoFolio"
-                    wire:loading.attr="disabled"
-                    wire:target="finalizarMovimientoFolio">
-
-                    <img wire:loading wire:target="finalizarMovimientoFolio" class="mx-auto h-4 mr-1" src="{{ asset('storage/img/loading3.svg') }}" alt="Loading">
-
-                    <span>Finalizar</span>
-
-                </x-button-blue>
-
-                <x-button-red
-                    wire:click="$toggle('modalFinalizar')"
-                    wire:loading.attr="disabled"
-                    wire:target="$toggle('modalFinalizar')"
-                    type="button">
-
-                    <span>Cerrar</span>
-
-                </x-button-red>
-
-            </div>
+            <x-danger-button
+                class="ml-2"
+                wire:click="finalizarSupervisor"
+                wire:loading.attr="disabled"
+                wire:target="finalizarSupervisor"
+            >
+                Finalizar
+            </x-danger-button>
 
         </x-slot>
 
-    </x-dialog-modal>
+    </x-confirmation-modal>
 
 </div>
 

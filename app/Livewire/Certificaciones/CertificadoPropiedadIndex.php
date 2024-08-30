@@ -2,10 +2,8 @@
 
 namespace App\Livewire\Certificaciones;
 
-use App\Models\File;
 use Livewire\Component;
 use Livewire\WithPagination;
-use App\Models\Certificacion;
 use App\Traits\ComponentesTrait;
 use Illuminate\Support\Facades\DB;
 use App\Models\MovimientoRegistral;
@@ -22,7 +20,6 @@ class CertificadoPropiedadIndex extends Component
 
     public MovimientoRegistral $modelo_editar;
 
-    public $documento;
     public $modalFinalizar = false;
 
     public function crearModeloVacio(){
@@ -31,35 +28,72 @@ class CertificadoPropiedadIndex extends Component
 
     public function elaborar(MovimientoRegistral $movimientoRegistral){
 
-        if($movimientoRegistral->folioReal){
+        if($movimientoRegistral->tipo_servicio == 'ordinario'){
 
-            $movimientos = $movimientoRegistral->folioReal->movimientosRegistrales()->whereIn('estado', ['nuevo', 'elaborado'])->orderBy('folio')->get();
+            if(!($this->calcularDiaElaboracion($movimientoRegistral) <= now())){
 
-            if($movimientos->count()){
+                $this->dispatch('mostrarMensaje', ['error', "El trámite puede elaborarse apartir del " . $this->calcularDiaElaboracion($movimientoRegistral)->format('d-m-Y')]);
 
-                $primerMovimiento = $movimientos->first();
+                return;
 
-                if($movimientoRegistral->folio > $primerMovimiento->folio){
+            }
 
-                    $this->dispatch('mostrarMensaje', ['warning', "El movimiento registral: (" . $movimientoRegistral->folioReal->folio . '-' . $primerMovimiento->folio . ') debe elaborace primero.']);
+        }
+
+        $movimientoAsignados = MovimientoRegistral::whereIn('estado', ['nuevo'])
+                                                        ->where('usuario_Asignado', auth()->id())
+                                                        ->withWhereHas('folioReal', function($q){
+                                                            $q->where('estado', 'activo');
+                                                        })
+                                                        ->whereHas('certificacion', function($q){
+                                                            $q->whereIn('servicio', ['DL10', 'DL11']);
+                                                        })
+                                                        ->orderBy('created_at')
+                                                        ->get();
+
+        foreach($movimientoAsignados as $movimiento){
+
+            if($movimiento->tipo_servicio == 'ordinario'){
+
+                if($movimiento->fecha_entrega <= now()){
+
+                    if($movimientoRegistral->id == $movimiento->id){
+
+                        break;
+
+                    }else{
+
+                        $this->dispatch('mostrarMensaje', ['error', "Debe elaborar el movimiento registral " . $movimiento->folioReal->folio . '-' . $movimiento->folio . ' primero.']);
+
+                        return;
+
+                    }
 
                 }else{
 
-                    return redirect()->route('certificado_propiedad', $movimientoRegistral->certificacion);
+                    continue;
 
                 }
 
             }else{
 
-                return redirect()->route('certificado_propiedad', $movimientoRegistral->certificacion);
+                if($movimientoRegistral->id != $movimiento->id){
+
+                    $this->dispatch('mostrarMensaje', ['error', "Debe elaborar el movimiento registral " . $movimiento->folioReal->folio . '-' . $movimiento->folio . ' primero.']);
+
+                    return;
+
+                }else{
+
+                    break;
+
+                }
 
             }
 
-        }else{
-
-            return redirect()->route('certificado_propiedad', $movimientoRegistral->certificacion);
-
         }
+
+        return redirect()->route('certificado_propiedad', $movimientoRegistral->certificacion);
 
     }
 
@@ -87,10 +121,6 @@ class CertificadoPropiedadIndex extends Component
 
     public function abrirModalFinalizar(MovimientoRegistral $modelo){
 
-        $this->reset('documento');
-
-        $this->dispatch('removeFiles');
-
         if($this->modelo_editar->isNot($modelo))
             $this->modelo_editar = $modelo;
 
@@ -100,55 +130,9 @@ class CertificadoPropiedadIndex extends Component
 
     public function finalizarMovimientoFolio(){
 
-        $this->validate(['documento' => 'required']);
-
         try {
 
             DB::transaction(function () {
-
-                if(env('LOCAL') == "1"){
-
-                    $pdf = $this->documento->store('srpp/caratulas', 's3');
-
-                    File::create([
-                        'fileable_id' => $this->modelo_editar->id,
-                        'fileable_type' => 'App\Models\MovimientoRegistral',
-                        'descripcion' => 'caratula',
-                        'url' => $pdf
-                    ]);
-
-                }elseif(env('LOCAL') == "0"){
-
-                    $pdf = $this->documento->store('/', 'caratulas');
-
-                    File::create([
-                        'fileable_id' => $this->modelo_editar->id,
-                        'fileable_type' => 'App\Models\MovimientoRegistral',
-                        'descripcion' => 'caratula_s3',
-                        'url' => $pdf
-                    ]);
-
-                }elseif(env('LOCAL') == "2"){
-
-                    $pdf = $this->documento->store('srpp/caratulas', 's3');
-
-                    File::create([
-                        'fileable_id' => $this->modelo_editar->id,
-                        'fileable_type' => 'App\Models\MovimientoRegistral',
-                        'descripcion' => 'caratula_s3',
-                        'url' => $pdf
-                    ]);
-
-                    $pdf = $this->documento->store('/', 'caratulas');
-
-                    File::create([
-                        'fileable_id' => $this->modelo_editar->id,
-                        'fileable_type' => 'App\Models\MovimientoRegistral',
-                        'descripcion' => 'caratula',
-                        'url' => $pdf
-                    ]);
-
-                }
 
                 $this->modelo_editar->actualizado_por = auth()->user()->id;
 

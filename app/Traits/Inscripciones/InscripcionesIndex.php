@@ -21,29 +21,45 @@ trait InscripcionesIndex{
 
     public MovimientoRegistral $modelo_editar;
 
+    public $actual;
+
     public function crearModeloVacio(){
         $this->modelo_editar = MovimientoRegistral::make();
     }
 
+    public function estaBloqueado(){
+
+        $movimientos = $this->actual->folioReal->movimientosRegistrales()->whereIn('estado', ['nuevo', 'captura'])->orderBy('folio')->get();
+
+        if($movimientos->count()){
+
+            $primerMovimiento = $movimientos->first();
+
+            if($this->actual->folio > $primerMovimiento->folio){
+
+                $this->dispatch('mostrarMensaje', ['warning', "El movimiento registral: (" . $this->actual->folioReal->folio . '-' . $primerMovimiento->folio . ') debe elaborarce primero.']);
+
+                return true;
+
+            }else{
+
+               return false;
+
+            }
+
+        }else{
+
+            return false;
+
+        }
+
+    }
+
     public function elaborar(MovimientoRegistral $movimientoRegistral){
 
-        /* $movimientoAsignado = MovimientoRegistral::whereIn('estado', ['nuevo', 'captura'])
-                                                        ->where('usuario_Asignado', auth()->id())
-                                                        ->whereHas('folioReal', function($q){
-                                                            $q->where('estado', 'activo');
-                                                        })
-                                                        ->orderBy('created_at')
-                                                        ->first();
+        $this->modelo_editar = $movimientoRegistral;
 
-        if($movimientoAsignado->folio && $movimientoRegistral->id != $movimientoAsignado->id){
-
-            $this->dispatch('mostrarMensaje', ['error', "Debe elaborar el movimiento registral " . $movimientoAsignado->folioReal->folio . '-' . $movimientoAsignado->folio . ' primero.']);
-
-            return;
-
-        } */
-
-        if($movimientoRegistral->folioReal->avisoPreventivo()){
+        if($this->modelo_editar->folioReal->avisoPreventivo()){
 
             $this->dispatch('mostrarMensaje', ['warning', "El folio real tiene un aviso preventivo vigente."]);
 
@@ -51,25 +67,54 @@ trait InscripcionesIndex{
 
         }
 
-        $movimientos = $movimientoRegistral->folioReal->movimientosRegistrales()->whereIn('estado', ['nuevo', 'elaborado'])->orderBy('folio')->get();
+        $movimientoAsignados = MovimientoRegistral::whereIn('estado', ['nuevo', 'captura'])
+                                                        ->where('usuario_Asignado', auth()->id())
+                                                        ->withWhereHas('folioReal', function($q){
+                                                            $q->where('estado', 'activo');
+                                                        })
+                                                        ->orderBy('created_at')
+                                                        ->get();
 
-        if($movimientos->count()){
+        foreach($movimientoAsignados as $movimiento){
 
-            $primerMovimiento = $movimientos->first();
+            $this->actual = $movimiento;
 
-            if($movimientoRegistral->folio > $primerMovimiento->folio){
+            if($this->estaBloqueado()){
 
-                $this->dispatch('mostrarMensaje', ['warning', "El movimiento registral: (" . $movimientoRegistral->folioReal->folio . '-' . $primerMovimiento->folio . ') debe elaborarce primero.']);
+                /* Esta bloqueado y es el que esta intentando hacer */
+                if($this->modelo_editar->id == $this->actual->id){
+
+                    break;
+
+                }else{
+
+                    continue;
+
+                }
 
             }else{
 
-                $this->ruta($movimientoRegistral);
+                /* Si solo hay un movimiento por realizar y no esta bloqueado */
+                if($movimientoAsignados->count() == 1 && $this->actual->id == $this->modelo_editar->id){
+
+                    $this->ruta($this->modelo_editar);
+
+                }
+
+                /* Revisar si es el que debe hacer ($this->actual) */
+                if($this->modelo_editar->id != $this->actual->id){
+
+                    $this->dispatch('mostrarMensaje', ['error', "Debe elaborar el movimiento registral " . $this->actual->folioReal->folio . '-' . $this->actual->folio . ' primero.']);
+
+                    return;
+
+                }else{
+
+                    $this->ruta($this->modelo_editar);
+
+                }
 
             }
-
-        }else{
-
-            $this->ruta($movimientoRegistral);
 
         }
 
@@ -342,7 +387,7 @@ trait InscripcionesIndex{
 
         $diaElaboracion = $modelo->fecha_pago;
 
-        for ($i=0; $i < 2; $i++) {
+        for ($i=0; $i < 4; $i++) {
 
             $diaElaboracion->addDays(1);
 

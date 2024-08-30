@@ -3,14 +3,17 @@
 namespace App\Http\Controllers\Certificaciones;
 
 use Carbon\Carbon;
+use App\Models\File;
 use App\Models\User;
 use App\Models\Predio;
+use Illuminate\Support\Str;
 use App\Constantes\Constantes;
 use Barryvdh\DomPDF\Facade\Pdf;
 use App\Models\CertificadoPersona;
 use App\Models\MovimientoRegistral;
-use App\Http\Controllers\Controller;
 use App\Traits\NombreServicioTrait;
+use App\Http\Controllers\Controller;
+use Illuminate\Support\Facades\Storage;
 use Luecano\NumeroALetras\NumeroALetras;
 
 class CertificadoPropiedadController extends Controller
@@ -110,6 +113,9 @@ class CertificadoPropiedadController extends Controller
 
         $canvas->page_text(35, 745, $movimientoRegistral->folioReal->folio  .'-' . $movimientoRegistral->folio, null, 9, array(1, 1, 1));
 
+        if(!$movimientoRegistral->caratula())
+            $this->pdfSinFirma($pdf, $movimientoRegistral);
+
         return $pdf->stream('documento.pdf');
 
     }
@@ -155,6 +161,9 @@ class CertificadoPropiedadController extends Controller
         $canvas->page_text(480, 745, "Página: {PAGE_NUM} de {PAGE_COUNT}", null, 9, array(1, 1, 1));
 
         $canvas->page_text(35, 745, $movimientoRegistral->folioReal->folio  .'-' . $movimientoRegistral->folio, null, 9, array(1, 1, 1));
+
+        if(!$movimientoRegistral->caratula())
+            $this->pdfSinFirma($pdf, $movimientoRegistral);
 
         return $pdf->stream('documento.pdf');
 
@@ -202,6 +211,9 @@ class CertificadoPropiedadController extends Controller
 
         $canvas->page_text(35, 745, $movimientoRegistral->folioReal->folio  .'-' . $movimientoRegistral->folio, null, 9, array(1, 1, 1));
 
+        if(!$movimientoRegistral->caratula())
+            $this->pdfSinFirma($pdf, $movimientoRegistral);
+
         return $pdf->stream('documento.pdf');
 
     }
@@ -239,6 +251,58 @@ class CertificadoPropiedadController extends Controller
         $canvas->page_text(480, 745, "Página: {PAGE_NUM} de {PAGE_COUNT}", null, 9, array(1, 1, 1));
 
         return $pdf->stream('documento.pdf');
+
+    }
+
+    public function pdfSinFirma($pdf, $movimientoRegistral){
+
+        $nombreS3 = Str::random(40) . '.pdf';
+
+        $nombreLocal = Str::random(40) . '.pdf';
+
+        if(env('LOCAL') == "1"){
+
+            Storage::disk('s3')->put($nombreS3, $pdf->output());
+
+            File::create([
+                'fileable_id' => $movimientoRegistral->id,
+                'fileable_type' => 'App\Models\MovimientoRegistral',
+                'descripcion' => 'caratula',
+                'url' => $nombreS3
+            ]);
+
+        }elseif(env('LOCAL') == "0"){
+
+            Storage::disk('caratulas')->put($nombreLocal, $pdf->output());
+
+            File::create([
+                'fileable_id' => $movimientoRegistral->id,
+                'fileable_type' => 'App\Models\MovimientoRegistral',
+                'descripcion' => 'caratula_s3',
+                'url' => $nombreLocal
+            ]);
+
+        }elseif(env('LOCAL') == "2"){
+
+            Storage::disk('s3')->put($nombreS3, $pdf->output());
+
+            File::create([
+                'fileable_id' => $movimientoRegistral->id,
+                'fileable_type' => 'App\Models\MovimientoRegistral',
+                'descripcion' => 'caratula_s3',
+                'url' => $nombreS3
+            ]);
+
+            Storage::disk('caratulas')->put($nombreLocal, $pdf->output());
+
+            File::create([
+                'fileable_id' => $movimientoRegistral->id,
+                'fileable_type' => 'App\Models\MovimientoRegistral',
+                'descripcion' => 'caratula',
+                'url' => $nombreLocal
+            ]);
+
+        }
 
     }
 
