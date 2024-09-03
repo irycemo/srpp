@@ -184,6 +184,44 @@ class CertificadoPropiedadIndex extends Component
 
     }
 
+    public function finalizarSupervisor(){
+
+        try {
+
+            DB::transaction(function (){
+
+                $this->modelo_editar->finalizado_en = now();
+
+                $this->modelo_editar->firma = now();
+
+                $this->modelo_editar->actualizado_por = auth()->user()->id;
+
+                $this->modelo_editar->movimientoRegistral->estado = 'concluido';
+
+                $this->modelo_editar->movimientoRegistral->save();
+
+                $this->modelo_editar->save();
+
+                (new SistemaTramitesService())->finaliarTramite($this->modelo_editar->movimientoRegistral->año, $this->modelo_editar->movimientoRegistral->tramite, $this->modelo_editar->movimientoRegistral->usuario, 'concluido');
+
+                $this->resetearTodo();
+
+                $this->dispatch('mostrarMensaje', ['success', "El trámite se finalizó con éxito."]);
+
+                $this->modalFinalizar = false;
+
+            });
+
+        } catch (\Throwable $th) {
+
+            Log::error("Error al finalizar trámite de copias certificadas por el usuario: (id: " . auth()->user()->id . ") " . auth()->user()->name . ". " . $th);
+            $this->dispatch('mostrarMensaje', ['error', "Ha ocurrido un error."]);
+            $this->resetearTodo();
+
+        }
+
+    }
+
     public function render()
     {
 
