@@ -266,6 +266,14 @@
                                     </p>
 
                                     <p class="parrafo">
+                                        <strong>Tipo / Número de documento:</strong>{{ $gravamen->movimientoRegistral->tipo_documento }}/{{ $gravamen->movimientoRegistral->numero_documento }}
+                                    </p>
+
+                                    <p class="parrafo">
+                                        <strong>Procedencia:</strong>{{ $gravamen->movimientoRegistral->procedencia }}
+                                    </p>
+
+                                    <p class="parrafo">
                                         <strong>Tipo:</strong>{{ $gravamen->tipo }}
                                     </p>
 
@@ -391,7 +399,7 @@
 
                     @if($distrito == '02 Uruapan' )
                         <p class="borde">Lic. SANDRO MEDINA MORALES </p>
-                        <p style="margin:0;">COORDINADOR REGIONAL 4 PURHÉPECHA (URUAPAN)</p>
+                        <p style="margin:0;">COORDINADOR REGIONAL 4 PURHÉPECHA (URUAPAN)</p>
                     @else
                         <p class="borde" style="margin:0;">{{ $director }}</p>
                         <p style="margin:0;">Director del registro público de la propiedad</p>

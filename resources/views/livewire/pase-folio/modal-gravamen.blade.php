@@ -130,7 +130,7 @@
 
                 </x-input-group>
 
-                <x-input-group for="procedencia" label="Dependencia" :error="$errors->first('procedencia')" class="w-full">
+                <x-input-group for="procedencia" label="Procedencia" :error="$errors->first('procedencia')" class="w-full">
 
                     <x-input-text id="procedencia" wire:model="procedencia" />
 

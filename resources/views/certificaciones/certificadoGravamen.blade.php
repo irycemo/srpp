@@ -453,6 +453,8 @@
                         <strong>Distrito: </strong>{{ $gravamen->movimientoRegistral->distrito }};
                         CON <strong>FECHA DE INSCRIPCIÓN: </strong> {{ Carbon\Carbon::parse($gravamen->fecha_inscripcion)->format('d-m-Y') }};
                         <strong>RELATIVO A: </strong> {{ $gravamen->acto_contenido }};
+                        <strong>Tipo / Número de documento:</strong>{{ $gravamen->movimientoRegistral->tipo_documento }}/{{ $gravamen->movimientoRegistral->numero_documento }}
+                        <strong>Procedencia:</strong>{{ $gravamen->movimientoRegistral->procedencia }}
                         <strong>Tipo: </strong>{{ $gravamen->tipo }};
                         <strong>CELEBRADO POR EL(LOS) ACREDOR(ES):</strong>
                         @foreach ($gravamen->acreedores as $acreedor)
