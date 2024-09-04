@@ -290,7 +290,7 @@ class MovimientoRegistralService{
 
             return $auxArray + $array + [
                 'usuario_asignado' => $this->obtenerUsuarioAsignado($documento_entrada, $folioReal, $request['servicio'], $request['distrito'], $request['solicitante'], $request['tipo_servicio'],$request['categoria_servicio'], false),
-                'usuario_supervisor' => $this->obtenerSupervisor($request['servicio'], $request['distrito']),
+                'usuario_supervisor' => $this->obtenerSupervisor($request['servicio'], $request['categoria_servicio'], $request['distrito']),
                 'solicitante' => $request['nombre_solicitante']
             ];
 
@@ -419,7 +419,7 @@ class MovimientoRegistralService{
         }
 
         /* Inscripciones: Gravamen */
-        if($servicio == 'D150' && $categoria_servicio == 'Inscripciones - Gravamenes'){
+        if(in_array($servicio, ['DL07', 'DM68', 'D155', 'D150']) && $categoria_servicio == 'Inscripciones - Gravamenes'){
 
             return $this->asignacionService->obtenerUsuarioGravamen($folioReal, $distrito);
 
@@ -433,7 +433,7 @@ class MovimientoRegistralService{
         }
 
         /* Inscripciones: Varios */
-        if($servicio == 'DL09'){
+        if(in_array($servicio, ['DL09', 'D128']) && $categoria_servicio == 'Varios, Arrendamientos, Avisos Preventivos'){
 
             return $this->asignacionService->obtenerUsuarioVarios($folioReal, $distrito);
 
@@ -448,7 +448,7 @@ class MovimientoRegistralService{
 
     }
 
-    public function obtenerSupervisor($servicio, $distrito):int
+    public function obtenerSupervisor($servicio, $categoria_servicio, $distrito):int
     {
 
         if($distrito == 2){
@@ -482,7 +482,8 @@ class MovimientoRegistralService{
         }
 
         /* Inscripciones: Gravamen */
-        if($servicio == 'D150'){
+        if(in_array($servicio, ['DL07', 'DM68', 'D155', 'D150']) && $categoria_servicio == 'Inscripciones - Gravamenes'){
+
             return $this->asignacionService->obtenerSupervisorGravamen($distrito);
 
         }
@@ -495,7 +496,7 @@ class MovimientoRegistralService{
         }
 
         /* Inscripciones: Varios */
-        if($servicio == 'DL09'){
+        if(in_array($servicio, ['DL09', 'D128']) && $categoria_servicio == 'Varios, Arrendamientos, Avisos Preventivos'){
 
             return $this->asignacionService->obtenerSupervisorVarios($distrito);
 

@@ -32,6 +32,8 @@ class Gravamen extends Component
 
     public $label_numero_documento = "Número de documento";
 
+    public $propiedadOld;
+
     #[On('cargarPropiedad')]
     public function cargarPropiedad($id){
 

@@ -190,83 +190,79 @@
 
         @if($movimientoRegistral->inscripcionPropiedad?->servicio == 'D731' && $movimientoRegistral->folioReal)
 
-        <div class="w-full bg-white rounded-lg p-3 shadow-lg mb-3">
+            <div class="w-full bg-white rounded-lg p-3 shadow-lg mb-3">
 
-            <span class="flex items-center justify-center text-gray-700">Antecedentes a fusionar</span>
+                <span class="flex items-center justify-center text-gray-700">Antecedentes a fusionar</span>
 
-            <div class="">
+                <div class="">
 
-                <div class="mb-2 flex justify-end">
+                    <div class="mb-2 flex justify-end">
 
-                    <x-button-blue wire:click="abrirModalCrear">Agregar antecedente</x-button-blue>
+                        <x-button-blue wire:click="abrirModalCrear">Agregar antecedente</x-button-blue>
 
-                </div>
+                    </div>
 
-                <div>
+                    <div>
 
-                    <x-table>
+                        <x-table>
 
-                        <x-slot name="head">
-                            <x-table.heading >Tomo</x-table.heading>
-                            <x-table.heading >Registro</x-table.heading>
-                            <x-table.heading ># Propiedad</x-table.heading>
-                            <x-table.heading >Distrito</x-table.heading>
-                            <x-table.heading >Sección</x-table.heading>
-                            <x-table.heading ></x-table.heading>
-                        </x-slot>
+                            <x-slot name="head">
+                                <x-table.heading >Tomo</x-table.heading>
+                                <x-table.heading >Registro</x-table.heading>
+                                <x-table.heading ># Propiedad</x-table.heading>
+                                <x-table.heading >Distrito</x-table.heading>
+                                <x-table.heading >Sección</x-table.heading>
+                                <x-table.heading ></x-table.heading>
+                            </x-slot>
 
-                        <x-slot name="body">
+                            <x-slot name="body">
 
-                            @foreach ($movimientoRegistral->folioReal->antecedentes as $antecedente)
+                                @foreach ($movimientoRegistral->folioReal->antecedentes as $antecedente)
 
-                                <x-table.row >
+                                    <x-table.row >
 
-                                    <x-table.cell>{{ $antecedente->tomo_antecedente }}</x-table.cell>
-                                    <x-table.cell>{{ $antecedente->registro_antecedente }}</x-table.cell>
-                                    <x-table.cell>{{ $antecedente->numero_propiedad_antecedente }}</x-table.cell>
-                                    <x-table.cell>{{ $antecedente->distrito_antecedente }}</x-table.cell>
-                                    <x-table.cell>{{ $antecedente->seccion_antecedente }}</x-table.cell>
-                                    <x-table.cell>
-                                        <div class="flex items-center gap-3">
-                                            <x-button-blue
-                                                wire:click="abrirModalEditar({{ $antecedente->id }})"
-                                                wire:loading.attr="disabled"
-                                            >
-                                                Editar
-                                            </x-button-blue>
-                                            <x-button-red
-                                                wire:click="borrarAntecedente({{ $antecedente->id }})"
-                                                wire:loading.attr="disabled">
-                                                Borrar
-                                            </x-button-red>
-                                        </div>
-                                    </x-table.cell>
+                                        <x-table.cell>{{ $antecedente->tomo_antecedente }}</x-table.cell>
+                                        <x-table.cell>{{ $antecedente->registro_antecedente }}</x-table.cell>
+                                        <x-table.cell>{{ $antecedente->numero_propiedad_antecedente }}</x-table.cell>
+                                        <x-table.cell>{{ $antecedente->distrito_antecedente }}</x-table.cell>
+                                        <x-table.cell>{{ $antecedente->seccion_antecedente }}</x-table.cell>
+                                        <x-table.cell>
+                                            <div class="flex items-center gap-3">
+                                                <x-button-blue
+                                                    wire:click="abrirModalEditar({{ $antecedente->id }})"
+                                                    wire:loading.attr="disabled"
+                                                >
+                                                    Editar
+                                                </x-button-blue>
+                                                <x-button-red
+                                                    wire:click="borrarAntecedente({{ $antecedente->id }})"
+                                                    wire:loading.attr="disabled">
+                                                    Borrar
+                                                </x-button-red>
+                                            </div>
+                                        </x-table.cell>
 
-                                </x-table.row>
+                                    </x-table.row>
 
-                            @endforeach
+                                @endforeach
 
-                        </x-slot>
+                            </x-slot>
 
-                        <x-slot name="tfoot"></x-slot>
+                            <x-slot name="tfoot"></x-slot>
 
-                    </x-table>
+                        </x-table>
+
+                    </div>
 
                 </div>
 
             </div>
 
-        </div>
-
         @endif
 
     </div>
 
-    <div class="bg-white rounded-lg p-2 mb-3 shadow-lg">
-
-        <span class="flex items-center justify-center text-lg text-gray-700">Información de la base de datos</span>
-
-    </div>
+    @include('livewire.pase-folio.informacion_base_datos')
 
     <x-dialog-modal wire:model="modal">
 

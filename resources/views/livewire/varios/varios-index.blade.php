@@ -172,12 +172,12 @@
                                                 Imprimir
                                             </x-button-green>
 
-                                            <x-button-green
+                                            <x-button-blue
                                                 wire:click="abrirModalFinalizar({{  $movimiento->id }})"
                                                 wire:loading.attr="disabled"
                                                 wire:target="abrirModalFinalizar({{  $movimiento->id }})">
                                                 Finalizar
-                                            </x-button-green>
+                                            </x-button-blue>
 
                                         @endif
 

@@ -210,11 +210,7 @@
 
     </div>
 
-    <div class="bg-white rounded-lg p-2 mb-3 shadow-lg">
-
-        <span class="flex items-center justify-center text-lg text-gray-700">Información de la base de datos</span>
-
-    </div>
+    @include('livewire.pase-folio.informacion_base_datos')
 
     <div class=" flex justify-end items-center bg-white rounded-lg p-2 shadow-lg md:col-span-3 col-span-1 sm:col-span-2">
 

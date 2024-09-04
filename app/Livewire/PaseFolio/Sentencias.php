@@ -45,6 +45,8 @@ class Sentencias extends Component
     public $estado = 'activo';
     public $comentario;
 
+    public $propiedadOld;
+
     public $label_numero_documento = "Número de documento";
 
     protected $validationAttributes  = [

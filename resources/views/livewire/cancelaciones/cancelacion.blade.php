@@ -4,29 +4,6 @@
 
     <div class="p-4 bg-white shadow-xl rounded-xl mb-5">
 
-        @if(!$cancelacion->movimientoRegistral->documentoEntrada())
-
-            <x-button-blue
-                wire:click="abrirModalFinalizar"
-                wire:loading.attr="disabled"
-                wire:target="abrirModalFinalizar">
-
-                <img wire:loading wire:target="abrirModalFinalizar" class="mx-auto h-4 mr-1" src="{{ asset('storage/img/loading3.svg') }}" alt="Loading">
-
-                Subir documento de entrada
-
-            </x-button-blue>
-
-        @else
-
-            <div class="inline-block">
-
-                <x-link-blue target="_blank" href="{{ $cancelacion->movimientoRegistral->documentoEntrada() }}">Documento de entrada</x-link-blue>
-
-            </div>
-
-        @endif
-
         <span class="flex items-center justify-center ext-gray-700">Datos del movimiento</span>
 
         <div class="flex gap-3 items-center w-full lg:w-1/2 justify-center mx-auto mb-4">
@@ -139,6 +116,29 @@
     @endif
 
     <div class="bg-white rounded-lg p-3 flex justify-end shadow-lg gap-3">
+
+        @if(!$cancelacion->movimientoRegistral->documentoEntrada())
+
+            <x-button-blue
+                wire:click="abrirModalFinalizar"
+                wire:loading.attr="disabled"
+                wire:target="abrirModalFinalizar">
+
+                <img wire:loading wire:target="abrirModalFinalizar" class="mx-auto h-4 mr-1" src="{{ asset('storage/img/loading3.svg') }}" alt="Loading">
+
+                Subir documento de entrada
+
+            </x-button-blue>
+
+        @else
+
+            <div class="inline-block">
+
+                <x-link-blue target="_blank" href="{{ $cancelacion->movimientoRegistral->documentoEntrada() }}">Documento de entrada</x-link-blue>
+
+            </div>
+
+        @endif
 
         <x-button-red
             wire:click="$toggle('modalRechazar')"

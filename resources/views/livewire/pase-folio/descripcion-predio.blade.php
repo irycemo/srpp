@@ -240,17 +240,13 @@
 
         </div>
 
-        <div class="bg-white rounded-lg p-2 mb-3 shadow-lg">
-
-            <span class="flex items-center justify-center text-lg text-gray-700">Información de la base de datos</span>
-
-        </div>
+        @include('livewire.pase-folio.informacion_base_datos')
 
     </div>
 
-    <div class="grid grid-cols-1 sm:grid-cols-3 gap-3">
+    <div class="gap-3">
 
-        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3 mb-3 col-span-2 bg-white rounded-lg p-3 shadow-lg">
+        <div class="mb-3 col-span-2 bg-white rounded-lg p-3 shadow-lg">
 
             <span class="flex items-center justify-center text-lg text-gray-700 md:col-span-3 col-span-1 sm:col-span-2">Colindancias</span>
 
@@ -371,12 +367,6 @@
                 </x-button-green>
 
             </div>
-
-        </div>
-
-        <div class="bg-white rounded-lg p-2 mb-3 shadow-lg">
-
-            <span class="flex items-center justify-center text-lg text-gray-700">Información de la base de datos</span>
 
         </div>
 

@@ -61,6 +61,8 @@ class Propietarios extends Component
     public MovimientoRegistral $movimientoRegistral;
     public Predio $propiedad;
 
+    public $propiedadOld;
+
     protected function rules(){
         return [
             'porcentaje_propiedad' => 'nullable|numeric|min:0|max:100',
@@ -393,25 +395,6 @@ class Propietarios extends Component
         }
 
     }
-
-    /* public function repartirPartesIguales($flag = false){
-
-        $propietarios = $flag ? $this->propiedad->propietarios()->count() + 1 : $this->propiedad->propietarios()->count();
-
-        $porcentaje = 100 / $propietarios;
-
-        foreach ($this->propiedad->propietarios() as $propietario) {
-
-            $propietario->update([
-                'porcentaje_nuda' => $porcentaje,
-                'porcentaje_usufructo' => $porcentaje
-            ]);
-
-        }
-
-        return $porcentaje;
-
-    } */
 
     public function guardarTransmitente(){
 

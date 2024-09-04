@@ -31,6 +31,7 @@ class Varios extends Component
     public $actos;
     public $modalContraseña = false;
     public $modalDocumento = false;
+    public $modalPersona = false;
     public $documento;
     public $link;
     public $contraseña;
@@ -63,6 +64,12 @@ class Varios extends Component
     public $entidad;
     public $municipio;
 
+    public $porcentaje_propiedad;
+    public $porcentaje_nuda;
+    public $porcentaje_usufructo;
+
+    public $actor;
+
     protected function rules(){
         return [
             'vario.acto_contenido' => 'required',
@@ -78,6 +85,40 @@ class Varios extends Component
         'numero_hojas' => 'número de hojas',
         'numero_escritura' => 'número de escritura',
     ];
+
+    public function updatedVarioActoContenido(){
+
+        $frp = $this->vario->movimientoRegistral->folioRealPersona;
+
+        $this->vario->movimientoRegistral->update(['folio_real_persona' => null]);
+
+        if($frp) $frp->delete();
+
+        foreach($this->vario->actores as $actor){
+
+            $actor->delete();
+
+        }
+
+        if($this->vario->acto_contenido == 'CONSOLIDACIÓN DEL USUFRUCTO'){
+
+            foreach ($this->vario->movimientoRegistral->folioReal->predio->propietarios() as $propietario) {
+
+                $this->vario->actores()->create([
+                    'persona_id' => $propietario->persona_id,
+                    'tipo_actor' => 'propietario',
+                    'porcentaje_propiedad' => $propietario->porcentaje_propiedad,
+                    'porcentaje_nuda' => $propietario->porcentaje_nuda,
+                    'porcentaje_usufructo' => $propietario->porcentaje_usufructo,
+                ]);
+
+                $this->vario->load('actores.persona');
+
+            }
+
+        }
+
+    }
 
     public function consultarArchivo(){
 
@@ -266,6 +307,43 @@ class Varios extends Component
 
     }
 
+    public function abrirModalEditarPropietario(Actor $actor){
+
+        $this->actor = $actor;
+
+        $this->porcentaje_propiedad = $actor->porcentaje_propiedad;
+        $this->porcentaje_nuda = $actor->porcentaje_nuda;
+        $this->porcentaje_usufructo = $actor->porcentaje_usufructo;
+
+        $this->modalPersona = true;
+
+    }
+
+    public function actualizarPorcentajes(){
+
+        try {
+
+            $this->actor->update([
+                'porcentaje_propiedad' => $this->porcentaje_propiedad,
+                'porcentaje_nuda' => $this->porcentaje_nuda,
+                'porcentaje_usufructo' => $this->porcentaje_usufructo,
+            ]);
+
+            $this->vario->load('actores.persona');
+
+            $this->modalPersona = false;
+
+            $this->dispatch('mostrarMensaje', ['success', "El actor se actualizó con éxito."]);
+
+        } catch (\Throwable $th) {
+
+            Log::error("Error al actualizar propietario en consolidación de usufructo por el usuario: (id: " . auth()->user()->id . ") " . auth()->user()->name . ". " . $th);
+            $this->dispatch('mostrarMensaje', ['error', "Ha ocurrido un error."]);
+
+        }
+
+    }
+
     public function finalizar(){
 
         $this->validate();
@@ -328,71 +406,19 @@ class Varios extends Component
 
                 if($this->vario->servicio == 'DL09'){
 
-                    $movimiento = MovimientoRegistral::create([
-                        'estado' => 'nuevo',
-                        'folio' => FolioReal::find($this->vario->movimientoRegistral->folio_real)->ultimoFolio() + 1,
-                        'folio_real' => $this->vario->movimientoRegistral->folio_real,
-                        'fecha_prelacion' => $this->vario->movimientoRegistral->fecha_prelacion,
-                        'fecha_entrega' => $this->vario->movimientoRegistral->fecha_entrega,
-                        'fecha_pago' => $this->vario->movimientoRegistral->fecha_pago,
-                        'tipo_servicio' => $this->vario->movimientoRegistral->tipo_servicio,
-                        'solicitante' => $this->vario->movimientoRegistral->solicitante,
-                        'seccion' => $this->vario->movimientoRegistral->seccion,
-                        'año' => $this->vario->movimientoRegistral->año,
-                        'tramite' => $this->vario->movimientoRegistral->tramite,
-                        'usuario' => $this->vario->movimientoRegistral->usuario,
-                        'distrito' => $this->vario->movimientoRegistral->getRawOriginal('distrito'),
-                        'tipo_documento' => $this->vario->movimientoRegistral->tipo_documento,
-                        'numero_documento' => $this->vario->movimientoRegistral->numero_documento,
-                        'numero_propiedad' => $this->vario->movimientoRegistral->numero_propiedad,
-                        'autoridad_cargo' => $this->vario->movimientoRegistral->autoridad_cargo,
-                        'autoridad_numero' => $this->vario->movimientoRegistral->autoridad_numero,
-                        'fecha_emision' => $this->vario->movimientoRegistral->fecha_emision,
-                        'fecha_inscripcion' => $this->vario->movimientoRegistral->fecha_inscripcion,
-                        'procedencia' => $this->vario->movimientoRegistral->procedencia,
-                        'numero_oficio' => $this->vario->movimientoRegistral->numero_oficio,
-                        'folio_real' => $this->vario->movimientoRegistral->folio_real,
-                        'monto' => $this->vario->movimientoRegistral->monto,
-                        'usuario_asignado' => (new AsignacionService())->obtenerUltimoUsuarioConAsignacion($this->obtenerUsuarios()),
-                        'usuario_supervisor' => $this->obtenerSupervisor(),
-                        'movimiento_padre' => $this->vario->movimientoRegistral->id
-                    ]);
-
-                    $movimiento->certificacion()->create([
-                        'servicio' => 'DL07',
-                        'observaciones' => 'Trámite generado por inscripción de un primer aviso preventivo ' . $this->vario->movimientoRegistral->año . '-' . $this->vario->movimientoRegistral->tramite . '-' . $this->vario->movimientoRegistral->usuario
-                    ]);
+                    $this->crearCertificadoGravamen();
 
                 }
 
                 if($this->vario->acto_contenido == 'PERSONAS MORALES'){
 
-                    $folioRealPersona = FolioRealPersona::create([
-                        'folio' => (FolioRealPersona::max('folio') ?? 0) + 1,
-                        'denominacion' => $this->denominacion,
-                        'fecha_celebracion' => $this->fecha_celebracion,
-                        'fecha_inscripcion' => $this->fecha_inscripcion,
-                        'notaria' => $this->notaria,
-                        'nombre_notario' => $this->nombre_notario,
-                        'numero_hojas' => $this->numero_hojas,
-                        'numero_escritura' => $this->numero_escritura,
-                        'descripcion' => $this->descripcion,
-                        'observaciones' => $this->observaciones,
-                        'creado_por' => auth()->id()
-                    ]);
+                    $this->crearFolioRealPersona();
 
-                    $this->vario->movimientoRegistral->update(['folio_real_persona' => $folioRealPersona->id]);
+                }
 
-                    foreach($this->vario->actores as $actor){
+                if($this->vario->acto_contenido == 'CONSOLIDACIÓN DEL USUFRUCTO'){
 
-                        $folioRealPersona->actores()->create([
-                            'persona_id' => $actor->persona_id,
-                            'tipo_actor' => $actor->tipo_actor
-                        ]);
-
-                        $actor->delete();
-
-                    }
+                    $this->actualizarPropietarios();
 
                 }
 
@@ -400,9 +426,180 @@ class Varios extends Component
 
             return redirect()->route('varios');
 
+        } catch (Exception $ex) {
+
+            $this->dispatch('mostrarMensaje', ['error', $ex->getMessage()]);
+
         } catch (\Throwable $th) {
             Log::error("Error al finalizar inscripcion de propiedad por el usuario: (id: " . auth()->user()->id . ") " . auth()->user()->name . ". " . $th);
             $this->dispatch('mostrarMensaje', ['error', "Ha ocurrido un error."]);
+        }
+
+    }
+
+    public function crearCertificadoGravamen(){
+
+        $movimiento = MovimientoRegistral::create([
+            'estado' => 'nuevo',
+            'folio' => FolioReal::find($this->vario->movimientoRegistral->folio_real)->ultimoFolio() + 1,
+            'folio_real' => $this->vario->movimientoRegistral->folio_real,
+            'fecha_prelacion' => $this->vario->movimientoRegistral->fecha_prelacion,
+            'fecha_entrega' => $this->vario->movimientoRegistral->fecha_entrega,
+            'fecha_pago' => $this->vario->movimientoRegistral->fecha_pago,
+            'tipo_servicio' => $this->vario->movimientoRegistral->tipo_servicio,
+            'solicitante' => $this->vario->movimientoRegistral->solicitante,
+            'seccion' => $this->vario->movimientoRegistral->seccion,
+            'año' => $this->vario->movimientoRegistral->año,
+            'tramite' => $this->vario->movimientoRegistral->tramite,
+            'usuario' => $this->vario->movimientoRegistral->usuario,
+            'distrito' => $this->vario->movimientoRegistral->getRawOriginal('distrito'),
+            'tipo_documento' => $this->vario->movimientoRegistral->tipo_documento,
+            'numero_documento' => $this->vario->movimientoRegistral->numero_documento,
+            'numero_propiedad' => $this->vario->movimientoRegistral->numero_propiedad,
+            'autoridad_cargo' => $this->vario->movimientoRegistral->autoridad_cargo,
+            'autoridad_numero' => $this->vario->movimientoRegistral->autoridad_numero,
+            'fecha_emision' => $this->vario->movimientoRegistral->fecha_emision,
+            'fecha_inscripcion' => $this->vario->movimientoRegistral->fecha_inscripcion,
+            'procedencia' => $this->vario->movimientoRegistral->procedencia,
+            'numero_oficio' => $this->vario->movimientoRegistral->numero_oficio,
+            'folio_real' => $this->vario->movimientoRegistral->folio_real,
+            'monto' => $this->vario->movimientoRegistral->monto,
+            'usuario_asignado' => (new AsignacionService())->obtenerUltimoUsuarioConAsignacion($this->obtenerUsuarios()),
+            'usuario_supervisor' => $this->obtenerSupervisor(),
+            'movimiento_padre' => $this->vario->movimientoRegistral->id
+        ]);
+
+        $movimiento->certificacion()->create([
+            'servicio' => 'DL07',
+            'observaciones' => 'Trámite generado por inscripción de un primer aviso preventivo ' . $this->vario->movimientoRegistral->año . '-' . $this->vario->movimientoRegistral->tramite . '-' . $this->vario->movimientoRegistral->usuario
+        ]);
+
+    }
+
+    public function crearFolioRealPersona(){
+
+        if(!$this->vario->movimientoRegistral->folio_real_persona){
+
+            $folioRealPersona = FolioRealPersona::create([
+                'folio' => (FolioRealPersona::max('folio') ?? 0) + 1,
+                'denominacion' => $this->denominacion,
+                'estado' => 'activo',
+                'fecha_celebracion' => $this->fecha_celebracion,
+                'fecha_inscripcion' => $this->fecha_inscripcion,
+                'notaria' => $this->notaria,
+                'nombre_notario' => $this->nombre_notario,
+                'numero_hojas' => $this->numero_hojas,
+                'numero_escritura' => $this->numero_escritura,
+                'descripcion' => $this->descripcion,
+                'observaciones' => $this->observaciones,
+                'creado_por' => auth()->id()
+            ]);
+
+            $this->vario->movimientoRegistral->update(['folio_real_persona' => $folioRealPersona->id]);
+
+        }else{
+
+            $this->vario->movimientoRegistral->folioRealPersona->update([
+                'denominacion' => $this->denominacion,
+                'estado' => 'activo',
+                'fecha_celebracion' => $this->fecha_celebracion,
+                'fecha_inscripcion' => $this->fecha_inscripcion,
+                'notaria' => $this->notaria,
+                'nombre_notario' => $this->nombre_notario,
+                'numero_hojas' => $this->numero_hojas,
+                'numero_escritura' => $this->numero_escritura,
+                'descripcion' => $this->descripcion,
+                'observaciones' => $this->observaciones,
+            ]);
+
+        }
+
+        foreach($this->vario->actores as $actor){
+
+            $folioRealPersona->actores()->create([
+                'persona_id' => $actor->persona_id,
+                'tipo_actor' => $actor->tipo_actor
+            ]);
+
+            $actor->delete();
+
+        }
+
+    }
+
+    public function actualizarPropietarios(){
+
+        $this->revisarPorcentajes();
+
+        foreach ($this->vario->actores as $actor){
+
+            $propietario = $this->vario->movimientoRegistral->folioReal->predio->propietarios()->where('persona_id', $actor->persona_id)->first();
+
+            if($actor->porcentaje_propiedad == 0 && $actor->porcentaje_nuda == 0 && $actor->porcentaje_usufructo){
+
+                $propietario->delete();
+
+            }else{
+
+                $propietario->update([
+                    'porcentaje_propiedad' => $actor->porcentaje_propiedad,
+                    'porcentaje_nuda' => $actor->porcentaje_nuda,
+                    'porcentaje_usufructo' => $actor->porcentaje_usufructo,
+                ]);
+
+            }
+
+        }
+
+    }
+
+    public function revisarPorcentajes(){
+
+        $pn = 0;
+
+        $pu = 0;
+
+        $pp = 0;
+
+        foreach($this->vario->actores as $propietario){
+
+            $pn = $pn + $propietario->porcentaje_nuda;
+
+            $pu = $pu + $propietario->porcentaje_usufructo;
+
+            $pp = $pp + $propietario->porcentaje_propiedad;
+
+        }
+
+        if($pp == 0){
+
+            if($pn <= 99.99){
+
+                throw new Exception("El porcentaje de nuda propiedad no es el 100%.");
+
+            }
+
+            if($pu <= 99.99){
+
+                throw new Exception("El porcentaje de usufructo no es el 100%.");
+
+            }
+
+        }else{
+
+
+            if(($pn + $pp) <= 99.99){
+
+                throw new Exception("El porcentaje de nuda propiedad no es el 100%.");
+
+            }
+
+            if(($pu + $pp) <= 99.99){
+
+                throw new Exception("El porcentaje de usufructo no es el 100%.");
+
+            }
+
         }
 
     }
@@ -416,6 +613,45 @@ class Varios extends Component
                 $this->vario->movimientoRegistral->update(['estado' => 'captura']);
 
                 $this->vario->save();
+
+                if($this->vario->acto_contenido == 'PERSONAS MORALES'){
+
+                    if(!$this->vario->movimientoRegistral->folio_real_persona){
+
+                        $folioRealPersona = FolioRealPersona::create([
+                            'folio' => (FolioRealPersona::max('folio') ?? 0) + 1,
+                            'denominacion' => $this->denominacion,
+                            'estado' => 'captura',
+                            'fecha_celebracion' => $this->fecha_celebracion,
+                            'fecha_inscripcion' => $this->fecha_inscripcion,
+                            'notaria' => $this->notaria,
+                            'nombre_notario' => $this->nombre_notario,
+                            'numero_hojas' => $this->numero_hojas,
+                            'numero_escritura' => $this->numero_escritura,
+                            'descripcion' => $this->descripcion,
+                            'observaciones' => $this->observaciones,
+                            'creado_por' => auth()->id()
+                        ]);
+
+                        $this->vario->movimientoRegistral->update(['folio_real_persona' => $folioRealPersona->id]);
+
+                    }else{
+
+                        $this->vario->movimientoRegistral->folioRealPersona->update([
+                            'denominacion' => $this->denominacion,
+                            'fecha_celebracion' => $this->fecha_celebracion,
+                            'fecha_inscripcion' => $this->fecha_inscripcion,
+                            'notaria' => $this->notaria,
+                            'nombre_notario' => $this->nombre_notario,
+                            'numero_hojas' => $this->numero_hojas,
+                            'numero_escritura' => $this->numero_escritura,
+                            'descripcion' => $this->descripcion,
+                            'observaciones' => $this->observaciones,
+                        ]);
+
+                    }
+
+                }
 
             });
 
@@ -591,6 +827,21 @@ class Varios extends Component
         $this->actos = Constantes::ACTOS_INSCRIPCION_VARIOS;
 
         $this->vario->load('actores.persona');
+
+
+        if($this->vario->movimientoRegistral->folioRealPersona){
+
+            $this->fecha_celebracion = $this->vario->movimientoRegistral->folioRealPersona->fecha_celebracion;
+            $this->denominacion = $this->vario->movimientoRegistral->folioRealPersona->denominacion;
+            $this->fecha_inscripcion = $this->vario->movimientoRegistral->folioRealPersona->fecha_inscripcion;
+            $this->notaria = $this->vario->movimientoRegistral->folioRealPersona->notaria;
+            $this->nombre_notario = $this->vario->movimientoRegistral->folioRealPersona->nombre_notario;
+            $this->numero_hojas = $this->vario->movimientoRegistral->folioRealPersona->numero_hojas;
+            $this->numero_escritura = $this->vario->movimientoRegistral->folioRealPersona->numero_escritura;
+            $this->descripcion = $this->vario->movimientoRegistral->folioRealPersona->descripcion;
+            $this->observaciones = $this->vario->movimientoRegistral->folioRealPersona->observaciones;
+
+        }
 
     }
 

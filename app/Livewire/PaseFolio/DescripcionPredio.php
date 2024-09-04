@@ -52,6 +52,8 @@ class DescripcionPredio extends Component
     public MovimientoRegistral $movimientoRegistral;
     public Predio $propiedad;
 
+    public $propiedadOld;
+
     protected function rules(){
         return [
             'localidad' => 'nullable',

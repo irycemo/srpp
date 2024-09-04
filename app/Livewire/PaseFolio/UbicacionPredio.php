@@ -49,6 +49,8 @@ class UbicacionPredio extends Component
     public MovimientoRegistral $movimientoRegistral;
     public Predio $propiedad;
 
+    public $propiedadOld;
+
     protected function rules(){
 
         return [

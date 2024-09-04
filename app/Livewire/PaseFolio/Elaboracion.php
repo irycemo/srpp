@@ -19,6 +19,7 @@ use Illuminate\Support\Facades\Log;
 use App\Livewire\PaseFolio\PaseFolio;
 use App\Http\Services\AsignacionService;
 use App\Http\Services\SistemaTramitesService;
+use App\Models\Propiedadold;
 
 class Elaboracion extends Component
 {
@@ -59,6 +60,8 @@ class Elaboracion extends Component
     public $crear = false;
     public $antecedente;
     public $documentos_de_entrada;
+
+    public $propiedadOld;
 
     protected function rules(){
         return [
@@ -867,6 +870,12 @@ class Elaboracion extends Component
         }
 
         $this->documentos_de_entrada = Constantes::DOCUMENTOS_DE_ENTRADA;
+
+        $this->propiedadOld = Propiedadold::where('distrito', $this->movimientoRegistral->getRawOriginal('distrito'))
+                                                ->where('tomo', $this->movimientoRegistral->tomo)
+                                                ->where('registro', $this->movimientoRegistral->registro)
+                                                ->where('noprop', $this->movimientoRegistral->numero_propiedad)
+                                                ->first();
 
     }
 

@@ -47,6 +47,8 @@ class Varios extends Component
 
     public $label_numero_documento = "Número de documento";
 
+    public $propiedadOld;
+
     protected $validationAttributes  = [
         'movimientoRegistral.distrito' => 'distrito de propiedad',
         'antecente_tomo' => 'tomo',

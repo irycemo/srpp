@@ -133,7 +133,7 @@
 
                     <div class="rounded-lg bg-gray-100 py-1 px-2 md:col-span-3 col-span-1 sm:col-span-2 lg:col-span-6">
 
-                        <strong>Comentario de la sentencia</strong>
+                        <strong>Comentario</strong>
 
                         <p>{{ $vario->descripcion }}</p>
 

@@ -213,6 +213,10 @@ class PaseFolio extends Component
 
             $role = 'Certificador Gravamen';
 
+        }elseif($this->modelo_editar->vario){
+
+            $role = 'Varios';
+
         }
 
         if($this->modelo_editar->asignadoA->hasRole('Pase a folio')){
