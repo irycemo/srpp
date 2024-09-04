@@ -100,6 +100,12 @@
 
         </x-input-group>
 
+        <x-input-group for="inscripcion.descripcion_acto" label="Descripción del acto" :error="$errors->first('inscripcion.descripcion_acto')" class="w-full lg:w-1/4 mx-auto">
+
+            <textarea class="bg-white rounded text-xs w-full  @error('inscripcion.descripcion_acto') border-1 border-red-500 @enderror" rows="4" wire:model="inscripcion.descripcion_acto"></textarea>
+
+        </x-input-group>
+
     </div>
 
     <div class="bg-white rounded-lg p-4 shadow-lg mb-4">
@@ -834,7 +840,7 @@
 
                                     @foreach ($representante->representados as $representado)
 
-                                        <p>{{ $representado->persona->nombre }} {{ $representado->persona->ap_paterno }} {{ $representado->persona->ap_materno }} {{ $representante->persona->razon_social }}</p>
+                                        <p>{{ $representado->persona->nombre }} {{ $representado->persona->ap_paterno }} {{ $representado->persona->ap_materno }} {{ $representado->persona->razon_social }}</p>
 
                                     @endforeach
 
@@ -876,26 +882,6 @@
             </div>
 
         @endif
-
-    </div>
-
-    <div class="bg-white rounded-lg p-1 flex justify-end shadow-lg mb-4">
-
-        <div class=" mx-auto lg:w-1/2">
-
-            <div>
-
-                <h4 class="text-lg mb-1 text-center">Descripción</h4>
-
-            </div>
-
-            <div>
-
-                <textarea class="bg-white rounded text-xs w-full  @error('inscripcion.descripcion_acto') border-1 border-red-500 @enderror" rows="4" wire:model="inscripcion.descripcion_acto"></textarea>
-
-            </div>
-
-        </div>
 
     </div>
 

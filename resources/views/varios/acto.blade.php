@@ -178,10 +178,6 @@
                     <p><strong>{{ $vario->acto_contenido }}</strong></p>
                 </div>
 
-                <p class="parrafo">
-                    {{ $vario->descripcion }}
-                </p>
-
                 @if($vario->acto_contenido == 'PERSONAS MORALES')
 
                     <p class="parrafo">
@@ -461,11 +457,15 @@
 
                     </p>
 
+                    <p class="parrafo">
+                        <strong>descripción del acto:</strong> {{ $vario->descripcion }}
+                    </p>
+
                 @endif
 
 
                 <p class="parrafo">
-                    A SOLICITUD DE: <strong>{{ $vario->movimientoRegistral->solicitante }}</strong> EXPEDIDO EL PRESENTE CERTIFICADO EN LA CIUDAD DE @if($predio->folioReal->distrito== '02 Uruapan' ) uruapan @else MORELIA @endif, MICHOACÁN, A LAS
+                    A SOLICITUD DE: <strong>{{ $vario->movimientoRegistral->solicitante }}</strong> se expide EL PRESENTE EN LA CIUDAD DE @if($predio->folioReal->distrito== '02 Uruapan' ) uruapan @else MORELIA, @endif MICHOACÁN, A LAS
                     {{ Carbon\Carbon::now()->locale('es')->translatedFormat('H:i:s \d\e\l l d \d\e F \d\e\l Y'); }}.
                 </p>
 

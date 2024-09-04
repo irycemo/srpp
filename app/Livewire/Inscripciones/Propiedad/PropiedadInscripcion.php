@@ -522,7 +522,7 @@ class PropiedadInscripcion extends Component
 
         if($persona){
 
-            foreach ($this->inscripcion->propietarios() as $propietario) {
+            foreach ($this->inscripcion->representantes() as $propietario) {
 
                 if($persona->id == $propietario->persona_id){
 

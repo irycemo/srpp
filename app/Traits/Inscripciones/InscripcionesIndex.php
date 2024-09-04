@@ -112,6 +112,8 @@ trait InscripcionesIndex{
 
                     $this->ruta($this->modelo_editar);
 
+                    break;
+
                 }
 
             }

@@ -248,7 +248,12 @@ class MovimientoRegistralService{
                                                     ->where('registro', $request['registro'])
                                                     ->where('numero_propiedad', $request['numero_propiedad'])
                                                     ->where('distrito', $request['distrito'])
-                                                    ->whereNull('folio_real')
+                                                    ->when($folioReal != null, function($q) use($folioReal){
+                                                        $q->where('folio_real', $folioReal->id);
+                                                    })
+                                                    ->when($folioReal == null, function($q) use($folioReal){
+                                                        $q->whereNull('folio_real');
+                                                    })
                                                     ->where('folio', '>=', 1)
                                                     ->first();
 
@@ -258,7 +263,12 @@ class MovimientoRegistralService{
                                                     ->where('registro', $request['registro'])
                                                     ->where('numero_propiedad', $request['numero_propiedad'])
                                                     ->where('distrito', $request['distrito'])
-                                                    ->whereNull('folio_real')
+                                                    ->when($folioReal != null, function($q) use($folioReal){
+                                                        $q->where('folio_real', $folioReal->id);
+                                                    })
+                                                    ->when($folioReal == null, function($q) use($folioReal){
+                                                        $q->whereNull('folio_real');
+                                                    })
                                                     ->where('folio', '>=', 1)
                                                     ->max('folio');
 
