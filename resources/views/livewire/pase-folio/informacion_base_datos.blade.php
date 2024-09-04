@@ -2,109 +2,113 @@
 
     <span class="flex items-center justify-center text-lg text-gray-700">Información de la base de datos</span>
 
-    <div class="space-y-1 text-sm">
+    @if($propiedadOld)
 
-        @if($propiedadOld->superficie)
+        <div class="space-y-1 text-sm">
 
-            <div class="rounded-lg bg-gray-100 py-1 px-2">
+            @if($propiedadOld->superficie)
 
-                <p><strong>Superficie</strong> {{ $propiedadOld->superficie }}</p>
+                <div class="rounded-lg bg-gray-100 py-1 px-2">
 
-            </div>
+                    <p><strong>Superficie</strong> {{ $propiedadOld->superficie }}</p>
 
-        @endif
+                </div>
 
-        @if($propiedadOld->monto)
+            @endif
 
-            <div class="rounded-lg bg-gray-100 py-1 px-2">
+            @if($propiedadOld->monto)
 
-                <p><strong>Monto</strong> {{ $propiedadOld->monto / 100 }} - <strong>Divisa</strong> {{ $propiedadOld->tipomon }}</p>
+                <div class="rounded-lg bg-gray-100 py-1 px-2">
 
-            </div>
+                    <p><strong>Monto</strong> {{ $propiedadOld->monto / 100 }} - <strong>Divisa</strong> {{ $propiedadOld->tipomon ?? '' }}</p>
 
-        @endif
+                </div>
 
-        @if($propiedadOld->fechainscripcion)
+            @endif
 
-            <div class="rounded-lg bg-gray-100 py-1 px-2">
+            @if($propiedadOld->fechainscripcion)
 
-                <p><strong>Fecha de inscripción</strong> {{ $propiedadOld->fechainscripcion }}</p>
+                <div class="rounded-lg bg-gray-100 py-1 px-2">
 
-            </div>
+                    <p><strong>Fecha de inscripción</strong> {{ $propiedadOld->fechainscripcion }}</p>
 
-        @endif
+                </div>
 
-        @if($propiedadOld->notaria)
+            @endif
 
-            <div class="rounded-lg bg-gray-100 py-1 px-2">
+            @if($propiedadOld->notaria)
 
-                <p><strong>Notaria</strong> {{ $propiedadOld->notaria }}</p>
+                <div class="rounded-lg bg-gray-100 py-1 px-2">
 
-            </div>
+                    <p><strong>Notaria</strong> {{ $propiedadOld->notaria }}</p>
 
-        @endif
+                </div>
 
-        @if($propiedadOld->escritura)
+            @endif
 
-            <div class="rounded-lg bg-gray-100 py-1 px-2">
+            @if($propiedadOld->escritura)
 
-                <p><strong>Escritura</strong> {{ $propiedadOld->escritura }}</p>
+                <div class="rounded-lg bg-gray-100 py-1 px-2">
 
-            </div>
+                    <p><strong>Escritura</strong> {{ $propiedadOld->escritura }}</p>
 
-        @endif
+                </div>
 
-        @if($propiedadOld->comentarios)
+            @endif
 
-            <div class="rounded-lg bg-gray-100 py-1 px-2">
+            @if($propiedadOld->comentarios)
 
-                <p><strong>Comentarios</strong> {{ $propiedadOld->comentarios }}</p>
+                <div class="rounded-lg bg-gray-100 py-1 px-2">
 
-            </div>
+                    <p><strong>Comentarios</strong> {{ $propiedadOld->comentarios }}</p>
 
-        @endif
+                </div>
 
-        @if($propiedadOld->Linderos)
+            @endif
 
-            <div class="rounded-lg bg-gray-100 py-1 px-2">
+            @if($propiedadOld->Linderos)
+
+                <div class="rounded-lg bg-gray-100 py-1 px-2">
 
 
-                <p><strong>Linderos</strong> {{ $propiedadOld->Linderos }}</p>
+                    <p><strong>Linderos</strong> {{ $propiedadOld->Linderos }}</p>
 
-            </div>
+                </div>
 
-        @endif
+            @endif
 
-        @if($propiedadOld->ubicacion)
+            @if($propiedadOld->ubicacion)
 
-            <div class="rounded-lg bg-gray-100 py-1 px-2">
+                <div class="rounded-lg bg-gray-100 py-1 px-2">
 
-                <p><strong>Ubicación</strong> {{ $propiedadOld->ubicacion }}</p>
+                    <p><strong>Ubicación</strong> {{ $propiedadOld->ubicacion }}</p>
 
-            </div>
+                </div>
 
-        @endif
+            @endif
 
-        @if($propiedadOld->propietarios)
+            @if($propiedadOld->propietarios)
 
-            <div class="rounded-lg bg-gray-100 py-1 px-2">
+                <div class="rounded-lg bg-gray-100 py-1 px-2">
 
-                <p><strong>Propietarios</strong> {{ $propiedadOld->propietarios }}</p>
+                    <p><strong>Propietarios</strong> {{ $propiedadOld->propietarios }}</p>
 
-            </div>
+                </div>
 
-        @endif
+            @endif
 
-        @if($propiedadOld->vendedores)
+            @if($propiedadOld->vendedores)
 
-            <div class="rounded-lg bg-gray-100 py-1 px-2">
+                <div class="rounded-lg bg-gray-100 py-1 px-2">
 
-                <p><strong>Vendedores</strong> {{ $propiedadOld->vendedores }}</p>
+                    <p><strong>Vendedores</strong> {{ $propiedadOld->vendedores }}</p>
 
-            </div>
+                </div>
 
-        @endif
+            @endif
 
-    </div>
+        </div>
+
+    @endif
 
 </div>
