@@ -4,23 +4,35 @@
 
     <div class="space-y-1 text-sm">
 
-        <div class="rounded-lg bg-gray-100 py-1 px-2">
+        @if($propiedadOld->superficie)
 
-            <p><strong>Superficie</strong> {{ $propiedadOld->superficie }}</p>
+            <div class="rounded-lg bg-gray-100 py-1 px-2">
 
-        </div>
+                <p><strong>Superficie</strong> {{ $propiedadOld->superficie }}</p>
 
-        <div class="rounded-lg bg-gray-100 py-1 px-2">
+            </div>
 
-            <p><strong>Monto</strong> {{ $propiedadOld->monto / 100 }} - <strong>Divisa</strong> {{ $propiedadOld->tipomon }}</p>
+        @endif
 
-        </div>
+        @if($propiedadOld->monto)
 
-        <div class="rounded-lg bg-gray-100 py-1 px-2">
+            <div class="rounded-lg bg-gray-100 py-1 px-2">
 
-            <p><strong>Fecha de inscripción</strong> {{ $propiedadOld->fechainscripcion }}</p>
+                <p><strong>Monto</strong> {{ $propiedadOld->monto / 100 }} - <strong>Divisa</strong> {{ $propiedadOld->tipomon }}</p>
 
-        </div>
+            </div>
+
+        @endif
+
+        @if($propiedadOld->fechainscripcion)
+
+            <div class="rounded-lg bg-gray-100 py-1 px-2">
+
+                <p><strong>Fecha de inscripción</strong> {{ $propiedadOld->fechainscripcion }}</p>
+
+            </div>
+
+        @endif
 
         @if($propiedadOld->notaria)
 
