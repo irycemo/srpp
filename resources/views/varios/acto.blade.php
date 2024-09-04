@@ -465,7 +465,7 @@
 
 
                 <p class="parrafo">
-                    A SOLICITUD DE: <strong>{{ $vario->movimientoRegistral->solicitante }}</strong> se expide EL PRESENTE EN LA CIUDAD DE @if($predio->folioReal->distrito== '02 Uruapan' ) uruapan @else MORELIA, @endif MICHOACÁN, A LAS
+                    A SOLICITUD DE: <strong>{{ $vario->movimientoRegistral->solicitante }}</strong> se expide EL PRESENTE EN LA CIUDAD DE @if($predio->folioReal->distrito== '02 Uruapan' ) uruapan @else MORELIA @endif MICHOACÁN, A LAS
                     {{ Carbon\Carbon::now()->locale('es')->translatedFormat('H:i:s \d\e\l l d \d\e F \d\e\l Y'); }}.
                 </p>
 
