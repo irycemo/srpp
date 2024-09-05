@@ -87,7 +87,7 @@ class GravamenIndex extends Component
                                                             ->orWhere('tramite', 'LIKE', '%' . $this->search . '%');
                                                     })
                                                     ->whereHas('gravamen', function($q){
-                                                        $q->whereIn('servicio', ['DL07', 'DM68', 'D155', 'D150', null]);
+                                                        $q->whereIn('servicio', ['DL07', 'DM68', 'D155', 'D150']);
                                                     })
                                                     ->orderBy($this->sort, $this->direction)
                                                     ->paginate($this->pagination);

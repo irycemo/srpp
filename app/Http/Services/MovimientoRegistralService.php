@@ -421,7 +421,27 @@ class MovimientoRegistralService{
                                         })
                                         ->first();
 
-            if($movimiento) return $movimiento->usuario_asignado;
+            if($movimiento){
+
+                if($categoria_servicio == 'Inscripciones - Gravamenes' && $movimiento->gravamen){
+
+                    return $movimiento->usuario_asignado;
+
+                }elseif($categoria_servicio == 'Varios, Arrendamientos, Avisos Preventivos' && $movimiento->vario){
+
+                    return $movimiento->usuario_asignado;
+
+                }elseif($categoria_servicio == 'Cancelación - Gravamenes' && $movimiento->cancelacion){
+
+                    return $movimiento->usuario_asignado;
+
+                }elseif($categoria_servicio == 'Sentencias' && $movimiento->sentencia){
+
+                    return $movimiento->usuario_asignado;
+
+                }
+
+            }
 
         }
 
