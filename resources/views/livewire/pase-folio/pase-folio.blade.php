@@ -123,7 +123,7 @@
 
                             <span class="lg:hidden absolute top-0 left-0 bg-blue-300 px-2 py-1 text-xs text-white font-bold uppercase rounded-br-xl">Usuario asignado</span>
 
-                            {{ $movimiento->asignadoA->name }}
+                            {{ $movimiento->asignadoA?->name }}
 
                         </x-table.cell>
 
@@ -133,7 +133,7 @@
 
                                 <span class="lg:hidden absolute top-0 left-0 bg-blue-300 px-2 py-1 text-xs text-white font-bold uppercase rounded-br-xl">Supervisor</span>
 
-                                {{ $movimiento->supervisor->name }}
+                                {{ $movimiento->supervisor?->name }}
 
                             </x-table.cell>
 

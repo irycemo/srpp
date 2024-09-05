@@ -249,15 +249,15 @@ class MovimientoRegistralService{
                                                     ->where('numero_propiedad', $request['numero_propiedad'])
                                                     ->where('distrito', $request['distrito'])
                                                     ->when($folioReal != null, function($q) use($folioReal){
-                                                        $q->where('folio_real', $folioReal->id);
+                                                        $q->where('folio_real', $folioReal->id)
+                                                            ->whereHas('folioReal', function($q){
+                                                                $q->whereIn('estado', ['nuevo', 'captura', 'elaborado']);
+                                                            });
                                                     })
                                                     ->when($folioReal == null, function($q) use($folioReal){
                                                         $q->whereNull('folio_real');
                                                     })
                                                     ->where('folio', '>=', 1)
-                                                    ->whereHas('folioReal', function($q){
-                                                        $q->whereIn('estado', ['nuevo', 'captura', 'elaborado']);
-                                                    })
                                                     ->first();
 
                 if($mRegsitral){
@@ -267,15 +267,15 @@ class MovimientoRegistralService{
                                                     ->where('numero_propiedad', $request['numero_propiedad'])
                                                     ->where('distrito', $request['distrito'])
                                                     ->when($folioReal != null, function($q) use($folioReal){
-                                                        $q->where('folio_real', $folioReal->id);
+                                                        $q->where('folio_real', $folioReal->id)
+                                                            ->whereHas('folioReal', function($q){
+                                                                $q->whereIn('estado', ['nuevo', 'captura', 'elaborado']);
+                                                            });
                                                     })
                                                     ->when($folioReal == null, function($q) use($folioReal){
                                                         $q->whereNull('folio_real');
                                                     })
                                                     ->where('folio', '>=', 1)
-                                                    ->whereHas('folioReal', function($q){
-                                                        $q->whereIn('estado', ['nuevo', 'captura', 'elaborado']);
-                                                    })
                                                     ->max('folio');
 
                     $auxArray = $array + [
