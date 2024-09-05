@@ -305,7 +305,7 @@ class MovimientoRegistralService{
             }
 
             return $auxArray + $array + [
-                'usuario_asignado' => $this->obtenerUsuarioAsignado($documento_entrada, $folioReal, $request['servicio'], $request['distrito'], $request['solicitante'], $request['tipo_servicio'],$request['categoria_servicio'], false),
+                'usuario_asignado' => $this->obtenerUsuarioAsignado($documento_entrada, $folioReal, $request['servicio'], $request['distrito'], $request['solicitante'], $request['tipo_servicio'],$request['categoria_servicio'], $auxArray['estado'], false),
                 'usuario_supervisor' => $this->obtenerSupervisor($request['servicio'], $request['categoria_servicio'], $request['distrito']),
                 'solicitante' => $request['nombre_solicitante']
             ];
@@ -363,7 +363,7 @@ class MovimientoRegistralService{
 
     }
 
-    public function obtenerUsuarioAsignado($documento_entrada, $folioReal, $servicio, $distrito, $solicitante, $tipo_servicio, $categoria_servicio, $random):int
+    public function obtenerUsuarioAsignado($documento_entrada, $folioReal, $servicio, $distrito, $solicitante, $tipo_servicio, $categoria_servicio, $estado, $random):int
     {
 
         /* Certificaciones: Copias simples, Copias certificadas */
@@ -401,7 +401,8 @@ class MovimientoRegistralService{
             && isset($documento_entrada['numero_documento']))
         {
 
-           $movimiento =  MovimientoRegistral::when(isset($documento_entrada['tipo_documento']), function($q) use($documento_entrada){
+           $movimientos =  MovimientoRegistral::with('gravamen', 'vario', 'sentencia', 'cancelacion', 'inscripcionPropiedad')
+                                        ->when(isset($documento_entrada['tipo_documento']), function($q) use($documento_entrada){
                                             $q->where('tipo_documento', $documento_entrada['tipo_documento']);
                                         })
                                         ->when(isset($documento_entrada['autoridad_cargo']), function($q) use($documento_entrada){
@@ -419,25 +420,33 @@ class MovimientoRegistralService{
                                         ->when(isset($documento_entrada['procedencia']), function($q) use($documento_entrada){
                                             $q->where('procedencia', $documento_entrada['procedencia']);
                                         })
-                                        ->first();
+                                        ->get();
 
-            if($movimiento){
+            foreach ($movimientos as $movimiento) {
 
-                if($categoria_servicio == 'Inscripciones - Gravamenes' && $movimiento->gravamen){
+                if($movimiento){
 
-                    return $movimiento->usuario_asignado;
+                    if($categoria_servicio == 'Inscripciones - Gravamenes' && $movimiento->gravamen){
 
-                }elseif($categoria_servicio == 'Varios, Arrendamientos, Avisos Preventivos' && $movimiento->vario){
+                        return $movimiento->usuario_asignado;
 
-                    return $movimiento->usuario_asignado;
+                    }elseif($categoria_servicio == 'Varios, Arrendamientos, Avisos Preventivos' && $movimiento->vario){
 
-                }elseif($categoria_servicio == 'Cancelación - Gravamenes' && $movimiento->cancelacion){
+                        return $movimiento->usuario_asignado;
 
-                    return $movimiento->usuario_asignado;
+                    }elseif($categoria_servicio == 'Cancelación - Gravamenes' && $movimiento->cancelacion){
 
-                }elseif($categoria_servicio == 'Sentencias' && $movimiento->sentencia){
+                        return $movimiento->usuario_asignado;
 
-                    return $movimiento->usuario_asignado;
+                    }elseif($categoria_servicio == 'Sentencias' && $movimiento->sentencia){
+
+                        return $movimiento->usuario_asignado;
+
+                    }elseif($categoria_servicio == 'Inscripciones - Propiedad' && $movimiento->inscripcionPropiedad){
+
+                        return $movimiento->usuario_asignado;
+
+                    }
 
                 }
 
@@ -450,35 +459,35 @@ class MovimientoRegistralService{
         /* Inscripciones: Propiedad */
         if(in_array($servicio, $inscripcionesPropiedad)){
 
-            return $this->asignacionService->obtenerUsuarioPropiedad($folioReal, $distrito);
+            return $this->asignacionService->obtenerUsuarioPropiedad($folioReal, $distrito, $estado);
 
         }
 
         /* Inscripciones: Gravamen */
         if(in_array($servicio, ['DL07', 'DM68', 'D155', 'D150']) && $categoria_servicio == 'Inscripciones - Gravamenes'){
 
-            return $this->asignacionService->obtenerUsuarioGravamen($folioReal, $distrito);
+            return $this->asignacionService->obtenerUsuarioGravamen($folioReal, $distrito, $estado);
 
         }
 
         /* Inscripciones: Cancelaciones */
         if($servicio == 'D156' && $categoria_servicio == 'Cancelación - Gravamenes'){
 
-            return $this->asignacionService->obtenerUsuarioCancelacion($folioReal, $distrito);
+            return $this->asignacionService->obtenerUsuarioCancelacion($folioReal, $distrito, $estado);
 
         }
 
         /* Inscripciones: Varios */
         if(in_array($servicio, ['DL09', 'D128']) && $categoria_servicio == 'Varios, Arrendamientos, Avisos Preventivos'){
 
-            return $this->asignacionService->obtenerUsuarioVarios($folioReal, $distrito);
+            return $this->asignacionService->obtenerUsuarioVarios($folioReal, $distrito, $estado);
 
         }
 
         /* Inscripciones: Sentencias */
         if($servicio == 'D110'){
 
-            return $this->asignacionService->obtenerUsuarioSentencias($folioReal, $distrito);
+            return $this->asignacionService->obtenerUsuarioSentencias($folioReal, $distrito, $estado);
 
         }
 

@@ -306,7 +306,7 @@ class AsignacionService{
     }
 
     /* Inscripciones : Propiedad */
-    public function obtenerUsuarioPropiedad($folioReal, $distrito):int
+    public function obtenerUsuarioPropiedad($folioReal, $distrito, $estado):int
     {
 
         $usuarios = User::with('ultimoMovimientoRegistralAsignado')
@@ -317,7 +317,7 @@ class AsignacionService{
                                 ->when($distrito != 2, function($q){
                                     $q->where('ubicacion', '!=', 'Regional 4');
                                 })
-                                ->when($folioReal != null, function($q){
+                                ->when(($folioReal != null) || ($folioReal === null && $estado == 'precalificacion'), function($q){
                                     $q->whereHas('roles', function($q){
                                         $q->whereIn('name', ['Propiedad', 'Registrador Propiedad']);
                                     });
@@ -385,7 +385,7 @@ class AsignacionService{
     }
 
     /* Inscripciones : Gravamen */
-    public function obtenerUsuarioGravamen($folioReal, $distrito):int
+    public function obtenerUsuarioGravamen($folioReal, $distrito, $estado):int
     {
 
         $usuarios = User::with('ultimoMovimientoRegistralAsignado')
@@ -396,9 +396,9 @@ class AsignacionService{
                                 ->when($distrito != 2, function($q){
                                     $q->where('ubicacion', '!=', 'Regional 4');
                                 })
-                                ->when($folioReal != null, function($q){
+                                ->when(($folioReal != null) || ($folioReal === null && $estado == 'precalificacion'), function($q){
                                     $q->whereHas('roles', function($q){
-                                        $q->whereIn('name', ['Gravamen']);
+                                        $q->whereIn('name', ['Gravamen', 'Registrador Gravamen']);
                                     });
                                 })
                                 ->when($folioReal === null, function($q){
@@ -464,7 +464,7 @@ class AsignacionService{
     }
 
     /* Inscripciones : Cancelacion */
-    public function obtenerUsuarioCancelacion($folioReal, $distrito):int
+    public function obtenerUsuarioCancelacion($folioReal, $distrito, $estado):int
     {
 
         if($distrito == 2){
@@ -489,7 +489,7 @@ class AsignacionService{
                                 ->when($distrito != 2, function($q){
                                     $q->where('ubicacion', '!=', 'Regional 4');
                                 })
-                                ->when($folioReal != null, function($q){
+                                ->when(($folioReal != null) || ($folioReal === null && $estado == 'precalificacion'), function($q){
                                     $q->whereHas('roles', function($q){
                                         $q->whereIn('name', ['Cancelación', 'Registrador Cancelación']);
                                     });
@@ -557,7 +557,7 @@ class AsignacionService{
     }
 
     /* Inscripciones : Varios */
-    public function obtenerUsuarioVarios($folioReal, $distrito):int
+    public function obtenerUsuarioVarios($folioReal, $distrito, $estado):int
     {
 
         $usuarios = User::with('ultimoMovimientoRegistralAsignado')
@@ -568,7 +568,7 @@ class AsignacionService{
                                 ->when($distrito != 2, function($q){
                                     $q->where('ubicacion', '!=', 'Regional 4');
                                 })
-                                ->when($folioReal != null, function($q){
+                                ->when(($folioReal != null) || ($folioReal === null && $estado == 'precalificacion'), function($q){
                                     $q->whereHas('roles', function($q){
                                         $q->whereIn('name', ['Varios', 'Registrador Varios']);
                                     });
@@ -635,7 +635,7 @@ class AsignacionService{
     }
 
     /* Inscripciones : Sentencias */
-    public function obtenerUsuarioSentencias($folioReal, $distrito):int
+    public function obtenerUsuarioSentencias($folioReal, $distrito, $estado):int
     {
 
         $usuarios = User::with('ultimoMovimientoRegistralAsignado')
@@ -646,7 +646,7 @@ class AsignacionService{
                                 ->when($distrito != 2, function($q){
                                     $q->where('ubicacion', '!=', 'Regional 4');
                                 })
-                                ->when($folioReal != null, function($q){
+                                ->when(($folioReal != null) || ($folioReal === null && $estado == 'precalificacion'), function($q){
                                     $q->whereHas('roles', function($q){
                                         $q->whereIn('name', ['Sentencias', 'Registrador Sentencias']);
                                     });
