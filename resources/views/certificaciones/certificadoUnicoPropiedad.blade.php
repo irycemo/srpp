@@ -182,7 +182,7 @@
                 </p>
 
                 <p class="parrafo">
-                    EL DIRECTOR DEL REGISTRO PÚBLICO DE LA PROPIEDAD @if($distrito == '02 Uruapan' ) <strong>L.A. SANDRO MEDINA MORALES</strong> @else <strong>{{ $director }}</strong>, @endif certifica que habiendose examinado el acervo registral correspondientes al distrito de {{ $distrito}}, la propiedad que acontinuación se describe es la única que se registra a nombre de: <strong>{{ $persona }}</strong> como único propietario de la siguiente propiedad.
+                    EL DIRECTOR DEL REGISTRO PÚBLICO DE LA PROPIEDAD @if($distrito == '02 Uruapan' ) <strong>L.A. SANDRO MEDINA MORALES</strong> @else <strong>{{ $director }}</strong>, @endif certifica que habiendose examinado el acervo registral correspondientes al distrito de {{ $distrito}}, la propiedad que acontinuación se describe es la única que se registra a nombre de: <strong>{{ $persona }}</strong>.
                 </p>
 
                 <p style="text-align: center"><strong>FOLIO REAL:</strong> {{ $movimientoRegistral->folioReal->folio }}</p>

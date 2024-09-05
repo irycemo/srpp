@@ -240,7 +240,7 @@
 
                 </x-button-red>
 
-                @if(count($predios) == 1 || count($prediosOld) == 1)
+                @if($flagUnico)
 
                     <x-button-blue
                         wire:click="generarCertificadoPropiedadUnico"

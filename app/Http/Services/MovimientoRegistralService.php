@@ -255,6 +255,9 @@ class MovimientoRegistralService{
                                                         $q->whereNull('folio_real');
                                                     })
                                                     ->where('folio', '>=', 1)
+                                                    ->whereHas('folioReal', function($q){
+                                                        $q->whereIn('estado', ['nuevo', 'captura', 'elaborado']);
+                                                    })
                                                     ->first();
 
                 if($mRegsitral){
@@ -270,6 +273,9 @@ class MovimientoRegistralService{
                                                         $q->whereNull('folio_real');
                                                     })
                                                     ->where('folio', '>=', 1)
+                                                    ->whereHas('folioReal', function($q){
+                                                        $q->whereIn('estado', ['nuevo', 'captura', 'elaborado']);
+                                                    })
                                                     ->max('folio');
 
                     $auxArray = $array + [

@@ -62,6 +62,14 @@ class FolioRealController extends Controller
 
             if($folio_real){
 
+                if($folio_real->estado == 'rechazado'){
+
+                    return response()->json([
+                        'error' => 'El folio real esta rechazado',
+                    ], 401);
+
+                }
+
                 return (new FolioRealResource($folio_real))->response()->setStatusCode(200);
 
             }elseif(isset($validated['folio_real']) && !$folio_real){

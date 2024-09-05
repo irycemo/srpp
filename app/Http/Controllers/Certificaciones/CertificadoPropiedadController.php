@@ -150,7 +150,11 @@ class CertificadoPropiedadController extends Controller
 
         $servicio = $this->nombreServicio($movimientoRegistral->certificacion->servicio);
 
-        $pdf = Pdf::loadView('certificaciones.certificadoUnicoPropiedad', compact('predio', 'distrito', 'director', 'movimientoRegistral', 'fecha', 'registro_numero', 'tomo_numero', 'formatter', 'servicio'));
+        $persona = $movimientoRegistral->certificacion->personas()->first()->persona->nombre . ' ' .
+                    $movimientoRegistral->certificacion->personas()->first()->persona->ap_paterno . ' ' .
+                    $movimientoRegistral->certificacion->personas()->first()->persona->ap_materno;
+
+        $pdf = Pdf::loadView('certificaciones.certificadoUnicoPropiedad', compact('predio', 'distrito', 'director', 'movimientoRegistral', 'fecha', 'registro_numero', 'tomo_numero', 'formatter', 'servicio', 'persona'));
 
         $pdf->render();
 

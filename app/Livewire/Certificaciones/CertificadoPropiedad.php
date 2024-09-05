@@ -34,6 +34,7 @@ class CertificadoPropiedad extends Component
     public $prediosOld = [];
 
     public $flagNegativo = false;
+    public $flagUnico = false;
 
     public $observaciones;
 
@@ -123,13 +124,17 @@ class CertificadoPropiedad extends Component
 
             }
 
-            if(count($this->predios) == 0){
+            if(count($this->prediosOld) == 0){
 
                 $this->flagNegativo = true;
 
                 $this->dispatch('mostrarMensaje', ['warning', "No se encontraron resultados con la información ingresada."]);
 
-                return;
+            }
+
+            if(count($this->prediosOld) == 1){
+
+                $this->flagUnico = true;
 
             }
 
@@ -159,6 +164,12 @@ class CertificadoPropiedad extends Component
 
                 }
 
+                if(count($this->predios) == 1){
+
+                    $this->flagUnico = true;
+
+                }
+
             }else{
 
                 $this->flagNegativo = true;
@@ -166,6 +177,12 @@ class CertificadoPropiedad extends Component
                 $this->dispatch('mostrarMensaje', ['warning', "No se encontraron resultados con la información ingresada."]);
 
             }
+
+        }
+
+        if($this->flagUnico){
+
+            $this->buscarProppietariosEnFolio();
 
         }
 
@@ -398,6 +415,8 @@ class CertificadoPropiedad extends Component
             $this->dispatch('mostrarMensaje', ['success', $this->nombre  . ' ' . $this->ap_paterno  . ' ' . $this->ap_materno . ' no es propietario.']);
 
             $this->flagNegativo = true;
+
+            $this->flagUnico = false;
 
         }else{
 
