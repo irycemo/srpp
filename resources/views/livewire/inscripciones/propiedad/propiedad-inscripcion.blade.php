@@ -900,7 +900,7 @@
                 <tr class="text-sm text-gray-500 text-left traling-wider whitespace-nowrap">
 
                     <th class="px-2">Nombre / Razón social</th>
-                    <th class="px-2">% Porpiedad</th>
+                    <th class="px-2">% Propiedad</th>
                     <th class="px-2">% Nuda</th>
                     <th class="px-2">% Usufructo</th>
 

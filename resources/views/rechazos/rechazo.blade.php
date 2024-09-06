@@ -82,6 +82,12 @@
 
             <p style="text-align: center; font-weight: bold; font-size: 11px;">Movimiento registral rechazado</p>
 
+            @if($movimientoRegistral->folio_real)
+
+                <p><strong>Folio Real: {{ $movimientoRegistral->folioReal->folio }}-{{ $movimientoRegistral->folio }}</strong></p>
+
+            @endif
+
             <p>
                 el movimiento registral con numero de control: {{ $movimientoRegistral->año }}-{{ $movimientoRegistral->tramite }}-{{ $movimientoRegistral->usuario }}
                 ha sido rechazado.
@@ -97,7 +103,7 @@
 
                         <tr>
                             <th >
-                                <p>Rechaza</p>
+                                <p style="margin-bottom: 50px;">Rechaza</p>
                                 <p class="borde" style="font-weight: 400; vertical-align: top">{{ auth()->user()->name }}</p>
                             </th>
                             {{-- <th>

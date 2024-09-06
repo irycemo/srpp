@@ -478,7 +478,6 @@ class AsignacionService{
 
             return $registradorCancelacion->id;
 
-
         }
 
         $usuarios = User::with('ultimoMovimientoRegistralAsignado')

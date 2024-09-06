@@ -1276,14 +1276,28 @@ class PropiedadInscripcion extends Component
 
         foreach($this->inscripcion->propietarios() as $adquiriente){
 
-            $this->predio->actores()->create([
-                'persona_id' => $adquiriente->persona->id,
-                'tipo_actor' => 'propietario',
-                'porcentaje_propiedad' => $adquiriente->porcentaje_propiedad,
-                'porcentaje_nuda' => $adquiriente->porcentaje_nuda,
-                'porcentaje_usufructo' => $adquiriente->porcentaje_usufructo,
-                'creado_por' => auth()->id()
-            ]);
+            $actor = $this->predio->actores()->where('persona_id', $adquiriente->persona_id)->first();
+
+            if($actor){
+
+                $actor->update([
+                    'porcentaje_propiedad' => $actor->porcentaje_propiedad + $adquiriente->porcentaje_propiedad,
+                    'porcentaje_nuda' => $actor->porcentaje_nuda + $adquiriente->porcentaje_nuda,
+                    'porcentaje_usufructo' => $actor->porcentaje_usufructo + $adquiriente->porcentaje_usufructo,
+                ]);
+
+            }else{
+
+                $this->predio->actores()->create([
+                    'persona_id' => $adquiriente->persona->id,
+                    'tipo_actor' => 'propietario',
+                    'porcentaje_propiedad' => $adquiriente->porcentaje_propiedad,
+                    'porcentaje_nuda' => $adquiriente->porcentaje_nuda,
+                    'porcentaje_usufructo' => $adquiriente->porcentaje_usufructo,
+                    'creado_por' => auth()->id()
+                ]);
+
+            }
 
         }
 
@@ -1437,6 +1451,20 @@ class PropiedadInscripcion extends Component
         }
 
         $this->predio = $this->inscripcion->movimientoRegistral->folioReal->predio;
+
+        if(!$this->inscripcion->acto_contenido){
+
+            foreach($this->inscripcion->getAttributes() as $attribute => $value){
+
+                if(!$value && isset($this->predio->{ $attribute })){
+
+                    $this->inscripcion->{$attribute} = $this->predio->{ $attribute};
+
+                }
+
+            }
+
+        }
 
         foreach ($this->predio->colindancias as $colindancia) {
 
