@@ -376,7 +376,7 @@ class MovimientoRegistralService{
 
         }
 
-        $auxArray = null;
+        $auxArray = [];
 
         if(isset($request['tomo']) && isset($request['registro']) && isset($request['numero_propiedad'])){
 

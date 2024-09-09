@@ -262,23 +262,23 @@
                                     </p>
 
                                     <p class="parrafo">
-                                        <strong>Acto contenido:</strong>{{ $gravamen->acto_contenido }}
+                                        <strong>Acto contenido:</strong> {{ $gravamen->acto_contenido }}
                                     </p>
 
                                     <p class="parrafo">
-                                        <strong>Tipo / Número de documento:</strong>{{ $gravamen->movimientoRegistral->tipo_documento }}/{{ $gravamen->movimientoRegistral->numero_documento }}
+                                        <strong>Tipo / Número de documento:</strong> {{ $gravamen->movimientoRegistral->tipo_documento }}/{{ $gravamen->movimientoRegistral->numero_documento }}
                                     </p>
 
                                     <p class="parrafo">
-                                        <strong>Procedencia:</strong>{{ $gravamen->movimientoRegistral->procedencia }}
+                                        <strong>Procedencia:</strong> {{ $gravamen->movimientoRegistral->procedencia }}
                                     </p>
 
                                     <p class="parrafo">
-                                        <strong>Tipo:</strong>{{ $gravamen->tipo }}
+                                        <strong>Tipo:</strong> {{ $gravamen->tipo }}
                                     </p>
 
                                     <p class="parrafo">
-                                        <strong>Descripción:</strong>{{ $gravamen->observaciones }}
+                                        <strong>Descripción:</strong> {{ $gravamen->observaciones }}
                                     </p>
 
                                     <p class="parrafo">
