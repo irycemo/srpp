@@ -46,6 +46,8 @@
 
     @if($vario->acto_contenido == 'PERSONAS MORALES')
 
+        @livewire('varios.personas-morales')
+
         <div class="p-4 bg-white shadow-xl rounded-xl mb-5">
 
             <span class="flex items-center justify-center ext-gray-700 mb-5">Datos de la asignación de folio real de persona moral</span>
@@ -186,9 +188,10 @@
 
         </div>
 
-    @endif
+    {{-- Aclaración administrativa --}}
+    @elseif($vario->servicio == 'D112')
 
-    @if($vario->acto_contenido == 'CONSOLIDACIÓN DEL USUFRUCTO')
+        @livewire('varios.personas-morales')
 
         <div class="p-4 bg-white shadow-xl rounded-xl mb-5">
 

@@ -450,7 +450,7 @@ class CertificadoPropiedad extends Component
 
         $this->validate();
 
-        if($this->certificacion->movimientoRegistral->tipo_servicio == 'ordinario'){
+        if($this->certificacion->movimientoRegistral->tipo_servicio == 'ordinario' && $this->modelo_editar->movimientoRegistral->distrito != '02 Uruapan'){
 
             if(!($this->calcularDiaElaboracion($this->certificacion) <= now())){
 

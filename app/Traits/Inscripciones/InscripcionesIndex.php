@@ -59,6 +59,26 @@ trait InscripcionesIndex{
 
         $this->modelo_editar = $movimientoRegistral;
 
+        $aclaracion = $this->modelo_editar->folioReal->aclaracionAdministrativa();
+
+        if($aclaracion){
+
+            if($aclaracion->id == $movimientoRegistral->id){
+
+                $this->ruta($this->modelo_editar);
+
+                return;
+
+            }else{
+
+                $this->dispatch('mostrarMensaje', ['warning', "El folio real tiene aclaración administrativa vigente."]);
+
+                return;
+
+            }
+
+        }
+
         if($this->modelo_editar->folioReal->avisoPreventivo()){
 
             $this->dispatch('mostrarMensaje', ['warning', "El folio real tiene un aviso preventivo vigente."]);
@@ -389,7 +409,7 @@ trait InscripcionesIndex{
 
         $diaElaboracion = $modelo->fecha_pago;
 
-        for ($i=0; $i < 4; $i++) {
+        for ($i=0; $i < 3; $i++) {
 
             $diaElaboracion->addDays(1);
 

@@ -157,7 +157,7 @@ class CertificadoGravamen extends Component
 
         $diaElaboracion = $modelo->fecha_pago;
 
-        for ($i=0; $i < 4; $i++) {
+        for ($i=0; $i < 2; $i++) {
 
             $diaElaboracion->addDays(1);
 
@@ -175,7 +175,7 @@ class CertificadoGravamen extends Component
 
     public function generarCertificado(){
 
-        if($this->modelo_editar->movimientoRegistral->tipo_servicio == 'ordinario'){
+        if($this->modelo_editar->movimientoRegistral->tipo_servicio == 'ordinario' && $this->modelo_editar->movimientoRegistral->distrito != '02 Uruapan'){
 
             if(!($this->calcularDiaElaboracion($this->modelo_editar->movimientoRegistral) <= now())){
 

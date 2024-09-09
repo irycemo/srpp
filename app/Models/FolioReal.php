@@ -154,4 +154,17 @@ class FolioReal extends Model implements Auditable
 
     }
 
+    public function aclaracionAdministrativa(){
+
+        $movimiento = $this->movimientosRegistrales()
+                                        ->whereHas('vario', function($q){
+                                            $q->whereIn('servicio', ['D112']);
+                                        })
+                                        ->where('estado','!=', 'concluido')
+                                        ->first();
+
+        return $movimiento;
+
+    }
+
 }

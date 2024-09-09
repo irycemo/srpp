@@ -54,7 +54,11 @@ class Propiedades extends Component
             'numero_propiedad' => 'required',
         ]);
 
-        $this->modelo_editar = Propiedadold::where('distrito', $this->distrito)->where('tomo', $this->tomo)->where('registro', $this->registro)->where('noprop', $this->numero_propiedad)->first();
+        $this->modelo_editar = Propiedadold::where('distrito', $this->distrito)
+                                                ->where('tomo', $this->tomo)
+                                                ->where('registro', $this->registro)
+                                                ->where('noprop', $this->numero_propiedad)
+                                                ->first();
 
         if(!$this->modelo_editar){
 
