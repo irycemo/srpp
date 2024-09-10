@@ -22,6 +22,11 @@
 
         @livewire('varios.consolidacion-usufructo', ['vario' => $this->vario])
 
+    {{-- Primer aviso preventivo --}}
+    @elseif($vario->servicio == 'DL09')
+
+        @livewire('varios.primer-aviso-preventivo', ['vario' => $this->vario])
+
     @else
 
         <div class="p-4 bg-white shadow-xl rounded-xl mb-5">

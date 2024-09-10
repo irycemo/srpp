@@ -284,7 +284,7 @@ class Constantes{
     ];
 
     const ACTOS_INSCRIPCION_VARIOS = [
-        'PRIMER AVISO PREVENTIVO',
+        /* 'PRIMER AVISO PREVENTIVO', */
         'SEGUNDO AVISO PREVENTIVO',
         'CAPITULACIÓN',
         'CAPITULACIÓN MATRIMONIAL',
@@ -292,9 +292,9 @@ class Constantes{
         'CESIÓN DE PODER',
         'CONSTITUCIÓN DE SOCIEDAD CONYUGAL',
         'NOMBRAMIENTO',
-        'PERSONAS MORALES',
+        /* 'PERSONAS MORALES',
         'CONSOLIDACIÓN DEL USUFRUCTO',
-        'ACLARACIÓN ADMINISTRATIVA'
+        'ACLARACIÓN ADMINISTRATIVA' */
     ];
 
     const ACTOS_INSCRIPCION_SENTENCIAS = [

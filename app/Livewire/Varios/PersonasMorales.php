@@ -54,6 +54,14 @@ class PersonasMorales extends Component
         return [
             'vario.acto_contenido' => 'required',
             'vario.descripcion' => 'required',
+            'denominacion' => 'required',
+            'fecha_celebracion' => 'required',
+            'fecha_inscripcion' => 'required',
+            'notaria' => 'required',
+            'nombre_notario' => 'required',
+            'numero_hojas' => 'required',
+            'descripcion' => 'required',
+            'observaciones' => 'required',
          ];
     }
 
@@ -205,41 +213,6 @@ class PersonasMorales extends Component
             $this->dispatch('mostrarMensaje', ['error', "Ha ocurrido un error."]);
 
         }
-
-    }
-
-    public function finalizar(){
-
-        $this->validate();
-
-        $this->validate([
-            'denominacion' => 'required',
-            'fecha_celebracion' => 'required',
-            'fecha_inscripcion' => 'required',
-            'notaria' => 'required',
-            'nombre_notario' => 'required',
-            'numero_hojas' => 'required',
-            'descripcion' => 'required',
-            'observaciones' => 'required',
-        ]);
-
-        if($this->vario->actores->count() == 0){
-
-            $this->dispatch('mostrarMensaje', ['error', "Debe haber participantes."]);
-
-            return;
-
-        }
-
-        if(!$this->vario->movimientoRegistral->documentoEntrada()){
-
-            $this->dispatch('mostrarMensaje', ['error', "Debe subir el documento de entrada."]);
-
-            return;
-
-        }
-
-        $this->modalContraseña = true;
 
     }
 
@@ -405,8 +378,6 @@ class PersonasMorales extends Component
             $this->observaciones = $this->vario->movimientoRegistral->folioRealPersona->observaciones;
 
         }
-
-        $this->actos = Constantes::ACTOS_INSCRIPCION_VARIOS;
 
         $this->vario->load('actores.persona');
 

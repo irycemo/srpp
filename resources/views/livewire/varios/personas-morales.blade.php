@@ -4,6 +4,12 @@
 
         <div class="flex gap-3 items-center w-full lg:w-1/2 justify-center mx-auto">
 
+            <span>Personas morales</span>
+
+        </div>
+
+        <div class="flex gap-3 items-center w-full lg:w-1/2 justify-center mx-auto">
+
             <x-input-group for="vario.descripcion" label="Comentario del movimiento" :error="$errors->first('vario.descripcion')" class="w-full">
 
                 <textarea rows="3" class="w-full bg-white rounded" wire:model="vario.descripcion"></textarea>

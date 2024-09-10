@@ -805,7 +805,6 @@ class Elaboracion extends Component
 
     }
 
-
     public function revisarInscripcionPropiedad(){
 
         if(
