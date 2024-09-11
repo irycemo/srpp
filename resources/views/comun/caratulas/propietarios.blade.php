@@ -15,7 +15,7 @@
 
     <tbody>
 
-        @foreach ($folioReal->predio->propietarios() as $propietario)
+        @foreach ($predio->propietarios() as $propietario)
 
             <tr>
                 <td style="padding-right: 40px;">

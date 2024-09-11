@@ -179,6 +179,22 @@
                                                 Finalizar
                                             </x-button-green>
 
+                                        @elseif($movimiento->estado == 'finalizado' && auth()->user()->hasRole(['Jefe de departamento']))
+
+                                            <x-button-blue
+                                                wire:click="imprimir({{  $movimiento->id }})"
+                                                wire:loading.attr="disabled"
+                                                wire:target="imprimir({{  $movimiento->id }})">
+                                                Imprimir
+                                            </x-button-blue>
+
+                                            <x-button-green
+                                                wire:click="abrirModalConcluir({{  $movimiento->id }})"
+                                                wire:loading.attr="disabled"
+                                                wire:target="abrirModalConcluir({{  $movimiento->id }})">
+                                                Finalizar
+                                            </x-button-green>
+
                                         @endif
 
                                     </div>

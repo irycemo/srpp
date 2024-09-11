@@ -1,52 +1,52 @@
 <p class="separador">DESCRIPCIÓN DEL INMUEBLE</p>
 
 <p class="parrafo">
-    @if($folioReal->predio->cp_localidad)
-        <strong>Cuenta predial:</strong> {{ $folioReal->predio->cp_localidad }}-{{ $folioReal->predio->cp_oficina }}-{{ $folioReal->predio->cp_tipo_predio }}-{{ $folioReal->predio->cp_registro }};
+    @if($predio->cp_localidad)
+        <strong>Cuenta predial:</strong> {{ $predio->cp_localidad }}-{{ $predio->cp_oficina }}-{{ $predio->cp_tipo_predio }}-{{ $predio->cp_registro }};
     @endif
 
-    @if($folioReal->predio->cc_region_catastral)
-        <strong>Clave catastral:</strong> {{ $folioReal->predio->cc_estado }}-{{ $folioReal->predio->cc_region_catastral }}-{{ $folioReal->predio->cc_municipio }}-{{ $folioReal->predio->cc_zona_catastral }}-{{ $folioReal->predio->cc_sector }}-{{ $folioReal->predio->cc_manzana }}-{{ $folioReal->predio->cc_predio }}-{{ $folioReal->predio->cc_edificio }}-{{ $folioReal->predio->cc_departamento }};
+    @if($predio->cc_region_catastral)
+        <strong>Clave catastral:</strong> {{ $predio->cc_estado }}-{{ $predio->cc_region_catastral }}-{{ $predio->cc_municipio }}-{{ $predio->cc_zona_catastral }}-{{ $predio->cc_sector }}-{{ $predio->cc_manzana }}-{{ $predio->cc_predio }}-{{ $predio->cc_edificio }}-{{ $predio->cc_departamento }};
     @endif
 
-    <strong>Superficie de terreno:</strong> {{ $superficie_terreno }} {{ $folioReal->predio->unidad_area }} <strong>Superficie de construcción:</strong> {{ $superficie_construccion }} {{ $folioReal->predio->unidad_area }} <strong>monto de la transacción:</strong> {{ $monto_transaccion }} {{ $folioReal->predio->divisa }};
+    <strong>Superficie de terreno:</strong> {{ $predio->superficie_terreno }} {{ $predio->unidad_area }} <strong>Superficie de construcción:</strong> {{ $predio->superficie_construccion }} {{ $predio->unidad_area }} <strong>monto de la transacción:</strong> ${{ number_format($predio->monto_transaccion, 2) }} {{ $predio->divisa }};
 
-    @if ($folioReal->predio->curt)
-        <strong>curt:</strong> {{ $folioReal->predio->curt }};
+    @if ($predio->curt)
+        <strong>curt:</strong> {{ $predio->curt }};
     @endif
 
-    @if ($folioReal->predio->superficie_judicial)
-        <strong>superficie judicial:</strong> {{ $folioReal->predio->superficie_judicial }} {{ $folioReal->predio->unidad_area }};
+    @if ($predio->superficie_judicial)
+        <strong>superficie judicial:</strong> {{ $predio->superficie_judicial }} {{ $predio->unidad_area }};
     @endif
 
-    @if ($folioReal->predio->superficie_notarial)
-        <strong>superficie notarial:</strong> {{ $folioReal->predio->superficie_notarial }} {{ $folioReal->predio->unidad_area }};
+    @if ($predio->superficie_notarial)
+        <strong>superficie notarial:</strong> {{ $predio->superficie_notarial }} {{ $predio->unidad_area }};
     @endif
 
-    @if ($folioReal->predio->area_comun_terreno)
-        <strong>área de terreno común:</strong> {{ $folioReal->predio->area_comun_terreno }} {{ $folioReal->predio->unidad_area }};
+    @if ($predio->area_comun_terreno)
+        <strong>área de terreno común:</strong> {{ $predio->area_comun_terreno }} {{ $predio->unidad_area }};
     @endif
 
-    @if ($folioReal->predio->area_comun_construccion)
-        <strong>área de construcción común:</strong> {{ $folioReal->predio->area_comun_construccion }} {{ $folioReal->predio->unidad_area }};
+    @if ($predio->area_comun_construccion)
+        <strong>área de construcción común:</strong> {{ $predio->area_comun_construccion }} {{ $predio->unidad_area }};
     @endif
 
-    @if ($folioReal->predio->valor_terreno_comun)
-        <strong>valor de terreno común:</strong> {{ $folioReal->predio->valor_terreno_comun }} {{ $folioReal->predio->divisa }};
+    @if ($predio->valor_terreno_comun)
+        <strong>valor de terreno común:</strong> {{ $predio->valor_terreno_comun }} {{ $predio->divisa }};
     @endif
 
-    @if ($folioReal->predio->valor_construccion_comun)
-        <strong>valor de construcción común:</strong> {{ $folioReal->predio->valor_construccion_comun }} {{ $folioReal->predio->divisa }};
+    @if ($predio->valor_construccion_comun)
+        <strong>valor de construcción común:</strong> {{ $predio->valor_construccion_comun }} {{ $predio->divisa }};
     @endif
 
-    @if ($folioReal->predio->valor_catastral)
-        <strong>valor de construcción común:</strong> {{ $folioReal->predio->valor_catastral }} {{ $folioReal->predio->divisa }};
+    @if ($predio->valor_catastral)
+        <strong>valor de construcción común:</strong> {{ $predio->valor_catastral }} {{ $predio->divisa }};
     @endif
 
 </p>
 
 <p class="parrafo">
 
-    <strong>Descripción:</strong> {{ $folioReal->predio->descripcion }}.
+    <strong>Descripción:</strong> {{ $predio->descripcion }}.
 
 </p>

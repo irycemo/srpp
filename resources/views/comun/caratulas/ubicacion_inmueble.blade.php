@@ -2,112 +2,112 @@
 
 <p class="parrafo">
 
-    @if ($folioReal->predio->codigo_postal)
-        <strong>CÓDIGO POSTAL:</strong> {{ $folioReal->predio->codigo_postal }};
+    @if ($predio->codigo_postal)
+        <strong>CÓDIGO POSTAL:</strong> {{ $predio->codigo_postal }};
     @endif
 
-    @if ($folioReal->predio->tipo_asentamiento)
-        <strong>TIPO DE ASENTAMIENTO:</strong> {{ $folioReal->predio->tipo_asentamiento }};
+    @if ($predio->tipo_asentamiento)
+        <strong>TIPO DE ASENTAMIENTO:</strong> {{ $predio->tipo_asentamiento }};
     @endif
 
-    @if ($folioReal->predio->nombre_asentamiento)
-        <strong>NOMBRE DEL ASENTAMIENTO:</strong> {{ $folioReal->predio->nombre_asentamiento }};
+    @if ($predio->nombre_asentamiento)
+        <strong>NOMBRE DEL ASENTAMIENTO:</strong> {{ $predio->nombre_asentamiento }};
     @endif
 
-    @if ($folioReal->predio->municipio)
-        <strong>MUNICIPIO:</strong> {{ $folioReal->predio->municipio }};
+    @if ($predio->municipio)
+        <strong>MUNICIPIO:</strong> {{ $predio->municipio }};
     @endif
 
-    @if ($folioReal->predio->ciudad)
-        <strong>CIUDAD:</strong> {{ $folioReal->predio->ciudad }};
+    @if ($predio->ciudad)
+        <strong>CIUDAD:</strong> {{ $predio->ciudad }};
     @endif
 
-    @if ($folioReal->predio->localidad)
-        <strong>LOCALIDAD:</strong> {{ $folioReal->predio->localidad }};
+    @if ($predio->localidad)
+        <strong>LOCALIDAD:</strong> {{ $predio->localidad }};
     @endif
 
-    @if ($folioReal->predio->tipo_vialidad)
-        <strong>TIPO DE VIALIDAD:</strong> {{ $folioReal->predio->tipo_vialidad }};
+    @if ($predio->tipo_vialidad)
+        <strong>TIPO DE VIALIDAD:</strong> {{ $predio->tipo_vialidad }};
     @endif
 
-    @if ($folioReal->predio->nombre_vialidad)
-        <strong>NOMBRE DE LA VIALIDAD:</strong> {{ $folioReal->predio->nombre_vialidad }};
+    @if ($predio->nombre_vialidad)
+        <strong>NOMBRE DE LA VIALIDAD:</strong> {{ $predio->nombre_vialidad }};
     @endif
 
-    @if ($folioReal->predio->numero_exterior)
-        <strong>NÚMERO EXTERIOR:</strong> {{ $folioReal->predio->numero_exterior ?? 'SN' }};
+    @if ($predio->numero_exterior)
+        <strong>NÚMERO EXTERIOR:</strong> {{ $predio->numero_exterior ?? 'SN' }};
     @endif
 
-    @if ($folioReal->predio->numero_interior)
-        <strong>NÚMERO INTERIOR:</strong> {{ $folioReal->predio->numero_interior ?? 'SN' }};
+    @if ($predio->numero_interior)
+        <strong>NÚMERO INTERIOR:</strong> {{ $predio->numero_interior ?? 'SN' }};
     @endif
 
-    @if ($folioReal->predio->nombre_edificio)
-        <strong>EDIFICIO:</strong> {{ $folioReal->predio->nombre_edificio }};
+    @if ($predio->nombre_edificio)
+        <strong>EDIFICIO:</strong> {{ $predio->nombre_edificio }};
     @endif
 
-    @if ($folioReal->predio->clave_edificio)
-        <strong>clave del edificio:</strong> {{ $folioReal->predio->clave_edificio }};
+    @if ($predio->clave_edificio)
+        <strong>clave del edificio:</strong> {{ $predio->clave_edificio }};
     @endif
 
-    @if ($folioReal->predio->departamento_edificio)
-        <strong>DEPARTAMENTO:</strong> {{ $folioReal->predio->departamento_edificio }};
+    @if ($predio->departamento_edificio)
+        <strong>DEPARTAMENTO:</strong> {{ $predio->departamento_edificio }};
     @endif
 
-    @if ($folioReal->predio->lote)
-        <strong>LOTE:</strong> {{ $folioReal->predio->lote }};
+    @if ($predio->lote)
+        <strong>LOTE:</strong> {{ $predio->lote }};
     @endif
 
-    @if ($folioReal->predio->manzana)
-        <strong>MANZANA:</strong> {{ $folioReal->predio->manzana }};
+    @if ($predio->manzana)
+        <strong>MANZANA:</strong> {{ $predio->manzana }};
     @endif
 
-    @if ($folioReal->predio->ejido)
-        <strong>ejido:</strong> {{ $folioReal->predio->ejido }};
+    @if ($predio->ejido)
+        <strong>ejido:</strong> {{ $predio->ejido }};
     @endif
 
-    @if ($folioReal->predio->parcela)
-        <strong>parcela:</strong> {{ $folioReal->predio->parcela }};
+    @if ($predio->parcela)
+        <strong>parcela:</strong> {{ $predio->parcela }};
     @endif
 
-    @if ($folioReal->predio->solar)
-        <strong>solar:</strong> {{ $folioReal->predio->solar }};
+    @if ($predio->solar)
+        <strong>solar:</strong> {{ $predio->solar }};
     @endif
 
-    @if ($folioReal->predio->poblado)
-        <strong>poblado:</strong> {{ $folioReal->predio->poblado }};
+    @if ($predio->poblado)
+        <strong>poblado:</strong> {{ $predio->poblado }};
     @endif
 
-    @if ($folioReal->predio->numero_exterior)
-        <strong>número exterior:</strong> {{ $folioReal->predio->numero_exterior }};
+    @if ($predio->numero_exterior)
+        <strong>número exterior:</strong> {{ $predio->numero_exterior }};
     @endif
 
-    @if ($folioReal->predio->numero_exterior_2)
-        <strong>número exterior 2:</strong> {{ $folioReal->predio->numero_exterior_2 }};
+    @if ($predio->numero_exterior_2)
+        <strong>número exterior 2:</strong> {{ $predio->numero_exterior_2 }};
     @endif
 
-    @if ($folioReal->predio->numero_adicional)
-        <strong>número adicional:</strong> {{ $folioReal->predio->numero_adicional }};
+    @if ($predio->numero_adicional)
+        <strong>número adicional:</strong> {{ $predio->numero_adicional }};
     @endif
 
-    @if ($folioReal->predio->numero_adicional_2)
-        <strong>número adicional 2:</strong> {{ $folioReal->predio->numero_adicional_2 }};
+    @if ($predio->numero_adicional_2)
+        <strong>número adicional 2:</strong> {{ $predio->numero_adicional_2 }};
     @endif
 
-    @if ($folioReal->predio->lote_fraccionador)
-        <strong>lote del fraccionador:</strong> {{ $folioReal->predio->lote_fraccionador }};
+    @if ($predio->lote_fraccionador)
+        <strong>lote del fraccionador:</strong> {{ $predio->lote_fraccionador }};
     @endif
 
-    @if ($folioReal->predio->manzana_fraccionador)
-        <strong>manzana del fraccionador:</strong> {{ $folioReal->predio->manzana_fraccionador }};
+    @if ($predio->manzana_fraccionador)
+        <strong>manzana del fraccionador:</strong> {{ $predio->manzana_fraccionador }};
     @endif
 
-    @if ($folioReal->predio->etapa_fraccionador)
-        <strong>etapa del fraccionador:</strong> {{ $folioReal->predio->etapa_fraccionador }};
+    @if ($predio->etapa_fraccionador)
+        <strong>etapa del fraccionador:</strong> {{ $predio->etapa_fraccionador }};
     @endif
 
-    @if ($folioReal->predio->observaciones)
-        <strong>OBSERVACIONES:</strong> {{ $folioReal->predio->observaciones }}.
+    @if ($predio->observaciones)
+        <strong>OBSERVACIONES:</strong> {{ $predio->observaciones }}.
     @endif
 
 </p>

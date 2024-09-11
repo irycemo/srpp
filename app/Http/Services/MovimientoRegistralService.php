@@ -451,7 +451,15 @@ class MovimientoRegistralService{
 
                 }
 
+            }else{
+
+                $auxArray['estado'] = 'nuevo';
+
             }
+
+        }else{
+
+            $auxArray['estado'] = 'nuevo';
 
         }
 

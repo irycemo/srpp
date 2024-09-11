@@ -31,6 +31,7 @@ class PaseFolio extends Component
     public $documento;
     public $motivos;
     public $motivo;
+    public $supervisor = false;
 
     public MovimientoRegistral $modelo_editar;
 
@@ -302,6 +303,8 @@ class PaseFolio extends Component
 
         $this->motivos = Constantes::RECHAZO_MOTIVOS;
 
+        $this->supervisor = in_array(auth()->user()->getRoleNames()->first(), ['Supervisor varios', 'Supervisor cancelación', 'Supervisor sentencias', 'Supervisor gravamen', 'Supervisor propiedad', 'Supervisor certificaciones', 'Supervisor uruapan']);
+
     }
 
     public function render()
@@ -333,7 +336,6 @@ class PaseFolio extends Component
 
             $movimientos = MovimientoRegistral::with('actualizadoPor', 'folioReal', 'asignadoA')
                                                     ->where('folio', 1)
-                                                    ->whereIn('estado', ['elaborado', 'concluido', 'nuevo', 'captura'])
                                                     ->where(function($q){
                                                         $q->whereNull('folio_real')
                                                             ->orWhereHas('folioReal', function($q){
@@ -346,6 +348,13 @@ class PaseFolio extends Component
                                                             ->orWhere('tomo', 'LIKE', '%' . $this->search . '%')
                                                             ->orWhere('registro', 'LIKE', '%' . $this->search . '%');
                                                     })
+                                                    ->when(auth()->user()->ubicacion == 'Regional 4', function($q){
+                                                        $q->where('distrito', 2);
+                                                    })
+                                                    ->when(auth()->user()->ubicacion != 'Regional 4', function($q){
+                                                        $q->where('distrito', '!=', 2);
+                                                    })
+                                                    ->where('usuario_supervisor', auth()->user()->id)
                                                     ->orderBy($this->sort, $this->direction)
                                                     ->paginate($this->pagination);
 
@@ -365,6 +374,12 @@ class PaseFolio extends Component
                                                             ->orWhere('usuario', 'LIKE', '%' . $this->search . '%')
                                                             ->orWhere('tomo', 'LIKE', '%' . $this->search . '%')
                                                             ->orWhere('registro', 'LIKE', '%' . $this->search . '%');
+                                                    })
+                                                    ->when(auth()->user()->ubicacion == 'Regional 4', function($q){
+                                                        $q->where('distrito', 2);
+                                                    })
+                                                    ->when(auth()->user()->ubicacion != 'Regional 4', function($q){
+                                                        $q->where('distrito', '!=', 2);
                                                     })
                                                     ->where('usuario_asignado', auth()->user()->id)
                                                     ->orderBy($this->sort, $this->direction)

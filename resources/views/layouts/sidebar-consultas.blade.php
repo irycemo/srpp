@@ -1,6 +1,6 @@
 <div x-data="{openRoles:true, openDistritos:true, openValores:true, openPredios:true}" class="mb-5">
 
-    <p class="uppercase text-base mb-2 border-b border-rojo rounded-lg px-1.5 w-full">Consultas</p>
+    <p class="uppercase text-base mb-2 border-b border-rojo rounded-lg px-1.5 w-full">Índices</p>
 
     <div class="flex items-center w-full justify-between hover:text-red-600 transition ease-in-out duration-500 hover:bg-gray-100 rounded-xl">
 

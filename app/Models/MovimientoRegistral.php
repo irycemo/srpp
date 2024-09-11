@@ -90,13 +90,13 @@ class MovimientoRegistral extends Model implements Auditable
 
     public function caratula(){
 
-        return $this->archivos()->where('descripcion', 'caratula')->first()
+        return $this->archivos()->where('descripcion', 'caratula')->latest()->first()
                 ? Storage::disk('caratulas')->url($this->archivos()->where('descripcion', 'caratula')->first()->url)
                 : null;
     }
 
     public function documentoEntrada(){
-        return $this->archivos()->where('descripcion', 'documento_entrada')->first()
+        return $this->archivos()->where('descripcion', 'documento_entrada')->latest()->first()
                 ? Storage::disk('documento_entrada')->url($this->archivos()->where('descripcion', 'documento_entrada')->first()->url)
                 : null;
     }

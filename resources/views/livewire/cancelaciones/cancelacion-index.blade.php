@@ -16,7 +16,7 @@
                 <x-table.heading sortable wire:click="sortBy('tomo_gravamen')" :direction="$sort === 'tomo_gravamen' ? $direction : null" >Tomo gravamen</x-table.heading>
                 <x-table.heading sortable wire:click="sortBy('registro_gravamen')" :direction="$sort === 'registro_gravamen' ? $direction : null" >Registro gravamen</x-table.heading>
                 <x-table.heading sortable wire:click="sortBy('fecha_entrega')" :direction="$sort === 'fecha_entrega' ? $direction : null" >Fecha de entrega</x-table.heading>
-                @if(auth()->user()->hasRole(['Supervisor cancelación', 'Supervisor uruapan', 'Administrador']))
+                @if(auth()->user()->hasRole(['Supervisor cancelación', 'Supervisor uruapan', 'Administrador', 'Jefe de departamento']))
                     <x-table.heading sortable wire:click="sortBy('usuario_asignado')" :direction="$sort === 'usuario_asignado' ? $direction : null">Usuario asignado</x-table.heading>
                 @endif
                 <x-table.heading sortable wire:click="sortBy('created_at')" :direction="$sort === 'created_at' ? $direction : null">Ingreso</x-table.heading>
@@ -97,7 +97,7 @@
 
                         </x-table.cell>
 
-                        @if(auth()->user()->hasRole(['Supervisor cancelación', 'Supervisor uruapan', 'Administrador']))
+                        @if(auth()->user()->hasRole(['Supervisor cancelación', 'Supervisor uruapan', 'Administrador', 'Jefe de departamento']))
 
                             <x-table.cell>
 
@@ -194,6 +194,22 @@
                                                 wire:click="abrirModalFinalizar({{  $movimiento->id }})"
                                                 wire:loading.attr="disabled"
                                                 wire:target="abrirModalFinalizar({{  $movimiento->id }})">
+                                                Finalizar
+                                            </x-button-green>
+
+                                        @elseif($movimiento->estado == 'finalizado' && auth()->user()->hasRole(['Jefe de departamento']))
+
+                                            <x-button-blue
+                                                wire:click="imprimir({{  $movimiento->id }})"
+                                                wire:loading.attr="disabled"
+                                                wire:target="imprimir({{  $movimiento->id }})">
+                                                Imprimir
+                                            </x-button-blue>
+
+                                            <x-button-green
+                                                wire:click="abrirModalConcluir({{  $movimiento->id }})"
+                                                wire:loading.attr="disabled"
+                                                wire:target="abrirModalConcluir({{  $movimiento->id }})">
                                                 Finalizar
                                             </x-button-green>
 

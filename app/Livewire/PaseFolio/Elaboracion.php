@@ -33,6 +33,8 @@ class Elaboracion extends Component
     public $fecha_emision;
     public $fecha_inscripcion;
     public $procedencia;
+    public $acto_contenido_antecedente;
+    public $observaciones_antecedente;
 
     /* Escritura */
     public $escritura_numero;
@@ -60,6 +62,7 @@ class Elaboracion extends Component
     public $crear = false;
     public $antecedente;
     public $documentos_de_entrada;
+    public $actos_contenidos;
 
     public $propiedadOld;
 
@@ -81,7 +84,9 @@ class Elaboracion extends Component
             'escritura_notaria' => Rule::requiredIf($this->tipo_documento === "escritura"),
             'escritura_nombre_notario' => Rule::requiredIf($this->tipo_documento === "escritura"),
             'escritura_estado_notario' => Rule::requiredIf($this->tipo_documento === "escritura"),
-            'escritura_observaciones' => 'nullable|' . utf8_encode('regex:/^[áéíóúÁÉÍÓÚñÑa-zA-Z-0-9$#.()\/\-," ]*$/'),
+            'escritura_observaciones' => 'nullable',
+            'acto_contenido_antecedente' => Rule::requiredIf($this->tipo_documento === "oficio"),
+            'observaciones_antecedente' => 'nullable'
         ];
     }
 
@@ -100,6 +105,8 @@ class Elaboracion extends Component
         'escritura_nombre_notario' => 'nombre del notario',
         'escritura_estado_notario' => 'estado de la notaría',
         'escritura_observaciones' => 'observaciones',
+        'acto_contenido_antecedente' => 'acto contenido',
+        'observaciones_antecedente' => 'observaciones'
     ];
 
     public function resetAll(){
@@ -144,6 +151,8 @@ class Elaboracion extends Component
             'distrito_antecedente' => $this->movimientoRegistral->getRawOriginal('distrito'),
             'seccion_antecedente' => $this->movimientoRegistral->seccion,
             'tipo_documento' => $this->tipo_documento,
+            'acto_contenido_antecedente' => $this->acto_contenido_antecedente,
+            'observaciones_antecedente' => $this->observaciones_antecedente
         ]);
 
         $this->movimientoRegistral->update(['folio_real' => $folioReal->id]);
@@ -354,6 +363,9 @@ class Elaboracion extends Component
             'acto_contenido' => $gravamen->descGravamen ?? null,
             'valor_gravamen' => $monto,
             'observaciones' => "Gravamen ingresado mediante pase a folio: | Tomo gravamen:" . $gravamen->tomog .
+                                " | Tomo propiedad: " .  $gravamen->tomp .
+                                " | Registro propiedad: " .  $gravamen->registrop .
+                                " | Número de propiedad: " .  $gravamen->noprop .
                                 " | Registro gravamen: " . $gravamen->registrog . "/" . $gravamen->rbisg .
                                 " | Divisa:" . $gravamen->tmoneda .
                                 " | Monto de la transacción:" . $monto .
@@ -827,6 +839,8 @@ class Elaboracion extends Component
         $this->distritos = Constantes::DISTRITOS;
 
         $this->estados = Constantes::ESTADOS;
+
+        $this->actos_contenidos = Constantes::ACTOS_INSCRIPCION_PROPIEDAD;
 
         if($this->movimientoRegistral->folioReal){
 

@@ -14,7 +14,7 @@
 
     <tbody>
 
-        @foreach ($folioReal->predio->colindancias as $colindancia)
+        @foreach ($predio->colindancias as $colindancia)
 
             <tr>
                 <td style="padding-right: 40px;">

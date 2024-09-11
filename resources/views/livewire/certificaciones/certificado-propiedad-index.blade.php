@@ -50,7 +50,7 @@
                 <x-table.heading sortable wire:click="sortBy('tipo_servicio')" :direction="$sort === 'tipo_servicio' ? $direction : null" >Tipo de servicio</x-table.heading>
                 <x-table.heading sortable wire:click="sortBy('distrito')" :direction="$sort === 'distrito' ? $direction : null" >Distrito</x-table.heading>
                 <x-table.heading>Solicitante</x-table.heading>
-                @if (auth()->user()->hasRole(['Certificador Propiedad', 'Supervisor certificaciones', 'Administrador']))
+                @if (auth()->user()->hasRole(['Certificador Propiedad', 'Supervisor certificaciones', 'Administrador', 'Jefe de departamento']))
                     <x-table.heading sortable wire:click="sortBy('usuario_asignado')" :direction="$sort === 'usuario_asignado' ? $direction : null" >Asignado a</x-table.heading>
                 @endif
                 @if (!auth()->user()->hasRole(['Certificador Propiedad', 'Supervisor certificaciones']))
@@ -133,7 +133,7 @@
 
                         @endif
 
-                        @if (!auth()->user()->hasRole(['Certificador Propiedad', 'Supervisor certificaciones']))
+                        @if (!auth()->user()->hasRole(['Certificador Propiedad', 'Supervisor certificaciones', 'Jefe de departamento']))
 
                             <x-table.cell>
 
@@ -169,15 +169,15 @@
 
                         </x-table.cell>
 
-                        @if (!auth()->user()->hasRole('Administrador'))
+                        <x-table.cell>
 
-                            @if (auth()->user()->hasRole(['Supervisor certificaciones', 'Supervisor uruapan']))
+                            <span class="lg:hidden absolute top-0 left-0 bg-blue-300 px-2 py-1 text-xs text-white font-bold uppercase rounded-br-xl">Acciones</span>
 
-                                <x-table.cell>
+                            @if (!auth()->user()->hasRole('Administrador'))
 
-                                    <span class="lg:hidden absolute top-0 left-0 bg-blue-300 px-2 py-1 text-xs text-white font-bold uppercase rounded-br-xl">Acciones</span>
+                                <div class="flex justify-center lg:justify-start gap-2">
 
-                                    <div class="flex justify-center lg:justify-start gap-2">
+                                    @if (auth()->user()->hasRole(['Supervisor certificaciones', 'Supervisor uruapan']))
 
                                         <x-button-blue
                                             wire:click="reimprimir({{  $certificado->id }})"
@@ -206,17 +206,36 @@
 
                                         @endif
 
-                                    </div>
+                                    @elseif($certificado->estado == 'elaborado' && auth()->user()->hasRole(['Jefe de departamento']))
 
-                                </x-table.cell>
+                                        <x-button-blue
+                                            wire:click="reimprimir({{  $certificado->id }})"
+                                            wire:loading.attr="disabled"
+                                            wire:target="reimprimir({{  $certificado->id }})">
+                                            Reimprimir
+                                        </x-button-blue>
 
-                            @else
+                                        @if($certificado->folio_real)
 
-                                <x-table.cell>
+                                            <x-button-green
+                                                wire:click="abrirModalFinalizar({{  $certificado->id }})"
+                                                wire:loading.attr="disabled"
+                                                wire:target="abrirModalFinalizar({{  $certificado->id }})">
+                                                Finalizar
+                                            </x-button-green>
 
-                                    <span class="lg:hidden absolute top-0 left-0 bg-blue-300 px-2 py-1 text-xs text-white font-bold uppercase rounded-br-xl">Acciones</span>
+                                        @else
 
-                                    <div class="flex justify-center lg:justify-start gap-2">
+                                            <x-button-green
+                                                wire:click="finalizar({{  $certificado->id }})"
+                                                wire:loading.attr="disabled"
+                                                wire:target="finalizar({{  $certificado->id }})">
+                                                Finalizar
+                                            </x-button-green>
+
+                                        @endif
+
+                                    @else
 
                                         <x-button-blue
                                             wire:click="elaborar({{  $certificado->id }})"
@@ -225,13 +244,13 @@
                                             Elaborar
                                         </x-button-blue>
 
-                                    </div>
+                                    @endif
 
-                                </x-table.cell>
+                                </div>
 
                             @endif
 
-                        @endif
+                        </x-table.cell>
 
                     </x-table.row>
 

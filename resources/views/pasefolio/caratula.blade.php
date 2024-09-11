@@ -227,9 +227,21 @@
 
                 @endif
 
+                @if($folioReal->acto_contenido_antecedente)
+
+                    <p class="parrafo"><strong>Acto contenido en el antecedente:</strong> {{ $folioReal->acto_contenido_antecedente }}</p>
+
+                @endif
+
+                @if($folioReal->observaciones_antecedente)
+
+                    <p class="parrafo"><strong>Observaciones en el antecedente:</strong> {{ $folioReal->observaciones_antecedente }}</p>
+
+                @endif
+
                 @include('comun.caratulas.ubicacion_inmueble')
 
-                @if($folioReal->predio->colindancias->count())
+                @if($predio->colindancias->count())
 
                     @include('comun.caratulas.colindancias')
 

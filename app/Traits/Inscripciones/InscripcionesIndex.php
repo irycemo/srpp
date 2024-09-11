@@ -87,6 +87,23 @@ trait InscripcionesIndex{
 
         }
 
+        if(auth()->user()->hasRole('Jefe de departamento')){
+
+            $this->actual = $this->modelo_editar;
+
+            if($this->estaBloqueado()){
+
+                return;
+
+            }else{
+
+                $this->ruta($this->modelo_editar);
+
+                return;
+            }
+
+        }
+
         $movimientoAsignados = MovimientoRegistral::whereIn('estado', ['nuevo', 'captura'])
                                                         ->where('usuario_Asignado', auth()->id())
                                                         ->withWhereHas('folioReal', function($q){

@@ -38,11 +38,7 @@ class PaseFolioController extends Controller
 
         $tomo_letras = $formatter->toWords($folioReal->tomo_antecedente);
 
-        $superficie_terreno = $formatter->toWords($folioReal->predio->superficie_terreno);
-
-        $superficie_construccion = $formatter->toWords($folioReal->predio->superficie_construccion);
-
-        $monto_transaccion = $formatter->toWords($folioReal->predio->monto_transaccion);
+        $predio = $folioReal->predio;
 
         $pdf = Pdf::loadView('pasefolio.caratula', compact(
             'folioReal',
@@ -50,9 +46,7 @@ class PaseFolioController extends Controller
             'registro_letras',
             'tomo_letras',
             'director',
-            'superficie_terreno',
-            'superficie_construccion',
-            'monto_transaccion',
+            'predio'
         ));
 
         $pdf->render();
