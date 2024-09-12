@@ -190,19 +190,19 @@ class CertificadoPropiedadIndex extends Component
 
             DB::transaction(function (){
 
-                $this->modelo_editar->finalizado_en = now();
+                $this->modelo_editar->certificacion->finalizado_en = now();
 
-                $this->modelo_editar->firma = now();
+                $this->modelo_editar->certificacion->firma = now();
 
                 $this->modelo_editar->actualizado_por = auth()->user()->id;
 
-                $this->modelo_editar->movimientoRegistral->estado = 'concluido';
-
-                $this->modelo_editar->movimientoRegistral->save();
+                $this->modelo_editar->estado = 'concluido';
 
                 $this->modelo_editar->save();
 
-                (new SistemaTramitesService())->finaliarTramite($this->modelo_editar->movimientoRegistral->año, $this->modelo_editar->movimientoRegistral->tramite, $this->modelo_editar->movimientoRegistral->usuario, 'concluido');
+                $this->modelo_editar->save();
+
+                (new SistemaTramitesService())->finaliarTramite($this->modelo_editar->año, $this->modelo_editar->tramite, $this->modelo_editar->usuario, 'concluido');
 
                 $this->resetearTodo();
 
@@ -214,7 +214,7 @@ class CertificadoPropiedadIndex extends Component
 
         } catch (\Throwable $th) {
 
-            Log::error("Error al finalizar trámite de copias certificadas por el usuario: (id: " . auth()->user()->id . ") " . auth()->user()->name . ". " . $th);
+            Log::error("Error al finalizar certificado de propiedad por el usuario: (id: " . auth()->user()->id . ") " . auth()->user()->name . ". " . $th);
             $this->dispatch('mostrarMensaje', ['error', "Ha ocurrido un error."]);
             $this->resetearTodo();
 
