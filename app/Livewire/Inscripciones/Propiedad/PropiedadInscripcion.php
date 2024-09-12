@@ -518,7 +518,15 @@ class PropiedadInscripcion extends Component
             'representados' => Rule::requiredIf($this->modalRepresentante === true),
         ]);
 
-        $persona = Persona::where('rfc', $this->rfc)->first();
+        $persona = Persona::where(function($q){
+                                                $q->when($this->nombre, fn($q) => $q->where('nombre', $this->nombre))
+                                                    ->when($this->ap_paterno, fn($q) => $q->where('ap_paterno', $this->ap_paterno))
+                                                    ->when($this->ap_materno, fn($q) => $q->where('ap_materno', $this->ap_materno));
+                                            })
+                                            ->when($this->razon_social, fn($q) => $q->orWhere('razon_social', $this->razon_social))
+                                            ->when($this->rfc, fn($q) => $q->orWhere('rfc', $this->rfc))
+                                            ->when($this->curp, fn($q) => $q->orWhere('curp', $this->curp))
+                                            ->first();
 
         if($persona){
 

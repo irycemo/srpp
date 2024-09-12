@@ -171,12 +171,12 @@
 
                 <div>
 
-                    <p class="titulo">CARATULA DE ASIGNACION DE FOLIO REAL</p>
+                    <p style="text-align: center; font-weight: bold; font-size: 11px;">CARATULA DE ASIGNACION DE FOLIO REAL</p>
 
                 </div>
 
                 <p class="parrafo">
-                    EL DIRECTOR DEL REGISTRO PÚBLICO DE LA PROPIEDAD <strong>{{ $director }}</strong>, AUTORIZA EL PRESENTE FOLIO REAL PARA LOS ASIENTOS RELATIVOS AL INMUEBLE QUE ACONTINUACIÓN SE DESCRIBE:
+                    EL DIRECTOR DEL REGISTRO PÚBLICO DE LA PROPIEDAD <strong>{{ $director }}</strong>, AUTORIZA EL PRESENTE FOLIO REAL PARA LOS ASIENTOS RELATIVOS A EL INMUEBLE QUE A CONTINUACIÓN SE DESCRIBE:
                 </p>
 
                 <p style="text-align: center"><strong>FOLIO REAL:</strong> {{ $folioReal->folio }}</p>

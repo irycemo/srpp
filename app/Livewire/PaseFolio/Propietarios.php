@@ -127,7 +127,6 @@ class Propietarios extends Component
             'modalPropietario',
             'modalTransmitente',
             'modalRepresentante',
-            'partes_iguales'
         ]);
     }
 
