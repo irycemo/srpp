@@ -690,7 +690,7 @@ class Elaboracion extends Component
                                     ->where('seccion_antecedente', $this->movimientoRegistral->seccion)
                                     ->first();
 
-        if($folioReal){
+        if($folioReal && $this->movimientoRegistral->inscripcionPropiedad?->servicio == 'D731'){
 
             $this->dispatch('mostrarMensaje', ['warning', "El antecedente ya tiene folio real."]);
 
