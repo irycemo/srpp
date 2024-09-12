@@ -69,13 +69,13 @@ class Elaboracion extends Component
     protected function rules(){
         return [
             'tipo_documento' => 'required',
-            'autoridad_cargo' => Rule::requiredIf($this->tipo_documento === "OFICIO"),
-            'autoridad_nombre' => Rule::requiredIf($this->tipo_documento === "OFICIO"),
-            'autoridad_numero' => Rule::requiredIf($this->tipo_documento === "OFICIO"),
-            'numero_documento' => Rule::requiredIf($this->tipo_documento === "OFICIO"),
-            'fecha_emision' => Rule::requiredIf($this->tipo_documento === "OFICIO"),
-            'fecha_inscripcion' => Rule::requiredIf($this->tipo_documento === "OFICIO"),
-            'procedencia' => Rule::requiredIf($this->tipo_documento === "OFICIO"),
+            'autoridad_cargo' => Rule::requiredIf(in_array($this->tipo_documento, ['OFICIO', 'TÍTULO DE PROPIEDAD'])),
+            'autoridad_nombre' => Rule::requiredIf(in_array($this->tipo_documento, ['OFICIO', 'TÍTULO DE PROPIEDAD'])),
+            'autoridad_numero' => Rule::requiredIf(in_array($this->tipo_documento, ['OFICIO', 'TÍTULO DE PROPIEDAD'])),
+            'numero_documento' => Rule::requiredIf(in_array($this->tipo_documento, ['OFICIO', 'TÍTULO DE PROPIEDAD'])),
+            'fecha_emision' => Rule::requiredIf(in_array($this->tipo_documento, ['OFICIO', 'TÍTULO DE PROPIEDAD'])),
+            'fecha_inscripcion' => Rule::requiredIf(in_array($this->tipo_documento, ['OFICIO', 'TÍTULO DE PROPIEDAD'])),
+            'procedencia' => Rule::requiredIf(in_array($this->tipo_documento, ['OFICIO', 'TÍTULO DE PROPIEDAD'])),
             'escritura_numero' => Rule::requiredIf(in_array($this->tipo_documento, ['ESCRITURA PÚBLICA', 'ESCRITURA PRIVADA'])),
             'escritura_fecha_inscripcion' => Rule::requiredIf(in_array($this->tipo_documento, ['ESCRITURA PÚBLICA', 'ESCRITURA PRIVADA'])),
             'escritura_fecha_escritura' => Rule::requiredIf(in_array($this->tipo_documento, ['ESCRITURA PÚBLICA', 'ESCRITURA PRIVADA'])),
@@ -85,7 +85,7 @@ class Elaboracion extends Component
             'escritura_nombre_notario' => Rule::requiredIf(in_array($this->tipo_documento, ['ESCRITURA PÚBLICA', 'ESCRITURA PRIVADA'])),
             'escritura_estado_notario' => Rule::requiredIf(in_array($this->tipo_documento, ['ESCRITURA PÚBLICA', 'ESCRITURA PRIVADA'])),
             'escritura_observaciones' => 'nullable',
-            'acto_contenido_antecedente' => Rule::requiredIf($this->tipo_documento === "OFICIO"),
+            'acto_contenido_antecedente' => Rule::requiredIf(in_array($this->tipo_documento, ['OFICIO', 'TÍTULO DE PROPIEDAD'])),
             'observaciones_antecedente' => 'nullable'
         ];
     }
@@ -128,6 +128,8 @@ class Elaboracion extends Component
             'escritura_nombre_notario',
             'escritura_estado_notario',
             'escritura_observaciones',
+            'acto_contenido_antecedente',
+            'observaciones_antecedente'
         ]);
 
     }

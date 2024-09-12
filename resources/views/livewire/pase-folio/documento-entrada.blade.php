@@ -68,7 +68,7 @@
 
             </x-input-group>
 
-            @if($tipo_documento == 'OFICIO')
+            @if(in_array($tipo_documento, ['OFICIO', 'TÍTULO DE PROPIEDAD']))
 
                 <x-input-group for="autoridad_cargo" label="Autoridad cargo" :error="$errors->first('autoridad_cargo')" class="w-full">
 

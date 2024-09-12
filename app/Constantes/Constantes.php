@@ -292,8 +292,8 @@ class Constantes{
         'CESIÓN DE PODER',
         'CONSTITUCIÓN DE SOCIEDAD CONYUGAL',
         'NOMBRAMIENTO',
-        /* 'PERSONAS MORALES',
-        'CONSOLIDACIÓN DEL USUFRUCTO',
+        'PERSONAS MORALES',
+        /* 'CONSOLIDACIÓN DEL USUFRUCTO',
         'ACLARACIÓN ADMINISTRATIVA' */
     ];
 
@@ -315,7 +315,8 @@ class Constantes{
     const DOCUMENTOS_DE_ENTRADA = [
         'ESCRITURA PÚBLICA',
         'ESCRITURA PRIVADA',
-        'OFICIO'
+        'OFICIO',
+        'TÍTULO DE PROPIEDAD'
     ];
 
     const RECHAZO_MOTIVOS = [
