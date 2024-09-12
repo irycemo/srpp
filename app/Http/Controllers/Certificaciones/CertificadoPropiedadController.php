@@ -264,25 +264,25 @@ class CertificadoPropiedadController extends Controller
 
         $nombreLocal = Str::random(40) . '.pdf';
 
-        if(env('LOCAL') == "1"){
+        if(env('LOCAL') == "0"){
 
             Storage::disk('s3')->put($nombreS3, $pdf->output());
 
             File::create([
                 'fileable_id' => $movimientoRegistral->id,
                 'fileable_type' => 'App\Models\MovimientoRegistral',
-                'descripcion' => 'caratula',
+                'descripcion' => 'caratula_s3',
                 'url' => $nombreS3
             ]);
 
-        }elseif(env('LOCAL') == "0"){
+        }elseif(env('LOCAL') == "1"){
 
             Storage::disk('caratulas')->put($nombreLocal, $pdf->output());
 
             File::create([
                 'fileable_id' => $movimientoRegistral->id,
                 'fileable_type' => 'App\Models\MovimientoRegistral',
-                'descripcion' => 'caratula_s3',
+                'descripcion' => 'caratula',
                 'url' => $nombreLocal
             ]);
 
