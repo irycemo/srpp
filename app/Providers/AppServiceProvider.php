@@ -7,7 +7,6 @@ use Illuminate\Support\Facades\URL;
 use Illuminate\Support\Facades\Route;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\ServiceProvider;
-use Opcodes\LogViewer\Facades\LogViewer;
 
 class AppServiceProvider extends ServiceProvider
 {
@@ -27,7 +26,7 @@ class AppServiceProvider extends ServiceProvider
 
         Model::shouldBeStrict();
 
-        if(env('LOCAL') === "1"){
+        if(env('LOCAL') === "0"){
 
             URL::forceScheme('https');
 
@@ -39,7 +38,7 @@ class AppServiceProvider extends ServiceProvider
                 return Route::post('/srpp/public/livewire/update', $handle);
             });
 
-        }elseif(env('LOCAL') === "0"){
+        }elseif(env('LOCAL') === "1"){
 
             Livewire::setScriptRoute(function ($handle) {
                 return Route::get('/srpp/public/vendor/livewire/livewire.js', $handle);
