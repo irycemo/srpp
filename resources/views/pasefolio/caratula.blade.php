@@ -255,6 +255,14 @@
                         <strong>Tipo de documento: </strong> {{ $folioReal->tipo_documento }}; <strong>Número de escritura: </strong> {{ $folioReal->predio->escritura->numero }}; <strong>Número de notaria: </strong> {{ $folioReal->predio->escritura->notaria }}; <strong>Nombre del notario: </strong> {{ $folioReal->predio->escritura->nombre_notario }}; <strong>Estado del notario: </strong> {{ $folioReal->predio->escritura->estado_notario }}; <strong>Fecha de inscripción: </strong> {{ Carbon\Carbon::parse($folioReal->predio->escritura->fecha_inscripcion)->format('d-m-Y') }}; <strong>Fecha de la escritura: </strong> {{ Carbon\Carbon::parse($folioReal->predio->escritura->fecha_escritura)->format('d-m-Y') }}; <strong>Número de hojas: </strong>{{ $folioReal->predio->escritura->numero_hojas }}; <strong>Número de paginas: </strong>{{ $folioReal->predio->escritura->numero_paginas }}
                     </p>
 
+                    <p class="parrafo"><strong>Acto contenido en el antecedente:</strong> {{ $folioReal->predio->escritura->acto_contenido_antecedente }}</p>
+
+                    @if($folioReal->predio->escritura->comentario)
+
+                        <p class="parrafo"><strong>Observaciones en el antecedente:</strong> {{ $folioReal->predio->escritura->comentario }}</p>
+
+                    @endif
+
                 @endif
 
                 @include('comun.caratulas.ubicacion_inmueble')

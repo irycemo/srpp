@@ -178,6 +178,7 @@ class Elaboracion extends Component
                     'nombre_notario' => $this->escritura_nombre_notario,
                     'estado_notario' => $this->escritura_estado_notario,
                     'comentario' => $this->escritura_observaciones,
+                    'acto_contenido_antecedente' => $this->acto_contenido_antecedente,
                 ]);
 
             }
@@ -291,6 +292,7 @@ class Elaboracion extends Component
                         'nombre_notario' => $this->escritura_nombre_notario,
                         'estado_notario' => $this->escritura_estado_notario,
                         'comentario' => $this->escritura_observaciones,
+                        'acto_contenido_antecedente' => $this->acto_contenido_antecedente,
                     ]);
 
                     $this->propiedad->update(['escritura_id' => $this->escritura->id]);
@@ -307,6 +309,7 @@ class Elaboracion extends Component
                         'nombre_notario' => $this->escritura_nombre_notario,
                         'estado_notario' => $this->escritura_estado_notario,
                         'comentario' => $this->escritura_observaciones,
+                        'acto_contenido_antecedente' => $this->acto_contenido_antecedente,
                     ]);
 
                 }
@@ -879,6 +882,7 @@ class Elaboracion extends Component
                     $this->escritura_nombre_notario = $this->propiedad->escritura->nombre_notario;
                     $this->escritura_estado_notario = $this->propiedad->escritura->estado_notario;
                     $this->escritura_observaciones = $this->propiedad->escritura->comentario;
+                    $this->acto_contenido_antecedente = $this->propiedad->escritura->acto_contenido_antecedente;
 
                 }
 
