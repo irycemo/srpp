@@ -184,6 +184,7 @@
         </div>
 
         <div>
+
             <p class="titulo">CERTIFICADO DE GRAVAMEN O DE LIBERTAD DE GRAVAMEN</p>
 
         </div>
@@ -233,7 +234,7 @@
                         <strong>Tipo / Número de documento:</strong>{{ $gravamen->movimientoRegistral->tipo_documento }}/{{ $gravamen->movimientoRegistral->numero_documento }}
                         <strong>Procedencia:</strong>{{ $gravamen->movimientoRegistral->procedencia }}
                         <strong>Tipo: </strong>{{ $gravamen->tipo }};
-                        <strong>CELEBRADO POR EL(LOS) ACREDOR(ES):</strong>
+                        <strong>CELEBRADO POR EL(LOS) ACREEDOR(ES):</strong>
                         @foreach ($gravamen->acreedores as $acreedor)
 
                             {{ $acreedor->persona->nombre }} {{ $acreedor->persona->ap_paterno }} {{ $acreedor->persona->ap_materno }}{{ $acreedor->persona->razon_social }}@if(!$loop->last), @endif

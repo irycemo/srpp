@@ -210,7 +210,7 @@
 
         </div>
 
-        @if($movimientoRegistral->inscripcionPropiedad?->servicio == 'D731' && $movimientoRegistral->folioReal)
+        @if($movimientoRegistral->folioReal)
 
             <div class="w-full bg-white rounded-lg p-3 shadow-lg mb-3">
 
@@ -304,7 +304,7 @@
 
                 <x-input-group for="tomo" label="Tomo" :error="$errors->first('tomo')" class="w-full">
 
-                    <x-input-text id="tomo" wire:model="tomo" />
+                    <x-input-text type="number" id="tomo" wire:model="tomo" />
 
                 </x-input-group>
 
@@ -316,7 +316,7 @@
 
                 <x-input-group for="numero_propiedad" label="Número de propiedad" :error="$errors->first('numero_propiedad')" class="w-full">
 
-                    <x-input-text id="numero_propiedad" wire:model="numero_propiedad" />
+                    <x-input-text type="number" id="numero_propiedad" wire:model="numero_propiedad" />
 
                 </x-input-group>
 

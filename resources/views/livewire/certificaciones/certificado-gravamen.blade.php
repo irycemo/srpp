@@ -311,7 +311,7 @@
 
                         <div class="p-4 bg-gray-100 mb-2 rounded-lg">
 
-                            <p><strong>Tomo: </strong> {{ $gravamen->movimientoRegistral->tomo_gravamen }} <strong>Registro: </strong>{{ $gravamen->movimientoRegistral->tomo_gravamen }} <strong>Distrito: </strong>{{ $gravamen->movimientoRegistral->distrito }}</p>
+                            <p><strong>Tomo: </strong> {{ $gravamen->movimientoRegistral->tomo_gravamen }} <strong>Registro: </strong>{{ $gravamen->movimientoRegistral->registro_gravamen }} <strong>Distrito: </strong>{{ $gravamen->movimientoRegistral->distrito }}</p>
                             <p><strong>Acto: </strong>{{ $gravamen->acto_contenido }}</p>
                             <p><strong>Tipo: </strong>{{ $gravamen->tipo }}</p>
                             <p><strong>Valor: </strong>{{ number_format($gravamen->valor_gravamen, 2) }} {{ $gravamen->divisa }}, <strong>Fecha de inscripción: </strong>{{ $gravamen->fecha_inscripcion }}</p>

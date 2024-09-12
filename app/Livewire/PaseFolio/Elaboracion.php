@@ -69,23 +69,23 @@ class Elaboracion extends Component
     protected function rules(){
         return [
             'tipo_documento' => 'required',
-            'autoridad_cargo' => Rule::requiredIf($this->tipo_documento === "oficio"),
-            'autoridad_nombre' => Rule::requiredIf($this->tipo_documento === "oficio"),
-            'autoridad_numero' => Rule::requiredIf($this->tipo_documento === "oficio"),
-            'numero_documento' => Rule::requiredIf($this->tipo_documento === "oficio"),
-            'fecha_emision' => Rule::requiredIf($this->tipo_documento === "oficio"),
-            'fecha_inscripcion' => Rule::requiredIf($this->tipo_documento === "oficio"),
-            'procedencia' => Rule::requiredIf($this->tipo_documento === "oficio"),
-            'escritura_numero' => Rule::requiredIf($this->tipo_documento === "escritura"),
-            'escritura_fecha_inscripcion' => Rule::requiredIf($this->tipo_documento === "escritura"),
-            'escritura_fecha_escritura' => Rule::requiredIf($this->tipo_documento === "escritura"),
-            'escritura_numero_hojas' => Rule::requiredIf($this->tipo_documento === "escritura"),
-            'escritura_numero_paginas' => Rule::requiredIf($this->tipo_documento === "escritura"),
-            'escritura_notaria' => Rule::requiredIf($this->tipo_documento === "escritura"),
-            'escritura_nombre_notario' => Rule::requiredIf($this->tipo_documento === "escritura"),
-            'escritura_estado_notario' => Rule::requiredIf($this->tipo_documento === "escritura"),
+            'autoridad_cargo' => Rule::requiredIf($this->tipo_documento === "OFICIO"),
+            'autoridad_nombre' => Rule::requiredIf($this->tipo_documento === "OFICIO"),
+            'autoridad_numero' => Rule::requiredIf($this->tipo_documento === "OFICIO"),
+            'numero_documento' => Rule::requiredIf($this->tipo_documento === "OFICIO"),
+            'fecha_emision' => Rule::requiredIf($this->tipo_documento === "OFICIO"),
+            'fecha_inscripcion' => Rule::requiredIf($this->tipo_documento === "OFICIO"),
+            'procedencia' => Rule::requiredIf($this->tipo_documento === "OFICIO"),
+            'escritura_numero' => Rule::requiredIf(in_array($this->tipo_documento, ['ESCRITURA PÚBLICA', 'ESCRITURA PRIVADA'])),
+            'escritura_fecha_inscripcion' => Rule::requiredIf(in_array($this->tipo_documento, ['ESCRITURA PÚBLICA', 'ESCRITURA PRIVADA'])),
+            'escritura_fecha_escritura' => Rule::requiredIf(in_array($this->tipo_documento, ['ESCRITURA PÚBLICA', 'ESCRITURA PRIVADA'])),
+            'escritura_numero_hojas' => Rule::requiredIf(in_array($this->tipo_documento, ['ESCRITURA PÚBLICA', 'ESCRITURA PRIVADA'])),
+            'escritura_numero_paginas' => Rule::requiredIf(in_array($this->tipo_documento, ['ESCRITURA PÚBLICA', 'ESCRITURA PRIVADA'])),
+            'escritura_notaria' => Rule::requiredIf(in_array($this->tipo_documento, ['ESCRITURA PÚBLICA', 'ESCRITURA PRIVADA'])),
+            'escritura_nombre_notario' => Rule::requiredIf(in_array($this->tipo_documento, ['ESCRITURA PÚBLICA', 'ESCRITURA PRIVADA'])),
+            'escritura_estado_notario' => Rule::requiredIf(in_array($this->tipo_documento, ['ESCRITURA PÚBLICA', 'ESCRITURA PRIVADA'])),
             'escritura_observaciones' => 'nullable',
-            'acto_contenido_antecedente' => Rule::requiredIf($this->tipo_documento === "oficio"),
+            'acto_contenido_antecedente' => Rule::requiredIf($this->tipo_documento === "OFICIO"),
             'observaciones_antecedente' => 'nullable'
         ];
     }
@@ -196,6 +196,8 @@ class Elaboracion extends Component
                 'fecha_emision' => $this->fecha_emision,
                 'fecha_inscripcion' => $this->fecha_inscripcion,
                 'procedencia' => $this->procedencia,
+                'acto_contenido_antecedente' => $this->acto_contenido_antecedente,
+                'observaciones_antecedente' => $this->observaciones_antecedente
             ]);
 
             $this->propiedad = Predio::create([
@@ -316,6 +318,8 @@ class Elaboracion extends Component
                     'fecha_emision' => $this->fecha_emision,
                     'fecha_inscripcion' => $this->fecha_inscripcion,
                     'procedencia' => $this->procedencia,
+                    'acto_contenido_antecedente' => $this->acto_contenido_antecedente,
+                    'observaciones_antecedente' => $this->observaciones_antecedente
                 ]);
 
                 $this->dispatch('mostrarMensaje', ['success', "El documento de entrada se guardó con éxito."]);
@@ -853,6 +857,8 @@ class Elaboracion extends Component
             $this->fecha_emision = $this->movimientoRegistral->folioReal->fecha_emision;
             $this->fecha_inscripcion = $this->movimientoRegistral->folioReal->fecha_inscripcion;
             $this->procedencia = $this->movimientoRegistral->folioReal->procedencia;
+            $this->acto_contenido_antecedente = $this->movimientoRegistral->folioReal->acto_contenido_antecedente;
+            $this->observaciones_antecedente = $this->movimientoRegistral->folioReal->observaciones_antecedente;
 
             $this->propiedad = Predio::where('folio_real', $this->movimientoRegistral->folio_real)->first();
 

@@ -78,10 +78,6 @@
         <strong>poblado:</strong> {{ $predio->poblado }};
     @endif
 
-    @if ($predio->numero_exterior)
-        <strong>número exterior:</strong> {{ $predio->numero_exterior }};
-    @endif
-
     @if ($predio->numero_exterior_2)
         <strong>número exterior 2:</strong> {{ $predio->numero_exterior_2 }};
     @endif

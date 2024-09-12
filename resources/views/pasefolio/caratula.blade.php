@@ -169,6 +169,12 @@
                     <p style="margin:0"><strong>DISTRITO:</strong> {{ $distrito}}</p>
                 </div>
 
+                <div>
+
+                    <p class="titulo">CARATULA DE ASIGNACION DE FOLIO REAL</p>
+
+                </div>
+
                 <p class="parrafo">
                     EL DIRECTOR DEL REGISTRO PÚBLICO DE LA PROPIEDAD <strong>{{ $director }}</strong>, AUTORIZA EL PRESENTE FOLIO REAL PARA LOS ASIENTOS RELATIVOS AL INMUEBLE QUE ACONTINUACIÓN SE DESCRIBE:
                 </p>
@@ -227,15 +233,27 @@
 
                 @endif
 
-                @if($folioReal->acto_contenido_antecedente)
+                <p class="separador">Documento de entrada</p>
+
+                @if($folioReal->tipo_documento == 'OFICIO')
+
+                    <p class="parrafo">
+                        <strong>Tipo de documento: </strong> {{ $folioReal->tipo_documento }}; <strong>Número de documento: </strong> {{ $folioReal->numero_documento }}; <strong>Cargo de la autoridad: </strong> {{ $folioReal->autoridad_cargo }}; <strong>Nombre de la autoridad: </strong> {{ $folioReal->autoridad_nombre }}; <strong>Número de la autoridad: </strong> {{ $folioReal->autoridad_numero }}; <strong>Fecha de emisión: </strong> {{ Carbon\Carbon::parse($folioReal->fecha_emision)->format('d-m-Y') }}; <strong>Fecha de inscripción: </strong> {{ Carbon\Carbon::parse($folioReal->fecha_inscripcion)->format('d-m-Y') }}; <strong>Dependencia: </strong>{{ $folioReal->procedencia }}
+                    </p>
 
                     <p class="parrafo"><strong>Acto contenido en el antecedente:</strong> {{ $folioReal->acto_contenido_antecedente }}</p>
 
-                @endif
+                    @if($folioReal->observaciones_antecedente)
 
-                @if($folioReal->observaciones_antecedente)
+                        <p class="parrafo"><strong>Observaciones en el antecedente:</strong> {{ $folioReal->observaciones_antecedente }}</p>
 
-                    <p class="parrafo"><strong>Observaciones en el antecedente:</strong> {{ $folioReal->observaciones_antecedente }}</p>
+                    @endif
+
+                @else
+
+                    <p class="parrafo">
+                        <strong>Tipo de documento: </strong> {{ $folioReal->tipo_documento }}; <strong>Número de escritura: </strong> {{ $folioReal->predio->escritura->numero }}; <strong>Número de notaria: </strong> {{ $folioReal->predio->escritura->notaria }}; <strong>Nombre del notario: </strong> {{ $folioReal->predio->escritura->nombre_notario }}; <strong>Estado del notario: </strong> {{ $folioReal->predio->escritura->estado_notario }}; <strong>Fecha de inscripción: </strong> {{ Carbon\Carbon::parse($folioReal->predio->escritura->fecha_inscripcion)->format('d-m-Y') }}; <strong>Fecha de la escritura: </strong> {{ Carbon\Carbon::parse($folioReal->predio->escritura->fecha_escritura)->format('d-m-Y') }}; <strong>Número de hojas: </strong>{{ $folioReal->predio->escritura->numero_hojas }}; <strong>Número de paginas: </strong>{{ $folioReal->predio->escritura->numero_paginas }}
+                    </p>
 
                 @endif
 
