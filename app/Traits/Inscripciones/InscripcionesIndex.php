@@ -291,7 +291,7 @@ trait InscripcionesIndex{
                     File::create([
                         'fileable_id' => $this->modelo_editar->id,
                         'fileable_type' => 'App\Models\MovimientoRegistral',
-                        'descripcion' => 'caratula',
+                        'descripcion' => 'caratula_s3',
                         'url' => $pdf
                     ]);
 
@@ -302,7 +302,7 @@ trait InscripcionesIndex{
                     File::create([
                         'fileable_id' => $this->modelo_editar->id,
                         'fileable_type' => 'App\Models\MovimientoRegistral',
-                        'descripcion' => 'caratula_s3',
+                        'descripcion' => 'caratula',
                         'url' => $pdf
                     ]);
 
