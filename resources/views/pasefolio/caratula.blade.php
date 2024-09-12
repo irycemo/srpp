@@ -235,7 +235,7 @@
 
                 <p class="separador">Documento de entrada</p>
 
-                @if($folioReal->tipo_documento == 'OFICIO')
+                @if(in_array($folioReal->tipo_documento, ['OFICIO', 'TÍTULO DE PROPIEDAD']))
 
                     <p class="parrafo">
                         <strong>Tipo de documento: </strong> {{ $folioReal->tipo_documento }}; <strong>Número de documento: </strong> {{ $folioReal->numero_documento }}; <strong>Cargo de la autoridad: </strong> {{ $folioReal->autoridad_cargo }}; <strong>Nombre de la autoridad: </strong> {{ $folioReal->autoridad_nombre }}; <strong>Número de la autoridad: </strong> {{ $folioReal->autoridad_numero }}; <strong>Fecha de emisión: </strong> {{ Carbon\Carbon::parse($folioReal->fecha_emision)->format('d-m-Y') }}; <strong>Fecha de inscripción: </strong> {{ Carbon\Carbon::parse($folioReal->fecha_inscripcion)->format('d-m-Y') }}; <strong>Dependencia: </strong>{{ $folioReal->procedencia }}

@@ -222,6 +222,26 @@ class CertificadoPropiedadIndex extends Component
 
     }
 
+    public function calcularDiaElaboracion($modelo){
+
+        $diaElaboracion = $modelo->fecha_pago;
+
+        for ($i=0; $i < 2; $i++) {
+
+            $diaElaboracion->addDays(1);
+
+            while($diaElaboracion->isWeekend()){
+
+                $diaElaboracion->addDay();
+
+            }
+
+        }
+
+        return $diaElaboracion;
+
+    }
+
     public function render()
     {
 

@@ -2,53 +2,105 @@
 
     <span class="flex items-center justify-center text-lg text-gray-700 md:col-span-3 col-span-1 sm:col-span-2 lg:col-span-6">Antecedente</span>
 
-    <div class="rounded-lg bg-gray-100 py-1 px-2">
+    @if($folioReal->antecedentes->count())
 
-        <strong>Folio real</strong>
+        @foreach ($folioReal->antecedentes as $antecedente)
 
-        <p>{{ $folioReal->folioRealAntecedente?->folio }}</p>
+            <div class="rounded-lg bg-gray-100 py-1 px-2">
 
-    </div>
+                <strong>Tomo</strong>
 
-    <div class="rounded-lg bg-gray-100 py-1 px-2">
+                <p>{{ $antecedente->tomo_antecedente }}</p>
 
-        <strong>Tomo</strong>
+            </div>
 
-        <p>{{ $folioReal->tomo_antecedente }}</p>
+            <div class="rounded-lg bg-gray-100 py-1 px-2">
 
-    </div>
+                <strong>Registro</strong>
 
-    <div class="rounded-lg bg-gray-100 py-1 px-2">
+                <p>{{ $antecedente->registro_antecedente }}</p>
 
-        <strong>Registro</strong>
+            </div>
 
-        <p>{{ $folioReal->registro_antecedente }}</p>
+            <div class="rounded-lg bg-gray-100 py-1 px-2">
 
-    </div>
+                <strong>Número de propiedad</strong>
 
-    <div class="rounded-lg bg-gray-100 py-1 px-2">
+                <p>{{ $antecedente->numero_propiedad_antecedente }}</p>
 
-        <strong>Número de propiedad</strong>
+            </div>
 
-        <p>{{ $folioReal->numero_propiedad_antecedente }}</p>
+            <div class="rounded-lg bg-gray-100 py-1 px-2">
 
-    </div>
+                <strong>Distrito</strong>
 
-    <div class="rounded-lg bg-gray-100 py-1 px-2">
+                <p>{{ $antecedente->distrito_antecedente }}</p>
 
-        <strong>Distrito</strong>
+            </div>
 
-        <p>{{ $folioReal->distrito }}</p>
+            <div class="rounded-lg bg-gray-100 py-1 px-2">
 
-    </div>
+                <strong>Sección</strong>
 
-    <div class="rounded-lg bg-gray-100 py-1 px-2">
+                <p>{{ $antecedente->seccion_antecedente }}</p>
 
-        <strong>Sección</strong>
+            </div>
 
-        <p>{{ $folioReal->seccion_antecedente }}</p>
+            <div></div>
 
-    </div>
+        @endforeach
+
+    @else
+
+        <div class="rounded-lg bg-gray-100 py-1 px-2">
+
+            <strong>Folio real</strong>
+
+            <p>{{ $folioReal->folioRealAntecedente?->folio }}</p>
+
+        </div>
+
+        <div class="rounded-lg bg-gray-100 py-1 px-2">
+
+            <strong>Tomo</strong>
+
+            <p>{{ $folioReal->tomo_antecedente }}</p>
+
+        </div>
+
+        <div class="rounded-lg bg-gray-100 py-1 px-2">
+
+            <strong>Registro</strong>
+
+            <p>{{ $folioReal->registro_antecedente }}</p>
+
+        </div>
+
+        <div class="rounded-lg bg-gray-100 py-1 px-2">
+
+            <strong>Número de propiedad</strong>
+
+            <p>{{ $folioReal->numero_propiedad_antecedente }}</p>
+
+        </div>
+
+        <div class="rounded-lg bg-gray-100 py-1 px-2">
+
+            <strong>Distrito</strong>
+
+            <p>{{ $folioReal->distrito }}</p>
+
+        </div>
+
+        <div class="rounded-lg bg-gray-100 py-1 px-2">
+
+            <strong>Sección</strong>
+
+            <p>{{ $folioReal->seccion_antecedente }}</p>
+
+        </div>
+
+    @endif
 
 </div>
 
@@ -56,7 +108,15 @@
 
     <span class="flex items-center justify-center text-lg text-gray-700 md:col-span-3 col-span-1 sm:col-span-2 lg:col-span-5">Documento de entrada</span>
 
-    @if($folioReal->tipo_documento === 'OFICIO')
+    @if(in_array($folioReal->tipo_documento, ['OFICIO', 'TÍTULO DE PROPIEDAD']))
+
+        <div class="rounded-lg bg-gray-100 py-1 px-2">
+
+            <strong>Tipo de documento</strong>
+
+            <p>{{ $folioReal->tipo_documento }}</p>
+
+        </div>
 
         <div class="rounded-lg bg-gray-100 py-1 px-2">
 
