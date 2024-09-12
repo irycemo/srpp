@@ -85,7 +85,7 @@ class Elaboracion extends Component
             'escritura_nombre_notario' => Rule::requiredIf(in_array($this->tipo_documento, ['ESCRITURA PÚBLICA', 'ESCRITURA PRIVADA'])),
             'escritura_estado_notario' => Rule::requiredIf(in_array($this->tipo_documento, ['ESCRITURA PÚBLICA', 'ESCRITURA PRIVADA'])),
             'escritura_observaciones' => 'nullable',
-            'acto_contenido_antecedente' => Rule::requiredIf(in_array($this->tipo_documento, ['OFICIO', 'TÍTULO DE PROPIEDAD'])),
+            'acto_contenido_antecedente' => 'required',
             'observaciones_antecedente' => 'nullable'
         ];
     }

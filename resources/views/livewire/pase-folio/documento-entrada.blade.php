@@ -200,6 +200,22 @@
 
                 </x-input-group>
 
+                <x-input-group for="acto_contenido_antecedente" label="Acto contenido" :error="$errors->first('acto_contenido_antecedente')" class="w-full">
+
+                    <x-input-select id="acto_contenido_antecedente" wire:model.live="acto_contenido_antecedente" class="w-full">
+
+                        <option value="">Seleccione una opción</option>
+
+                        @foreach ($actos_contenidos as $acto)
+
+                            <option value="{{ $acto }}">{{ $acto }}</option>
+
+                        @endforeach
+
+                    </x-input-select>
+
+                </x-input-group>
+
                 <x-input-group for="escritura_observaciones" label="Observaciones" :error="$errors->first('escritura_observaciones')" class="sm:col-span-2 lg:col-span-3">
 
                     <textarea rows="3" class="w-full bg-white rounded text-sm" wire:model="escritura_observaciones"></textarea>
