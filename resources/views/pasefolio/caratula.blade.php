@@ -183,7 +183,7 @@
 
                 @if($folioReal->antecedentes->count())
 
-                    <p class="separador">Antecedentes fusionados</p>
+                    <p class="separador">Antecedentes</p>
 
                     <table>
 
@@ -296,31 +296,31 @@
                                     <p class="separador">gravamen ({{ $folioReal->folio }}-{{ $folioReal->movimientosRegistrales()->where('id', $gravamen->movimiento_registral_id)->first()->folio }})</p>
 
                                     <p class="parrafo">
-                                        <strong>Fecha de inscripción:</strong> {{ Carbon\Carbon::parse($gravamen->fecha_inscripcion)->format('d/m/Y') }}. <strong>Valor del gravamen:</strong> ${{ number_format($gravamen->valor_gravamen, 2) }} {{ $gravamen->divisa }}.
+                                        <strong>Fecha de inscripción: </strong> {{ Carbon\Carbon::parse($gravamen->fecha_inscripcion)->format('d/m/Y') }}. <strong>Valor del gravamen:</strong> ${{ number_format($gravamen->valor_gravamen, 2) }} {{ $gravamen->divisa }}.
                                     </p>
 
                                     <p class="parrafo">
-                                        <strong>Acto contenido:</strong> {{ $gravamen->acto_contenido }}
+                                        <strong>Acto contenido: </strong> {{ $gravamen->acto_contenido }}
                                     </p>
 
                                     <p class="parrafo">
-                                        <strong>Tipo / Número de documento:</strong> {{ $gravamen->movimientoRegistral->tipo_documento }}/{{ $gravamen->movimientoRegistral->numero_documento }}
+                                        <strong>Tipo / Número de documento: </strong> {{ $gravamen->movimientoRegistral->tipo_documento }}/{{ $gravamen->movimientoRegistral->numero_documento }}
                                     </p>
 
                                     <p class="parrafo">
-                                        <strong>Procedencia:</strong> {{ $gravamen->movimientoRegistral->procedencia }}
+                                        <strong>Procedencia: </strong> {{ $gravamen->movimientoRegistral->procedencia }}
                                     </p>
 
                                     <p class="parrafo">
-                                        <strong>Tipo:</strong> {{ $gravamen->tipo }}
+                                        <strong>Tipo: </strong> {{ $gravamen->tipo }}
                                     </p>
 
                                     <p class="parrafo">
-                                        <strong>Descripción:</strong> {{ $gravamen->observaciones }}
+                                        <strong>Descripción: </strong> {{ $gravamen->observaciones }}
                                     </p>
 
                                     <p class="parrafo">
-                                        <strong>deudores:</strong>
+                                        <strong>deudores: </strong>
                                         @foreach ($gravamen->deudores as $deudor)
 
                                             {{ $deudor->persona->nombre }} {{ $deudor->persona->ap_paterno }} {{ $deudor->persona->ap_materno }} {{ $deudor->persona->razon_social }}@if(!$loop->last), @endif
@@ -329,7 +329,7 @@
                                     </p>
 
                                     <p class="parrafo">
-                                        <strong>acreedores:</strong>
+                                        <strong>acreedores: </strong>
                                         @foreach ($gravamen->acreedores as $acreedor)
 
                                             {{ $acreedor->persona->nombre }} {{ $acreedor->persona->ap_paterno }} {{ $acreedor->persona->ap_materno }} {{ $acreedor->persona->razon_social }}@if(!$loop->last), @endif

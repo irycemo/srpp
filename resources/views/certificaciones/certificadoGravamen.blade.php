@@ -231,16 +231,16 @@
                         <strong>Distrito: </strong>{{ $gravamen->movimientoRegistral->distrito }};
                         CON <strong>FECHA DE INSCRIPCIÓN: </strong> {{ Carbon\Carbon::parse($gravamen->fecha_inscripcion)->format('d-m-Y') }};
                         <strong>RELATIVO A: </strong> {{ $gravamen->acto_contenido }};
-                        <strong>Tipo / Número de documento:</strong>{{ $gravamen->movimientoRegistral->tipo_documento }}/{{ $gravamen->movimientoRegistral->numero_documento }}
-                        <strong>Procedencia:</strong>{{ $gravamen->movimientoRegistral->procedencia }}
+                        <strong>Tipo / Número de documento: </strong>{{ $gravamen->movimientoRegistral->tipo_documento }}/{{ $gravamen->movimientoRegistral->numero_documento }}
+                        <strong>Procedencia: </strong>{{ $gravamen->movimientoRegistral->procedencia }}
                         <strong>Tipo: </strong>{{ $gravamen->tipo }};
-                        <strong>CELEBRADO POR EL(LOS) ACREEDOR(ES):</strong>
+                        <strong>CELEBRADO POR EL(LOS) ACREEDOR(ES): </strong>
                         @foreach ($gravamen->acreedores as $acreedor)
 
                             {{ $acreedor->persona->nombre }} {{ $acreedor->persona->ap_paterno }} {{ $acreedor->persona->ap_materno }}{{ $acreedor->persona->razon_social }}@if(!$loop->last), @endif
 
                         @endforeach
-                        <strong> Y COMO DEUDOR(ES):</strong>
+                        <strong> Y COMO DEUDOR(ES): </strong>
                         @foreach ($gravamen->deudores as $deudor)
 
                             {{ $deudor->persona->nombre }} {{ $deudor->persona->ap_paterno }} {{ $deudor->persona->ap_materno }}{{ $deudor->persona->razon_social }}@if(!$loop->last), @else; @endif
