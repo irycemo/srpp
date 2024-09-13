@@ -140,6 +140,7 @@ class MovimientosRegistrales extends Component
                             ->when($this->filters['registro'], fn($q, $registro) => $q->where('registro', $registro))
                             ->when($this->filters['distrito'], fn($q, $distrito) => $q->where('distrito', $distrito))
                             ->when($this->filters['usuario_asignado'], fn($q, $usuario_asignado) => $q->where('usuario_asignado', $usuario_asignado))
+                            ->whereNotNull('folio')
                             ->orderBy($this->sort, $this->direction)
                             ->paginate($this->pagination);
 
