@@ -43,6 +43,7 @@ use App\Livewire\Inscripciones\Propiedad\PropiedadInscripcion;
 use App\Http\Controllers\InscripcionesPropiedad\TraslativoController;
 use App\Http\Controllers\Certificaciones\CertificadoGravamenController;
 use App\Http\Controllers\Certificaciones\CertificadoPropiedadController;
+use App\Livewire\Admin\FoliosReales;
 
 /*
 |--------------------------------------------------------------------------
@@ -61,14 +62,16 @@ Route::get('/', function () {
 
 Route::group(['middleware' => ['auth', 'esta.activo']], function(){
 
-    /* Administración */
     Route::get('dashboard', DashboardController::class)->name('dashboard');
 
+    /* Administración */
     Route::get('roles', Roles::class)->middleware('permission:Lista de roles')->name('roles');
 
     Route::get('permisos', Permisos::class)->middleware('permission:Lista de permisos')->name('permisos');
 
     Route::get('usuarios', Usuarios::class)->middleware('permission:Lista de usuarios')->name('usuarios');
+
+    Route::get('folios_reales', FoliosReales::class)->middleware('permission:Lista de folios reales')->name('folios_reales');
 
     Route::get('propiedades', Propiedades::class)->middleware('permission:Lista de propiedades')->name('propiedades');
 

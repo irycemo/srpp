@@ -54,18 +54,21 @@ class Propiedades extends Component
             'numero_propiedad' => 'required',
         ]);
 
-        $this->modelo_editar = Propiedadold::where('distrito', $this->distrito)
+        $propiedad = Propiedadold::where('distrito', $this->distrito)
                                                 ->where('tomo', $this->tomo)
                                                 ->where('registro', $this->registro)
                                                 ->where('noprop', $this->numero_propiedad)
                                                 ->first();
 
-        if(!$this->modelo_editar){
+        if(!$propiedad){
 
             $this->dispatch('mostrarMensaje', ['error', "No se encontro la propiedad."]);
 
             return;
 
+        }else{
+
+            $this->modelo_editar = $propiedad;
         }
 
     }

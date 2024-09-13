@@ -19,7 +19,8 @@ class Constantes{
         'Inscripciones',
         'Pase a folio',
         'Consultas',
-        'Propiedades'
+        'Propiedades',
+        'Folios reales'
     ];
 
     /* USUARIOS */
@@ -87,6 +88,13 @@ class Constantes{
         17 => '17 Coalcoman',
         18 => '18 Ario De Rosales',
         19 => '19 Tanhuato'
+    ];
+
+    const ESTADO_CIVIL = [
+        'CASADO',
+        'SOLTERO',
+        'VIUDO',
+        'DIVORCIADO'
     ];
 
     const TIPO_PROPIETARIO = [

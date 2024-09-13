@@ -5,7 +5,6 @@ namespace App\Livewire\Varios;
 use Exception;
 use App\Models\Actor;
 use Livewire\Component;
-use Livewire\WithFileUploads;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Hash;
@@ -14,7 +13,6 @@ use App\Traits\Inscripciones\Varios\VariosTrait;
 class ConsolidacionUsufructo extends Component
 {
 
-    use WithFileUploads;
     use VariosTrait;
 
     public $porcentaje_propiedad;

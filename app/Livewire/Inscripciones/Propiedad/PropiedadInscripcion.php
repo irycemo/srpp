@@ -237,6 +237,14 @@ class PropiedadInscripcion extends Component
 
     public function agregarPropietario(){
 
+        if($this->inscripcion->transmitentes()->count() == 0){
+
+            $this->dispatch('mostrarMensaje', ['error', "Debe ingresar los transmitentes primero."]);
+
+            return;
+
+        }
+
         $this->modalPropietario = true;
         $this->modalTransmitente = false;
         $this->modalRepresentante = false;
