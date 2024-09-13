@@ -22,19 +22,53 @@ class CertificadoPropiedadIndex extends Component
 
     public $modalFinalizar = false;
 
+    public $actual;
+
     public function crearModeloVacio(){
         $this->modelo_editar = MovimientoRegistral::make();
     }
 
+    public function estaBloqueado(){
+
+        $movimientos = $this->actual->folioReal->movimientosRegistrales()->whereIn('estado', ['nuevo', 'captura'])->orderBy('folio')->get();
+
+        if($movimientos->count()){
+
+            $primerMovimiento = $movimientos->first();
+
+            if($this->actual->folio > $primerMovimiento->folio){
+
+                $this->dispatch('mostrarMensaje', ['warning', "El movimiento registral: (" . $this->actual->folioReal->folio . '-' . $primerMovimiento->folio . ') debe elaborarce primero.']);
+
+                return true;
+
+            }else{
+
+               return false;
+
+            }
+
+        }else{
+
+            return false;
+
+        }
+
+    }
+
     public function elaborar(MovimientoRegistral $movimientoRegistral){
 
-        if($movimientoRegistral->tipo_servicio == 'ordinario'){
+        if($movimientoRegistral->getRawOriginal('distrito') != 2){
 
-            if(!($this->calcularDiaElaboracion($movimientoRegistral) <= now())){
+            if($movimientoRegistral->tipo_servicio == 'ordinario'){
 
-                $this->dispatch('mostrarMensaje', ['error', "El trámite puede elaborarse apartir del " . $this->calcularDiaElaboracion($movimientoRegistral)->format('d-m-Y')]);
+                if(!($this->calcularDiaElaboracion($movimientoRegistral) <= now())){
 
-                return;
+                    $this->dispatch('mostrarMensaje', ['error', "El trámite puede elaborarse apartir del " . $this->calcularDiaElaboracion($movimientoRegistral)->format('d-m-Y')]);
+
+                    return;
+
+                }
 
             }
 

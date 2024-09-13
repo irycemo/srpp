@@ -236,13 +236,17 @@ class CertificadoPropiedad extends Component
 
     public function generarCertificadoColindancias(){
 
-        if($this->certificacion->movimientoRegistral->tipo_servicio == 'ordinario'){
+        if($this->certificacion->movimientoRegistral->getRawOriginal('distrito') != 2){
 
-            if(!($this->calcularDiaElaboracion($this->certificacion) <= now())){
+            if($this->certificacion->movimientoRegistral->tipo_servicio == 'ordinario'){
 
-                $this->dispatch('mostrarMensaje', ['error', "El trámite puede elaborarse apartir del " . $this->calcularDiaElaboracion($this->certificacion)->format('d-m-Y')]);
+                if(!($this->calcularDiaElaboracion($this->certificacion) <= now())){
 
-                return;
+                    $this->dispatch('mostrarMensaje', ['error', "El trámite puede elaborarse apartir del " . $this->calcularDiaElaboracion($this->certificacion)->format('d-m-Y')]);
+
+                    return;
+
+                }
 
             }
 
