@@ -75,7 +75,7 @@
 
                             <span class="lg:hidden absolute top-0 left-0 bg-blue-300 px-2 py-1 text-xs text-white font-bold uppercase rounded-br-xl">Movimiento registral</span>
 
-                            {{ $certificado->folioReal->folio }}-{{ $certificado->folio }}
+                            <span class="whitespace-nowrap">{{ $certificado->folioReal->folio }}-{{ $certificado->folio }}</span>
 
                         </x-table.cell>
 

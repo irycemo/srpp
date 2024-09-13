@@ -775,7 +775,7 @@ class Elaboracion extends Component
                 if($sentencia->movimientoRegistral->folio == 1) continue;
 
                 $sentencia->movimientoRegistral->update([
-                    'usuario_supervisor' => (new AsignacionService())->obtenerSupervisorGravamen($this->movimientoRegistral->getRawOriginal('distrito')),
+                    'usuario_supervisor' => (new AsignacionService())->obtenerSupervisorSentencias($this->movimientoRegistral->getRawOriginal('distrito')),
                     'estado' => 'concluido'
                 ]);
 
@@ -796,7 +796,7 @@ class Elaboracion extends Component
                 if($vario->movimientoRegistral->folio == 1) continue;
 
                 $vario->movimientoRegistral->update([
-                    'usuario_supervisor' => (new AsignacionService())->obtenerSupervisorGravamen($this->movimientoRegistral->getRawOriginal('distrito')),
+                    'usuario_supervisor' => (new AsignacionService())->obtenerSupervisorVarios($this->movimientoRegistral->getRawOriginal('distrito')),
                     'estado' => 'concluido'
                 ]);
 

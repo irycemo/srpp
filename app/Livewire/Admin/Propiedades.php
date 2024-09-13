@@ -81,6 +81,8 @@ class Propiedades extends Component
 
             $this->modelo_editar->save();
 
+            $this->modelo_editar->audits()->latest()->first()->update(['tags' => 'Actualizó estado']);
+
             $this->resetearTodo();
 
             $this->dispatch('mostrarMensaje', ['success', "La propiedad se actualizó con éxito."]);

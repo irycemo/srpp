@@ -79,7 +79,7 @@
 
                             <span class="lg:hidden absolute top-0 left-0 bg-blue-300 px-2 py-1 text-xs text-white font-bold uppercase rounded-br-xl"># Control</span>
 
-                            <span class="">{{ $copia->año }}-{{ $copia->tramite }}-{{ $copia->usuario }}</span>
+                            <span class="whitespace-nowrap">{{ $copia->año }}-{{ $copia->tramite }}-{{ $copia->usuario }}</span>
 
                         </x-table.cell>
 

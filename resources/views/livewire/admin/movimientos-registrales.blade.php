@@ -6,26 +6,54 @@
 
         <div class="flex justify-between">
 
-            <div class="flex gap-3">
+            <div class="flex gap-3 overflow-auto p-1">
 
-                <input type="number" wire:model.live.debounce.500ms="filters.folio" placeholder="Folio" class="bg-white rounded-full text-sm">
+                <select class="bg-white rounded-full text-sm" wire:model.live="filters.año">
 
-                <select class="bg-white rounded-full text-sm" wire:model.live="filters.estado">
+                    <option value="">Año</option>
+
+                    @foreach ($años as $año)
+
+                        <option value="{{ $año }}">{{ $año }}</option>
+
+                    @endforeach
+
+                </select>
+
+                <input type="number" wire:model.live.debounce.500ms="filters.tramite" placeholder="# control" class="bg-white rounded-full text-sm w-24">
+
+                <input type="number" wire:model.live.debounce.500ms="filters.usuario" placeholder="Usuario" class="bg-white rounded-full text-sm w-20">
+
+                <input type="number" wire:model.live.debounce.500ms="filters.folio_real" placeholder="F. Real" class="bg-white rounded-full text-sm w-24">
+
+                <input type="number" wire:model.live.debounce.500ms="filters.folio" placeholder="Folio" class="bg-white rounded-full text-sm w-24">
+
+                <select class="bg-white rounded-full text-sm w-min" wire:model.live="filters.estado">
 
                     <option value="nuevo">Nuevo</option>
                     <option value="elaborado">Elaborado</option>
                     <option value="rechazado">Rechazado</option>
-                    <option value="finalizado">Fiinalizado</option>
+                    <option value="finalizado">Finalizado</option>
 
                 </select>
 
-                <input type="number" wire:model.live.debounce.500ms="filters.tomo" placeholder="Tomo" class="bg-white rounded-full text-sm">
+                <input type="number" wire:model.live.debounce.500ms="filters.tomo" placeholder="Tomo" class="bg-white rounded-full text-sm w-24">
 
-                <input type="number" wire:model.live.debounce.500ms="filters.registro" placeholder="Registro" class="bg-white rounded-full text-sm">
+                <input type="number" wire:model.live.debounce.500ms="filters.registro" placeholder="Registro" class="bg-white rounded-full text-sm w-24">
 
-                <input type="number" wire:model.live.debounce.500ms="filters.distrito" placeholder="Distrito" class="bg-white rounded-full text-sm">
+                <select class="bg-white rounded-full text-sm" wire:model.live="filters.distrito">
 
-                <select class="bg-white rounded-full text-sm" wire:model.live="filters.usuario">
+                    <option value="">Seleccione una opción</option>
+
+                    @foreach ($distritos as $key => $distrito)
+
+                        <option value="{{ $key }}">{{ $distrito }}</option>
+
+                    @endforeach
+
+                </select>
+
+                <select class="bg-white rounded-full text-sm" wire:model.live="filters.usuario_asignado">
 
                     <option value="">Seleccione una opción</option>
 
@@ -66,6 +94,8 @@
                 <x-table.heading sortable wire:click="sortBy('numero_propiedad')" :direction="$sort === 'numero_propiedad' ? $direction : null" ># Propiedad</x-table.heading>
                 <x-table.heading sortable wire:click="sortBy('distrito')" :direction="$sort === 'distrito' ? $direction : null" >Distrito</x-table.heading>
                 <x-table.heading sortable wire:click="sortBy('seccion')" :direction="$sort === 'seccion' ? $direction : null" >Sección</x-table.heading>
+                <x-table.heading sortable wire:click="sortBy('usuario_asignado')" :direction="$sort === 'usuario_asignado' ? $direction : null" >Asignado a</x-table.heading>
+                <x-table.heading sortable wire:click="sortBy('usuario_supervisor')" :direction="$sort === 'usuario_supervisor' ? $direction : null" >Supervisor</x-table.heading>
                 <x-table.heading sortable wire:click="sortBy('created_at')" :direction="$sort === 'created_at' ? $direction : null">Registro</x-table.heading>
                 <x-table.heading sortable wire:click="sortBy('updated_at')" :direction="$sort === 'updated_at' ? $direction : null">Actualizado</x-table.heading>
                 <x-table.heading >Acciones</x-table.heading>
@@ -82,7 +112,15 @@
 
                             <span class="lg:hidden absolute top-0 left-0 bg-blue-300 px-2 py-1 text-xs text-white font-bold uppercase rounded-br-xl">Folio</span>
 
-                            {{ $movimiento->folio }}
+                            <span class="whitespace-nowrap">{{ $movimiento->año }}-{{ $movimiento->tramite }}-{{ $movimiento->usuario }}</span>
+
+                        </x-table.cell>
+
+                        <x-table.cell>
+
+                            <span class="lg:hidden absolute top-0 left-0 bg-blue-300 px-2 py-1 text-xs text-white font-bold uppercase rounded-br-xl">Tomo</span>
+
+                            {{ $movimiento->folioReal?->folio }}-{{ $movimiento->folio }}
 
                         </x-table.cell>
 
@@ -98,7 +136,7 @@
 
                             <span class="lg:hidden absolute top-0 left-0 bg-blue-300 px-2 py-1 text-xs text-white font-bold uppercase rounded-br-xl">Tomo</span>
 
-                            {{ $movimiento->tomo }}
+                            {{ $movimiento->tomo ?? 'N/A' }}
 
                         </x-table.cell>
 
@@ -106,7 +144,7 @@
 
                             <span class="lg:hidden absolute top-0 left-0 bg-blue-300 px-2 py-1 text-xs text-white font-bold uppercase rounded-br-xl">Registro</span>
 
-                            {{ $movimiento->registro }}
+                            {{ $movimiento->registro ?? 'N/A' }}
 
                         </x-table.cell>
 
@@ -114,7 +152,7 @@
 
                             <span class="lg:hidden absolute top-0 left-0 bg-blue-300 px-2 py-1 text-xs text-white font-bold uppercase rounded-br-xl"># Propiedad</span>
 
-                            {{ $movimiento->numero_propiedad }}
+                            {{ $movimiento->numero_propiedad ?? 'N/A' }}
 
                         </x-table.cell>
 
@@ -128,10 +166,31 @@
 
                         <x-table.cell>
 
+                            <span class="lg:hidden absolute top-0 left-0 bg-blue-300 px-2 py-1 text-xs text-white font-bold uppercase rounded-br-xl">Sección</span>
+
+                            {{ $movimiento->seccion }}
+
+                        </x-table.cell>
+
+                        <x-table.cell>
+
+                            <span class="lg:hidden absolute top-0 left-0 bg-blue-300 px-2 py-1 text-xs text-white font-bold uppercase rounded-br-xl">Asignado a</span>
+
+                            {{ $movimiento->asignadoA->name }}
+
+                        </x-table.cell>
+
+                        <x-table.cell>
+
+                            <span class="lg:hidden absolute top-0 left-0 bg-blue-300 px-2 py-1 text-xs text-white font-bold uppercase rounded-br-xl">Supervisor</span>
+
+                            {{ $movimiento->supervisor->name }}
+
+                        </x-table.cell>
+
+                        <x-table.cell>
+
                             <span class="lg:hidden absolute top-0 left-0 bg-blue-300 px-2 py-1 text-xs text-white font-bold uppercase rounded-br-xl">Registrado</span>
-
-
-                            <span class="font-semibold">@if($movimiento->creadoPor != null)Registrado por: {{$movimiento->creadoPor->name}} @else Registro: @endif</span> <br>
 
                             {{ $movimiento->created_at }}
 
@@ -149,24 +208,35 @@
 
                             <span class="lg:hidden absolute top-0 left-0 bg-blue-300 px-2 py-1 text-xs text-white font-bold uppercase rounded-br-xl">Acciones</span>
 
-                            <div class="flex justify-center lg:justify-start gap-2">
+                            <div class="ml-3 relative" x-data="{ open_drop_down:false }">
 
-                                @can('Reasignar movimiento')
+                                <div>
 
-                                    <x-button-red
-                                        wire:click="abrirModalReasignar({{ $movimiento->id }})"
-                                        wire:target="abrirModalReasignar({{ $movimiento->id }})"
-                                        wire:loading.attr="disabled"
-                                    >
-                                        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" class="w-4 h-4 mr-2">
-                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z" />
+                                    <button x-on:click="open_drop_down=true" type="button" class="rounded-full focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-offset-gray-800 focus:ring-white">
+
+                                        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-6 h-6">
+                                            <path stroke-linecap="round" stroke-linejoin="round" d="M6.75 12a.75.75 0 1 1-1.5 0 .75.75 0 0 1 1.5 0ZM12.75 12a.75.75 0 1 1-1.5 0 .75.75 0 0 1 1.5 0ZM18.75 12a.75.75 0 1 1-1.5 0 .75.75 0 0 1 1.5 0Z" />
                                         </svg>
 
-                                        <span>Reasignar</span>
+                                    </button>
 
-                                    </x-button-red>
+                                </div>
 
-                                @endcan
+                                <div x-cloak x-show="open_drop_down" x-on:click="open_drop_down=false" x-on:click.away="open_drop_down=false" class="z-50 origin-top-right absolute right-0 mt-2 w-48 rounded-md shadow-lg py-1 bg-white ring-1 ring-black ring-opacity-5 focus:outline-none" role="menu" aria-orientation="vertical" aria-labelledby="user-menu">
+
+                                    @can('Reasignar movimiento')
+
+                                        <button
+                                            wire:click="abrirModalReasignar({{ $movimiento->id }})"
+                                            wire:loading.attr="disabled"
+                                            class="w-full text-left block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 focus:outline-none focus:bg-gray-100"
+                                            role="menuitem">
+                                            Reasignar
+                                        </button>
+
+                                    @endif
+
+                                </div>
 
                             </div>
 
@@ -178,7 +248,7 @@
 
                     <x-table.row>
 
-                        <x-table.cell colspan="9">
+                        <x-table.cell colspan="15">
 
                             <div class="bg-white text-gray-500 text-center p-5 rounded-full text-lg">
 
@@ -198,7 +268,7 @@
 
                 <x-table.row>
 
-                    <x-table.cell colspan="9" class="bg-gray-50">
+                    <x-table.cell colspan="15" class="bg-gray-50">
 
                         {{ $movimientos->links()}}
 
@@ -212,15 +282,11 @@
 
     </div>
 
-    <x-dialog-modal wire:model="modal" maxWidth="sm">
+    <x-dialog-modal wire:model="modalReasignar" maxWidth="sm">
 
         <x-slot name="title">
 
-            @if($crear)
-                Nuevo Distrito
-            @elseif($editar)
-                Editar Distrito
-            @endif
+            Reasignar usuario
 
         </x-slot>
 
@@ -228,15 +294,19 @@
 
             <div class="flex flex-col md:flex-row justify-between gap-3 mb-3">
 
-                <x-input-group for="modelo_editar.nombre" label="Nombre" :error="$errors->first('modelo_editar.nombre')" class="w-full">
+                <x-input-group for="modelo_editar.usuario_asignado" label="Área" :error="$errors->first('modelo_editar.usuario_asignado')" class="w-full">
 
-                    <x-input-text id="modelo_editar.nombre" wire:model="modelo_editar.nombre" />
+                    <x-input-select id="modelo_editar.usuario_asignado" wire:model="modelo_editar.usuario_asignado" class="w-full">
 
-                </x-input-group>
+                        <option value="">Seleccione una opción</option>
 
-                <x-input-group for="modelo_editar.clave" label="Clave" :error="$errors->first('modelo_editar.clave')" class="w-full">
+                        @foreach ($usuarios as $usuario)
 
-                    <x-input-text type="number" id="modelo_editar.clave" wire:model="modelo_editar.clave" />
+                            <option value="{{ $usuario->id }}">{{ $usuario->name }}</option>
+
+                        @endforeach
+
+                    </x-input-select>
 
                 </x-input-group>
 
@@ -248,37 +318,20 @@
 
             <div class="flex gap-3">
 
-                @if($crear)
+                <x-button-blue
+                    wire:click="reasignar"
+                    wire:loading.attr="disabled"
+                    wire:target="reasignar">
 
-                    <x-button-blue
-                        wire:click="guardar"
-                        wire:loading.attr="disabled"
-                        wire:target="guardar">
+                    <img wire:loading wire:target="reasignar" class="mx-auto h-4 mr-1" src="{{ asset('storage/img/loading3.svg') }}" alt="Loading">
 
-                        <img wire:loading wire:target="guardar" class="mx-auto h-4 mr-1" src="{{ asset('storage/img/loading3.svg') }}" alt="Loading">
-
-                        <span>Guardar</span>
-                    </x-button-blue>
-
-                @elseif($editar)
-
-                    <button
-                        wire:click="actualizar"
-                        wire:loading.attr="disabled"
-                        wire:target="actualizar"
-                        class="bg-blue-400 hover:shadow-lg text-white font-bold px-4 py-2 rounded-full text-sm mb-2 hover:bg-blue-700 flaot-left mr-1 focus:outline-none">
-
-                        <img wire:loading wire:target="actualizar" class="mx-auto h-4 mr-1" src="{{ asset('storage/img/loading3.svg') }}" alt="Loading">
-
-                        <span>Actualizar</span>
-                    </button>
-
-                @endif
+                    <span>Reasignar</span>
+                </x-button-blue>
 
                 <x-button-red
-                    wire:click="resetearTodo"
+                    wire:click="$toggle('modalReasignar')"
                     wire:loading.attr="disabled"
-                    wire:target="resetearTodo"
+                    wire:target="$toggle('modalReasignar')"
                     type="button">
                     Cerrar
                 </x-button-red>

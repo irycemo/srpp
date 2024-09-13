@@ -2,11 +2,12 @@
 
 namespace App\Livewire\Admin;
 
-use App\Constantes\Constantes;
-use App\Models\FolioReal;
-use App\Traits\ComponentesTrait;
 use Livewire\Component;
+use App\Models\FolioReal;
 use Livewire\WithPagination;
+use App\Constantes\Constantes;
+use App\Traits\ComponentesTrait;
+use Illuminate\Support\Facades\Log;
 
 class FoliosReales extends Component
 {
@@ -37,7 +38,33 @@ class FoliosReales extends Component
 
     public function abrirModalEnviarCaptura(FolioReal $folioReal){
 
-        /* $movimiento = $folioReal->movimientosRegistrales()->where('estado', ) */
+        $movimiento = $folioReal->movimientosRegistrales()->whereIn('estado', ['elaborado', 'finalizado', 'concluido'])->first();
+
+        if($movimiento){
+
+            $this->dispatch('mostrarMensaje', ['error', "El folio tiene movimientos registrales elaborados no es posible enviarlo a captura."]);
+
+            return;
+
+        }
+
+        try {
+
+            $folioReal->update([
+                'estado' => 'captura',
+                'actualizado_por' => auth()->id()
+            ]);
+
+            $folioReal->audits()->latest()->first()->update(['tags' => 'Envió folio a captura']);
+
+            $this->dispatch('mostrarMensaje', ['success', "El folio esta en captura."]);
+
+        } catch (\Throwable $th) {
+
+            $this->dispatch('mostrarMensaje', ['error', "Hubo un error."]);
+            Log::error("Error al enviar a captura folio real por el usuario: (id: " . auth()->user()->id . ") " . auth()->user()->name . ". " . $th);
+
+        }
 
     }
 

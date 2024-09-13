@@ -20,7 +20,8 @@ class Constantes{
         'Pase a folio',
         'Consultas',
         'Propiedades',
-        'Folios reales'
+        'Folios reales',
+        'Movimientos Registrales'
     ];
 
     /* USUARIOS */

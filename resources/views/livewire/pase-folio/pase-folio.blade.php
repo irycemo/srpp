@@ -67,7 +67,7 @@
 
                             <span class="lg:hidden absolute top-0 left-0 bg-blue-300 px-2 py-1 text-xs text-white font-bold uppercase rounded-br-xl">Número de control</span>
 
-                            {{ $movimiento->año }}-{{ $movimiento->tramite }}-{{ $movimiento->usuario }}
+                            <span class="whitespace-nowrap">{{ $movimiento->año }}-{{ $movimiento->tramite }}-{{ $movimiento->usuario }}</span>
 
                         </x-table.cell>
 

@@ -77,7 +77,7 @@
 
                             <span class="lg:hidden absolute top-0 left-0 bg-blue-300 px-2 py-1 text-xs text-white font-bold uppercase rounded-br-xl">Folio real</span>
 
-                            {{ $certificado->folioReal ? $certificado->folioReal->folio . '-' . $certificado->folio : 'N/A'}}
+                            <span class="whitespace-nowrap">{{ $certificado->folioReal ? $certificado->folioReal->folio . '-' . $certificado->folio : 'N/A'}}</span>
 
                         </x-table.cell>
 

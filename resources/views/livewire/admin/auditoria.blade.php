@@ -103,6 +103,8 @@
                                 Relacionado
                             @endif
 
+                            : {{ $audit->tags }}
+
                         </x-table.cell>
 
                         <x-table.cell>
