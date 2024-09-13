@@ -1044,7 +1044,7 @@ class Sentencia extends Component
 
             DB::transaction(function (){
 
-                if(env('LOCAL') == "1"){
+                if(env('LOCAL') == "0"){
 
                     $pdf = $this->documento->store('srpp/documento_entrada', 's3');
 
@@ -1055,7 +1055,7 @@ class Sentencia extends Component
                         'url' => $pdf
                     ]);
 
-                }elseif(env('LOCAL') == "0"){
+                }elseif(env('LOCAL') == "1"){
 
                     $pdf = $this->documento->store('/', 'documento_entrada');
 
