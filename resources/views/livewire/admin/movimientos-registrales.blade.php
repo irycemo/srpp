@@ -227,11 +227,19 @@
                                     @can('Reasignar movimiento')
 
                                         <button
-                                            wire:click="abrirModalReasignar({{ $movimiento->id }})"
+                                            wire:click="abrirModalReasignarUsuario({{ $movimiento->id }})"
                                             wire:loading.attr="disabled"
                                             class="w-full text-left block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 focus:outline-none focus:bg-gray-100"
                                             role="menuitem">
-                                            Reasignar
+                                            Reasignar usuario
+                                        </button>
+
+                                        <button
+                                            wire:click="abrirModalReasignarSupervisor({{ $movimiento->id }})"
+                                            wire:loading.attr="disabled"
+                                            class="w-full text-left block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 focus:outline-none focus:bg-gray-100"
+                                            role="menuitem">
+                                            Reasignar supervisor
                                         </button>
 
                                     @endif
@@ -282,7 +290,7 @@
 
     </div>
 
-    <x-dialog-modal wire:model="modalReasignar" maxWidth="sm">
+    <x-dialog-modal wire:model="modalReasignarUsuario" maxWidth="sm">
 
         <x-slot name="title">
 
@@ -319,19 +327,79 @@
             <div class="flex gap-3">
 
                 <x-button-blue
-                    wire:click="reasignar"
+                    wire:click="reasignarUsuario"
                     wire:loading.attr="disabled"
-                    wire:target="reasignar">
+                    wire:target="reasignarUsuario">
 
-                    <img wire:loading wire:target="reasignar" class="mx-auto h-4 mr-1" src="{{ asset('storage/img/loading3.svg') }}" alt="Loading">
+                    <img wire:loading wire:target="reasignarUsuario" class="mx-auto h-4 mr-1" src="{{ asset('storage/img/loading3.svg') }}" alt="Loading">
 
                     <span>Reasignar</span>
                 </x-button-blue>
 
                 <x-button-red
-                    wire:click="$toggle('modalReasignar')"
+                    wire:click="$toggle('modalReasignarUsuario')"
                     wire:loading.attr="disabled"
-                    wire:target="$toggle('modalReasignar')"
+                    wire:target="$toggle('modalReasignarUsuario')"
+                    type="button">
+                    Cerrar
+                </x-button-red>
+
+            </div>
+
+        </x-slot>
+
+    </x-dialog-modal>
+
+    <x-dialog-modal wire:model="modalReasignarSupervisor" maxWidth="sm">
+
+        <x-slot name="title">
+
+            Reasignar supervisor
+
+        </x-slot>
+
+        <x-slot name="content">
+
+            <div class="flex flex-col md:flex-row justify-between gap-3 mb-3">
+
+                <x-input-group for="modelo_editar.usuario_supervisor" label="Área" :error="$errors->first('modelo_editar.usuario_supervisor')" class="w-full">
+
+                    <x-input-select id="modelo_editar.usuario_supervisor" wire:model="modelo_editar.usuario_supervisor" class="w-full">
+
+                        <option value="">Seleccione una opción</option>
+
+                        @foreach ($supervisores as $supervisor)
+
+                            <option value="{{ $supervisor->id }}">{{ $supervisor->name }}</option>
+
+                        @endforeach
+
+                    </x-input-select>
+
+                </x-input-group>
+
+            </div>
+
+        </x-slot>
+
+        <x-slot name="footer">
+
+            <div class="flex gap-3">
+
+                <x-button-blue
+                    wire:click="reasignarSupervisor"
+                    wire:loading.attr="disabled"
+                    wire:target="reasignarSupervisor">
+
+                    <img wire:loading wire:target="reasignarSupervisor" class="mx-auto h-4 mr-1" src="{{ asset('storage/img/loading3.svg') }}" alt="Loading">
+
+                    <span>Reasignar</span>
+                </x-button-blue>
+
+                <x-button-red
+                    wire:click="$toggle('modalReasignarSupervisor')"
+                    wire:loading.attr="disabled"
+                    wire:target="$toggle('modalReasignarSupervisor')"
                     type="button">
                     Cerrar
                 </x-button-red>

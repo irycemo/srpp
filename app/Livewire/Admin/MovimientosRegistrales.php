@@ -20,9 +20,11 @@ class MovimientosRegistrales extends Component
 
     public $distritos;
     public $usuarios;
+    public $supervisores;
     public $años;
 
-    public $modalReasignar = false;
+    public $modalReasignarUsuario = false;
+    public $modalReasignarSupervisor = false;
 
     public $filters = [
         'año' => '',
@@ -41,11 +43,13 @@ class MovimientosRegistrales extends Component
     protected function rules(){
         return [
             'modelo_editar.usuario_asignado' => 'required',
+            'modelo_editar.usuario_supervisor' => 'required',
          ];
     }
 
     protected $validationAttributes  = [
         'modelo_editar.usuario_asignado' => 'usuario asignado',
+        'modelo_editar.usuario_supervisor' => 'usuario supervisor',
     ];
 
     public function updatedFilters() { $this->resetPage(); }
@@ -56,16 +60,16 @@ class MovimientosRegistrales extends Component
 
     }
 
-    public function abrirModalReasignar(MovimientoRegistral $modelo){
+    public function abrirModalReasignarUsuario(MovimientoRegistral $modelo){
 
         if($this->modelo_editar->isNot($modelo))
             $this->modelo_editar = $modelo;
 
-        $this->modalReasignar = true;
+        $this->modalReasignarUsuario = true;
 
     }
 
-    public function reasignar(){
+    public function reasignarUsuario(){
 
         $this->validate();
 
@@ -78,12 +82,45 @@ class MovimientosRegistrales extends Component
 
             $this->dispatch('mostrarMensaje', ['success', "El usuario se reasignó con éxito."]);
 
-            $this->modalReasignar = false;
+            $this->modalReasignarUsuario = false;
 
         } catch (\Throwable $th) {
 
             $this->dispatch('mostrarMensaje', ['error', "Hubo un error."]);
             Log::error("Error al reasignar usuario a movimiento registral por el usuario: (id: " . auth()->user()->id . ") " . auth()->user()->name . ". " . $th);
+
+        }
+
+    }
+
+    public function abrirModalReasignarSupervisor(MovimientoRegistral $modelo){
+
+        if($this->modelo_editar->isNot($modelo))
+            $this->modelo_editar = $modelo;
+
+        $this->modalReasignarSupervisor = true;
+
+    }
+
+    public function reasignarSupervisor(){
+
+        $this->validate();
+
+        try {
+
+            $this->modelo_editar->actualizado_por = auth()->id();
+            $this->modelo_editar->save();
+
+            $this->modelo_editar->audits()->latest()->first()->update(['tags' => 'Reasignó supervisor']);
+
+            $this->dispatch('mostrarMensaje', ['success', "El supervisor se reasignó con éxito."]);
+
+            $this->modalReasignarSupervisor = false;
+
+        } catch (\Throwable $th) {
+
+            $this->dispatch('mostrarMensaje', ['error', "Hubo un error."]);
+            Log::error("Error al reasignar supervisor a movimiento registral por el usuario: (id: " . auth()->user()->id . ") " . auth()->user()->name . ". " . $th);
 
         }
 
@@ -115,6 +152,20 @@ class MovimientosRegistrales extends Component
                                                             'Certificador Oficialia',
                                                             'Certificador Juridico',
                                                             'Certificador'
+                                                        ]);
+                                })
+                                ->orderBy('name')
+                                ->get();
+
+        $this->supervisores = User::whereHas('roles', function($q){
+                                    $q->whereIn('name', [
+                                                            'Supervisor uruapan',
+                                                            'Supervisor sentencias',
+                                                            'Supervisor varios',
+                                                            'Supervisor cancelación',
+                                                            'Supervisor gravamen',
+                                                            'Supervisor propiedad',
+                                                            'Supervisor certificaciones'
                                                         ]);
                                 })
                                 ->orderBy('name')
