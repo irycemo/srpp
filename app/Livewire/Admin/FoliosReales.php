@@ -2,6 +2,7 @@
 
 namespace App\Livewire\Admin;
 
+use App\Models\User;
 use Livewire\Component;
 use App\Models\FolioReal;
 use Livewire\WithPagination;
@@ -18,6 +19,11 @@ class FoliosReales extends Component
     public FolioReal $modelo_editar;
 
     public $distritos;
+    public $usuarios;
+
+    public $modalReasignar = false;
+
+    public $usuario_id;
 
     public $filters = [
         'folio' => '',
@@ -36,7 +42,7 @@ class FoliosReales extends Component
 
     }
 
-    public function abrirModalEnviarCaptura(FolioReal $folioReal){
+    public function enviarCaptura(FolioReal $folioReal){
 
         $movimiento = $folioReal->movimientosRegistrales()->whereIn('estado', ['elaborado', 'finalizado', 'concluido'])->first();
 
@@ -68,12 +74,62 @@ class FoliosReales extends Component
 
     }
 
+    public function abrirModalReasignar(FolioReal $modelo){
+
+        if($this->modelo_editar->isNot($modelo))
+            $this->modelo_editar = $modelo;
+
+        $this->modalReasignar = true;
+
+    }
+
+    public function reasignar(){
+
+        try {
+
+            $this->modelo_editar->movimientosRegistrales()->first()->update([
+                'usuario_asignado' => $this->usuario_id,
+                'actualizado_por' => auth()->id()
+            ]);
+
+            $this->modelo_editar->audits()->latest()->first()->update(['tags' => 'Reasignó folio real']);
+
+            $this->dispatch('mostrarMensaje', ['success', "El folio se reasgnó con éxito."]);
+
+            $this->modalReasignar = false;
+
+        } catch (\Throwable $th) {
+
+            $this->dispatch('mostrarMensaje', ['error', "Hubo un error."]);
+            Log::error("Error al reasignar folio real por el usuario: (id: " . auth()->user()->id . ") " . auth()->user()->name . ". " . $th);
+
+        }
+
+    }
+
     public function mount(): void
     {
 
         $this->crearModeloVacio();
 
         $this->distritos = Constantes::DISTRITOS;
+
+        $this->usuarios = User::whereHas('roles', function($q){
+            $q->whereIn('name', [
+                                    'Registrador Sentencias',
+                                    'Registrador Varios',
+                                    'Registrador Cancelación',
+                                    'Registrador Gravamen',
+                                    'Registrador Propiedad',
+                                    'Certificador Propiedad',
+                                    'Certificador Gravamen',
+                                    'Certificador Oficialia',
+                                    'Certificador Juridico',
+                                    'Pase a folio'
+                                ]);
+        })
+        ->orderBy('name')
+        ->get();
 
     }
 

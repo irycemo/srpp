@@ -154,12 +154,28 @@
                                     @can('Envia a captura')
 
                                         <button
-                                            wire:click="abrirModalEnviarCaptura({{ $folio->id }})"
+                                            wire:click="enviarCaptura({{ $folio->id }})"
                                             wire:loading.attr="disabled"
                                             class="w-full text-left block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 focus:outline-none focus:bg-gray-100"
                                             role="menuitem">
                                             Enviar a captura
                                         </button>
+
+                                    @endif
+
+                                    @if(in_array($folio->estado, ['nuevo', 'captura']))
+
+                                        @can('Reasignar folio')
+
+                                            <button
+                                                wire:click="abrirModalReasignar({{ $folio->id }})"
+                                                wire:loading.attr="disabled"
+                                                class="w-full text-left block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 focus:outline-none focus:bg-gray-100"
+                                                role="menuitem">
+                                                Reasignar
+                                            </button>
+
+                                        @endif
 
                                     @endif
 
@@ -209,15 +225,11 @@
 
     </div>
 
-    <x-dialog-modal wire:model="modal" maxWidth="sm">
+    <x-dialog-modal wire:model="modalReasignar" maxWidth="sm">
 
         <x-slot name="title">
 
-            @if($crear)
-                Nuevo Distrito
-            @elseif($editar)
-                Editar Distrito
-            @endif
+            Reasignar folio
 
         </x-slot>
 
@@ -225,15 +237,19 @@
 
             <div class="flex flex-col md:flex-row justify-between gap-3 mb-3">
 
-                <x-input-group for="modelo_editar.nombre" label="Nombre" :error="$errors->first('modelo_editar.nombre')" class="w-full">
+                <x-input-group for="usuario_id" label="Usuario" :error="$errors->first('usuario_id')" class="w-full">
 
-                    <x-input-text id="modelo_editar.nombre" wire:model="modelo_editar.nombre" />
+                    <x-input-select id="usuario_id" wire:model="usuario_id" class="w-full">
 
-                </x-input-group>
+                        <option value="">Seleccione una opción</option>
 
-                <x-input-group for="modelo_editar.clave" label="Clave" :error="$errors->first('modelo_editar.clave')" class="w-full">
+                        @foreach ($usuarios as $usuario)
 
-                    <x-input-text type="number" id="modelo_editar.clave" wire:model="modelo_editar.clave" />
+                            <option value="{{ $usuario->id }}">{{ $usuario->name }}</option>
+
+                        @endforeach
+
+                    </x-input-select>
 
                 </x-input-group>
 
@@ -245,37 +261,20 @@
 
             <div class="flex gap-3">
 
-                @if($crear)
+                <x-button-blue
+                    wire:click="reasignar"
+                    wire:loading.attr="disabled"
+                    wire:target="reasignar">
 
-                    <x-button-blue
-                        wire:click="guardar"
-                        wire:loading.attr="disabled"
-                        wire:target="guardar">
+                    <img wire:loading wire:target="reasignar" class="mx-auto h-4 mr-1" src="{{ asset('storage/img/loading3.svg') }}" alt="Loading">
 
-                        <img wire:loading wire:target="guardar" class="mx-auto h-4 mr-1" src="{{ asset('storage/img/loading3.svg') }}" alt="Loading">
-
-                        <span>Guardar</span>
-                    </x-button-blue>
-
-                @elseif($editar)
-
-                    <button
-                        wire:click="actualizar"
-                        wire:loading.attr="disabled"
-                        wire:target="actualizar"
-                        class="bg-blue-400 hover:shadow-lg text-white font-bold px-4 py-2 rounded-full text-sm mb-2 hover:bg-blue-700 flaot-left mr-1 focus:outline-none">
-
-                        <img wire:loading wire:target="actualizar" class="mx-auto h-4 mr-1" src="{{ asset('storage/img/loading3.svg') }}" alt="Loading">
-
-                        <span>Actualizar</span>
-                    </button>
-
-                @endif
+                    <span>Reasignar</span>
+                </x-button-blue>
 
                 <x-button-red
-                    wire:click="resetearTodo"
+                    wire:click="$toggle('modalReasignar')"
                     wire:loading.attr="disabled"
-                    wire:target="resetearTodo"
+                    wire:target="$toggle('modalReasignar')"
                     type="button">
                     Cerrar
                 </x-button-red>
