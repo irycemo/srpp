@@ -70,7 +70,7 @@
     }
 
     .atte{
-        margin-bottom: 40px;
+        margin-bottom: 10px;
     }
 
     .borde{
@@ -436,9 +436,19 @@
                     </p>
 
                     @if($distrito == '02 Uruapan' )
+                        @if($firma)
+                            <p><img style="max-height: 80px;" src="{{ public_path('storage/img/firma_director_uruapan.png') }}" alt=""></p>
+                        @else
+                            <p style="margin-top: 80px;"></p>
+                        @endif
                         <p class="borde">Lic. SANDRO MEDINA MORALES </p>
                         <p style="margin:0;">COORDINADOR REGIONAL 4 PURHÉPECHA (URUAPAN)</p>
                     @else
+                        @if($firma)
+                            <p><img style="max-height: 80px;" src="{{ public_path('storage/img/firma_director.png') }}" alt=""></p>
+                        @else
+                            <p style="margin-top: 80px;"></p>
+                        @endif
                         <p class="borde" style="margin:0;">{{ $director }}</p>
                         <p style="margin:0;">Director del registro público de la propiedad</p>
                     @endif

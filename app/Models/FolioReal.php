@@ -104,7 +104,7 @@ class FolioReal extends Model implements Auditable
     public function caratula(){
 
         return $this->archivos()->where('descripcion', 'caratula')->first()
-                ? Storage::disk('caratulas')->url($this->archivos()->where('descripcion', 'caratula')->first()->url)
+                ? Storage::disk('caratulas')->url($this->archivos()->where('descripcion', 'caratula')->latest()->first()->url)
                 : null;
     }
 

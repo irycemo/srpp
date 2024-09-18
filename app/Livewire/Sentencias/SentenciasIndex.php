@@ -2,6 +2,7 @@
 
 namespace App\Livewire\Sentencias;
 
+use App\Models\User;
 use Livewire\Component;
 use Livewire\WithPagination;
 use Livewire\WithFileUploads;
@@ -23,6 +24,13 @@ class SentenciasIndex extends Component
         $this->crearModeloVacio();
 
         $this->motivos = Constantes::RECHAZO_MOTIVOS;
+
+        $this->usuarios = User::where('status', 'activo')
+                                        ->whereHas('roles', function($q){
+                                            $q->whereIn('name', ['Sentencias', 'Registrador Sentencias']);
+                                        })
+                                        ->orderBy('name')
+                                        ->get();
 
     }
 
@@ -86,7 +94,7 @@ class SentenciasIndex extends Component
                                                     ->whereHas('sentencia', function($q){
                                                         $q->whereIn('servicio', ['D110']);
                                                     })
-                                                    ->where('estado', 'elaborado')
+                                                    ->whereIn('estado', ['nuevo', 'captura', 'elaborado', 'finalizado'])
                                                     ->orderBy($this->sort, $this->direction)
                                                     ->paginate($this->pagination);
 

@@ -2,10 +2,11 @@
 
 namespace App\Livewire\Inscripciones\Propiedad;
 
-use App\Constantes\Constantes;
+use App\Models\User;
 use Livewire\Component;
 use Livewire\WithPagination;
 use Livewire\WithFileUploads;
+use App\Constantes\Constantes;
 use App\Traits\ComponentesTrait;
 use App\Models\MovimientoRegistral;
 use App\Traits\Inscripciones\InscripcionesIndex;
@@ -22,6 +23,13 @@ class PropiedadIndex extends Component
         $this->crearModeloVacio();
 
         $this->motivos = Constantes::RECHAZO_MOTIVOS;
+
+        $this->usuarios = User::where('status', 'activo')
+                                        ->whereHas('roles', function($q){
+                                            $q->whereIn('name', ['Propiedad', 'Registrador Propiedad']);
+                                        })
+                                        ->orderBy('name')
+                                        ->get();
 
     }
 
@@ -86,7 +94,7 @@ class PropiedadIndex extends Component
                                                     ->whereHas('inscripcionPropiedad', function($q){
                                                         $q->whereIn('servicio', ['D158', 'D122', 'D114', 'D125', 'D126', 'D124', 'D121', 'D120', 'D119', 'D123', 'D113', 'D115', 'D116', 'D118']);
                                                     })
-                                                    ->where('estado', 'finalizado')
+                                                    ->whereIn('estado', ['nuevo', 'captura', 'elaborado', 'finalizado'])
                                                     ->orderBy($this->sort, $this->direction)
                                                     ->paginate($this->pagination);
 

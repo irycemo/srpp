@@ -111,13 +111,49 @@
 
                         @if (!auth()->user()->hasRole('Administrador'))
 
-                            @if (auth()->user()->hasRole(['Supervisor gravamen', 'Supervisor uruapan']))
+                            <x-table.cell>
 
-                                <x-table.cell>
+                                <span class="lg:hidden absolute top-0 left-0 bg-blue-300 px-2 py-1 text-xs text-white font-bold uppercase rounded-br-xl">Acciones</span>
 
-                                    <span class="lg:hidden absolute top-0 left-0 bg-blue-300 px-2 py-1 text-xs text-white font-bold uppercase rounded-br-xl">Acciones</span>
+                                <div class="flex justify-center lg:justify-start gap-2">
 
-                                    <div class="flex justify-center lg:justify-start gap-2">
+                                    @if(in_array($movimiento->estado, ['nuevo', 'captura']) && !auth()->user()->hasRole(['Jefe de departamento', 'Supervisor gravamen', 'Supervisor uruapan']))
+
+                                        <x-button-blue
+                                            wire:click="elaborar({{  $movimiento->id }})"
+                                            wire:loading.attr="disabled"
+                                            wire:target="elaborar({{  $movimiento->id }})">
+                                            Elaborar
+                                        </x-button-blue>
+
+                                        <x-button-red
+                                            wire:click="abrirModalRechazar({{  $movimiento->id }})"
+                                            wire:loading.attr="disabled"
+                                            wire:target="abrirModalRechazar({{  $movimiento->id }})">
+
+                                            <img wire:loading wire:target="abrirModalRechazar({{  $movimiento->id }})" class="mx-auto h-4 mr-1" src="{{ asset('storage/img/loading3.svg') }}" alt="Loading">
+
+                                            Rechazar
+
+                                        </x-button-red>
+
+                                    @elseif($movimiento->estado == 'elaborado'  && !auth()->user()->hasRole(['Jefe de departamento', 'Supervisor gravamen', 'Supervisor uruapan']))
+
+                                        <x-button-green
+                                            wire:click="imprimir({{  $movimiento->id }})"
+                                            wire:loading.attr="disabled"
+                                            wire:target="imprimir({{  $movimiento->id }})">
+                                            Imprimir
+                                        </x-button-green>
+
+                                        <x-button-green
+                                            wire:click="abrirModalFinalizar({{  $movimiento->id }})"
+                                            wire:loading.attr="disabled"
+                                            wire:target="abrirModalFinalizar({{  $movimiento->id }})">
+                                            Finalizar
+                                        </x-button-green>
+
+                                    @elseif($movimiento->estado == 'finalizado' && auth()->user()->hasRole(['Jefe de departamento', 'Supervisor gravamen', 'Supervisor uruapan']))
 
                                         <x-button-blue
                                             wire:click="imprimir({{  $movimiento->id }})"
@@ -133,77 +169,20 @@
                                             Finalizar
                                         </x-button-green>
 
-                                    </div>
+                                    @elseif(in_array($movimiento->estado, ['nuevo', 'captura', 'elaborado']) && auth()->user()->hasRole(['Jefe de departamento', 'Supervisor gravamen', 'Supervisor uruapan']))
 
-                                </x-table.cell>
+                                        <x-button-red
+                                            wire:click="abrirModalReasignar({{  $movimiento->id }})"
+                                            wire:loading.attr="disabled"
+                                            wire:target="abrirModalReasignar({{  $movimiento->id }})">
+                                            Reasignar
+                                        </x-button-red>
 
-                            @else
+                                    @endif
 
-                                <x-table.cell>
+                                </div>
 
-                                    <span class="lg:hidden absolute top-0 left-0 bg-blue-300 px-2 py-1 text-xs text-white font-bold uppercase rounded-br-xl">Acciones</span>
-
-                                    <div class="flex justify-center lg:justify-start gap-2">
-
-                                        @if(in_array($movimiento->estado, ['nuevo', 'captura']))
-
-                                            <x-button-blue
-                                                wire:click="elaborar({{  $movimiento->id }})"
-                                                wire:loading.attr="disabled"
-                                                wire:target="elaborar({{  $movimiento->id }})">
-                                                Elaborar
-                                            </x-button-blue>
-
-                                            <x-button-red
-                                                wire:click="abrirModalRechazar({{  $movimiento->id }})"
-                                                wire:loading.attr="disabled"
-                                                wire:target="abrirModalRechazar({{  $movimiento->id }})">
-
-                                                <img wire:loading wire:target="abrirModalRechazar({{  $movimiento->id }})" class="mx-auto h-4 mr-1" src="{{ asset('storage/img/loading3.svg') }}" alt="Loading">
-
-                                                Rechazar
-
-                                            </x-button-red>
-
-                                        @elseif($movimiento->estado == 'elaborado')
-
-                                            <x-button-green
-                                                wire:click="imprimir({{  $movimiento->id }})"
-                                                wire:loading.attr="disabled"
-                                                wire:target="imprimir({{  $movimiento->id }})">
-                                                Imprimir
-                                            </x-button-green>
-
-                                            <x-button-green
-                                                wire:click="abrirModalFinalizar({{  $movimiento->id }})"
-                                                wire:loading.attr="disabled"
-                                                wire:target="abrirModalFinalizar({{  $movimiento->id }})">
-                                                Finalizar
-                                            </x-button-green>
-
-                                        @elseif($movimiento->estado == 'finalizado' && auth()->user()->hasRole(['Jefe de departamento', 'Supervisor gravamen', 'Supervisor uruapan']))
-
-                                            <x-button-blue
-                                                wire:click="imprimir({{  $movimiento->id }})"
-                                                wire:loading.attr="disabled"
-                                                wire:target="imprimir({{  $movimiento->id }})">
-                                                Imprimir
-                                            </x-button-blue>
-
-                                            <x-button-green
-                                                wire:click="abrirModalConcluir({{  $movimiento->id }})"
-                                                wire:loading.attr="disabled"
-                                                wire:target="abrirModalConcluir({{  $movimiento->id }})">
-                                                Finalizar
-                                            </x-button-green>
-
-                                        @endif
-
-                                    </div>
-
-                                </x-table.cell>
-
-                            @endif
+                            </x-table.cell>
 
                         @endif
 
@@ -376,6 +355,38 @@
         </x-slot>
 
     </x-dialog-modal>
+
+    <x-confirmation-modal wire:model="modalReasignar" maxWidth="sm">
+
+        <x-slot name="title">
+            Reasignar
+        </x-slot>
+
+        <x-slot name="content">
+            ¿Esta seguro que desea reasignar el movimiento registral?
+        </x-slot>
+
+        <x-slot name="footer">
+
+            <x-secondary-button
+                wire:click="$toggle('modalReasignar')"
+                wire:loading.attr="disabled"
+            >
+                No
+            </x-secondary-button>
+
+            <x-danger-button
+                class="ml-2"
+                wire:click="reasignar"
+                wire:loading.attr="disabled"
+                wire:target="reasignar"
+            >
+                Reasignar
+            </x-danger-button>
+
+        </x-slot>
+
+    </x-confirmation-modal>
 
     <x-confirmation-modal wire:model="modalConcluir" maxWidth="sm">
 

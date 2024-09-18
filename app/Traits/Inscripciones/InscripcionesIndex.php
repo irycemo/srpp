@@ -14,10 +14,12 @@ trait InscripcionesIndex{
     public $modalFinalizar = false;
     public $modalRechazar = false;
     public $modalConcluir = false;
+    public $modalReasignar = false;
     public $documento;
     public $observaciones;
     public $motivos;
     public $motivo;
+    public $usuarios;
 
     public MovimientoRegistral $modelo_editar;
 
@@ -276,6 +278,15 @@ trait InscripcionesIndex{
 
     }
 
+    public function abrirModalReasignar(MovimientoRegistral $modelo){
+
+        if($this->modelo_editar->isNot($modelo))
+            $this->modelo_editar = $modelo;
+
+        $this->modalReasignar = true;
+
+    }
+
     public function finalizar(){
 
         $this->validate(['documento' => 'required']);
@@ -368,6 +379,31 @@ trait InscripcionesIndex{
         } catch (\Throwable $th) {
 
             Log::error("Error al concluir inscripción por el usuario: (id: " . auth()->user()->id . ") " . auth()->user()->name . ". " . $th);
+            $this->dispatch('mostrarMensaje', ['error', "Ha ocurrido un error."]);
+
+        }
+
+    }
+
+    public function reasignar(){
+
+        try {
+
+            $this->modelo_editar->usuario_asignado = $this->usuarios->where('id', '!=', $this->modelo_editar->usuario_asignado)->random()->id;
+
+            $this->modelo_editar->actualizado_por = auth()->user()->id;
+
+            $this->modelo_editar->save();
+
+            $this->modelo_editar->audits()->latest()->first()->update(['tags' => 'Reasignó usuario']);
+
+            $this->dispatch('mostrarMensaje', ['success', "El trámite se reasignó con éxito."]);
+
+            $this->modalReasignar = false;
+
+        } catch (\Throwable $th) {
+
+            Log::error("Error al reasignar movimiento registral por el usuario: (id: " . auth()->user()->id . ") " . auth()->user()->name . ". " . $th);
             $this->dispatch('mostrarMensaje', ['error', "Ha ocurrido un error."]);
 
         }

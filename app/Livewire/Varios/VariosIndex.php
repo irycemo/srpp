@@ -2,6 +2,7 @@
 
 namespace App\Livewire\Varios;
 
+use App\Models\User;
 use Livewire\Component;
 use Livewire\WithPagination;
 use Livewire\WithFileUploads;
@@ -23,6 +24,13 @@ class VariosIndex extends Component
         $this->crearModeloVacio();
 
         $this->motivos = Constantes::RECHAZO_MOTIVOS;
+
+        $this->usuarios = User::where('status', 'activo')
+                                        ->whereHas('roles', function($q){
+                                            $q->whereIn('name', ['Varios', 'Registrador Varios']);
+                                        })
+                                        ->orderBy('name')
+                                        ->get();
 
     }
 
@@ -51,7 +59,7 @@ class VariosIndex extends Component
 
         }elseif(auth()->user()->hasRole(['Supervisor varios', 'Supervisor uruapan'])){
 
-            $movimientos = MovimientoRegistral::with('vario', 'actualizadoPor', 'folioReal')
+            $movimientos = MovimientoRegistral::with('vario', 'actualizadoPor', 'folioReal', 'asignadoA')
                                                     ->whereHas('folioReal', function($q){
                                                         $q->where('estado', 'activo');
                                                     })
@@ -64,7 +72,7 @@ class VariosIndex extends Component
                                                     ->whereHas('vario', function($q){
                                                         $q->whereIn('servicio', ['DL09', 'D128', 'D112', 'D149']);
                                                     })
-                                                    ->where('estado', 'finalizado')
+                                                    ->whereIn('estado', ['nuevo', 'captura', 'elaborado', 'finalizado'])
                                                     ->orderBy($this->sort, $this->direction)
                                                     ->paginate($this->pagination);
 

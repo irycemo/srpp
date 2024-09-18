@@ -3,10 +3,8 @@
 namespace App\Livewire\PaseFolio;
 
 use Exception;
-use App\Models\File;
 use App\Models\User;
 use Livewire\Component;
-use Livewire\WithPagination;
 use Livewire\WithFileUploads;
 use App\Constantes\Constantes;
 use Barryvdh\DomPDF\Facade\Pdf;
@@ -21,14 +19,12 @@ class PaseFolio extends Component
 {
 
     use ComponentesTrait;
-    use WithPagination;
     use WithFileUploads;
 
     public $observaciones;
     public $modal = false;
     public $modalFinalizar = false;
     public $modalRechazar = false;
-    public $documento;
     public $motivos;
     public $motivo;
     public $supervisor = false;
@@ -98,10 +94,6 @@ class PaseFolio extends Component
 
     public function abrirModalFinalizar(MovimientoRegistral $modelo){
 
-        $this->reset('documento');
-
-        $this->dispatch('removeFiles');
-
         if($this->modelo_editar->isNot($modelo))
             $this->modelo_editar = $modelo;
 
@@ -111,55 +103,9 @@ class PaseFolio extends Component
 
     public function finalizar(){
 
-        $this->validate(['documento' => 'required']);
-
         try {
 
             DB::transaction(function (){
-
-                if(env('LOCAL') == "0"){
-
-                    $pdf = $this->documento->store('srpp/caratulas', 's3');
-
-                    File::create([
-                        'fileable_id' => $this->modelo_editar->folioReal->id,
-                        'fileable_type' => 'App\Models\FolioReal',
-                        'descripcion' => 'caratula',
-                        'url' => $pdf
-                    ]);
-
-                }elseif(env('LOCAL') == "1"){
-
-                    $pdf = $this->documento->store('/', 'caratulas');
-
-                    File::create([
-                        'fileable_id' => $this->modelo_editar->folioReal->id,
-                        'fileable_type' => 'App\Models\FolioReal',
-                        'descripcion' => 'caratula_s3',
-                        'url' => $pdf
-                    ]);
-
-                }elseif(env('LOCAL') == "2"){
-
-                    $pdf = $this->documento->store('srpp/caratulas', 's3');
-
-                    File::create([
-                        'fileable_id' => $this->modelo_editar->folioReal->id,
-                        'fileable_type' => 'App\Models\FolioReal',
-                        'descripcion' => 'caratula_s3',
-                        'url' => $pdf
-                    ]);
-
-                    $pdf = $this->documento->store('/', 'caratulas');
-
-                    File::create([
-                        'fileable_id' => $this->modelo_editar->folioReal->id,
-                        'fileable_type' => 'App\Models\FolioReal',
-                        'descripcion' => 'caratula',
-                        'url' => $pdf
-                    ]);
-
-                }
 
                 $this->revisarMovimientosPrecalificacion();
 
@@ -177,13 +123,13 @@ class PaseFolio extends Component
 
         } catch (Exception $ex) {
 
-            Log::error("Error al subir archivo de folio real por el usuario: (id: " . auth()->user()->id . ") " . auth()->user()->name . ". " . $ex);
+            Log::error("Error al finalizar folio real por el usuario: (id: " . auth()->user()->id . ") " . auth()->user()->name . ". " . $ex);
 
             $this->dispatch('mostrarMensaje', ['error', $ex->getMessage()]);
 
         }catch (\Throwable $th) {
 
-            Log::error("Error al subir archivo de folio real por el usuario: (id: " . auth()->user()->id . ") " . auth()->user()->name . ". " . $th);
+            Log::error("Error al finalizar folio real por el usuario: (id: " . auth()->user()->id . ") " . auth()->user()->name . ". " . $th);
             $this->dispatch('mostrarMensaje', ['error', "Ha ocurrido un error."]);
 
         }
@@ -366,7 +312,7 @@ class PaseFolio extends Component
                                                     ->where(function($q){
                                                         $q->whereNull('folio_real')
                                                             ->orWhereHas('folioReal', function($q){
-                                                                $q->whereIn('estado', ['nuevo', 'captura']);
+                                                                $q->whereIn('estado', ['nuevo', 'captura', 'elaborado']);
                                                             });
                                                     })
                                                     ->where(function($q){

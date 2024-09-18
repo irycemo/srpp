@@ -2,6 +2,7 @@
 
 namespace App\Livewire\Gravamenes;
 
+use App\Models\User;
 use Livewire\Component;
 use Livewire\WithPagination;
 use Livewire\WithFileUploads;
@@ -23,6 +24,13 @@ class GravamenIndex extends Component
         $this->crearModeloVacio();
 
         $this->motivos = Constantes::RECHAZO_MOTIVOS;
+
+        $this->usuarios = User::where('status', 'activo')
+                                        ->whereHas('roles', function($q){
+                                            $q->whereIn('name', ['Gravamen', 'Registrador Gravamen']);
+                                        })
+                                        ->orderBy('name')
+                                        ->get();
 
     }
 
@@ -62,7 +70,7 @@ class GravamenIndex extends Component
                                                     ->when(auth()->user()->ubicacion != 'Regional 4', function($q){
                                                         $q->where('distrito', '!=', 2);
                                                     })
-                                                    ->where('estado', 'finalizado')
+                                                    ->whereIn('estado', ['nuevo', 'captura', 'elaborado', 'finalizado'])
                                                     ->whereHas('gravamen', function($q){
                                                         $q->whereIn('servicio', ['DL07', 'DM68', 'D155', 'D150']);
                                                     })
