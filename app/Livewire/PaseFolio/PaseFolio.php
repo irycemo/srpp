@@ -14,12 +14,14 @@ use App\Models\MovimientoRegistral;
 use Illuminate\Support\Facades\Log;
 use App\Http\Services\AsignacionService;
 use App\Http\Services\SistemaTramitesService;
+use Livewire\WithPagination;
 
 class PaseFolio extends Component
 {
 
     use ComponentesTrait;
     use WithFileUploads;
+    use WithPagination;
 
     public $observaciones;
     public $modal = false;
