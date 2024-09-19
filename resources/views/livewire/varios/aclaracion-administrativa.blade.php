@@ -74,6 +74,8 @@
 
                     <x-input-select id="predio.divisa" wire:model="predio.divisa">
 
+                        <option value="">-</option>
+
                         @foreach ($divisas as $divisa)
 
                             <option value="{{ $divisa }}">{{ $divisa }}</option>

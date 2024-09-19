@@ -173,6 +173,7 @@ class AclaracionAdministrativa extends Component
                 'unidad_area' => $this->vario->movimientoRegistral->folioReal->predio->unidad_area,
                 'superficie_construccion' => $this->vario->movimientoRegistral->folioReal->predio->superficie_construccion,
                 'monto_transaccion' => $this->vario->movimientoRegistral->folioReal->predio->monto_transaccion,
+                'divisa' => $this->vario->movimientoRegistral->folioReal->predio->divisa,
                 'observaciones' => $this->vario->movimientoRegistral->folioReal->predio->observaciones,
                 'superficie_judicial' => $this->vario->movimientoRegistral->folioReal->predio->superficie_judicial,
                 'superficie_notarial' => $this->vario->movimientoRegistral->folioReal->predio->superficie_notarial,
@@ -762,6 +763,7 @@ class AclaracionAdministrativa extends Component
         $this->vario->movimientoRegistral->folioReal->predio->manzana_fraccionador = $this->predio->manzana_fraccionador;
         $this->vario->movimientoRegistral->folioReal->predio->etapa_fraccionador = $this->predio->etapa_fraccionador;
         $this->vario->movimientoRegistral->folioReal->predio->clave_edificio = $this->predio->clave_edificio;
+        $this->vario->movimientoRegistral->folioReal->predio->divisa = $this->predio->divisa;
 
         $this->vario->movimientoRegistral->folioReal->predio->save();
 
@@ -817,10 +819,6 @@ class AclaracionAdministrativa extends Component
             });
 
             return redirect()->route('varios');
-
-        } catch (Exception $ex) {
-
-            $this->dispatch('mostrarMensaje', ['error', $ex->getMessage()]);
 
         } catch (\Throwable $th) {
             Log::error("Error al finalizar inscripcion de varios por el usuario: (id: " . auth()->user()->id . ") " . auth()->user()->name . ". " . $th);
