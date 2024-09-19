@@ -1202,7 +1202,61 @@ class PropiedadInscripcion extends Component
 
         $suma = $pp_adquirientes + $pp;
 
-        if(round($suma,2) < round(($pp_transmitentes - 0.01), 2)){
+        if($suma == 0){
+
+            $suma = $pn_adquirientes + $pn;
+
+            if(round($suma, 2) > round($pn_transmitentes + $pp_transmitentes,2)){
+
+                $this->dispatch('mostrarMensaje', ['error', "La suma de los porcentajes de propiedad debe ser " . $pp_transmitentes . '%.']);
+
+                return true;
+
+            }
+
+            $suma = $pu_adquirientes + $pu;
+
+            if(round($suma, 2) != round($pu_transmitentes + $pp_transmitentes, 2)){
+
+                $this->dispatch('mostrarMensaje', ['error', "La suma de los porcentajes de usufructo debe ser " . $pu_transmitentes + $pp_transmitentes . '%.']);
+
+                return true;
+
+            }
+
+        }else{
+
+            if(round($suma,2) != round($pp_transmitentes,2)){
+
+                $this->dispatch('mostrarMensaje', ['error', "La suma de los porcentajes de propiedad debe ser " . $pp_transmitentes . '%.']);
+
+                return true;
+
+            }
+
+            $suma = $pn_adquirientes + $pn;
+
+            if(round($suma, 2) != round($pn_transmitentes,2)){
+
+                $this->dispatch('mostrarMensaje', ['error', "La suma de los porcentajes de nuda debe ser " . $pn_transmitentes . '%.']);
+
+                return true;
+
+            }
+
+            $suma = $pu_adquirientes + $pu;
+
+            if(round($suma, 2) != round($pu_transmitentes, 2)){
+
+                $this->dispatch('mostrarMensaje', ['error', "La suma de los porcentajes de usufructo debe ser " . $pu_transmitentes . '%.']);
+
+                return true;
+
+            }
+
+        }
+
+        /* if(round($suma,2) < round(($pp_transmitentes - 0.01), 2)){
 
             $this->dispatch('mostrarMensaje', ['error', "La suma de los porcentajes de propiedad debe ser " . $pp_transmitentes . '%.']);
 
@@ -1228,7 +1282,7 @@ class PropiedadInscripcion extends Component
 
             return true;
 
-        }
+        } */
 
     }
 

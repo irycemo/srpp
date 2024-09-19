@@ -179,7 +179,7 @@
 
                                         @if($movimiento->folioReal)
 
-                                            @if($movimiento->folioReal->estado == 'elaborado' && $supervisor)
+                                            @if($movimiento->folioReal->estado == 'elaborado' )
 
                                                 <button
                                                     wire:click="pasarCaptura({{ $movimiento->id }})"

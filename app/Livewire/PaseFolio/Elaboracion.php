@@ -372,7 +372,7 @@ class Elaboracion extends Component
             'acto_contenido' => $gravamen->descGravamen ?? null,
             'valor_gravamen' => $monto,
             'observaciones' => "Gravamen ingresado mediante pase a folio: | Tomo gravamen:" . $gravamen->tomog .
-                                " | Tomo propiedad: " .  $gravamen->tomp .
+                                " | Tomo propiedad: " .  $gravamen->tomop .
                                 " | Registro propiedad: " .  $gravamen->registrop .
                                 " | Número de propiedad: " .  $gravamen->noprop .
                                 " | Registro gravamen: " . $gravamen->registrog . "/" . $gravamen->rbisg .

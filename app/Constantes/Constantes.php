@@ -325,7 +325,8 @@ class Constantes{
         'ESCRITURA PÚBLICA',
         'ESCRITURA PRIVADA',
         'OFICIO',
-        'TÍTULO DE PROPIEDAD'
+        'TÍTULO DE PROPIEDAD',
+        'FIDEICOMISO'
     ];
 
     const RECHAZO_MOTIVOS = [
