@@ -275,7 +275,8 @@ class Constantes{
         'VARIACIÓN CATASTRAL',
         'PRESCRIPCIÓN POSITIVA',
         'SOCIEDADES',
-        'PERMUTA'
+        'PERMUTA',
+        'FIDEICOMISO'
     ];
 
     const ACTOS_INSCRIPCION_GRAVAMEN = [
@@ -326,7 +327,6 @@ class Constantes{
         'ESCRITURA PRIVADA',
         'OFICIO',
         'TÍTULO DE PROPIEDAD',
-        'FIDEICOMISO'
     ];
 
     const RECHAZO_MOTIVOS = [
