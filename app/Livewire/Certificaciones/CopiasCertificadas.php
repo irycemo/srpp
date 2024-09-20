@@ -180,6 +180,14 @@ class CopiasCertificadas extends Component
 
     public function finalizarSupervisor(Certificacion $modelo){
 
+        if(!$modelo->folio_carpeta_copias){
+
+            $this->dispatch('mostrarMensaje', ['warning', "El trámite no tiene folio de carpeta"]);
+
+            return;
+
+        }
+
         if($this->modelo_editar->isNot($modelo))
             $this->modelo_editar = $modelo;
 
