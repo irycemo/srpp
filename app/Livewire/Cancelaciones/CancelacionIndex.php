@@ -56,7 +56,7 @@ class CancelacionIndex extends Component
                                                     ->whereHas('cancelacion', function($q){
                                                         $q->whereIn('servicio', ['D156']);
                                                     })
-                                                    ->whereIn('estado', ['nuevo', 'captura'])
+                                                    ->whereIn('estado', ['nuevo', 'captura', 'elaborado'])
                                                     ->orderBy($this->sort, $this->direction)
                                                     ->paginate($this->pagination);
 
