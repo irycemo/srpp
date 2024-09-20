@@ -819,10 +819,13 @@ class Elaboracion extends Component
                                                                                         ->where('folio', '>', 1)
                                                                                         ->first();
 
-        if(!$cancelacion)
+        if(!$cancelacion){
+
             (new SistemaTramitesService())->rechazarTramite($this->movimientoRegistral->año, $this->movimientoRegistral->tramite, $this->movimientoRegistral->usuario, 'Se rechaza en pase a folio debido a que el folio real no tiene gravamenes con la información ingresada.');
 
-        $this->movimientoRegistral->update(['estado' => 'rechazado']);
+            $this->movimientoRegistral->update(['estado' => 'rechazado']);
+
+        }
 
     }
 
