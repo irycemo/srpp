@@ -215,9 +215,9 @@ class AclaracionAdministrativa extends Component
 
             $this->vario->update(['predio_id' => $this->predio->id]);
 
-            foreach ($this->predio->colindancias as $colindancia) {
+            foreach ($this->vario->movimientoRegistral->folioReal->predio->colindancias as $colindancia) {
 
-                $this->vario->movimientoRegistral->folioReal->predio->colindancias()->create([
+                $this->predio->colindancias()->create([
                     'viento' => $colindancia->viento,
                     'longitud' => $colindancia->longitud,
                     'descripcion' => $colindancia->descripcion,
@@ -837,13 +837,13 @@ class AclaracionAdministrativa extends Component
 
         }
 
-        if(!$this->vario->movimientoRegistral->documentoEntrada()){
+        /* if(!$this->vario->movimientoRegistral->documentoEntrada()){
 
             $this->dispatch('mostrarMensaje', ['error', "Debe subir el documento de entrada."]);
 
             return;
 
-        }
+        } */
 
         $this->modalContraseña = true;
 

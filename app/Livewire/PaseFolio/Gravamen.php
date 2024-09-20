@@ -220,7 +220,7 @@ class Gravamen extends Component
 
             $this->cargarGravamenes();
 
-            $this->dispatch('mostrarMensaje', ['success', "El gravamen se canceló con éxito."]);
+            $this->dispatch('mostrarMensaje', ['success', "El gravamen se inactivo con éxito."]);
 
         } catch (\Throwable $th) {
             Log::error("Error al inactivar gravamen en pase a folio por el usuario: (id: " . auth()->user()->id . ") " . auth()->user()->name . ". " . $th);

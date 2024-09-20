@@ -324,7 +324,7 @@ class CertificadoPropiedadIndex extends Component
                                                         ->orWhere('estado', 'LIKE', '%' . $this->search . '%')
                                                         ->orWhere('tramite', 'LIKE', '%' . $this->search . '%');
                                                 })
-                                                ->where('estado', 'elaborado')
+                                                ->whereIn('estado', ['nuevo', 'elaborado'])
                                                 ->when(auth()->user()->ubicacion == 'Regional 4', function($q){
                                                     $q->where('distrito', 2);
                                                 })
@@ -368,6 +368,7 @@ class CertificadoPropiedadIndex extends Component
                                                 ->whereHas('certificacion', function($q){
                                                     $q->whereIn('servicio', ['DL10', 'DL11']);
                                                 })
+                                                ->whereIn('estado', ['nuevo', 'elaborado'])
                                                 ->orderBy($this->sort, $this->direction)
                                                 ->paginate($this->pagination);
 

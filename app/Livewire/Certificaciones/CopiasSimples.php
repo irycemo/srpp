@@ -2,6 +2,7 @@
 
 namespace App\Livewire\Certificaciones;
 
+use App\Models\User;
 use Livewire\Component;
 use Livewire\WithPagination;
 use App\Models\Certificacion;
@@ -24,6 +25,9 @@ class CopiasSimples extends Component
     public $modalCarga;
     public $fecha_inicio;
     public $fecha_final;
+    public $usuarios;
+
+    public $modalReasignar = false;
 
     protected function rules(){
         return [
@@ -82,6 +86,50 @@ class CopiasSimples extends Component
 
         if($this->modelo_editar->isNot($modelo))
             $this->modelo_editar = $modelo;
+
+    }
+
+    public function abrirModalReasignar(Certificacion $modelo){
+
+        if($this->modelo_editar->isNot($modelo))
+            $this->modelo_editar = $modelo;
+
+        $this->modalReasignar = true;
+
+    }
+
+    public function reasignar(){
+
+        $cantidad = $this->modelo_editar->movimientoRegistral->audits()->where('tags', 'Reasignó usuario')->count();
+
+        if($cantidad >= 2){
+
+            $this->dispatch('mostrarMensaje', ['warning', "Ya se ha reasignado multiples veces."]);
+
+            return;
+
+        }
+
+        try {
+
+            $this->modelo_editar->movimientoRegistral->usuario_asignado = $this->usuarios->where('id', '!=', $this->modelo_editar->movimientoRegistral->usuario_asignado)->random()->id;
+
+            $this->modelo_editar->movimientoRegistral->actualizado_por = auth()->user()->id;
+
+            $this->modelo_editar->movimientoRegistral->save();
+
+            $this->modelo_editar->movimientoRegistral->audits()->latest()->first()->update(['tags' => 'Reasignó usuario']);
+
+            $this->dispatch('mostrarMensaje', ['success', "El trámite se reasignó con éxito."]);
+
+            $this->modalReasignar = false;
+
+        } catch (\Throwable $th) {
+
+            Log::error("Error al reasignar movimiento registral por el usuario: (id: " . auth()->user()->id . ") " . auth()->user()->name . ". " . $th);
+            $this->dispatch('mostrarMensaje', ['error', "Ha ocurrido un error."]);
+
+        }
 
     }
 
@@ -343,6 +391,13 @@ class CopiasSimples extends Component
 
         $this->crearModeloVacio();
 
+        $this->usuarios = User::where('status', 'activo')
+                                        ->whereHas('roles', function($q){
+                                            $q->whereIn('name', ['Certificador']);
+                                        })
+                                        ->orderBy('name')
+                                        ->get();
+
     }
 
     public function render()
@@ -366,7 +421,7 @@ class CopiasSimples extends Component
                                                     ->orWhere('tramite', 'LIKE', '%' . $this->search . '%')
                                                     ->orWhere('estado', 'LIKE', '%' . $this->search . '%');
                                             })
-                                            ->where('estado', 'elaborado')
+                                            ->whereIn('estado', ['nuevo', 'elaborado'])
                                             ->when(auth()->user()->ubicacion == 'Regional 4', function($q){
                                                 $q->where('distrito', 2);
                                             })
@@ -408,6 +463,31 @@ class CopiasSimples extends Component
                                                     ->whereNull('finalizado_en')
                                                     ->whereNull('folio_carpeta_copias');
                                             })
+                                            ->orderBy($this->sort, $this->direction)
+                                            ->paginate($this->pagination);
+
+        }elseif(auth()->user()->hasRole(['Jefe de departamento'])){
+
+            $copias = MovimientoRegistral::with('asignadoA', 'supervisor', 'actualizadoPor', 'certificacion.actualizadoPor')
+                                            ->where(function($q){
+                                                $q->whereHas('asignadoA', function($q){
+                                                        $q->where('name', 'LIKE', '%' . $this->search . '%');
+                                                    })
+                                                    ->orWhereHas('supervisor', function($q){
+                                                        $q->where('name', 'LIKE', '%' . $this->search . '%');
+                                                    })
+                                                    ->orWhere('solicitante', 'LIKE', '%' . $this->search . '%')
+                                                    ->orWhere('tomo', 'LIKE', '%' . $this->search . '%')
+                                                    ->orWhere('registro', 'LIKE', '%' . $this->search . '%')
+                                                    ->orWhere('distrito', 'LIKE', '%' . $this->search . '%')
+                                                    ->orWhere('seccion', 'LIKE', '%' . $this->search . '%')
+                                                    ->orWhere('tramite', 'LIKE', '%' . $this->search . '%')
+                                                    ->orWhere('estado', 'LIKE', '%' . $this->search . '%');
+                                            })
+                                            ->whereHas('certificacion', function($q){
+                                                $q->where('servicio', 'DL14');
+                                            })
+                                            ->whereIn('estado', ['nuevo', 'elaborado'])
                                             ->orderBy($this->sort, $this->direction)
                                             ->paginate($this->pagination);
 

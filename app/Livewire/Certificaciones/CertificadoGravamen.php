@@ -400,7 +400,7 @@ class CertificadoGravamen extends Component
                                                         ->orWhere('estado', 'LIKE', '%' . $this->search . '%')
                                                         ->orWhere('tramite', 'LIKE', '%' . $this->search . '%');
                                                 })
-                                                ->where('estado', 'elaborado')
+                                                ->whereIn('estado', ['nuevo', 'elaborado'])
                                                 ->when(auth()->user()->ubicacion == 'Regional 4', function($q){
                                                     $q->where('distrito', 2);
                                                 })
@@ -445,6 +445,7 @@ class CertificadoGravamen extends Component
                                                 ->whereHas('certificacion', function($q){
                                                     $q->where('servicio', 'DL07');
                                                 })
+                                                ->whereIn('estado', ['nuevo', 'elaborado'])
                                                 ->orderBy($this->sort, $this->direction)
                                                 ->paginate($this->pagination);
 

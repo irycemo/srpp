@@ -623,14 +623,14 @@ class MovimientoRegistralService{
         }
 
         /* Inscripciones: Varios */
-        if(in_array($servicio, ['DL09', 'D128', 'D112', 'D149']) && $categoria_servicio == 'Varios, Arrendamientos, Avisos Preventivos'){
+        if(in_array($servicio, ['DL09', 'D128', 'D112', 'D149', 'D110']) && $categoria_servicio == 'Varios, Arrendamientos, Avisos Preventivos'){
 
             return $this->asignacionService->obtenerUsuarioVarios($folioReal, $distrito, $estado);
 
         }
 
         /* Inscripciones: Sentencias */
-        if($servicio == 'D110'){
+        if($servicio == 'D110' && $categoria_servicio == 'Sentencias'){
 
             return $this->asignacionService->obtenerUsuarioSentencias($folioReal, $distrito, $estado);
 
@@ -686,14 +686,14 @@ class MovimientoRegistralService{
         }
 
         /* Inscripciones: Varios */
-        if(in_array($servicio, ['DL09', 'D128', 'D112', 'D149']) && $categoria_servicio == 'Varios, Arrendamientos, Avisos Preventivos'){
+        if(in_array($servicio, ['DL09', 'D128', 'D112', 'D149', 'D110']) && $categoria_servicio == 'Varios, Arrendamientos, Avisos Preventivos'){
 
             return $this->asignacionService->obtenerSupervisorVarios($distrito);
 
         }
 
         /* Inscripciones: Sentencias */
-        if($servicio == 'D110'){
+        if($servicio == 'D110' && $categoria_servicio == 'Sentencias'){
 
             return $this->asignacionService->obtenerSupervisorSentencias($distrito);
 

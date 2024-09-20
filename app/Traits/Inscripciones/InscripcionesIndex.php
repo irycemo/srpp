@@ -197,6 +197,22 @@ trait InscripcionesIndex{
 
     public function imprimir(MovimientoRegistral $movimientoRegistral){
 
+        if($movimientoRegistral->getRawOriginal('distrito') != 2){
+
+            if($movimientoRegistral->tipo_servicio == 'ordinario'){
+
+                if(!($this->calcularDiaElaboracion($movimientoRegistral) <= now())){
+
+                    $this->dispatch('mostrarMensaje', ['error', "El trámite puede finalizarse apartir del " . $this->calcularDiaElaboracion($movimientoRegistral)->format('d-m-Y')]);
+
+                    return;
+
+                }
+
+            }
+
+        }
+
         if($movimientoRegistral->inscripcionPropiedad){
 
             $this->dispatch('imprimir_documento', ['caratula' => $movimientoRegistral->inscripcionPropiedad->id]);
@@ -386,6 +402,16 @@ trait InscripcionesIndex{
     }
 
     public function reasignar(){
+
+        $cantidad = $this->modelo_editar->audits()->where('tags', 'Reasignó usuario')->count();
+
+        if($cantidad >= 2){
+
+            $this->dispatch('mostrarMensaje', ['warning', "Ya se ha reasignado multiples veces."]);
+
+            return;
+
+        }
 
         try {
 
