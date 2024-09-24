@@ -54,7 +54,7 @@ class Usuarios extends Component
             $this->modelo_editar = $modelo;
 
         if(isset($modelo['roles'][0]))
-            $this->role = $modelo['roles'][0]['id'];
+            $this->role = $modelo->roles()->pluck('id');
 
     }
 

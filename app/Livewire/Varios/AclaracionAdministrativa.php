@@ -2,7 +2,6 @@
 
 namespace App\Livewire\Varios;
 
-use Exception;
 use App\Models\Actor;
 use App\Models\Predio;
 use App\Models\Persona;
@@ -884,4 +883,5 @@ class AclaracionAdministrativa extends Component
     {
         return view('livewire.varios.aclaracion-administrativa');
     }
+
 }

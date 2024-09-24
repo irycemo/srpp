@@ -528,68 +528,80 @@ class MovimientoRegistralService{
 
             foreach ($movimientos as $movimiento) {
 
-                if($movimiento){
+                if($categoria_servicio == 'Inscripciones - Gravamenes' && $movimiento->inscripcionPropiedad){
 
-                    if($categoria_servicio == 'Inscripciones - Gravamenes' && $movimiento->gravamen){
+                    if($movimiento->asignadoA->hasAllRoles(['Registrador Propiedad', 'Registrador Gravamen'])){
 
-                        if($movimiento->asignadoA->hasRole('Pase a folio')){
+                        return $movimiento->usuario_asignado;
 
-                            return $this->asignacionService->obtenerUsuarioGravamen($folioReal, $distrito, $estado);
+                    }
 
-                        }else{
+                }elseif($categoria_servicio == 'Inscripciones - Propiedad' && $movimiento->gravamen){
 
-                            return $movimiento->usuario_asignado;
+                    if($movimiento->asignadoA->hasAllRoles(['Registrador Propiedad', 'Registrador Gravamen'])){
 
-                        }
+                        return $movimiento->usuario_asignado;
 
-                    }elseif($categoria_servicio == 'Varios, Arrendamientos, Avisos Preventivos' && $movimiento->vario){
+                    }
+
+                }elseif($categoria_servicio == 'Inscripciones - Gravamenes' && $movimiento->gravamen){
+
+                    if($movimiento->asignadoA->hasRole('Pase a folio')){
+
+                        return $this->asignacionService->obtenerUsuarioGravamen($folioReal, $distrito, $estado);
+
+                    }else{
+
+                        return $movimiento->usuario_asignado;
+
+                    }
+
+                }elseif($categoria_servicio == 'Varios, Arrendamientos, Avisos Preventivos' && $movimiento->vario){
 
 
-                        if($movimiento->asignadoA->hasRole('Pase a folio')){
+                    if($movimiento->asignadoA->hasRole('Pase a folio')){
 
-                            return $this->asignacionService->obtenerUsuarioVarios($folioReal, $distrito, $estado);
+                        return $this->asignacionService->obtenerUsuarioVarios($folioReal, $distrito, $estado);
 
-                        }else{
+                    }else{
 
-                            return $movimiento->usuario_asignado;
+                        return $movimiento->usuario_asignado;
 
-                        }
+                    }
 
-                    }elseif($categoria_servicio == 'Cancelación - Gravamenes' && $movimiento->cancelacion){
+                }elseif($categoria_servicio == 'Cancelación - Gravamenes' && $movimiento->cancelacion){
 
-                        if($movimiento->asignadoA->hasRole('Pase a folio')){
+                    if($movimiento->asignadoA->hasRole('Pase a folio')){
 
-                            return $this->asignacionService->obtenerUsuarioCancelacion($folioReal, $distrito, $estado);
+                        return $this->asignacionService->obtenerUsuarioCancelacion($folioReal, $distrito, $estado);
 
-                        }else{
+                    }else{
 
-                            return $movimiento->usuario_asignado;
+                        return $movimiento->usuario_asignado;
 
-                        }
+                    }
 
-                    }elseif($categoria_servicio == 'Sentencias' && $movimiento->sentencia){
+                }elseif($categoria_servicio == 'Sentencias' && $movimiento->sentencia){
 
-                        if($movimiento->asignadoA->hasRole('Pase a folio')){
+                    if($movimiento->asignadoA->hasRole('Pase a folio')){
 
-                            return $this->asignacionService->obtenerUsuarioSentencias($folioReal, $distrito, $estado);
+                        return $this->asignacionService->obtenerUsuarioSentencias($folioReal, $distrito, $estado);
 
-                        }else{
+                    }else{
 
-                            return $movimiento->usuario_asignado;
+                        return $movimiento->usuario_asignado;
 
-                        }
+                    }
 
-                    }elseif($categoria_servicio == 'Inscripciones - Propiedad' && $movimiento->inscripcionPropiedad){
+                }elseif($categoria_servicio == 'Inscripciones - Propiedad' && $movimiento->inscripcionPropiedad){
 
-                        if($movimiento->asignadoA->hasRole('Pase a folio')){
+                    if($movimiento->asignadoA->hasRole('Pase a folio')){
 
-                            return $this->asignacionService->obtenerUsuarioPropiedad($folioReal, $distrito, $estado);
+                        return $this->asignacionService->obtenerUsuarioPropiedad($folioReal, $distrito, $estado);
 
-                        }else{
+                    }else{
 
-                            return $movimiento->usuario_asignado;
-
-                        }
+                        return $movimiento->usuario_asignado;
 
                     }
 

@@ -115,7 +115,7 @@
 
                                 <div class="flex justify-center lg:justify-start gap-2">
 
-                                    @if(in_array($movimiento->estado, ['nuevo', 'captura']) && !auth()->user()->hasRole(['Jefe de departamento', 'Supervisor propiedad', 'Supervisor uruapan']))
+                                    @if(in_array($movimiento->estado, ['nuevo', 'captura', 'correccion']) && !auth()->user()->hasRole(['Jefe de departamento', 'Supervisor propiedad', 'Supervisor uruapan']))
 
                                         <x-button-blue
                                             wire:click="elaborar({{  $movimiento->id }})"

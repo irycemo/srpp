@@ -90,7 +90,7 @@
 
                             @if ($usuario->roles()->count())
 
-                                {{ $usuario->getRoleNames()->first() }}
+                                {{ preg_replace('/[\[\]\"]/', '', $usuario->getRoleNames()) }}
 
                             @endif
 
@@ -292,23 +292,6 @@
 
                 </x-input-group>
 
-                <x-input-group for="role" label="Rol" :error="$errors->first('role')" class="w-full">
-
-                    <x-input-select id="role" wire:model="role" class="w-full">
-
-                        <option value="">Seleccione una opción</option>
-
-                        @foreach ($roles as $role)
-
-
-                            <option value="{{ $role->id }}">{{ $role->name }}</option>
-
-                        @endforeach
-
-                    </x-input-select>
-
-                </x-input-group>
-
             </div>
 
             <div class="flex flex-col md:flex-row justify-between gap-3 mb-3">
@@ -338,6 +321,27 @@
                         @foreach ($areas_adscripcion as $area)
 
                             <option value="{{ $area }}">{{ $area }}</option>
+
+                        @endforeach
+
+                    </x-input-select>
+
+                </x-input-group>
+
+            </div>
+
+            <div class="flex flex-col md:flex-row justify-between gap-3 mb-3">
+
+                <x-input-group for="role" label="Rol" :error="$errors->first('role')" class="w-full">
+
+                    <x-input-select id="role" wire:model="role" class="w-full" multiple>
+
+                        <option value="">Seleccione una opción</option>
+
+                        @foreach ($roles as $role)
+
+
+                            <option value="{{ $role->id }}">{{ $role->name }}</option>
 
                         @endforeach
 

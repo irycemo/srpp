@@ -226,11 +226,11 @@ class ModalGravamen extends ModalComponent
         }elseif($string == 'datos_gravamen'){
 
             $this->validate([
-                'tipo_documento' => 'required',
-                'autoridad_cargo' => 'required',
-                'autoridad_nombre' => 'required',
-                'numero_documento' => 'required',
-                'fecha_emision' => 'required',
+                'tipo_documento' => 'nullable',
+                'autoridad_cargo' => 'nullable',
+                'autoridad_nombre' => 'nullable',
+                'numero_documento' => 'nullable',
+                'fecha_emision' => 'nullable',
                 'procedencia' => 'nullable'
             ]);
 

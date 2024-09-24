@@ -31,7 +31,7 @@ trait InscripcionesIndex{
 
     public function estaBloqueado(){
 
-        $movimientos = $this->actual->folioReal->movimientosRegistrales()->whereIn('estado', ['nuevo', 'captura'])->orderBy('folio')->get();
+        $movimientos = $this->actual->folioReal->movimientosRegistrales()->whereIn('estado', ['nuevo', 'captura', 'correccion'])->orderBy('folio')->get();
 
         if($movimientos->count()){
 
@@ -106,7 +106,7 @@ trait InscripcionesIndex{
 
         }
 
-        $movimientoAsignados = MovimientoRegistral::whereIn('estado', ['nuevo', 'captura'])
+        $movimientoAsignados = MovimientoRegistral::whereIn('estado', ['nuevo', 'captura', 'correccion'])
                                                         ->where('usuario_Asignado', auth()->id())
                                                         ->withWhereHas('folioReal', function($q){
                                                             $q->where('estado', 'activo');
