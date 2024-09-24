@@ -177,7 +177,7 @@
                 <p>
                     <strong>por</strong> {{ $inscripcion->movimientoRegistral->tipo_documento }} <strong>n°</strong>
                     {{ $inscripcion->movimientoRegistral->numero_documento }}
-                    <strong>de fecha</strong> {{ Carbon\Carbon::parse($inscripcion->movimientoRegistral->fecha_emision)->format('d-m-Y') }}
+                    <strong>de fecha</strong> {{ Carbon\Carbon::parse($inscripcion->movimientoRegistral->fecha_emision)->format('d/m/Y') }}
                     <strong>otorgado por</strong> {{ $inscripcion->movimientoRegistral->autoridad_cargo }} {{ $inscripcion->movimientoRegistral->autoridad_nombre }}
                     <strong>consta que </strong>
                     @foreach ($inscripcion->transmitentes() as $transmitente)
@@ -245,7 +245,7 @@
 
                                 </td>
 
-                                @if($inscripcion->movimientoRegistral->distrito != '02 Uruapan')
+                                {{-- @if($inscripcion->movimientoRegistral->distrito != '02 Uruapan')
 
                                     <td style="padding-right: 40px; text-align:center; width: 50%; vertical-align: bottom; white-space: nowrap;">
 
@@ -253,7 +253,7 @@
                                         <p style="margin: 0">JEFE DE Departamento de Registro de Inscripciones</p>
                                     </td>
 
-                                @endif
+                                @endif --}}
 
                             </tr>
                         </tbody>

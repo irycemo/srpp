@@ -1059,7 +1059,7 @@ class PropiedadInscripcion extends Component
 
                 $this->predio->save();
 
-                $this->procesarPropietarios();
+                if($this->inscripcion->movimientoRegistral->estado != 'correccion') $this->procesarPropietarios();
 
                 $this->inscripcion->fecha_inscripcion = now()->toDateString();
                 $this->inscripcion->actualizado_por = auth()->id();
