@@ -68,4 +68,12 @@ class Predio extends Model implements Auditable
 
     }
 
+    public function getSuperficieTerrenoFormateadaAttribute(){
+
+        return str_pad((string)intval($this->attributes['superficie_terreno']), 6, '0', STR_PAD_LEFT);
+
+
+
+    }
+
 }

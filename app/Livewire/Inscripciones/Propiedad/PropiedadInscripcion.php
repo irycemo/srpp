@@ -106,9 +106,9 @@ class PropiedadInscripcion extends Component
             'inscripcion.cc_departamento' => 'required', */
             'inscripcion.acto_contenido' => 'required',
             'inscripcion.descripcion_acto' => 'nullable',
-            'inscripcion.superficie_terreno' => 'required',
+            'inscripcion.superficie_terreno' => 'nullable',
             'inscripcion.unidad_area' => 'required',
-            'inscripcion.superficie_construccion' => 'required',
+            'inscripcion.superficie_construccion' => 'nullable',
             'inscripcion.monto_transaccion' => 'required',
             'inscripcion.observaciones' => 'nullable',
             'inscripcion.divisa' => 'nullable',

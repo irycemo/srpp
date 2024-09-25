@@ -69,7 +69,7 @@ class DescripcionPredio extends Component
             'edificio' => 'nullable',
             'departamento' => 'nullable',
             'curt' => 'nullable',
-            'superficie_terreno' => 'required',
+            'superficie_terreno' => 'nullable',
             'superficie_construccion' => 'nullable',
             'superficie_judicial' => 'nullable',
             'superficie_notarial' => 'nullable',
