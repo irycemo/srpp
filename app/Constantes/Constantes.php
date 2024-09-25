@@ -276,7 +276,8 @@ class Constantes{
         'PRESCRIPCIÓN POSITIVA',
         'SOCIEDADES',
         'PERMUTA',
-        'FIDEICOMISO'
+        'FIDEICOMISO',
+        'EXPEDICIÓN DE TÍTULO DE PROPIEDAD'
     ];
 
     const ACTOS_INSCRIPCION_GRAVAMEN = [
