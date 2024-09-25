@@ -68,12 +68,37 @@ class Predio extends Model implements Auditable
 
     }
 
-    /* public function getSuperficieTerrenoFormateadaAttribute(){
+    public function getSuperficieTerrenoFormateadaAttribute(){
 
-        return str_pad((string)intval($this->attributes['superficie_terreno']), 6, '0', STR_PAD_LEFT);
+        $string =  str_pad((string)(intval($this->attributes['superficie_terreno'])), 6, '0', STR_PAD_LEFT);
 
+        return substr($string, 0, 2) . '-' .
+                substr($string, 2, -2) . '-' .
+                substr($string, 4, 5) . '.' .
+                substr((string)($this->attributes['superficie_terreno']), -4, -2);
 
+    }
 
-    } */
+    public function getSuperficieNotarialFormateadaAttribute(){
+
+        $string =  str_pad((string)(intval($this->attributes['superficie_notarial'])), 6, '0', STR_PAD_LEFT);
+
+        return substr($string, 0, 2) . '-' .
+                substr($string, 2, -2) . '-' .
+                substr($string, 4, 5) . '.' .
+                substr((string)($this->attributes['superficie_notarial']), -4, -2);
+
+    }
+
+    public function getSuperficieJudicialFormateadaAttribute(){
+
+        $string =  str_pad((string)(intval($this->attributes['superficie_judicial'])), 6, '0', STR_PAD_LEFT);
+
+        return substr($string, 0, 2) . '-' .
+                substr($string, 2, -2) . '-' .
+                substr($string, 4, 5) . '.' .
+                substr((string)($this->attributes['superficie_judicial']), -4, -2);
+
+    }
 
 }
