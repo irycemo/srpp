@@ -245,7 +245,7 @@
 
                                 </td>
 
-                                {{-- @if($inscripcion->movimientoRegistral->distrito != '02 Uruapan')
+                                @if($inscripcion->movimientoRegistral->distrito != '02 Uruapan')
 
                                     <td style="padding-right: 40px; text-align:center; width: 50%; vertical-align: bottom; white-space: nowrap;">
 
@@ -253,7 +253,7 @@
                                         <p style="margin: 0">JEFE DE Departamento de Registro de Inscripciones</p>
                                     </td>
 
-                                @endif --}}
+                                @endif
 
                             </tr>
                         </tbody>
