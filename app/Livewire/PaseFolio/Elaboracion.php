@@ -71,7 +71,7 @@ class Elaboracion extends Component
             'tipo_documento' => 'required',
             'autoridad_cargo' => Rule::requiredIf(in_array($this->tipo_documento, ['OFICIO', 'TÍTULO DE PROPIEDAD'])),
             'autoridad_nombre' => Rule::requiredIf(in_array($this->tipo_documento, ['OFICIO', 'TÍTULO DE PROPIEDAD'])),
-            'autoridad_numero' => Rule::requiredIf(in_array($this->tipo_documento, ['OFICIO', 'TÍTULO DE PROPIEDAD'])),
+            'autoridad_numero' => 'nullable',
             'numero_documento' => Rule::requiredIf(in_array($this->tipo_documento, ['OFICIO', 'TÍTULO DE PROPIEDAD'])),
             'fecha_emision' => Rule::requiredIf(in_array($this->tipo_documento, ['OFICIO', 'TÍTULO DE PROPIEDAD'])),
             'fecha_inscripcion' => Rule::requiredIf(in_array($this->tipo_documento, ['OFICIO', 'TÍTULO DE PROPIEDAD'])),
