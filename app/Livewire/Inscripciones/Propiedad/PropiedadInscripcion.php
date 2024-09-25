@@ -12,6 +12,7 @@ use App\Models\Propiedad;
 use App\Models\Colindancia;
 use Livewire\WithFileUploads;
 use App\Constantes\Constantes;
+use Exception;
 use Illuminate\Validation\Rule;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
@@ -717,7 +718,7 @@ class PropiedadInscripcion extends Component
             'representados' => Rule::requiredIf($this->modalRepresentante === true),
         ]);
 
-        if($this->revisarProcentajes($this->actor->id)){
+        if($this->revisarProcentajes($this->actor->id) && $this->inscripcion->movimientoRegistral->estado != 'correccion'){
 
             $this->dispatch('mostrarMensaje', ['error', "La suma de los porcentajes no puede exceder el 100%."]);
 
@@ -974,7 +975,11 @@ class PropiedadInscripcion extends Component
 
         /* if($this->revisarProcentajes()) return true; */
 
-        if($this->revisarProcentajesFinal()) return true;
+        if($this->inscripcion->movimientoRegistral->estado != 'correccion'){
+
+            if($this->revisarProcentajesFinal()) return true;
+
+        }
 
     }
 
@@ -1059,7 +1064,15 @@ class PropiedadInscripcion extends Component
 
                 $this->predio->save();
 
-                if($this->inscripcion->movimientoRegistral->estado != 'correccion') $this->procesarPropietarios();
+                if($this->inscripcion->movimientoRegistral->estado != 'correccion'){
+
+                    $this->procesarPropietarios();
+
+                }else{
+
+                    $this->revisarPorcentajesCorreccion();
+
+                }
 
                 $this->inscripcion->fecha_inscripcion = now()->toDateString();
                 $this->inscripcion->actualizado_por = auth()->id();
@@ -1143,9 +1156,16 @@ class PropiedadInscripcion extends Component
 
             return redirect()->route('propiedad');
 
+        } catch (Exception $ex) {
+
+            Log::error("Error al finalizar inscripcion de propiedad por el usuario: (id: " . auth()->user()->id . ") " . auth()->user()->name . ". " . $ex);
+            $this->dispatch('mostrarMensaje', ['error', $ex->getMessage()]);
+
         } catch (\Throwable $th) {
+
             Log::error("Error al finalizar inscripcion de propiedad por el usuario: (id: " . auth()->user()->id . ") " . auth()->user()->name . ". " . $th);
             $this->dispatch('mostrarMensaje', ['error', "Ha ocurrido un error."]);
+
         }
 
     }
@@ -1283,6 +1303,57 @@ class PropiedadInscripcion extends Component
             return true;
 
         } */
+
+    }
+
+    public function revisarPorcentajesCorreccion(){
+
+        $pn = 0;
+
+        $pu = 0;
+
+        $pp = 0;
+
+        foreach($this->predio->propietarios() as $propietario){
+
+            $pn = $pn + $propietario->porcentaje_nuda;
+
+            $pu = $pu + $propietario->porcentaje_usufructo;
+
+            $pp = $pp + $propietario->porcentaje_propiedad;
+
+        }
+
+        if($pp == 0){
+
+            if($pn < 99.9999){
+
+                throw new Exception("El porcentaje de nuda propiedad no es el 100%.");
+
+            }
+
+            if($pu < 99.9999){
+
+                throw new Exception("El porcentaje de usufructo no es el 100%.");
+
+            }
+
+        }else{
+
+
+            if(($pn + $pp) < 99.9999){
+
+                throw new Exception("El porcentaje de nuda propiedad no es el 100%.");
+
+            }
+
+            if(($pu + $pp) < 99.9999){
+
+                throw new Exception("El porcentaje de usufructo no es el 100%.");
+
+            }
+
+        }
 
     }
 

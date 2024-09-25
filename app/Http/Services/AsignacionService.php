@@ -659,7 +659,7 @@ class AsignacionService{
 
         if($usuarios->count() == 0){
 
-            throw new AsignacionServiceException('No se encontraron usuarios de varios para asignar al movimiento registral.');
+            throw new AsignacionServiceException('No se encontraron usuarios de sentencias para asignar al movimiento registral.');
 
         }else if($usuarios->count() == 1){
 

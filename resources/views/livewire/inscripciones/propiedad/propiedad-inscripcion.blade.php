@@ -963,19 +963,6 @@
 
                     <span class="flex items-center justify-center text-lg text-gray-700 mb-5">Propietarios</span>
 
-                    <div class="flex justify-end mb-2">
-
-                        <x-button-gray
-                                wire:click="agregarPropietario"
-                                wire:loading.attr="disabled"
-                                wire:target="agregarPropietario">
-
-                                <img wire:loading wire:target="agregarPropietario" class="mx-auto h-4 mr-1" src="{{ asset('storage/img/loading3.svg') }}" alt="Loading">
-                                Agregar propietario
-                        </x-button-gray>
-
-                    </div>
-
                     <x-table>
 
                         <x-slot name="head">
@@ -1629,15 +1616,439 @@
 
     </x-dialog-modal>
 
-    <x-dialog-modal wire:model="modalContraseña" maxWidth="sm">
+    <x-dialog-modal wire:model="modalContraseña">
 
         <x-slot name="title">
 
-            Ingresa tu contraseña
+            Finalizar inscripción
 
         </x-slot>
 
         <x-slot name="content">
+
+            <div class="grid grid-cols-2 gap-2">
+
+                <div class="bg-gray-100 p-2 rounded-lg">
+
+                    <p><strong>Cuenta predial:</strong> {{ $inscripcion->cp_localidad }}-{{ $inscripcion->cp_oficina }}-{{ $inscripcion->cp_tipo_predio }}-{{ $inscripcion->cp_registro }}</p>
+
+                </div>
+
+                <div class="bg-gray-100 p-2 rounded-lg">
+
+                    <p><strong>Superficie de terreno:</strong> {{ $inscripcion->superficie_terreno }} {{ $inscripcion->unidad_area }}</p>
+
+                </div>
+
+                <div class="bg-gray-100 p-2 rounded-lg">
+
+                    <p><strong>Superficie de construcción:</strong> {{ $inscripcion->superficie_construccion }} {{ $inscripcion->unidad_area }}</p>
+
+                </div>
+
+                <div class="bg-gray-100 p-2 rounded-lg">
+
+                    <p><strong>Monto de la transacción:</strong> {{ $inscripcion->monto_transaccion }} {{ $inscripcion->divisa }}</p>
+
+                </div>
+
+                <div class="bg-gray-100 p-2 rounded-lg">
+
+                    <p><strong>Monto de la transacción:</strong> {{ $inscripcion->monto_transaccion }} {{ $inscripcion->divisa }}</p>
+
+                </div>
+
+                @if ($inscripcion->superficie_judicial)
+
+                    <div class="bg-gray-100 p-2 rounded-lg">
+
+                        <p><strong>Superficie judicial:</strong> {{ $inscripcion->superficie_judicial }} {{ $inscripcion->unidad_area }}</p>
+
+                    </div>
+
+                @endif
+
+                @if ($inscripcion->superficie_notarial)
+
+                    <div class="bg-gray-100 p-2 rounded-lg">
+
+                        <p><strong>Superficie notarial:</strong> {{ $inscripcion->superficie_notarial }} {{ $inscripcion->unidad_area }}</p>
+
+                    </div>
+
+                @endif
+
+                @if ($inscripcion->area_comun_terreno)
+
+                    <div class="bg-gray-100 p-2 rounded-lg">
+
+                        <p><strong>Área de terreno común:</strong> {{ $inscripcion->area_comun_terreno }} {{ $inscripcion->unidad_area }}</p>
+
+                    </div>
+
+                @endif
+
+                @if ($inscripcion->area_comun_construccion)
+
+                    <div class="bg-gray-100 p-2 rounded-lg">
+
+                        <p><strong>Área de contrucción común:</strong> {{ $inscripcion->area_comun_construccion }} {{ $inscripcion->unidad_area }}</p>
+
+                    </div>
+
+                @endif
+
+                @if ($inscripcion->valor_terreno_comun)
+
+                    <div class="bg-gray-100 p-2 rounded-lg">
+
+                        <p><strong>Valor de terreno común:</strong> {{ $inscripcion->valor_terreno_comun }}</p>
+
+                    </div>
+
+                @endif
+
+                @if ($inscripcion->valor_construccion_comun)
+
+                    <div class="bg-gray-100 p-2 rounded-lg">
+
+                        <p><strong>Valor de construcción común:</strong> {{ $inscripcion->valor_construccion_comun }}</p>
+
+                    </div>
+
+                @endif
+
+                @if ($inscripcion->valor_total_terreno)
+
+                    <div class="bg-gray-100 p-2 rounded-lg">
+
+                        <p><strong>Valor total del terreno:</strong> {{ $inscripcion->valor_total_terreno }}</p>
+
+                    </div>
+
+                @endif
+
+                @if ($inscripcion->valor_total_construccion)
+
+                    <div class="bg-gray-100 p-2 rounded-lg">
+
+                        <p><strong>Valor total de la contrucción:</strong> {{ $inscripcion->valor_total_construccion }}</p>
+
+                    </div>
+
+                @endif
+
+                <div class="col-span-2">
+
+                    <table class="min-w-full">
+                        <thead class="border-b border-gray-300 bg-gray-50">
+                            <tr class="text-gray-500 text-left">
+                                <th class="px-2">Viento</th>
+                                <th class="px-2">Longitud</th>
+                                <th class="px-2">Descripción</th>
+
+                            </tr>
+                        </thead>
+                        <tbody class="bg-gray-100 divide-y">
+                            @foreach ($medidas as $index => $medida)
+                                <tr>
+                                    <td class="px-2">{{ $medida['viento'] }}</td>
+                                    <td class="px-2">{{ $medida['longitud'] }}</td>
+                                    <td class="px-2">{{ $medida['descripcion'] }}</td>
+                                </tr>
+                            @endforeach
+                        </tbody>
+                    </table>
+
+                </div>
+
+                @if ($inscripcion->codigo_postal)
+
+                    <div class="bg-gray-100 p-2 rounded-lg">
+
+                        <p><strong>Código postal:</strong> {{ $inscripcion->codigo_postal }}</p>
+
+                    </div>
+
+                @endif
+
+                @if ($inscripcion->nombre_asentamiento)
+
+                    <div class="bg-gray-100 p-2 rounded-lg">
+
+                        <p><strong>Nombre del asentamiento:</strong> {{ $inscripcion->nombre_asentamiento }}</p>
+
+                    </div>
+
+                @endif
+
+                @if ($inscripcion->municipio)
+
+                    <div class="bg-gray-100 p-2 rounded-lg">
+
+                        <p><strong>Municipio:</strong> {{ $inscripcion->municipio }}</p>
+
+                    </div>
+
+                @endif
+
+                @if ($inscripcion->ciudad)
+
+                    <div class="bg-gray-100 p-2 rounded-lg">
+
+                        <p><strong>Ciudad:</strong> {{ $inscripcion->ciudad }}</p>
+
+                    </div>
+
+                @endif
+
+                @if ($inscripcion->tipo_asentamiento)
+
+                    <div class="bg-gray-100 p-2 rounded-lg">
+
+                        <p><strong>Tipo de asentamiento:</strong> {{ $inscripcion->tipo_asentamiento }}</p>
+
+                    </div>
+
+                @endif
+
+                @if ($inscripcion->localidad)
+
+                    <div class="bg-gray-100 p-2 rounded-lg">
+
+                        <p><strong>Localidad:</strong> {{ $inscripcion->localidad }}</p>
+
+                    </div>
+
+                @endif
+
+                @if ($inscripcion->tipo_vialidad)
+
+                    <div class="bg-gray-100 p-2 rounded-lg">
+
+                        <p><strong>Tipo de vialidad:</strong> {{ $inscripcion->tipo_vialidad }}</p>
+
+                    </div>
+
+                @endif
+
+                @if ($inscripcion->nombre_vialidad)
+
+                    <div class="bg-gray-100 p-2 rounded-lg">
+
+                        <p><strong>Nombre de la vialidad:</strong> {{ $inscripcion->nombre_vialidad }}</p>
+
+                    </div>
+
+                @endif
+
+                @if ($inscripcion->numero_exterior)
+
+                    <div class="bg-gray-100 p-2 rounded-lg">
+
+                        <p><strong>Número exterior:</strong> {{ $inscripcion->numero_exterior }}</p>
+
+                    </div>
+
+                @endif
+
+                @if ($inscripcion->numero_interior)
+
+                    <div class="bg-gray-100 p-2 rounded-lg">
+
+                        <p><strong>Número interior:</strong> {{ $inscripcion->numero_interior }}</p>
+
+                    </div>
+
+                @endif
+
+                @if ($inscripcion->nombre_edificio)
+
+                    <div class="bg-gray-100 p-2 rounded-lg">
+
+                        <p><strong>Edificio:</strong> {{ $inscripcion->nombre_edificio }}</p>
+
+                    </div>
+
+                @endif
+
+                @if ($inscripcion->departamento_edificio)
+
+                    <div class="bg-gray-100 p-2 rounded-lg">
+
+                        <p><strong>Departamento:</strong> {{ $inscripcion->departamento_edificio }}</p>
+
+                    </div>
+
+                @endif
+
+                @if ($inscripcion->observaciones)
+
+                    <div class="bg-gray-100 p-2 rounded-lg">
+
+                        <p><strong>Observaciones:</strong> {{ $inscripcion->observaciones }}</p>
+
+                    </div>
+
+                @endif
+
+                @if ($inscripcion->lote)
+
+                    <div class="bg-gray-100 p-2 rounded-lg">
+
+                        <p><strong>Lote:</strong> {{ $inscripcion->lote }}</p>
+
+                    </div>
+
+                @endif
+
+                @if ($inscripcion->manzana)
+
+                    <div class="bg-gray-100 p-2 rounded-lg">
+
+                        <p><strong>Manzana:</strong> {{ $inscripcion->manzana }}</p>
+
+                    </div>
+
+                @endif
+
+                @if ($inscripcion->ejido)
+
+                    <div class="bg-gray-100 p-2 rounded-lg">
+
+                        <p><strong>Ejido:</strong> {{ $inscripcion->ejido }}</p>
+
+                    </div>
+
+                @endif
+
+                @if ($inscripcion->parcela)
+
+                    <div class="bg-gray-100 p-2 rounded-lg">
+
+                        <p><strong>Parcela:</strong> {{ $inscripcion->parcela }}</p>
+
+                    </div>
+
+                @endif
+
+                @if ($inscripcion->solar)
+
+                    <div class="bg-gray-100 p-2 rounded-lg">
+
+                        <p><strong>Solar:</strong> {{ $inscripcion->solar }}</p>
+
+                    </div>
+
+                @endif
+
+                @if ($inscripcion->poblado)
+
+                    <div class="bg-gray-100 p-2 rounded-lg">
+
+                        <p><strong>Poblado:</strong> {{ $inscripcion->poblado }}</p>
+
+                    </div>
+
+                @endif
+
+                @if ($inscripcion->numero_exterior_2)
+
+                    <div class="bg-gray-100 p-2 rounded-lg">
+
+                        <p><strong>Número exterior 2:</strong> {{ $inscripcion->numero_exterior_2 }}</p>
+
+                    </div>
+
+                @endif
+
+                @if ($inscripcion->numero_adicional)
+
+                    <div class="bg-gray-100 p-2 rounded-lg">
+
+                        <p><strong>Número adicional:</strong> {{ $inscripcion->numero_adicional }}</p>
+
+                    </div>
+
+                @endif
+
+                @if ($inscripcion->numero_adicional_2)
+
+                    <div class="bg-gray-100 p-2 rounded-lg">
+
+                        <p><strong>Número adicional 2:</strong> {{ $inscripcion->numero_adicional_2 }}</p>
+
+                    </div>
+
+                @endif
+
+                @if ($inscripcion->lote_fraccionador)
+
+                    <div class="bg-gray-100 p-2 rounded-lg">
+
+                        <p><strong>Lote del fraccionador:</strong> {{ $inscripcion->lote_fraccionador }}</p>
+
+                    </div>
+
+                @endif
+
+                @if ($inscripcion->manzana_fraccionador)
+
+                    <div class="bg-gray-100 p-2 rounded-lg">
+
+                        <p><strong>Manzana del fraccionador:</strong> {{ $inscripcion->manzana_fraccionador }}</p>
+
+                    </div>
+
+                @endif
+
+                @if ($inscripcion->etapa_fraccionador)
+
+                    <div class="bg-gray-100 p-2 rounded-lg">
+
+                        <p><strong>Etapa del fraccionador:</strong> {{ $inscripcion->etapa_fraccionador }}</p>
+
+                    </div>
+
+                @endif
+
+                @if ($inscripcion->clave_edificio)
+
+                    <div class="bg-gray-100 p-2 rounded-lg">
+
+                        <p><strong>Clave del edificio:</strong> {{ $inscripcion->clave_edificio }}</p>
+
+                    </div>
+
+                @endif
+
+                <div class="col-span-2">
+
+                    <table class="min-w-full">
+                        <thead class="border-b border-gray-300 bg-gray-50">
+                            <tr class="text-gray-500 text-left">
+                                <th class="px-2">Nombre/Razón social</th>
+                                <th class="px-2">% propiedad</th>
+                                <th class="px-2">% nuda</th>
+                                <th class="px-2">% usufructo</th>
+
+                            </tr>
+                        </thead>
+                        <tbody class="bg-gray-100 divide-y">
+                            @foreach ($inscripcion->propietarios() as $propietario)
+                                <tr>
+                                    <td class="px-2">{{ $propietario->persona->nombre }} {{ $propietario->persona->ap_paterno }} {{ $propietario->persona->ap_materno }} {{ $propietario->persona->razon_social }}</td>
+                                    <td class="px-2">{{ $propietario->porcentaje_propiedad }}</td>
+                                    <td class="px-2">{{ $propietario->porcentaje_nuda }}</td>
+                                    <td class="px-2">{{ $propietario->porcentaje_usufructo }}</td>
+                                </tr>
+                            @endforeach
+                        </tbody>
+                    </table>
+
+                </div>
+
+            </div>
 
             <x-input-group for="contraseña" label="Contraseña" :error="$errors->first('contraseña')" class="w-full">
 

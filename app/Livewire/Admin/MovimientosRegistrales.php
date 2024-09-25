@@ -25,6 +25,7 @@ class MovimientosRegistrales extends Component
 
     public $modalReasignarUsuario = false;
     public $modalReasignarSupervisor = false;
+    public $modalCorreccion = false;
 
     public $filters = [
         'año' => '',
@@ -99,6 +100,51 @@ class MovimientosRegistrales extends Component
             $this->modelo_editar = $modelo;
 
         $this->modalReasignarSupervisor = true;
+
+    }
+
+    public function abrirModalCorreccion(MovimientoRegistral $modelo){
+
+        if($this->modelo_editar->isNot($modelo))
+            $this->modelo_editar = $modelo;
+
+        $this->modalCorreccion = true;
+
+    }
+
+    public function correccion(){
+
+        $movimiento = $this->modelo_editar->folioReal->movimientosRegistrales()
+                                                        ->whereIn('estado', ['finalizado', 'concluido'])
+                                                        ->where('folio', '>', $this->modelo_editar->folio)
+                                                        ->first();
+
+        if($movimiento){
+
+            $this->dispatch('mostrarMensaje', ['warning', "El folio real ya tiene movimientos registrales posteriores finalizados."]);
+
+            return;
+
+        }
+
+        try {
+
+            $this->modelo_editar->estado = 'correccion';
+            $this->modelo_editar->actualizado_por = auth()->id();
+            $this->modelo_editar->save();
+
+            $this->modelo_editar->audits()->latest()->first()->update(['tags' => 'Cambio estado a corrección']);
+
+            $this->dispatch('mostrarMensaje', ['success', "La información se actualizó con éxito."]);
+
+            $this->modalReasignarUsuario = false;
+
+        } catch (\Throwable $th) {
+
+            $this->dispatch('mostrarMensaje', ['error', "Hubo un error."]);
+            Log::error("Error al enviar a corrección movimiento registral por el usuario: (id: " . auth()->user()->id . ") " . auth()->user()->name . ". " . $th);
+
+        }
 
     }
 
