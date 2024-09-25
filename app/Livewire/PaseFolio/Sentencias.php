@@ -2,7 +2,6 @@
 
 namespace App\Livewire\PaseFolio;
 
-use App\Models\Acto;
 use Livewire\Component;
 use App\Models\Sentencia;
 use App\Constantes\Constantes;
