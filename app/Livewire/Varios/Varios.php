@@ -134,6 +134,12 @@ class Varios extends Component
 
         $this->actos = Constantes::ACTOS_INSCRIPCION_VARIOS;
 
+        if($this->vario->servicio == 'D110'){
+
+            $this->actos = ['PERSONAS MORALES'];
+
+        }
+
     }
 
     public function render()

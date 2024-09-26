@@ -7,17 +7,18 @@ use App\Models\Actor;
 use App\Models\Deudor;
 use App\Models\Persona;
 use Livewire\Component;
-use App\Constantes\Constantes;
 use App\Models\FolioRealPersona;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Hash;
 use App\Traits\Inscripciones\Varios\VariosTrait;
+use Livewire\WithFileUploads;
 
 class PersonasMorales extends Component
 {
 
     use VariosTrait;
+    use WithFileUploads;
 
     public $denominacion;
     public $fecha_celebracion;
@@ -235,7 +236,10 @@ class PersonasMorales extends Component
                 $this->vario->fecha_inscripcion = now()->toDateString();
                 $this->vario->save();
 
-                $this->vario->movimientoRegistral->update(['estado' => 'elaborado']);
+                $this->vario->movimientoRegistral->update([
+                                                            'estado' => 'elaborado',
+                                                            'folio' => 1
+                                                        ]);
 
                 $this->crearFolioRealPersona();
 
@@ -244,11 +248,11 @@ class PersonasMorales extends Component
             return redirect()->route('varios');
 
         } catch (Exception $ex) {
-
+            Log::error("Error al finalizar inscripcion de folio real de persona moral por el usuario: (id: " . auth()->user()->id . ") " . auth()->user()->name . ". " . $ex);
             $this->dispatch('mostrarMensaje', ['error', $ex->getMessage()]);
 
         } catch (\Throwable $th) {
-            Log::error("Error al finalizar inscripcion de propiedad por el usuario: (id: " . auth()->user()->id . ") " . auth()->user()->name . ". " . $th);
+            Log::error("Error al finalizar inscripcion de folio real de persona moral por el usuario: (id: " . auth()->user()->id . ") " . auth()->user()->name . ". " . $th);
             $this->dispatch('mostrarMensaje', ['error', "Ha ocurrido un error."]);
         }
 
@@ -294,7 +298,7 @@ class PersonasMorales extends Component
 
         foreach($this->vario->actores as $actor){
 
-            $folioRealPersona->actores()->create([
+            $this->vario->movimientoRegistral->folioRealPersona->actores()->create([
                 'persona_id' => $actor->persona_id,
                 'tipo_actor' => $actor->tipo_actor
             ]);

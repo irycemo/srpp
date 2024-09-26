@@ -21,7 +21,8 @@ class Constantes{
         'Consultas',
         'Propiedades',
         'Folios reales',
-        'Movimientos Registrales'
+        'Movimientos Registrales',
+        'Personas morales'
     ];
 
     /* USUARIOS */

@@ -366,4 +366,101 @@
 
     </x-dialog-modal>
 
+    <x-dialog-modal wire:model="modalDocumento" maxWidth="sm">
+
+        <x-slot name="title">
+
+            Subir archivo
+
+        </x-slot>
+
+        <x-slot name="content">
+
+            <x-filepond wire:model.live="documento" accept="['application/pdf']"/>
+
+            <div>
+
+                @error('documento') <span class="error text-sm text-red-500">{{ $message }}</span> @enderror
+
+            </div>
+
+        </x-slot>
+
+        <x-slot name="footer">
+
+            <div class="flex gap-3">
+
+                <x-button-blue
+                    wire:click="guardarDocumento"
+                    wire:loading.attr="disabled"
+                    wire:target="guardarDocumento">
+
+                    <img wire:loading wire:target="guardarDocumento" class="mx-auto h-4 mr-1" src="{{ asset('storage/img/loading3.svg') }}" alt="Loading">
+
+                    <span>Guardar</span>
+
+                </x-button-blue>
+
+                <x-button-red
+                    wire:click="$toggle('modalDocumento')"
+                    wire:loading.attr="disabled"
+                    wire:target="$toggle('modalDocumento')"
+                    type="button">
+
+                    <span>Cerrar</span>
+
+                </x-button-red>
+
+            </div>
+
+        </x-slot>
+
+    </x-dialog-modal>
+
+    <x-dialog-modal wire:model="modalContraseña" maxWidth="sm">
+
+        <x-slot name="title">
+
+            Ingresa tu contraseña
+
+        </x-slot>
+
+        <x-slot name="content">
+
+            <x-input-group for="contraseña" label="Contraseña" :error="$errors->first('contraseña')" class="w-full">
+
+                <x-input-text type="password" id="contraseña" wire:model="contraseña" />
+
+            </x-input-group>
+
+        </x-slot>
+
+        <x-slot name="footer">
+
+            <div class="flex gap-3">
+
+                <x-button-blue
+                    wire:click="inscribir"
+                    wire:loading.attr="disabled"
+                    wire:target="inscribir">
+
+                    <img wire:loading wire:target="inscribir" class="mx-auto h-4 mr-1" src="{{ asset('storage/img/loading3.svg') }}" alt="Loading">
+
+                    <span>Ingresar contraseña</span>
+                </x-button-blue>
+
+                <x-button-red
+                    wire:click="$toggle('modalContraseña')"
+                    wire:loading.attr="disabled"
+                    wire:target="$toggle('modalContraseña')"
+                    type="button">
+                    Cerrar
+                </x-button-red>
+
+            </div>
+
+        </x-slot>
+
+    </x-dialog-modal>
+
 </div>

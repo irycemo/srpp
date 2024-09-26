@@ -26,22 +26,32 @@ class VariosController extends Controller
             $q->where('name', 'Jefe de departamento')->where('area', 'Departamento de Registro de Inscripciones');
         })->first()->name;
 
+        $servicio = $this->nombreServicio($vario->servicio);
+
         if($vario->acto_contenido == 'PERSONAS MORALES'){
 
             $vario->load('movimientoRegistral.folioRealPersona.actores.persona');
 
+            $pdf = Pdf::loadView('varios.acto', [
+                'vario' => $vario,
+                'director' => $director,
+                'jefe_departamento' => $jefe_departamento,
+                'distrito' => $vario->movimientoRegistral->getRawOriginal('distrito'),
+                'servicio' => $servicio
+            ]);
+
+        }else{
+
+            $pdf = Pdf::loadView('varios.acto', [
+                'vario' => $vario,
+                'director' => $director,
+                'jefe_departamento' => $jefe_departamento,
+                'distrito' => $vario->movimientoRegistral->getRawOriginal('distrito'),
+                'predio' => $vario->movimientoRegistral->folioReal->predio,
+                'servicio' => $servicio
+            ]);
+
         }
-
-        $servicio = $this->nombreServicio($vario->servicio);
-
-        $pdf = Pdf::loadView('varios.acto', [
-            'vario' => $vario,
-            'director' => $director,
-            'jefe_departamento' => $jefe_departamento,
-            'distrito' => $vario->movimientoRegistral->getRawOriginal('distrito'),
-            'predio' => $vario->movimientoRegistral->folioReal->predio,
-            'servicio' => $servicio
-        ]);
 
         $pdf->render();
 
@@ -51,7 +61,15 @@ class VariosController extends Controller
 
         $canvas->page_text(480, 745, "Página: {PAGE_NUM} de {PAGE_COUNT}", null, 10, array(1, 1, 1));
 
-        $canvas->page_text(35, 745, $vario->movimientoRegistral->folioReal->folio  .'-' . $vario->movimientoRegistral->folio, null, 9, array(1, 1, 1));
+        if($vario->acto_contenido == 'PERSONAS MORALES'){
+
+            $canvas->page_text(35, 745, $vario->movimientoRegistral->folioRealPersona->folio  .'-' . $vario->movimientoRegistral->folio, null, 9, array(1, 1, 1));
+
+        }else{
+
+            $canvas->page_text(35, 745, $vario->movimientoRegistral->folioReal->folio  .'-' . $vario->movimientoRegistral->folio, null, 9, array(1, 1, 1));
+
+        }
 
         return $pdf->stream('documento.pdf');
 

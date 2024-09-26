@@ -135,6 +135,13 @@
         margin: 0 0 5px 0;
     }
 
+    .titulo{
+        text-align: center;
+        font-size: 13px;
+        font-weight: bold;
+        margin: 0;
+    }
+
 </style>
 <body>
 
@@ -171,7 +178,7 @@
 
                 <div>
 
-                    <p style="text-align: center; font-weight: bold; font-size: 11px;">CARATULA DE ASIGNACION DE FOLIO REAL</p>
+                    <p class="titulo">CARATULA DE ASIGNACION DE FOLIO REAL</p>
 
                 </div>
 

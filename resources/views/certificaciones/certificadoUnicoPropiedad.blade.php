@@ -137,7 +137,7 @@
 
     .titulo{
         text-align: center;
-        font-size: 11px;
+        font-size: 13px;
         font-weight: bold;
         margin: 0;
     }

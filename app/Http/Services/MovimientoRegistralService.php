@@ -722,6 +722,13 @@ class MovimientoRegistralService{
 
         }
 
+        /* Inscripción de folio real de persona moral */
+        if(!isset($request['tomo']) && !isset($request['registro']) && !isset($request['numero_propiedad']) && $request['servicio'] == 'D110'){
+
+            return null;
+
+        }
+
         /* Certificados de propiedad o negativos, sin antecedente */
         if($request['servicio'] == 'DL10'){
 
@@ -740,6 +747,7 @@ class MovimientoRegistralService{
 
         }
 
+        /* Inscripciones */
         if(!isset($request['folio_real'])){
 
             return 1;

@@ -133,6 +133,13 @@
         margin-right: auto;
     }
 
+    .titulo{
+        text-align: center;
+        font-size: 13px;
+        font-weight: bold;
+        margin: 0;
+    }
+
 </style>
 <body>
 
@@ -168,7 +175,7 @@
                 <p style="margin:0"><strong>DISTRITO:</strong> {{ $inscripcion->movimientoRegistral->distrito }}</p>
             </div>
 
-            <div style="text-align: center">
+            <div class="titulo">
                 <p><strong>{{ $inscripcion->acto_contenido }}</strong></p>
             </div>
 

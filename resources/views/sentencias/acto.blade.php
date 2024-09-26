@@ -137,6 +137,13 @@
         margin: 0 0 5px 0;
     }
 
+    .titulo{
+        text-align: center;
+        font-size: 13px;
+        font-weight: bold;
+        margin: 0;
+    }
+
 </style>
 <body>
 
@@ -174,7 +181,7 @@
                     <p style="margin:0;"><strong>DISTRITO:</strong> {{ $sentencia->movimientoRegistral->distrito}}</p>
                 </div>
 
-                <div style="text-align: center">
+                <div class="titulo">
                     <p><strong>{{ $sentencia->acto_contenido }}</strong></p>
                 </div>
 
