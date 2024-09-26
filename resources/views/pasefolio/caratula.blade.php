@@ -248,7 +248,7 @@
                         <strong>Tipo de documento: </strong> {{ $folioReal->tipo_documento }}; <strong>Número de documento: </strong> {{ $folioReal->numero_documento }}; <strong>Cargo de la autoridad: </strong> {{ $folioReal->autoridad_cargo }}; <strong>Nombre de la autoridad: </strong> {{ $folioReal->autoridad_nombre }}; <strong>Número de la autoridad: </strong> {{ $folioReal->autoridad_numero }}; <strong>Fecha de emisión: </strong> {{ Carbon\Carbon::parse($folioReal->fecha_emision)->format('d-m-Y') }}; <strong>Fecha de inscripción: </strong> {{ Carbon\Carbon::parse($folioReal->fecha_inscripcion)->format('d-m-Y') }}; <strong>Dependencia: </strong>{{ $folioReal->procedencia }}
                     </p>
 
-                    <p class="parrafo"><strong>Acto contenido en el antecedente:</strong> {{ $folioReal->acto_contenido_antecedente }}</p>
+                    <p class="parrafo"><strong>Acto contenido:</strong> {{ $folioReal->acto_contenido_antecedente }}</p>
 
                     @if($folioReal->observaciones_antecedente)
 
