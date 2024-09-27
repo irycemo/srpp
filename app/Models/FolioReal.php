@@ -108,6 +108,12 @@ class FolioReal extends Model implements Auditable
                 : null;
     }
 
+    public function documentoEntrada(){
+        return $this->archivos()->where('descripcion', 'documento_entrada')->latest()->first()
+                ? Storage::disk('documento_entrada')->url($this->archivos()->where('descripcion', 'documento_entrada')->first()->url)
+                : null;
+    }
+
     public function avisoPreventivo(){
 
         $movimiento = $this->movimientosRegistrales()

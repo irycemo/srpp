@@ -44,7 +44,9 @@ class FoliosReales extends Component
 
     public function enviarCaptura(FolioReal $folioReal){
 
-        $movimiento = $folioReal->movimientosRegistrales()->whereIn('estado', ['elaborado', 'finalizado', 'concluido'])->first();
+        /* $movimiento = $folioReal->movimientosRegistrales()
+                                    ->whereIn('estado', ['elaborado', 'finalizado', 'concluido'])
+                                    ->first();
 
         if($movimiento){
 
@@ -52,7 +54,7 @@ class FoliosReales extends Component
 
             return;
 
-        }
+        } */
 
         try {
 
@@ -60,6 +62,10 @@ class FoliosReales extends Component
                 'estado' => 'captura',
                 'actualizado_por' => auth()->id()
             ]);
+
+            $movimiento = $folioReal->movimientosRegistrales()->where('folio', 1)->first();
+
+            $movimiento->update(['estado', 'nuevo']);
 
             $folioReal->audits()->latest()->first()->update(['tags' => 'Envió folio a captura']);
 

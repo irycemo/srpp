@@ -4,6 +4,7 @@ namespace App\Livewire\PaseFolio;
 
 use Exception;
 use Carbon\Carbon;
+use App\Models\File;
 use App\Models\Predio;
 use Livewire\Component;
 use App\Models\Gravamen;
@@ -11,6 +12,8 @@ use App\Models\Escritura;
 use App\Models\FolioReal;
 use App\Models\Antecedente;
 use Livewire\Attributes\On;
+use App\Models\Propiedadold;
+use Livewire\WithFileUploads;
 use App\Constantes\Constantes;
 use Illuminate\Validation\Rule;
 use Illuminate\Support\Facades\DB;
@@ -19,10 +22,11 @@ use Illuminate\Support\Facades\Log;
 use App\Livewire\PaseFolio\PaseFolio;
 use App\Http\Services\AsignacionService;
 use App\Http\Services\SistemaTramitesService;
-use App\Models\Propiedadold;
 
 class Elaboracion extends Component
 {
+
+    use WithFileUploads;
 
     /* Documento entrada */
     public $tipo_documento;
@@ -58,6 +62,7 @@ class Elaboracion extends Component
     public $registro;
     public $numero_propiedad;
     public $modal = false;
+    public $modalDocumento = false;
     public $editar = false;
     public $crear = false;
     public $antecedente;
@@ -65,6 +70,8 @@ class Elaboracion extends Component
     public $actos_contenidos;
 
     public $propiedadOld;
+
+    public $documento;
 
     protected function rules(){
         return [
@@ -625,6 +632,83 @@ class Elaboracion extends Component
         $this->modal = true;
 
         $this->editar = true;
+
+    }
+
+    public function abrirModalDocumento(){
+
+        $this->reset('documento');
+
+        $this->dispatch('removeFiles');
+
+        $this->modalDocumento = true;
+
+    }
+
+    public function guardarDocumento(){
+
+        $this->validate(['documento' => 'required']);
+
+        try {
+
+            DB::transaction(function (){
+
+                if(env('LOCAL') == "0"){
+
+                    $pdf = $this->documento->store('srpp/documento_entrada', 's3');
+
+                    File::create([
+                        'fileable_id' => $this->movimientoRegistral->folioReal->id,
+                        'fileable_type' => 'App\Models\FolioReal',
+                        'descripcion' => 'documento_entrada_s3',
+                        'url' => $pdf
+                    ]);
+
+                }elseif(env('LOCAL') == "1"){
+
+                    $pdf = $this->documento->store('/', 'documento_entrada');
+
+                    File::create([
+                        'fileable_id' => $this->movimientoRegistral->folioReal->id,
+                        'fileable_type' => 'App\Models\FolioReal',
+                        'descripcion' => 'documento_entrada',
+                        'url' => $pdf
+                    ]);
+
+                }elseif(env('LOCAL') == "2"){
+
+                    $pdf = $this->documento->store('srpp/documento_entrada', 's3');
+
+                    File::create([
+                        'fileable_id' => $this->movimientoRegistral->folioReal->id,
+                        'fileable_type' => 'App\Models\FolioReal',
+                        'descripcion' => 'documento_entrada_s3',
+                        'url' => $pdf
+                    ]);
+
+                    $pdf = $this->documento->store('/', 'documento_entrada');
+
+                    File::create([
+                        'fileable_id' => $this->movimientoRegistral->folioReal->id,
+                        'fileable_type' => 'App\Models\FolioReal',
+                        'descripcion' => 'documento_entrada',
+                        'url' => $pdf
+                    ]);
+
+                }
+
+                $this->dispatch('mostrarMensaje', ['success', "El documento de entrada se guardó con éxito."]);
+
+                $this->modalDocumento = false;
+
+            });
+
+        } catch (\Throwable $th) {
+
+            Log::error("Error al guardar documento de entrada en pase a folio por el usuario: (id: " . auth()->user()->id . ") " . auth()->user()->name . ". " . $th);
+            $this->dispatch('mostrarMensaje', ['error', "Ha ocurrido un error."]);
+
+        }
 
     }
 
