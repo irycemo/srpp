@@ -65,7 +65,7 @@ class FoliosReales extends Component
 
             $movimiento = $folioReal->movimientosRegistrales()->where('folio', 1)->first();
 
-            $movimiento->update(['estado', 'nuevo']);
+            $movimiento->update(['estado' => 'nuevo']);
 
             $folioReal->audits()->latest()->first()->update(['tags' => 'Envió folio a captura']);
 
