@@ -114,7 +114,7 @@ class MovimientosRegistrales extends Component
 
     public function correccion(){
 
-        $movimiento = $this->modelo_editar->folioReal->movimientosRegistrales()
+        /* $movimiento = $this->modelo_editar->folioReal->movimientosRegistrales()
                                                         ->whereIn('estado', ['finalizado', 'concluido'])
                                                         ->where('folio', '>', $this->modelo_editar->folio)
                                                         ->first();
@@ -122,6 +122,14 @@ class MovimientosRegistrales extends Component
         if($movimiento){
 
             $this->dispatch('mostrarMensaje', ['warning', "El folio real ya tiene movimientos registrales posteriores finalizados."]);
+
+            return;
+
+        } */
+
+        if($this->modelo_editar->fecha_entrega->addDays(30) < now()){
+
+            $this->dispatch('mostrarMensaje', ['warning', "Han pasado 30 dias desde su fecha de entrega no es posible enviar a corrección."]);
 
             return;
 
@@ -137,7 +145,7 @@ class MovimientosRegistrales extends Component
 
             $this->dispatch('mostrarMensaje', ['success', "La información se actualizó con éxito."]);
 
-            $this->modalReasignarUsuario = false;
+            $this->modalCorreccion = false;
 
         } catch (\Throwable $th) {
 

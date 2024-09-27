@@ -203,7 +203,7 @@ trait InscripcionesIndex{
 
                 if(!($this->calcularDiaElaboracion($movimientoRegistral) <= now())){
 
-                    $this->dispatch('mostrarMensaje', ['error', "El trámite puede finalizarse apartir del " . $this->calcularDiaElaboracion($movimientoRegistral)->format('d-m-Y')]);
+                    $this->dispatch('mostrarMensaje', ['warning', "El trámite puede finalizarse apartir del " . $this->calcularDiaElaboracion($movimientoRegistral)->format('d-m-Y')]);
 
                     return;
 
