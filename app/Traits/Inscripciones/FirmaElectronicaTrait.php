@@ -2,8 +2,14 @@
 
 namespace App\Traits\Inscripciones;
 
+use App\Models\Vario;
 use App\Models\Predio;
+use App\Models\Gravamen;
 use App\Models\FolioReal;
+use App\Models\Propiedad;
+use App\Models\Sentencia;
+use App\Models\Certificacion;
+use App\Models\MovimientoRegistral;
 
 trait FirmaElectronicaTrait{
 
@@ -138,6 +144,145 @@ trait FirmaElectronicaTrait{
             'observaciones' => $predio->observaciones,
             'colindancias' => $colindancias,
             'propietarios' => $propietarios
+        ];
+
+    }
+
+    public function movimientoRegistral(MovimientoRegistral $movimientoRegistral):array
+    {
+
+        $certificacion = null;
+
+        if($movimientoRegistral->certificacion){
+
+            $certificacion = $this->certificacion($movimientoRegistral->certificacion);
+
+        }
+
+        $propiedad = null;
+
+        if($movimientoRegistral->inscripcionPropiedad){
+
+            $propiedad = $this->propiedad($movimientoRegistral->inscripcionPropiedad);
+
+        }
+
+        $gravamen = null;
+
+        if($movimientoRegistral->gravamen){
+
+            $gravamen = $this->gravamen($movimientoRegistral->gravamen);
+
+        }
+
+        $sentencia = null;
+
+        if($movimientoRegistral->sentencia){
+
+            $sentencia = $this->sentencia($movimientoRegistral->sentencia);
+
+        }
+
+        $vario = null;
+
+        if($movimientoRegistral->vario){
+
+            $vario = $this->vario($movimientoRegistral->vario);
+
+        }
+
+        return [
+            'id' => $movimientoRegistral->id,
+            'estado' => $movimientoRegistral->estado,
+            'folio' => $movimientoRegistral->folio,
+            'año' => $movimientoRegistral->año,
+            'tramite' => $movimientoRegistral->tramite,
+            'usuario' => $movimientoRegistral->usuario,
+            'monto' => $movimientoRegistral->monto,
+            'tipo_servicio' => $movimientoRegistral->tipo_servicio,
+            'solicitante' => $movimientoRegistral->solicitante,
+            'tomo_gravamen' => $movimientoRegistral->tomo_gravamen,
+            'registro_gravamen' => $movimientoRegistral->registro_gravamen,
+            'registro_gravamen' => $movimientoRegistral->registro_gravamen,
+            'certificacion' => $certificacion,
+            'propiedad' => $propiedad,
+            'gravamen' => $gravamen,
+            'sentencia' => $sentencia,
+            'vario' => $vario,
+        ];
+
+    }
+
+    public function certificacion(Certificacion $certificacion):array
+    {
+
+        return [
+            'id' => $certificacion->id,
+            'servicio' => $certificacion->servicio,
+            'numero_paginas' => $certificacion->numero_paginas,
+            'folio_carpeta_copias' => $certificacion->folio_carpeta_copias,
+            'observaciones' => $certificacion->observaciones,
+            'observaciones_certificado' => $certificacion->observaciones_certificado,
+        ];
+
+    }
+
+    public function propiedad(Propiedad $propiedad):array
+    {
+
+        return [
+            'id' => $propiedad->id,
+            'servicio' => $propiedad->servicio,
+            'acto_contenido' => $propiedad->acto_contenido,
+            'numero_inmuebles' => $propiedad->numero_inmuebles,
+            'descripcion_acto' => $propiedad->descripcion_acto,
+            'fecha_inscripcion' => $propiedad->fecha_inscripcion
+        ];
+
+    }
+
+    public function gravamen(Gravamen $gravamen):array
+    {
+
+        return [
+            'id' => $gravamen->id,
+            'servicio' => $gravamen->servicio,
+            'acto_contenido' => $gravamen->acto_contenido,
+            'estado' => $gravamen->estado,
+            'tipo' => $gravamen->tipo,
+            'valor_gravamen' => $gravamen->valor_gravamen,
+            'divisa' => $gravamen->divisa,
+            'fecha_inscripcion' => $gravamen->fecha_inscripcion,
+            'observaciones' => $gravamen->observaciones,
+            'observaciones' => $gravamen->observaciones,
+        ];
+
+    }
+
+    public function sentencia(Sentencia $sentencia):array
+    {
+
+        return [
+            'id' => $sentencia->id,
+            'servicio' => $sentencia->servicio,
+            'acto_contenido' => $sentencia->acto_contenido,
+            'estado' => $sentencia->estado,
+            'descripcion' => $sentencia->descripcion,
+            'fecha_inscripcion' => $sentencia->fecha_inscripcion,
+        ];
+
+    }
+
+    public function vario(Vario $vario):array
+    {
+
+        return [
+            'id' => $vario->id,
+            'servicio' => $vario->servicio,
+            'acto_contenido' => $vario->acto_contenido,
+            'estado' => $vario->estado,
+            'descripcion' => $vario->descripcion,
+            'fecha_inscripcion' => $vario->fecha_inscripcion,
         ];
 
     }
