@@ -9,7 +9,7 @@
         <strong>Clave catastral:</strong> {{ $predio->cc_estado }}-{{ $predio->cc_region_catastral }}-{{ $predio->cc_municipio }}-{{ $predio->cc_zona_catastral }}-{{ $predio->cc_sector }}-{{ $predio->cc_manzana }}-{{ $predio->cc_predio }}-{{ $predio->cc_edificio }}-{{ $predio->cc_departamento }};
     @endif
 
-    <strong>Superficie de terreno:</strong> @if($predio->unidad_area == 'Hectareas') {{ $predio->superficie_terreno_formateada }} @else {{ $predio->superficie_terreno }} @endif {{ $predio->unidad_area }} <strong>Superficie de construcción:</strong> {{ $predio->superficie_construccion }} {{ $predio->unidad_area }} <strong>monto de la transacción:</strong> ${{ number_format($predio->monto_transaccion, 2) }} {{ $predio->divisa }};
+    <strong>Superficie de terreno:</strong> @if($predio->unidad_area == 'Hectareas') {{ $predio->superficie_terreno_formateada }} @else {{ $predio->superficie_terreno }} @endif {{ $predio->unidad_area }} <strong>Superficie de construcción:</strong> {{ $predio->superficie_construccion }} Metros cuadrados <strong>monto de la transacción:</strong> ${{ number_format($predio->monto_transaccion, 2) }} {{ $predio->divisa }};
 
     @if ($predio->curt)
         <strong>curt:</strong> {{ $predio->curt }};
@@ -24,11 +24,11 @@
     @endif
 
     @if ($predio->area_comun_terreno)
-        <strong>área de terreno común:</strong> {{ $predio->area_comun_terreno }} {{ $predio->unidad_area }};
+        <strong>área de terreno común:</strong> {{ $predio->area_comun_terreno }} Metros cuadrados;
     @endif
 
     @if ($predio->area_comun_construccion)
-        <strong>área de construcción común:</strong> {{ $predio->area_comun_construccion }} {{ $predio->unidad_area }};
+        <strong>área de construcción común:</strong> {{ $predio->area_comun_construccion }} Metros cuadrados;
     @endif
 
     @if ($predio->valor_terreno_comun)

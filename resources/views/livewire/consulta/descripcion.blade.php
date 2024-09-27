@@ -22,7 +22,7 @@
 
         <strong>Superficie de terreno</strong>
 
-        <p>{{ number_format($folioReal->predio->superficie_terreno, 2) }} {{ $folioReal->predio->unidad_area }}</p>
+        <p>@if($predio->unidad_area == 'Hectareas') {{ $predio->superficie_terreno_formateada }} @else {{ $predio->superficie_terreno }} @endif {{ $folioReal->predio->unidad_area }}</p>
 
     </div>
 
@@ -30,7 +30,7 @@
 
         <strong>Superficie de construcción</strong>
 
-        <p>{{ number_format($folioReal->predio->superficie_construccion, 2) }} {{ $folioReal->predio->unidad_area }}</p>
+        <p>{{ number_format($folioReal->predio->superficie_construccion, 2) }} Metros cuadrados</p>
 
     </div>
 
@@ -60,7 +60,7 @@
 
             <strong>Superficie judicial</strong>
 
-            <p>{{ number_format($folioReal->predio->superficie_judicial, 2) }} {{ $folioReal->predio->unidad_area }}</p>
+            <p>@if($predio->unidad_area == 'Hectareas') {{ $predio->superficie_judicial_formateada }} @else {{ $predio->superficie_judicial }} @endif {{ $folioReal->predio->unidad_area }}</p>
 
         </div>
 
@@ -72,7 +72,7 @@
 
             <strong>Superficie notarial</strong>
 
-            <p>{{ number_format($folioReal->predio->superficie_notarial, 2) }} {{ $folioReal->predio->unidad_area }}</p>
+            <p>@if($predio->unidad_area == 'Hectareas') {{ $predio->superficie_notarial_formateada }} @else {{ $predio->superficie_notarial }} @endif {{ $folioReal->predio->unidad_area }}</p>
 
         </div>
 
