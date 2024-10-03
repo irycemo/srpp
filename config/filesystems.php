@@ -72,6 +72,14 @@ return [
             'throw' => false,
         ],
 
+        'efirmas' => [
+            'driver' => 'local',
+            'root' => storage_path('app/efirmas'),
+            'url' => env('APP_URL').'/efirmas',
+            'visibility' => 'public',
+            'throw' => false,
+        ],
+
     ],
 
     /*
@@ -89,6 +97,7 @@ return [
         public_path('storage') => storage_path('app/public'),
         public_path('caratulas') => storage_path('app/caratulas'),
         public_path('documento_entrada') => storage_path('app/documento_entrada'),
+        public_path('efirmas') => storage_path('app/efirmas'),
     ],
 
 ];

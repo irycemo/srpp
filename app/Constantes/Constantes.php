@@ -22,7 +22,8 @@ class Constantes{
         'Propiedades',
         'Folios reales',
         'Movimientos Registrales',
-        'Personas morales'
+        'Personas morales',
+        'Efirmas'
     ];
 
     /* USUARIOS */

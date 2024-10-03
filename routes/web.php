@@ -1,6 +1,7 @@
 <?php
 
 use App\Livewire\Admin\Roles;
+use App\Livewire\Admin\Efirmas;
 use App\Livewire\Admin\Ranchos;
 use App\Livewire\Varios\Varios;
 use App\Livewire\Admin\Permisos;
@@ -11,6 +12,7 @@ use App\Livewire\Admin\Tenencias;
 use App\Livewire\Admin\Municipios;
 use App\Livewire\Admin\Propiedades;
 use App\Livewire\Consulta\Consulta;
+use App\Livewire\Admin\FoliosReales;
 use App\Livewire\Varios\VariosIndex;
 use App\Livewire\PaseFolio\PaseFolio;
 use Illuminate\Support\Facades\Route;
@@ -20,8 +22,10 @@ use App\Http\Controllers\ManualController;
 use App\Livewire\Gravamenes\GravamenIndex;
 use App\Livewire\Cancelaciones\Cancelacion;
 use App\Livewire\Certificaciones\Consultas;
+use App\Livewire\Varios\PersonaMoral\Index;
 use App\Livewire\Sentencias\SentenciasIndex;
 use App\Http\Controllers\DashboardController;
+use App\Livewire\Admin\MovimientosRegistrales;
 use App\Http\Controllers\SetPasswordController;
 use App\Livewire\Certificaciones\CopiasSimples;
 use App\Livewire\Cancelaciones\CancelacionIndex;
@@ -43,9 +47,6 @@ use App\Livewire\Inscripciones\Propiedad\PropiedadInscripcion;
 use App\Http\Controllers\InscripcionesPropiedad\TraslativoController;
 use App\Http\Controllers\Certificaciones\CertificadoGravamenController;
 use App\Http\Controllers\Certificaciones\CertificadoPropiedadController;
-use App\Livewire\Admin\FoliosReales;
-use App\Livewire\Admin\MovimientosRegistrales;
-use App\Livewire\Varios\PersonaMoral\Index;
 
 /*
 |--------------------------------------------------------------------------
@@ -72,6 +73,8 @@ Route::group(['middleware' => ['auth', 'esta.activo']], function(){
     Route::get('permisos', Permisos::class)->middleware('permission:Lista de permisos')->name('permisos');
 
     Route::get('usuarios', Usuarios::class)->middleware('permission:Lista de usuarios')->name('usuarios');
+
+    Route::get('efirmas', Efirmas::class)->middleware('permission:Lista de efirmas')->name('efirmas');
 
     Route::get('folios_reales', FoliosReales::class)->middleware('permission:Lista de folios reales')->name('folios_reales');
 

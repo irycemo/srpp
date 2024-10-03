@@ -19,6 +19,7 @@
         "opcodesio/log-viewer": "^3.1",
         "orangehill/iseed": "^3.0",
         "owen-it/laravel-auditing": "^13.5",
+        "phpcfdi/credentials": "^1.2",
         "rap2hpoutre/laravel-log-viewer": "^2.4",
         "spatie/laravel-permission": "^5.11",
         "wire-elements/modal": "^2.0"
