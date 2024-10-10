@@ -330,6 +330,33 @@ class PaseFolio extends Component
                                                     })
                                                     ->orderBy($this->sort, $this->direction)
                                                     ->paginate($this->pagination);
+        }else{
+
+            $movimientos = MovimientoRegistral::with('actualizadoPor', 'folioReal', 'asignadoA')
+                                                    ->where('folio', 1)
+                                                    ->where('estado', 'nuevo')
+                                                    ->where(function($q){
+                                                        $q->whereNull('folio_real')
+                                                            ->orWhereHas('folioReal', function($q){
+                                                                $q->whereIn('estado', ['nuevo', 'captura']);
+                                                            });
+                                                    })
+                                                    ->where(function($q){
+                                                        $q->where('tramite', 'LIKE', '%' . $this->search . '%')
+                                                            ->orWhere('usuario', 'LIKE', '%' . $this->search . '%')
+                                                            ->orWhere('tomo', 'LIKE', '%' . $this->search . '%')
+                                                            ->orWhere('registro', 'LIKE', '%' . $this->search . '%');
+                                                    })
+                                                    ->when(auth()->user()->ubicacion == 'Regional 4', function($q){
+                                                        $q->where('distrito', 2);
+                                                    })
+                                                    ->when(auth()->user()->ubicacion != 'Regional 4', function($q){
+                                                        $q->where('distrito', '!=', 2);
+                                                    })
+                                                    ->where('usuario_asignado', auth()->user()->id)
+                                                    ->orderBy($this->sort, $this->direction)
+                                                    ->paginate($this->pagination);
+
         }
 
         return view('livewire.pase-folio.pase-folio', compact('movimientos'))->extends('layouts.admin');
