@@ -2,12 +2,12 @@
 
 namespace App\Traits\Inscripciones;
 
-use App\Models\File;
 use Barryvdh\DomPDF\Facade\Pdf;
 use Illuminate\Support\Facades\DB;
 use App\Models\MovimientoRegistral;
 use Illuminate\Support\Facades\Log;
 use App\Http\Services\SistemaTramitesService;
+use App\Http\Controllers\InscripcionesPropiedad\PropiedadController;
 
 trait InscripcionesIndex{
 
@@ -213,34 +213,46 @@ trait InscripcionesIndex{
 
         }
 
-        if($movimientoRegistral->inscripcionPropiedad){
+        try {
 
-            $this->dispatch('imprimir_documento', ['caratula' => $movimientoRegistral->inscripcionPropiedad->id]);
+            if($movimientoRegistral->inscripcionPropiedad){
 
-        }
+                $pdf = (new PropiedadController())->reimprimir($movimientoRegistral->firmaElectronica);
 
-        if($movimientoRegistral->gravamen){
+            }
 
-            $this->dispatch('imprimir_documento', ['caratula' => $movimientoRegistral->gravamen->id]);
+            if($movimientoRegistral->gravamen){
 
-        }
+                $this->dispatch('imprimir_documento', ['caratula' => $movimientoRegistral->gravamen->id]);
 
-        if($movimientoRegistral->vario){
+            }
 
-            $this->dispatch('imprimir_documento', ['caratula' => $movimientoRegistral->vario->id]);
+            if($movimientoRegistral->vario){
 
-        }
+                $this->dispatch('imprimir_documento', ['caratula' => $movimientoRegistral->vario->id]);
 
-        if($movimientoRegistral->cancelacion){
+            }
 
-            $this->dispatch('imprimir_documento', ['caratula' => $movimientoRegistral->cancelacion->id]);
+            if($movimientoRegistral->cancelacion){
 
-        }
+                $this->dispatch('imprimir_documento', ['caratula' => $movimientoRegistral->cancelacion->id]);
 
-        if($movimientoRegistral->sentencia){
+            }
 
-            $this->dispatch('imprimir_documento', ['caratula' => $movimientoRegistral->sentencia->id]);
+            if($movimientoRegistral->sentencia){
 
+                $this->dispatch('imprimir_documento', ['caratula' => $movimientoRegistral->sentencia->id]);
+
+            }
+
+            return response()->streamDownload(
+                fn () => print($pdf->output()),
+                'documento.pdf'
+            );
+
+        } catch (\Throwable $th) {
+            Log::error("Error al reimiprimir caratula de inscripción por el usuario: (id: " . auth()->user()->id . ") " . auth()->user()->name . ". " . $th);
+            $this->dispatch('mostrarMensaje', ['error', "Ha ocurrido un error."]);
         }
 
     }
@@ -305,55 +317,9 @@ trait InscripcionesIndex{
 
     public function finalizar(){
 
-        $this->validate(['documento' => 'required']);
-
         try {
 
             DB::transaction(function (){
-
-                if(env('LOCAL') == "0"){
-
-                    $pdf = $this->documento->store('srpp/caratulas', 's3');
-
-                    File::create([
-                        'fileable_id' => $this->modelo_editar->id,
-                        'fileable_type' => 'App\Models\MovimientoRegistral',
-                        'descripcion' => 'caratula_s3',
-                        'url' => $pdf
-                    ]);
-
-                }elseif(env('LOCAL') == "1"){
-
-                    $pdf = $this->documento->store('/', 'caratulas');
-
-                    File::create([
-                        'fileable_id' => $this->modelo_editar->id,
-                        'fileable_type' => 'App\Models\MovimientoRegistral',
-                        'descripcion' => 'caratula',
-                        'url' => $pdf
-                    ]);
-
-                }elseif(env('LOCAL') == "2"){
-
-                    $pdf = $this->documento->store('srpp/caratulas', 's3');
-
-                    File::create([
-                        'fileable_id' => $this->modelo_editar->id,
-                        'fileable_type' => 'App\Models\MovimientoRegistral',
-                        'descripcion' => 'caratula_s3',
-                        'url' => $pdf
-                    ]);
-
-                    $pdf = $this->documento->store('/', 'caratulas');
-
-                    File::create([
-                        'fileable_id' => $this->modelo_editar->id,
-                        'fileable_type' => 'App\Models\MovimientoRegistral',
-                        'descripcion' => 'caratula',
-                        'url' => $pdf
-                    ]);
-
-                }
 
                 $this->modelo_editar->actualizado_por = auth()->user()->id;
 

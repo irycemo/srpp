@@ -243,11 +243,11 @@
 
                     @endif
 
-                    @if($gravamen->movimientoRegistral->caratula())
-
-                        <x-link-blue target="_blank" href="{{ $gravamen->movimientoRegistral->caratula() }}">Caratula</x-link-blue>
-
-                    @endif
+                    @foreach ($gravamen->movimientoRegistral->caratula as $image)
+                        <a href="{{ Storage::disk('caratulas')->url($image->url) }}" data-lightbox="imagen" data-title="Caratula">
+                            <img class="h-20" src="{{ Storage::disk('caratulas')->url($image->url) }}" alt="Caratula">
+                        </a>
+                    @endforeach
 
                 </div>
 

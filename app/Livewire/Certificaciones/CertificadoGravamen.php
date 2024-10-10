@@ -9,11 +9,13 @@ use App\Models\Gravamen;
 use Livewire\WithPagination;
 use App\Models\Certificacion;
 use Livewire\WithFileUploads;
+use Barryvdh\DomPDF\Facade\Pdf;
 use App\Traits\ComponentesTrait;
 use Illuminate\Support\Facades\DB;
 use App\Models\MovimientoRegistral;
 use Illuminate\Support\Facades\Log;
 use App\Http\Services\SistemaTramitesService;
+use App\Traits\QrTrait;
 
 class CertificadoGravamen extends Component
 {
@@ -21,6 +23,7 @@ class CertificadoGravamen extends Component
     use WithPagination;
     use WithFileUploads;
     use ComponentesTrait;
+    use QrTrait;
 
     public Certificacion $modelo_editar;
 
@@ -340,6 +343,51 @@ class CertificadoGravamen extends Component
 
     }
 
+    public function reimprimir(MovimientoRegistral $movimientoRegistral){
+
+        try {
+
+            $movimientoRegistral->certificacion->update(['reimpreso_en' => now()]);
+
+            $firmaElectronica = $movimientoRegistral->firmaElectronica;
+
+            $objeto = json_decode($firmaElectronica->cadena_original);
+
+            $pdf = Pdf::loadView('certificaciones.certificadoGravamen', [
+                'predio' => $objeto->predio,
+                'director' => $objeto->director,
+                'gravamenes' => $objeto->gravamenes,
+                'folioReal' => $objeto->folioReal,
+                'aviso' => $objeto->aviso,
+                'datos_control' => $objeto->datos_control,
+                'firma_electronica' => false,
+                'qr'=> $this->generadorQr($firmaElectronica->uuid)
+            ]);
+
+            $pdf->render();
+
+            $dom_pdf = $pdf->getDomPDF();
+
+            $canvas = $dom_pdf->get_canvas();
+
+            $canvas->page_text(480, 745, "Página: {PAGE_NUM} de {PAGE_COUNT}", null, 9, array(1,1,1));
+
+            $canvas->page_text(35, 745, $movimientoRegistral->folioReal->folio . '-' .$movimientoRegistral->folio, null, 9, array(1, 1, 1));
+
+            return response()->streamDownload(
+                fn () => print($pdf->output()),
+                'documento.pdf'
+            );
+
+        } catch (\Throwable $th) {
+
+            Log::error("Error al reimiprimir certificado de gravamen por el usuario: (id: " . auth()->user()->id . ") " . auth()->user()->name . ". " . $th);
+            $this->dispatch('mostrarMensaje', ['error', "Ha ocurrido un error."]);
+
+        }
+
+    }
+
     public function render()
     {
 
@@ -414,7 +462,7 @@ class CertificadoGravamen extends Component
                                                 ->orderBy($this->sort, $this->direction)
                                                 ->paginate($this->pagination);
 
-        }elseif(auth()->user()->hasRole(['Jefe de departamento'])){
+        }elseif(auth()->user()->hasRole(['Jefe de departamento certificaciones'])){
 
             $certificados = MovimientoRegistral::with('asignadoA', 'supervisor', 'actualizadoPor', 'certificacion.actualizadoPor', 'folioReal:id,folio')
                                                 ->whereHas('folioReal', function($q){

@@ -12,6 +12,7 @@ use App\Models\Propiedad;
 use App\Models\Colindancia;
 use Livewire\WithFileUploads;
 use App\Constantes\Constantes;
+use App\Http\Controllers\InscripcionesPropiedad\PropiedadController;
 use Exception;
 use Illuminate\Validation\Rule;
 use Illuminate\Support\Facades\DB;
@@ -1007,7 +1008,8 @@ class PropiedadInscripcion extends Component
 
             DB::transaction(function () {
 
-                $this->inscripcion->movimientoRegistral->update(['estado' => 'captura']);
+                if($this->inscripcion->movimientoRegistral->estado != 'correccion')
+                    $this->inscripcion->movimientoRegistral->update(['estado' => 'captura']);
 
                 $this->inscripcion->save();
 
@@ -1151,6 +1153,8 @@ class PropiedadInscripcion extends Component
                 }
 
                 $this->inscripcion->movimientoRegistral->update(['estado' => 'elaborado']);
+
+                (new PropiedadController())->caratula($this->inscripcion);
 
             });
 
@@ -1452,14 +1456,14 @@ class PropiedadInscripcion extends Component
 
     public function borrarColindancia($index){
 
-        $this->authorize('update',  $this->sentencia->movimientoRegistral);
+        $this->authorize('update',  $this->inscripcion->movimientoRegistral);
 
         try {
 
             $this->predio->colindancias()->where('id', $this->medidas[$index]['id'])->delete();
 
         } catch (\Throwable $th) {
-            Log::error("Error al borrar colindancia en sentencia por el usuario: (id: " . auth()->user()->id . ") " . auth()->user()->name . ". " . $th);
+            Log::error("Error al borrar colindancia en inscripcion de propipedad por el usuario: (id: " . auth()->user()->id . ") " . auth()->user()->name . ". " . $th);
             $this->dispatch('mostrarMensaje', ['error', "Hubo un error."]);
         }
 
@@ -1487,49 +1491,14 @@ class PropiedadInscripcion extends Component
 
             DB::transaction(function (){
 
-                if(env('LOCAL') == "0"){
+                $pdf = $this->documento->store('/', 'documento_entrada');
 
-                    $pdf = $this->documento->store('srpp/documento_entrada', 's3');
-
-                    File::create([
-                        'fileable_id' => $this->inscripcion->movimientoRegistral->id,
-                        'fileable_type' => 'App\Models\MovimientoRegistral',
-                        'descripcion' => 'documento_entrada_s3',
-                        'url' => $pdf
-                    ]);
-
-                }elseif(env('LOCAL') == "1"){
-
-                    $pdf = $this->documento->store('/', 'documento_entrada');
-
-                    File::create([
-                        'fileable_id' => $this->inscripcion->movimientoRegistral->id,
-                        'fileable_type' => 'App\Models\MovimientoRegistral',
-                        'descripcion' => 'documento_entrada',
-                        'url' => $pdf
-                    ]);
-
-                }elseif(env('LOCAL') == "2"){
-
-                    $pdf = $this->documento->store('srpp/documento_entrada', 's3');
-
-                    File::create([
-                        'fileable_id' => $this->inscripcion->movimientoRegistral->id,
-                        'fileable_type' => 'App\Models\MovimientoRegistral',
-                        'descripcion' => 'documento_entrada_s3',
-                        'url' => $pdf
-                    ]);
-
-                    $pdf = $this->documento->store('/', 'documento_entrada');
-
-                    File::create([
-                        'fileable_id' => $this->inscripcion->movimientoRegistral->id,
-                        'fileable_type' => 'App\Models\MovimientoRegistral',
-                        'descripcion' => 'documento_entrada',
-                        'url' => $pdf
-                    ]);
-
-                }
+                File::create([
+                    'fileable_id' => $this->inscripcion->movimientoRegistral->id,
+                    'fileable_type' => 'App\Models\MovimientoRegistral',
+                    'descripcion' => 'documento_entrada',
+                    'url' => $pdf
+                ]);
 
                 $this->modalDocumento = false;
 
@@ -1628,7 +1597,7 @@ class PropiedadInscripcion extends Component
         if(!$director) abort(500, message:"Es necesario registrar al director.");
 
         $jefe_departamento = User::where('status', 'activo')->whereHas('roles', function($q){
-            $q->where('name', 'Jefe de departamento')->where('area', 'Departamento de Registro de Inscripciones');
+            $q->where('name', 'Jefe de departamento inscripciones');
         })->first();
 
         if(!$jefe_departamento) abort(500, message:"Es necesario registrar al jefe de Departamento de Registro de Inscripciones.");

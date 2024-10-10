@@ -44,7 +44,6 @@ use App\Livewire\Certificaciones\ConsultasCertificaciones;
 use App\Livewire\Certificaciones\CertificadoPropiedadIndex;
 use App\Http\Controllers\Cancelaciones\CancelacionController;
 use App\Livewire\Inscripciones\Propiedad\PropiedadInscripcion;
-use App\Http\Controllers\InscripcionesPropiedad\TraslativoController;
 use App\Http\Controllers\Certificaciones\CertificadoGravamenController;
 use App\Http\Controllers\Certificaciones\CertificadoPropiedadController;
 
@@ -74,7 +73,7 @@ Route::group(['middleware' => ['auth', 'esta.activo']], function(){
 
     Route::get('usuarios', Usuarios::class)->middleware('permission:Lista de usuarios')->name('usuarios');
 
-    Route::get('efirmas', Efirmas::class)->middleware('permission:Lista de efirmas')->name('efirmas');
+    Route::get('e_firmas', Efirmas::class)->middleware('permission:Lista de efirmas')->name('e_firmas');
 
     Route::get('folios_reales', FoliosReales::class)->middleware('permission:Lista de folios reales')->name('folios_reales');
 
@@ -134,8 +133,6 @@ Route::group(['middleware' => ['auth', 'esta.activo']], function(){
     /* Propiedad */
     Route::get('propiedad', PropiedadIndex::class)->middleware('permission:Propiedad')->name('propiedad');
     Route::get('propiedad/{propiedad}', PropiedadInscripcion::class)->middleware('permission:Propiedad inscripción')->name('propiedad.inscripcion');
-    Route::get('boleta_presentacion/{propiedad}', [TraslativoController::class, 'boleta_presentacion'])->middleware('permission:Propiedad inscripción')->name('propiedad.inscripcion.boleta_presentacion');
-    Route::get('inscripcion_propiedad_pdf/{propiedad}', [TraslativoController::class, 'acto'])->middleware('permission:Propiedad inscripción')->name('propiedad.inscripcion.acto');
 
     /* Gravamen */
     Route::get('gravamen', GravamenIndex::class)->middleware('permission:Gravamen')->name('gravamen');

@@ -2,38 +2,89 @@
 
 namespace App\Traits\Inscripciones;
 
+use Carbon\Carbon;
 use App\Models\Vario;
 use App\Models\Predio;
+use App\Traits\QrTrait;
 use App\Models\Gravamen;
 use App\Models\FolioReal;
 use App\Models\Propiedad;
 use App\Models\Sentencia;
+use App\Models\Cancelacion;
 use App\Models\Certificacion;
 use App\Models\MovimientoRegistral;
+use Illuminate\Support\Facades\Storage;
 
 trait FirmaElectronicaTrait{
 
+    use QrTrait;
 
-    public function folioRealArray(FolioReal $folioReal):object
+    public function folioReal(FolioReal $folioReal):object
     {
+
+        $folioReal->load(
+            'cancelaciones.movimientoRegistral',
+            'cancelaciones.gravamenCancelado',
+            'gravamenes.movimientoRegistral',
+            'gravamenes.deudores',
+            'gravamenes.acreedores'
+        );
 
         $gravamenes = collect();
 
-        if($folioReal->movimientosRegistrales->count() > 1 && $folioReal->gravamenes->count() >= 1){
+        foreach ($folioReal->gravamenes as $gravamen) {
 
-            foreach ($folioReal->gravamenes as $gravamen) {
+            if($gravamen->movimientoRegistral->folio == 1) continue;
 
-                if($gravamen->movimientoRegistral->folio == 1) continue;
+            $item = $this->gravamen($gravamen);
 
-                $gravamen = $this->gravamen($gravamen);
+            $gravamenes->push($item);
 
-                $gravamen->movimiento_folio = $gravamen->movimientoRegistral->folio;
-                $gravamen->tomo = $gravamen->movimientoRegistral->tomo_gravamen;
-                $gravamen->registro = $gravamen->movimientoRegistral->registro_gravamen;
+        }
 
-                $gravamenes->push($gravamen);
+        $cancelaciones = collect();
 
-            }
+        foreach ($folioReal->cancelaciones as $cancelacion) {
+
+            if($cancelacion->movimientoRegistral->folio == 1) continue;
+
+            $item = $this->cancelacion($cancelacion);
+
+            $cancelaciones->push($item);
+
+        }
+
+        $antecedentes = collect();
+
+        foreach ($folioReal->antecedentes as $antecedente) {
+
+            $item = (object)[];
+
+            $item->tomo_antecedente = $antecedente->tomo_antecedente;
+            $item->registro_antecedente = $antecedente->registro_antecedente;
+            $item->numero_propiedad_antecedente = $antecedente->numero_propiedad_antecedente;
+            $item->distrito_antecedente = $antecedente->distrito_antecedente;
+            $item->seccion_antecedente = $antecedente->seccion_antecedente;
+
+            $antecedentes->push($item);
+
+        }
+
+        $escritura = (object)[];
+
+        if($folioReal->predio->escritura){
+
+            $escritura->numero = $folioReal->predio->escritura->numero;
+            $escritura->fecha_inscripcion = Carbon::parse($folioReal->predio->escritura->fecha_inscripcion)->format('d/m/Y');
+            $escritura->fecha_escritura = Carbon::parse($folioReal->predio->escritura->fecha_escritura)->format('d/m/Y');
+            $escritura->numero_hojas = $folioReal->predio->escritura->numero_hojas;
+            $escritura->numero_paginas = $folioReal->predio->escritura->numero_paginas;
+            $escritura->notaria = $folioReal->predio->escritura->notaria;
+            $escritura->nombre_notario = $folioReal->predio->escritura->nombre_notario;
+            $escritura->estado_notario = $folioReal->predio->escritura->estado_notario;
+            $escritura->comentario = $folioReal->predio->escritura->comentario;
+            $escritura->acto_contenido_antecedente = $folioReal->predio->escritura->acto_contenido_antecedente;
+            $escritura->acto_contenido_antecedente = $folioReal->predio->escritura->acto_contenido_antecedente;
 
         }
 
@@ -55,13 +106,17 @@ trait FirmaElectronicaTrait{
         $object->autoridad_cargo = $folioReal->autoridad_cargo;
         $object->autoridad_nombre = $folioReal->autoridad_nombre;
         $object->autoridad_numero = $folioReal->autoridad_numero;
-        $object->fecha_emision = $folioReal->fecha_emision;
-        $object->fecha_inscripcion = $folioReal->fecha_inscripcion;
+        $object->fecha_emision = Carbon::parse($folioReal->fecha_emision)->format('d/m/Y');
+        $object->fecha_inscripcion = Carbon::parse($folioReal->fecha_inscripcion)->format('d/m/Y');
         $object->procedencia = $folioReal->procedencia;
         $object->acto_contenido_antecedente = $folioReal->acto_contenido_antecedente;
         $object->observaciones_antecedente = $folioReal->observaciones_antecedente;
         $object->movimientosRegistrales = $folioReal->movimientosRegistrales->count();
         $object->gravamenes = $gravamenes;
+        $object->antecedentes = $antecedentes;
+        $object->escritura = $escritura;
+        $object->cancelaciones = $cancelaciones;
+        $object->asignado_por = $folioReal->asignado_por;
 
         return $object;
 
@@ -94,9 +149,9 @@ trait FirmaElectronicaTrait{
             $item->ap_paterno = $propietario->persona->ap_paterno;
             $item->ap_materno = $propietario->persona->ap_materno;
             $item->razon_social = $propietario->persona->razon_social;
-            $item->porcentaje_propiedad = $propietario->persona->porcentaje_propiedad;
-            $item->procentaje_nuda = $propietario->persona->procentaje_nuda;
-            $item->porcentaje_usufructo = $propietario->persona->porcentaje_usufructo;
+            $item->porcentaje_propiedad = $propietario->porcentaje_propiedad;
+            $item->porcentaje_nuda = $propietario->porcentaje_nuda;
+            $item->porcentaje_usufructo = $propietario->porcentaje_usufructo;
 
             $propietarios->push($item);
 
@@ -107,10 +162,7 @@ trait FirmaElectronicaTrait{
         $object->id = $predio->id;
         $object->status = $predio->status;
         $object->curt = $predio->curt;
-        $object->superficie_terreno = $predio->superficie_terreno;
         $object->superficie_construccion = $predio->superficie_construccion;
-        $object->superficie_judicial = $predio->superficie_judicial;
-        $object->superficie_notarial = $predio->superficie_notarial;
         $object->area_comun_terreno = $predio->area_comun_terreno;
         $object->area_comun_construccion = $predio->area_comun_construccion;
         $object->valor_terreno_comun = $predio->valor_terreno_comun;
@@ -173,6 +225,21 @@ trait FirmaElectronicaTrait{
         $object->observaciones = $predio->observaciones;
         $object->colindancias = $colindancias;
         $object->propietarios = $propietarios;
+
+        if($predio->unidad_area == 'Hectareas'){
+
+            $object->superficie_terreno = $predio->superficie_terreno_formateada;
+            $object->superficie_judicial = $predio->superficie_judicial_formateada;
+            $object->superficie_notarial = $predio->superficie_notarial_formateada;
+
+        }else{
+
+            $object->superficie_terreno = $predio->superficie_terreno;
+            $object->superficie_judicial = $predio->superficie_judicial;
+            $object->superficie_notarial = $predio->superficie_notarial;
+
+        }
+
 
         return $object;
 
@@ -265,6 +332,30 @@ trait FirmaElectronicaTrait{
     public function propiedad(Propiedad $propiedad):object
     {
 
+        $transmitentes = collect();
+
+        foreach ($propiedad->transmitentes() as $transmitente) {
+
+            $item = (object)[];
+
+            $item->nombre = $transmitente->persona->nombre;
+            $item->ap_paterno = $transmitente->persona->ap_paterno;
+            $item->ap_materno = $transmitente->persona->ap_materno;
+            $item->razon_social = $transmitente->persona->razon_social;
+
+            if($transmitente->representadoPor){
+
+                $item->representado_por = $transmitente->representadoPor->persona->nombre . ' ' .
+                                            $transmitente->representadoPor->persona->ap_paterno . ' ' .
+                                            $transmitente->representadoPor->persona->ap_materno . ' ' .
+                                            $transmitente->representadoPor->persona->razon_social ;
+
+            }
+
+            $transmitentes->push($item);
+
+        }
+
         $object = (object)[];
 
         $object->id = $propiedad->id;
@@ -272,7 +363,14 @@ trait FirmaElectronicaTrait{
         $object->acto_contenido = $propiedad->acto_contenido;
         $object->numero_inmuebles = $propiedad->numero_inmuebles;
         $object->descripcion_acto = $propiedad->descripcion_acto;
-        $object->fecha_inscripcion = $propiedad->fecha_inscripcio;
+        $object->fecha_inscripcion = Carbon::parse($propiedad->fecha_inscripcion)->format('d/m/Y');
+        $object->tipo_documento = $propiedad->movimientoRegistral->tipo_documento;
+        $object->numero_documento = $propiedad->movimientoRegistral->numero_documento;
+        $object->procedencia = $propiedad->movimientoRegistral->procedencia;
+        $object->autoridad_cargo = $propiedad->movimientoRegistral->autoridad_cargo;
+        $object->autoridad_nombre = $propiedad->movimientoRegistral->autoridad_nombre;
+        $object->fecha_emision = Carbon::parse($propiedad->movimientoRegistral->fecha_emision)->format('d/m/Y');
+        $object->transmitentes = $transmitentes;
 
         return $object;
 
@@ -321,11 +419,17 @@ trait FirmaElectronicaTrait{
         $object->tipo = $gravamen->tipo;
         $object->valor_gravamen = $gravamen->valor_gravamen;
         $object->divisa = $gravamen->divisa;
-        $object->fecha_inscripcion = $gravamen->fecha_inscripcion;
-        $object->observaciones = $gravamen->observaciones;
+        $object->fecha_inscripcion = Carbon::parse($gravamen->fecha_inscripcion)->format('d/m/Y');
         $object->observaciones = $gravamen->observaciones;
         $object->deudores = $deudores;
         $object->acreedores = $acreedores;
+        $object->movimiento_folio = $gravamen->movimientoRegistral->folio;
+        $object->tomo = $gravamen->movimientoRegistral->tomo_gravamen;
+        $object->registro = $gravamen->movimientoRegistral->registro_gravamen;
+        $object->distrito = $gravamen->movimientoRegistral->distrito;
+        $object->tipo_documento = $gravamen->movimientoRegistral->tipo_documento;
+        $object->numero_documento = $gravamen->movimientoRegistral->numero_documento;
+        $object->procedencia = $gravamen->movimientoRegistral->procedencia;
 
         return $object;
 
@@ -358,8 +462,46 @@ trait FirmaElectronicaTrait{
         $object->estado = $vario->estado;
         $object->descripcion = $vario->descripcion;
         $object->fecha_inscripcion = $vario->fecha_inscripcion;
+        $object->movimiento_folio = $vario->movimientoRegistral->folio;
 
         return $object;
+
+    }
+
+    public function cancelacion(Cancelacion $cancelacion):object
+    {
+
+        $object = (object)[];
+
+        $object->id = $cancelacion->id;
+        $object->servicio = $cancelacion->servicio;
+        $object->acto_contenido = $cancelacion->acto_contenido;
+        $object->tipo = $cancelacion->tipo;
+        $object->estado = $cancelacion->estado;
+        $object->observaciones = $cancelacion->observaciones;
+        $object->fecha_inscripcion = $cancelacion->fecha_inscripcion;
+        $object->movimiento_folio = $cancelacion->movimientoRegistral->folio;
+        $object->gravamen = $cancelacion->gravamenCancelado->folio;
+
+        return $object;
+
+    }
+
+    public function resetCaratula($id){
+
+        $movimiento = MovimientoRegistral::with('archivos')->find($id);
+
+        foreach($movimiento->archivos as $archivo){
+
+            if($archivo->descripcion == 'caratula'){
+
+                Storage::disk('caratulas')->delete($archivo->url);
+
+            }
+
+        }
+
+        $movimiento->caratula()->delete();
 
     }
 

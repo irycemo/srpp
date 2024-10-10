@@ -8,10 +8,6 @@
 </head>
 <style>
 
-    /* @page {
-        margin: 0cm 0cm;
-    } */
-
     header{
         position: fixed;
         top: 0cm;
@@ -188,7 +184,7 @@
 
                 <p style="text-align: center"><strong>FOLIO REAL:</strong> {{ $folioReal->folio }}</p>
 
-                @if($folioReal->antecedentes->count())
+                @if(count($folioReal->antecedentes))
 
                     <p class="separador">Antecedentes</p>
 
@@ -245,7 +241,7 @@
                 @if(in_array($folioReal->tipo_documento, ['OFICIO', 'TÍTULO DE PROPIEDAD']))
 
                     <p class="parrafo">
-                        <strong>Tipo de documento: </strong> {{ $folioReal->tipo_documento }}; <strong>Número de documento: </strong> {{ $folioReal->numero_documento }}; <strong>Cargo de la autoridad: </strong> {{ $folioReal->autoridad_cargo }}; <strong>Nombre de la autoridad: </strong> {{ $folioReal->autoridad_nombre }}; <strong>Número de la autoridad: </strong> {{ $folioReal->autoridad_numero }}; <strong>Fecha de emisión: </strong> {{ Carbon\Carbon::parse($folioReal->fecha_emision)->format('d-m-Y') }}; <strong>Fecha de inscripción: </strong> {{ Carbon\Carbon::parse($folioReal->fecha_inscripcion)->format('d-m-Y') }}; <strong>Dependencia: </strong>{{ $folioReal->procedencia }}
+                        <strong>Tipo de documento: </strong> {{ $folioReal->tipo_documento }}; <strong>Número de documento: </strong> {{ $folioReal->numero_documento }}; <strong>Cargo de la autoridad: </strong> {{ $folioReal->autoridad_cargo }}; <strong>Nombre de la autoridad: </strong> {{ $folioReal->autoridad_nombre }}; <strong>Número de la autoridad: </strong> {{ $folioReal->autoridad_numero }}; <strong>Fecha de emisión: </strong> {{ $folioReal->fecha_emision }}; <strong>Fecha de inscripción: </strong> {{$folioReal->fecha_inscripcion }}; <strong>Dependencia: </strong>{{ $folioReal->procedencia }}
                     </p>
 
                     <p class="parrafo"><strong>Acto contenido:</strong> {{ $folioReal->acto_contenido_antecedente }}</p>
@@ -259,14 +255,14 @@
                 @else
 
                     <p class="parrafo">
-                        <strong>Tipo de documento: </strong> {{ $folioReal->tipo_documento }}; <strong>Número de escritura: </strong> {{ $folioReal->predio->escritura->numero }}; <strong>Número de notaria: </strong> {{ $folioReal->predio->escritura->notaria }}; <strong>Nombre del notario: </strong> {{ $folioReal->predio->escritura->nombre_notario }}; <strong>Estado del notario: </strong> {{ $folioReal->predio->escritura->estado_notario }}; <strong>Fecha de inscripción: </strong> {{ Carbon\Carbon::parse($folioReal->predio->escritura->fecha_inscripcion)->format('d-m-Y') }}; <strong>Fecha de la escritura: </strong> {{ Carbon\Carbon::parse($folioReal->predio->escritura->fecha_escritura)->format('d-m-Y') }}; <strong>Número de hojas: </strong>{{ $folioReal->predio->escritura->numero_hojas }}; <strong>Número de paginas: </strong>{{ $folioReal->predio->escritura->numero_paginas }}
+                        <strong>Tipo de documento: </strong> {{ $folioReal->tipo_documento }}; <strong>Número de escritura: </strong> {{ $folioReal->escritura->numero }}; <strong>Número de notaria: </strong> {{ $folioReal->escritura->notaria }}; <strong>Nombre del notario: </strong> {{ $folioReal->escritura->nombre_notario }}; <strong>Estado del notario: </strong> {{ $folioReal->escritura->estado_notario }}; <strong>Fecha de inscripción: </strong> {{ $folioReal->escritura->fecha_inscripcion }}; <strong>Fecha de la escritura: </strong> {{ $folioReal->escritura->fecha_escritura }}; <strong>Número de hojas: </strong>{{ $folioReal->escritura->numero_hojas }}; <strong>Número de paginas: </strong>{{ $folioReal->escritura->numero_paginas }}
                     </p>
 
-                    <p class="parrafo"><strong>Acto contenido en el antecedente:</strong> {{ $folioReal->predio->escritura->acto_contenido_antecedente }}</p>
+                    <p class="parrafo"><strong>Acto contenido en el antecedente:</strong> {{ $folioReal->escritura->acto_contenido_antecedente }}</p>
 
-                    @if($folioReal->predio->escritura->comentario)
+                    @if($folioReal->escritura->comentario)
 
-                        <p class="parrafo"><strong>Observaciones en el antecedente:</strong> {{ $folioReal->predio->escritura->comentario }}</p>
+                        <p class="parrafo"><strong>Observaciones en el antecedente:</strong> {{ $folioReal->escritura->comentario }}</p>
 
                     @endif
 
@@ -274,7 +270,7 @@
 
                 @include('comun.caratulas.ubicacion_inmueble')
 
-                @if($predio->colindancias->count())
+                @if(count($predio->colindancias))
 
                     @include('comun.caratulas.colindancias')
 
@@ -284,23 +280,23 @@
 
                 @include('comun.caratulas.propietarios')
 
-                @if($folioReal->movimientosRegistrales->count() > 1)
+                @if($folioReal->movimientosRegistrales > 1)
 
                     <p class="separador" style="text-align: center">Movimientos registrales</p>
 
                     <div style="margin-left: 10px; margin-right: 10px;">
 
-                        @if($folioReal->gravamenes->count() >= 1)
+                        @if(count($folioReal->gravamenes) >= 1)
 
                             <p class="separador" style="text-align: center">Gravamenes</p>
 
                             @foreach ($folioReal->gravamenes as $gravamen)
 
-                                @if($gravamen->movimientoRegistral->folio == 1) @continue @endif
+                                @if($gravamen->movimiento_folio == 1) @continue @endif
 
                                 <p class="parrafo">
 
-                                    <p class="separador">gravamen ({{ $folioReal->folio }}-{{ $folioReal->movimientosRegistrales()->where('id', $gravamen->movimiento_registral_id)->first()->folio }})</p>
+                                    <p class="separador">gravamen ({{ $folioReal->folio }}-{{ $gravamen->movimiento_folio }})</p>
 
                                     <p class="parrafo">
                                         <strong>Fecha de inscripción: </strong> {{ Carbon\Carbon::parse($gravamen->fecha_inscripcion)->format('d/m/Y') }}. <strong>Valor del gravamen:</strong> ${{ number_format($gravamen->valor_gravamen, 2) }} {{ $gravamen->divisa }}.
@@ -311,11 +307,11 @@
                                     </p>
 
                                     <p class="parrafo">
-                                        <strong>Tipo / Número de documento: </strong> {{ $gravamen->movimientoRegistral->tipo_documento }}/{{ $gravamen->movimientoRegistral->numero_documento }}
+                                        <strong>Tipo / Número de documento: </strong> {{ $gravamen->tipo_documento }}/{{ $gravamen->numero_documento }}
                                     </p>
 
                                     <p class="parrafo">
-                                        <strong>Procedencia: </strong> {{ $gravamen->movimientoRegistral->procedencia }}
+                                        <strong>Procedencia: </strong> {{ $gravamen->procedencia }}
                                     </p>
 
                                     <p class="parrafo">
@@ -330,7 +326,7 @@
                                         <strong>deudores: </strong>
                                         @foreach ($gravamen->deudores as $deudor)
 
-                                            {{ $deudor->persona->nombre }} {{ $deudor->persona->ap_paterno }} {{ $deudor->persona->ap_materno }} {{ $deudor->persona->razon_social }}@if(!$loop->last), @endif
+                                            {{ $deudor->nombre }} {{ $deudor->ap_paterno }} {{ $deudor->ap_materno }} {{ $deudor->razon_social }}@if(!$loop->last), @endif
 
                                         @endforeach
                                     </p>
@@ -339,7 +335,7 @@
                                         <strong>acreedores: </strong>
                                         @foreach ($gravamen->acreedores as $acreedor)
 
-                                            {{ $acreedor->persona->nombre }} {{ $acreedor->persona->ap_paterno }} {{ $acreedor->persona->ap_materno }} {{ $acreedor->persona->razon_social }}@if(!$loop->last), @endif
+                                            {{ $acreedor->nombre }} {{ $acreedor->ap_paterno }} {{ $acreedor->ap_materno }} {{ $acreedor->razon_social }}@if(!$loop->last), @endif
 
                                         @endforeach
                                     </p>
@@ -350,7 +346,7 @@
 
                         @endif
 
-                        @if($folioReal->sentencias->count() >= 1)
+                        {{-- @if($folioReal->sentencias) >= 1)
 
                             <p class="separador" style="text-align: center">Sentencias</p>
 
@@ -376,7 +372,7 @@
 
                         @endif
 
-                        @if($folioReal->varios->count() >= 1)
+                        @if($folioReal->varios) >= 1)
 
                             <p class="separador" style="text-align: center">Varios</p>
 
@@ -400,22 +396,22 @@
 
                             @endforeach
 
-                        @endif
+                        @endif --}}
 
-                        @if($folioReal->cancelaciones->count() >= 1)
+                        @if(count($folioReal->cancelaciones) >= 1)
 
                             <p class="separador" style="text-align: center">Cancelaciones</p>
 
                             @foreach ($folioReal->cancelaciones as $cancelacion)
 
-                                @if($cancelacion->movimientoRegistral->folio == 1) @continue @endif
+                                @if($cancelacion->movimiento_folio == 1) @continue @endif
 
                                 <p class="parrafo">
 
-                                    <p class="separador">Cancelación ({{ $folioReal->folio }}-{{ $folioReal->movimientosRegistrales()->where('id', $cancelacion->movimiento_registral_id)->first()->folio }})</p>
+                                    <p class="separador">Cancelación ({{ $folioReal->folio }}-{{ $cancelacion->movimiento_folio }})</p>
 
                                     <p class="parrafo">
-                                        <strong>Gravamen cancelado:</strong> {{ $folioReal->folio }}-{{ $folioReal->movimientosRegistrales()->where('id', $cancelacion->gravamen)->first()->folio }}
+                                        <strong>Gravamen cancelado:</strong> {{ $folioReal->folio }}-{{ $cancelacion->gravamen }}
                                     </p>
 
                                     <p class="parrafo">
@@ -442,35 +438,50 @@
                         <strong>A T E N T A M E N T E</strong>
                     </p>
 
-                    @if($distrito == '02 Uruapan' )
-                        @if($firma)
-                            <p><img style="max-height: 80px;" src="{{ public_path('storage/img/firma_director_uruapan.png') }}" alt=""></p>
+                    @if(!$firma_electronica)
+
+                        @if($distrito == '02 Uruapan' )
+                            <p style="margin-top: 80px;"></p>
+                            <p class="borde">Lic. SANDRO MEDINA MORALES </p>
+                            <p style="margin:0;">COORDINADOR REGIONAL 4 PURHÉPECHA (URUAPAN)</p>
                         @else
                             <p style="margin-top: 80px;"></p>
+                            <p class="borde" style="margin:0;">{{ $director }}</p>
+                            <p style="margin:0;">Director del registro público de la propiedad</p>
                         @endif
-                        <p class="borde">Lic. SANDRO MEDINA MORALES </p>
-                        <p style="margin:0;">COORDINADOR REGIONAL 4 PURHÉPECHA (URUAPAN)</p>
+
                     @else
-                        @if($firma)
-                            <p><img style="max-height: 80px;" src="{{ public_path('storage/img/firma_director.png') }}" alt=""></p>
-                        @else
-                            <p style="margin-top: 80px;"></p>
-                        @endif
-                        <p class="borde" style="margin:0;">{{ $director }}</p>
+
+                        <p style="margin:0;">{{ $director }}</p>
                         <p style="margin:0;">Director del registro público de la propiedad</p>
+                        <p style="text-align: center">Firma Electrónica:</p>
+                        <p class="parrafo" style="overflow-wrap: break-word;">{{ $firma_electronica }}</p>
+
                     @endif
 
                 </div>
 
                 <p class="separador">datos de control</p>
 
-                <div class="parrafo">
+                <table style="margin-top: 10px">
 
-                    <p><strong>Fecha de asignación de folio:</strong> {{ Carbon\Carbon::now()->locale('es')->translatedFormat('H:i:s \d\e\l l d \d\e F \d\e\l Y') }}.</p>
-                    <p><strong>Registrador:</strong> {{ auth()->user()->name }}.</p>
-                    <p><strong>número de control:</strong> {{ $folioReal->movimientosRegistrales->where('folio', 1)->first()->año }}-{{ $folioReal->movimientosRegistrales->where('folio', 1)->first()->tramite }}-{{ $folioReal->movimientosRegistrales->where('folio', 1)->first()->usuario }}.</p>
+                    <tbody>
+                        <tr>
+                            <td style="padding-right: 40px;">
 
-                </div>
+                                <img class="qr" src="{{ $qr }}" alt="QR">
+                            </td>
+                            <td style="padding-right: 40px;">
+
+                                <p><strong>folio Asignado por:</strong> {{ $folioReal->asignado_por }}.</p>
+                                <p><strong>Fecha de asignación de folio:</strong> {{ $datos_control->fecha_asignacion }}.</p>
+                                <p><strong>número de control:</strong> {{ $datos_control->numero_control }}.</p>
+
+                            </td>
+                        </tr>
+                    </tbody>
+
+                </table>
 
             </div>
 

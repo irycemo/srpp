@@ -58,7 +58,7 @@
 
                             @foreach ($areas as $unidad)
 
-                                <option value="{{ $unidad }}">{{ $unidad }}</option>
+                                <option value="{{ $unidad }}">@if($unidad == 'Metros cuadrados') M<sup>2</sup> @else Has.@endif</option>
 
                             @endforeach
 
@@ -78,7 +78,7 @@
 
                             @foreach ($areas as $unidad)
 
-                                <option value="{{ $unidad }}">{{ $unidad }}</option>
+                                <option value="{{ $unidad }}">@if($unidad == 'Metros cuadrados') M<sup>2</sup> @else Has.@endif</option>
 
                             @endforeach
 
@@ -88,7 +88,7 @@
 
                 </x-input-group>
 
-                <x-input-group for="monto_transaccion" label="Monto de la transacción" :error="$errors->first('monto_transaccion')" class="w-full relative">
+                <x-input-group for="monto_transaccion" label="Valor de la propiedad (Monto de la transacción)" :error="$errors->first('monto_transaccion')" class="w-full relative">
 
                     <x-input-text type="number" id="monto_transaccion" wire:model="monto_transaccion" />
 
@@ -136,7 +136,7 @@
 
                             @foreach ($areas as $unidad)
 
-                                <option value="{{ $unidad }}">{{ $unidad }}</option>
+                                <option value="{{ $unidad }}">@if($unidad == 'Metros cuadrados') M<sup>2</sup> @else Has.@endif</option>
 
                             @endforeach
 
@@ -156,7 +156,7 @@
 
                             @foreach ($areas as $unidad)
 
-                                <option value="{{ $unidad }}">{{ $unidad }}</option>
+                                <option value="{{ $unidad }}">@if($unidad == 'Metros cuadrados') M<sup>2</sup> @else Has.@endif</option>
 
                             @endforeach
 
@@ -176,7 +176,7 @@
 
                             @foreach ($areas as $unidad)
 
-                                <option value="{{ $unidad }}">{{ $unidad }}</option>
+                                <option value="{{ $unidad }}">@if($unidad == 'Metros cuadrados') M<sup>2</sup> @else Has.@endif</option>
 
                             @endforeach
 
@@ -196,7 +196,7 @@
 
                             @foreach ($areas as $unidad)
 
-                                <option value="{{ $unidad }}">{{ $unidad }}</option>
+                                <option value="{{ $unidad }}">@if($unidad == 'Metros cuadrados') M<sup>2</sup> @else Has.@endif</option>
 
                             @endforeach
 

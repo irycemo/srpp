@@ -22,7 +22,11 @@ class CertificadoPropiedadIndex extends Component
 
     public $modalFinalizar = false;
 
+    public $modalRechazar = false;
+
     public $actual;
+
+    public $observaciones;
 
     public function crearModeloVacio(){
         $this->modelo_editar = MovimientoRegistral::make();
@@ -162,6 +166,33 @@ class CertificadoPropiedadIndex extends Component
 
     }
 
+    public function abrirModalRechazar(MovimientoRegistral $modelo){
+
+        if(!auth()->user()->hasRole(['Certificador Juridico', 'Certificador Oficialia'])){
+
+            if($modelo->tipo_servicio == 'ordinario'){
+
+                if(!($this->calcularDiaElaboracion($modelo) <= now())){
+
+                    $this->dispatch('mostrarMensaje', ['error', "El trámite puede elaborarse apartir del " . $this->calcularDiaElaboracion($modelo)->format('d-m-Y')]);
+
+                    return;
+
+                }
+
+            }
+
+        }
+
+        $this->resetearTodo();
+            $this->modalRechazar = true;
+            $this->editar = true;
+
+        if($this->modelo_editar->isNot($modelo))
+            $this->modelo_editar = $modelo;
+
+    }
+
     public function finalizarMovimientoFolio(){
 
         try {
@@ -256,6 +287,58 @@ class CertificadoPropiedadIndex extends Component
 
     }
 
+    public function rechazar(){
+
+        if(!auth()->user()->hasRole(['Certificador Juridico', 'Certificador Oficialia'])){
+
+            if($this->modelo_editar->tipo_servicio == 'ordinario'){
+
+                if(!($this->calcularDiaElaboracion($this->modelo_editar) <= now())){
+
+                    $this->dispatch('mostrarMensaje', ['error', "El trámite puede elaborarse apartir del " . $this->calcularDiaElaboracion($this->modelo_editar)->format('d-m-Y')]);
+
+                    return;
+
+                }
+
+            }
+
+        }
+
+        $this->validate([
+            'observaciones' => 'required'
+        ]);
+
+        try {
+
+            DB::transaction(function (){
+
+                $observaciones = auth()->user()->name . ' rechaza el ' . now() . ', con motivo: ' . $this->observaciones ;
+
+                (new SistemaTramitesService())->rechazarTramite($this->modelo_editar->año, $this->modelo_editar->tramite, $this->modelo_editar->usuario, $observaciones);
+
+                $this->modelo_editar->update(['estado' => 'rechazado', 'actualizado_por' => auth()->user()->id]);
+
+                $this->modelo_editar->certificacion->observaciones = $this->modelo_editar->certificacion->observaciones . $observaciones;
+
+                $this->modelo_editar->certificacion->save();
+
+                $this->dispatch('mostrarMensaje', ['success', "El trámite se rechazó con éxito."]);
+
+                $this->resetearTodo();
+
+                $this->modalRechazar = false;
+
+            });
+
+        } catch (\Throwable $th) {
+
+            Log::error("Error al rechazar certificado de propiedad por el usuario: (id: " . auth()->user()->id . ") " . auth()->user()->name . ". " . $th);
+            $this->dispatch('mostrarMensaje', ['error', "Ha ocurrido un error."]);
+        }
+
+    }
+
     public function calcularDiaElaboracion($modelo){
 
         $diaElaboracion = $modelo->fecha_pago;
@@ -340,7 +423,7 @@ class CertificadoPropiedadIndex extends Component
                                                 ->orderBy($this->sort, $this->direction)
                                                 ->paginate($this->pagination);
 
-        }elseif(auth()->user()->hasRole(['Jefe de departamento'])){
+        }elseif(auth()->user()->hasRole(['Jefe de departamento certificaciones'])){
 
             $certificados = MovimientoRegistral::with('asignadoA', 'supervisor', 'actualizadoPor', 'certificacion.actualizadoPor', 'folioReal:id,folio')
                                                 ->where(function($q){

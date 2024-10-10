@@ -39,6 +39,7 @@ class UbicacionPredio extends Component
     public $ejido;
     public $parcela;
     public $solar;
+    public $zona_ubicacion;
     public $observaciones;
 
     public $tipos_asentamientos;
@@ -73,12 +74,13 @@ class UbicacionPredio extends Component
             'clave_edificio' => 'nullable',
             'departamento_edificio' => 'nullable',
             'municipio_ubicacion' => 'required',
-            'ciudad' => 'required|'. utf8_encode('regex:/^[áéíóúÁÉÍÓÚñÑa-zA-Z-0-9$#.() ]*$/'),
+            'ciudad' => 'nullable',
             'localidad_ubicacion' => 'nullable',
             'poblado' => 'nullable',
             'ejido' => 'nullable',
             'parcela' => 'nullable',
             'solar' => 'nullable',
+            'zona_ubicacion' => 'nullable',
         ];
 
     }
@@ -98,6 +100,7 @@ class UbicacionPredio extends Component
         'nombre_edificio' => 'nombre del edificio',
         'municipio_ubicacion' => 'municipio',
         'localidad_ubicacion' => 'localidad',
+        'zona_ubicacion' => 'zona'
     ];
 
     /* public function updatedCodigoPostal(){
@@ -140,6 +143,7 @@ class UbicacionPredio extends Component
         $this->numero_adicional_2 = $this->propiedad->numero_adicional_2;
         $this->numero_interior = $this->propiedad->numero_interior;
         $this->lote = $this->propiedad->lote;
+        $this->zona_ubicacion = $this->propiedad->zona_ubicacion;
         $this->manzana_ubicacion = $this->propiedad->manzana;
         $this->codigo_postal = $this->propiedad->codigo_postal;
         $this->lote_fraccionador = $this->propiedad->lote_fraccionador;
@@ -191,6 +195,7 @@ class UbicacionPredio extends Component
                         'numero_adicional_2' => $this->numero_adicional_2,
                         'numero_interior' => $this->numero_interior,
                         'lote' => $this->lote,
+                        'zona_ubicacion' => $this->zona_ubicacion,
                         'manzana' => $this->manzana_ubicacion,
                         'codigo_postal' => $this->codigo_postal,
                         'lote_fraccionador' => $this->lote_fraccionador,
@@ -222,6 +227,7 @@ class UbicacionPredio extends Component
                     'numero_adicional_2' => $this->numero_adicional_2,
                     'numero_interior' => $this->numero_interior,
                     'lote' => $this->lote,
+                    'zona_ubicacion' => $this->zona_ubicacion,
                     'manzana' => $this->manzana_ubicacion,
                     'codigo_postal' => $this->codigo_postal,
                     'lote_fraccionador' => $this->lote_fraccionador,

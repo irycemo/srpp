@@ -76,13 +76,13 @@ class Elaboracion extends Component
     protected function rules(){
         return [
             'tipo_documento' => 'required',
-            'autoridad_cargo' => Rule::requiredIf(in_array($this->tipo_documento, ['OFICIO', 'TÍTULO DE PROPIEDAD'])),
-            'autoridad_nombre' => Rule::requiredIf(in_array($this->tipo_documento, ['OFICIO', 'TÍTULO DE PROPIEDAD'])),
+            'autoridad_cargo' => Rule::requiredIf(in_array($this->tipo_documento, ['OFICIO', 'TÍTULO DE PROPIEDAD', 'RESOLUCIÓN JUDICIAL', 'ESCRITURA INSTITUCIONAL'])),
+            'autoridad_nombre' => Rule::requiredIf(in_array($this->tipo_documento, ['OFICIO', 'TÍTULO DE PROPIEDAD', 'RESOLUCIÓN JUDICIAL', 'ESCRITURA INSTITUCIONAL'])),
             'autoridad_numero' => 'nullable',
-            'numero_documento' => Rule::requiredIf(in_array($this->tipo_documento, ['OFICIO', 'TÍTULO DE PROPIEDAD'])),
-            'fecha_emision' => Rule::requiredIf(in_array($this->tipo_documento, ['OFICIO', 'TÍTULO DE PROPIEDAD'])),
-            'fecha_inscripcion' => Rule::requiredIf(in_array($this->tipo_documento, ['OFICIO', 'TÍTULO DE PROPIEDAD'])),
-            'procedencia' => Rule::requiredIf(in_array($this->tipo_documento, ['OFICIO', 'TÍTULO DE PROPIEDAD'])),
+            'numero_documento' => Rule::requiredIf(in_array($this->tipo_documento, ['OFICIO', 'TÍTULO DE PROPIEDAD', 'RESOLUCIÓN JUDICIAL', 'ESCRITURA INSTITUCIONAL'])),
+            'fecha_emision' => Rule::requiredIf(in_array($this->tipo_documento, ['OFICIO', 'TÍTULO DE PROPIEDAD', 'RESOLUCIÓN JUDICIAL', 'ESCRITURA INSTITUCIONAL'])),
+            'fecha_inscripcion' => Rule::requiredIf(in_array($this->tipo_documento, ['OFICIO', 'TÍTULO DE PROPIEDAD', 'RESOLUCIÓN JUDICIAL', 'ESCRITURA INSTITUCIONAL'])),
+            'procedencia' => Rule::requiredIf(in_array($this->tipo_documento, ['OFICIO', 'TÍTULO DE PROPIEDAD', 'RESOLUCIÓN JUDICIAL', 'ESCRITURA INSTITUCIONAL'])),
             'escritura_numero' => Rule::requiredIf(in_array($this->tipo_documento, ['ESCRITURA PÚBLICA', 'ESCRITURA PRIVADA'])),
             'escritura_fecha_inscripcion' => Rule::requiredIf(in_array($this->tipo_documento, ['ESCRITURA PÚBLICA', 'ESCRITURA PRIVADA'])),
             'escritura_fecha_escritura' => Rule::requiredIf(in_array($this->tipo_documento, ['ESCRITURA PÚBLICA', 'ESCRITURA PRIVADA'])),
@@ -421,7 +421,7 @@ class Elaboracion extends Component
 
         if($pp == 0){
 
-            if($pn < 99.9999){
+            if($pn < 99.99){
 
                 $this->dispatch('mostrarMensaje', ['error', "El porcentaje de nuda propiedad no es el 100%."]);
 
@@ -429,7 +429,7 @@ class Elaboracion extends Component
 
             }
 
-            if($pu < 99.9999){
+            if($pu < 99.99){
 
                 $this->dispatch('mostrarMensaje', ['error', "El porcentaje de usufructo no es el 100%."]);
 
@@ -440,7 +440,7 @@ class Elaboracion extends Component
         }else{
 
 
-            if(($pn + $pp) < 99.9999){
+            if(($pn + $pp) < 99.99){
 
                 $this->dispatch('mostrarMensaje', ['error', "El porcentaje de nuda propiedad no es el 100%."]);
 
@@ -448,7 +448,7 @@ class Elaboracion extends Component
 
             }
 
-            if(($pu + $pp) < 99.9999){
+            if(($pu + $pp) < 99.99){
 
                 $this->dispatch('mostrarMensaje', ['error', "El porcentaje de usufructo no es el 100%."]);
 
@@ -557,7 +557,7 @@ class Elaboracion extends Component
 
         if($this->propiedad->propietarios()->count() == 0){
 
-            $this->dispatch('mostrarMensaje', ['error', "Debe tener almenos un propietario."]);
+            $this->dispatch('mostrarMensaje', ['error', "Debe tener al menos un propietario."]);
 
             return;
 
@@ -565,7 +565,7 @@ class Elaboracion extends Component
 
         if($this->propiedad->transmitentes()->count() == 0){
 
-            $this->dispatch('mostrarMensaje', ['error', "Debe tener almenos un transmitente."]);
+            $this->dispatch('mostrarMensaje', ['error', "Debe tener al menos un transmitente."]);
 
             return;
 
@@ -587,7 +587,10 @@ class Elaboracion extends Component
 
                 }
 
-                $this->movimientoRegistral->folioReal->update(['estado' => 'elaborado']);
+                $this->movimientoRegistral->folioReal->update([
+                    'estado' => 'elaborado',
+                    'asignado_por' => auth()->user()->name
+                ]);
 
                 $this->dispatch('imprimir_documento', ['documento' => $this->movimientoRegistral->folio_real]);
 

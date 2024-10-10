@@ -76,7 +76,7 @@ class VariosIndex extends Component
                                                     ->orderBy($this->sort, $this->direction)
                                                     ->paginate($this->pagination);
 
-        }elseif(auth()->user()->hasRole(['Jefe de departamento'])){
+        }elseif(auth()->user()->hasRole(['Jefe de departamento inscripciones'])){
 
             $movimientos = MovimientoRegistral::with('vario', 'asignadoA', 'actualizadoPor', 'folioReal')
                                                     ->whereHas('folioReal', function($q){

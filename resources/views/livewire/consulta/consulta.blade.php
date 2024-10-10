@@ -1,3 +1,9 @@
+@push('styles')
+
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/lightbox2/2.11.3/css/lightbox.min.css" integrity="sha512-ZKX+BvQihRJPA8CROKBhDNvoc2aDMOdAlcm7TUQY+35XYtrd3yh95QOOhsPDQY9QnKE0Wqag9y38OIgEvb88cA==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+
+@endpush
+
 <div class="">
 
     <div class="mb-6">
@@ -56,11 +62,11 @@
 
             <span class="lg:col-span-6 md:col-span-7 sm:col-span- text-center">Ubicación</span>
 
-            <x-input-group for="codigo_postal" label="Código postal" :error="$errors->first('codigo_postal')" class="w-full">
+            {{-- <x-input-group for="codigo_postal" label="Código postal" :error="$errors->first('codigo_postal')" class="w-full">
 
                 <x-input-text id="codigo_postal" wire:model.lazy="codigo_postal" />
 
-            </x-input-group>
+            </x-input-group> --}}
 
             <x-input-group for="municipio" label="Municipio" :error="$errors->first('municipio')" class="w-full">
 
@@ -68,13 +74,13 @@
 
             </x-input-group>
 
-            <x-input-group for="ciudad" label="Ciudad" :error="$errors->first('ciudad')" class="w-full">
+            {{-- <x-input-group for="ciudad" label="Ciudad" :error="$errors->first('ciudad')" class="w-full">
 
                 <x-input-text id="ciudad" wire:model="ciudad"/>
 
-            </x-input-group>
+            </x-input-group> --}}
 
-            <x-input-group for="tipo_asentamiento" label="Tipo de asentamiento" :error="$errors->first('tipo_asentamiento')" class="w-full">
+            {{-- <x-input-group for="tipo_asentamiento" label="Tipo de asentamiento" :error="$errors->first('tipo_asentamiento')" class="w-full">
 
                 <x-input-select id="tipo_asentamiento" wire:model="tipo_asentamiento" class="w-full">
 
@@ -88,9 +94,9 @@
 
                 </x-input-select>
 
-            </x-input-group>
+            </x-input-group> --}}
 
-            <x-input-group for="nombre_asentamiento" label="Nombre del asentamiento" :error="$errors->first('nombre_asentamiento')" class="w-full">
+           {{--  <x-input-group for="nombre_asentamiento" label="Nombre del asentamiento" :error="$errors->first('nombre_asentamiento')" class="w-full">
 
                 <x-input-select id="nombre_asentamiento" wire:model="nombre_asentamiento" class="w-full">
 
@@ -108,7 +114,7 @@
 
                 </x-input-select>
 
-            </x-input-group>
+            </x-input-group> --}}
 
             <x-input-group for="localidad_ubicacion" label="Localidad" :error="$errors->first('localidad_ubicacion')" class="w-full">
 
@@ -116,7 +122,7 @@
 
             </x-input-group>
 
-            <x-input-group for="tipo_vialidad" label="Tipo de vialidad" :error="$errors->first('tipo_vialidad')" class="w-full">
+            {{-- <x-input-group for="tipo_vialidad" label="Tipo de vialidad" :error="$errors->first('tipo_vialidad')" class="w-full">
 
                 <x-input-select id="tipo_vialidad" wire:model="tipo_vialidad" class="w-full">
 
@@ -130,6 +136,12 @@
 
                 </x-input-select>
 
+            </x-input-group> --}}
+
+            <x-input-group for="nombre_asentamiento" label="Nombre del asentamiento" :error="$errors->first('nombre_asentamiento')" class="w-full">
+
+                <x-input-text id="nombre_asentamiento" wire:model="nombre_asentamiento" />
+
             </x-input-group>
 
             <x-input-group for="nombre_vialidad" label="Nombre de la vialidad" :error="$errors->first('nombre_vialidad')" class="w-full">
@@ -138,11 +150,11 @@
 
             </x-input-group>
 
-            <x-input-group for="numero_exterior" label="Número exterior" :error="$errors->first('numero_exterior')" class="w-full">
+            {{-- <x-input-group for="numero_exterior" label="Número exterior" :error="$errors->first('numero_exterior')" class="w-full">
 
                 <x-input-text id="numero_exterior" wire:model="numero_exterior" />
 
-            </x-input-group>
+            </x-input-group> --}}
 
             <span class="lg:col-span-6 md:col-span-7 sm:col-span- text-center">Propietario</span>
 
@@ -243,12 +255,12 @@
                                 <span class="lg:hidden absolute top-0 left-0 bg-blue-300 px-2 py-1 text-xs text-white font-bold uppercase rounded-br-xl">Ubicación</span>
 
                                 {{
-                                    $folio->predio->municipio . ', ' .
-                                    $folio->predio->ciudad . ', ' .
-                                    $folio->predio->codigo_postal . ', ' .
-                                    $folio->predio->nombre_asentamiento . ', ' .
-                                    $folio->predio->nombre_vialidad . ', # ' .
-                                    $folio->predio->numero_exterior
+                                    $folio->predio?->municipio . ', ' .
+                                    $folio->predio?->ciudad . ', ' .
+                                    $folio->predio?->codigo_postal . ', ' .
+                                    $folio->predio?->nombre_asentamiento . ', ' .
+                                    $folio->predio?->nombre_vialidad . ', # ' .
+                                    $folio->predio?->numero_exterior
                                 }}
 
                             </x-table.cell>
@@ -257,7 +269,7 @@
 
                                 <span class="lg:hidden absolute top-0 left-0 bg-blue-300 px-2 py-1 text-xs text-white font-bold uppercase rounded-br-xl">Propietario</span>
 
-                                {{ $folio->predio->primerPropietario() }}
+                                {{ $folio->predio?->primerPropietario() }}
 
                             </x-table.cell>
 
@@ -385,3 +397,20 @@
     @endif
 
 </div>
+
+@push('scripts')
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js" integrity="sha512-894YE6QWD5I59HgZOGReFYm4dnWc1Qt5NtvYSaNcOP+u1T9qYdvdihz0PPSiiqn/+/3e7Jo4EaG7TubfWGUrMQ==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/lightbox2/2.11.3/js/lightbox.min.js" integrity="sha512-k2GFCTbp9rQU412BStrcD/rlwv1PYec9SNrkbQlo6RZCf75l6KcC3UwDY8H5n5hl4v77IDtIPwOk9Dqjs/mMBQ==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+
+    <script>
+        lightbox.option({
+          'resizeDuration': 200,
+          'wrapAround': true,
+          'fitImagesInViewport': false,
+          'maxWidth':0,
+          'maxHeight':0
+        })
+    </script>
+
+@endpush

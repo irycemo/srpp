@@ -15,11 +15,11 @@
 
     <tbody>
 
-        @foreach ($predio->propietarios() as $propietario)
+        @foreach ($predio->propietarios as $propietario)
 
             <tr>
                 <td style="padding-right: 40px;">
-                    {{ $propietario->persona->nombre }} {{ $propietario->persona->ap_paterno }} {{ $propietario->persona->ap_materno }} {{ $propietario->persona->razon_social }}
+                    {{ $propietario->nombre }} {{ $propietario->ap_paterno }} {{ $propietario->ap_materno }} {{ $propietario->razon_social }}
                 </td>
                 <td style="padding-right: 40px;">
                     {{ $propietario->porcentaje_propiedad ?? '0.00' }} %

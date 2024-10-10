@@ -322,7 +322,7 @@ class AsignacionService{
                                         $q->whereIn('name', ['Propiedad', 'Registrador Propiedad']);
                                     });
                                 })
-                                ->when($folioReal === null, function($q){
+                                ->when($folioReal === null && $estado != 'precalificacion', function($q){
                                     $q->whereHas('roles', function($q){
                                         $q->whereIn('name', ['Pase a folio', 'Registrador Propiedad']);
                                     });
@@ -401,7 +401,7 @@ class AsignacionService{
                                         $q->whereIn('name', ['Gravamen', 'Registrador Gravamen']);
                                     });
                                 })
-                                ->when($folioReal === null, function($q){
+                                ->when($folioReal === null && $estado != 'precalificacion', function($q){
                                     $q->whereHas('roles', function($q){
                                         $q->whereIn('name', ['Pase a folio', 'Registrador Gravamen']);
                                     });
@@ -493,7 +493,7 @@ class AsignacionService{
                                         $q->whereIn('name', ['Cancelación', 'Registrador Cancelación']);
                                     });
                                 })
-                                ->when($folioReal === null, function($q){
+                                ->when($folioReal === null && $estado != 'precalificacion', function($q){
                                     $q->whereHas('roles', function($q){
                                         $q->whereIn('name', ['Pase a folio', 'Registrador Cancelación']);
                                     });
@@ -572,7 +572,7 @@ class AsignacionService{
                                         $q->whereIn('name', ['Varios', 'Registrador Varios']);
                                     });
                                 })
-                                ->when($folioReal === null, function($q){
+                                ->when($folioReal === null && $estado != 'precalificacion', function($q){
                                     $q->whereHas('roles', function($q){
                                         $q->whereIn('name', ['Pase a folio', 'Registrador Varios']);
                                     });
@@ -650,7 +650,7 @@ class AsignacionService{
                                         $q->whereIn('name', ['Sentencias', 'Registrador Sentencias']);
                                     });
                                 })
-                                ->when($folioReal === null, function($q){
+                                ->when($folioReal === null && $estado != 'precalificacion', function($q){
                                     $q->whereHas('roles', function($q){
                                         $q->whereIn('name', ['Pase a folio', 'Registrador Sentencias']);
                                     });

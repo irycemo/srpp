@@ -50,10 +50,10 @@
                 <x-table.heading sortable wire:click="sortBy('tipo_servicio')" :direction="$sort === 'tipo_servicio' ? $direction : null" >Tipo de servicio</x-table.heading>
                 <x-table.heading sortable wire:click="sortBy('distrito')" :direction="$sort === 'distrito' ? $direction : null" >Distrito</x-table.heading>
                 <x-table.heading>Solicitante</x-table.heading>
-                @if (auth()->user()->hasRole(['Certificador Propiedad', 'Supervisor certificaciones', 'Administrador', 'Jefe de departamento']))
+                @if (auth()->user()->hasRole(['Supervisor certificaciones', 'Administrador', 'Jefe de departamento certificaciones', 'Supervisor uruapan']))
                     <x-table.heading sortable wire:click="sortBy('usuario_asignado')" :direction="$sort === 'usuario_asignado' ? $direction : null" >Asignado a</x-table.heading>
                 @endif
-                @if (!auth()->user()->hasRole(['Certificador Propiedad', 'Supervisor certificaciones']))
+                @if (auth()->user()->hasRole('Administrador'))
                     <x-table.heading >Reimpreso en</x-table.heading>
                 @endif
                 <x-table.heading sortable wire:click="sortBy('fecha_entrega')" :direction="$sort === 'fecha_entrega' ? $direction : null">Fecha de entrega</x-table.heading>
@@ -85,7 +85,7 @@
 
                             <span class="lg:hidden absolute top-0 left-0 bg-blue-300 px-2 py-1 text-xs text-white font-bold uppercase rounded-br-xl"># Control</span>
 
-                            {{ $certificado->año ?? 'N/A' }}-{{ $certificado->tramite ?? 'N/A' }}-{{ $certificado->usuario ?? 'N/A' }}
+                            <span class="whitespace-nowrap">{{ $certificado->año ?? 'N/A' }}-{{ $certificado->tramite ?? 'N/A' }}-{{ $certificado->usuario ?? 'N/A' }}</span>
 
                         </x-table.cell>
 
@@ -121,7 +121,7 @@
 
                         </x-table.cell>
 
-                        @if (!auth()->user()->hasRole('Certificador Gravamen'))
+                        @if (auth()->user()->hasRole(['Supervisor certificaciones', 'Administrador', 'Jefe de departamento certificaciones', 'Supervisor uruapan']))
 
                             <x-table.cell>
 
@@ -133,7 +133,7 @@
 
                         @endif
 
-                        @if (!auth()->user()->hasRole(['Certificador Propiedad', 'Supervisor certificaciones', 'Jefe de departamento']))
+                        @if (auth()->user()->hasRole('Administrador'))
 
                             <x-table.cell>
 
@@ -177,65 +177,19 @@
 
                                 <div class="flex justify-center lg:justify-start gap-2">
 
-                                    @if (auth()->user()->hasRole(['Supervisor certificaciones', 'Supervisor uruapan']))
+                                    @if(auth()->user()->hasRole(['Certificador Propiedad', 'Certificador Oficialia', 'Certificador Juridico']))
 
-                                        <x-button-blue
-                                            wire:click="reimprimir({{  $certificado->id }})"
-                                            wire:loading.attr="disabled"
-                                            wire:target="reimprimir({{  $certificado->id }})">
-                                            Reimprimir
-                                        </x-button-blue>
+                                        <x-button-red
+                                            wire:click="abrirModalRechazar({{ $certificado->id }})"
+                                            wire:loading.attr="disabled">
 
-                                        @if($certificado->folio_real)
+                                            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" class="w-4 h-4 mr-2">
+                                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z" />
+                                            </svg>
 
-                                            <x-button-green
-                                                wire:click="abrirModalFinalizar({{  $certificado->id }})"
-                                                wire:loading.attr="disabled"
-                                                wire:target="abrirModalFinalizar({{  $certificado->id }})">
-                                                Finalizar
-                                            </x-button-green>
+                                            <span>Rechazar</span>
 
-                                        @else
-
-                                            <x-button-green
-                                                wire:click="finalizar({{  $certificado->id }})"
-                                                wire:loading.attr="disabled"
-                                                wire:target="finalizar({{  $certificado->id }})">
-                                                Finalizar
-                                            </x-button-green>
-
-                                        @endif
-
-                                    @elseif($certificado->estado == 'elaborado' && auth()->user()->hasRole(['Jefe de departamento']))
-
-                                        <x-button-blue
-                                            wire:click="reimprimir({{  $certificado->id }})"
-                                            wire:loading.attr="disabled"
-                                            wire:target="reimprimir({{  $certificado->id }})">
-                                            Reimprimir
-                                        </x-button-blue>
-
-                                        @if($certificado->folio_real)
-
-                                            <x-button-green
-                                                wire:click="abrirModalFinalizar({{  $certificado->id }})"
-                                                wire:loading.attr="disabled"
-                                                wire:target="abrirModalFinalizar({{  $certificado->id }})">
-                                                Finalizar
-                                            </x-button-green>
-
-                                        @else
-
-                                            <x-button-green
-                                                wire:click="finalizar({{  $certificado->id }})"
-                                                wire:loading.attr="disabled"
-                                                wire:target="finalizar({{  $certificado->id }})">
-                                                Finalizar
-                                            </x-button-green>
-
-                                        @endif
-
-                                    @else
+                                        </x-button-red>
 
                                         <x-button-blue
                                             wire:click="elaborar({{  $certificado->id }})"
@@ -243,6 +197,64 @@
                                             wire:target="elaborar({{  $certificado->id }})">
                                             Elaborar
                                         </x-button-blue>
+
+                                    @elseif(auth()->user()->hasRole('Jefe de departamento certificaciones') && $certificado->estado != 'elaborado')
+
+                                        <x-button-red
+                                            wire:click="abrirModalRechazar({{ $certificado->id }})"
+                                            wire:loading.attr="disabled">
+
+                                            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" class="w-4 h-4 mr-2">
+                                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z" />
+                                            </svg>
+
+                                            <span>Rechazar</span>
+
+                                        </x-button-red>
+
+                                        <x-button-blue
+                                            wire:click="elaborar({{  $certificado->id }})"
+                                            wire:loading.attr="disabled"
+                                            wire:target="elaborar({{  $certificado->id }})">
+                                            Elaborar
+                                        </x-button-blue>
+
+                                    @elseif(auth()->user()->hasRole(['Supervisor certificaciones', 'Jefe de departamento certificaciones', 'Supervisor uruapan']) && $certificado->estado == 'elaborado')
+
+                                        @if ($certificado->certificacion->reimpreso_en == null)
+
+                                            <x-button-blue
+                                                wire:click="reimprimir({{  $certificado->id }})"
+                                                wire:loading.attr="disabled"
+                                                wire:target="reimprimir({{  $certificado->id }})">
+                                                Reimprimir
+                                            </x-button-blue>
+
+                                        @endif
+
+                                        @if($certificado->estado == 'elaborado')
+
+                                            @if($certificado->folio_real)
+
+                                                <x-button-green
+                                                    wire:click="abrirModalFinalizar({{  $certificado->id }})"
+                                                    wire:loading.attr="disabled"
+                                                    wire:target="abrirModalFinalizar({{  $certificado->id }})">
+                                                    Finalizar
+                                                </x-button-green>
+
+                                            @else
+
+                                                <x-button-green
+                                                    wire:click="finalizar({{  $certificado->id }})"
+                                                    wire:loading.attr="disabled"
+                                                    wire:target="finalizar({{  $certificado->id }})">
+                                                    Finalizar
+                                                </x-button-green>
+
+                                            @endif
+
+                                        @endif
 
                                     @endif
 

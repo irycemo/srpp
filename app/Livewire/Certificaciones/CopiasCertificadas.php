@@ -502,7 +502,7 @@ class CopiasCertificadas extends Component
                                                 ->orderBy($this->sort, $this->direction)
                                                 ->paginate($this->pagination);
 
-        }elseif(auth()->user()->hasRole(['Jefe de departamento'])){
+        }elseif(auth()->user()->hasRole(['Jefe de departamento certificaciones'])){
 
             $copias = MovimientoRegistral::with('asignadoA', 'supervisor', 'actualizadoPor', 'certificacion.actualizadoPor')
                                                 ->where(function($q){
@@ -528,7 +528,7 @@ class CopiasCertificadas extends Component
                                                 ->orderBy($this->sort, $this->direction)
                                                 ->paginate($this->pagination);
 
-        }elseif(auth()->user()->hasRole(['Administrador', 'Jefe de departamento'])){
+        }elseif(auth()->user()->hasRole(['Administrador'])){
 
             $copias = MovimientoRegistral::with('asignadoA', 'supervisor', 'actualizadoPor', 'certificacion.actualizadoPor')
                                                 ->where(function($q){

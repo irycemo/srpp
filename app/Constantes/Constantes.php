@@ -283,7 +283,7 @@ class Constantes{
     ];
 
     const ACTOS_INSCRIPCION_GRAVAMEN = [
-        'CREDITO HIPOTECARIO',
+        'CRÉDITO HIPOTECARIO',
         'HIPOTECA',
         'FIANZA JUDICIAL',
         'FIANZA ADMINISTRATIVA',
@@ -293,7 +293,8 @@ class Constantes{
         'CONVENIO',
         'DIVISIÓN DE HIPOTECA',
         'ADHESIÓN DE HIPOTECA',
-        'POR ANTECEDENTE'
+        'POR ANTECEDENTE',
+        'CRÉDITO REFACCIONARIO'
     ];
 
     const ACTOS_INSCRIPCION_VARIOS = [
@@ -328,8 +329,10 @@ class Constantes{
     const DOCUMENTOS_DE_ENTRADA = [
         'ESCRITURA PÚBLICA',
         'ESCRITURA PRIVADA',
+        'ESCRITURA INSTITUCIONAL',
         'OFICIO',
         'TÍTULO DE PROPIEDAD',
+        'RESOLUCIÓN JUDICIAL'
     ];
 
     const RECHAZO_MOTIVOS = [

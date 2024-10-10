@@ -64,41 +64,11 @@ class SentenciasIndex extends Component
                                                     ->whereHas('sentencia', function($q){
                                                         $q->whereIn('servicio', ['D110']);
                                                     })
-                                                    ->whereIn('estado', ['nuevo', 'captura'])
+                                                    ->whereIn('estado', ['nuevo', 'captura', 'elaborado'])
                                                     ->orderBy($this->sort, $this->direction)
                                                     ->paginate($this->pagination);
 
-    }elseif(auth()->user()->hasRole(['Supervisor sentencias', 'Supervisor uruapan'])){
-
-            $movimientos = MovimientoRegistral::with('sentencia', 'asignadoA', 'actualizadoPor', 'folioReal:id,folio')
-                                                    ->whereHas('folioReal', function($q){
-                                                        $q->where('estado', 'activo');
-                                                    })
-                                                    ->where(function($q){
-                                                        $q->whereHas('asignadoA', function($q){
-                                                                $q->where('name', 'LIKE', '%' . $this->search . '%');
-                                                            })
-                                                            ->orWhere('solicitante', 'LIKE', '%' . $this->search . '%')
-                                                            ->orWhere('tomo', 'LIKE', '%' . $this->search . '%')
-                                                            ->orWhere('registro', 'LIKE', '%' . $this->search . '%')
-                                                            ->orWhere('distrito', 'LIKE', '%' . $this->search . '%')
-                                                            ->orWhere('seccion', 'LIKE', '%' . $this->search . '%')
-                                                            ->orWhere('tramite', 'LIKE', '%' . $this->search . '%');
-                                                    })
-                                                    ->when(auth()->user()->ubicacion == 'Regional 4', function($q){
-                                                        $q->where('distrito', 2);
-                                                    })
-                                                    ->when(auth()->user()->ubicacion != 'Regional 4', function($q){
-                                                        $q->where('distrito', '!=', 2);
-                                                    })
-                                                    ->whereHas('sentencia', function($q){
-                                                        $q->whereIn('servicio', ['D110']);
-                                                    })
-                                                    ->whereIn('estado', ['nuevo', 'captura', 'elaborado', 'finalizado'])
-                                                    ->orderBy($this->sort, $this->direction)
-                                                    ->paginate($this->pagination);
-
-    }elseif(auth()->user()->hasRole(['Supervisor sentencias', 'Supervisor uruapan'])){
+        }elseif(auth()->user()->hasRole(['Supervisor sentencias', 'Supervisor uruapan'])){
 
             $movimientos = MovimientoRegistral::with('sentencia', 'asignadoA', 'actualizadoPor', 'folioReal:id,folio')
                                                     ->whereHas('folioReal', function($q){
@@ -128,7 +98,7 @@ class SentenciasIndex extends Component
                                                     ->orderBy($this->sort, $this->direction)
                                                     ->paginate($this->pagination);
 
-        }elseif(auth()->user()->hasRole(['Jefe de departamento'])){
+        }elseif(auth()->user()->hasRole(['Jefe de departamento inscripciones'])){
 
             $movimientos = MovimientoRegistral::with('sentencia', 'asignadoA', 'actualizadoPor', 'folioReal:id,folio')
                                                     ->whereHas('folioReal', function($q){

@@ -2,57 +2,87 @@
 
 namespace App\Http\Controllers\PaseFolio;
 
+use Carbon\Carbon;
 use App\Models\File;
 use App\Models\User;
 use App\Models\FolioReal;
 use Illuminate\Support\Str;
 use App\Constantes\Constantes;
 use Barryvdh\DomPDF\Facade\Pdf;
+use App\Models\FirmaElectronica;
+use PhpCfdi\Credentials\Credential;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Storage;
 use Luecano\NumeroALetras\NumeroALetras;
+use App\Traits\Inscripciones\FirmaElectronicaTrait;
 
 class PaseFolioController extends Controller
 {
 
+    use FirmaElectronicaTrait;
+
     public function caratula(FolioReal $folioReal){
 
-        $folioReal->load(
-            'predio',
-            'antecedentes',
-            'gravamenes.deudores',
-            'gravamenes.acreedores',
-            'gravamenes.movimientoRegistral',
-            'sentencias.movimientoRegistral',
-            'varios.movimientoRegistral',
-            'cancelaciones.movimientoRegistral'
-        );
+        $movimiento1 = $folioReal->movimientosRegistrales->where('folio', 1)->first();
+
+        $numero_control = $movimiento1->año . '-' . $movimiento1->tramite . '-'.  $movimiento1->usuario;
 
         $formatter = new NumeroALetras();
 
-        $director = Str::upper(User::where('status', 'activo')->whereHas('roles', function($q){
-            $q->where('name', 'Director');
-        })->first()->name);
+        $director = User::where('status', 'activo')
+                            ->whereHas('roles', function($q){
+                                $q->where('name', 'Director');
+                            })
+                            ->first();
 
-        $distrito = Constantes::DISTRITOS[$folioReal->distrito_antecedente];
+        $datos_control = (object)[];
 
-        $registro_letras = $formatter->toWords($folioReal->registro_antecedente);
+        $datos_control->numero_control = $numero_control;
+        $datos_control->registrador = auth()->user()->name;
+        $datos_control->fecha_asignacion = Carbon::now()->locale('es')->translatedFormat('H:i:s \d\e\l l d \d\e F \d\e\l Y');
 
-        $tomo_letras = $formatter->toWords($folioReal->tomo_antecedente);
+        $object = (object)[];
 
-        $predio = $folioReal->predio;
+        $object->folioReal = $this->folioReal($folioReal);
+        $object->distrito = Constantes::DISTRITOS[$folioReal->distrito_antecedente];
+        $object->registro_letras = $formatter->toWords($folioReal->registro_antecedente);
+        $object->tomo_letras = $formatter->toWords($folioReal->tomo_antecedente);
+        $object->director = $director->name;
+        $object->predio = $this->predio($folioReal->predio);
+        $object->datos_control = $datos_control;
 
-        $firma = false;
+        $fielDirector = Credential::openFiles(Storage::disk('efirmas')->path($director->efirma->cer),
+                                                Storage::disk('efirmas')->path($director->efirma->key),
+                                                $director->efirma->contraseña
+                                            );
 
-        $pdf = Pdf::loadView('pasefolio.caratula', compact(
-            'folioReal',
-            'distrito',
-            'registro_letras',
-            'tomo_letras',
-            'director',
-            'predio',
-            'firma'
-        ));
+        $firmaDirector = $fielDirector->sign(json_encode($object));
+
+
+
+        $firmaElectronica = FirmaElectronica::create([
+            'folio_real' => $folioReal->id,
+            'cadena_original' => json_encode($object),
+            'cadena_encriptada' => base64_encode($firmaDirector),
+        ]);
+
+        $director = $director->name;
+
+        $firma_electronica = false;
+
+        $qr = $this->generadorQr($firmaElectronica->uuid);
+
+        $pdf = Pdf::loadView('pasefolio.caratula', [
+            'folioReal' => $object->folioReal,
+            'distrito' => $object->distrito,
+            'registro_letras' => $object->registro_letras,
+            'tomo_letras' => $object->tomo_letras,
+            'director' => $object->director,
+            'predio' => $object->predio,
+            'datos_control' => $object->datos_control,
+            'firma_electronica' => $firma_electronica,
+            'qr' => $qr
+        ]);
 
         $pdf->render();
 
@@ -64,25 +94,30 @@ class PaseFolioController extends Controller
 
         $canvas->page_text(35, 745, "Folio real: " . $folioReal->folio , null, 10, array(1, 1, 1));
 
-        $firma = true;
 
-        $pdfFirmado = Pdf::loadView('pasefolio.caratula', compact(
-            'folioReal',
-            'distrito',
-            'registro_letras',
-            'tomo_letras',
-            'director',
-            'predio',
-            'firma'
-        ));
+        $objeto = json_decode($firmaElectronica->cadena_original);
 
-        $this->pdfFirmado($pdfFirmado, $folioReal);
+        $pdfFirmado = Pdf::loadView('pasefolio.caratula', [
+            'folioReal' => $objeto->folioReal,
+            'distrito' => $objeto->distrito,
+            'registro_letras' => $objeto->registro_letras,
+            'tomo_letras' => $objeto->tomo_letras,
+            'director' => $objeto->director,
+            'predio' => $objeto->predio,
+            'datos_control' => $objeto->datos_control,
+            'firma_electronica' => base64_encode($firmaDirector),
+            'qr'=> $qr
+        ]);
+
+        $this->pdfFirmado($pdfFirmado, $folioReal->id, $folioReal->folio);
 
         return $pdf->stream('documento.pdf');
 
     }
 
-    public function pdfFirmado($pdf, FolioReal $folioReal){
+    public function pdfFirmado($pdf, $id, $folio){
+
+        $this->resetCaratula($id);
 
         $pdf->render();
 
@@ -92,55 +127,58 @@ class PaseFolioController extends Controller
 
         $canvas->page_text(480, 745, "Página: {PAGE_NUM} de {PAGE_COUNT}", null, 10, array(1, 1, 1));
 
-        $canvas->page_text(35, 745, "Folio real: " . $folioReal->folio , null, 10, array(1, 1, 1));
+        $canvas->page_text(35, 745, "Folio real: " . $folio , null, 10, array(1, 1, 1));
 
-        $nombreS3 = Str::random(40) . '.pdf';
+        $canvas->page_script(function ($pageNumber, $pageCount, $canvas, $fontMetrics) {
+            $w = $canvas->get_width();
+            $h = $canvas->get_height();
 
-        $nombreLocal = Str::random(40) . '.pdf';
+            $canvas->image(public_path('storage/img/watermark.png'), 0, 0, $w, $h, $resolution = "normal");
 
-        if(env('LOCAL') == "0"){
+        });
 
-            Storage::disk('s3')->put($nombreS3, $pdf->output());
+        $nombre = Str::random(40);
 
-            File::create([
-                'fileable_id' => $folioReal->id,
-                'fileable_type' => 'App\Models\FolioReal',
-                'descripcion' => 'caratula_s3',
-                'url' => $nombreS3
-            ]);
+        $nombreFinal = $nombre . 'pdf';
 
-        }elseif(env('LOCAL') == "1"){
+        Storage::disk('caratulas')->put($nombre .'pdf', $pdf->output());
 
-            Storage::disk('caratulas')->put($nombreLocal, $pdf->output());
+        $pdfImagen = new \Spatie\PdfToImage\Pdf('caratulas/' . $nombre . 'pdf');
 
-            File::create([
-                'fileable_id' => $folioReal->id,
-                'fileable_type' => 'App\Models\FolioReal',
-                'descripcion' => 'caratula',
-                'url' => $nombreLocal
-            ]);
+        for ($i=1; $i <= $pdfImagen->pageCount(); $i++) {
 
-        }elseif(env('LOCAL') == "2"){
+            $nombre = $nombre . '_' . $i . '.jpg';
 
-            Storage::disk('s3')->put($nombreS3, $pdf->output());
+            $pdfImagen->selectPage($i)->save('caratulas/'. $nombre);
 
             File::create([
-                'fileable_id' => $folioReal->id,
-                'fileable_type' => 'App\Models\FolioReal',
-                'descripcion' => 'caratula_s3',
-                'url' => $nombreS3
-            ]);
-
-            Storage::disk('caratulas')->put($nombreLocal, $pdf->output());
-
-            File::create([
-                'fileable_id' => $folioReal->id,
+                'fileable_id' => $id,
                 'fileable_type' => 'App\Models\FolioReal',
                 'descripcion' => 'caratula',
-                'url' => $nombreLocal
+                'url' => $nombre
             ]);
 
         }
+
+        unlink('caratulas/' . $nombreFinal);
+
+    }
+
+    public function resetCaratula($id){
+
+        $folioReal = FolioReal::with('archivos')->find($id);
+
+        foreach($folioReal->archivos as $archivo){
+
+            if($archivo->descripcion == 'caratula'){
+
+                Storage::disk('caratulas')->delete($archivo->url);
+
+            }
+
+        }
+
+        $folioReal->archivos()->delete();
 
     }
 

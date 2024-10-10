@@ -16,7 +16,7 @@
                 <x-table.heading sortable wire:click="sortBy('tomo_gravamen')" :direction="$sort === 'tomo_gravamen' ? $direction : null" >Tomo gravamen</x-table.heading>
                 <x-table.heading sortable wire:click="sortBy('registro_gravamen')" :direction="$sort === 'registro_gravamen' ? $direction : null" >Registro gravamen</x-table.heading>
                 <x-table.heading sortable wire:click="sortBy('fecha_entrega')" :direction="$sort === 'fecha_entrega' ? $direction : null" >Fecha de entrega</x-table.heading>
-                @if(auth()->user()->hasRole(['Supervisor cancelación', 'Supervisor uruapan', 'Administrador', 'Jefe de departamento']))
+                @if(auth()->user()->hasRole(['Supervisor cancelación', 'Supervisor uruapan', 'Administrador', 'Jefe de departamento inscripciones']))
                     <x-table.heading sortable wire:click="sortBy('usuario_asignado')" :direction="$sort === 'usuario_asignado' ? $direction : null">Usuario asignado</x-table.heading>
                 @endif
                 <x-table.heading sortable wire:click="sortBy('created_at')" :direction="$sort === 'created_at' ? $direction : null">Ingreso</x-table.heading>
@@ -97,7 +97,7 @@
 
                         </x-table.cell>
 
-                        @if(auth()->user()->hasRole(['Supervisor cancelación', 'Supervisor uruapan', 'Administrador', 'Jefe de departamento']))
+                        @if(auth()->user()->hasRole(['Supervisor cancelación', 'Supervisor uruapan', 'Administrador', 'Jefe de departamento inscripciones']))
 
                             <x-table.cell>
 
@@ -197,7 +197,7 @@
                                                 Finalizar
                                             </x-button-green>
 
-                                        @elseif($movimiento->estado == 'finalizado' && auth()->user()->hasRole(['Jefe de departamento', 'Supervisor cancelación', 'Supervisor uruapan']))
+                                        @elseif($movimiento->estado == 'finalizado' && auth()->user()->hasRole(['Jefe de departamento inscripciones', 'Supervisor cancelación', 'Supervisor uruapan']))
 
                                             <x-button-blue
                                                 wire:click="imprimir({{  $movimiento->id }})"

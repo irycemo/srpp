@@ -146,13 +146,13 @@
 
                 <x-input-group for="tomo_cancelacion" label="Tomo de cancelación" :error="$errors->first('tomo_cancelacion')" class="w-full">
 
-                    <x-input-text id="tomo_cancelacion" wire:model="tomo_cancelacion" />
+                    <x-input-text type="number"  id="tomo_cancelacion" wire:model="tomo_cancelacion" />
 
                 </x-input-group>
 
                 <x-input-group for="folio_cancelacion" label="Folio de cancelación" :error="$errors->first('folio_cancelacion')" class="w-full">
 
-                    <x-input-text id="folio_cancelacion" wire:model="folio_cancelacion" />
+                    <x-input-text  type="number" id="folio_cancelacion" wire:model="folio_cancelacion" />
 
                 </x-input-group>
 

@@ -6,11 +6,15 @@
 
             Movimiento registral: ({{ $certificado->movimientoRegistral->folio }})
 
-            @if($certificado->movimientoRegistral->caratula())
+            <div class="flex gap-2">
 
-                <x-link-blue target="_blank" href="{{ $certificado->movimientoRegistral->caratula() }}">Caratula</x-link-blue>
+                @foreach ($certificado->movimientoRegistral->caratula as $image)
+                    <a href="{{ Storage::disk('caratulas')->url($image->url) }}" data-lightbox="imagen" data-title="Caratula">
+                        <img class="h-20" src="{{ Storage::disk('caratulas')->url($image->url) }}" alt="Caratula">
+                    </a>
+                @endforeach
 
-            @endif
+            </div>
 
         </x-h4>
 

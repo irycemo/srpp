@@ -19,7 +19,7 @@ class RoleSeeder extends Seeder
 
         $role1 = Role::create(['name' => 'Administrador']);
         /* Certificaciones */
-        $role2 = Role::create(['name' => 'Supervisor Copias']);
+        $role2 = Role::create(['name' => 'Supervisor certificaciones']);
         $role3 = Role::create(['name' => 'Certificador']);
         $role5 = Role::create(['name' => 'Director']);
         $role6 = Role::create(['name' => 'Consulta']);
@@ -27,15 +27,27 @@ class RoleSeeder extends Seeder
         $role3 = Role::create(['name' => 'Certificador Oficialia']);
         /* Inscripciones */
         $role7 = Role::create(['name' => 'Propiedad']);
+        $role7 = Role::create(['name' => 'Gravamen']);
+        $role7 = Role::create(['name' => 'Cancelacación']);
+        $role7 = Role::create(['name' => 'Sentencias']);
+        $role7 = Role::create(['name' => 'Varios']);
         $role8 = Role::create(['name' => 'Supervisor propiedad']);
+        $role8 = Role::create(['name' => 'Supervisor gravamen']);
+        $role8 = Role::create(['name' => 'Supervisor cancelaciones']);
+        $role8 = Role::create(['name' => 'Supervisor sentencias']);
+        $role8 = Role::create(['name' => 'Supervisor varios']);
         /* Pase a folio */
         $role9 = Role::create(['name' => 'Pase a folio']);
         /* Registrador */
         $role9 = Role::create(['name' => 'Registrador Propiedad']);
         $role9 = Role::create(['name' => 'Registrador Gravamen']);
         $role9 = Role::create(['name' => 'Registrador Cancelaciones']);
+        $role9 = Role::create(['name' => 'Registrador Varios']);
+        $role9 = Role::create(['name' => 'Registrador Sentencias']);
 
-        $role10 = Role::create(['name' => 'Jefe de departamento']);
+        $role10 = Role::create(['name' => 'Jefe de departamento certificaciones']);
+
+        $role12 = Role::create(['name' => 'Jefe de departamento inscripciones']);
 
         $role11 = Role::create(['name' => 'Sistemas']);
 

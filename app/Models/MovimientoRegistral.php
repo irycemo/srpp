@@ -10,6 +10,7 @@ use App\Models\Cancelacion;
 use App\Traits\ModelosTrait;
 use App\Models\Certificacion;
 use App\Constantes\Constantes;
+use App\Models\FirmaElectronica;
 use App\Models\FolioRealPersona;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Facades\Storage;
@@ -88,11 +89,12 @@ class MovimientoRegistral extends Model implements Auditable
         return $this->morphMany(File::class, 'fileable');
     }
 
-    public function caratula(){
+    public function firmaElectronica(){
+        return $this->hasOne(FirmaElectronica::class);
+    }
 
-        return $this->archivos()->where('descripcion', 'caratula')->latest()->first()
-                ? Storage::disk('caratulas')->url($this->archivos()->where('descripcion', 'caratula')->first()->url)
-                : null;
+    public function caratula(){
+        return $this->morphMany(File::class, 'fileable')->where('descripcion', 'caratula');
     }
 
     public function documentoEntrada(){

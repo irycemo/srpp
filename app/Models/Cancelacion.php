@@ -21,7 +21,7 @@ class Cancelacion extends Model implements Auditable
         return $this->belongsTo(MovimientoRegistral::class);
     }
 
-    public function gravamen(){
+    public function gravamenCancelado(){
         return $this->belongsTo(MovimientoRegistral::class, 'gravamen');
     }
 

@@ -68,7 +68,7 @@
 
             </x-input-group>
 
-            @if(in_array($tipo_documento, ['OFICIO', 'TÍTULO DE PROPIEDAD']))
+            @if(in_array($tipo_documento, ['OFICIO', 'TÍTULO DE PROPIEDAD', 'RESOLUCIÓN JUDICIAL', 'ESCRITURA INSTITUCIONAL']))
 
                 <x-input-group for="autoridad_cargo" label="Autoridad cargo" :error="$errors->first('autoridad_cargo')" class="w-full">
 
@@ -77,6 +77,7 @@
                         <option value="">Seleccione una opción</option>
                         <option value="juez">Juez(a)</option>
                         <option value="funcionario">Funcionario</option>
+                        <option value="servidor público">Servidor público</option>
 
                     </x-input-select>
 
@@ -216,7 +217,7 @@
 
                 </x-input-group>
 
-                <x-input-group for="escritura_observaciones" label="Observaciones" :error="$errors->first('escritura_observaciones')" class="sm:col-span-2 lg:col-span-3">
+                <x-input-group for="escritura_observaciones" label="Descripción" :error="$errors->first('escritura_observaciones')" class="sm:col-span-2 lg:col-span-3">
 
                     <textarea rows="3" class="w-full bg-white rounded text-sm" wire:model="escritura_observaciones"></textarea>
 

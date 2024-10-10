@@ -4,6 +4,7 @@ namespace App\Models;
 
 // use Illuminate\Contracts\Auth\MustVerifyEmail;
 
+use App\Models\Efirma;
 use App\Traits\ModelosTrait;
 use Laravel\Sanctum\HasApiTokens;
 use Laravel\Jetstream\HasProfilePhoto;
@@ -85,6 +86,10 @@ class User extends Authenticatable implements Auditable
 
     public function ultimoMovimientoRegistralAsignado(){
         return $this->hasOne(MovimientoRegistral::class, 'usuario_asignado')->latest();
+    }
+
+    public function efirma(){
+        return $this->hasOne(Efirma::class);
     }
 
 }

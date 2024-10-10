@@ -72,7 +72,8 @@ class Varios extends Component
 
             DB::transaction(function () {
 
-                $this->vario->movimientoRegistral->update(['estado' => 'captura']);
+                if($this->vario->movimientoRegistral->estado != 'correccion')
+                    $this->vario->movimientoRegistral->update(['estado' => 'captura']);
 
                 $this->vario->save();
 

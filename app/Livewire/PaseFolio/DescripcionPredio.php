@@ -144,7 +144,7 @@ class DescripcionPredio extends Component
         $this->valor_catastral = $this->propiedad->valor_catastral;
         $this->monto_transaccion = $this->propiedad->monto_transaccion;
         $this->divisa = $this->divisa;
-        $this->unidad_area = $this->unidad_area;
+        $this->unidad_area = $this->propiedad->unidad_area;
         $this->observaciones = $this->propiedad->observaciones;
 
         foreach ($this->propiedad->colindancias as $colindancia) {
@@ -316,8 +316,6 @@ class DescripcionPredio extends Component
         $this->divisa = $this->divisas[0];
 
         $this->areas = Constantes::UNIDADES;
-
-        $this->unidad_area = $this->areas[0];
 
         if($this->movimientoRegistral->folio_real)
             $this->cargarPropiedad($this->movimientoRegistral->folioReal->predio->id);

@@ -13,7 +13,7 @@
                 <x-table.heading sortable wire:click="sortBy('estado')" :direction="$sort === 'estado' ? $direction : null">Estado</x-table.heading>
                 <x-table.heading sortable wire:click="sortBy('tipo_servicio')" :direction="$sort === 'tipo_servicio' ? $direction : null" >Tipo de servicio</x-table.heading>
                 <x-table.heading sortable wire:click="sortBy('distrito')" :direction="$sort === 'distrito' ? $direction : null" >Distrito</x-table.heading>
-                @if(auth()->user()->hasRole(['Supervisor varios', 'Supervisor uruapan', 'Administrador']))
+                @if(auth()->user()->hasRole(['Supervisor sentencias', 'Supervisor uruapan', 'Administrador', 'Jefe de departamento inscripciones']))
                     <x-table.heading sortable wire:click="sortBy('usuario_asignado')" :direction="$sort === 'usuario_asignado' ? $direction : null">Usuario asignado</x-table.heading>
                 @endif
                 <x-table.heading sortable wire:click="sortBy('fecha_entrega')" :direction="$sort === 'fecha_entrega' ? $direction : null">Fecha de entrega</x-table.heading>
@@ -71,7 +71,7 @@
 
                         </x-table.cell>
 
-                        @if(auth()->user()->hasRole(['Supervisor sentencias', 'Supervisor uruapan', 'Administrador']))
+                        @if(auth()->user()->hasRole(['Supervisor sentencias', 'Supervisor uruapan', 'Administrador', 'Jefe de departamento inscripciones']))
 
                             <x-table.cell>
 
@@ -115,7 +115,7 @@
 
                                 <div class="flex justify-center lg:justify-start gap-2">
 
-                                    @if(in_array($movimiento->estado, ['nuevo', 'captura']) && !auth()->user()->hasRole(['Jefe de departamento', 'Supervisor sentencias', 'Supervisor uruapan']))
+                                    @if(in_array($movimiento->estado, ['nuevo', 'captura']) && !auth()->user()->hasRole(['Jefe de departamento inscripciones', 'Supervisor sentencias', 'Supervisor uruapan']))
 
                                         <x-button-blue
                                             wire:click="elaborar({{  $movimiento->id }})"
@@ -135,7 +135,7 @@
 
                                         </x-button-red>
 
-                                    @elseif($movimiento->estado == 'elaborado'  && !auth()->user()->hasRole(['Jefe de departamento', 'Supervisor sentencias', 'Supervisor uruapan']))
+                                    @elseif($movimiento->estado == 'elaborado'  && !auth()->user()->hasRole(['Jefe de departamento inscripciones', 'Supervisor sentencias', 'Supervisor uruapan']))
 
                                         <x-button-green
                                             wire:click="imprimir({{  $movimiento->id }})"
@@ -151,7 +151,7 @@
                                             Finalizar
                                         </x-button-green>
 
-                                    @elseif($movimiento->estado == 'finalizado' && auth()->user()->hasRole(['Jefe de departamento', 'Supervisor sentencias', 'Supervisor uruapan']))
+                                    @elseif($movimiento->estado == 'finalizado' && auth()->user()->hasRole(['Jefe de departamento inscripciones', 'Supervisor sentencias', 'Supervisor uruapan']))
 
                                         <x-button-blue
                                             wire:click="imprimir({{  $movimiento->id }})"
@@ -167,7 +167,7 @@
                                             Finalizar
                                         </x-button-green>
 
-                                    @elseif(in_array($movimiento->estado, ['nuevo', 'captura', 'elaborado']) && auth()->user()->hasRole(['Jefe de departamento', 'Supervisor sentencias', 'Supervisor uruapan']))
+                                    @elseif(in_array($movimiento->estado, ['nuevo', 'captura', 'elaborado']) && auth()->user()->hasRole(['Jefe de departamento inscripciones', 'Supervisor sentencias', 'Supervisor uruapan']))
 
                                         <x-button-red
                                             wire:click="abrirModalReasignar({{  $movimiento->id }})"

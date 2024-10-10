@@ -1043,43 +1043,39 @@
 
     <div class="bg-white rounded-lg p-3 flex justify-end shadow-lg gap-3">
 
-        @if($inscripcion->movimientoRegistral->estado != 'correccion')
-
-            @if(!$inscripcion->movimientoRegistral->documentoEntrada())
-
-                <x-button-blue
-                    wire:click="abrirModalDocumento"
-                    wire:loading.attr="disabled"
-                    wire:target="abrirModalDocumento">
-
-                    <img wire:loading wire:target="abrirModalDocumento" class="mx-auto h-4 mr-1" src="{{ asset('storage/img/loading3.svg') }}" alt="Loading">
-
-                    Subir documento de entrada
-
-                </x-button-blue>
-
-            @else
-
-                <div class="inline-block">
-
-                    <x-link-blue target="_blank" href="{{ $inscripcion->movimientoRegistral->documentoEntrada() }}">Ver documento de entrada</x-link-blue>
-
-                </div>
-
-            @endif
+        @if(!$inscripcion->movimientoRegistral->documentoEntrada())
 
             <x-button-blue
-                wire:click="guardar"
+                wire:click="abrirModalDocumento"
                 wire:loading.attr="disabled"
-                wire:target="guardar">
+                wire:target="abrirModalDocumento">
 
-                <img wire:loading wire:target="guardar" class="mx-auto h-4 mr-1" src="{{ asset('storage/img/loading3.svg') }}" alt="Loading">
+                <img wire:loading wire:target="abrirModalDocumento" class="mx-auto h-4 mr-1" src="{{ asset('storage/img/loading3.svg') }}" alt="Loading">
 
-                Guardar y continuar
+                Subir documento de entrada
 
             </x-button-blue>
 
+        @else
+
+            <div class="inline-block">
+
+                <x-link-blue target="_blank" href="{{ $inscripcion->movimientoRegistral->documentoEntrada() }}">Ver documento de entrada</x-link-blue>
+
+            </div>
+
         @endif
+
+        <x-button-blue
+            wire:click="guardar"
+            wire:loading.attr="disabled"
+            wire:target="guardar">
+
+            <img wire:loading wire:target="guardar" class="mx-auto h-4 mr-1" src="{{ asset('storage/img/loading3.svg') }}" alt="Loading">
+
+            Guardar y continuar
+
+        </x-button-blue>
 
         <x-button-green
             wire:click="finalizar"
@@ -2143,21 +2139,5 @@
 
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js" integrity="sha512-894YE6QWD5I59HgZOGReFYm4dnWc1Qt5NtvYSaNcOP+u1T9qYdvdihz0PPSiiqn/+/3e7Jo4EaG7TubfWGUrMQ==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
     <script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
-
-    <script>
-
-        window.addEventListener('imprimir_documento', event => {
-
-            const documento = event.detail[0].inscripcion;
-
-            var url = "{{ route('propiedad.inscripcion.acto', '')}}" + "/" + documento;
-
-            window.open(url, '_blank');
-
-            window.location.href = "{{ route('propiedad')}}";
-
-        });
-
-    </script>
 
 @endpush

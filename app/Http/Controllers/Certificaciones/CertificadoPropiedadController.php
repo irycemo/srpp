@@ -9,10 +9,12 @@ use App\Models\Predio;
 use Illuminate\Support\Str;
 use App\Constantes\Constantes;
 use Barryvdh\DomPDF\Facade\Pdf;
-use App\Models\CertificadoPersona;
+use App\Models\FirmaElectronica;
 use App\Models\MovimientoRegistral;
 use App\Traits\NombreServicioTrait;
+use PhpCfdi\Credentials\Credential;
 use App\Http\Controllers\Controller;
+use App\Traits\Inscripciones\FirmaElectronicaTrait;
 use Illuminate\Support\Facades\Storage;
 use Luecano\NumeroALetras\NumeroALetras;
 
@@ -20,40 +22,88 @@ class CertificadoPropiedadController extends Controller
 {
 
     use NombreServicioTrait;
+    use FirmaElectronicaTrait;
 
     public function certificadoNegativoPropiedad(MovimientoRegistral $movimientoRegistral){
 
         /* $this->authorize('update', $movimientoRegistral); */
 
-        $formatter = new NumeroALetras();
-
-        $predio = Predio::where('folio_real', $movimientoRegistral->folio_real)->first();
-
-        Carbon::setLocale(config('app.locale'));
-        setlocale(LC_ALL, 'es_MX', 'es', 'ES', 'es_MX.utf8');
-
-        $fecha = Carbon::parse($predio->folioReal->fecha_inscripcion);
-
-        $año = $fecha->format('Y');
-
-        $fecha = now()->formatLocalized('%d DE %B DE ') . $formatter->toWords($año);
-
-        $director = User::where('status', 'activo')
+        $director = User::where('status', 'activo', 'efirma')
                             ->whereHas('roles', function($q){
                                 $q->where('name', 'Director');
-                            })->first()->name;
+                            })->first();
 
-        $registro_numero = $formatter->toWords($predio->folioReal->registro_antecedente);
+        $folioReal = (object)[];
 
-        $tomo_numero = $formatter->toWords($predio->folioReal->tomo_antecedente);
+        $folioReal->folio = $movimientoRegistral->folioReal->folio;
+        $folioReal->seccion = $movimientoRegistral->folioReal->seccion_antecedente;
+        $folioReal->distrito = $movimientoRegistral->folioReal->distrito;
+        $folioReal->tomo = $movimientoRegistral->folioReal->tomo_antecedente;
+        $folioReal->registro = $movimientoRegistral->folioReal->registro_antecedente;
+        $folioReal->numero_propiedad = $movimientoRegistral->folioReal->numero_propiedad_antecedente;
 
-        $distrito = Constantes::DISTRITOS[$movimientoRegistral->folioReal->distrito_antecedente];
+        $datos_control = (object)[];
 
-        $servicio = $this->nombreServicio($movimientoRegistral->certificacion->servicio);
+        $datos_control->numero_control = $movimientoRegistral->año . '-' . $movimientoRegistral->tramite . '-' . $movimientoRegistral->usuario;
+        $datos_control->verificado_por = auth()->user()->name;
+        $datos_control->elaborado_en = Carbon::now()->locale('es')->translatedFormat('H:i:s \d\e\l l d \d\e F \d\e\l Y');
+        $datos_control->servicio = $this->nombreServicio($movimientoRegistral->certificacion->servicio);
+        $datos_control->solicitante = $movimientoRegistral->solicitante;
+        $datos_control->monto = $movimientoRegistral->monto;
+        $datos_control->tipo_servicio = $movimientoRegistral->tipo_servicio;
+        $datos_control->movimiento_folio = $movimientoRegistral->folio;
 
-        $personas = $movimientoRegistral->certificacion->personas;
+        $personas = collect();
 
-        $pdf = Pdf::loadView('certificaciones.certificadoNegativoPropiedad', compact('predio', 'distrito', 'director', 'movimientoRegistral', 'fecha', 'registro_numero', 'tomo_numero', 'formatter', 'servicio', 'personas'));
+        if($movimientoRegistral->certificacion->personas->count()){
+
+            foreach ($movimientoRegistral->certificacion->personas as $persona) {
+
+                $item = (object)[];
+
+                $item->nombre = $persona->persona->nombre;
+                $item->ap_paterno = $persona->persona->ap_paterno;
+                $item->ap_materno = $persona->persona->ap_materno;
+
+                $personas->push($item);
+
+            }
+
+        }
+
+        $object = (object)[];
+
+        $object->predio = $this->predio($movimientoRegistral->folioReal->predio);
+        $object->director = $director->name;
+        $object->datos_control = $datos_control;
+        $object->folioReal = $folioReal;
+        $object->personas = $personas;
+
+        $fielDirector = Credential::openFiles(
+                                                Storage::disk('efirmas')->path($director->efirma->cer),
+                                                Storage::disk('efirmas')->path($director->efirma->key),
+                                                $director->efirma->contraseña
+                                            );
+
+        $firmaDirector = $fielDirector->sign(json_encode($object));
+
+        $firmaElectronica = FirmaElectronica::create([
+            'movimiento_registral_id' => $movimientoRegistral->id,
+            'cadena_original' => json_encode($object),
+            'cadena_encriptada' => base64_encode($firmaDirector),
+        ]);
+
+        $qr = $this->generadorQr($firmaElectronica->uuid);
+
+        $pdf = Pdf::loadView('certificaciones.certificadoNegativoPropiedad', [
+            'folioReal' => $object->folioReal,
+            'predio' => $object->predio,
+            'director' => $object->director,
+            'personas' => $object->personas,
+            'datos_control' => $object->datos_control,
+            'firma_electronica' => false,
+            'qr' => $qr,
+        ]);
 
         $pdf->render();
 
@@ -64,6 +114,20 @@ class CertificadoPropiedadController extends Controller
         $canvas->page_text(480, 745, "Página: {PAGE_NUM} de {PAGE_COUNT}", null, 9, array(1, 1, 1));
 
         $canvas->page_text(35, 745, $movimientoRegistral->folioReal->folio  .'-' . $movimientoRegistral->folio, null, 9, array(1, 1, 1));
+
+        $objeto = json_decode($firmaElectronica->cadena_original);
+
+        $pdfFirmado = Pdf::loadView('certificaciones.certificadoNegativoPropiedad', [
+            'folioReal' => $objeto->folioReal,
+            'predio' => $objeto->predio,
+            'director' => $objeto->director,
+            'personas' => $objeto->personas,
+            'datos_control' => $objeto->datos_control,
+            'firma_electronica' => base64_encode($firmaDirector),
+            'qr' => $qr,
+        ]);
+
+        $this->pdfFirmado($pdfFirmado, $movimientoRegistral->id, $movimientoRegistral->folioReal->folio . '-' .$movimientoRegistral->folio);
 
         return $pdf->stream('documento.pdf');
 
@@ -73,35 +137,83 @@ class CertificadoPropiedadController extends Controller
 
         /* $this->authorize('update', $movimientoRegistral); */
 
-        $formatter = new NumeroALetras();
-
-        $predio = Predio::where('folio_real', $movimientoRegistral->folio_real)->first();
-
-        Carbon::setLocale(config('app.locale'));
-        setlocale(LC_ALL, 'es_MX', 'es', 'ES', 'es_MX.utf8');
-
-        $fecha = Carbon::parse($predio->folioReal->fecha_inscripcion);
-
-        $año = $fecha->format('Y');
-
-        $fecha = now()->formatLocalized('%d DE %B DE ') . $formatter->toWords($año);
-
-        $director = User::where('status', 'activo')
+        $director = User::where('status', 'activo', 'efirma')
                             ->whereHas('roles', function($q){
                                 $q->where('name', 'Director');
-                            })->first()->name;
+                            })->first();
 
-        $registro_numero = $formatter->toWords($predio->folioReal->registro_antecedente);
+        $folioReal = (object)[];
 
-        $tomo_numero = $formatter->toWords($predio->folioReal->tomo_antecedente);
+        $folioReal->folio = $movimientoRegistral->folioReal->folio;
+        $folioReal->seccion = $movimientoRegistral->folioReal->seccion_antecedente;
+        $folioReal->distrito = $movimientoRegistral->folioReal->distrito;
+        $folioReal->tomo = $movimientoRegistral->folioReal->tomo_antecedente;
+        $folioReal->registro = $movimientoRegistral->folioReal->registro_antecedente;
+        $folioReal->numero_propiedad = $movimientoRegistral->folioReal->numero_propiedad_antecedente;
 
-        $distrito = Constantes::DISTRITOS[$movimientoRegistral->folioReal->distrito_antecedente];
+        $datos_control = (object)[];
 
-        $personas = CertificadoPersona::with('persona')->where('certificacion_id', $movimientoRegistral->certificacion->id)->get();
+        $datos_control->numero_control = $movimientoRegistral->año . '-' . $movimientoRegistral->tramite . '-' . $movimientoRegistral->usuario;
+        $datos_control->verificado_por = auth()->user()->name;
+        $datos_control->elaborado_en = Carbon::now()->locale('es')->translatedFormat('H:i:s \d\e\l l d \d\e F \d\e\l Y');
+        $datos_control->servicio = $this->nombreServicio($movimientoRegistral->certificacion->servicio);
+        $datos_control->solicitante = $movimientoRegistral->solicitante;
+        $datos_control->monto = $movimientoRegistral->monto;
+        $datos_control->tipo_servicio = $movimientoRegistral->tipo_servicio;
+        $datos_control->movimiento_folio = $movimientoRegistral->folio;
 
-        $servicio = $this->nombreServicio($movimientoRegistral->certificacion->servicio);
+        $personas = collect();
 
-        $pdf = Pdf::loadView('certificaciones.certificadoPropiedad', compact('predio', 'distrito', 'director', 'movimientoRegistral', 'fecha', 'registro_numero', 'tomo_numero', 'formatter', 'personas', 'servicio'));
+        if($movimientoRegistral->certificacion->personas->count()){
+
+            foreach ($movimientoRegistral->certificacion->personas as $persona) {
+
+                $item = (object)[];
+
+                $item->nombre = $persona->persona->nombre;
+                $item->ap_paterno = $persona->persona->ap_paterno;
+                $item->ap_materno = $persona->persona->ap_materno;
+
+                $personas->push($item);
+
+            }
+
+        }
+
+        $object = (object)[];
+
+        $object->predio = $this->predio($movimientoRegistral->folioReal->predio);
+        $object->director = $director->name;
+        $object->datos_control = $datos_control;
+        $object->folioReal = $folioReal;
+        $object->personas = $personas;
+
+        $fielDirector = Credential::openFiles(
+                                                Storage::disk('efirmas')->path($director->efirma->cer),
+                                                Storage::disk('efirmas')->path($director->efirma->key),
+                                                $director->efirma->contraseña
+                                            );
+
+        $firmaDirector = $fielDirector->sign(json_encode($object));
+
+        $firmaElectronica = FirmaElectronica::create([
+            'movimiento_registral_id' => $movimientoRegistral->id,
+            'cadena_original' => json_encode($object),
+            'cadena_encriptada' => base64_encode($firmaDirector),
+        ]);
+
+        $qr = $this->generadorQr($firmaElectronica->uuid);
+
+        $pdf = Pdf::loadView('certificaciones.certificadoPropiedad', [
+            'folioReal' => $object->folioReal,
+            'predio' => $object->predio,
+            'director' => $object->director,
+            'personas' => $object->personas,
+            'datos_control' => $object->datos_control,
+            'firma_electronica' => false,
+            'qr' => $qr,
+        ]);
+
 
         $pdf->render();
 
@@ -113,8 +225,19 @@ class CertificadoPropiedadController extends Controller
 
         $canvas->page_text(35, 745, $movimientoRegistral->folioReal->folio  .'-' . $movimientoRegistral->folio, null, 9, array(1, 1, 1));
 
-        if(!$movimientoRegistral->caratula())
-            $this->pdfSinFirma($pdf, $movimientoRegistral);
+        $objeto = json_decode($firmaElectronica->cadena_original);
+
+        $pdfFirmado = Pdf::loadView('certificaciones.certificadoPropiedad', [
+            'folioReal' => $objeto->folioReal,
+            'predio' => $objeto->predio,
+            'director' => $objeto->director,
+            'personas' => $objeto->personas,
+            'datos_control' => $objeto->datos_control,
+            'firma_electronica' => base64_encode($firmaDirector),
+            'qr' => $qr,
+        ]);
+
+        $this->pdfFirmado($pdfFirmado, $movimientoRegistral->id, $movimientoRegistral->folioReal->folio . '-' .$movimientoRegistral->folio);
 
         return $pdf->stream('documento.pdf');
 
@@ -124,37 +247,82 @@ class CertificadoPropiedadController extends Controller
 
         /* $this->authorize('update', $movimientoRegistral); */
 
-        $formatter = new NumeroALetras();
-
-        $predio = Predio::where('folio_real', $movimientoRegistral->folio_real)->first();
-
-        Carbon::setLocale(config('app.locale'));
-        setlocale(LC_ALL, 'es_MX', 'es', 'ES', 'es_MX.utf8');
-
-        $fecha = Carbon::parse($predio->folioReal->fecha_inscripcion);
-
-        $año = $fecha->format('Y');
-
-        $fecha = now()->formatLocalized('%d DE %B DE ') . $formatter->toWords($año);
-
-        $director = User::where('status', 'activo')
+        $director = User::where('status', 'activo', 'efirma')
                             ->whereHas('roles', function($q){
                                 $q->where('name', 'Director');
-                            })->first()->name;
+                            })->first();
 
-        $registro_numero = $formatter->toWords($predio->folioReal->registro_antecedente);
+        $folioReal = (object)[];
 
-        $tomo_numero = $formatter->toWords($predio->folioReal->tomo_antecedente);
+        $folioReal->folio = $movimientoRegistral->folioReal->folio;
+        $folioReal->seccion = $movimientoRegistral->folioReal->seccion_antecedente;
+        $folioReal->distrito = $movimientoRegistral->folioReal->distrito;
+        $folioReal->tomo = $movimientoRegistral->folioReal->tomo_antecedente;
+        $folioReal->registro = $movimientoRegistral->folioReal->registro_antecedente;
+        $folioReal->numero_propiedad = $movimientoRegistral->folioReal->numero_propiedad_antecedente;
 
-        $distrito = Constantes::DISTRITOS[$movimientoRegistral->folioReal->distrito_antecedente];
+        $datos_control = (object)[];
 
-        $servicio = $this->nombreServicio($movimientoRegistral->certificacion->servicio);
+        $datos_control->numero_control = $movimientoRegistral->año . '-' . $movimientoRegistral->tramite . '-' . $movimientoRegistral->usuario;
+        $datos_control->verificado_por = auth()->user()->name;
+        $datos_control->elaborado_en = Carbon::now()->locale('es')->translatedFormat('H:i:s \d\e\l l d \d\e F \d\e\l Y');
+        $datos_control->servicio = $this->nombreServicio($movimientoRegistral->certificacion->servicio);
+        $datos_control->solicitante = $movimientoRegistral->solicitante;
+        $datos_control->monto = $movimientoRegistral->monto;
+        $datos_control->tipo_servicio = $movimientoRegistral->tipo_servicio;
+        $datos_control->movimiento_folio = $movimientoRegistral->folio;
 
-        $persona = $movimientoRegistral->certificacion->personas()->first()->persona->nombre . ' ' .
-                    $movimientoRegistral->certificacion->personas()->first()->persona->ap_paterno . ' ' .
-                    $movimientoRegistral->certificacion->personas()->first()->persona->ap_materno;
+        $personas = collect();
 
-        $pdf = Pdf::loadView('certificaciones.certificadoUnicoPropiedad', compact('predio', 'distrito', 'director', 'movimientoRegistral', 'fecha', 'registro_numero', 'tomo_numero', 'formatter', 'servicio', 'persona'));
+        if($movimientoRegistral->certificacion->personas->count()){
+
+            foreach ($movimientoRegistral->certificacion->personas as $persona) {
+
+                $item = (object)[];
+
+                $item->nombre = $persona->persona->nombre;
+                $item->ap_paterno = $persona->persona->ap_paterno;
+                $item->ap_materno = $persona->persona->ap_materno;
+
+                $personas->push($item);
+
+            }
+
+        }
+
+        $object = (object)[];
+
+        $object->predio = $this->predio($movimientoRegistral->folioReal->predio);
+        $object->director = $director->name;
+        $object->datos_control = $datos_control;
+        $object->folioReal = $folioReal;
+        $object->personas = $personas;
+
+        $fielDirector = Credential::openFiles(
+                                                Storage::disk('efirmas')->path($director->efirma->cer),
+                                                Storage::disk('efirmas')->path($director->efirma->key),
+                                                $director->efirma->contraseña
+                                            );
+
+        $firmaDirector = $fielDirector->sign(json_encode($object));
+
+        $firmaElectronica = FirmaElectronica::create([
+            'movimiento_registral_id' => $movimientoRegistral->id,
+            'cadena_original' => json_encode($object),
+            'cadena_encriptada' => base64_encode($firmaDirector),
+        ]);
+
+        $qr = $this->generadorQr($firmaElectronica->uuid);
+
+        $pdf = Pdf::loadView('certificaciones.certificadoUnicoPropiedad', [
+            'folioReal' => $object->folioReal,
+            'predio' => $object->predio,
+            'director' => $object->director,
+            'personas' => $object->personas,
+            'datos_control' => $object->datos_control,
+            'firma_electronica' => false,
+            'qr' => $qr,
+        ]);
 
         $pdf->render();
 
@@ -166,8 +334,19 @@ class CertificadoPropiedadController extends Controller
 
         $canvas->page_text(35, 745, $movimientoRegistral->folioReal->folio  .'-' . $movimientoRegistral->folio, null, 9, array(1, 1, 1));
 
-        if(!$movimientoRegistral->caratula())
-            $this->pdfSinFirma($pdf, $movimientoRegistral);
+        $objeto = json_decode($firmaElectronica->cadena_original);
+
+        $pdfFirmado = Pdf::loadView('certificaciones.certificadoUnicoPropiedad', [
+            'folioReal' => $objeto->folioReal,
+            'predio' => $objeto->predio,
+            'director' => $objeto->director,
+            'personas' => $objeto->personas,
+            'datos_control' => $objeto->datos_control,
+            'firma_electronica' => base64_encode($firmaDirector),
+            'qr' => $qr,
+        ]);
+
+        $this->pdfFirmado($pdfFirmado, $movimientoRegistral->id, $movimientoRegistral->folioReal->folio . '-' .$movimientoRegistral->folio);
 
         return $pdf->stream('documento.pdf');
 
@@ -177,33 +356,62 @@ class CertificadoPropiedadController extends Controller
 
         /* $this->authorize('update', $movimientoRegistral); */
 
-        $formatter = new NumeroALetras();
-
-        $predio = Predio::where('folio_real', $movimientoRegistral->folio_real)->first();
-
-        Carbon::setLocale(config('app.locale'));
-        setlocale(LC_ALL, 'es_MX', 'es', 'ES', 'es_MX.utf8');
-
-        $fecha = Carbon::parse($predio->folioReal->fecha_inscripcion);
-
-        $año = $fecha->format('Y');
-
-        $fecha = now()->formatLocalized('%d DE %B DE ') . $formatter->toWords($año);
-
-        $director = User::where('status', 'activo')
+        $director = User::where('status', 'activo', 'efirma')
                             ->whereHas('roles', function($q){
                                 $q->where('name', 'Director');
-                            })->first()->name;
+                            })->first();
 
-        $registro_numero = $formatter->toWords($predio->folioReal->registro_antecedente);
+        $folioReal = (object)[];
 
-        $tomo_numero = $formatter->toWords($predio->folioReal->tomo_antecedente);
+        $folioReal->folio = $movimientoRegistral->folioReal->folio;
+        $folioReal->seccion = $movimientoRegistral->folioReal->seccion_antecedente;
+        $folioReal->distrito = $movimientoRegistral->folioReal->distrito;
+        $folioReal->tomo = $movimientoRegistral->folioReal->tomo_antecedente;
+        $folioReal->registro = $movimientoRegistral->folioReal->registro_antecedente;
+        $folioReal->numero_propiedad = $movimientoRegistral->folioReal->numero_propiedad_antecedente;
 
-        $distrito = Constantes::DISTRITOS[$movimientoRegistral->folioReal->distrito_antecedente];
+        $datos_control = (object)[];
 
-        $servicio = $this->nombreServicio($movimientoRegistral->certificacion->servicio);
+        $datos_control->numero_control = $movimientoRegistral->año . '-' . $movimientoRegistral->tramite . '-' . $movimientoRegistral->usuario;
+        $datos_control->verificado_por = auth()->user()->name;
+        $datos_control->elaborado_en = Carbon::now()->locale('es')->translatedFormat('H:i:s \d\e\l l d \d\e F \d\e\l Y');
+        $datos_control->servicio = $this->nombreServicio($movimientoRegistral->certificacion->servicio);
+        $datos_control->solicitante = $movimientoRegistral->solicitante;
+        $datos_control->monto = $movimientoRegistral->monto;
+        $datos_control->tipo_servicio = $movimientoRegistral->tipo_servicio;
+        $datos_control->movimiento_folio = $movimientoRegistral->folio;
 
-        $pdf = Pdf::loadView('certificaciones.certificadoPropiedadColindancias', compact('predio', 'distrito', 'director', 'movimientoRegistral', 'fecha', 'registro_numero', 'tomo_numero', 'formatter', 'servicio'));
+        $object = (object)[];
+
+        $object->predio = $this->predio($movimientoRegistral->folioReal->predio);
+        $object->director = $director->name;
+        $object->datos_control = $datos_control;
+        $object->folioReal = $folioReal;
+
+        $fielDirector = Credential::openFiles(
+                                                Storage::disk('efirmas')->path($director->efirma->cer),
+                                                Storage::disk('efirmas')->path($director->efirma->key),
+                                                $director->efirma->contraseña
+                                            );
+
+        $firmaDirector = $fielDirector->sign(json_encode($object));
+
+        $firmaElectronica = FirmaElectronica::create([
+            'movimiento_registral_id' => $movimientoRegistral->id,
+            'cadena_original' => json_encode($object),
+            'cadena_encriptada' => base64_encode($firmaDirector),
+        ]);
+
+        $qr = $this->generadorQr($firmaElectronica->uuid);
+
+        $pdf = Pdf::loadView('certificaciones.certificadoPropiedadColindancias', [
+            'folioReal' => $object->folioReal,
+            'predio' => $object->predio,
+            'director' => $object->director,
+            'datos_control' => $object->datos_control,
+            'firma_electronica' => false,
+            'qr' => $qr,
+        ]);
 
         $pdf->render();
 
@@ -215,8 +423,18 @@ class CertificadoPropiedadController extends Controller
 
         $canvas->page_text(35, 745, $movimientoRegistral->folioReal->folio  .'-' . $movimientoRegistral->folio, null, 9, array(1, 1, 1));
 
-        if(!$movimientoRegistral->caratula())
-            $this->pdfSinFirma($pdf, $movimientoRegistral);
+        $objeto = json_decode($firmaElectronica->cadena_original);
+
+        $pdfFirmado = Pdf::loadView('certificaciones.certificadoPropiedadColindancias', [
+            'folioReal' => $objeto->folioReal,
+            'predio' => $objeto->predio,
+            'director' => $objeto->director,
+            'datos_control' => $objeto->datos_control,
+            'firma_electronica' => base64_encode($firmaDirector),
+            'qr' => $qr,
+        ]);
+
+        $this->pdfFirmado($pdfFirmado, $movimientoRegistral->id, $movimientoRegistral->folioReal->folio . '-' .$movimientoRegistral->folio);
 
         return $pdf->stream('documento.pdf');
 
@@ -226,25 +444,83 @@ class CertificadoPropiedadController extends Controller
 
         /* $this->authorize('update', $movimientoRegistral); */
 
-        $formatter = new NumeroALetras();
-
-        Carbon::setLocale(config('app.locale'));
-        setlocale(LC_ALL, 'es_MX', 'es', 'ES', 'es_MX.utf8');
-
-        $director = User::where('status', 'activo')
+        $director = User::where('status', 'activo', 'efirma')
                             ->whereHas('roles', function($q){
                                 $q->where('name', 'Director');
-                            })->first()->name;
+                            })->first();
 
-        $distrito = $movimientoRegistral->distrito;
+        $folioReal = (object)[];
 
-        $persona = $movimientoRegistral->certificacion->personas()->first()->persona->nombre . ' ' .
-                    $movimientoRegistral->certificacion->personas()->first()->persona->ap_paterno . ' ' .
-                    $movimientoRegistral->certificacion->personas()->first()->persona->ap_materno;
+        $folioReal->folio = $movimientoRegistral->folioReal->folio;
+        $folioReal->seccion = $movimientoRegistral->folioReal->seccion_antecedente;
+        $folioReal->distrito = $movimientoRegistral->folioReal->distrito;
+        $folioReal->tomo = $movimientoRegistral->folioReal->tomo_antecedente;
+        $folioReal->registro = $movimientoRegistral->folioReal->registro_antecedente;
+        $folioReal->numero_propiedad = $movimientoRegistral->folioReal->numero_propiedad_antecedente;
 
-        $servicio = $this->nombreServicio($movimientoRegistral->certificacion->servicio);
+        $datos_control = (object)[];
 
-        $pdf = Pdf::loadView('certificaciones.certificadoNegativo', compact('distrito', 'director', 'movimientoRegistral', 'persona', 'servicio'));
+        $datos_control->numero_control = $movimientoRegistral->año . '-' . $movimientoRegistral->tramite . '-' . $movimientoRegistral->usuario;
+        $datos_control->verificado_por = auth()->user()->name;
+        $datos_control->elaborado_en = Carbon::now()->locale('es')->translatedFormat('H:i:s \d\e\l l d \d\e F \d\e\l Y');
+        $datos_control->servicio = $this->nombreServicio($movimientoRegistral->certificacion->servicio);
+        $datos_control->solicitante = $movimientoRegistral->solicitante;
+        $datos_control->monto = $movimientoRegistral->monto;
+        $datos_control->tipo_servicio = $movimientoRegistral->tipo_servicio;
+        $datos_control->movimiento_folio = $movimientoRegistral->folio;
+
+        $personas = collect();
+
+        if($movimientoRegistral->certificacion->personas->count()){
+
+            foreach ($movimientoRegistral->certificacion->personas as $persona) {
+
+                $item = (object)[];
+
+                $item->nombre = $persona->persona->nombre;
+                $item->ap_paterno = $persona->persona->ap_paterno;
+                $item->ap_materno = $persona->persona->ap_materno;
+
+                $personas->push($item);
+
+            }
+
+        }
+
+        $object = (object)[];
+
+        $object->director = $director->name;
+        $object->datos_control = $datos_control;
+        $object->folioReal = $folioReal;
+        $object->personas = $personas;
+        $object->distrito = $movimientoRegistral->distrito;
+        $object->observaciones_certificado = $movimientoRegistral->certificacion->observaciones_certificado;
+
+        $fielDirector = Credential::openFiles(
+                                                Storage::disk('efirmas')->path($director->efirma->cer),
+                                                Storage::disk('efirmas')->path($director->efirma->key),
+                                                $director->efirma->contraseña
+                                            );
+
+        $firmaDirector = $fielDirector->sign(json_encode($object));
+
+        $firmaElectronica = FirmaElectronica::create([
+            'movimiento_registral_id' => $movimientoRegistral->id,
+            'cadena_original' => json_encode($object),
+            'cadena_encriptada' => base64_encode($firmaDirector),
+        ]);
+
+        $qr = $this->generadorQr($firmaElectronica->uuid);
+
+        $pdf = Pdf::loadView('certificaciones.certificadoNegativo', [
+            'distrito' => $object->distrito,
+            'director' => $object->director,
+            'personas' => $object->personas,
+            'datos_control' => $object->datos_control,
+            'observaciones_certificado' => $object->observaciones_certificado,
+            'firma_electronica' => false,
+            'qr' => $qr,
+        ]);
 
         $pdf->render();
 
@@ -258,55 +534,52 @@ class CertificadoPropiedadController extends Controller
 
     }
 
-    public function pdfSinFirma($pdf, $movimientoRegistral){
+    public function pdfFirmado($pdf, $id, $folio){
 
-        $nombreS3 = Str::random(40) . '.pdf';
+        $this->resetCaratula($id);
 
-        $nombreLocal = Str::random(40) . '.pdf';
+        $pdf->render();
 
-        if(env('LOCAL') == "0"){
+        $dom_pdf = $pdf->getDomPDF();
 
-            Storage::disk('s3')->put($nombreS3, $pdf->output());
+        $canvas = $dom_pdf->get_canvas();
 
-            File::create([
-                'fileable_id' => $movimientoRegistral->id,
-                'fileable_type' => 'App\Models\MovimientoRegistral',
-                'descripcion' => 'caratula_s3',
-                'url' => $nombreS3
-            ]);
+        $canvas->page_text(35, 745, $folio, null, 9, array(1, 1, 1));
 
-        }elseif(env('LOCAL') == "1"){
+        $canvas->page_text(480, 745, "Página: {PAGE_NUM} de {PAGE_COUNT}", null, 9, array(1, 1, 1));
 
-            Storage::disk('caratulas')->put($nombreLocal, $pdf->output());
+        $canvas->page_script(function ($pageNumber, $pageCount, $canvas, $fontMetrics) {
+            $w = $canvas->get_width();
+            $h = $canvas->get_height();
 
-            File::create([
-                'fileable_id' => $movimientoRegistral->id,
-                'fileable_type' => 'App\Models\MovimientoRegistral',
-                'descripcion' => 'caratula',
-                'url' => $nombreLocal
-            ]);
+            $canvas->image(public_path('storage/img/watermark.png'), 0, 0, $w, $h, $resolution = "normal");
 
-        }elseif(env('LOCAL') == "2"){
+        });
 
-            Storage::disk('s3')->put($nombreS3, $pdf->output());
+        $nombre = Str::random(40);
 
-            File::create([
-                'fileable_id' => $movimientoRegistral->id,
-                'fileable_type' => 'App\Models\MovimientoRegistral',
-                'descripcion' => 'caratula_s3',
-                'url' => $nombreS3
-            ]);
+        $nombreFinal = $nombre . '.pdf';
 
-            Storage::disk('caratulas')->put($nombreLocal, $pdf->output());
+        Storage::disk('caratulas')->put($nombre . '.pdf', $pdf->output());
+
+        $pdfImagen = new \Spatie\PdfToImage\Pdf('caratulas/' . $nombre . '.pdf');
+
+        for ($i=1; $i <= $pdfImagen->pageCount(); $i++) {
+
+            $nombre = $nombre . '_' . $i . '.jpg';
+
+            $pdfImagen->selectPage($i)->save('caratulas/'. $nombre);
 
             File::create([
-                'fileable_id' => $movimientoRegistral->id,
+                'fileable_id' => $id,
                 'fileable_type' => 'App\Models\MovimientoRegistral',
                 'descripcion' => 'caratula',
-                'url' => $nombreLocal
+                'url' => $nombre
             ]);
 
         }
+
+        unlink('caratulas/' . $nombreFinal);
 
     }
 

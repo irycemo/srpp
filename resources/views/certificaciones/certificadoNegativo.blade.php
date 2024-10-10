@@ -8,10 +8,6 @@
 </head>
 <style>
 
-    /* @page {
-        margin: 0cm 0cm;
-    } */
-
     header{
         position: fixed;
         top: 0cm;
@@ -51,13 +47,6 @@
         width: 50%;
     }
 
-    .titulo{
-        text-align: center;
-        font-size: 13px;
-        font-weight: bold;
-        margin: 0;
-    }
-
     .container{
         display: flex;
         align-content: space-around;
@@ -77,7 +66,7 @@
     }
 
     .atte{
-        margin-bottom: 40px;
+        margin-bottom: 10px;
     }
 
     .borde{
@@ -142,6 +131,14 @@
         margin: 0 0 5px 0;
     }
 
+    .titulo{
+        text-align: center;
+        font-size: 13px;
+        font-weight: bold;
+        margin: 0;
+    }
+
+
 </style>
 <body>
 
@@ -173,7 +170,7 @@
                 </div>
 
                 <div style="text-align: right">
-                    <p style="margin:0;"><strong>DISTRITO:</strong> {{ $movimientoRegistral->distrito}}</p>
+                    <p style="margin:0;"><strong>DISTRITO:</strong> {{ $distrito}}</p>
                 </div>
 
                 <p class="titulo">
@@ -181,20 +178,22 @@
                 </p>
 
                 <p class="parrafo">
-                    EL DIRECTOR DEL REGISTRO PÚBLICO DE LA PROPIEDAD @if($distrito == '02 Uruapan' ) <strong>L.A. SANDRO MEDINA MORALES</strong> @else <strong>{{ $director }}</strong>, @endif certifica que habiendose examinado el acervo regsitral correspondiente al distrito  {{ $distrito}} no se encontro registrado a nombre de: <strong>{{ $persona }}</strong>.
+                    EL DIRECTOR DEL REGISTRO PÚBLICO DE LA PROPIEDAD @if($distrito == '02 Uruapan' ) <strong>L.A. SANDRO MEDINA MORALES</strong> @else <strong>{{ $director }}</strong>, @endif certifica que habiendose examinado el acervo regsitral correspondiente al distrito  {{ $distrito}} no se encontro registrado a nombre de:
+                    @foreach ($personas as $persona)
+                        <strong> {{ $persona->nombre }} {{ $persona->ap_paterno }} {{ $persona->ap_materno }}</strong>@if(!$loop->last),@endif
+                    @endforeach
                 </p>
 
-                @if($movimientoRegistral->certificacion->observaciones_certificado)
+                @if($observaciones_certificado)
 
                     <p class="parrafo">
-                        <strong>Descripción de la propiedad:</strong> {{ $movimientoRegistral->certificacion->observaciones_certificado }}
+                        <strong>Descripción de la propiedad:</strong> {{ $observaciones_certificado }}
                     </p>
 
                 @endif
 
                 <p class="parrafo">
-                    A SOLICITUD DE: <strong>{{ $movimientoRegistral->solicitante }}</strong> se expide EL PRESENTE CERTIFICADO EN LA CIUDAD DE @if($distrito == '02 Uruapan' ) URUAPAN, @else MORELIA, @endif MICHOACÁN, A LAS
-                    {{ Carbon\Carbon::now()->locale('es')->translatedFormat('H:i:s \d\e\l l d \d\e F \d\e\l Y'); }}.
+                    A SOLICITUD DE: <strong>{{ $datos_control->solicitante }}</strong> se expide EL PRESENTE CERTIFICADO EN LA CIUDAD DE @if($distrito == '02 Uruapan' ) URUAPAN, @else MORELIA, @endif MICHOACÁN, A LAS{{ $datos_control->elaborado_en }}.
                 </p>
 
                 <div class="firma no-break">
@@ -203,12 +202,23 @@
                         <strong>A T E N T A M E N T E</strong>
                     </p>
 
-                    @if($distrito == '02 Uruapan' )
-                        <p class="borde">Lic. SANDRO MEDINA MORALES </p>
-                        <p style="margin:0;">COORDINADOR REGIONAL 4 PURHÉPECHA (URUAPAN)</p>
+                    @if(!$firma_electronica)
+
+                        @if($distrito == '02 Uruapan' )
+                            <p class="borde">Lic. SANDRO MEDINA MORALES </p>
+                            <p style="margin:0;">COORDINADOR REGIONAL 4 PURHÉPECHA (URUAPAN)</p>
+                        @else
+                            <p class="borde" style="margin:0;">{{ $director }}</p>
+                            <p style="margin:0;">Director del registro público de la propiedad</p>
+                        @endif
+
                     @else
-                        <p class="borde" style="margin:0;">{{ $director }}</p>
+
+                        <p style="margin:0;">{{ $director }}</p>
                         <p style="margin:0;">Director del registro público de la propiedad</p>
+                        <p style="text-align: center">Firma Electrónica:</p>
+                        <p class="parrafo" style="overflow-wrap: break-word;">{{ $firma_electronica }}</p>
+
                     @endif
 
                 </div>
@@ -219,35 +229,28 @@
 
                         <p class="separador">DATOS DE CONTROL</p>
 
-                        <table style="font-size: 9px">
+                        <table style="margin-top: 10px">
+
                             <tbody>
                                 <tr>
-                                    <td style="padding-right: 40px; text-align:left; vertical-align: bottom;">
+                                    <td style="padding-right: 40px;">
 
-                                        @if($movimientoRegistral->año)
-
-                                            <p style="margin: 0"><strong>NÚMERO DE CONTROL: </strong>{{ $movimientoRegistral->año }}-{{ $movimientoRegistral->tramite }}-{{ $movimientoRegistral->usuario }}</p>
-
-                                        @else
-
-                                            <p style="margin: 0"><strong>NÚMERO DE CONTROL: </strong>{{ $movimientoRegistral->certificacion->observaciones }}</p>
-
-                                        @endif
-
-                                        <p style="margin: 0"><strong>DERECHOS: </strong>${{ number_format($movimientoRegistral->monto, 2) }}</p>
-                                        <p style="margin: 0"><strong>Tipo de servicio: </strong>{{ $movimientoRegistral->tipo_servicio }}</p>
-                                        <p style="margin: 0"><strong>Servicio: </strong>{{ $servicio }}</p>
+                                        <img class="qr" src="{{ $qr }}" alt="QR">
 
                                     </td>
+                                    <td style="padding-right: 40px;">
 
-                                    <td style="padding-right: 40px; text-align:left; ; vertical-align: top; white-space: nowrap;">
+                                        <p style="margin: 0"><strong>NÚMERO DE CONTROL: </strong>{{ $datos_control->numero_control }}</p>
+                                        <p style="margin: 0"><strong>DERECHOS: </strong>${{ number_format($datos_control->monto, 2) }}</p>
+                                        <p style="margin: 0"><strong>Tipo de servicio: </strong>{{ $datos_control->tipo_servicio }}</p>
+                                        <p style="margin: 0"><strong>Servicio: </strong>{{ $datos_control->servicio }}</p>
+                                        <p style="margin: 0"><strong>Elaborado en: </strong>{{ $datos_control->elaborado_en }}</p>
+                                        <p style="margin: 0"><strong>Verificado POR: </strong>{{  $datos_control->verificado_por }}</p>
 
-                                        <p style="margin: 0"><strong>Impreso en: </strong>{{ now()->format('d/m/Y H:i:s') }}</p>
-                                        <p style="margin: 0"><strong>IMPRESO POR: </strong>{{  auth()->user()->name }}</p>
                                     </td>
-
                                 </tr>
                             </tbody>
+
                         </table>
 
                     </div>

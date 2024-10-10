@@ -30,6 +30,7 @@ class Propietarios extends Component
     public $porcentaje_usufructo = 0.00;
     public $tipo_persona;
     public $nombre;
+    public $multiple_nombre;
     public $ap_paterno;
     public $ap_materno;
     public $curp;
@@ -69,6 +70,7 @@ class Propietarios extends Component
             'porcentaje_nuda' => 'nullable|numeric|min:0|max:100',
             'porcentaje_usufructo' => 'nullable|numeric|min:0|max:100',
             'tipo_persona' => 'required',
+            'multiple_nombre' => 'nullable',
             'nombre' => [
                 Rule::requiredIf($this->tipo_persona === 'FISICA')
             ],
@@ -109,6 +111,7 @@ class Propietarios extends Component
             'porcentaje_usufructo',
             'tipo_persona',
             'nombre',
+            'multiple_nombre',
             'ap_paterno',
             'ap_materno',
             'curp',
@@ -172,6 +175,7 @@ class Propietarios extends Component
                 'curp',
                 'fecha_nacimiento',
                 'estado_civil',
+                'multiple_nombre'
             ]);
 
         }
@@ -327,6 +331,7 @@ class Propietarios extends Component
                     $persona = Persona::create([
                         'tipo' => $this->tipo_persona,
                         'nombre' => $this->nombre,
+                        'multiple_nombre' => $this->multiple_nombre,
                         'ap_paterno' => $this->ap_paterno,
                         'ap_materno' => $this->ap_materno,
                         'curp' => $this->curp,
@@ -450,6 +455,7 @@ class Propietarios extends Component
                     $persona = Persona::create([
                         'tipo' => $this->tipo_persona,
                         'nombre' => $this->nombre,
+                        'multiple_nombre' => $this->multiple_nombre,
                         'ap_paterno' => $this->ap_paterno,
                         'ap_materno' => $this->ap_materno,
                         'curp' => $this->curp,
@@ -552,6 +558,7 @@ class Propietarios extends Component
                     $persona = Persona::create([
                         'tipo' => $this->tipo_persona,
                         'nombre' => $this->nombre,
+                        'multiple_nombre' => $this->multiple_nombre,
                         'ap_paterno' => $this->ap_paterno,
                         'ap_materno' => $this->ap_materno,
                         'curp' => $this->curp,
@@ -615,6 +622,7 @@ class Propietarios extends Component
         $this->porcentaje_usufructo = $actor->porcentaje_usufructo;
         $this->tipo_persona = $actor->persona->tipo;
         $this->nombre = $actor->persona->nombre;
+        $this->multiple_nombre = $actor->persona->multiple_nombre;
         $this->ap_paterno = $actor->persona->ap_paterno;
         $this->ap_materno = $actor->persona->ap_materno;
         $this->curp = $actor->persona->curp;
@@ -679,6 +687,7 @@ class Propietarios extends Component
                 $this->actor->persona->update([
                     'tipo' => $this->tipo_persona,
                     'nombre' => $this->nombre,
+                    'multiple_nombre' => $this->multiple_nombre,
                     'ap_paterno' => $this->ap_paterno,
                     'ap_materno' => $this->ap_materno,
                     'curp' => $this->curp,

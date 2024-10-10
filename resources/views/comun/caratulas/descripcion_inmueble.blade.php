@@ -1,6 +1,7 @@
 <p class="separador">DESCRIPCIÓN DEL INMUEBLE</p>
 
 <p class="parrafo">
+
     @if($predio->cp_localidad)
         <strong>Cuenta predial:</strong> {{ $predio->cp_localidad }}-{{ $predio->cp_oficina }}-{{ $predio->cp_tipo_predio }}-{{ $predio->cp_registro }};
     @endif
@@ -9,18 +10,26 @@
         <strong>Clave catastral:</strong> {{ $predio->cc_estado }}-{{ $predio->cc_region_catastral }}-{{ $predio->cc_municipio }}-{{ $predio->cc_zona_catastral }}-{{ $predio->cc_sector }}-{{ $predio->cc_manzana }}-{{ $predio->cc_predio }}-{{ $predio->cc_edificio }}-{{ $predio->cc_departamento }};
     @endif
 
-    <strong>Superficie de terreno:</strong> @if($predio->unidad_area == 'Hectareas') {{ $predio->superficie_terreno_formateada }} @else {{ $predio->superficie_terreno }} @endif {{ $predio->unidad_area }} <strong>Superficie de construcción:</strong> {{ $predio->superficie_construccion }} Metros cuadrados <strong>monto de la transacción:</strong> ${{ number_format($predio->monto_transaccion, 2) }} {{ $predio->divisa }};
+    <strong>Superficie de terreno:</strong>  {{ $predio->superficie_terreno }}  {{ $predio->unidad_area }}
+
+    @if ($predio->superficie_construccion)
+
+        <strong>Superficie de construcción:</strong> {{ $predio->superficie_construccion }} Metros cuadrados
+
+    @endif
+
+    <strong>monto de la transacción:</strong> ${{ number_format($predio->monto_transaccion, 2) }} {{ $predio->divisa }};
 
     @if ($predio->curt)
         <strong>curt:</strong> {{ $predio->curt }};
     @endif
 
     @if ($predio->superficie_judicial)
-        <strong>superficie judicial:</strong> @if($predio->unidad_area == 'Hectareas') {{ $predio->superficie_judicial_formateada }} @else {{ $predio->superficie_judicial }} @endif {{ $predio->unidad_area }};
+        <strong>superficie judicial:</strong>  {{ $predio->superficie_judicial }}  {{ $predio->unidad_area }};
     @endif
 
     @if ($predio->superficie_notarial)
-        <strong>superficie notarial:</strong> @if($predio->unidad_area == 'Hectareas') {{ $predio->superficie_notarial_formateada }} @else {{ $predio->superficie_notarial }} @endif {{ $predio->unidad_area }};
+        <strong>superficie notarial:</strong> {{ $predio->superficie_notarial }}  {{ $predio->unidad_area }};
     @endif
 
     @if ($predio->area_comun_terreno)

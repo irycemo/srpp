@@ -52,7 +52,7 @@
                 <x-table.heading sortable wire:click="sortBy('seccion')" :direction="$sort === 'seccion' ? $direction : null" >Sección</x-table.heading>
                 <x-table.heading>Solicitante</x-table.heading>
                 <x-table.heading >Número de páginas</x-table.heading>
-                @if (auth()->user()->hasRole(['Supervisor certificaciones', 'Administrador', 'Supervisor uruapan', 'Jefe de departamento']))
+                @if (auth()->user()->hasRole(['Supervisor certificaciones', 'Administrador', 'Supervisor uruapan', 'Jefe de departamento certificaciones']))
                     <x-table.heading >Folio de carpeta</x-table.heading>
                     <x-table.heading sortable wire:click="sortBy('usuario_asignado')" :direction="$sort === 'usuario_asignado' ? $direction : null" >Asignado a</x-table.heading>
                 @endif
@@ -145,7 +145,7 @@
 
                         </x-table.cell>
 
-                        @if (auth()->user()->hasRole(['Supervisor certificaciones', 'Administrador', 'Supervisor uruapan', 'Jefe de departamento']))
+                        @if (auth()->user()->hasRole(['Supervisor certificaciones', 'Administrador', 'Supervisor uruapan', 'Jefe de departamento certificaciones']))
 
                             <x-table.cell>
 
@@ -269,7 +269,7 @@
 
                                         @can('Finalizar copias certificadas')
 
-                                            @if(auth()->user()->hasRole(['Supervisor certificaciones', 'Certificador Oficialia', 'Certificador Juridico', 'Jefe de departamento']))
+                                            @if(auth()->user()->hasRole(['Supervisor certificaciones', 'Certificador Oficialia', 'Certificador Juridico', 'Jefe de departamento certificaciones']))
 
                                                 <button
                                                     wire:click="finalizarSupervisor({{ $copia->certificacion->id }})"

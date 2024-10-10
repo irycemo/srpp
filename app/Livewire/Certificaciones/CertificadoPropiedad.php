@@ -311,7 +311,7 @@ class CertificadoPropiedad extends Component
 
         } catch (\Throwable $th) {
 
-            Log::error("Error al generar certificado con colindancias por el usuario: (id: " . auth()->user()->id . ") " . auth()->user()->name . ". " . $th);
+            Log::error("Error al generar certificado de propiedad por el usuario: (id: " . auth()->user()->id . ") " . auth()->user()->name . ". " . $th);
             $this->dispatch('mostrarMensaje', ['error', "Ha ocurrido un error."]);
 
         }

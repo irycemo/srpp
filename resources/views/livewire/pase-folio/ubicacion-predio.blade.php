@@ -8,52 +8,6 @@
 
                 <span class="flex items-center justify-center text-lg text-gray-700 md:col-span-3 col-span-1 sm:col-span-2">Ubicación del predio</span>
 
-                <x-input-group for="codigo_postal" label="Código postal" :error="$errors->first('codigo_postal')" class="w-full">
-
-                    <x-input-text type="number" id="codigo_postal" wire:model="codigo_postal" />
-
-                </x-input-group>
-
-                <x-input-group for="nombre_asentamiento" label="Nombre del asentamiento" :error="$errors->first('nombre_asentamiento')" class="w-full">
-
-                    <x-input-text  id="nombre_asentamiento" wire:model="nombre_asentamiento" />
-
-                </x-input-group>
-
-                <x-input-group for="municipio_ubicacion" label="Municipio" :error="$errors->first('municipio_ubicacion')" class="w-full">
-
-                    <x-input-text id="municipio_ubicacion" wire:model="municipio_ubicacion"/>
-
-                </x-input-group>
-
-                <x-input-group for="ciudad" label="Ciudad" :error="$errors->first('ciudad')" class="w-full">
-
-                    <x-input-text id="ciudad" wire:model="ciudad"/>
-
-                </x-input-group>
-
-                <x-input-group for="tipo_asentamiento" label="Tipo de asentamiento" :error="$errors->first('tipo_asentamiento')" class="w-full">
-
-                    <x-input-select id="tipo_asentamiento" wire:model.live="tipo_asentamiento" class="w-full">
-
-                        <option value="">Seleccione una opción</option>
-
-                        @foreach ($tipos_asentamientos as $asentamiento)
-
-                            <option value="{{ $asentamiento }}">{{ $asentamiento }}</option>
-
-                        @endforeach
-
-                    </x-input-select>
-
-                </x-input-group>
-
-                <x-input-group for="localidad_ubicacion" label="Localidad" :error="$errors->first('localidad_ubicacion')" class="w-full">
-
-                    <x-input-text id="localidad_ubicacion" wire:model="localidad_ubicacion" />
-
-                </x-input-group>
-
                 <x-input-group for="tipo_vialidad" label="Tipo de vialidad" :error="$errors->first('tipo_vialidad')" class="w-full">
 
                     <x-input-select id="tipo_vialidad" wire:model.live="tipo_vialidad" class="w-full">
@@ -100,6 +54,52 @@
 
                 </x-input-group>
 
+                <x-input-group for="tipo_asentamiento" label="Tipo de asentamiento" :error="$errors->first('tipo_asentamiento')" class="w-full">
+
+                    <x-input-select id="tipo_asentamiento" wire:model.live="tipo_asentamiento" class="w-full">
+
+                        <option value="">Seleccione una opción</option>
+
+                        @foreach ($tipos_asentamientos as $asentamiento)
+
+                            <option value="{{ $asentamiento }}">{{ $asentamiento }}</option>
+
+                        @endforeach
+
+                    </x-input-select>
+
+                </x-input-group>
+
+                <x-input-group for="nombre_asentamiento" label="Nombre del asentamiento" :error="$errors->first('nombre_asentamiento')" class="w-full">
+
+                    <x-input-text  id="nombre_asentamiento" wire:model="nombre_asentamiento" />
+
+                </x-input-group>
+
+                <x-input-group for="codigo_postal" label="Código postal" :error="$errors->first('codigo_postal')" class="w-full">
+
+                    <x-input-text type="number" id="codigo_postal" wire:model="codigo_postal" />
+
+                </x-input-group>
+
+                <x-input-group for="localidad_ubicacion" label="Localidad" :error="$errors->first('localidad_ubicacion')" class="w-full">
+
+                    <x-input-text id="localidad_ubicacion" wire:model="localidad_ubicacion" />
+
+                </x-input-group>
+
+                <x-input-group for="municipio_ubicacion" label="Municipio" :error="$errors->first('municipio_ubicacion')" class="w-full">
+
+                    <x-input-text id="municipio_ubicacion" wire:model="municipio_ubicacion"/>
+
+                </x-input-group>
+
+                <x-input-group for="ciudad" label="Ciudad" :error="$errors->first('ciudad')" class="w-full">
+
+                    <x-input-text id="ciudad" wire:model="ciudad"/>
+
+                </x-input-group>
+
                 <x-input-group for="observaciones" label="Observaciones" :error="$errors->first('observaciones')" class="md:col-span-3 col-span-1 sm:col-span-2">
 
                     <textarea rows="3" class="w-full bg-white rounded" wire:model="observaciones"></textarea>
@@ -111,6 +111,12 @@
             <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-3 mb-3 bg-white rounded-lg p-3 shadow-lg">
 
                 <span class="flex items-center justify-center text-lg text-gray-700 md:col-span-3 col-span-1 sm:col-span-2">Datos Complementarios</span>
+
+                <x-input-group for="zona_ubicacion" label="Zona" :error="$errors->first('zona_ubicacion')" class="w-full">
+
+                    <x-input-text id="zona_ubicacion" wire:model="zona_ubicacion" />
+
+                </x-input-group>
 
                 <x-input-group for="lote" label="Lote" :error="$errors->first('lote')" class="w-full">
 
@@ -147,6 +153,10 @@
                     <x-input-text id="poblado" wire:model="poblado" />
 
                 </x-input-group>
+
+            </div>
+
+            <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-3 mb-3 bg-white rounded-lg p-3 shadow-lg">
 
                 <x-input-group for="numero_exterior_2" label="Número exterior 2" :error="$errors->first('numero_exterior_2')" class="w-full">
 

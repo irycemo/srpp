@@ -24,7 +24,7 @@ class MovimientoRegistralPolicy
     public function update(User $user, MovimientoRegistral $movimientoRegistral): Response
     {
 
-        if(!in_array($movimientoRegistral->estado, ['nuevo', 'captura'])){
+        if(!in_array($movimientoRegistral->estado, ['nuevo', 'captura', 'correccion'])){
 
             return Response::deny('El movimiento registral no puede ser modificado.');
 

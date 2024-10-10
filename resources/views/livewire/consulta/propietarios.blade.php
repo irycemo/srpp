@@ -40,7 +40,7 @@
 
     </div>
 
-    <div class="bg-white p-4 rounded-lg mb-3 flex gap-3 items-center justify-end">
+    <div class="bg-white p-4 rounded-lg mb-3 flex gap-3 items-center justify-between">
 
         @if($folioReal->documentoEntrada())
 
@@ -48,11 +48,11 @@
 
         @endif
 
-        @if($folioReal->caratula())
-
-            <x-link-blue target="_blank" href="{{ $folioReal->caratula() }}">Caratula</x-link-blue>
-
-        @endif
+        @foreach ($folioReal->caratula as $image)
+            <a href="{{ Storage::disk('caratulas')->url($image->url) }}" data-lightbox="imagen" data-title="Caratula">
+                <img class="h-20" src="{{ Storage::disk('caratulas')->url($image->url) }}" alt="Caratula">
+            </a>
+        @endforeach
 
     </div>
 
