@@ -273,7 +273,7 @@
 
                                         @can('Finalizar copias certificadas')
 
-                                            @if(auth()->user()->hasRole('Supervisor certificaciones'))
+                                            @if(auth()->user()->hasRole(['Supervisor certificaciones', 'Certificador Oficialia', 'Certificador Juridico', 'Jefe de departamento certificaciones']))
 
                                                 <button
                                                     wire:click="finalizarSupervisor({{ $copia->certificacion->id }})"
@@ -281,7 +281,7 @@
                                                     class="w-full text-left block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 focus:outline-none focus:bg-gray-100"
                                                     role="menuitem">
 
-                                                    <span>Finalizar</span>
+                                                    <span>Concluir</span>
 
                                                 </button>
 
@@ -293,7 +293,7 @@
                                                     class="w-full text-left block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 focus:outline-none focus:bg-gray-100"
                                                     role="menuitem">
 
-                                                    <span>Finalizar</span>
+                                                    <span>Elaborar</span>
 
                                                 </button>
 

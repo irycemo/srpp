@@ -12,7 +12,7 @@ class MovimientoRegistralPolicy
     public function view(User $user, MovimientoRegistral $movimientoRegistral): Response
     {
 
-        if ($user->hasRole(['Administrador', 'Jefe de departamento'])) {
+        if ($user->hasRole(['Administrador', 'Jefe de departamento inscripciones', 'Jefe de departamento certificaciones'])) {
             return Response::allow();
         }
 
@@ -30,7 +30,7 @@ class MovimientoRegistralPolicy
 
         }
 
-        if ($user->hasRole('Administrador', 'Jefe de departamento')) {
+        if ($user->hasRole('Administrador', 'Jefe de departamento inscripciones', 'Jefe de departamento certificaciones')) {
             return Response::allow();
         }
 

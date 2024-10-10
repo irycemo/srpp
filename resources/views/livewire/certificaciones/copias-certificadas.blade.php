@@ -271,15 +271,31 @@
 
                                             @if(auth()->user()->hasRole(['Supervisor certificaciones', 'Certificador Oficialia', 'Certificador Juridico', 'Jefe de departamento certificaciones']))
 
-                                                <button
-                                                    wire:click="finalizarSupervisor({{ $copia->certificacion->id }})"
-                                                    wire:loading.attr="disabled"
-                                                    class="w-full text-left block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 focus:outline-none focus:bg-gray-100"
-                                                    role="menuitem">
+                                                @if($copia->certificacion->folio_carpeta_copias)
 
-                                                    <span>Finalizar</span>
+                                                    <button
+                                                        wire:click="finalizarSupervisor({{ $copia->certificacion->id }})"
+                                                        wire:loading.attr="disabled"
+                                                        class="w-full text-left block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 focus:outline-none focus:bg-gray-100"
+                                                        role="menuitem">
 
-                                                </button>
+                                                        <span>Concluir</span>
+
+                                                    </button>
+
+                                                @else
+
+                                                    <button
+                                                        wire:click="abrirModalEditar({{ $copia->certificacion->id }})"
+                                                        wire:loading.attr="disabled"
+                                                        class="w-full text-left block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 focus:outline-none focus:bg-gray-100"
+                                                        role="menuitem">
+
+                                                        <span>Elaborar</span>
+
+                                                    </button>
+
+                                                @endif
 
                                             @else
 
