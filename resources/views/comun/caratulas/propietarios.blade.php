@@ -19,7 +19,10 @@
 
             <tr>
                 <td style="padding-right: 40px;">
-                    {{ $propietario->nombre }} {{ $propietario->ap_paterno }} {{ $propietario->ap_materno }} {{ $propietario->razon_social }}
+                    <p style="margin:0">{{ $propietario->nombre }} {{ $propietario->ap_paterno }} {{ $propietario->ap_materno }} {{ $propietario->razon_social }}</p>
+                    @if($propietario->multiple_nombre)
+                        <p style="margin:0">({{ $propietario->multiple_nombre }})</p>
+                    @endif
                 </td>
                 <td style="padding-right: 40px;">
                     {{ $propietario->porcentaje_propiedad ?? '0.00' }} %

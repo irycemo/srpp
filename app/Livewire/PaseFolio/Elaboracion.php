@@ -523,13 +523,13 @@ class Elaboracion extends Component
 
         }
 
-        if(!$this->propiedad->tipo_asentamiento){
+        /* if(!$this->propiedad->tipo_asentamiento){
 
             $this->dispatch('mostrarMensaje', ['error', "El predio debe tener tipo de asentamiento."]);
 
             return;
 
-        }
+        } */
 
         /* if(!$this->propiedad->localidad){
 

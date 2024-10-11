@@ -101,8 +101,15 @@ class FolioReal extends Model implements Auditable
         return $this->morphMany(File::class, 'fileable');
     }
 
-    public function caratula(){
+   /*  public function caratula(){
         return $this->morphMany(File::class, 'fileable')->where('descripcion', 'caratula');
+    } */
+
+    public function caratula(){
+
+        return $this->archivos()->where('descripcion', 'caratula')->first()
+                ? Storage::disk('caratulas')->url($this->archivos()->where('descripcion', 'caratula')->first()->url)
+                : null;
     }
 
     public function documentoEntrada(){

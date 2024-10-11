@@ -182,13 +182,13 @@
                     <strong>de fecha</strong> {{ $propiedad->fecha_emision }}
                     <strong>otorgado por</strong> {{ $propiedad->autoridad_cargo }} {{ $propiedad->autoridad_nombre }}
                     <strong>consta que </strong>
-                    @foreach ($propiedad->transmitentes as $transmitente)
+                    @foreach ($propiedad->propietarios as $propietario)
 
-                        {{ $transmitente->nombre }} {{ $transmitente->ap_paterno }} {{ $transmitente->ap_materno }} {{ $transmitente->razon_social }}
+                        {{ $propietario->nombre }} {{ $propietario->ap_paterno }} {{ $propietario->ap_materno }} {{ $propietario->razon_social }} {{ $propietario->multiple_nombre }}
 
-                        @if($transmitente->representado_por)
+                        @if(isset($propietario->representado_por))
 
-                            <strong>representado(a) por: </strong>{{ $transmitente->representado_por }}
+                            <strong>representado(a) por: </strong>{{ $propietario->representado_por }}
 
                         @endif
 
@@ -212,7 +212,7 @@
 
             @include('comun.caratulas.descripcion_inmueble')
 
-            <p class="parrafo">{{ $datos_control->servicio }}</p>
+            <p style="text-align: center">Tipo de predio: {{ $datos_control->servicio }}</p>
 
             @include('comun.caratulas.propietarios')
 
@@ -229,9 +229,11 @@
                 @if(!$firma_electronica)
 
                     @if($folioReal->distrito == '02 Uruapan' )
+                        <p style="margin-top: 80px;"></p>
                         <p class="borde">Lic. SANDRO MEDINA MORALES </p>
                         <p style="margin:0;">COORDINADOR REGIONAL 4 PURHÉPECHA (URUAPAN)</p>
                     @else
+                        <p style="margin-top: 80px;"></p>
                         <p class="borde" style="margin:0;">{{ $director }}</p>
                         <p style="margin:0;">Director del registro público de la propiedad</p>
                     @endif
@@ -297,12 +299,13 @@
                             <td style="padding-right: 40px;">
 
                                 <p style="margin: 0"><strong>NÚMERO DE CONTROL: </strong>{{ $datos_control->numero_control }}</p>
+                                <p style="margin: 0"><strong>Movimiento registral:</strong> {{ $folioReal->folio }}-{{ $datos_control->movimiento_folio }}</p>
                                 <p style="margin: 0"><strong>DERECHOS: </strong>${{ number_format($datos_control->monto, 2) }}</p>
                                 <p style="margin: 0"><strong>Tipo de servicio: </strong>{{ $datos_control->tipo_servicio }}</p>
                                 <p style="margin: 0"><strong>Servicio: </strong>{{ $datos_control->servicio }}</p>
                                 <p style="margin: 0"><strong>Elaborado en: </strong>{{ $datos_control->elaborado_en }}</p>
-                                <p style="margin: 0"><strong>Verificado POR: </strong>{{  $datos_control->verificado_por }}</p>
-                                <p style="margin: 0"><strong>Movimiento registral:</strong> {{ $folioReal->folio }}-{{ $datos_control->movimiento_folio }}</p>
+                                <p style="margin: 0"><strong>Registrado POR: </strong>{{  $datos_control->registrado_por }}</p>
+                                <p style="margin: 0"><strong>Folio real asignado por:</strong> {{ $datos_control->asigno_folio }}</p>
 
                             </td>
                         </tr>

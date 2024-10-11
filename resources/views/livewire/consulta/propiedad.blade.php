@@ -261,17 +261,25 @@
 
                 <div class="bg-white p-4 rounded-lg mb-3 flex gap-3 items-center justify-end">
 
-                    @if($inscripcion->movimientoRegistral->documentoEntrada())
+                    <div>
 
-                        <x-link-blue target="_blank" href="{{ $inscripcion->movimientoRegistral->documentoEntrada() }}">Documento de entrada</x-link-blue>
+                        @if($inscripcion->movimientoRegistral->documentoEntrada())
 
-                    @endif
+                            <x-link-blue target="_blank" href="{{ $inscripcion->movimientoRegistral->documentoEntrada() }}">Documento de entrada</x-link-blue>
 
-                    @foreach ($inscripcion->movimientoRegistral->caratula as $image)
-                        <a href="{{ Storage::disk('caratulas')->url($image->url) }}" data-lightbox="imagen" data-title="Caratula">
-                            <img class="h-20" src="{{ Storage::disk('caratulas')->url($image->url) }}" alt="Caratula">
-                        </a>
-                    @endforeach
+                        @endif
+
+                    </div>
+
+                    <div>
+
+                        @if($inscripcion->movimientoRegistral->caratula())
+
+                            <x-link-blue target="_blank" href="{{ $inscripcion->movimientoRegistral->caratula() }}">Documento de entrada</x-link-blue>
+
+                        @endif
+
+                    </div>
 
                 </div>
 

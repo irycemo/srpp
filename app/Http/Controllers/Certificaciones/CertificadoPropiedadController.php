@@ -5,9 +5,7 @@ namespace App\Http\Controllers\Certificaciones;
 use Carbon\Carbon;
 use App\Models\File;
 use App\Models\User;
-use App\Models\Predio;
 use Illuminate\Support\Str;
-use App\Constantes\Constantes;
 use Barryvdh\DomPDF\Facade\Pdf;
 use App\Models\FirmaElectronica;
 use App\Models\MovimientoRegistral;
@@ -16,7 +14,7 @@ use PhpCfdi\Credentials\Credential;
 use App\Http\Controllers\Controller;
 use App\Traits\Inscripciones\FirmaElectronicaTrait;
 use Illuminate\Support\Facades\Storage;
-use Luecano\NumeroALetras\NumeroALetras;
+use Imagick;
 
 class CertificadoPropiedadController extends Controller
 {
@@ -52,6 +50,7 @@ class CertificadoPropiedadController extends Controller
         $datos_control->monto = $movimientoRegistral->monto;
         $datos_control->tipo_servicio = $movimientoRegistral->tipo_servicio;
         $datos_control->movimiento_folio = $movimientoRegistral->folio;
+        $datos_control->asigno_folio = $movimientoRegistral->folioReal->asignado_por;
 
         $personas = collect();
 
@@ -161,6 +160,7 @@ class CertificadoPropiedadController extends Controller
         $datos_control->monto = $movimientoRegistral->monto;
         $datos_control->tipo_servicio = $movimientoRegistral->tipo_servicio;
         $datos_control->movimiento_folio = $movimientoRegistral->folio;
+        $datos_control->asigno_folio = $movimientoRegistral->folioReal->asignado_por;
 
         $personas = collect();
 
@@ -271,6 +271,7 @@ class CertificadoPropiedadController extends Controller
         $datos_control->monto = $movimientoRegistral->monto;
         $datos_control->tipo_servicio = $movimientoRegistral->tipo_servicio;
         $datos_control->movimiento_folio = $movimientoRegistral->folio;
+        $datos_control->asigno_folio = $movimientoRegistral->folioReal->asignado_por;
 
         $personas = collect();
 
@@ -380,6 +381,7 @@ class CertificadoPropiedadController extends Controller
         $datos_control->monto = $movimientoRegistral->monto;
         $datos_control->tipo_servicio = $movimientoRegistral->tipo_servicio;
         $datos_control->movimiento_folio = $movimientoRegistral->folio;
+        $datos_control->asigno_folio = $movimientoRegistral->folioReal->asignado_por;
 
         $object = (object)[];
 
@@ -564,20 +566,34 @@ class CertificadoPropiedadController extends Controller
 
         $pdfImagen = new \Spatie\PdfToImage\Pdf('caratulas/' . $nombre . '.pdf');
 
+        $all = new Imagick();
+
         for ($i=1; $i <= $pdfImagen->pageCount(); $i++) {
 
             $nombre = $nombre . '_' . $i . '.jpg';
 
             $pdfImagen->selectPage($i)->save('caratulas/'. $nombre);
 
-            File::create([
-                'fileable_id' => $id,
-                'fileable_type' => 'App\Models\MovimientoRegistral',
-                'descripcion' => 'caratula',
-                'url' => $nombre
-            ]);
+            $im = new Imagick(Storage::disk('caratulas')->path($nombre));
+
+            $all->addImage($im);
+
+            unlink('caratulas/' . $nombre);
 
         }
+
+        $all->resetIterator();
+        $combined = $all->appendImages(true);
+        $combined->setImageFormat("jpg");
+
+        file_put_contents("caratulas/" . $nombre, $combined);
+
+        File::create([
+            'fileable_id' => $id,
+            'fileable_type' => 'App\Models\MovimientoRegistral',
+            'descripcion' => 'caratula',
+            'url' => $nombre
+        ]);
 
         unlink('caratulas/' . $nombreFinal);
 

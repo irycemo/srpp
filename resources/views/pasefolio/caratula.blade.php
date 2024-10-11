@@ -182,11 +182,11 @@
                     EL DIRECTOR DEL REGISTRO PÚBLICO DE LA PROPIEDAD <strong>{{ $director }}</strong>, AUTORIZA EL PRESENTE FOLIO REAL PARA LOS ASIENTOS RELATIVOS A EL INMUEBLE QUE A CONTINUACIÓN SE DESCRIBE:
                 </p>
 
-                <p style="text-align: center"><strong>FOLIO REAL:</strong> {{ $folioReal->folio }}</p>
+                <p style="text-align: center" class="titulo"><strong>FOLIO REAL:</strong> {{ $folioReal->folio }}</p>
 
                 @if(count($folioReal->antecedentes))
 
-                    <p class="separador">Antecedentes</p>
+                    <p class="separador">Antecedente(s)</p>
 
                     <table>
 
@@ -231,7 +231,7 @@
                     </table>
 
                 @else
-
+                    <p class="separador">Antecedente</p>
                     <p style="text-align: center"><strong>SECCIÓN:</strong> {{ $folioReal->seccion_antecedente }}; <strong>DISTRITO:</strong> {{ $distrito}}; <strong>TOMO:</strong> {{ $folioReal->tomo_antecedente }}, <strong>REGISTRO:</strong> {{ $folioReal->registro_antecedente }}, <strong>NÚMERO DE PROPIEDAD:</strong> {{ $folioReal->numero_propiedad_antecedente }}</p>
 
                 @endif

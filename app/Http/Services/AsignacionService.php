@@ -129,7 +129,7 @@ class AsignacionService{
 
         if(!$folioReal){
 
-            $roles = ['Certificador Gravamen', 'Pase a folio'];
+            $roles = ['Pase a folio'];
         }else{
 
             $roles = ['Certificador Gravamen'];

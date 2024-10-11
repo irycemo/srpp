@@ -3,7 +3,6 @@
 namespace App\Livewire\Consulta;
 
 use App\Models\Actor;
-use App\Models\Predio;
 use App\Models\Persona;
 use Livewire\Component;
 use App\Models\FolioReal;
@@ -100,7 +99,7 @@ class Consulta extends Component
 
         $this->reset(['folioReal']);
 
-        if($this->folio_real || $this->tomo || $this->registro || $this->numero_propiedad || $this->distrito || $this->seccion || $this->codigo_postal || $this->municipio || $this->ciudad || $this->tipo_asentamiento || $this->nombre_asentamiento || $this->localidad || $this->tipo_vialidad || $this->nombre_vialidad || $this->numero_exterior){
+        if($this->folio_real || $this->tomo || $this->registro || $this->numero_propiedad || $this->distrito || $this->seccion || $this->codigo_postal || $this->municipio || $this->ciudad || $this->tipo_asentamiento || $this->nombre_asentamiento || $this->localidad_ubicacion || $this->tipo_vialidad || $this->nombre_vialidad || $this->numero_exterior){
 
             $this->folios_reales = FolioReal::with('predio', 'antecedentes')
                                 ->where('estado', 'activo')
@@ -111,11 +110,11 @@ class Consulta extends Component
                                 ->when($this->distrito, fn($q, $distrito) => $q->where('distrito_antecedente', $distrito) )
                                 ->when($this->seccion, fn($q, $seccion) => $q->where('seccion_antecedente', $seccion) )
                                 ->when($this->codigo_postal, fn($q, $codigo_postal) => $q->whereHas('predio', function($q) use($codigo_postal){ $q->where('codigo_postal', $codigo_postal); }))
-                                ->when($this->municipio, fn($q, $municipio) => $q->whereHas('predio', function($q) use($municipio){ $q->where('municipio', $municipio); }))
-                                ->when($this->ciudad, fn($q, $ciudad) => $q->whereHas('predio', function($q) use($ciudad){ $q->where('ciudad', $ciudad); }))
-                                ->when($this->tipo_asentamiento, fn($q, $tipo_asentamiento) => $q->whereHas('predio', function($q) use($tipo_asentamiento){ $q->where('tipo_asentamiento', $tipo_asentamiento); }))
-                                ->when($this->nombre_asentamiento, fn($q, $nombre_asentamiento) => $q->whereHas('predio', function($q) use($nombre_asentamiento){ $q->where('nombre_asentamiento', $nombre_asentamiento); }))
-                                ->when($this->localidad, fn($q, $localidad) => $q->whereHas('predio', function($q) use($localidad){ $q->where('localidad', $localidad); }))
+                                ->when($this->municipio, fn($q, $municipio) => $q->whereHas('predio', function($q) use($municipio){ $q->where('municipio', 'like' , '%' . $municipio . '%'); }))
+                                ->when($this->ciudad, fn($q, $ciudad) => $q->whereHas('predio', function($q) use($ciudad){ $q->where('ciudad', 'like' , '%' .$ciudad . '%'); }))
+                                ->when($this->tipo_asentamiento, fn($q, $tipo_asentamiento) => $q->whereHas('predio', function($q) use($tipo_asentamiento){ $q->where('tipo_asentamiento', 'like' , '%' . $tipo_asentamiento . '%'); }))
+                                ->when($this->nombre_asentamiento, fn($q, $nombre_asentamiento) => $q->whereHas('predio', function($q) use($nombre_asentamiento){ $q->where('nombre_asentamiento', 'like' , '%' .$nombre_asentamiento . '%'); }))
+                                ->when($this->localidad_ubicacion, fn($q, $localidad_ubicacion) => $q->whereHas('predio', function($q) use($localidad_ubicacion){ $q->where('localidad', 'like' , '%' .$localidad_ubicacion . '%'); }))
                                 ->when($this->tipo_vialidad, fn($q, $tipo_vialidad) => $q->whereHas('predio', function($q) use($tipo_vialidad){ $q->where('tipo_vialidad', $tipo_vialidad); }))
                                 ->when($this->nombre_vialidad, fn($q, $nombre_vialidad) => $q->whereHas('predio', function($q) use($nombre_vialidad){ $q->where('nombre_vialidad', $nombre_vialidad); }))
                                 ->when($this->numero_exterior, fn($q, $numero_exterior) => $q->whereHas('predio', function($q) use($numero_exterior){ $q->where('numero_exterior', $numero_exterior); }))
@@ -153,7 +152,10 @@ class Consulta extends Component
                 }else{
 
                     foreach ($folios as $folio) {
-                        $this->folios_reales->push($folio);
+
+                        if(!$this->folios_reales->where('id', $folio->id)->first())
+                            $this->folios_reales->push($folio);
+
                     }
 
                 }
@@ -202,12 +204,12 @@ class Consulta extends Component
             'predio',
             'predio.escritura',
             'predio.colindancias',
-            'sentencias.movimientoRegistral.caratula',
+            'sentencias.movimientoRegistral',
             'varios.movimientoRegistral',
-            'propiedad.movimientoRegistral.caratula',
-            'certificaciones.movimientoRegistral.caratula',
-            'cancelaciones.movimientoRegistral.caratula',
-            'gravamenes.movimientoRegistral.caratula',
+            'propiedad.movimientoRegistral',
+            'certificaciones.movimientoRegistral',
+            'cancelaciones.movimientoRegistral',
+            'gravamenes.movimientoRegistral',
             'gravamenes.deudores',
             'gravamenes.acreedores',
         );

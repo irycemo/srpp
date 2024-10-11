@@ -15,6 +15,7 @@ use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Storage;
 use Luecano\NumeroALetras\NumeroALetras;
 use App\Traits\Inscripciones\FirmaElectronicaTrait;
+use Imagick;
 
 class PaseFolioController extends Controller
 {
@@ -145,20 +146,34 @@ class PaseFolioController extends Controller
 
         $pdfImagen = new \Spatie\PdfToImage\Pdf('caratulas/' . $nombre . 'pdf');
 
+        $all = new Imagick();
+
         for ($i=1; $i <= $pdfImagen->pageCount(); $i++) {
 
             $nombre = $nombre . '_' . $i . '.jpg';
 
             $pdfImagen->selectPage($i)->save('caratulas/'. $nombre);
 
-            File::create([
-                'fileable_id' => $id,
-                'fileable_type' => 'App\Models\FolioReal',
-                'descripcion' => 'caratula',
-                'url' => $nombre
-            ]);
+            $im = new Imagick(Storage::disk('caratulas')->path($nombre));
+
+            $all->addImage($im);
+
+            unlink('caratulas/' . $nombre);
 
         }
+
+        $all->resetIterator();
+        $combined = $all->appendImages(true);
+        $combined->setImageFormat("jpg");
+
+        file_put_contents("caratulas/" . $nombre, $combined);
+
+        File::create([
+            'fileable_id' => $id,
+            'fileable_type' => 'App\Models\FolioReal',
+            'descripcion' => 'caratula',
+            'url' => $nombre
+        ]);
 
         unlink('caratulas/' . $nombreFinal);
 

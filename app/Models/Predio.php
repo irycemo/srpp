@@ -75,7 +75,7 @@ class Predio extends Model implements Auditable
         return substr($string,0, -4) . '-' .
                 substr($string,-4, -2) . '-' .
                 substr($string, -2, strlen($string)) . '.' .
-                substr((string)($this->attributes['superficie_terreno']), -5, -2);
+                substr((string)($this->attributes['superficie_terreno']), -2, strlen($string));
 
     }
 
@@ -86,7 +86,7 @@ class Predio extends Model implements Auditable
         return substr($string,0, -4) . '-' .
                 substr($string,-4, -2) . '-' .
                 substr($string, -2, strlen($string)) . '.' .
-                substr((string)($this->attributes['superficie_terreno']), -5, -2);
+                substr((string)($this->attributes['superficie_notarial']), -2, strlen($string));
 
     }
 
@@ -97,7 +97,7 @@ class Predio extends Model implements Auditable
         return substr($string,0, -4) . '-' .
                 substr($string,-4, -2) . '-' .
                 substr($string, -2, strlen($string)) . '.' .
-                substr((string)($this->attributes['superficie_terreno']), -5, -2);
+                substr((string)($this->attributes['superficie_judicial']), -2, strlen($string));
 
     }
 

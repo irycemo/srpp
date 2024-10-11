@@ -16,6 +16,7 @@ use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Storage;
 use Luecano\NumeroALetras\NumeroALetras;
 use App\Traits\Inscripciones\FirmaElectronicaTrait;
+use Imagick;
 
 class CertificadoGravamenController extends Controller
 {
@@ -75,7 +76,8 @@ class CertificadoGravamenController extends Controller
         $datos_control->solicitante = $movimientoRegistral->solicitante;
         $datos_control->monto = $movimientoRegistral->monto;
         $datos_control->tipo_servicio = $movimientoRegistral->tipo_servicio;
-        $datos_control->movimiento_folio = $movimientoRegistral->folio;
+        $datos_control->movimiento_folio  = $movimientoRegistral->folio;
+        $datos_control->asigno_folio = $movimientoRegistral->folioReal->asignado_por;
 
         if($movimientoRegistral->FolioReal->avisoPreventivo()){
 
@@ -180,20 +182,34 @@ class CertificadoGravamenController extends Controller
 
         $pdfImagen = new \Spatie\PdfToImage\Pdf('caratulas/' . $nombre . '.pdf');
 
+        $all = new Imagick();
+
         for ($i=1; $i <= $pdfImagen->pageCount(); $i++) {
 
             $nombre = $nombre . '_' . $i . '.jpg';
 
             $pdfImagen->selectPage($i)->save('caratulas/'. $nombre);
 
-            File::create([
-                'fileable_id' => $id,
-                'fileable_type' => 'App\Models\MovimientoRegistral',
-                'descripcion' => 'caratula',
-                'url' => $nombre
-            ]);
+            $im = new Imagick(Storage::disk('caratulas')->path($nombre));
+
+            $all->addImage($im);
+
+            unlink('caratulas/' . $nombre);
 
         }
+
+        $all->resetIterator();
+        $combined = $all->appendImages(true);
+        $combined->setImageFormat("jpg");
+
+        file_put_contents("caratulas/" . $nombre, $combined);
+
+        File::create([
+            'fileable_id' => $id,
+            'fileable_type' => 'App\Models\MovimientoRegistral',
+            'descripcion' => 'caratula',
+            'url' => $nombre
+        ]);
 
         unlink('caratulas/' . $nombreFinal);
 

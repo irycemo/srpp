@@ -60,6 +60,7 @@ class PropiedadInscripcion extends Component
     public $porcentaje_usufructo;
     public $tipo_persona;
     public $nombre;
+    public $multiple_nombre;
     public $ap_paterno;
     public $ap_materno;
     public $curp;
@@ -200,6 +201,7 @@ class PropiedadInscripcion extends Component
                 'curp',
                 'fecha_nacimiento',
                 'estado_civil',
+                'multiple_nombre',
             ]);
 
         }
@@ -210,6 +212,7 @@ class PropiedadInscripcion extends Component
 
         $this->reset([
             'tipo_propietario',
+            'multiple_nombre',
             'porcentaje_nuda',
             'porcentaje_usufructo',
             'tipo_persona',
@@ -359,6 +362,7 @@ class PropiedadInscripcion extends Component
                         'ap_paterno' => $this->ap_paterno,
                         'ap_materno' => $this->ap_materno,
                         'curp' => $this->curp,
+                        'multiple_nombre' => $this->multiple_nombre,
                         'rfc' => $this->rfc,
                         'razon_social' => $this->razon_social,
                         'fecha_nacimiento' => $this->fecha_nacimiento,
@@ -381,6 +385,7 @@ class PropiedadInscripcion extends Component
                         'nombre' => $this->nombre,
                         'ap_paterno' => $this->ap_paterno,
                         'ap_materno' => $this->ap_materno,
+                        'multiple_nombre' => $this->multiple_nombre,
                         'curp' => $this->curp,
                         'rfc' => $this->rfc,
                         'razon_social' => $this->razon_social,
@@ -565,6 +570,7 @@ class PropiedadInscripcion extends Component
                         'ap_paterno' => $this->ap_paterno,
                         'ap_materno' => $this->ap_materno,
                         'curp' => $this->curp,
+                        'multiple_nombre' => $this->multiple_nombre,
                         'rfc' => $this->rfc,
                         'razon_social' => $this->razon_social,
                         'fecha_nacimiento' => $this->fecha_nacimiento,
@@ -594,6 +600,7 @@ class PropiedadInscripcion extends Component
                         'nacionalidad' => $this->nacionalidad,
                         'estado_civil' => $this->estado_civil,
                         'calle' => $this->calle,
+                        'multiple_nombre' => $this->multiple_nombre,
                         'numero_exterior' => $this->numero_exterior_propietario,
                         'numero_interior' => $this->numero_interior_propietario,
                         'colonia' => $this->colonia,

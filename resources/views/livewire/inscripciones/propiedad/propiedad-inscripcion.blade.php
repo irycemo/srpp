@@ -1104,19 +1104,19 @@
 
         <x-slot name="content">
 
+            <x-input-group for="tipo_persona" label="Tipo de persona" :error="$errors->first('tipo_persona')" class="w-full">
+
+                <x-input-select id="tipo_persona" wire:model.live="tipo_persona" class="w-full">
+
+                    <option value="">Seleccione una opción</option>
+                    <option value="MORAL">MORAL</option>
+                    <option value="FISICA">FISICA</option>
+
+                </x-input-select>
+
+            </x-input-group>
+
             <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-3 mb-3 col-span-2 rounded-lg p-3">
-
-                <x-input-group for="tipo_persona" label="Tipo de persona" :error="$errors->first('tipo_persona')" class="w-full">
-
-                    <x-input-select id="tipo_persona" wire:model.live="tipo_persona" class="w-full">
-
-                        <option value="">Seleccione una opción</option>
-                        <option value="MORAL">MORAL</option>
-                        <option value="FISICA">FISICA</option>
-
-                    </x-input-select>
-
-                </x-input-group>
 
                 @if($tipo_persona == 'FISICA')
 
@@ -1137,6 +1137,16 @@
                         <x-input-text id="ap_materno" wire:model="ap_materno" />
 
                     </x-input-group>
+
+                    <div class=" col-span-3 rounded-lg">
+
+                        <x-input-group for="multiple_nombre" label="Nombre multiple (Opcional)" :error="$errors->first('multiple_nombre')" class="sm:col-span-2 lg:col-span-3">
+
+                            <textarea rows="3" class="w-full bg-white rounded text-sm" wire:model="multiple_nombre"></textarea>
+
+                        </x-input-group>
+
+                    </div>
 
                     <x-input-group for="curp" label="CURP" :error="$errors->first('curp')" class="w-full">
 
@@ -1367,19 +1377,19 @@
 
         <x-slot name="content">
 
+            <x-input-group for="tipo_persona" label="Tipo de persona" :error="$errors->first('tipo_persona')" class="w-full">
+
+                <x-input-select id="tipo_persona" wire:model.live="tipo_persona" class="w-full">
+
+                    <option value="">Seleccione una opción</option>
+                    <option value="MORAL">MORAL</option>
+                    <option value="FISICA">FISICA</option>
+
+                </x-input-select>
+
+            </x-input-group>
+
             <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-3 mb-3 col-span-2 rounded-lg p-3">
-
-                <x-input-group for="tipo_persona" label="Tipo de persona" :error="$errors->first('tipo_persona')" class="w-full">
-
-                    <x-input-select id="tipo_persona" wire:model.live="tipo_persona" class="w-full">
-
-                        <option value="">Seleccione una opción</option>
-                        <option value="MORAL">MORAL</option>
-                        <option value="FISICA">FISICA</option>
-
-                    </x-input-select>
-
-                </x-input-group>
 
                 @if($tipo_persona == 'FISICA')
 
@@ -1400,6 +1410,16 @@
                         <x-input-text id="ap_materno" wire:model="ap_materno" />
 
                     </x-input-group>
+
+                    <div class=" col-span-3 rounded-lg">
+
+                        <x-input-group for="multiple_nombre" label="Nombre multiple (Opcional)" :error="$errors->first('multiple_nombre')" class="sm:col-span-2 lg:col-span-3">
+
+                            <textarea rows="3" class="w-full bg-white rounded text-sm" wire:model="multiple_nombre"></textarea>
+
+                        </x-input-group>
+
+                    </div>
 
                     <x-input-group for="curp" label="CURP" :error="$errors->first('curp')" class="w-full">
 

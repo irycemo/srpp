@@ -37,7 +37,7 @@ class MovimientoRegistral extends Model implements Auditable
     {
         return [
             'nuevo' => 'blue-400',
-            'concluido' => 'gray-400',
+            'concluido' => 'gray-800',
             'rechazado' => 'red-400',
             'elaborado' => 'green-400',
             'captura' => 'yellow-400',
@@ -93,8 +93,15 @@ class MovimientoRegistral extends Model implements Auditable
         return $this->hasOne(FirmaElectronica::class);
     }
 
-    public function caratula(){
+    /* public function caratula(){
         return $this->morphMany(File::class, 'fileable')->where('descripcion', 'caratula');
+    } */
+
+    public function caratula(){
+
+        return $this->archivos()->where('descripcion', 'caratula')->first()
+                ? Storage::disk('caratulas')->url($this->archivos()->where('descripcion', 'caratula')->first()->url)
+                : null;
     }
 
     public function documentoEntrada(){

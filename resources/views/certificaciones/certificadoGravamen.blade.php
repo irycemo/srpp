@@ -183,6 +183,8 @@
 
             <p style="text-align: center; margin:0;"><strong>FOLIO REAL:</strong> {{ $folioReal->folio }}</p>
 
+            <p class="separador">Antecedente(s)</p>
+
             <p style="text-align: center; margin:0;"><strong>SECCIÓN:</strong> {{ $folioReal->seccion }}; <strong>DISTRITO:</strong> {{ $folioReal->distrito}}; <strong>TOMO:</strong> {{ $folioReal->tomo }}, <strong>REGISTRO:</strong> {{ $folioReal->registro }}, <strong>NÚMERO DE PROPIEDAD:</strong> {{ $folioReal->numero_propiedad }}.</p>
 
             <br>
@@ -204,8 +206,6 @@
             @if(count($gravamenes))
 
                 <p><strong>REPORTA EL(LOS) SIGUIENTE(S) GRAVAMEN(ES):</strong></p>
-
-                <br>
 
                 @foreach ($gravamenes as $gravamen)
 
@@ -252,8 +252,6 @@
 
                 <p><strong>REPORTA un aviso preventivo:</strong></p>
 
-                <br>
-
                 <p class="parrafo">
                     <strong>acto: </strong>{{ $aviso->acto_contenido }}
                 </p>
@@ -285,9 +283,11 @@
             @if(!$firma_electronica)
 
                 @if($folioReal->distrito== '02 Uruapan' )
+                    <p style="margin-top: 80px;"></p>
                     <p class="borde">Lic. SANDRO MEDINA MORALES </p>
                     <p style="margin:0;">COORDINADOR REGIONAL 4 PURHÉPECHA (URUAPAN)</p>
                 @else
+                    <p style="margin-top: 80px;"></p>
                     <p class="borde" style="margin:0;">{{ $director }}</p>
                     <p style="margin:0;">Director del registro público de la propiedad</p>
                 @endif
@@ -326,6 +326,7 @@
                                 <p style="margin: 0"><strong>Elaborado en: </strong>{{ $datos_control->elaborado_en }}</p>
                                 <p style="margin: 0"><strong>Verificado POR: </strong>{{  $datos_control->verificado_por }}</p>
                                 <p style="margin: 0"><strong>Movimiento registral:</strong> {{ $folioReal->folio }}-{{ $datos_control->movimiento_folio }}</p>
+                                <p style="margin: 0"><strong>Folio real asignado por:</strong> {{ $datos_control->asigno_folio }}</p>
 
                             </td>
                         </tr>

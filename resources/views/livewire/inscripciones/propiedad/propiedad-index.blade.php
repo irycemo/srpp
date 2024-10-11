@@ -115,7 +115,7 @@
 
                                 <div class="flex justify-center lg:justify-start gap-2">
 
-                                    @if(in_array($movimiento->estado, ['nuevo', 'captura', 'correccion']) && !auth()->user()->hasRole(['Jefe de departamento inscripciones', 'Supervisor propiedad', 'Supervisor uruapan']))
+                                    @if(in_array($movimiento->estado, ['nuevo', 'captura', 'correccion']) && !auth()->user()->hasRole(['Supervisor propiedad', 'Supervisor uruapan']))
 
                                         <x-button-blue
                                             wire:click="elaborar({{  $movimiento->id }})"
@@ -133,14 +133,14 @@
                                             Rechazar
                                         </x-button-red>
 
-                                    @elseif($movimiento->estado == 'elaborado' && !auth()->user()->hasRole(['Jefe de departamento inscripciones', 'Supervisor propiedad', 'Supervisor uruapan']))
+                                    @elseif($movimiento->estado == 'elaborado' && !auth()->user()->hasRole(['Supervisor propiedad', 'Supervisor uruapan']))
 
-                                        <x-button-green
+                                        <x-button-blue
                                             wire:click="imprimir({{  $movimiento->id }})"
                                             wire:loading.attr="disabled"
                                             wire:target="imprimir({{  $movimiento->id }})">
                                             Imprimir
-                                        </x-button-green>
+                                        </x-button-blue>
 
                                         <x-button-green
                                             wire:click="abrirModalFinalizar({{  $movimiento->id }})"

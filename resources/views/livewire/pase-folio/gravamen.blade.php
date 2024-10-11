@@ -55,6 +55,10 @@
 
                                         <span class="bg-red-400 py-1 px-2 rounded-full text-white text-xs">{{ ucfirst($gravamen->estado) }}</span>
 
+                                    @elseif($gravamen->estado == 'parcial')
+
+                                        <span class="bg-yellow-400 py-1 px-2 rounded-full text-white text-xs">{{ ucfirst($gravamen->estado) }}</span>
+
                                     @endif
                                 </x-table.cell>
                                 <x-table.cell>{{ $gravamen->acto_contenido }}</x-table.cell>
@@ -81,7 +85,7 @@
 
                                         @endif
 
-                                        @if($gravamen->acreedores()->count() && $gravamen->estado != 'cancelado')
+                                        @if($gravamen->acreedores()->count() && !in_array($gravamen->estado, ['cancelado', 'parcial']))
 
                                             <x-button-red
                                                 wire:click="abrirModalCancelar({{ $gravamen->id }})"
@@ -142,27 +146,29 @@
 
         <x-slot name="content">
 
-            <div class="flex flex-col md:flex-row justify-between gap-3 mb-3">
+            <x-input-group for="tomo_cancelacion" label="Tomo de cancelación" :error="$errors->first('tomo_cancelacion')" class="w-full">
 
-                <x-input-group for="tomo_cancelacion" label="Tomo de cancelación" :error="$errors->first('tomo_cancelacion')" class="w-full">
+                <x-input-text type="number"  id="tomo_cancelacion" wire:model="tomo_cancelacion" />
 
-                    <x-input-text type="number"  id="tomo_cancelacion" wire:model="tomo_cancelacion" />
+            </x-input-group>
 
-                </x-input-group>
+            <x-input-group for="folio_cancelacion" label="Registro de cancelación" :error="$errors->first('folio_cancelacion')" class="w-full">
 
-                <x-input-group for="folio_cancelacion" label="Folio de cancelación" :error="$errors->first('folio_cancelacion')" class="w-full">
+                <x-input-text  type="number" id="folio_cancelacion" wire:model="folio_cancelacion" />
 
-                    <x-input-text  type="number" id="folio_cancelacion" wire:model="folio_cancelacion" />
+            </x-input-group>
 
-                </x-input-group>
+            <x-input-group for="tipo_cancelacion" label="Tipo de cancelación" :error="$errors->first('tipo_cancelacion')" class="w-full">
 
-            </div>
+                <x-input-select id="tipo_cancelacion" wire:model="tipo_cancelacion" class="w-full">
 
-            <div class="flex flex-col md:flex-row justify-between gap-3 mb-3">
+                    <option value="">Seleccione una opción</option>
+                    <option value="total">Total</option>
+                    <option value="parcial">Parcial</option>
 
+                </x-input-select>
 
-
-            </div>
+            </x-input-group>
 
         </x-slot>
 

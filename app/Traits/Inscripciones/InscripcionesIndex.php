@@ -59,6 +59,23 @@ trait InscripcionesIndex{
 
     public function elaborar(MovimientoRegistral $movimientoRegistral){
 
+        if(auth()->user()->hasRole('Jefe de departamento inscripciones')){
+
+            $this->actual = $movimientoRegistral;
+
+            if($this->estaBloqueado()){
+
+                return;
+
+            }else{
+
+                $this->ruta($movimientoRegistral);
+
+                return;
+            }
+
+        }
+
         $this->modelo_editar = $movimientoRegistral;
 
         $aclaracion = $this->modelo_editar->folioReal->aclaracionAdministrativa();

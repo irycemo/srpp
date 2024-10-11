@@ -84,7 +84,7 @@ trait FirmaElectronicaTrait{
             $escritura->estado_notario = $folioReal->predio->escritura->estado_notario;
             $escritura->comentario = $folioReal->predio->escritura->comentario;
             $escritura->acto_contenido_antecedente = $folioReal->predio->escritura->acto_contenido_antecedente;
-            $escritura->acto_contenido_antecedente = $folioReal->predio->escritura->acto_contenido_antecedente;
+            $escritura->comentario = $folioReal->predio->escritura->comentario;
 
         }
 
@@ -148,6 +148,7 @@ trait FirmaElectronicaTrait{
             $item->nombre = $propietario->persona->nombre;
             $item->ap_paterno = $propietario->persona->ap_paterno;
             $item->ap_materno = $propietario->persona->ap_materno;
+            $item->multiple_nombre = $propietario->persona->multiple_nombre;
             $item->razon_social = $propietario->persona->razon_social;
             $item->porcentaje_propiedad = $propietario->porcentaje_propiedad;
             $item->porcentaje_nuda = $propietario->porcentaje_nuda;
@@ -222,15 +223,14 @@ trait FirmaElectronicaTrait{
         $object->cp_registro = $predio->cp_registro;
         $object->descripcion = $predio->descripcion;
         $object->observaciones = $predio->observaciones;
-        $object->observaciones = $predio->observaciones;
         $object->colindancias = $colindancias;
         $object->propietarios = $propietarios;
 
         if($predio->unidad_area == 'Hectareas'){
 
             $object->superficie_terreno = $predio->superficie_terreno_formateada;
-            $object->superficie_judicial = $predio->superficie_judicial_formateada;
-            $object->superficie_notarial = $predio->superficie_notarial_formateada;
+            $object->superficie_judicial = $predio->superficie_judicial ? $predio->superficie_judicial_formateada : null;
+            $object->superficie_notarial = $predio->superficie_notarial ? $predio->superficie_notarial_formateada : null;
 
         }else{
 
@@ -332,27 +332,29 @@ trait FirmaElectronicaTrait{
     public function propiedad(Propiedad $propiedad):object
     {
 
-        $transmitentes = collect();
+        $propietarios = collect();
 
-        foreach ($propiedad->transmitentes() as $transmitente) {
+        foreach ($propiedad->propietarios() as $propietario) {
 
             $item = (object)[];
 
-            $item->nombre = $transmitente->persona->nombre;
-            $item->ap_paterno = $transmitente->persona->ap_paterno;
-            $item->ap_materno = $transmitente->persona->ap_materno;
-            $item->razon_social = $transmitente->persona->razon_social;
+            $item->nombre = $propietario->persona->nombre;
+            $item->ap_paterno = $propietario->persona->ap_paterno;
+            $item->ap_materno = $propietario->persona->ap_materno;
+            $item->razon_social = $propietario->persona->razon_social;
+            $item->multiple_nombre = $propietario->persona->multiple_nombre;
 
-            if($transmitente->representadoPor){
+            if($propietario->representadoPor){
 
-                $item->representado_por = $transmitente->representadoPor->persona->nombre . ' ' .
-                                            $transmitente->representadoPor->persona->ap_paterno . ' ' .
-                                            $transmitente->representadoPor->persona->ap_materno . ' ' .
-                                            $transmitente->representadoPor->persona->razon_social ;
+                $item->representado_por = $propietario->representadoPor->persona->nombre . ' ' .
+                                            $propietario->representadoPor->persona->ap_paterno . ' ' .
+                                            $propietario->representadoPor->persona->ap_materno . ' ' .
+                                            $propietario->representadoPor->persona->multiple_nombre . ' ' .
+                                            $propietario->representadoPor->persona->razon_social ;
 
             }
 
-            $transmitentes->push($item);
+            $propietarios->push($item);
 
         }
 
@@ -370,7 +372,7 @@ trait FirmaElectronicaTrait{
         $object->autoridad_cargo = $propiedad->movimientoRegistral->autoridad_cargo;
         $object->autoridad_nombre = $propiedad->movimientoRegistral->autoridad_nombre;
         $object->fecha_emision = Carbon::parse($propiedad->movimientoRegistral->fecha_emision)->format('d/m/Y');
-        $object->transmitentes = $transmitentes;
+        $object->propietarios = $propietarios;
 
         return $object;
 
@@ -491,17 +493,21 @@ trait FirmaElectronicaTrait{
 
         $movimiento = MovimientoRegistral::with('archivos')->find($id);
 
-        foreach($movimiento->archivos as $archivo){
+        if($movimiento->archivos->where('descripcion', 'caratula')->count()){
 
-            if($archivo->descripcion == 'caratula'){
+            foreach($movimiento->archivos as $archivo){
 
-                Storage::disk('caratulas')->delete($archivo->url);
+                if($archivo->descripcion == 'caratula'){
+
+                    Storage::disk('caratulas')->delete($archivo->url);
+
+                }
 
             }
 
-        }
+            $movimiento->archivos->where('descripcion', 'caratula')->first()->delete();
 
-        $movimiento->caratula()->delete();
+        }
 
     }
 

@@ -14,6 +14,7 @@ use PhpCfdi\Credentials\Credential;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Storage;
 use App\Traits\Inscripciones\FirmaElectronicaTrait;
+use Imagick;
 
 class PropiedadController extends Controller
 {
@@ -37,7 +38,7 @@ class PropiedadController extends Controller
         $datos_control = (object)[];
 
         $datos_control->numero_control = $propiedad->movimientoRegistral->año . '-' . $propiedad->movimientoRegistral->tramite . '-' . $propiedad->movimientoRegistral->usuario;
-        $datos_control->verificado_por = auth()->user()->name;
+        $datos_control->registrado_por = auth()->user()->name;
         $datos_control->fecha_asignacion = Carbon::now()->locale('es')->translatedFormat('H:i:s \d\e\l l d \d\e F \d\e\l Y');
         $datos_control->elaborado_en = Carbon::now()->locale('es')->translatedFormat('H:i:s \d\e\l l d \d\e F \d\e\l Y');
         $datos_control->jefe_departamento = $jefe_departamento;
@@ -46,6 +47,7 @@ class PropiedadController extends Controller
         $datos_control->solicitante = $propiedad->movimientoRegistral->solicitante;
         $datos_control->monto = $propiedad->movimientoRegistral->monto;
         $datos_control->tipo_servicio = $propiedad->movimientoRegistral->tipo_servicio;
+        $datos_control->asigno_folio = $propiedad->movimientoRegistral->folioReal->asignado_por;
 
         $folioReal = (object)[];
 
@@ -111,20 +113,34 @@ class PropiedadController extends Controller
 
         $pdfImagen = new \Spatie\PdfToImage\Pdf('caratulas/' . $nombre . '.pdf');
 
+        $all = new Imagick();
+
         for ($i=1; $i <= $pdfImagen->pageCount(); $i++) {
 
             $nombre = $nombre . '_' . $i . '.jpg';
 
             $pdfImagen->selectPage($i)->save('caratulas/'. $nombre);
 
-            File::create([
-                'fileable_id' => $propiedad->movimientoRegistral->id,
-                'fileable_type' => 'App\Models\MovimientoRegistral',
-                'descripcion' => 'caratula',
-                'url' => $nombre
-            ]);
+            $im = new Imagick(Storage::disk('caratulas')->path($nombre));
+
+            $all->addImage($im);
+
+            unlink('caratulas/' . $nombre);
 
         }
+
+        $all->resetIterator();
+        $combined = $all->appendImages(true);
+        $combined->setImageFormat("jpg");
+
+        file_put_contents("caratulas/" . $nombre, $combined);
+
+        File::create([
+            'fileable_id' => $propiedad->movimientoRegistral->id,
+            'fileable_type' => 'App\Models\MovimientoRegistral',
+            'descripcion' => 'caratula',
+            'url' => $nombre
+        ]);
 
         unlink('caratulas/' . $nombreFinal);
 

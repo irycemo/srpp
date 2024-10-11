@@ -135,7 +135,7 @@
 
                 </x-input-group>
 
-                <x-input-group for="observaciones_antecedente" label="Observaciones" :error="$errors->first('observaciones_antecedente')" class="sm:col-span-2 lg:col-span-3">
+                <x-input-group for="observaciones_antecedente" label="Descripción" :error="$errors->first('observaciones_antecedente')" class="sm:col-span-2 lg:col-span-3">
 
                     <textarea rows="3" class="w-full bg-white rounded text-sm" wire:model="observaciones_antecedente"></textarea>
 

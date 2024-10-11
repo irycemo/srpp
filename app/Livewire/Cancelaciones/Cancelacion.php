@@ -149,6 +149,9 @@ class Cancelacion extends Component
                     if($this->gravamenCancelarMovimiento->gravamen->valor_gravamen <= 0){
 
                         $this->gravamenCancelarMovimiento->gravamen->estado = 'cancelado';
+                    }else{
+
+                        $this->gravamenCancelarMovimiento->gravamen->estado = 'parcial';
                     }
 
                     $this->gravamenCancelarMovimiento->gravamen->save();

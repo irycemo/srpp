@@ -27,6 +27,7 @@ class Gravamen extends Component
 
     public $folio_cancelacion;
     public $tomo_cancelacion;
+    public $tipo_cancelacion;
 
     public Predio $propiedad;
 
@@ -170,6 +171,7 @@ class Gravamen extends Component
 
                 $cancelacionMovimiento->cancelacion()->create([
                     'estado' => 'activo',
+                    'tipo' => $this->tipo_cancelacion,
                     'acto_contenido' => 'Cancelación en captura',
                     'gravamen' => $this->gravamen_seleccionado->movimientoRegistral->id,
                     'observaciones' => 'Cancelación en captura de asignación de folio real en base al Tomo de cancelación: ' . $this->tomo_cancelacion . ' Folio de cancelación: ' . $this->folio_cancelacion . '.',
@@ -177,8 +179,10 @@ class Gravamen extends Component
                     'actualizado_por' => auth()->id(),
                 ]);
 
+                $estado = $this->tipo_cancelacion == 'total' ? 'cancelado' : 'parcial';
+
                 $this->gravamen_seleccionado->update([
-                    'estado' => 'cancelado',
+                    'estado' => $estado,
                     'actualizado_por' => auth()->id(),
                     'observaciones' => $this->gravamen_seleccionado->observaciones .  ' Cancelado mediante movimiento registral: ' . $cancelacionMovimiento->folioReal->folio . '-' . $cancelacionMovimiento->folio,
                 ]);
