@@ -21,7 +21,7 @@
                     {{ $colindancia->viento }}
                 </td>
                 <td style="padding-right: 40px;">
-                    {{ number_format($colindancia->longitud, 4) }}
+                    {{ number_format($colindancia->longitud, 2) }}
                 </td>
                 <td style="padding-right: 40px;">
                     {{ $colindancia->descripcion }}
