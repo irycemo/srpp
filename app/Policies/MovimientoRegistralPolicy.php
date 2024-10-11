@@ -30,7 +30,7 @@ class MovimientoRegistralPolicy
 
         }
 
-        if ($user->hasRole('Administrador', 'Jefe de departamento inscripciones', 'Jefe de departamento certificaciones')) {
+        if ($user->hasRole(['Administrador', 'Jefe de departamento inscripciones', 'Jefe de departamento certificaciones'])) {
             return Response::allow();
         }
 

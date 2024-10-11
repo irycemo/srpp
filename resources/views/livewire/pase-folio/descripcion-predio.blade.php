@@ -56,6 +56,7 @@
 
                         <x-input-select id="unidad_area" wire:model="unidad_area">
 
+                            <option value="">-</option>
                             @foreach ($areas as $unidad)
 
                                 <option value="{{ $unidad }}">@if($unidad == 'Metros cuadrados') M<sup>2</sup> @else Has.@endif</option>
@@ -76,6 +77,7 @@
 
                         <x-input-select id="unidad_area" wire:model="unidad_area">
 
+                            <option value="">-</option>
                             @foreach ($areas as $unidad)
 
                                 <option value="{{ $unidad }}">@if($unidad == 'Metros cuadrados') M<sup>2</sup> @else Has.@endif</option>
@@ -96,6 +98,7 @@
 
                         <x-input-select id="divisa" wire:model="divisa">
 
+                            <option value="">-</option>
                             @foreach ($divisas as $divisa)
 
                                 <option value="{{ $divisa }}">{{ $divisa }}</option>
@@ -134,6 +137,7 @@
 
                         <x-input-select id="unidad_area" wire:model="unidad_area">
 
+                            <option value="">-</option>
                             @foreach ($areas as $unidad)
 
                                 <option value="{{ $unidad }}">@if($unidad == 'Metros cuadrados') M<sup>2</sup> @else Has.@endif</option>
@@ -154,6 +158,7 @@
 
                         <x-input-select id="unidad_area" wire:model="unidad_area">
 
+                            <option value="">-</option>
                             @foreach ($areas as $unidad)
 
                                 <option value="{{ $unidad }}">@if($unidad == 'Metros cuadrados') M<sup>2</sup> @else Has.@endif</option>
@@ -174,6 +179,7 @@
 
                         <x-input-select id="unidad_area" wire:model="unidad_area">
 
+                            <option value="">-</option>
                             @foreach ($areas as $unidad)
 
                                 <option value="{{ $unidad }}">@if($unidad == 'Metros cuadrados') M<sup>2</sup> @else Has.@endif</option>
@@ -194,6 +200,7 @@
 
                         <x-input-select id="unidad_area" wire:model="unidad_area">
 
+                            <option value="">-</option>
                             @foreach ($areas as $unidad)
 
                                 <option value="{{ $unidad }}">@if($unidad == 'Metros cuadrados') M<sup>2</sup> @else Has.@endif</option>

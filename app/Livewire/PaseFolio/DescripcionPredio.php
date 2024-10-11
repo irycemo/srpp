@@ -7,6 +7,7 @@ use Livewire\Component;
 use App\Models\Colindancia;
 use Livewire\Attributes\On;
 use App\Constantes\Constantes;
+use Illuminate\Validation\Rule;
 use Illuminate\Support\Facades\DB;
 use App\Models\MovimientoRegistral;
 use Illuminate\Support\Facades\Log;
@@ -81,7 +82,7 @@ class DescripcionPredio extends Component
             'valor_total_construccion' => 'nullable',
             'valor_catastral' => 'nullable',
             'monto_transaccion' => 'nullable',
-            'divisa' => 'nullable',
+            'divisa' => ['required', Rule::in(Constantes::DIVISAS)],
             'observaciones' => 'nullable',
             'medidas.*' => 'nullable',
             'medidas.*.viento' => 'nullable|string',
@@ -92,7 +93,7 @@ class DescripcionPredio extends Component
                                     ],
             'medidas.*.descripcion' => 'nullable',
             'predio' => 'nullable',
-            'unidad_area' => 'required'
+            'unidad_area' => ['required', Rule::in(Constantes::UNIDADES)]
          ];
     }
 
