@@ -25,13 +25,13 @@
                     @endif
                 </td>
                 <td style="padding-right: 40px;">
-                    {{ $propietario->porcentaje_propiedad ?? '0.00' }} %
+                    <p style="margin:0">{{ $propietario->porcentaje_propiedad ?? '0.00' }} %</p>
                 </td>
                 <td style="padding-right: 40px;">
-                    {{ $propietario->porcentaje_nuda ?? '0.00' }} %
+                    <p style="margin:0">{{ $propietario->porcentaje_nuda ?? '0.00' }} %</p>
                 </td>
                 <td style="padding-right: 40px;">
-                    {{ $propietario->porcentaje_usufructo ?? '0.00' }} %
+                    <p style="margin:0">{{ $propietario->porcentaje_usufructo ?? '0.00' }} %</p>
                 </td>
             </tr>
 

@@ -453,13 +453,6 @@ class CertificadoPropiedadController extends Controller
 
         $folioReal = (object)[];
 
-        $folioReal->folio = $movimientoRegistral->folioReal->folio;
-        $folioReal->seccion = $movimientoRegistral->folioReal->seccion_antecedente;
-        $folioReal->distrito = $movimientoRegistral->folioReal->distrito;
-        $folioReal->tomo = $movimientoRegistral->folioReal->tomo_antecedente;
-        $folioReal->registro = $movimientoRegistral->folioReal->registro_antecedente;
-        $folioReal->numero_propiedad = $movimientoRegistral->folioReal->numero_propiedad_antecedente;
-
         $datos_control = (object)[];
 
         $datos_control->numero_control = $movimientoRegistral->año . '-' . $movimientoRegistral->tramite . '-' . $movimientoRegistral->usuario;
@@ -493,7 +486,6 @@ class CertificadoPropiedadController extends Controller
 
         $object->director = $director->name;
         $object->datos_control = $datos_control;
-        $object->folioReal = $folioReal;
         $object->personas = $personas;
         $object->distrito = $movimientoRegistral->distrito;
         $object->observaciones_certificado = $movimientoRegistral->certificacion->observaciones_certificado;
