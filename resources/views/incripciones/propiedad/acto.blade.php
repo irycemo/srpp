@@ -273,7 +273,7 @@
                     <p style="text-align: center">Firma Electrónica:</p>
                     <p class="parrafo" style="overflow-wrap: break-word;">{{ $firma_electronica }}</p>
 
-                    <p >{{ $datos_control->verificado_por }}</p>
+                    <p >{{ $datos_control->registrado_por }}</p>
                     <p class="borde" style="margin: 0">REGISTRADOR</p>
 
                     <p >{{ $datos_control->jefe_departamento }}</p>
