@@ -160,7 +160,10 @@ class PaseFolio extends Component
 
         }elseif($this->modelo_editar->certificacion){
 
-            $role = 'Certificador Gravamen';
+            if($this->modelo_editar->certificacion->servicio == 'DL07')
+                $role = 'Certificador Gravamen';
+            elseif(in_array($this->modelo_editar->certificacion->servicio, ['DL11', 'DL10']))
+                $role = 'Certificador Propiedad';
 
         }elseif($this->modelo_editar->vario){
 
@@ -313,7 +316,7 @@ class PaseFolio extends Component
                                                     ->where(function($q){
                                                         $q->whereNull('folio_real')
                                                             ->orWhereHas('folioReal', function($q){
-                                                                $q->whereIn('estado', ['nuevo', 'captura', 'elaborado']);
+                                                                $q->whereIn('estado', ['nuevo', 'captura', 'elaborado', 'rechazado']);
                                                             });
                                                     })
                                                     ->where(function($q){
