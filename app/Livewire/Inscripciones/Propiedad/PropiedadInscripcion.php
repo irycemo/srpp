@@ -1016,7 +1016,10 @@ class PropiedadInscripcion extends Component
             DB::transaction(function () {
 
                 if($this->inscripcion->movimientoRegistral->estado != 'correccion')
-                    $this->inscripcion->movimientoRegistral->update(['estado' => 'captura']);
+                    $this->inscripcion->movimientoRegistral->estado = 'captura';
+
+                $this->inscripcion->movimientoRegistral->actualizado_por = auth()->id();
+                $this->inscripcion->movimientoRegistral->save();
 
                 $this->inscripcion->save();
 
@@ -1159,7 +1162,9 @@ class PropiedadInscripcion extends Component
 
                 }
 
-                $this->inscripcion->movimientoRegistral->update(['estado' => 'elaborado']);
+                $this->inscripcion->movimientoRegistral->update(['estado' => 'elaborado', 'actualizado_por' => auth()->id()]);
+
+                $this->inscripcion->movimientoRegistral->audits()->latest()->first()->update(['tags' => 'Elaboró inscripción de propiedad']);
 
                 (new PropiedadController())->caratula($this->inscripcion);
 

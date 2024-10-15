@@ -10,7 +10,7 @@
 
                 @if($certificado->movimientoRegistral->caratula())
 
-                    <x-link-blue target="_blank" href="{{ $certificado->movimientoRegistral->caratula() }}">Documento de entrada</x-link-blue>
+                    <x-link-blue target="_blank" href="{{ $certificado->movimientoRegistral->caratula() }}">Caratula</x-link-blue>
 
                 @endif
 

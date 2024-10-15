@@ -251,7 +251,7 @@
 
                         @if($gravamen->movimientoRegistral->caratula())
 
-                            <x-link-blue target="_blank" href="{{ $gravamen->movimientoRegistral->caratula() }}">Documento de entrada</x-link-blue>
+                            <x-link-blue target="_blank" href="{{ $gravamen->movimientoRegistral->caratula() }}">Caratula</x-link-blue>
 
                         @endif
 

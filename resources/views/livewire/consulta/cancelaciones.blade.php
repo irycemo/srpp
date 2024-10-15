@@ -173,7 +173,7 @@
 
                         @if($cancelacion->movimientoRegistral->caratula())
 
-                            <x-link-blue target="_blank" href="{{ $cancelacion->movimientoRegistral->caratula() }}">Documento de entrada</x-link-blue>
+                            <x-link-blue target="_blank" href="{{ $cancelacion->movimientoRegistral->caratula() }}">Caratula</x-link-blue>
 
                         @endif
 

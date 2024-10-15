@@ -157,7 +157,7 @@
 
                         @if($vario->movimientoRegistral->caratula())
 
-                            <x-link-blue target="_blank" href="{{ $vario->movimientoRegistral->caratula() }}">Documento de entrada</x-link-blue>
+                            <x-link-blue target="_blank" href="{{ $vario->movimientoRegistral->caratula() }}">Caratula</x-link-blue>
 
                         @endif
 
