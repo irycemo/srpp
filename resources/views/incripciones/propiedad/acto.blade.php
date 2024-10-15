@@ -245,7 +245,7 @@
                                 <tr>
                                     <td style="padding-right: 40px; text-align:center; width: 50%; vertical-align: bottom; white-space: nowrap;">
 
-                                        <p class="borde">{{ $datos_control->verificado_por }}</p>
+                                        <p class="borde">{{ $datos_control->registrado_por }}</p>
                                         <p style="margin: 0">REGISTRADOR</p>
 
                                     </td>
