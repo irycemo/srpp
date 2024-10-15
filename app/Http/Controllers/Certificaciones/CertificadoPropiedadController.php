@@ -451,8 +451,6 @@ class CertificadoPropiedadController extends Controller
                                 $q->where('name', 'Director');
                             })->first();
 
-        $folioReal = (object)[];
-
         $datos_control = (object)[];
 
         $datos_control->numero_control = $movimientoRegistral->año . '-' . $movimientoRegistral->tramite . '-' . $movimientoRegistral->usuario;

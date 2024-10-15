@@ -338,7 +338,7 @@ class PaseFolio extends Component
                                                     ->where(function($q){
                                                         $q->whereNull('folio_real')
                                                             ->orWhereHas('folioReal', function($q){
-                                                                $q->whereIn('estado', ['nuevo', 'captura']);
+                                                                $q->whereIn('estado', ['nuevo', 'captura', 'elaborado']);
                                                             });
                                                     })
                                                     ->where(function($q){
