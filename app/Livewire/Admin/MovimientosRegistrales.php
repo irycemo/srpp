@@ -205,7 +205,7 @@ class MovimientosRegistrales extends Component
                                                             'Certificador Gravamen',
                                                             'Certificador Oficialia',
                                                             'Certificador Juridico',
-                                                            'Certificador'.
+                                                            'Certificador',
                                                             'Pase a folio'
                                                         ]);
                                 })
