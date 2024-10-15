@@ -1,42 +1,46 @@
-<p class="separador">propietarios</p>
+<div class="no-break">
 
-<table>
+    <p class="separador">propietarios</p>
 
-    <thead>
+    <table>
 
-        <tr>
-            <th style="padding-right: 10px;">Nombre / Razón social</th>
-            <th style="padding-right: 10px;">% de propiedad</th>
-            <th style="padding-right: 10px;">% de nuda</th>
-            <th style="padding-right: 10px;">% de usufructo</th>
-        </tr>
-
-    </thead>
-
-    <tbody>
-
-        @foreach ($predio->propietarios as $propietario)
+        <thead>
 
             <tr>
-                <td style="padding-right: 40px;">
-                    <p style="margin:0">{{ $propietario->nombre }} {{ $propietario->ap_paterno }} {{ $propietario->ap_materno }} {{ $propietario->razon_social }}</p>
-                    @if($propietario->multiple_nombre)
-                        <p style="margin:0">({{ $propietario->multiple_nombre }})</p>
-                    @endif
-                </td>
-                <td style="padding-right: 40px;">
-                    <p style="margin:0">{{ $propietario->porcentaje_propiedad ?? '0.00' }} %</p>
-                </td>
-                <td style="padding-right: 40px;">
-                    <p style="margin:0">{{ $propietario->porcentaje_nuda ?? '0.00' }} %</p>
-                </td>
-                <td style="padding-right: 40px;">
-                    <p style="margin:0">{{ $propietario->porcentaje_usufructo ?? '0.00' }} %</p>
-                </td>
+                <th style="padding-right: 10px;">Nombre / Razón social</th>
+                <th style="padding-right: 10px;">% de propiedad</th>
+                <th style="padding-right: 10px;">% de nuda</th>
+                <th style="padding-right: 10px;">% de usufructo</th>
             </tr>
 
-        @endforeach
+        </thead>
 
-    </tbody>
+        <tbody>
 
-</table>
+            @foreach ($predio->propietarios as $propietario)
+
+                <tr>
+                    <td style="padding-right: 40px;">
+                        <p style="margin:0">{{ $propietario->nombre }} {{ $propietario->ap_paterno }} {{ $propietario->ap_materno }} {{ $propietario->razon_social }}</p>
+                        @if($propietario->multiple_nombre)
+                            <p style="margin:0">({{ $propietario->multiple_nombre }})</p>
+                        @endif
+                    </td>
+                    <td style="padding-right: 40px;">
+                        <p style="margin:0">{{ $propietario->porcentaje_propiedad ?? '0.00' }} %</p>
+                    </td>
+                    <td style="padding-right: 40px;">
+                        <p style="margin:0">{{ $propietario->porcentaje_nuda ?? '0.00' }} %</p>
+                    </td>
+                    <td style="padding-right: 40px;">
+                        <p style="margin:0">{{ $propietario->porcentaje_usufructo ?? '0.00' }} %</p>
+                    </td>
+                </tr>
+
+            @endforeach
+
+        </tbody>
+
+    </table>
+
+</div>

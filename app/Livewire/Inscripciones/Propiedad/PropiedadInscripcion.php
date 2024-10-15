@@ -1382,29 +1382,7 @@ class PropiedadInscripcion extends Component
                                                                                 })
                                                                                 ->first();
 
-                $deudores = Deudor::where('actor_id', $actor->id)->get();
-
-                if($deudores->count()){
-
-                    foreach ($deudores as $deudor) {
-
-                        Deudor::create([
-                            'gravamen_id' => $deudor->gravamen_id,
-                            'persona_id' => $actor->persona_id,
-                            'tipo' => $deudor->tipo
-                        ]);
-
-                        $deudor->delete();
-
-                    }
-
-                    $this->predio->actores()->where('id', $actor->id)->delete();
-
-                }else{
-
-                    $actor->delete();
-
-                }
+                $actor->delete();
 
             }else{
 
