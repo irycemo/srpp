@@ -135,6 +135,13 @@
 
                                     @elseif($movimiento->estado == 'elaborado' && !auth()->user()->hasRole(['Supervisor propiedad', 'Supervisor uruapan']))
 
+                                        <x-button-blue
+                                            wire:click="imprimir({{  $movimiento->id }})"
+                                            wire:loading.attr="disabled"
+                                            wire:target="imprimir({{  $movimiento->id }})">
+                                            Imprimir
+                                        </x-button-blue>
+
                                         <x-button-green
                                             wire:click="abrirModalFinalizar({{  $movimiento->id }})"
                                             wire:loading.attr="disabled"
