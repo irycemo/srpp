@@ -168,18 +168,3 @@ Route::group(['middleware' => ['auth', 'esta.activo']], function(){
 Route::get('setpassword/{email}', [SetPasswordController::class, 'create'])->name('setpassword');
 Route::post('setpassword', [SetPasswordController::class, 'store'])->name('setpassword.store');
 
-Route::get('test', function(){
-
-    $users = User::withCount([
-        'movimientosRegistralesAsignados as cancelados' => function($q) { $q->where('estado', 'cancelado'); },
-        'movimientosRegistralesAsignados as nuevos' => function($q) { $q->where('estado', 'nuevo'); },
-        'movimientosRegistralesAsignados as rechazados' => function($q) { $q->where('estado', 'rechazado'); },
-        'movimientosRegistralesAsignados as concluidos' => function($q) { $q->where('estado', 'concluido'); },
-        'movimientosRegistralesAsignados as elaborados' => function($q) { $q->where('estado', 'elaborado'); },
-        'movimientosRegistralesAsignados as finalizados' => function($q) { $q->where('estado', 'finalizado'); },
-        'movimientosRegistralesAsignados as captura' => function($q) { $q->where('estado', 'captura'); },
-        ])->get();
-
-    return $users;
-
-});
