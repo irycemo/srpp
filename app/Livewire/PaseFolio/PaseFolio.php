@@ -144,30 +144,35 @@ class PaseFolio extends Component
 
         if($this->modelo_editar->inscripcionPropiedad){
 
-            $role = 'Propiedad';
+            $role = ['Propiedad', 'Registrador Propiedad'];
 
         }elseif($this->modelo_editar->gravamen){
 
-            $role = 'Gravamen';
+            $role = ['Gravamen'];
 
         }elseif($this->modelo_editar->cancelacion){
 
-            $role = 'Cancelación';
+            $role = ['Cancelación'];
 
         }elseif($this->modelo_editar->sentencia){
 
-            $role = 'Sentencias';
+            $role = ['Sentencias'];
 
         }elseif($this->modelo_editar->certificacion){
 
-            if($this->modelo_editar->certificacion->servicio == 'DL07')
-                $role = 'Certificador Gravamen';
-            elseif(in_array($this->modelo_editar->certificacion->servicio, ['DL11', 'DL10']))
-                $role = 'Certificador Propiedad';
+            if($this->modelo_editar->certificacion->servicio == 'DL07'){
+
+                $role = ['Certificador Gravamen'];
+
+            }elseif(in_array($this->modelo_editar->certificacion->servicio, ['DL11', 'DL10'])){
+
+                $role = ['Certificador Propiedad'];
+
+            }
 
         }elseif($this->modelo_editar->vario){
 
-            $role = 'Varios';
+            $role = ['Varios'];
 
         }
 
@@ -202,7 +207,7 @@ class PaseFolio extends Component
                                 $q->where('ubicacion', '!=', 'Regional 4');
                             })
                             ->whereHas('roles', function($q) use ($role){
-                                $q->where('name', $role);
+                                $q->whereIn('name', $role);
                             })
                             ->get();
     }
