@@ -279,7 +279,8 @@ class Constantes{
         'SOCIEDADES',
         'PERMUTA',
         'FIDEICOMISO',
-        'EXPEDICIÓN DE TÍTULO DE PROPIEDAD'
+        'EXPEDICIÓN DE TÍTULO DE PROPIEDAD',
+        'SUBDIVISIÓN'
     ];
 
     const ACTOS_INSCRIPCION_GRAVAMEN = [
