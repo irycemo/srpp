@@ -159,7 +159,7 @@ class UbicacionPredio extends Component
         $this->ejido = $this->propiedad->ejido;
         $this->parcela = $this->propiedad->parcela;
         $this->solar = $this->propiedad->solar;
-        $this->observaciones = $this->propiedad->descripcion;
+        $this->observaciones = $this->propiedad->observaciones;
 
 
     }

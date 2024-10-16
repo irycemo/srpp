@@ -146,7 +146,7 @@ class DescripcionPredio extends Component
         $this->monto_transaccion = $this->propiedad->monto_transaccion;
         $this->divisa = $this->divisa;
         $this->unidad_area = $this->propiedad->unidad_area;
-        $this->observaciones = $this->propiedad->observaciones;
+        $this->observaciones = $this->propiedad->descripcion;
 
         foreach ($this->propiedad->colindancias as $colindancia) {
 
