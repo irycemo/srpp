@@ -161,7 +161,7 @@
 
                                     <div class="flex justify-center lg:justify-start gap-2">
 
-                                        @if(in_array($movimiento->estado, ['nuevo', 'captura']))
+                                        @if(in_array($movimiento->estado, ['nuevo', 'captura', 'correccion']) && !auth()->user()->hasRole(['Supervisor cancelación', 'Supervisor uruapan']))
 
                                             <x-button-blue
                                                 wire:click="elaborar({{  $movimiento->id }})"
@@ -176,19 +176,17 @@
                                                 wire:target="abrirModalRechazar({{  $movimiento->id }})">
 
                                                 <img wire:loading wire:target="abrirModalRechazar({{  $movimiento->id }})" class="mx-auto h-4 mr-1" src="{{ asset('storage/img/loading3.svg') }}" alt="Loading">
-
                                                 Rechazar
-
                                             </x-button-red>
 
-                                        @elseif($movimiento->estado == 'elaborado')
+                                        @elseif($movimiento->estado == 'elaborado' && !auth()->user()->hasRole(['Supervisor cancelación', 'Supervisor uruapan']))
 
-                                            <x-button-green
+                                            <x-button-blue
                                                 wire:click="imprimir({{  $movimiento->id }})"
                                                 wire:loading.attr="disabled"
                                                 wire:target="imprimir({{  $movimiento->id }})">
                                                 Imprimir
-                                            </x-button-green>
+                                            </x-button-blue>
 
                                             <x-button-green
                                                 wire:click="abrirModalFinalizar({{  $movimiento->id }})"
@@ -210,8 +208,17 @@
                                                 wire:click="abrirModalConcluir({{  $movimiento->id }})"
                                                 wire:loading.attr="disabled"
                                                 wire:target="abrirModalConcluir({{  $movimiento->id }})">
-                                                Finalizar
+                                                Concluir
                                             </x-button-green>
+
+                                        @elseif(in_array($movimiento->estado, ['nuevo', 'captura', 'elaborado']) && auth()->user()->hasRole(['Jefe de departamento inscripciones', 'Supervisor cancelación', 'Supervisor uruapan']))
+
+                                            <x-button-red
+                                                wire:click="abrirModalReasignar({{  $movimiento->id }})"
+                                                wire:loading.attr="disabled"
+                                                wire:target="abrirModalReasignar({{  $movimiento->id }})">
+                                                Reasignar
+                                            </x-button-red>
 
                                         @endif
 

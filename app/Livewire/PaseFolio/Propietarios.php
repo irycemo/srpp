@@ -53,6 +53,7 @@ class Propietarios extends Component
     public $actor;
 
     public $tipos_propietarios;
+    public $tipo;
 
     public $estados;
 
@@ -184,6 +185,8 @@ class Propietarios extends Component
 
     public function agregarPropietario(){
 
+        $this->resetear();
+
         if(!$this->movimientoRegistral->folio_real){
 
             $this->dispatch('mostrarMensaje', ['error', "Primero ingrese la información del documento de entrada."]);
@@ -209,6 +212,8 @@ class Propietarios extends Component
 
     public function agregarTransmitente(){
 
+        $this->resetear();
+
         if(!$this->movimientoRegistral->folio_real){
 
             $this->dispatch('mostrarMensaje', ['error', "Primero ingrese la información del documento de entrada."]);
@@ -233,6 +238,8 @@ class Propietarios extends Component
     }
 
     public function agregarRepresentante(){
+
+        $this->resetear();
 
         if(!$this->movimientoRegistral->folio_real){
 
@@ -616,6 +623,8 @@ class Propietarios extends Component
 
         $this->actor = $actor;
 
+        $this->tipo = $tipo;
+
         $this->tipo_propietario = $actor->tipo_actor;
         $this->porcentaje_propiedad = $actor->porcentaje_propiedad;
         $this->porcentaje_nuda = $actor->porcentaje_nuda;
@@ -664,19 +673,24 @@ class Propietarios extends Component
 
         $this->validate();
 
-        if($this->porcentaje_propiedad == 0 && $this->porcentaje_nuda == 0 && $this->porcentaje_usufructo == 0){
+        if($this->tipo == 'propietario'){
 
-            $this->dispatch('mostrarMensaje', ['error', "La suma de los porcentajes no puede ser 0."]);
+            if($this->porcentaje_propiedad == 0 && $this->porcentaje_nuda == 0 && $this->porcentaje_usufructo == 0){
 
-            return;
+                $this->dispatch('mostrarMensaje', ['error', "La suma de los porcentajes no puede ser 0."]);
 
-        }
+                return;
 
-        if($this->revisarProcentajes($this->actor->id)){
+            }
 
-            $this->dispatch('mostrarMensaje', ['error', "La suma de los porcentajes no puede exceder el 100%."]);
+            if($this->revisarProcentajes($this->actor->id)){
 
-            return;
+                $this->dispatch('mostrarMensaje', ['error', "La suma de los porcentajes no puede exceder el 100%."]);
+
+                return;
+
+            }
+
 
         }
 
