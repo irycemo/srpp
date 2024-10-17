@@ -104,6 +104,8 @@ class CertificadoGravamenController extends Controller
 
         $firmaDirector = $fielDirector->sign(json_encode($object));
 
+        FirmaElectronica::where('movimiento_registral_id', $movimientoRegistral->id)->first()?->delete();
+
         $firmaElectronica = FirmaElectronica::create([
             'movimiento_registral_id' => $movimientoRegistral->id,
             'cadena_original' => json_encode($object),

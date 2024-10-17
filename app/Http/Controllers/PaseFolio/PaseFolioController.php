@@ -59,7 +59,7 @@ class PaseFolioController extends Controller
 
         $firmaDirector = $fielDirector->sign(json_encode($object));
 
-
+        FirmaElectronica::where('folio_real', $folioReal->id)->first()?->delete();
 
         $firmaElectronica = FirmaElectronica::create([
             'folio_real' => $folioReal->id,
