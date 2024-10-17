@@ -127,13 +127,13 @@ class MovimientosRegistrales extends Component
 
         } */
 
-        if($this->modelo_editar->fecha_entrega->addDays(30) < now()){
+        /* if($this->modelo_editar->fecha_entrega->addDays(30) < now()){
 
             $this->dispatch('mostrarMensaje', ['warning', "Han pasado 30 dias desde su fecha de entrega no es posible enviar a corrección."]);
 
             return;
 
-        }
+        } */
 
         try {
 

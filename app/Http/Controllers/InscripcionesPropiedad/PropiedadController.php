@@ -69,8 +69,6 @@ class PropiedadController extends Controller
 
         $firmaDirector = $fielDirector->sign(json_encode($object));
 
-        FirmaElectronica::where('movimiento_registral_id', $propiedad->movimientoRegistral->id)->first()?->delete();
-
         $firmaElectronica = FirmaElectronica::create([
             'movimiento_registral_id' => $propiedad->movimientoRegistral->id,
             'cadena_original' => json_encode($object),
@@ -153,7 +151,6 @@ class PropiedadController extends Controller
         $objeto = json_decode($firmaElectronica->cadena_original);
 
         $qr = $this->generadorQr($firmaElectronica->uuid);
-
 
         $pdf = Pdf::loadView('incripciones.propiedad.acto', [
             'folioReal' => $objeto->folioReal,

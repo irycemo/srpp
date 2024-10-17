@@ -140,7 +140,7 @@
 
         @endif
 
-        <x-button-red
+        {{-- <x-button-red
             wire:click="$toggle('modalRechazar')"
             wire:loading.attr="disabled"
             wire:target="$toggle('modalRechazar')">
@@ -149,7 +149,7 @@
 
             Rechazar
 
-        </x-button-red>
+        </x-button-red> --}}
 
         <x-button-blue
             wire:click="guardar"

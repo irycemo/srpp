@@ -12,6 +12,7 @@ use App\Models\Propiedad;
 use App\Models\Sentencia;
 use App\Models\Cancelacion;
 use App\Models\Certificacion;
+use App\Models\FirmaElectronica;
 use App\Models\MovimientoRegistral;
 use Illuminate\Support\Facades\Storage;
 
@@ -412,6 +413,20 @@ trait FirmaElectronicaTrait{
 
         }
 
+        $gravamenesHipoteca = collect();
+
+        if($gravamen->acto_contenido === 'DIVISIÓN DE HIPOTECA'){
+
+            $movimientos = MovimientoRegistral::where('movimiento_padre', $gravamen->movimientoregistral->id)->get();
+
+            foreach ($movimientos as $movimiento) {
+
+                $gravamenesHipoteca->push($this->gravavmen($movimiento->gravamen));
+
+            }
+
+        }
+
         $object = (object)[];
 
         $object->id = $gravamen->id;
@@ -432,6 +447,7 @@ trait FirmaElectronicaTrait{
         $object->tipo_documento = $gravamen->movimientoRegistral->tipo_documento;
         $object->numero_documento = $gravamen->movimientoRegistral->numero_documento;
         $object->procedencia = $gravamen->movimientoRegistral->procedencia;
+        $object->gravamenesHipoteca = $gravamenesHipoteca;
 
         return $object;
 
@@ -483,7 +499,7 @@ trait FirmaElectronicaTrait{
         $object->observaciones = $cancelacion->observaciones;
         $object->fecha_inscripcion = $cancelacion->fecha_inscripcion;
         $object->movimiento_folio = $cancelacion->movimientoRegistral->folio;
-        $object->gravamen = $cancelacion->gravamenCancelado->folio;
+        $object->gravamen = $this->gravamen($cancelacion->gravamenCancelado->gravamen);
 
         return $object;
 
@@ -492,6 +508,8 @@ trait FirmaElectronicaTrait{
     public function resetCaratula($id){
 
         $movimiento = MovimientoRegistral::with('archivos')->find($id);
+
+        FirmaElectronica::where('movimiento_registral_id', $id)->first()?->delete();
 
         if($movimiento->archivos->where('descripcion', 'caratula')->count()){
 

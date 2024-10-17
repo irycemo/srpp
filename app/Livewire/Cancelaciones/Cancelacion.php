@@ -4,6 +4,7 @@ namespace App\Livewire\Cancelaciones;
 
 use App\Models\File;
 use Livewire\Component;
+use Livewire\WithFileUploads;
 use Illuminate\Validation\Rule;
 use Illuminate\Support\Facades\DB;
 use App\Models\MovimientoRegistral;
@@ -14,7 +15,7 @@ use Illuminate\Support\Facades\Storage;
 use App\Http\Services\SistemaTramitesService;
 use App\Models\Cancelacion as ModelCancelacion;
 use Illuminate\Http\Client\ConnectionException;
-use Livewire\WithFileUploads;
+use App\Http\Controllers\Cancelaciones\CancelacionController;
 
 class Cancelacion extends Component
 {
@@ -176,14 +177,18 @@ class Cancelacion extends Component
                 $this->cancelacion->fecha_inscripcion = now()->toDateString();
                 $this->cancelacion->save();
 
-                $this->cancelacion->movimientoRegistral->update(['estado' => 'elaborado']);
+                $this->cancelacion->movimientoRegistral->update(['estado' => 'elaborado', 'actualizado_por' => auth()->id()]);
+
+                $this->cancelacion->movimientoRegistral->audits()->latest()->first()->update(['tags' => 'Elaboró inscripción de cancelación']);
+
+                (new CancelacionController())->caratula($this->cancelacion);
 
             });
 
             return redirect()->route('cancelacion');
 
         } catch (\Throwable $th) {
-            Log::error("Error al finalizar inscripcion de propiedad por el usuario: (id: " . auth()->user()->id . ") " . auth()->user()->name . ". " . $th);
+            Log::error("Error al finalizar inscripcion de cancelación por el usuario: (id: " . auth()->user()->id . ") " . auth()->user()->name . ". " . $th);
             $this->dispatch('mostrarMensaje', ['error', "Ha ocurrido un error."]);
         }
 
@@ -195,9 +200,11 @@ class Cancelacion extends Component
 
             DB::transaction(function () {
 
-                $this->cancelacion->movimientoRegistral->update(['estado' => 'captura']);
+                if($this->cancelacion->movimientoRegistral->estado != 'correccion')
+                    $this->cancelacion->movimientoRegistral->estado = 'captura';
 
-                $this->cancelacion->save();
+                $this->cancelacion->movimientoRegistral->actualizado_por = auth()->id();
+                $this->cancelacion->movimientoRegistral->save();
 
             });
 
@@ -263,49 +270,14 @@ class Cancelacion extends Component
 
             DB::transaction(function (){
 
-                if(env('LOCAL') == "0"){
+                $pdf = $this->documento->store('/', 'documento_entrada');
 
-                    $pdf = $this->documento->store('srpp/documento_entrada', 's3');
-
-                    File::create([
-                        'fileable_id' => $this->cancelacion->movimientoRegistral->id,
-                        'fileable_type' => 'App\Models\MovimientoRegistral',
-                        'descripcion' => 'documento_entrada_s3',
-                        'url' => $pdf
-                    ]);
-
-                }elseif(env('LOCAL') == "1"){
-
-                    $pdf = $this->documento->store('/', 'documento_entrada');
-
-                    File::create([
-                        'fileable_id' => $this->cancelacion->movimientoRegistral->id,
-                        'fileable_type' => 'App\Models\MovimientoRegistral',
-                        'descripcion' => 'documento_entrada',
-                        'url' => $pdf
-                    ]);
-
-                }elseif(env('LOCAL') == "2"){
-
-                    $pdf = $this->documento->store('srpp/documento_entrada', 's3');
-
-                    File::create([
-                        'fileable_id' => $this->cancelacion->movimientoRegistral->id,
-                        'fileable_type' => 'App\Models\MovimientoRegistral',
-                        'descripcion' => 'documento_entrada_s3',
-                        'url' => $pdf
-                    ]);
-
-                    $pdf = $this->documento->store('/', 'documento_entrada');
-
-                    File::create([
-                        'fileable_id' => $this->cancelacion->movimientoRegistral->id,
-                        'fileable_type' => 'App\Models\MovimientoRegistral',
-                        'descripcion' => 'documento_entrada',
-                        'url' => $pdf
-                    ]);
-
-                }
+                File::create([
+                    'fileable_id' => $this->cancelacion->movimientoRegistral->id,
+                    'fileable_type' => 'App\Models\MovimientoRegistral',
+                    'descripcion' => 'documento_entrada',
+                    'url' => $pdf
+                ]);
 
                 $this->modalDocumento = false;
 
@@ -372,6 +344,13 @@ class Cancelacion extends Component
                                                                         $q->where('estado', 'activo');
                                                                     })
                                                                     ->first();
+
+        if($this->gravamenCancelarMovimiento && !$this->cancelacion->gravamen){
+
+            $this->cancelacion->gravamen = $this->gravamenCancelarMovimiento->id;
+            $this->cancelacion->save();
+
+        }
 
     }
 

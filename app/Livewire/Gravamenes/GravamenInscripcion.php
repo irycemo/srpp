@@ -21,6 +21,7 @@ use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Facades\Storage;
 use App\Http\Services\AsignacionService;
 use Illuminate\Http\Client\ConnectionException;
+use App\Http\Controllers\Gravamen\GravamenController;
 
 class GravamenInscripcion extends Component
 {
@@ -647,8 +648,6 @@ class GravamenInscripcion extends Component
                 $this->gravamen->actualizado_por = auth()->id();
                 $this->gravamen->save();
 
-                $this->gravamen->movimientoRegistral->update(['estado' => 'elaborado']);
-
                 if($this->gravamen->acto_contenido === 'DIVISIÓN DE HIPOTECA'){
 
                     foreach($this->folios_reales as $folio){
@@ -697,12 +696,18 @@ class GravamenInscripcion extends Component
 
                 }
 
+                $this->gravamen->movimientoRegistral->update(['estado' => 'elaborado', 'actualizado_por' => auth()->id()]);
+
+                $this->gravamen->movimientoRegistral->audits()->latest()->first()->update(['tags' => 'Elaboró inscripción de gravamen']);
+
+                (new GravamenController())->caratula($this->gravamen);
+
             });
 
             return redirect()->route('gravamen');
 
         } catch (\Throwable $th) {
-            Log::error("Error al finalizar inscripcion de propiedad por el usuario: (id: " . auth()->user()->id . ") " . auth()->user()->name . ". " . $th);
+            Log::error("Error al finalizar inscripcion de gravamen por el usuario: (id: " . auth()->user()->id . ") " . auth()->user()->name . ". " . $th);
             $this->dispatch('mostrarMensaje', ['error', "Ha ocurrido un error."]);
         }
 
@@ -714,9 +719,11 @@ class GravamenInscripcion extends Component
 
             DB::transaction(function () {
 
-                $this->gravamen->movimientoRegistral->update(['estado' => 'captura']);
+                if($this->gravamen->movimientoRegistral->estado != 'correccion')
+                    $this->gravamen->movimientoRegistral->estado = 'captura';
 
-                $this->gravamen->save();
+                $this->gravamen->movimientoRegistral->actualizado_por = auth()->id();
+                $this->gravamen->movimientoRegistral->save();
 
             });
 
@@ -839,49 +846,14 @@ class GravamenInscripcion extends Component
 
             DB::transaction(function (){
 
-                if(env('LOCAL') == "0"){
+                $pdf = $this->documento->store('/', 'documento_entrada');
 
-                    $pdf = $this->documento->store('srpp/documento_entrada', 's3');
-
-                    File::create([
-                        'fileable_id' => $this->gravamen->movimientoRegistral->id,
-                        'fileable_type' => 'App\Models\MovimientoRegistral',
-                        'descripcion' => 'documento_entrada_s3',
-                        'url' => $pdf
-                    ]);
-
-                }elseif(env('LOCAL') == "1"){
-
-                    $pdf = $this->documento->store('/', 'documento_entrada');
-
-                    File::create([
-                        'fileable_id' => $this->gravamen->movimientoRegistral->id,
-                        'fileable_type' => 'App\Models\MovimientoRegistral',
-                        'descripcion' => 'documento_entrada',
-                        'url' => $pdf
-                    ]);
-
-                }elseif(env('LOCAL') == "2"){
-
-                    $pdf = $this->documento->store('srpp/documento_entrada', 's3');
-
-                    File::create([
-                        'fileable_id' => $this->gravamen->movimientoRegistral->id,
-                        'fileable_type' => 'App\Models\MovimientoRegistral',
-                        'descripcion' => 'documento_entrada_s3',
-                        'url' => $pdf
-                    ]);
-
-                    $pdf = $this->documento->store('/', 'documento_entrada');
-
-                    File::create([
-                        'fileable_id' => $this->gravamen->movimientoRegistral->id,
-                        'fileable_type' => 'App\Models\MovimientoRegistral',
-                        'descripcion' => 'documento_entrada',
-                        'url' => $pdf
-                    ]);
-
-                }
+                File::create([
+                    'fileable_id' => $this->gravamen->movimientoRegistral->id,
+                    'fileable_type' => 'App\Models\MovimientoRegistral',
+                    'descripcion' => 'documento_entrada',
+                    'url' => $pdf
+                ]);
 
                 $this->modalDocumento = false;
 
@@ -970,6 +942,18 @@ class GravamenInscripcion extends Component
             }
 
         }
+
+        $director = User::where('status', 'activo')->whereHas('roles', function($q){
+            $q->where('name', 'Director');
+        })->first();
+
+        if(!$director) abort(500, message:"Es necesario registrar al director.");
+
+        $jefe_departamento = User::where('status', 'activo')->whereHas('roles', function($q){
+            $q->where('name', 'Jefe de departamento inscripciones');
+        })->first();
+
+        if(!$jefe_departamento) abort(500, message:"Es necesario registrar al jefe de Departamento de Registro de Inscripciones.");
 
     }
 

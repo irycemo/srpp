@@ -7,6 +7,8 @@ use Illuminate\Support\Facades\DB;
 use App\Models\MovimientoRegistral;
 use Illuminate\Support\Facades\Log;
 use App\Http\Services\SistemaTramitesService;
+use App\Http\Controllers\Gravamen\GravamenController;
+use App\Http\Controllers\Cancelaciones\CancelacionController;
 use App\Http\Controllers\InscripcionesPropiedad\PropiedadController;
 
 trait InscripcionesIndex{
@@ -240,7 +242,7 @@ trait InscripcionesIndex{
 
             if($movimientoRegistral->gravamen){
 
-                $this->dispatch('imprimir_documento', ['caratula' => $movimientoRegistral->gravamen->id]);
+                $pdf = (new GravamenController())->reimprimir($movimientoRegistral->firmaElectronica);
 
             }
 
@@ -252,7 +254,7 @@ trait InscripcionesIndex{
 
             if($movimientoRegistral->cancelacion){
 
-                $this->dispatch('imprimir_documento', ['caratula' => $movimientoRegistral->cancelacion->id]);
+                $pdf = (new CancelacionController())->reimprimir($movimientoRegistral->firmaElectronica);
 
             }
 

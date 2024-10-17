@@ -280,7 +280,8 @@ class Constantes{
         'PERMUTA',
         'FIDEICOMISO',
         'EXPEDICIÓN DE TÍTULO DE PROPIEDAD',
-        'SUBDIVISIÓN'
+        'SUBDIVISIÓN',
+        'CONTRATO VERBAL DE COMPRAVENTA'
     ];
 
     const ACTOS_INSCRIPCION_GRAVAMEN = [

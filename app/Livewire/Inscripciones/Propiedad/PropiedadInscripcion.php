@@ -5,7 +5,6 @@ namespace App\Livewire\Inscripciones\Propiedad;
 use App\Models\File;
 use App\Models\User;
 use App\Models\Actor;
-use App\Models\Deudor;
 use App\Models\Persona;
 use Livewire\Component;
 use App\Models\Propiedad;
@@ -1577,8 +1576,7 @@ class PropiedadInscripcion extends Component
 
         }
 
-        /* if(in_array($this->inscripcion->servicio, ['D114', 'D116', 'D115', 'D113'])) */
-            $this->actos = Constantes::ACTOS_INSCRIPCION_PROPIEDAD;
+        $this->actos = Constantes::ACTOS_INSCRIPCION_PROPIEDAD;
 
         $director = User::where('status', 'activo')->whereHas('roles', function($q){
             $q->where('name', 'Director');
