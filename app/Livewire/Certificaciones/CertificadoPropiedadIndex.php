@@ -4,12 +4,14 @@ namespace App\Livewire\Certificaciones;
 
 use Livewire\Component;
 use Livewire\WithPagination;
+use Livewire\WithFileUploads;
+use App\Constantes\Constantes;
+use Barryvdh\DomPDF\Facade\Pdf;
 use App\Traits\ComponentesTrait;
 use Illuminate\Support\Facades\DB;
 use App\Models\MovimientoRegistral;
 use Illuminate\Support\Facades\Log;
 use App\Http\Services\SistemaTramitesService;
-use Livewire\WithFileUploads;
 
 class CertificadoPropiedadIndex extends Component
 {
@@ -27,6 +29,9 @@ class CertificadoPropiedadIndex extends Component
     public $actual;
 
     public $observaciones;
+
+    public $motivos;
+    public $motivo;
 
     public function crearModeloVacio(){
         $this->modelo_editar = MovimientoRegistral::make();
@@ -289,52 +294,42 @@ class CertificadoPropiedadIndex extends Component
 
     public function rechazar(){
 
-        if(!auth()->user()->hasRole(['Certificador Juridico', 'Certificador Oficialia'])){
-
-            if($this->modelo_editar->tipo_servicio == 'ordinario'){
-
-                if(!($this->calcularDiaElaboracion($this->modelo_editar) <= now())){
-
-                    $this->dispatch('mostrarMensaje', ['error', "El trámite puede elaborarse apartir del " . $this->calcularDiaElaboracion($this->modelo_editar)->format('d-m-Y')]);
-
-                    return;
-
-                }
-
-            }
-
-        }
-
         $this->validate([
             'observaciones' => 'required'
         ]);
 
         try {
 
-            DB::transaction(function (){
+            DB::transaction(function () {
 
                 $observaciones = auth()->user()->name . ' rechaza el ' . now() . ', con motivo: ' . $this->observaciones ;
 
-                (new SistemaTramitesService())->rechazarTramite($this->modelo_editar->año, $this->modelo_editar->tramite, $this->modelo_editar->usuario, $observaciones);
+                (new SistemaTramitesService())->rechazarTramite($this->modelo_editar->año, $this->modelo_editar->tramite, $this->modelo_editar->usuario, $this->motivo . ' ' . $observaciones);
 
                 $this->modelo_editar->update(['estado' => 'rechazado', 'actualizado_por' => auth()->user()->id]);
 
-                $this->modelo_editar->certificacion->observaciones = $this->modelo_editar->certificacion->observaciones . $observaciones;
-
-                $this->modelo_editar->certificacion->save();
-
-                $this->dispatch('mostrarMensaje', ['success', "El trámite se rechazó con éxito."]);
-
-                $this->resetearTodo();
-
-                $this->modalRechazar = false;
-
             });
+
+            $this->dispatch('mostrarMensaje', ['success', "El trámite se rechazó con éxito."]);
+
+            $this->modalRechazar = false;
+
+            $pdf = Pdf::loadView('rechazos.rechazo', [
+                'movimientoRegistral' => $this->modelo_editar,
+                'motivo' => $this->motivo,
+                'observaciones' => $this->observaciones
+            ])->output();
+
+            return response()->streamDownload(
+                fn () => print($pdf),
+                'rechazo.pdf'
+            );
 
         } catch (\Throwable $th) {
 
             Log::error("Error al rechazar certificado de propiedad por el usuario: (id: " . auth()->user()->id . ") " . auth()->user()->name . ". " . $th);
             $this->dispatch('mostrarMensaje', ['error', "Ha ocurrido un error."]);
+
         }
 
     }
@@ -356,6 +351,20 @@ class CertificadoPropiedadIndex extends Component
         }
 
         return $diaElaboracion;
+
+    }
+
+    public function seleccionarMotivo($key){
+
+        $this->motivo = $this->motivos[$key];
+
+    }
+
+    public function mount(){
+
+        $this->crearModeloVacio();
+
+        $this->motivos = Constantes::RECHAZO_MOTIVOS;
 
     }
 
