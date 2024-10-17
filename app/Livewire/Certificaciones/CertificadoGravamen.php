@@ -4,18 +4,19 @@ namespace App\Livewire\Certificaciones;
 
 use App\Models\User;
 use App\Models\Predio;
+use App\Traits\QrTrait;
 use Livewire\Component;
 use App\Models\Gravamen;
 use Livewire\WithPagination;
 use App\Models\Certificacion;
 use Livewire\WithFileUploads;
+use App\Constantes\Constantes;
 use Barryvdh\DomPDF\Facade\Pdf;
 use App\Traits\ComponentesTrait;
 use Illuminate\Support\Facades\DB;
 use App\Models\MovimientoRegistral;
 use Illuminate\Support\Facades\Log;
 use App\Http\Services\SistemaTramitesService;
-use App\Traits\QrTrait;
 
 class CertificadoGravamen extends Component
 {
@@ -40,6 +41,9 @@ class CertificadoGravamen extends Component
     public $modalFinalizar = false;
 
     public $observaciones;
+
+    public $motivos;
+    public $motivo;
 
     public function crearModeloVacio(){
         $this->modelo_editar = Certificacion::make();
@@ -278,68 +282,43 @@ class CertificadoGravamen extends Component
 
     public function rechazar(){
 
-        if(!auth()->user()->hasRole(['Certificador Juridico', 'Certificador Oficialia'])){
-
-            if($this->modelo_editar->movimientoRegistral->tipo_servicio == 'ordinario'){
-
-                if(!($this->calcularDiaElaboracion($this->modelo_editar) <= now())){
-
-                    $this->dispatch('mostrarMensaje', ['error', "El trámite puede elaborarse apartir del " . $this->calcularDiaElaboracion($this->modelo_editar)->format('d-m-Y')]);
-
-                    return;
-
-                }
-
-            }
-
-        }
-
         $this->validate([
             'observaciones' => 'required'
         ]);
 
         try {
 
-            DB::transaction(function (){
+            DB::transaction(function () {
 
                 $observaciones = auth()->user()->name . ' rechaza el ' . now() . ', con motivo: ' . $this->observaciones ;
 
-                (new SistemaTramitesService())->rechazarTramite($this->modelo_editar->movimientoRegistral->año, $this->modelo_editar->movimientoRegistral->tramite, $this->modelo_editar->movimientoRegistral->usuario, $observaciones);
+                (new SistemaTramitesService())->rechazarTramite($this->modelo_editar->año, $this->modelo_editar->tramite, $this->modelo_editar->usuario, $this->motivo . ' ' . $observaciones);
 
-                $this->modelo_editar->movimientoRegistral->update(['estado' => 'rechazado', 'actualizado_por' => auth()->user()->id]);
-
-                $this->modelo_editar->actualizado_por = auth()->user()->id;
-
-                $this->modelo_editar->observaciones = $this->modelo_editar->observaciones . $observaciones;
-
-                $this->modelo_editar->save();
-
-                $this->dispatch('mostrarMensaje', ['success', "El trámite se rechazó con éxito."]);
-
-                $this->resetearTodo();
-
-                $this->modalRechazar = false;
+                $this->modelo_editar->update(['estado' => 'rechazado', 'actualizado_por' => auth()->user()->id]);
 
             });
 
+            $this->dispatch('mostrarMensaje', ['success', "El trámite se rechazó con éxito."]);
+
+            $this->modalRechazar = false;
+
+            $pdf = Pdf::loadView('rechazos.rechazo', [
+                'movimientoRegistral' => $this->modelo_editar,
+                'motivo' => $this->motivo,
+                'observaciones' => $this->observaciones
+            ])->output();
+
+            return response()->streamDownload(
+                fn () => print($pdf),
+                'rechazo.pdf'
+            );
+
         } catch (\Throwable $th) {
 
-            Log::error("Error al rechazar certificado de gravamen por el usuario: (id: " . auth()->user()->id . ") " . auth()->user()->name . ". " . $th);
+            Log::error("Error al rechazar certificado de propiedad por el usuario: (id: " . auth()->user()->id . ") " . auth()->user()->name . ". " . $th);
             $this->dispatch('mostrarMensaje', ['error', "Ha ocurrido un error."]);
+
         }
-
-    }
-
-    public function mount(){
-
-        $this->crearModeloVacio();
-
-        $this->director = User::where('status', 'activo')
-                                ->whereHas('roles', function($q){
-                                    $q->where('name', 'Director');
-                                })->first();
-
-        if(!$this->director) abort(500, message:"Es necesario registrar al director.");
 
     }
 
@@ -385,6 +364,21 @@ class CertificadoGravamen extends Component
             $this->dispatch('mostrarMensaje', ['error', "Ha ocurrido un error."]);
 
         }
+
+    }
+
+    public function mount(){
+
+        $this->crearModeloVacio();
+
+        $this->director = User::where('status', 'activo')
+                                ->whereHas('roles', function($q){
+                                    $q->where('name', 'Director');
+                                })->first();
+
+        if(!$this->director) abort(500, message:"Es necesario registrar al director.");
+
+        $this->motivos = Constantes::RECHAZO_MOTIVOS;
 
     }
 
