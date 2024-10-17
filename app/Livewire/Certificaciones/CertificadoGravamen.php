@@ -367,6 +367,12 @@ class CertificadoGravamen extends Component
 
     }
 
+    public function seleccionarMotivo($key){
+
+        $this->motivo = $this->motivos[$key];
+
+    }
+
     public function mount(){
 
         $this->crearModeloVacio();
