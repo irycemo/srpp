@@ -292,9 +292,9 @@ class CertificadoGravamen extends Component
 
                 $observaciones = auth()->user()->name . ' rechaza el ' . now() . ', con motivo: ' . $this->observaciones ;
 
-                (new SistemaTramitesService())->rechazarTramite($this->modelo_editar->año, $this->modelo_editar->tramite, $this->modelo_editar->usuario, $this->motivo . ' ' . $observaciones);
+                (new SistemaTramitesService())->rechazarTramite($this->modelo_editar->movimientoRegistral->año, $this->modelo_editar->movimientoRegistral->tramite, $this->modelo_editar->movimientoRegistral->usuario, $this->motivo . ' ' . $observaciones);
 
-                $this->modelo_editar->update(['estado' => 'rechazado', 'actualizado_por' => auth()->user()->id]);
+                $this->modelo_editar->movimientoRegistral->update(['estado' => 'rechazado', 'actualizado_por' => auth()->user()->id]);
 
             });
 
@@ -303,7 +303,7 @@ class CertificadoGravamen extends Component
             $this->modalRechazar = false;
 
             $pdf = Pdf::loadView('rechazos.rechazo', [
-                'movimientoRegistral' => $this->modelo_editar,
+                'movimientoRegistral' => $this->modelo_editar->movimientoRegistral,
                 'motivo' => $this->motivo,
                 'observaciones' => $this->observaciones
             ])->output();
