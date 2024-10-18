@@ -54,6 +54,8 @@ class CertificadoPropiedadController extends Controller
 
         $personas = collect();
 
+        $movimientoRegistral->certificacion->load('personas.persona');
+
         if($movimientoRegistral->certificacion->personas->count()){
 
             foreach ($movimientoRegistral->certificacion->personas as $persona) {
@@ -281,6 +283,8 @@ class CertificadoPropiedadController extends Controller
 
         $personas = collect();
 
+        $movimientoRegistral->certificacion->load('personas.persona');
+
         if($movimientoRegistral->certificacion->personas->count()){
 
             foreach ($movimientoRegistral->certificacion->personas as $persona) {
@@ -473,6 +477,8 @@ class CertificadoPropiedadController extends Controller
         $datos_control->movimiento_folio = $movimientoRegistral->folio;
 
         $personas = collect();
+
+        $movimientoRegistral->certificacion->load('personas.persona');
 
         if($movimientoRegistral->certificacion->personas->count()){
 
