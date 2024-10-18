@@ -166,6 +166,8 @@ class CertificadoPropiedadController extends Controller
 
         $personas = collect();
 
+        $movimientoRegistral->certificacion->load('personas');
+
         if($movimientoRegistral->certificacion->personas->count()){
 
             foreach ($movimientoRegistral->certificacion->personas as $persona) {

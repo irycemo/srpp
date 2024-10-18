@@ -105,37 +105,26 @@ trait InscripcionesIndex{
 
             $aviso = $this->modelo_editar->folioReal->avisoPreventivo();
 
-            if(!(
+            if($this->modelo_editar->inscripcionPropiedad &&
                 $aviso->movimientoRegistral->tipo_documento == $this->modelo_editar->tipo_documento &&
                 $aviso->movimientoRegistral->numero_documento == $this->modelo_editar->numero_documento &&
                 $aviso->movimientoRegistral->autoridad_cargo == $this->modelo_editar->autoridad_cargo &&
                 $aviso->movimientoRegistral->autoridad_nombre == $this->modelo_editar->autoridad_nombre &&
                 $aviso->movimientoRegistral->autoridad_numero == $this->modelo_editar->autoridad_numero &&
                 $aviso->movimientoRegistral->fecha_emision == $this->modelo_editar->fecha_emision &&
-                $aviso->movimientoRegistral->procedencia == $this->modelo_editar->procedencia)
+                $aviso->movimientoRegistral->procedencia == $this->modelo_editar->procedencia
             ){
 
-                $this->dispatch('mostrarMensaje', ['warning', "El folio real tiene un aviso preventivo vigente."]);
-
-                return;
-
-            }
-
-        }
-
-        if(auth()->user()->hasRole('Jefe de departamento')){
-
-            $this->actual = $this->modelo_editar;
-
-            if($this->estaBloqueado()){
+                $this->ruta($this->modelo_editar);
 
                 return;
 
             }else{
 
-                $this->ruta($this->modelo_editar);
+                $this->dispatch('mostrarMensaje', ['warning', "El folio real tiene un aviso preventivo vigente."]);
 
                 return;
+
             }
 
         }
