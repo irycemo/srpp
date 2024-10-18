@@ -575,6 +575,8 @@ class CertificadoPropiedad extends Component
 
     public function procesarPersona($nombre, $ap_paterno, $ap_materno){
 
+        $this->certificacion->personas()->delete();
+
         $persona = Persona::firstOrCreate(
             [
                 'tipo' => 'FISICA',
