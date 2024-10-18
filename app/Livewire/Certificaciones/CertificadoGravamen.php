@@ -396,7 +396,7 @@ class CertificadoGravamen extends Component
             $certificados = MovimientoRegistral::with('asignadoA', 'supervisor', 'actualizadoPor', 'certificacion.actualizadoPor', 'folioReal:id,folio')
                                                 ->where('usuario_asignado', auth()->id())
                                                 ->whereHas('folioReal', function($q){
-                                                    $q->where('estado', 'activo');
+                                                    $q->whereIn('estado', ['activo']);
                                                 })
                                                 ->where(function($q){
                                                     $q->whereHas('asignadoA', function($q){
@@ -413,7 +413,7 @@ class CertificadoGravamen extends Component
                                                         ->orWhere('estado', 'LIKE', '%' . $this->search . '%')
                                                         ->orWhere('tramite', 'LIKE', '%' . $this->search . '%');
                                                 })
-                                                ->where('estado', 'nuevo')
+                                                ->whereIn('estado', ['nuevo', 'correccion'])
                                                 ->when(auth()->user()->ubicacion == 'Regional 4', function($q){
                                                     $q->where('distrito', 2);
                                                 })
@@ -448,7 +448,7 @@ class CertificadoGravamen extends Component
                                                         ->orWhere('estado', 'LIKE', '%' . $this->search . '%')
                                                         ->orWhere('tramite', 'LIKE', '%' . $this->search . '%');
                                                 })
-                                                ->whereIn('estado', ['nuevo', 'elaborado'])
+                                                ->whereIn('estado', ['nuevo', 'elaborado', 'correccion'])
                                                 ->when(auth()->user()->ubicacion == 'Regional 4', function($q){
                                                     $q->where('distrito', 2);
                                                 })
@@ -493,7 +493,7 @@ class CertificadoGravamen extends Component
                                                 ->whereHas('certificacion', function($q){
                                                     $q->where('servicio', 'DL07');
                                                 })
-                                                ->whereIn('estado', ['nuevo', 'elaborado'])
+                                                ->whereIn('estado', ['nuevo', 'elaborado', 'correccion'])
                                                 ->orderBy($this->sort, $this->direction)
                                                 ->paginate($this->pagination);
 

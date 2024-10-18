@@ -144,12 +144,7 @@ class Varios extends Component
         unset($this->actos['PRIMER AVISO PREVENTIVO']);
         unset($this->actos['ACLARACIÓN ADMINISTRATIVA']);
         unset($this->actos['PERSONAS MORALES']);
-
-        if($this->vario->servicio == 'D110'){
-
-            $this->actos = ['PERSONAS MORALES'];
-
-        }
+        unset($this->actos['PERSONAS MORALES']);
 
     }
 

@@ -384,7 +384,7 @@ class CertificadoPropiedadIndex extends Component
                                                         ->orWhere('estado', 'LIKE', '%' . $this->search . '%')
                                                         ->orWhere('tramite', 'LIKE', '%' . $this->search . '%');
                                                 })
-                                                ->where('estado', 'nuevo')
+                                                ->whereIn('estado', ['nuevo', 'correccion'])
                                                 ->when(auth()->user()->ubicacion == 'Regional 4', function($q){
                                                     $q->where('distrito', 2);
                                                 })
@@ -416,7 +416,7 @@ class CertificadoPropiedadIndex extends Component
                                                         ->orWhere('estado', 'LIKE', '%' . $this->search . '%')
                                                         ->orWhere('tramite', 'LIKE', '%' . $this->search . '%');
                                                 })
-                                                ->whereIn('estado', ['nuevo', 'elaborado'])
+                                                ->whereIn('estado', ['nuevo', 'elaborado', 'correccion'])
                                                 ->when(auth()->user()->ubicacion == 'Regional 4', function($q){
                                                     $q->where('distrito', 2);
                                                 })
@@ -460,7 +460,7 @@ class CertificadoPropiedadIndex extends Component
                                                 ->whereHas('certificacion', function($q){
                                                     $q->whereIn('servicio', ['DL10', 'DL11']);
                                                 })
-                                                ->whereIn('estado', ['nuevo', 'elaborado'])
+                                                ->whereIn('estado', ['nuevo', 'elaborado', 'correccion'])
                                                 ->orderBy($this->sort, $this->direction)
                                                 ->paginate($this->pagination);
 

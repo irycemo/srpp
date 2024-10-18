@@ -170,7 +170,7 @@
                 @if($vario->acto_contenido == 'PERSONAS MORALES')
 
                     <div style="text-align: right">
-                        <p style="margin:0;"><strong>movimiento registral:</strong>{{ $vario->folioPersonaMoral->folio }}-{{ $datos_control->movimiento_folio }}</p>
+                        <p style="margin:0;"><strong>movimiento registral: </strong>{{ $vario->folioPersonaMoral->folio }}-{{ $datos_control->movimiento_folio }}</p>
                         <p style="margin:0;"><strong>DISTRITO:</strong> {{ $folioReal->distrito}}</p>
                     </div>
 
@@ -207,7 +207,7 @@
 
                     <p class="parrafo">
 
-                        <strong>Notaria:</strong> {{ $vario->folioPersonaMoral->folio->>notaria }}; <strong>Nombre del notario:</strong>{{ $vario->folioPersonaMoral->folio->nombre_notario }}; <strong>Número de hojas:</strong>{{ $vario->folioPersonaMoral->folio->numero_hojas }}.
+                        <strong>Notaria:</strong> {{ $vario->folioPersonaMoral->folio->notaria }}; <strong>Nombre del notario:</strong>{{ $vario->folioPersonaMoral->folio->nombre_notario }}; <strong>Número de hojas:</strong>{{ $vario->folioPersonaMoral->folio->numero_hojas }}.
 
                     </p>
 

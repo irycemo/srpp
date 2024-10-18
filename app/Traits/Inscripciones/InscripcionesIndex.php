@@ -7,6 +7,7 @@ use Illuminate\Support\Facades\DB;
 use App\Models\MovimientoRegistral;
 use Illuminate\Support\Facades\Log;
 use App\Http\Services\SistemaTramitesService;
+use App\Http\Controllers\Varios\VariosController;
 use App\Http\Controllers\Gravamen\GravamenController;
 use App\Http\Controllers\Cancelaciones\CancelacionController;
 use App\Http\Controllers\InscripcionesPropiedad\PropiedadController;
@@ -102,9 +103,23 @@ trait InscripcionesIndex{
 
         if($this->modelo_editar->folioReal->avisoPreventivo()){
 
-            $this->dispatch('mostrarMensaje', ['warning', "El folio real tiene un aviso preventivo vigente."]);
+            $aviso = $this->modelo_editar->folioReal->avisoPreventivo();
 
-            return;
+            if(!(
+                $aviso->movimientoRegistral->tipo_documento == $this->modelo_editar->tipo_documento &&
+                $aviso->movimientoRegistral->numero_documento == $this->modelo_editar->numero_documento &&
+                $aviso->movimientoRegistral->autoridad_cargo == $this->modelo_editar->autoridad_cargo &&
+                $aviso->movimientoRegistral->autoridad_nombre == $this->modelo_editar->autoridad_nombre &&
+                $aviso->movimientoRegistral->autoridad_numero == $this->modelo_editar->autoridad_numero &&
+                $aviso->movimientoRegistral->fecha_emision == $this->modelo_editar->fecha_emision &&
+                $aviso->movimientoRegistral->procedencia == $this->modelo_editar->procedencia)
+            ){
+
+                $this->dispatch('mostrarMensaje', ['warning', "El folio real tiene un aviso preventivo vigente."]);
+
+                return;
+
+            }
 
         }
 
@@ -248,7 +263,7 @@ trait InscripcionesIndex{
 
             if($movimientoRegistral->vario){
 
-                $this->dispatch('imprimir_documento', ['caratula' => $movimientoRegistral->vario->id]);
+                $pdf = (new VariosController())->reimprimir($movimientoRegistral->firmaElectronica);
 
             }
 

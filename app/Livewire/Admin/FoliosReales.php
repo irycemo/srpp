@@ -44,17 +44,13 @@ class FoliosReales extends Component
 
     public function enviarCaptura(FolioReal $folioReal){
 
-        /* $movimiento = $folioReal->movimientosRegistrales()
-                                    ->whereIn('estado', ['elaborado', 'finalizado', 'concluido'])
-                                    ->first();
+        if($movimiento = $folioReal->movimientosRegistrales()->count() >= 2){
 
-        if($movimiento){
-
-            $this->dispatch('mostrarMensaje', ['error', "El folio tiene movimientos registrales elaborados no es posible enviarlo a captura."]);
+            $this->dispatch('mostrarMensaje', ['error', "El folio tiene mas de 1 movimiento registral no es posible enviarlo a captura."]);
 
             return;
 
-        } */
+        }
 
         try {
 

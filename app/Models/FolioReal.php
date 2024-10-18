@@ -122,7 +122,7 @@ class FolioReal extends Model implements Auditable
 
         $movimiento = $this->movimientosRegistrales()
                                         ->whereHas('vario', function($q){
-                                            $q->whereIn('servicio', ['DL09'])
+                                            $q->whereIn('servicio', ['DL09', 'D110'])
                                                 ->where('estado', 'activo');
                                         })
                                         ->where('estado', 'concluido')
@@ -132,6 +132,7 @@ class FolioReal extends Model implements Auditable
         if($movimiento) {
 
             if($movimiento->vario->acto_contenido == "SEGUNDO AVISO PREVENTIVO"){
+
 
                 if(now() > Carbon::parse($movimiento->vario->fecha_inscripcion)->addDays(60)){
 

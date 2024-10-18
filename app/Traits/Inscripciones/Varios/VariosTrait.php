@@ -80,49 +80,14 @@ trait VariosTrait{
 
             DB::transaction(function (){
 
-                if(env('LOCAL') == "0"){
+                $pdf = $this->documento->store('/', 'documento_entrada');
 
-                    $pdf = $this->documento->store('srpp/documento_entrada', 's3');
-
-                    File::create([
-                        'fileable_id' => $this->vario->movimientoRegistral->id,
-                        'fileable_type' => 'App\Models\MovimientoRegistral',
-                        'descripcion' => 'documento_entrada_s3',
-                        'url' => $pdf
-                    ]);
-
-                }elseif(env('LOCAL') == "1"){
-
-                    $pdf = $this->documento->store('/', 'documento_entrada');
-
-                    File::create([
-                        'fileable_id' => $this->vario->movimientoRegistral->id,
-                        'fileable_type' => 'App\Models\MovimientoRegistral',
-                        'descripcion' => 'documento_entrada',
-                        'url' => $pdf
-                    ]);
-
-                }elseif(env('LOCAL') == "2"){
-
-                    $pdf = $this->documento->store('srpp/documento_entrada', 's3');
-
-                    File::create([
-                        'fileable_id' => $this->vario->movimientoRegistral->id,
-                        'fileable_type' => 'App\Models\MovimientoRegistral',
-                        'descripcion' => 'documento_entrada_s3',
-                        'url' => $pdf
-                    ]);
-
-                    $pdf = $this->documento->store('/', 'documento_entrada');
-
-                    File::create([
-                        'fileable_id' => $this->vario->movimientoRegistral->id,
-                        'fileable_type' => 'App\Models\MovimientoRegistral',
-                        'descripcion' => 'documento_entrada',
-                        'url' => $pdf
-                    ]);
-
-                }
+                File::create([
+                    'fileable_id' => $this->vario->movimientoRegistral->id,
+                    'fileable_type' => 'App\Models\MovimientoRegistral',
+                    'descripcion' => 'documento_entrada',
+                    'url' => $pdf
+                ]);
 
                 $this->modalDocumento = false;
 
@@ -130,7 +95,7 @@ trait VariosTrait{
 
         } catch (\Throwable $th) {
 
-            Log::error("Error al finalizar trámite de inscripción de cancelación por el usuario: (id: " . auth()->user()->id . ") " . auth()->user()->name . ". " . $th);
+            Log::error("Error al finalizar trámite de inscripción de varios por el usuario: (id: " . auth()->user()->id . ") " . auth()->user()->name . ". " . $th);
             $this->dispatch('mostrarMensaje', ['error', "Ha ocurrido un error."]);
 
         }

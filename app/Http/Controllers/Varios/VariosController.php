@@ -22,7 +22,7 @@ class VariosController extends Controller
     use NombreServicioTrait;
     use FirmaElectronicaTrait;
 
-    public function acto(Vario $vario)
+    public function caratula(Vario $vario)
     {
 
         $this->resetCaratula($vario->movimientoRegistral->id);
@@ -95,7 +95,7 @@ class VariosController extends Controller
 
         $canvas->page_text(480, 745, "Página: {PAGE_NUM} de {PAGE_COUNT}", null, 10, array(1, 1, 1));
 
-        $canvas->page_text(35, 745, $cancelacion->movimientoRegistral->folioReal->folio  .'-' . $cancelacion->movimientoRegistral->folio, null, 9, array(1, 1, 1));
+        $canvas->page_text(35, 745, $vario->movimientoRegistral->folioReal->folio  .'-' . $vario->movimientoRegistral->folio, null, 9, array(1, 1, 1));
 
         $canvas->page_script(function ($pageNumber, $pageCount, $canvas, $fontMetrics) {
             $w = $canvas->get_width();
