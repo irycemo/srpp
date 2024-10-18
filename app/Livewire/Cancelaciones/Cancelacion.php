@@ -2,6 +2,7 @@
 
 namespace App\Livewire\Cancelaciones;
 
+use App\Constantes\Constantes;
 use App\Models\File;
 use Livewire\Component;
 use Livewire\WithFileUploads;
@@ -28,6 +29,7 @@ class Cancelacion extends Component
     public $link;
     public $contraseña;
     public $documento;
+    public $actos;
 
     public $gravamenCancelarMovimiento;
     public $folio_gravamen;
@@ -351,6 +353,8 @@ class Cancelacion extends Component
             $this->cancelacion->save();
 
         }
+
+        $this->actos = Constantes::ACTOS_INSCRIPCION_CANCELACIONES;
 
     }
 

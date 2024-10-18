@@ -261,7 +261,7 @@
 
         @if($radio == 'propiedad' && $propiedad_radio == 'propieda')
 
-            <p class="text-center bg-white rounded-lg p-4 shadow-lg w-full  mx-auto mb-5"><strong>Cantidad solicitada {{ $certificacion->numero_paginas }}</strong></p>
+            {{-- <p class="text-center bg-white rounded-lg p-4 shadow-lg w-full  mx-auto mb-5"><strong>Cantidad solicitada {{ $certificacion->numero_paginas }}</strong></p> --}}
 
             @include('livewire.certificaciones.comun.propiedad')
 
@@ -278,20 +278,16 @@
 
                 </x-button-red>
 
-                @if($certificacion->movimientoRegistral->folioReal?->predio->propietarios()->count() == $certificacion->numero_paginas)
+                <x-button-blue
+                    wire:click="generarCertificadoPropiedad"
+                    wire:loading.attr="disabled"
+                    wire:target="generarCertificadoPropiedad">
 
-                    <x-button-blue
-                        wire:click="generarCertificadoPropiedad"
-                        wire:loading.attr="disabled"
-                        wire:target="generarCertificadoPropiedad">
+                    <img wire:loading wire:target="generarCertificadoPropiedad" class="mx-auto h-4 mr-1" src="{{ asset('storage/img/loading3.svg') }}" alt="Loading">
 
-                        <img wire:loading wire:target="generarCertificadoPropiedad" class="mx-auto h-4 mr-1" src="{{ asset('storage/img/loading3.svg') }}" alt="Loading">
+                    Generar certificado de propiedad
 
-                        Generar certificado de propiedad
-
-                    </x-button-blue>
-
-                @endif
+                </x-button-blue>
 
             </div>
 

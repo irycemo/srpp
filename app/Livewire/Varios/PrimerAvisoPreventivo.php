@@ -12,6 +12,7 @@ use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Hash;
 use App\Http\Services\AsignacionService;
 use App\Traits\Inscripciones\Varios\VariosTrait;
+use App\Http\Controllers\Varios\VariosController;
 
 class PrimerAvisoPreventivo extends Component
 {
@@ -37,9 +38,13 @@ class PrimerAvisoPreventivo extends Component
                 $this->vario->fecha_inscripcion = now()->toDateString();
                 $this->vario->save();
 
-                $this->vario->movimientoRegistral->update(['estado' => 'elaborado']);
-
                 $this->crearCertificadoGravamen();
+
+                $this->vario->movimientoRegistral->update(['estado' => 'elaborado', 'actualizado_por' => auth()->id()]);
+
+                $this->vario->movimientoRegistral->audits()->latest()->first()->update(['tags' => 'Elaboró inscripción de varios']);
+
+                (new VariosController())->caratula($this->vario);
 
             });
 
@@ -62,8 +67,10 @@ class PrimerAvisoPreventivo extends Component
 
             DB::transaction(function () {
 
-                $this->vario->movimientoRegistral->update(['estado' => 'captura']);
+                if($this->vario->movimientoRegistral->estado != 'correccion')
+                    $this->vario->movimientoRegistral->estado = 'captura';
 
+                $this->vario->movimientoRegistral->actualizado_por = auth()->id();
                 $this->vario->save();
 
             });

@@ -7,11 +7,6 @@
     <title>Varios</title>
 </head>
 <style>
-
-    /* @page {
-        margin: 0cm 0cm;
-    } */
-
     header{
         position: fixed;
         top: 0cm;
@@ -52,7 +47,6 @@
     }
 
     .container{
-        font-size: 10px;
         display: flex;
         align-content: space-around;
     }
@@ -66,18 +60,17 @@
     }
 
     .control{
-        margin-top: 20px;
+        margin-top: 100px;
         text-align: center;
     }
 
     .atte{
-        margin-bottom: 40px;
+        margin-bottom: 10px;
     }
 
     .borde{
         display: inline;
         border-top: 1px solid;
-        margin: 0;
     }
 
     .tabla{
@@ -113,12 +106,12 @@
         margin: 0;
     }
 
-    .no-break{
-        page-break-inside: avoid;
+    .qr{
+        display: block;
     }
 
-    .atte{
-        margin-bottom: 40px;
+    .no-break{
+        page-break-inside: avoid;
     }
 
     table{
@@ -149,9 +142,7 @@
 
     <header>
 
-
-            <img src="{{ public_path('storage/img/encabezado.png') }}" alt="encabezado">
-
+        <img src="{{ public_path('storage/img/encabezado.png') }}" alt="encabezado">
 
     </header>
 
@@ -179,15 +170,15 @@
                 @if($vario->acto_contenido == 'PERSONAS MORALES')
 
                     <div style="text-align: right">
-                        <p style="margin:0;"><strong>movimiento registral:</strong>{{ $vario->movimientoRegistral->folioRealPersona->folio }}-{{ $vario->movimientoRegistral->folio }}</p>
-                        <p style="margin:0;"><strong>DISTRITO:</strong> {{ $vario->movimientoRegistral->distrito}}</p>
+                        <p style="margin:0;"><strong>movimiento registral:</strong>{{ $vario->folioPersonaMoral->folio }}-{{ $datos_control->movimiento_folio }}</p>
+                        <p style="margin:0;"><strong>DISTRITO:</strong> {{ $folioReal->distrito}}</p>
                     </div>
 
                 @else
 
                     <div style="text-align: right">
-                        <p style="margin:0;"><strong>movimiento registral:</strong>{{ $predio->folioReal->folio }}-{{ $vario->movimientoRegistral->folio }}</p>
-                        <p style="margin:0;"><strong>DISTRITO:</strong> {{ $vario->movimientoRegistral->distrito}}</p>
+                        <p style="margin:0;"><strong>movimiento registral:</strong>{{ $folioReal->folio }}-{{ $datos_control->movimiento_folio }}</p>
+                        <p style="margin:0;"><strong>DISTRITO:</strong> {{ $folioReal->distrito}}</p>
                     </div>
 
                 @endif
@@ -200,35 +191,35 @@
 
                     <p class="parrafo">
 
-                        <p><strong>FOLIO REAL de persona moral:</strong>{{ $vario->movimientoRegistral->folioRealPersona->folio }}
+                        <p><strong>FOLIO REAL de persona moral:</strong>{{ $vario->folioPersonaMoral->folio }}
 
                     </p>
 
                     <p class="parrafo">
-                        <strong>Denominación:</strong> {{ $vario->movimientoRegistral->folioRealPersona->denominacion }}
+                        <strong>Denominación:</strong> {{ $vario->folioPersonaMoral->folio->denominacion }}
                     </p>
 
                     <p class="parrafo">
 
-                        <strong>Fecha de celebarción:</strong>{{ Carbon\Carbon::parse($vario->movimientoRegistral->folioRealPersona->fecha_celebracion)->format('d/m/Y') }}; <strong>Fecha de inscripción:</strong>{{ Carbon\Carbon::parse($vario->movimientoRegistral->folioRealPersona->fecha_inscripcion)->format('d/m/Y') }}.
-
-                    </p>
-
-                    <p class="parrafo">
-
-                        <strong>Notaria:</strong> {{ $vario->movimientoRegistral->folioRealPersona->notaria }}; <strong>Nombre del notario:</strong>{{ $vario->movimientoRegistral->folioRealPersona->nombre_notario }}; <strong>Número de hojas:</strong>{{ $vario->movimientoRegistral->folioRealPersona->numero_hojas }}.
+                        <strong>Fecha de celebarción:</strong>{{ $vario->folioPersonaMoral->folio->fecha_celebracion }}; <strong>Fecha de inscripción:</strong>{{ $vario->folioPersonaMoral->folio->fecha_inscripcion }}.
 
                     </p>
 
                     <p class="parrafo">
 
-                        <strong>Descripción:</strong> {{ $vario->movimientoRegistral->folioRealPersona->descripcion }}
+                        <strong>Notaria:</strong> {{ $vario->folioPersonaMoral->folio->>notaria }}; <strong>Nombre del notario:</strong>{{ $vario->folioPersonaMoral->folio->nombre_notario }}; <strong>Número de hojas:</strong>{{ $vario->folioPersonaMoral->folio->numero_hojas }}.
 
                     </p>
 
                     <p class="parrafo">
 
-                        <strong>Observaciones:</strong> {{ $vario->movimientoRegistral->folioRealPersona->observaciones }}
+                        <strong>Descripción:</strong> {{ $vario->folioPersonaMoral->folio->descripcion }}
+
+                    </p>
+
+                    <p class="parrafo">
+
+                        <strong>Observaciones:</strong> {{ $vario->folioPersonaMoral->folio->observaciones }}
 
                     </p>
 
@@ -247,14 +238,14 @@
 
                         <tbody>
 
-                            @foreach ($vario->movimientoRegistral->folioRealPersona->actores as $propietario)
+                            @foreach ($vario->folioPersonaMoral->folio->actores as $actor)
 
                                 <tr>
                                     <td style="padding-right: 40px;">
-                                        {{ $propietario->persona->razon_social }}
+                                        {{ $actor->razon_social }}
                                     </td>
                                     <td style="padding-right: 40px;">
-                                        {{ $propietario->persona->rfc }}
+                                        {{ $actor->rfc }}
                                     </td>
                                 </tr>
 
@@ -272,7 +263,7 @@
 
                     @include('comun.caratulas.ubicacion_inmueble')
 
-                    @if($predio->colindancias->count())
+                    @if(count($predio->colindancias))
 
                         @include('comun.caratulas.colindancias')
 
@@ -290,8 +281,7 @@
 
 
                 <p class="parrafo">
-                    A SOLICITUD DE: <strong>{{ $vario->movimientoRegistral->solicitante }}</strong> se expide EL PRESENTE EN LA CIUDAD DE @if($distrito== '02 Uruapan' ) uruapan @else MORELIA @endif MICHOACÁN, A LAS
-                    {{ Carbon\Carbon::now()->locale('es')->translatedFormat('H:i:s \d\e\l l d \d\e F \d\e\l Y'); }}.
+                    A SOLICITUD DE: <strong>{{ $datos_control->solicitante }}</strong> Ese EXPiDe EL PRESENTE EN LA CIUDAD DE @if($folioReal->distrito == '02 Uruapan' ) uruapan @else MORELIA @endif, MICHOACÁN, A LAS {{ $datos_control->elaborado_en }}.
                 </p>
 
             </div>
@@ -302,41 +292,58 @@
                     <strong>A T E N T A M E N T E</strong>
                 </p>
 
-                @if($vario->movimientoRegistral->distrito == '02 Uruapan' )
-                    <p class="borde">Lic. SANDRO MEDINA MORALES </p>
-                    <p style="margin:0;">COORDINADOR REGIONAL 4 PURHÉPECHA (URUAPAN)</p>
-                @else
-                    <p class="borde" style="margin:0;">{{ $director }}</p>
-                    <p style="margin:0;">Director del registro público de la propiedad</p>
-                @endif
+                @if(!$firma_electronica)
 
-                <div style="margin-top: 50px;">
+                    @if($folioReal->distrito == '02 Uruapan' )
+                        <p class="borde">Lic. SANDRO MEDINA MORALES </p>
+                        <p style="margin:0;">COORDINADOR REGIONAL 4 PURHÉPECHA (URUAPAN)</p>
+                    @else
+                        <p class="borde" style="margin:0;">{{ $director }}</p>
+                        <p style="margin:0;">Director del registro público de la propiedad</p>
+                    @endif
 
-                    <table class="tabla" >
-                        <tbody sty>
-                            <tr>
-                                <td style="padding-right: 40px; text-align:center; width: 50%; vertical-align: bottom; white-space: nowrap;">
+                    <div style="margin-top: 50px;">
 
-                                    <p class="borde">{{ $vario->movimientoRegistral->asignadoA->name }}</p>
-                                    <p style="margin: 0">REGISTRADOR</p>
-
-                                </td>
-
-                                @if($vario->movimientoRegistral->distrito != '02 Uruapan' )
-
+                        <table class="tabla" >
+                            <tbody sty>
+                                <tr>
                                     <td style="padding-right: 40px; text-align:center; width: 50%; vertical-align: bottom; white-space: nowrap;">
 
-                                        <p class="borde">{{ $jefe_departamento }}</p>
-                                        <p style="margin: 0">JEFE DE Departamento de Registro de Inscripciones	</p>
+                                        <p class="borde">{{ $datos_control->registrado_por }}</p>
+                                        <p style="margin: 0">REGISTRADOR</p>
+
                                     </td>
 
-                                @endif
+                                    @if($folioReal->distrito != '02 Uruapan' )
 
-                            </tr>
-                        </tbody>
-                    </table>
+                                        <td style="padding-right: 40px; text-align:center; width: 50%; vertical-align: bottom; white-space: nowrap;">
 
-                </div>
+                                            <p class="borde">{{ $datos_control->jefe_departamento }}</p>
+                                            <p style="margin: 0">JEFE DE Departamento de Registro de Inscripciones	</p>
+                                        </td>
+
+                                    @endif
+
+                                </tr>
+                            </tbody>
+                        </table>
+
+                    </div>
+
+                @else
+
+                    <p style="margin:0;">{{ $director }}</p>
+                    <p style="margin:0;">Director del registro público de la propiedad</p>
+                    <p style="text-align: center">Firma Electrónica:</p>
+                    <p class="parrafo" style="overflow-wrap: break-word;">{{ $firma_electronica }}</p>
+
+                    <p >{{ $datos_control->registrado_por }}</p>
+                    <p class="borde" style="margin: 0">REGISTRADOR</p>
+
+                    <p >{{ $datos_control->jefe_departamento }}</p>
+                    <p class="borde" style="margin: 0">JEFE DE Departamento de Registro de Inscripciones</p>
+
+                @endif
 
             </div>
 
@@ -344,27 +351,30 @@
 
                 <p class="separador">DATOS DE CONTROL</p>
 
-                <table style="font-size: 9px">
+                <table style="margin-top: 10px">
+
                     <tbody>
                         <tr>
-                            <td style="padding-right: 40px; text-align:left; ; vertical-align: bottom; white-space: wrap;">
+                            <td style="padding-right: 40px;">
 
-                                <p style="margin: 0"><strong>NÚMERO DE CONTROL: </strong>{{ $vario->movimientoRegistral->año }}-{{ $vario->movimientoRegistral->tramite }}-{{ $vario->movimientoRegistral->usuario }}</p>
-                                <p style="margin: 0"><strong>DERECHOS: </strong>${{ number_format($vario->movimientoRegistral->monto, 2) }}</p>
-                                <p style="margin: 0"><strong>Tipo de servicio: </strong>{{ $vario->movimientoRegistral->tipo_servicio }}</p>
-                                <p style="margin: 0"><strong>Servicio: </strong>{{ $servicio }}</p>
+                                <img class="qr" src="{{ $qr }}" alt="QR">
 
                             </td>
+                            <td style="padding-right: 40px;">
 
-                            <td style="padding-right: 40px; text-align:left; ; vertical-align: tom; white-space: wrap;">
-
-                                <p style="margin: 0"><strong>Fecha de impresión: </strong>{{ now()->format('d/m/Y H:i:s') }}</p>
-                                <p style="margin: 0"><strong>IMPRESO POR: </strong>{{  auth()->user()->name }}</p>
+                                <p style="margin: 0"><strong>NÚMERO DE CONTROL: </strong>{{ $datos_control->numero_control }}</p>
+                                <p style="margin: 0"><strong>Movimiento registral:</strong> {{ $folioReal->folio }}-{{ $datos_control->movimiento_folio }}</p>
+                                <p style="margin: 0"><strong>DERECHOS: </strong>${{ number_format($datos_control->monto, 2) }}</p>
+                                <p style="margin: 0"><strong>Tipo de servicio: </strong>{{ $datos_control->tipo_servicio }}</p>
+                                <p style="margin: 0"><strong>Servicio: </strong>{{ $datos_control->servicio }}</p>
+                                <p style="margin: 0"><strong>Elaborado en: </strong>{{ $datos_control->elaborado_en }}</p>
+                                <p style="margin: 0"><strong>Registrado POR: </strong>{{  $datos_control->registrado_por }}</p>
+                                <p style="margin: 0"><strong>Folio real asignado por:</strong> {{ $datos_control->asigno_folio }}</p>
 
                             </td>
-
                         </tr>
                     </tbody>
+
                 </table>
 
             </div>

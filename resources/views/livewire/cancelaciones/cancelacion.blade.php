@@ -13,8 +13,11 @@
                 <x-input-select id="cancelacion.acto_contenido" wire:model.live="cancelacion.acto_contenido" class="w-full">
 
                     <option value="">Seleccione una opción</option>
-                    <option value="PARCIAL">Parcial</option>
-                    <option value="TOTAL">Total</option>
+                    @foreach ($actos as $acto)
+
+                        <option value="{{ $acto }}">{{ $acto }}</option>
+
+                    @endforeach
 
                 </x-input-select>
 

@@ -12,8 +12,9 @@ use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Facades\Storage;
-use App\Traits\Inscripciones\Varios\VariosTrait;
 use Illuminate\Http\Client\ConnectionException;
+use App\Traits\Inscripciones\Varios\VariosTrait;
+use App\Http\Controllers\Varios\VariosController;
 
 class Varios extends Component
 {
@@ -49,7 +50,11 @@ class Varios extends Component
                 $this->vario->fecha_inscripcion = now()->toDateString();
                 $this->vario->save();
 
-                $this->vario->movimientoRegistral->update(['estado' => 'elaborado']);
+                $this->vario->movimientoRegistral->update(['estado' => 'elaborado', 'actualizado_por' => auth()->id()]);
+
+                $this->vario->movimientoRegistral->audits()->latest()->first()->update(['tags' => 'Elaboró inscripción de varios']);
+
+                (new VariosController())->caratula($this->vario);
 
             });
 
@@ -60,7 +65,7 @@ class Varios extends Component
             $this->dispatch('mostrarMensaje', ['error', $ex->getMessage()]);
 
         } catch (\Throwable $th) {
-            Log::error("Error al finalizar inscripcion de propiedad por el usuario: (id: " . auth()->user()->id . ") " . auth()->user()->name . ". " . $th);
+            Log::error("Error al finalizar inscripcion de varios por el usuario: (id: " . auth()->user()->id . ") " . auth()->user()->name . ". " . $th);
             $this->dispatch('mostrarMensaje', ['error', "Ha ocurrido un error."]);
         }
 
@@ -73,8 +78,9 @@ class Varios extends Component
             DB::transaction(function () {
 
                 if($this->vario->movimientoRegistral->estado != 'correccion')
-                    $this->vario->movimientoRegistral->update(['estado' => 'captura']);
+                    $this->vario->movimientoRegistral->estado = 'captura';
 
+                $this->vario->movimientoRegistral->actualizado_por = auth()->id();
                 $this->vario->save();
 
             });

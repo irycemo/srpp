@@ -472,6 +472,44 @@ trait FirmaElectronicaTrait{
     public function vario(Vario $vario):object
     {
 
+        $folioPersonaMoral = (object)[];
+
+        if($vario->acto_contenido == 'PERSONAS MORALES'){
+
+            $vario->load('movimientoRegistral.folioRealPersona.actores.persona');
+
+            $folioPersonaMoral->folio = $vario->movimientoRegistral->folioRealPersona->folio;
+            $folioPersonaMoral->denominacion = $vario->movimientoRegistral->folioRealPersona->denominacion;
+            $folioPersonaMoral->estado = $vario->movimientoRegistral->folioRealPersona->estado;
+            $folioPersonaMoral->fecha_celebracion = Carbon::parse($vario->movimientoRegistral->folioRealPersona->fecha_celebracion);
+            $folioPersonaMoral->fecha_inscripcion = Carbon::parse($vario->movimientoRegistral->folioRealPersona->fecha_inscripcion);
+            $folioPersonaMoral->notaria = $vario->movimientoRegistral->folioRealPersona->notaria;
+            $folioPersonaMoral->nombre_notario = $vario->movimientoRegistral->folioRealPersona->nombre_notario;
+            $folioPersonaMoral->numero_escritura = $vario->movimientoRegistral->folioRealPersona->numero_escritura;
+            $folioPersonaMoral->numero_hojas = $vario->movimientoRegistral->folioRealPersona->numero_hojas;
+            $folioPersonaMoral->descripcion = $vario->movimientoRegistral->folioRealPersona->descripcion;
+            $folioPersonaMoral->observaciones = $vario->movimientoRegistral->folioRealPersona->observaciones;
+
+            $actores = collect();
+
+            foreach ($vario->movimientoRegistral->folioRealPersona->actores as $actor) {
+
+                $item = (object)[];
+
+                $item->nombre = $actor->persona->nombre;
+                $item->ap_paterno = $actor->persona->ap_paterno;
+                $item->ap_materno = $actor->persona->ap_materno;
+                $item->razon_social = $actor->persona->razon_social;
+                $item->multiple_nombre = $actor->persona->multiple_nombre;
+
+                $actores->push($item);
+
+            }
+
+            $folioPersonaMoral->actores = $actores;
+
+        }
+
         $object = (object)[];
 
         $object->id = $vario->id;
@@ -481,6 +519,7 @@ trait FirmaElectronicaTrait{
         $object->descripcion = $vario->descripcion;
         $object->fecha_inscripcion = $vario->fecha_inscripcion;
         $object->movimiento_folio = $vario->movimientoRegistral->folio;
+        $object->folioPersonaMoral = $folioPersonaMoral;
 
         return $object;
 
