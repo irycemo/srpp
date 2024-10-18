@@ -6,6 +6,7 @@ use App\Models\User;
 use Livewire\Component;
 use Livewire\WithPagination;
 use App\Constantes\Constantes;
+use Barryvdh\DomPDF\Facade\Pdf;
 use App\Traits\ComponentesTrait;
 use Illuminate\Support\Facades\DB;
 use App\Models\MovimientoRegistral;
@@ -28,8 +29,21 @@ class ConsultarInscripcion extends Component
     public $usuarios;
     public $usuario;
     public $años;
+    public $motivos;
+    public $motivo;
 
     public $movimientoRegistral;
+
+    public function abrirModalRechazar(MovimientoRegistral $modelo){
+
+        $this->reset(['observaciones', 'motivo']);
+
+        if($this->modelo_editar->isNot($modelo))
+            $this->movimientoRegistral = $modelo;
+
+        $this->modalRechazar = true;
+
+    }
 
     public function rechazar(){
 
@@ -39,31 +53,36 @@ class ConsultarInscripcion extends Component
 
         try {
 
-            DB::transaction(function (){
+            DB::transaction(function () {
 
                 $observaciones = auth()->user()->name . ' rechaza el ' . now() . ', con motivo: ' . $this->observaciones ;
 
-                (new SistemaTramitesService())->rechazarTramite($this->certificacion->año, $this->certificacion->tramite, $this->certificacion->usuario, $observaciones);
+                (new SistemaTramitesService())->rechazarTramite($this->movimientoRegistral->año, $this->movimientoRegistral->tramite, $this->movimientoRegistral->usuario, $this->motivo . ' ' . $observaciones);
 
-                $this->certificacion->update(['estado' => 'rechazado', 'actualizado_por' => auth()->user()->id]);
-
-                $this->certificacion->actualizado_por = auth()->user()->id;
-
-                $this->certificacion->certificacion->observaciones = $this->certificacion->certificacion->observaciones . $observaciones;
-
-                $this->certificacion->certificacion->save();
-
-                $this->certificacion->save();
-
-                $this->dispatch('mostrarMensaje', ['success', "El trámite se rechazó con éxito."]);
-
-                $this->modalRechazar = false;
+                $this->movimientoRegistral->update(['estado' => 'rechazado', 'actualizado_por' => auth()->user()->id]);
 
             });
 
+            $this->dispatch('mostrarMensaje', ['success', "El trámite se rechazó con éxito."]);
+
+            $this->modalRechazar = false;
+
+            $pdf = Pdf::loadView('rechazos.rechazo', [
+                'movimientoRegistral' => $this->movimientoRegistral,
+                'motivo' => $this->motivo,
+                'observaciones' => $this->observaciones
+            ])->output();
+
+            return response()->streamDownload(
+                fn () => print($pdf),
+                'rechazo.pdf'
+            );
+
         } catch (\Throwable $th) {
-            Log::error("Error al rechazar trámite de copias certificadas por el usuario: (id: " . auth()->user()->id . ") " . auth()->user()->name . ". " . $th);
+
+            Log::error("Error al rechazar inscripcion por el usuario: (id: " . auth()->user()->id . ") " . auth()->user()->name . ". " . $th);
             $this->dispatch('mostrarMensaje', ['error', "Ha ocurrido un error."]);
+
         }
 
     }
@@ -87,7 +106,7 @@ class ConsultarInscripcion extends Component
             });
 
         } catch (\Throwable $th) {
-            Log::error("Error al reasignar trámite por el usuario: (id: " . auth()->user()->id . ") " . auth()->user()->name . ". " . $th);
+            Log::error("Error al reasignar inscripción por el usuario: (id: " . auth()->user()->id . ") " . auth()->user()->name . ". " . $th);
             $this->dispatch('mostrarMensaje', ['error', "Ha ocurrido un error."]);
         }
 
@@ -119,7 +138,15 @@ class ConsultarInscripcion extends Component
 
     }
 
+    public function seleccionarMotivo($key){
+
+        $this->motivo = $this->motivos[$key];
+
+    }
+
     public function mount(){
+
+        $this->motivos = Constantes::RECHAZO_MOTIVOS;
 
         $this->años = Constantes::AÑOS;
 
