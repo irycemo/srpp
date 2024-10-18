@@ -6,7 +6,7 @@
 
         <tr>
             <th>Viento</th>
-            <th>Longitud</th>
+            <th>Longitud (mts.)</th>
             <th>Descripción</th>
         </tr>
 
