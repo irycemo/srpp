@@ -281,7 +281,8 @@ class Constantes{
         'FIDEICOMISO',
         'EXPEDICIÓN DE TÍTULO DE PROPIEDAD',
         'SUBDIVISIÓN',
-        'CONTRATO VERBAL DE COMPRAVENTA'
+        'CONTRATO VERBAL DE COMPRAVENTA',
+        'PENDIENTE'
     ];
 
     const ACTOS_INSCRIPCION_GRAVAMEN = [

@@ -127,7 +127,7 @@ class SentenciasIndex extends Component
                                                     ->orderBy($this->sort, $this->direction)
                                                     ->paginate($this->pagination);
 
-        }elseif(auth()->user()->hasRole(['Administrador'])){
+        }elseif(auth()->user()->hasRole(['Administrador', 'Operador'])){
 
             $movimientos = MovimientoRegistral::with('sentencia', 'asignadoA', 'actualizadoPor', 'folioReal:id,folio')
                                                     ->whereHas('folioReal', function($q){

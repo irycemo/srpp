@@ -54,6 +54,10 @@
         <strong>DEPARTAMENTO:</strong> {{ $predio->departamento_edificio }};
     @endif
 
+    @if ($predio->zona_ubicacion)
+        <strong>Zona:</strong> {{ $predio->zona_ubicacion }};
+    @endif
+
     @if ($predio->lote)
         <strong>LOTE:</strong> {{ $predio->lote }};
     @endif

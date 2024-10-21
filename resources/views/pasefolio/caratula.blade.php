@@ -411,7 +411,7 @@
                                     <p class="separador">Cancelación ({{ $folioReal->folio }}-{{ $cancelacion->movimiento_folio }})</p>
 
                                     <p class="parrafo">
-                                        <strong>Gravamen cancelado:</strong> {{ $folioReal->folio }}-{{ $cancelacion->gravamen }}
+                                        <strong>Gravamen cancelado:</strong> {{ $folioReal->folio }}-{{ $cancelacion->movimiento_folio }}
                                     </p>
 
                                     <p class="parrafo">

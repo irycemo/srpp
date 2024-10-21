@@ -29,7 +29,7 @@
             {{-- Nav --}}
             <nav class="p-4 text-rojo overflow-y-auto h-menu">
 
-                @if(auth()->user()->hasRole('Administrador'))
+                @if(auth()->user()->hasRole(['Administrador', 'Operador']))
 
                     @include('layouts.sidebar-administrador')
 

@@ -52,17 +52,17 @@
                 <x-table.heading sortable wire:click="sortBy('seccion')" :direction="$sort === 'seccion' ? $direction : null" >Sección</x-table.heading>
                 <x-table.heading>Solicitante</x-table.heading>
                 <x-table.heading >Número de páginas</x-table.heading>
-                @if (auth()->user()->hasRole(['Supervisor certificaciones', 'Administrador', 'Supervisor uruapan', 'Jefe de departamento certificaciones']))
+                @if (auth()->user()->hasRole(['Supervisor certificaciones', 'Administrador', 'Supervisor uruapan', 'Jefe de departamento certificaciones', 'Operador']))
                     <x-table.heading >Folio de carpeta</x-table.heading>
                     <x-table.heading sortable wire:click="sortBy('usuario_asignado')" :direction="$sort === 'usuario_asignado' ? $direction : null" >Asignado a</x-table.heading>
                 @endif
-                @if (auth()->user()->hasRole('Administrador'))
+                @if (auth()->user()->hasRole(['Administrador', 'Operador']))
                     <x-table.heading >Reimpreso en</x-table.heading>
                 @endif
                 <x-table.heading sortable wire:click="sortBy('fecha_entrega')" :direction="$sort === 'fecha_entrega' ? $direction : null">Fecha de entrega</x-table.heading>
                 <x-table.heading sortable wire:click="sortBy('created_at')" :direction="$sort === 'created_at' ? $direction : null">Ingreso</x-table.heading>
                 <x-table.heading sortable wire:click="sortBy('updated_at')" :direction="$sort === 'updated_at' ? $direction : null">Actualizado</x-table.heading>
-                @if (!auth()->user()->hasRole('Administrador'))
+                @if (!auth()->user()->hasRole(['Administrador', 'Operador']))
                     <x-table.heading >Acciones</x-table.heading>
                 @endif
 
@@ -145,7 +145,7 @@
 
                         </x-table.cell>
 
-                        @if (auth()->user()->hasRole(['Supervisor certificaciones', 'Administrador', 'Supervisor uruapan', 'Jefe de departamento certificaciones']))
+                        @if (auth()->user()->hasRole(['Supervisor certificaciones', 'Administrador', 'Supervisor uruapan', 'Jefe de departamento certificaciones', 'Operador']))
 
                             <x-table.cell>
 
@@ -165,7 +165,7 @@
 
                         @endif
 
-                        @if (auth()->user()->hasRole('Administrador'))
+                        @if (auth()->user()->hasRole(['Administrador', 'Operador']))
 
                             <x-table.cell>
 
@@ -201,7 +201,7 @@
 
                         </x-table.cell>
 
-                        @if (!auth()->user()->hasRole('Administrador'))
+                        @if (!auth()->user()->hasRole(['Administrador', 'Operador']))
 
                             <x-table.cell>
 
