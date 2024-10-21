@@ -201,6 +201,7 @@ trait FirmaElectronicaTrait{
         $object->localidad = $predio->localidad;
         $object->poblado = $predio->poblado;
         $object->ejido = $predio->ejido;
+        $object->zona_ubicacion = $predio->zona_ubicacion;
         $object->parcela = $predio->parcela;
         $object->solar = $predio->solar;
         $object->uso_suelo = $predio->uso_suelo;
