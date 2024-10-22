@@ -176,7 +176,7 @@ class PaseFolio extends Component
 
         }
 
-        if($this->modelo_editar->asignadoA->hasRole('Pase a folio')){
+        if($this->modelo_editar->asignadoA->hasRole(['Pase a folio', 'Jefe de departamento certificaciones', 'Jefe de departamento inscripciones'])){
 
             $usuarios = $this->obtenerUsuarios($role);
 

@@ -114,6 +114,18 @@ class DescripcionPredio extends Component
         'medidas.*.descripcion' => 'descripción',
     ];
 
+    public function updatedMedidas($value, $index){
+
+        $i = explode('.', $index);
+
+        if(isset($this->medidas[$i[0]]['longitud'])){
+
+            $this->medidas[$i[0]]['longitud'] = bcdiv($this->medidas[$i[0]]['longitud'],1, 2);
+
+        }
+
+    }
+
     #[On('cargarPropiedad')]
     public function cargarPropiedad($id){
 

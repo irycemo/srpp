@@ -73,7 +73,7 @@
 
                 </div>
 
-                @if($cancelacion->acto_contenido == 'PARCIAL')
+                @if($cancelacion->acto_contenido == 'CANCELACIÓN PARCIAL DE GRAVAMEN')
 
                     <div class="gap-3 items-center justify-center mx-auto mb-4 w-min">
 

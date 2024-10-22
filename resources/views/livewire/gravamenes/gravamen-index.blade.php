@@ -226,84 +226,37 @@
 
     </div>
 
-    <x-dialog-modal wire:model="modalRechazar">
+    <x-confirmation-modal wire:model="modalFinalizar" maxWidth="sm">
 
         <x-slot name="title">
-
-            Rechazar
-
+            Finalizar movimiento registral
         </x-slot>
 
         <x-slot name="content">
-
-            <div class="max-h-80 overflow-auto">
-            @if(!$motivo)
-
-                @foreach ($motivos as $key => $item)
-
-                    <div
-                        wire:click="seleccionarMotivo('{{ $key }}')"
-                        wire:loading.attr="disabled"
-                        class="border rounded-lg text-sm mb-2 p-2 hover:bg-gray-100 cursor-pointer">
-
-                        <p>{{ $item }}</p>
-
-                    </div>
-
-                @endforeach
-
-            @else
-
-                <div class="border rounded-lg text-sm mb-2 p-2 relative pr-16">
-
-                    <span
-                        wire:click="$set('motivo', null)"
-                        wire:loading.attr="disabled"
-                        class="rounded-full px-2 border hover:bg-gray-700 hover:text-white absolute top-1 right-1 cursor-pointer">
-                        x
-                    </span>
-
-                    <p>{{ $motivo }}</p>
-
-                </div>
-
-            @endif
-        </div>
-
-            <x-input-group for="observaciones" label="Observaciones" :error="$errors->first('observaciones')" class="w-full">
-
-                <textarea autofocus="false" class="bg-white rounded text-xs w-full " rows="4" wire:model="observaciones" placeholder="Se lo mas especifico posible acerca del motivo del rechazo."></textarea>
-
-            </x-input-group>
-
+            ¿Esta seguro que desea finalizar el movimiento registral?
         </x-slot>
 
         <x-slot name="footer">
 
-            <div class="flex items-center justify-end space-x-3">
+            <x-secondary-button
+                wire:click="$toggle('modalFinalizar')"
+                wire:loading.attr="disabled"
+            >
+                No
+            </x-secondary-button>
 
-                <x-button-blue
-                    wire:click="rechazar"
-                    wire:loading.attr="disabled"
-                    wire:target="rechazar">
-
-                    <img wire:loading wire:target="rechazar" class="mx-auto h-4 mr-1" src="{{ asset('storage/img/loading3.svg') }}" alt="Loading">
-
-                    Rechazar
-                </x-button-blue>
-
-                <x-button-red
-                    wire:click="$set('modalRechazar',false)"
-                    wire:loading.attr="disabled"
-                    wire:target="$set('modalRechazar',false)">
-                    Cerrar
-                </x-button-red>
-
-            </div>
+            <x-danger-button
+                class="ml-2"
+                wire:click="finalizar"
+                wire:loading.attr="disabled"
+                wire:target="finalizar"
+            >
+                Finalizar
+            </x-danger-button>
 
         </x-slot>
 
-    </x-dialog-modal>
+    </x-confirmation-modal>
 
     <x-dialog-modal wire:model="modalRechazar">
 

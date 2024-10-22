@@ -418,7 +418,7 @@ trait FirmaElectronicaTrait{
 
         if($gravamen->acto_contenido === 'DIVISIÓN DE HIPOTECA'){
 
-            $movimientos = MovimientoRegistral::where('movimiento_padre', $gravamen->movimientoregistral->id)->get();
+            $movimientos = MovimientoRegistral::where('movimiento_padre', $gravamen->movimientoRegistral->id)->get();
 
             foreach ($movimientos as $movimiento) {
 
