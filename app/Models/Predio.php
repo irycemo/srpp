@@ -74,8 +74,8 @@ class Predio extends Model implements Auditable
 
         return substr($string,0, -4) . '-' .
                 substr($string,-4, -2) . '-' .
-                substr($string, -2, strlen($string)) . '.' .
-                substr((string)($this->attributes['superficie_terreno']), -2, strlen($string));
+                substr($string, -2, strlen($string)) .
+                $this->parteDecimal($this->attributes['superficie_terreno']);
 
     }
 
@@ -85,8 +85,8 @@ class Predio extends Model implements Auditable
 
         return substr($string,0, -4) . '-' .
                 substr($string,-4, -2) . '-' .
-                substr($string, -2, strlen($string)) . '.' .
-                substr((string)($this->attributes['superficie_notarial']), -2, strlen($string));
+                substr($string, -2, strlen($string)) .
+                $this->parteDecimal($this->attributes['superficie_notarial']);
 
     }
 
@@ -96,8 +96,32 @@ class Predio extends Model implements Auditable
 
         return substr($string,0, -4) . '-' .
                 substr($string,-4, -2) . '-' .
-                substr($string, -2, strlen($string)) . '.' .
-                substr((string)($this->attributes['superficie_judicial']), -2, strlen($string));
+                substr($string, -2, strlen($string)) .
+                $this->parteDecimal($this->attributes['superficie_judicial']);
+
+    }
+
+    public function parteDecimal($numero){
+
+        $numero = $numero + 0.0;
+
+        $partes = explode('.', strval($numero));
+
+        $lenDecimal = strlen($partes[1]);
+
+        if(!isset($partes[1])){
+
+            return '.00';
+
+        }
+
+        if($lenDecimal == 1){
+
+            return '.' . $partes[1] . '0';
+
+        }
+
+        return '.' . $partes[1];
 
     }
 
