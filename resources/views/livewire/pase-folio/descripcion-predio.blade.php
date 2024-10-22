@@ -22,32 +22,6 @@
 
                 </div>
 
-                {{-- <div class="space-y-1 sm:col-span-2 lg:col-span-3 mx-auto">
-
-                    <span class="flex items-center justify-center text-gray-700 col-span-2  ">Clave catastral</span>
-
-                    <input placeholder="Estado" type="number" class="bg-white rounded text-xs w-10" title="Estado" value="16" readonly>
-
-                    <input title="Región catastral" placeholder="Región" type="number" class="bg-white rounded text-xs w-16  @error('region') border-1 border-red-500 @enderror" wire:model.defer="region">
-
-                    <input title="Municipio" placeholder="Municipio" type="number" class="bg-white rounded text-xs w-20 @error('municipio') border-1 border-red-500 @enderror" wire:model.defer="municipio">
-
-                    <input title="Zona" placeholder="Zona" type="number" class="bg-white rounded text-xs w-16 @error('zona') border-1 border-red-500 @enderror" wire:model.defer="zona">
-
-                    <input title="Localidad" placeholder="Localidad" type="number" class="bg-white rounded text-xs w-20 @error('localidad') border-1 border-red-500 @enderror" wire:model.lazy="localidad">
-
-                    <input title="Sector" placeholder="Sector" type="number" class="bg-white rounded text-xs w-20 @error('sector') border-1 border-red-500 @enderror" wire:model.defer="sector">
-
-                    <input title="Manzana" placeholder="Manzana" type="number" class="bg-white rounded text-xs w-20 @error('manzana') border-1 border-red-500 @enderror" wire:model.defer="manzana">
-
-                    <input title="Predio" placeholder="Predio" type="number" class="bg-white rounded text-xs w-20 @error('predio') border-1 border-red-500 @enderror" wire:model.lazy="predio">
-
-                    <input title="Edificio" placeholder="Edificio" type="number" class="bg-white rounded text-xs w-16 @error('edificio') border-1 border-red-500 @enderror" wire:model.defer="edificio">
-
-                    <input title="Departamento" placeholder="Departamento" type="number" class="bg-white rounded text-xs w-28 @error('departamento') border-1 border-red-500 @enderror" wire:model.defer="departamento">
-
-                </div> --}}
-
                 <x-input-group for="superficie_terreno" label="Superficie de terreno" :error="$errors->first('superficie_terreno')" class="w-full relative">
 
                     <x-input-text type="number" id="superficie_terreno" wire:model="superficie_terreno" />

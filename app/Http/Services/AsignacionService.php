@@ -470,6 +470,7 @@ class AsignacionService{
         if($distrito == 2){
 
             $registradorCancelacion = User::inRandomOrder()
+                                ->where('status', 'activo')
                                 ->where('ubicacion', 'Regional 4')
                                 ->whereHas('roles', function($q){
                                     $q->where('name', 'Registrador Cancelación');
@@ -522,6 +523,7 @@ class AsignacionService{
         if($distrito == 2){
 
             $supervisor = User::inRandomOrder()
+                                ->where('status', 'activo')
                                 ->whereHas('roles', function($q){
                                     $q->where('name', 'Supervisor uruapan');
                                 })
