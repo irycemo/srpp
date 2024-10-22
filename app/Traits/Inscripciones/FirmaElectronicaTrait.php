@@ -529,6 +529,8 @@ trait FirmaElectronicaTrait{
     public function cancelacion(Cancelacion $cancelacion):object
     {
 
+        $cancelacion->load('gravamenCancelado.gravamen');
+
         $object = (object)[];
 
         $object->id = $cancelacion->id;
