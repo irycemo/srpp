@@ -32,4 +32,46 @@ class Actor extends Model implements Auditable
         return $this->belongsTo(Actor::class,'representado_por');
     }
 
+    public function getPorcentajePropiedadFormateadaAttribute(){
+
+        return $this->formatear($this->attributes['porcentaje_propiedad']);
+
+    }
+
+    public function getPorcentajeNudaFormateadaAttribute(){
+
+        return $this->formatear($this->attributes['porcentaje_nuda']);
+
+    }
+
+    public function getPorcentajeUsufructoFormateadaAttribute(){
+
+        return $this->formatear($this->attributes['porcentaje_usufructo']);
+
+    }
+
+    public function formatear($numero){
+
+        $numero = $numero + 0.0;
+
+        $partes = explode('.', strval($numero));
+
+        if(!isset($partes[1])){
+
+            return $partes[0] . '.00';
+
+        }
+
+        $lenDecimal = strlen($partes[1]);
+
+        if($lenDecimal == 1){
+
+            return $partes[0] . '.' . $partes[1] . '0';
+
+        }
+
+        return $partes[0] . '.' . $partes[1];
+
+    }
+
 }

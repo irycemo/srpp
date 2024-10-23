@@ -133,7 +133,7 @@ trait FirmaElectronicaTrait{
             $item = (object)[];
 
             $item->viento = $colindancia->viento;
-            $item->longitud = $colindancia->longitud;
+            $item->longitud = $colindancia->longitud_formateada;
             $item->descripcion = $colindancia->descripcion;
 
             $colindancias->push($item);
@@ -151,9 +151,9 @@ trait FirmaElectronicaTrait{
             $item->ap_materno = $propietario->persona->ap_materno;
             $item->multiple_nombre = $propietario->persona->multiple_nombre;
             $item->razon_social = $propietario->persona->razon_social;
-            $item->porcentaje_propiedad = $propietario->porcentaje_propiedad;
-            $item->porcentaje_nuda = $propietario->porcentaje_nuda;
-            $item->porcentaje_usufructo = $propietario->porcentaje_usufructo;
+            $item->porcentaje_propiedad = $propietario->porcentaje_propiedad_formateada;
+            $item->porcentaje_nuda = $propietario->porcentaje_nuda_formateada;
+            $item->porcentaje_usufructo = $propietario->porcentaje_usufructo_formateada;
 
             $propietarios->push($item);
 
