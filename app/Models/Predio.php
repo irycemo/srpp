@@ -68,36 +68,74 @@ class Predio extends Model implements Auditable
 
     }
 
+    public function getSuperficieConstruccionFormateadaAttribute(){
+
+        $partes = explode('.', strval($this->attributes['superficie_construccion']));
+
+        return $partes[0] . $this->parteDecimal($this->attributes['superficie_construccion']);
+
+    }
+
     public function getSuperficieTerrenoFormateadaAttribute(){
 
-        $string =  str_pad((string)(intval($this->attributes['superficie_terreno'])), 6, '0', STR_PAD_LEFT);
+        if($this->unidad_area == 'Hectareas'){
 
-        return substr($string,0, -4) . '-' .
-                substr($string,-4, -2) . '-' .
-                substr($string, -2, strlen($string)) .
-                $this->parteDecimal($this->attributes['superficie_terreno']);
+            $string =  str_pad((string)(intval($this->attributes['superficie_terreno'])), 6, '0', STR_PAD_LEFT);
+
+            return substr($string,0, -4) . '-' .
+                    substr($string,-4, -2) . '-' .
+                    substr($string, -2, strlen($string)) .
+                    $this->parteDecimal($this->attributes['superficie_terreno']);
+
+        }else{
+
+            $partes = explode('.', strval($this->attributes['superficie_terreno']));
+
+            return $partes[0] . $this->parteDecimal($this->attributes['superficie_terreno']);
+
+        }
 
     }
 
     public function getSuperficieNotarialFormateadaAttribute(){
 
-        $string =  str_pad((string)(intval($this->attributes['superficie_notarial'])), 6, '0', STR_PAD_LEFT);
+        if($this->unidad_area == 'Hectareas'){
 
-        return substr($string,0, -4) . '-' .
-                substr($string,-4, -2) . '-' .
-                substr($string, -2, strlen($string)) .
-                $this->parteDecimal($this->attributes['superficie_notarial']);
+            $string =  str_pad((string)(intval($this->attributes['superficie_notarial'])), 6, '0', STR_PAD_LEFT);
+
+            return substr($string,0, -4) . '-' .
+                    substr($string,-4, -2) . '-' .
+                    substr($string, -2, strlen($string)) .
+                    $this->parteDecimal($this->attributes['superficie_notarial']);
+
+        }else{
+
+            $partes = explode('.', strval($this->attributes['superficie_notarial']));
+
+            return $partes[0] . $this->parteDecimal($this->attributes['superficie_notarial']);
+
+        }
 
     }
 
     public function getSuperficieJudicialFormateadaAttribute(){
 
-        $string =  str_pad((string)(intval($this->attributes['superficie_judicial'])), 6, '0', STR_PAD_LEFT);
+        if($this->unidad_area == 'Hectareas'){
 
-        return substr($string,0, -4) . '-' .
-                substr($string,-4, -2) . '-' .
-                substr($string, -2, strlen($string)) .
-                $this->parteDecimal($this->attributes['superficie_judicial']);
+            $string =  str_pad((string)(intval($this->attributes['superficie_judicial'])), 6, '0', STR_PAD_LEFT);
+
+            return substr($string,0, -4) . '-' .
+                    substr($string,-4, -2) . '-' .
+                    substr($string, -2, strlen($string)) .
+                    $this->parteDecimal($this->attributes['superficie_judicial']);
+
+        }else{
+
+            $partes = explode('.', strval($this->attributes['superficie_judicial']));
+
+            return $partes[0] . $this->parteDecimal($this->attributes['superficie_judicial']);
+
+        }
 
     }
 
