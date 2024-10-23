@@ -936,6 +936,8 @@ class Elaboracion extends Component
 
             $this->movimientoRegistral->update(['estado' => 'concluido']);
 
+            $this->movimientoRegistral->folioReal->update(['estado' => 'activo']);
+
             (new SistemaTramitesService())->finaliarTramite($this->movimientoRegistral->año, $this->movimientoRegistral->tramite, $this->movimientoRegistral->usuario, 'concluido');
 
         }
