@@ -560,7 +560,7 @@ trait FirmaElectronicaTrait{
 
         $movimiento = MovimientoRegistral::with('archivos')->find($id);
 
-        FirmaElectronica::where('movimiento_registral_id', $id)->first()?->delete();
+        FirmaElectronica::where('movimiento_registral_id', $id)->first()?->update(['estado' => 'cancelado']);
 
         if($movimiento->archivos->where('descripcion', 'caratula')->count()){
 

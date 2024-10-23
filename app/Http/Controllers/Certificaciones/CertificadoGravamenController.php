@@ -110,6 +110,7 @@ class CertificadoGravamenController extends Controller
             'movimiento_registral_id' => $movimientoRegistral->id,
             'cadena_original' => json_encode($object),
             'cadena_encriptada' => base64_encode($firmaDirector),
+            'estado' => 'activo'
         ]);
 
         $qr = $this->generadorQr($firmaElectronica->uuid);

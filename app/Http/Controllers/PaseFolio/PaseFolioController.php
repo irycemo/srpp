@@ -65,6 +65,7 @@ class PaseFolioController extends Controller
             'folio_real' => $folioReal->id,
             'cadena_original' => json_encode($object),
             'cadena_encriptada' => base64_encode($firmaDirector),
+            'estado' => 'activo'
         ]);
 
         $director = $director->name;
