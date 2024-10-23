@@ -107,13 +107,13 @@ class Predio extends Model implements Auditable
 
         $partes = explode('.', strval($numero));
 
-        $lenDecimal = strlen($partes[1]);
-
         if(!isset($partes[1])){
 
             return '.00';
 
         }
+
+        $lenDecimal = strlen($partes[1]);
 
         if($lenDecimal == 1){
 
