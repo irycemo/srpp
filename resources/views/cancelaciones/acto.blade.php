@@ -173,7 +173,7 @@
                 </div>
 
                 <div class="titulo">
-                    <p><strong>cancelación {{ $cancelacion->acto_contenido }}</strong></p>
+                    <p><strong>{{ $cancelacion->acto_contenido }}</strong></p>
                 </div>
 
                 <p class="parrafo">

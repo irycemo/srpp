@@ -143,7 +143,7 @@ class Cancelacion extends Component
 
             DB::transaction(function () {
 
-                if($this->cancelacion->acto_contenido == 'PARCIAL'){
+                if($this->cancelacion->acto_contenido == 'CANCELACIÓN PARCIAL DE GRAVAMEN'){
 
                     $this->gravamenCancelarMovimiento->gravamen->valor_gravamen = $this->gravamenCancelarMovimiento->gravamen->valor_gravamen - $this->valor;
                     $this->gravamenCancelarMovimiento->gravamen->actualizado_por = auth()->id();
@@ -152,6 +152,7 @@ class Cancelacion extends Component
                     if($this->gravamenCancelarMovimiento->gravamen->valor_gravamen <= 0){
 
                         $this->gravamenCancelarMovimiento->gravamen->estado = 'cancelado';
+
                     }else{
 
                         $this->gravamenCancelarMovimiento->gravamen->estado = 'parcial';
@@ -159,7 +160,7 @@ class Cancelacion extends Component
 
                     $this->gravamenCancelarMovimiento->gravamen->save();
 
-                }elseif($this->cancelacion->acto_contenido == 'TOTAL'){
+                }elseif($this->cancelacion->acto_contenido == 'CANCELACIÓN TOTAL DE GRAVAMEN'){
 
                     $this->gravamenCancelarMovimiento->gravamen->update([
                         'estado' => 'cancelado',
