@@ -4,14 +4,9 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
-    <title>Cancelación</title>
+    <title>Sentencia</title>
 </head>
 <style>
-
-    /* @page {
-        margin: 0cm 0cm;
-    } */
-
     header{
         position: fixed;
         top: 0cm;
@@ -52,7 +47,6 @@
     }
 
     .container{
-        font-size: 10px;
         display: flex;
         align-content: space-around;
     }
@@ -66,18 +60,17 @@
     }
 
     .control{
-        margin-top: 20px;
+        margin-top: 100px;
         text-align: center;
     }
 
     .atte{
-        margin-bottom: 40px;
+        margin-bottom: 10px;
     }
 
     .borde{
         display: inline;
         border-top: 1px solid;
-        margin: 0;
     }
 
     .tabla{
@@ -113,12 +106,12 @@
         margin: 0;
     }
 
-    .no-break{
-        page-break-inside: avoid;
+    .qr{
+        display: block;
     }
 
-    .atte{
-        margin-bottom: 40px;
+    .no-break{
+        page-break-inside: avoid;
     }
 
     table{
@@ -149,9 +142,7 @@
 
     <header>
 
-
-            <img src="{{ public_path('storage/img/encabezado.png') }}" alt="encabezado">
-
+        <img src="{{ public_path('storage/img/encabezado.png') }}" alt="encabezado">
 
     </header>
 
@@ -177,8 +168,8 @@
             <div class="informacion">
 
                 <div style="text-align: right">
-                    <p style="margin:0;"><strong>FOLIO REAL:</strong>{{ $predio->folioReal->folio }}-{{ $sentencia->movimientoRegistral->folio }}</p>
-                    <p style="margin:0;"><strong>DISTRITO:</strong> {{ $sentencia->movimientoRegistral->distrito}}</p>
+                    <p style="margin:0;"><strong>FOLIO REAL:</strong> {{ $folioReal->folio }}-{{ $datos_control->movimiento_folio }}</p>
+                    <p style="margin:0;"><strong>DISTRITO:</strong> {{ $folioReal->distrito}}</p>
                 </div>
 
                 <div class="titulo">
@@ -191,7 +182,7 @@
 
                 @include('comun.caratulas.ubicacion_inmueble')
 
-                @if($predio->colindancias->count())
+                @if(count($predio->colindancias))
 
                     @include('comun.caratulas.colindancias')
 
@@ -201,82 +192,82 @@
 
                 @include('comun.caratulas.propietarios')
 
-                @if($movimientoCancelado)
+                @if(isset($sentencia->movimientoCancelado))
 
                     <p class="separador">datos de la inscripción cancelada</p>
 
-                    @if($movimientoCancelado->gravamen)
+                    @if($sentencia->movimientoCancelado->gravamen)
 
                         <p class="parrafo">
-                            <strong>Folio:</strong>{{ $movimientoCancelado->folioReal->folio . '-' . $movimientoCancelado->folio }}.
-                            <strong>Fecha de inscripción:</strong>{{ Carbon\Carbon::parse($movimientoCancelado->gravamen->fecha_inscripcion)->format('d-m-Y') }}.
-                            <strong>Valor del gravamen:</strong>${{ number_format($movimientoCancelado->gravamen->valor_gravamen, 2) }} {{ $movimientoCancelado->gravamen->divisa }}.
+                            <strong>Folio:</strong>{{ $sentencia->movimientoCancelado->folioReal->folio . '-' . $sentencia->movimientoCancelado->folio }}.
+                            <strong>Fecha de inscripción:</strong>{{ Carbon\Carbon::parse($sentencia->movimientoCancelado->gravamen->fecha_inscripcion)->format('d-m-Y') }}.
+                            <strong>Valor del gravamen:</strong>${{ number_format($sentencia->movimientoCancelado->gravamen->valor_gravamen, 2) }} {{ $sentencia->movimientoCancelado->gravamen->divisa }}.
                         </p>
 
                         <p class="parrafo">
-                            <strong>Acto contenido:</strong>{{ $movimientoCancelado->gravamen->acto_contenido }}.
-                            <strong>Tipo:</strong>{{ $movimientoCancelado->gravamen->tipo }}
+                            <strong>Acto contenido:</strong>{{ $sentencia->movimientoCancelado->gravamen->acto_contenido }}.
+                            <strong>Tipo:</strong>{{ $sentencia->movimientoCancelado->gravamen->tipo }}
                         </p>
 
                         <p class="parrafo">
-                            {{ $movimientoCancelado->gravamen->observaciones }}
+                            {{ $sentencia->movimientoCancelado->gravamen->observaciones }}
                         </p>
 
-                    @elseif($movimientoCancelado->cancelacion)
+                    @elseif($sentencia->movimientoCancelado->cancelacion)
 
                         <p class="parrafo">
-                            <strong>Folio:</strong>{{ $movimientoCancelado->folioReal->folio . '-' . $movimientoCancelado->folio }}.
-                        </p>
-
-                        <p class="parrafo">
-                            <strong>Acto contenido:</strong>{{ $movimientoCancelado->cancelacion->acto_contenido }}.
-                            <strong>Tipo:</strong>{{ $movimientoCancelado->cancelacion->tipo }}
+                            <strong>Folio:</strong>{{ $sentencia->movimientoCancelado->folioReal->folio . '-' . $sentencia->movimientoCancelado->folio }}.
                         </p>
 
                         <p class="parrafo">
-                            {{ $movimientoCancelado->cancelacion->observaciones }}
-                        </p>
-
-                    @elseif($movimientoCancelado->inscripcionPropiedad)
-
-                        <p class="parrafo">
-                            <strong>Folio:</strong>{{ $movimientoCancelado->folioReal->folio . '-' . $movimientoCancelado->folio }}.
+                            <strong>Acto contenido:</strong>{{ $sentencia->movimientoCancelado->cancelacion->acto_contenido }}.
+                            <strong>Tipo:</strong>{{ $sentencia->movimientoCancelado->cancelacion->tipo }}
                         </p>
 
                         <p class="parrafo">
-                            <strong>Acto contenido:</strong>{{ $movimientoCancelado->inscripcionPropiedad->acto_contenido }}.
+                            {{ $sentencia->movimientoCancelado->cancelacion->observaciones }}
+                        </p>
+
+                    @elseif($sentencia->movimientoCancelado->inscripcionPropiedad)
+
+                        <p class="parrafo">
+                            <strong>Folio:</strong>{{ $sentencia->movimientoCancelado->folioReal->folio . '-' . $sentencia->movimientoCancelado->folio }}.
                         </p>
 
                         <p class="parrafo">
-                            {{ $movimientoCancelado->inscripcionPropiedad->observaciones }}
-                        </p>
-
-                    @elseif($movimientoCancelado->vario)
-
-                        <p class="parrafo">
-                            <strong>Folio:</strong>{{ $movimientoCancelado->folioReal->folio . '-' . $movimientoCancelado->folio }}.
+                            <strong>Acto contenido:</strong>{{ $sentencia->movimientoCancelado->inscripcionPropiedad->acto_contenido }}.
                         </p>
 
                         <p class="parrafo">
-                            <strong>Acto contenido:</strong>{{ $movimientoCancelado->vario->acto_contenido }}.
+                            {{ $sentencia->movimientoCancelado->inscripcionPropiedad->observaciones }}
+                        </p>
+
+                    @elseif($sentencia->movimientoCancelado->vario)
+
+                        <p class="parrafo">
+                            <strong>Folio:</strong>{{ $sentencia->movimientoCancelado->folioReal->folio . '-' . $sentencia->movimientoCancelado->folio }}.
                         </p>
 
                         <p class="parrafo">
-                            {{ $movimientoCancelado->vario->descripcion }}
-                        </p>
-
-                    @elseif($movimientoCancelado->sentencia)
-
-                        <p class="parrafo">
-                            <strong>Folio:</strong>{{ $movimientoCancelado->folioReal->folio . '-' . $movimientoCancelado->folio }}.
+                            <strong>Acto contenido:</strong>{{ $sentencia->movimientoCancelado->vario->acto_contenido }}.
                         </p>
 
                         <p class="parrafo">
-                            <strong>Acto contenido:</strong>{{ $movimientoCancelado->sentencia->acto_contenido }}.
+                            {{ $sentencia->movimientoCancelado->vario->descripcion }}
+                        </p>
+
+                    @elseif($sentencia->movimientoCancelado->sentencia)
+
+                        <p class="parrafo">
+                            <strong>Folio:</strong>{{ $sentencia->movimientoCancelado->folioReal->folio . '-' . $sentencia->movimientoCancelado->folio }}.
                         </p>
 
                         <p class="parrafo">
-                            {{ $movimientoCancelado->sentencia->descripcion }}
+                            <strong>Acto contenido:</strong>{{ $sentencia->movimientoCancelado->sentencia->acto_contenido }}.
+                        </p>
+
+                        <p class="parrafo">
+                            {{ $sentencia->movimientoCancelado->sentencia->descripcion }}
                         </p>
 
                     @endif
@@ -286,8 +277,7 @@
             </div>
 
             <p class="parrafo">
-                A SOLICITUD DE: <strong>{{ $sentencia->movimientoRegistral->solicitante }}</strong> EXPEDIDO EL PRESENTE CERTIFICADO EN LA CIUDAD DE MORELIA, MICHOACÁN, A LAS
-                {{ Carbon\Carbon::now()->locale('es')->translatedFormat('H:i:s \d\e\l l d \d\e F \d\e\l Y'); }}.
+                A SOLICITUD DE: <strong>{{ $datos_control->solicitante }}</strong> se EXPiDe EL PRESENTE EN LA CIUDAD DE @if($folioReal->distrito == '02 Uruapan' ) uruapan @else MORELIA @endif, MICHOACÁN, A LAS {{ $datos_control->elaborado_en }}.
             </p>
 
             <div class="firma no-break">
@@ -296,41 +286,58 @@
                     <strong>A T E N T A M E N T E</strong>
                 </p>
 
-                @if($sentencia->movimientoRegistral->distrito == '02 Uruapan' )
-                    <p class="borde">Lic. SANDRO MEDINA MORALES </p>
-                    <p style="margin:0;">COORDINADOR REGIONAL 4 PURHÉPECHA (URUAPAN)</p>
-                @else
-                    <p class="borde" style="margin:0;">{{ $director }}</p>
-                    <p style="margin:0;">Director del registro público de la propiedad</p>
-                @endif
+                @if(!$firma_electronica)
 
-                <div style="margin-top: 50px;">
+                    @if($folioReal->distrito == '02 Uruapan' )
+                        <p class="borde">Lic. SANDRO MEDINA MORALES </p>
+                        <p style="margin:0;">COORDINADOR REGIONAL 4 PURHÉPECHA (URUAPAN)</p>
+                    @else
+                        <p class="borde" style="margin:0;">{{ $director }}</p>
+                        <p style="margin:0;">Director del registro público de la propiedad</p>
+                    @endif
 
-                    <table class="tabla" >
-                        <tbody sty>
-                            <tr>
-                                <td style="padding-right: 40px; text-align:center; width: 50%; vertical-align: bottom; white-space: nowrap;">
+                    <div style="margin-top: 50px;">
 
-                                    <p class="borde">{{ $sentencia->movimientoRegistral->asignadoA->name }}</p>
-                                    <p style="margin: 0">REGISTRADOR</p>
-
-                                </td>
-
-                                @if($sentencia->movimientoRegistral->distrito != '02 Uruapan' )
-
+                        <table class="tabla" >
+                            <tbody sty>
+                                <tr>
                                     <td style="padding-right: 40px; text-align:center; width: 50%; vertical-align: bottom; white-space: nowrap;">
 
-                                        <p class="borde">{{ $jefe_departamento }}</p>
-                                        <p style="margin: 0">JEFE DE Departamento de Registro de Inscripciones	</p>
+                                        <p class="borde">{{ $datos_control->registrado_por }}</p>
+                                        <p style="margin: 0">REGISTRADOR</p>
+
                                     </td>
 
-                                @endif
+                                    @if($folioReal->distrito != '02 Uruapan' )
 
-                            </tr>
-                        </tbody>
-                    </table>
+                                        <td style="padding-right: 40px; text-align:center; width: 50%; vertical-align: bottom; white-space: nowrap;">
 
-                </div>
+                                            <p class="borde">{{ $datos_control->jefe_departamento }}</p>
+                                            <p style="margin: 0">JEFE DE Departamento de Registro de Inscripciones	</p>
+                                        </td>
+
+                                    @endif
+
+                                </tr>
+                            </tbody>
+                        </table>
+
+                    </div>
+
+                @else
+
+                    <p style="margin:0;">{{ $director }}</p>
+                    <p style="margin:0;">Director del registro público de la propiedad</p>
+                    <p style="text-align: center">Firma Electrónica:</p>
+                    <p class="parrafo" style="overflow-wrap: break-word;">{{ $firma_electronica }}</p>
+
+                    <p >{{ $datos_control->registrado_por }}</p>
+                    <p class="borde" style="margin: 0">REGISTRADOR</p>
+
+                    <p >{{ $datos_control->jefe_departamento }}</p>
+                    <p class="borde" style="margin: 0">JEFE DE Departamento de Registro de Inscripciones</p>
+
+                @endif
 
             </div>
 
@@ -338,27 +345,30 @@
 
                 <p class="separador">DATOS DE CONTROL</p>
 
-                <table style="font-size: 9px">
+                <table style="margin-top: 10px">
+
                     <tbody>
                         <tr>
-                            <td style="padding-right: 40px; text-align:left; ; vertical-align: bottom; white-space: nowrap;">
+                            <td style="padding-right: 40px;">
 
-                                <p style="margin: 0"><strong>NÚMERO DE CONTROL: </strong>{{ $sentencia->movimientoRegistral->año }}-{{ $sentencia->movimientoRegistral->tramite }}-{{ $sentencia->movimientoRegistral->usuario }}</p>
-                                <p style="margin: 0"><strong>DERECHOS: </strong>${{ number_format($sentencia->movimientoRegistral->monto, 2) }}</p>
-                                <p style="margin: 0"><strong>Tipo de servicio: </strong>{{ $sentencia->movimientoRegistral->tipo_servicio }}</p>
-                                <p style="margin: 0"><strong>Servicio: </strong>{{ $servicio }}</p>
+                                <img class="qr" src="{{ $qr }}" alt="QR">
 
                             </td>
+                            <td style="padding-right: 40px;">
 
-                            <td style="padding-right: 40px; text-align:left; ; vertical-align: top; white-space: nowrap;">
-
-                                <p style="margin: 0"><strong>Fecha de impresión: </strong>{{ now()->format('d-m-Y H:i:s') }}</p>
-                                <p style="margin: 0"><strong>IMPRESO POR: </strong>{{  auth()->user()->name }}</p>
+                                <p style="margin: 0"><strong>NÚMERO DE CONTROL: </strong>{{ $datos_control->numero_control }}</p>
+                                <p style="margin: 0"><strong>Movimiento registral:</strong> {{ $folioReal->folio }}-{{ $datos_control->movimiento_folio }}</p>
+                                <p style="margin: 0"><strong>DERECHOS: </strong>${{ number_format($datos_control->monto, 2) }}</p>
+                                <p style="margin: 0"><strong>Tipo de servicio: </strong>{{ $datos_control->tipo_servicio }}</p>
+                                <p style="margin: 0"><strong>Servicio: </strong>{{ $datos_control->servicio }}</p>
+                                <p style="margin: 0"><strong>Elaborado en: </strong>{{ $datos_control->elaborado_en }}</p>
+                                <p style="margin: 0"><strong>Registrado POR: </strong>{{  $datos_control->registrado_por }}</p>
+                                <p style="margin: 0"><strong>Folio real asignado por:</strong> {{ $datos_control->asigno_folio }}</p>
 
                             </td>
-
                         </tr>
                     </tbody>
+
                 </table>
 
             </div>

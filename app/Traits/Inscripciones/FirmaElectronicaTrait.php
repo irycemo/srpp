@@ -459,12 +459,21 @@ trait FirmaElectronicaTrait{
 
         $object = (object)[];
 
+        $movimientoCancelado = null;
+
+        if($sentencia->acto_contenido == 'CANCELACIÓN DE INSCRIPCIÓN'){
+
+            $movimientoCancelado = MovimientoRegistral::where('movimiento_padre', $sentencia->movimientoRegistral->id)->first();
+
+        }
+
         $object->id = $sentencia->id;
         $object->servicio = $sentencia->servicio;
         $object->acto_contenido = $sentencia->acto_contenido;
         $object->estado = $sentencia->estado;
         $object->descripcion = $sentencia->descripcion;
         $object->fecha_inscripcion = $sentencia->fecha_inscripcion;
+        $object->movimientoCancelado = $movimientoCancelado;
 
         return $object;
 

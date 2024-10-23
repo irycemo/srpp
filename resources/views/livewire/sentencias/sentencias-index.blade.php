@@ -115,7 +115,7 @@
 
                                 <div class="flex justify-center lg:justify-start gap-2">
 
-                                    @if(in_array($movimiento->estado, ['nuevo', 'captura']) && !auth()->user()->hasRole(['Jefe de departamento inscripciones', 'Supervisor sentencias', 'Supervisor uruapan']))
+                                    @if(in_array($movimiento->estado, ['nuevo', 'captura', 'correccion']) && !auth()->user()->hasRole(['Supervisor sentencias', 'Supervisor uruapan']))
 
                                         <x-button-blue
                                             wire:click="elaborar({{  $movimiento->id }})"
@@ -135,7 +135,7 @@
 
                                         </x-button-red>
 
-                                    @elseif($movimiento->estado == 'elaborado'  && !auth()->user()->hasRole(['Jefe de departamento inscripciones', 'Supervisor sentencias', 'Supervisor uruapan']))
+                                    @elseif($movimiento->estado == 'elaborado'  && !auth()->user()->hasRole(['Supervisor sentencias', 'Supervisor uruapan']))
 
                                         <x-button-green
                                             wire:click="imprimir({{  $movimiento->id }})"
@@ -164,7 +164,7 @@
                                             wire:click="abrirModalConcluir({{  $movimiento->id }})"
                                             wire:loading.attr="disabled"
                                             wire:target="abrirModalConcluir({{  $movimiento->id }})">
-                                            Finalizar
+                                            Concluir
                                         </x-button-green>
 
                                     @elseif(in_array($movimiento->estado, ['nuevo', 'captura', 'elaborado']) && auth()->user()->hasRole(['Jefe de departamento inscripciones', 'Supervisor sentencias', 'Supervisor uruapan']))
@@ -224,56 +224,37 @@
 
     </div>
 
-    <x-dialog-modal wire:model="modalFinalizar" maxWidth="sm">
+    <x-confirmation-modal wire:model="modalFinalizar" maxWidth="sm">
 
         <x-slot name="title">
-
-            Subir archivo
-
+            Finalizar movimiento registral
         </x-slot>
 
         <x-slot name="content">
-
-            <x-filepond wire:model.live="documento" accept="['application/pdf']"/>
-
-            <div>
-
-                @error('documento') <span class="error text-sm text-red-500">{{ $message }}</span> @enderror
-
-            </div>
-
+            ¿Esta seguro que desea finalizar el movimiento registral?
         </x-slot>
 
         <x-slot name="footer">
 
-            <div class="flex gap-3">
+            <x-secondary-button
+                wire:click="$toggle('modalFinalizar')"
+                wire:loading.attr="disabled"
+            >
+                No
+            </x-secondary-button>
 
-                <x-button-blue
-                    wire:click="finalizar"
-                    wire:loading.attr="disabled"
-                    wire:target="finalizar">
-
-                    <img wire:loading wire:target="finalizar" class="mx-auto h-4 mr-1" src="{{ asset('storage/img/loading3.svg') }}" alt="Loading">
-
-                    <span>Finalizar</span>
-
-                </x-button-blue>
-
-                <x-button-red
-                    wire:click="$toggle('modalFinalizar')"
-                    wire:loading.attr="disabled"
-                    wire:target="$toggle('modalFinalizar')"
-                    type="button">
-
-                    <span>Cerrar</span>
-
-                </x-button-red>
-
-            </div>
+            <x-danger-button
+                class="ml-2"
+                wire:click="finalizar"
+                wire:loading.attr="disabled"
+                wire:target="finalizar"
+            >
+                Finalizar
+            </x-danger-button>
 
         </x-slot>
 
-    </x-dialog-modal>
+    </x-confirmation-modal>
 
     <x-dialog-modal wire:model="modalRechazar">
 
@@ -353,6 +334,38 @@
         </x-slot>
 
     </x-dialog-modal>
+
+    <x-confirmation-modal wire:model="modalReasignar" maxWidth="sm">
+
+        <x-slot name="title">
+            Reasignar
+        </x-slot>
+
+        <x-slot name="content">
+            ¿Esta seguro que desea reasignar el movimiento registral?
+        </x-slot>
+
+        <x-slot name="footer">
+
+            <x-secondary-button
+                wire:click="$toggle('modalReasignar')"
+                wire:loading.attr="disabled"
+            >
+                No
+            </x-secondary-button>
+
+            <x-danger-button
+                class="ml-2"
+                wire:click="reasignar"
+                wire:loading.attr="disabled"
+                wire:target="reasignar"
+            >
+                Reasignar
+            </x-danger-button>
+
+        </x-slot>
+
+    </x-confirmation-modal>
 
     <x-confirmation-modal wire:model="modalConcluir" maxWidth="sm">
 

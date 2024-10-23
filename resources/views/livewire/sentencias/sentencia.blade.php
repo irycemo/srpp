@@ -1,9 +1,3 @@
-@push('styles')
-
-    <link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css" rel="stylesheet" />
-
-@endpush
-
 <div>
 
     <x-header>Sentencia</x-header>
@@ -1085,31 +1079,3 @@
     </x-dialog-modal>
 
 </div>
-
-@push('scripts')
-
-    <script>
-
-        window.addEventListener('imprimir_documento', event => {
-
-            const documento = event.detail[0].sentencia;
-
-            var url = "{{ route('sentencias.inscripcion.acto', '')}}" + "/" + documento;
-
-            window.open(url, '_blank');
-
-            window.location.href = "{{ route('sentencias')}}";
-
-        });
-
-        window.addEventListener('ver_documento', event => {
-
-            const documento = event.detail[0].url;
-
-            window.open(documento, '_blank');
-
-        });
-
-    </script>
-
-@endpush

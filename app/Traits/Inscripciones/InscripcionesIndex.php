@@ -11,6 +11,7 @@ use App\Http\Controllers\Varios\VariosController;
 use App\Http\Controllers\Gravamen\GravamenController;
 use App\Http\Controllers\Cancelaciones\CancelacionController;
 use App\Http\Controllers\InscripcionesPropiedad\PropiedadController;
+use App\Http\Controllers\Sentencias\SentenciasController;
 
 trait InscripcionesIndex{
 
@@ -264,7 +265,7 @@ trait InscripcionesIndex{
 
             if($movimientoRegistral->sentencia){
 
-                $this->dispatch('imprimir_documento', ['caratula' => $movimientoRegistral->sentencia->id]);
+                $pdf = (new SentenciasController())->reimprimir($movimientoRegistral->firmaElectronica);
 
             }
 

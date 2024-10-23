@@ -141,17 +141,18 @@ class MovimientoRegistralService{
 
                 $movimiento_registral = MovimientoRegistral::findOrFail($data['movimiento_registral']);
 
-                if(
-                    $movimiento_registral->folio_real && !isset($data['folio_real']) ||
-                    isset($data['folio_real']) && ($movimiento_registral->folioReal?->folio != $data['folio_real'])
-                ){
+                /* if($movimiento_registral->folio_real){
 
-                    $movimiento_registral->update([
-                        'folio_real' => null,
-                        'folio' => 1
-                    ]);
+                    if(!isset($data['folio_real']) || isset($data['folio_real']) && ($movimiento_registral->folioReal->folio != $data['folio_real'])){
 
-                }
+                        $movimiento_registral->update([
+                            'folio_real' => null,
+                            'folio' => 1
+                        ]);
+
+                    }
+
+                } */
 
                 $movimiento_registral->update($this->requestMovimientoActualizar($data, $movimiento_registral));
 

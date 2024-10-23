@@ -9,6 +9,7 @@ use App\Models\Persona;
 use Livewire\Component;
 use App\Models\Colindancia;
 use App\Constantes\Constantes;
+use App\Http\Controllers\Sentencias\SentenciasController;
 use Illuminate\Validation\Rule;
 use Illuminate\Support\Facades\DB;
 use App\Models\MovimientoRegistral;
@@ -307,12 +308,18 @@ class Sentencia extends Component
 
                 $this->propcesarPredio();
 
+                $this->sentencia->movimientoRegistral->update(['estado' => 'elaborado', 'actualizado_por' => auth()->id()]);
+
+                $this->sentencia->movimientoRegistral->audits()->latest()->first()->update(['tags' => 'Elaboró inscripción de sentencia']);
+
+                (new SentenciasController())->caratula($this->sentencia);
+
             });
 
             return redirect()->route('sentencias');
 
         } catch (\Throwable $th) {
-            Log::error("Error al finalizar inscripcion de propiedad por el usuario: (id: " . auth()->user()->id . ") " . auth()->user()->name . ". " . $th);
+            Log::error("Error al finalizar inscripcion de sentencia por el usuario: (id: " . auth()->user()->id . ") " . auth()->user()->name . ". " . $th);
             $this->dispatch('mostrarMensaje', ['error', "Ha ocurrido un error."]);
         }
 
@@ -324,9 +331,11 @@ class Sentencia extends Component
 
             DB::transaction(function () {
 
-                $this->sentencia->movimientoRegistral->update(['estado' => 'captura']);
+                if($this->sentencia->movimientoRegistral->estado != 'correccion')
+                    $this->sentencia->movimientoRegistral->estado = 'captura';
 
-                $this->sentencia->save();
+                $this->sentencia->movimientoRegistral->actualizado_por = auth()->id();
+                $this->sentencia->movimientoRegistral->save();
 
                 $this->sentenciaPredio->save();
 
@@ -1044,49 +1053,14 @@ class Sentencia extends Component
 
             DB::transaction(function (){
 
-                if(env('LOCAL') == "0"){
+                $pdf = $this->documento->store('/', 'documento_entrada');
 
-                    $pdf = $this->documento->store('srpp/documento_entrada', 's3');
-
-                    File::create([
-                        'fileable_id' => $this->sentencia->movimientoRegistral->id,
-                        'fileable_type' => 'App\Models\MovimientoRegistral',
-                        'descripcion' => 'documento_entrada_s3',
-                        'url' => $pdf
-                    ]);
-
-                }elseif(env('LOCAL') == "1"){
-
-                    $pdf = $this->documento->store('/', 'documento_entrada');
-
-                    File::create([
-                        'fileable_id' => $this->sentencia->movimientoRegistral->id,
-                        'fileable_type' => 'App\Models\MovimientoRegistral',
-                        'descripcion' => 'documento_entrada',
-                        'url' => $pdf
-                    ]);
-
-                }elseif(env('LOCAL') == "2"){
-
-                    $pdf = $this->documento->store('srpp/documento_entrada', 's3');
-
-                    File::create([
-                        'fileable_id' => $this->sentencia->movimientoRegistral->id,
-                        'fileable_type' => 'App\Models\MovimientoRegistral',
-                        'descripcion' => 'documento_entrada_s3',
-                        'url' => $pdf
-                    ]);
-
-                    $pdf = $this->documento->store('/', 'documento_entrada');
-
-                    File::create([
-                        'fileable_id' => $this->sentencia->movimientoRegistral->id,
-                        'fileable_type' => 'App\Models\MovimientoRegistral',
-                        'descripcion' => 'documento_entrada',
-                        'url' => $pdf
-                    ]);
-
-                }
+                File::create([
+                    'fileable_id' => $this->sentencia->movimientoRegistral->id,
+                    'fileable_type' => 'App\Models\MovimientoRegistral',
+                    'descripcion' => 'documento_entrada',
+                    'url' => $pdf
+                ]);
 
                 $this->modalDocumento = false;
 

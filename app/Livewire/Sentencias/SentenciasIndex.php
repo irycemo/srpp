@@ -94,7 +94,7 @@ class SentenciasIndex extends Component
                                                     ->whereHas('sentencia', function($q){
                                                         $q->whereIn('servicio', ['D110']);
                                                     })
-                                                    ->where('estado', 'finalizado')
+                                                    ->whereIn('estado', ['nuevo', 'captura', 'elaborado', 'finalizado'])
                                                     ->orderBy($this->sort, $this->direction)
                                                     ->paginate($this->pagination);
 
