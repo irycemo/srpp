@@ -35,7 +35,7 @@ trait FirmaElectronicaTrait{
 
         foreach ($folioReal->gravamenes as $gravamen) {
 
-            if($gravamen->movimientoRegistral->folio == 1) continue;
+            if($gravamen->movimientoRegistral->folio == 1 || $gravamen->movimientoRegistral->estado == 'precalificacion') continue;
 
             $item = $this->gravamen($gravamen);
 
@@ -47,7 +47,7 @@ trait FirmaElectronicaTrait{
 
         foreach ($folioReal->cancelaciones as $cancelacion) {
 
-            if($cancelacion->movimientoRegistral->folio == 1) continue;
+            if($cancelacion->movimientoRegistral->folio == 1 || $cancelacion->movimientoRegistral->estado == 'precalificacion') continue;
 
             $item = $this->cancelacion($cancelacion);
 

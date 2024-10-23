@@ -182,9 +182,9 @@ class PaseFolio extends Component
 
             if($usuarios->count() === 0){
 
-                $this->dispatch('mostrarMensaje', ['error', "No hay usuarios con rol de " . $role . " disponibles."]);
+                $this->dispatch('mostrarMensaje', ['error', "No hay usuarios con rol de " . preg_replace('/[\[\]\"]/', '', $role) . " disponibles."]);
 
-                throw new Exception("No hay usuarios con rol de " . $role . " disponibles.");
+                throw new Exception("No hay usuarios con rol de " . preg_replace('/[\[\]\"]/', '', $role) . " disponibles.");
 
             }
 
