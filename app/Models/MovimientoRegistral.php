@@ -93,10 +93,6 @@ class MovimientoRegistral extends Model implements Auditable
         return $this->hasOne(FirmaElectronica::class)->where('estado', 'activo');
     }
 
-    /* public function caratula(){
-        return $this->morphMany(File::class, 'fileable')->where('descripcion', 'caratula');
-    } */
-
     public function caratula(){
 
         return $this->archivos()->where('descripcion', 'caratula')->first()

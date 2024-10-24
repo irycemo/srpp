@@ -24,6 +24,8 @@ class PaseFolioController extends Controller
 
     public function caratula(FolioReal $folioReal){
 
+        $this->cancelarFirmaElectronica($folioReal->id);
+
         $movimiento1 = $folioReal->movimientosRegistrales->where('folio', 1)->first();
 
         $numero_control = $movimiento1->año . '-' . $movimiento1->tramite . '-'.  $movimiento1->usuario;
@@ -195,6 +197,18 @@ class PaseFolioController extends Controller
         }
 
         $folioReal->archivos()->delete();
+
+    }
+
+    public function cancelarFirmaElectronica($id){
+
+        $firmas = FirmaElectronica::where('folio_real', $id)->get();
+
+        foreach ($firmas as $firma) {
+
+            $firma->update(['estado' => 'cancelado']);
+
+        }
 
     }
 

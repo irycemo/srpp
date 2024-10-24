@@ -215,7 +215,11 @@ class Gravamen extends Component
                 $this->gravamen_seleccionado->update([
                     'estado' => 'inactivo',
                     'actualizado_por' => auth()->id(),
-                    'observaciones' => $this->gravamen_seleccionado->observaciones .  ' Inactivado mediante pase a folio',
+                    'observaciones' => $this->gravamen_seleccionado->observaciones .
+                                    ' Reporta gravamen por antecedente en el tomo: ' . $this->gravamen_seleccionado->movimientoRegistral->tomo_gravamen .
+                                    ' registro: ' .$this->gravamen_seleccionado->movimientoRegistral->registro_gravamen .
+                                    ' del libro de gravamen correspondiente al distrito registral: ' . $this->gravamen_seleccionado->movimientoRegistral->distrito .
+                                    ' mismo que no afecta esta propiedad directamente.'
                 ]);
 
             });

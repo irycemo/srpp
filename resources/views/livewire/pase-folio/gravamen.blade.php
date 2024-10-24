@@ -98,7 +98,7 @@
                                                 wire:click="abrirModalInactivar({{ $gravamen->id }})"
                                                 wire:loading.attr="disabled"
                                             >
-                                                Inactivar
+                                                Sin afectación
                                             </x-button-blue>
 
                                         @endif
