@@ -90,7 +90,7 @@ class MovimientoRegistral extends Model implements Auditable
     }
 
     public function firmaElectronica(){
-        return $this->hasOne(FirmaElectronica::class);
+        return $this->hasOne(FirmaElectronica::class)->where('estado', 'activo');
     }
 
     /* public function caratula(){

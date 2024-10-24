@@ -196,7 +196,7 @@
 
                 <strong>Longitud</strong>
 
-                <p>{{ $colindancia->longitud }}</p>
+                <p>{{ $colindancia->longitud_formateada }}</p>
 
             </div>
 
