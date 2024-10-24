@@ -35,11 +35,11 @@
     @endif
 
     @if ($predio->numero_exterior)
-        <strong>NÚMERO EXTERIOR:</strong> {{ $predio->numero_exterior ?? 'SN' }};
+        <strong>NÚMERO EXTERIOR:</strong> {{ $predio->numero_exterior }};
     @endif
 
     @if ($predio->numero_interior)
-        <strong>NÚMERO INTERIOR:</strong> {{ $predio->numero_interior ?? 'SN' }};
+        <strong>NÚMERO INTERIOR:</strong> {{ $predio->numero_interior }};
     @endif
 
     @if ($predio->nombre_edificio)

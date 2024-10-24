@@ -282,7 +282,6 @@ class Constantes{
         'EXPEDICIÓN DE TÍTULO DE PROPIEDAD',
         'SUBDIVISIÓN',
         'CONTRATO VERBAL DE COMPRAVENTA',
-        'PENDIENTE'
     ];
 
     const ACTOS_INSCRIPCION_GRAVAMEN = [

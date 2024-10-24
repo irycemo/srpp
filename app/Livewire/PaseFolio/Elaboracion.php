@@ -656,49 +656,14 @@ class Elaboracion extends Component
 
             DB::transaction(function (){
 
-                if(env('LOCAL') == "0"){
+                $pdf = $this->documento->store('/', 'documento_entrada');
 
-                    $pdf = $this->documento->store('srpp/documento_entrada', 's3');
-
-                    File::create([
-                        'fileable_id' => $this->movimientoRegistral->folioReal->id,
-                        'fileable_type' => 'App\Models\FolioReal',
-                        'descripcion' => 'documento_entrada_s3',
-                        'url' => $pdf
-                    ]);
-
-                }elseif(env('LOCAL') == "1"){
-
-                    $pdf = $this->documento->store('/', 'documento_entrada');
-
-                    File::create([
-                        'fileable_id' => $this->movimientoRegistral->folioReal->id,
-                        'fileable_type' => 'App\Models\FolioReal',
-                        'descripcion' => 'documento_entrada',
-                        'url' => $pdf
-                    ]);
-
-                }elseif(env('LOCAL') == "2"){
-
-                    $pdf = $this->documento->store('srpp/documento_entrada', 's3');
-
-                    File::create([
-                        'fileable_id' => $this->movimientoRegistral->folioReal->id,
-                        'fileable_type' => 'App\Models\FolioReal',
-                        'descripcion' => 'documento_entrada_s3',
-                        'url' => $pdf
-                    ]);
-
-                    $pdf = $this->documento->store('/', 'documento_entrada');
-
-                    File::create([
-                        'fileable_id' => $this->movimientoRegistral->folioReal->id,
-                        'fileable_type' => 'App\Models\FolioReal',
-                        'descripcion' => 'documento_entrada',
-                        'url' => $pdf
-                    ]);
-
-                }
+                File::create([
+                    'fileable_id' => $this->movimientoRegistral->folioReal->id,
+                    'fileable_type' => 'App\Models\FolioReal',
+                    'descripcion' => 'documento_entrada',
+                    'url' => $pdf
+                ]);
 
                 $this->dispatch('mostrarMensaje', ['success', "El documento de entrada se guardó con éxito."]);
 
