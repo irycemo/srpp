@@ -70,6 +70,8 @@ class Predio extends Model implements Auditable
 
     public function getSuperficieConstruccionFormateadaAttribute(){
 
+        if($this->attributes['superficie_construccion'] == 0) return null;
+
         $partes = explode('.', strval($this->attributes['superficie_construccion']));
 
         return $partes[0] . $this->parteDecimal($this->attributes['superficie_construccion']);
@@ -77,6 +79,8 @@ class Predio extends Model implements Auditable
     }
 
     public function getSuperficieTerrenoFormateadaAttribute(){
+
+        if($this->attributes['superficie_terreno'] == 0) return null;
 
         if($this->unidad_area == 'Hectareas'){
 
@@ -99,6 +103,8 @@ class Predio extends Model implements Auditable
 
     public function getSuperficieNotarialFormateadaAttribute(){
 
+        if($this->attributes['superficie_notarial'] == 0) return null;
+
         if($this->unidad_area == 'Hectareas'){
 
             $string =  str_pad((string)(intval($this->attributes['superficie_notarial'])), 6, '0', STR_PAD_LEFT);
@@ -119,6 +125,8 @@ class Predio extends Model implements Auditable
     }
 
     public function getSuperficieJudicialFormateadaAttribute(){
+
+        if($this->attributes['superficie_judicial'] == 0) return null;
 
         if($this->unidad_area == 'Hectareas'){
 

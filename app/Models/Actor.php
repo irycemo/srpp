@@ -34,17 +34,23 @@ class Actor extends Model implements Auditable
 
     public function getPorcentajePropiedadFormateadaAttribute(){
 
+        if($this->attributes['porcentaje_propiedad'] == 0) return 0;
+
         return $this->formatear($this->attributes['porcentaje_propiedad']);
 
     }
 
     public function getPorcentajeNudaFormateadaAttribute(){
 
+        if($this->attributes['porcentaje_nuda'] == 0) return 0;
+
         return $this->formatear($this->attributes['porcentaje_nuda']);
 
     }
 
     public function getPorcentajeUsufructoFormateadaAttribute(){
+
+        if($this->attributes['porcentaje_usufructo'] == 0) return 0;
 
         return $this->formatear($this->attributes['porcentaje_usufructo']);
 

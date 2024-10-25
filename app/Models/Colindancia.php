@@ -20,6 +20,8 @@ class Colindancia extends Model
 
     public function getLongitudFormateadaAttribute(){
 
+        if($this->attributes['longitud'] == 0) return 0;
+
         return $this->formatear($this->attributes['longitud']);
 
     }
