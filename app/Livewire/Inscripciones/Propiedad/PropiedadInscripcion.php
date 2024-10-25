@@ -1406,6 +1406,18 @@ class PropiedadInscripcion extends Component
 
             }
 
+            $transmitente = $this->inscripcion->transmitentes()->find($propietario['id']);
+
+            if($transmitente){
+
+                $transmitente->update([
+                    'porcentaje_propiedad' => $transmitente->porcentaje_propiedad - $propietario['porcentaje_propiedad'],
+                    'porcentaje_nuda' => $transmitente->porcentaje_nuda - $propietario['porcentaje_nuda'],
+                    'porcentaje_usufructo' => $transmitente->porcentaje_usufructo - $propietario['porcentaje_usufructo'],
+                ]);
+
+            }
+
         }
 
         foreach($this->inscripcion->propietarios() as $adquiriente){

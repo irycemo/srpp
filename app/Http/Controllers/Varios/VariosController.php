@@ -42,6 +42,9 @@ class VariosController extends Controller
         $datos_control->fecha_asignacion = Carbon::now()->locale('es')->translatedFormat('H:i:s \d\e\l l d \d\e F \d\e\l Y');
         $datos_control->elaborado_en = Carbon::now()->locale('es')->translatedFormat('H:i:s \d\e\l l d \d\e F \d\e\l Y');
         $datos_control->jefe_departamento = $jefe_departamento;
+        $datos_control->folioReal = $vario->movimientoRegistral->folioReal->folio;
+        $datos_control->distrito = $vario->movimientoRegistral->folioReal->distrito;
+        $datos_control->director = $director->name;
         $datos_control->movimiento_folio = $vario->movimientoRegistral->folio;
         $datos_control->servicio = $this->nombreServicio($vario->servicio);
         $datos_control->solicitante = $vario->movimientoRegistral->solicitante;
@@ -49,15 +52,8 @@ class VariosController extends Controller
         $datos_control->tipo_servicio = $vario->movimientoRegistral->tipo_servicio;
         $datos_control->asigno_folio = $vario->movimientoRegistral->folioReal->asignado_por;
 
-        $folioReal = (object)[];
-
-        $folioReal->folio = $vario->movimientoRegistral->folioReal->folio;
-        $folioReal->distrito = $vario->movimientoRegistral->folioReal->distrito;
-
         $object = (object)[];
 
-        $object->folioReal = $folioReal;
-        $object->director = $director->name;
         $object->predio = $this->predio($vario->movimientoRegistral->folioReal->predio);
         $object->datos_control = $datos_control;
         $object->vario = $this->vario($vario);
@@ -79,9 +75,7 @@ class VariosController extends Controller
         $qr = $this->generadorQr($firmaElectronica->uuid);
 
         $pdf = Pdf::loadView('varios.acto', [
-            'folioReal' => $object->folioReal,
             'vario' => $object->vario,
-            'director' => $object->director,
             'predio' => $object->predio,
             'firma_electronica' => base64_encode($firmaDirector),
             'datos_control' => $object->datos_control,
@@ -154,9 +148,7 @@ class VariosController extends Controller
         $qr = $this->generadorQr($firmaElectronica->uuid);
 
         $pdf = Pdf::loadView('varios.acto', [
-            'folioReal' => $objeto->folioReal,
             'vario' => $objeto->vario,
-            'director' => $objeto->director,
             'predio' => $objeto->predio,
             'firma_electronica' => false,
             'datos_control' => $objeto->datos_control,

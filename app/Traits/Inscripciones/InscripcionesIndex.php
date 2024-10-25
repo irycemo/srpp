@@ -41,7 +41,11 @@ trait InscripcionesIndex{
 
             $primerMovimiento = $movimientos->first();
 
-            if($this->actual->folio > $primerMovimiento->folio){
+            if($this->actual->folioReal->avisoPreventivo()){
+
+                return true;
+
+            }elseif($this->actual->folio > $primerMovimiento->folio){
 
                 $this->dispatch('mostrarMensaje', ['warning', "El movimiento registral: (" . $this->actual->folioReal->folio . '-' . $primerMovimiento->folio . ') debe elaborarce primero.']);
 

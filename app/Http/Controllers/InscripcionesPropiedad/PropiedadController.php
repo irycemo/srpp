@@ -42,6 +42,9 @@ class PropiedadController extends Controller
         $datos_control->fecha_asignacion = Carbon::now()->locale('es')->translatedFormat('H:i:s \d\e\l l d \d\e F \d\e\l Y');
         $datos_control->elaborado_en = Carbon::now()->locale('es')->translatedFormat('H:i:s \d\e\l l d \d\e F \d\e\l Y');
         $datos_control->jefe_departamento = $jefe_departamento;
+        $datos_control->folioReal = $propiedad->movimientoRegistral->folioReal->folio;
+        $datos_control->distrito = $propiedad->movimientoRegistral->folioReal->distrito;
+        $datos_control->director = $director->name;
         $datos_control->movimiento_folio = $propiedad->movimientoRegistral->folio;
         $datos_control->servicio = $this->nombreServicio($propiedad->servicio);
         $datos_control->solicitante = $propiedad->movimientoRegistral->solicitante;
@@ -49,15 +52,8 @@ class PropiedadController extends Controller
         $datos_control->tipo_servicio = $propiedad->movimientoRegistral->tipo_servicio;
         $datos_control->asigno_folio = $propiedad->movimientoRegistral->folioReal->asignado_por;
 
-        $folioReal = (object)[];
-
-        $folioReal->folio = $propiedad->movimientoRegistral->folioReal->folio;
-        $folioReal->distrito = $propiedad->movimientoRegistral->folioReal->distrito;
-
         $object = (object)[];
 
-        $object->folioReal = $folioReal;
-        $object->director = $director->name;
         $object->predio = $this->predio($propiedad->movimientoRegistral->folioReal->predio);
         $object->datos_control = $datos_control;
         $object->propiedad = $this->propiedad($propiedad);
@@ -79,9 +75,7 @@ class PropiedadController extends Controller
         $qr = $this->generadorQr($firmaElectronica->uuid);
 
         $pdf = Pdf::loadView('incripciones.propiedad.acto', [
-            'folioReal' => $object->folioReal,
             'propiedad' => $object->propiedad,
-            'director' => $object->director,
             'predio' => $object->predio,
             'firma_electronica' => base64_encode($firmaDirector),
             'datos_control' => $object->datos_control,
@@ -154,9 +148,7 @@ class PropiedadController extends Controller
         $qr = $this->generadorQr($firmaElectronica->uuid);
 
         $pdf = Pdf::loadView('incripciones.propiedad.acto', [
-            'folioReal' => $objeto->folioReal,
             'propiedad' => $objeto->propiedad,
-            'director' => $objeto->director,
             'predio' => $objeto->predio,
             'firma_electronica' => false,
             'datos_control' => $objeto->datos_control,

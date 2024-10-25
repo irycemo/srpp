@@ -42,6 +42,9 @@ class CancelacionController extends Controller
         $datos_control->fecha_asignacion = Carbon::now()->locale('es')->translatedFormat('H:i:s \d\e\l l d \d\e F \d\e\l Y');
         $datos_control->elaborado_en = Carbon::now()->locale('es')->translatedFormat('H:i:s \d\e\l l d \d\e F \d\e\l Y');
         $datos_control->jefe_departamento = $jefe_departamento;
+        $datos_control->folioReal = $cancelacion->movimientoRegistral->folioReal->folio;
+        $datos_control->distrito = $cancelacion->movimientoRegistral->folioReal->distrito;
+        $datos_control->director = $director->name;
         $datos_control->movimiento_folio = $cancelacion->movimientoRegistral->folio;
         $datos_control->servicio = $this->nombreServicio($cancelacion->servicio);
         $datos_control->solicitante = $cancelacion->movimientoRegistral->solicitante;
@@ -49,15 +52,8 @@ class CancelacionController extends Controller
         $datos_control->tipo_servicio = $cancelacion->movimientoRegistral->tipo_servicio;
         $datos_control->asigno_folio = $cancelacion->movimientoRegistral->folioReal->asignado_por;
 
-        $folioReal = (object)[];
-
-        $folioReal->folio = $cancelacion->movimientoRegistral->folioReal->folio;
-        $folioReal->distrito = $cancelacion->movimientoRegistral->folioReal->distrito;
-
         $object = (object)[];
 
-        $object->folioReal = $folioReal;
-        $object->director = $director->name;
         $object->predio = $this->predio($cancelacion->movimientoRegistral->folioReal->predio);
         $object->datos_control = $datos_control;
         $object->cancelacion = $this->cancelacion($cancelacion);
@@ -79,9 +75,7 @@ class CancelacionController extends Controller
         $qr = $this->generadorQr($firmaElectronica->uuid);
 
         $pdf = Pdf::loadView('cancelaciones.acto', [
-            'folioReal' => $object->folioReal,
             'cancelacion' => $object->cancelacion,
-            'director' => $object->director,
             'predio' => $object->predio,
             'firma_electronica' => base64_encode($firmaDirector),
             'datos_control' => $object->datos_control,
@@ -154,9 +148,7 @@ class CancelacionController extends Controller
         $qr = $this->generadorQr($firmaElectronica->uuid);
 
         $pdf = Pdf::loadView('cancelaciones.acto', [
-            'folioReal' => $objeto->folioReal,
             'cancelacion' => $objeto->cancelacion,
-            'director' => $objeto->director,
             'predio' => $objeto->predio,
             'firma_electronica' => false,
             'datos_control' => $objeto->datos_control,

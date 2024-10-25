@@ -42,6 +42,9 @@ class GravamenController extends Controller
         $datos_control->fecha_asignacion = Carbon::now()->locale('es')->translatedFormat('H:i:s \d\e\l l d \d\e F \d\e\l Y');
         $datos_control->elaborado_en = Carbon::now()->locale('es')->translatedFormat('H:i:s \d\e\l l d \d\e F \d\e\l Y');
         $datos_control->jefe_departamento = $jefe_departamento;
+        $datos_control->folioReal = $gravamen->movimientoRegistral->folioReal->folio;
+        $datos_control->distrito = $gravamen->movimientoRegistral->folioReal->distrito;
+        $datos_control->director = $director->name;
         $datos_control->movimiento_folio = $gravamen->movimientoRegistral->folio;
         $datos_control->servicio = $this->nombreServicio($gravamen->servicio);
         $datos_control->solicitante = $gravamen->movimientoRegistral->solicitante;
@@ -49,15 +52,8 @@ class GravamenController extends Controller
         $datos_control->tipo_servicio = $gravamen->movimientoRegistral->tipo_servicio;
         $datos_control->asigno_folio = $gravamen->movimientoRegistral->folioReal->asignado_por;
 
-        $folioReal = (object)[];
-
-        $folioReal->folio = $gravamen->movimientoRegistral->folioReal->folio;
-        $folioReal->distrito = $gravamen->movimientoRegistral->folioReal->distrito;
-
         $object = (object)[];
 
-        $object->folioReal = $folioReal;
-        $object->director = $director->name;
         $object->predio = $this->predio($gravamen->movimientoRegistral->folioReal->predio);
         $object->datos_control = $datos_control;
         $object->gravamen = $this->gravamen($gravamen);
@@ -79,9 +75,7 @@ class GravamenController extends Controller
         $qr = $this->generadorQr($firmaElectronica->uuid);
 
         $pdf = Pdf::loadView('gravamenes.acto', [
-            'folioReal' => $object->folioReal,
             'gravamen' => $object->gravamen,
-            'director' => $object->director,
             'predio' => $object->predio,
             'firma_electronica' => base64_encode($firmaDirector),
             'datos_control' => $object->datos_control,
@@ -154,9 +148,7 @@ class GravamenController extends Controller
         $qr = $this->generadorQr($firmaElectronica->uuid);
 
         $pdf = Pdf::loadView('gravamenes.acto', [
-            'folioReal' => $objeto->folioReal,
             'gravamen' => $objeto->gravamen,
-            'director' => $objeto->director,
             'predio' => $objeto->predio,
             'firma_electronica' => false,
             'datos_control' => $objeto->datos_control,

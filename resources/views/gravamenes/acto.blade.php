@@ -60,7 +60,6 @@
     }
 
     .control{
-        margin-top: 100px;
         text-align: center;
     }
 
@@ -168,8 +167,8 @@
             <div class="informacion">
 
                 <div style="text-align: right">
-                    <p style="margin:0"><strong>movimiento registral:</strong> {{ $folioReal->folio }}-{{ $datos_control->movimiento_folio }}</p>
-                    <p style="margin:0"><strong>DISTRITO:</strong> {{ $folioReal->distrito}}</p>
+                    <p style="margin:0"><strong>movimiento registral:</strong> {{ $datos_control->folioReal }}-{{ $datos_control->movimiento_folio }}</p>
+                    <p style="margin:0"><strong>DISTRITO:</strong> {{ $datos_control->distrito}}</p>
                 </div>
 
                 <div class="titulo">
@@ -199,7 +198,7 @@
                         <p class="parrafo">
 
                             <p class="parrafo">
-                                <strong>Folio real:</strong> {{ $folioReal->folio }}-{{ $movimiento->movimiento_folio }}.
+                                <strong>Folio real:</strong> {{ $datos_control->folioReal }}-{{ $movimiento->movimiento_folio }}.
                             </p>
 
                             <p class="separador">datos del gravamen</p>
@@ -313,7 +312,7 @@
             </div>
 
             <p class="parrafo">
-                A SOLICITUD DE: <strong>{{ $datos_control->solicitante }}</strong> se EXPiDe EL PRESENTE EN LA CIUDAD DE @if($folioReal->distrito == '02 Uruapan' ) uruapan @else MORELIA @endif, MICHOACÁN, A LAS {{ $datos_control->elaborado_en }}.
+                A SOLICITUD DE: <strong>{{ $datos_control->solicitante }}</strong> se EXPiDe EL PRESENTE EN LA CIUDAD DE @if($datos_control->distrito == '02 Uruapan' ) uruapan @else MORELIA @endif, MICHOACÁN, A LAS {{ $datos_control->elaborado_en }}.
             </p>
 
             <div class="firma no-break">
@@ -324,11 +323,11 @@
 
                 @if(!$firma_electronica)
 
-                    @if($folioReal->distrito== '02 Uruapan' )
+                    @if($datos_control->distrito== '02 Uruapan' )
                         <p class="borde">Lic. SANDRO MEDINA MORALES </p>
                         <p style="margin:0;">COORDINADOR REGIONAL 4 PURHÉPECHA (URUAPAN)</p>
                     @else
-                        <p class="borde" style="margin:0;">{{ $director }}</p>
+                        <p class="borde" style="margin:0;">{{ $datos_control->director }}</p>
                         <p style="margin:0;">Director del registro público de la propiedad</p>
                     @endif
 
@@ -344,7 +343,7 @@
 
                                     </td>
 
-                                    @if($folioReal->distrito != '02 Uruapan')
+                                    @if($datos_control->distrito != '02 Uruapan')
 
                                         <td style="padding-right: 40px; text-align:center; width: 50%; vertical-align: bottom; white-space: nowrap;">
 
@@ -362,7 +361,7 @@
 
                 @else
 
-                    <p style="margin:0;">{{ $director }}</p>
+                    <p style="margin:0;">{{ $datos_control->director }}</p>
                     <p style="margin:0;">Director del registro público de la propiedad</p>
                     <p style="text-align: center">Firma Electrónica:</p>
                     <p class="parrafo" style="overflow-wrap: break-word;">{{ $firma_electronica }}</p>
@@ -393,7 +392,7 @@
                             <td style="padding-right: 40px;">
 
                                 <p style="margin: 0"><strong>NÚMERO DE CONTROL: </strong>{{ $datos_control->numero_control }}</p>
-                                <p style="margin: 0"><strong>Movimiento registral:</strong> {{ $folioReal->folio }}-{{ $datos_control->movimiento_folio }}</p>
+                                <p style="margin: 0"><strong>Movimiento registral:</strong> {{ $datos_control->folioReal }}-{{ $datos_control->movimiento_folio }}</p>
                                 <p style="margin: 0"><strong>DERECHOS: </strong>${{ number_format($datos_control->monto, 2) }}</p>
                                 <p style="margin: 0"><strong>Tipo de servicio: </strong>{{ $datos_control->tipo_servicio }}</p>
                                 <p style="margin: 0"><strong>Servicio: </strong>{{ $datos_control->servicio }}</p>

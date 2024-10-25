@@ -333,6 +333,9 @@ trait FirmaElectronicaTrait{
             $item->ap_materno = $propietario->persona->ap_materno;
             $item->razon_social = $propietario->persona->razon_social;
             $item->multiple_nombre = $propietario->persona->multiple_nombre;
+            $item->porcentaje_propiedad = $propietario->porcentaje_propiedad_formateada;
+            $item->porcentaje_nuda = $propietario->porcentaje_nuda_formateada;
+            $item->porcentaje_usufructo = $propietario->porcentaje_usufructo_formateada;
 
             if($propietario->representadoPor){
 
@@ -345,6 +348,35 @@ trait FirmaElectronicaTrait{
             }
 
             $propietarios->push($item);
+
+        }
+
+        $transmitentes = collect();
+
+        foreach ($propiedad->transmitentes() as $transmitente) {
+
+            $item = (object)[];
+
+            $item->nombre = $transmitente->persona->nombre;
+            $item->ap_paterno = $transmitente->persona->ap_paterno;
+            $item->ap_materno = $transmitente->persona->ap_materno;
+            $item->razon_social = $transmitente->persona->razon_social;
+            $item->multiple_nombre = $transmitente->persona->multiple_nombre;
+            $item->porcentaje_propiedad = $transmitente->porcentaje_propiedad_formateada;
+            $item->porcentaje_nuda = $transmitente->porcentaje_nuda_formateada;
+            $item->porcentaje_usufructo = $transmitente->porcentaje_usufructo_formateada;
+
+            if($transmitente->representadoPor){
+
+                $item->representado_por = $transmitente->representadoPor->persona->nombre . ' ' .
+                                            $transmitente->representadoPor->persona->ap_paterno . ' ' .
+                                            $transmitente->representadoPor->persona->ap_materno . ' ' .
+                                            $transmitente->representadoPor->persona->multiple_nombre . ' ' .
+                                            $transmitente->representadoPor->persona->razon_social ;
+
+            }
+
+            $transmitentes->push($item);
 
         }
 
@@ -363,6 +395,7 @@ trait FirmaElectronicaTrait{
         $object->autoridad_nombre = $propiedad->movimientoRegistral->autoridad_nombre;
         $object->fecha_emision = Carbon::parse($propiedad->movimientoRegistral->fecha_emision)->format('d/m/Y');
         $object->propietarios = $propietarios;
+        $object->transmitentes = $transmitentes;
 
         return $object;
 

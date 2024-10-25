@@ -60,7 +60,6 @@
     }
 
     .control{
-        margin-top: 100px;
         text-align: center;
     }
 

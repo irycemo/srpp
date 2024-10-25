@@ -42,6 +42,9 @@ class SentenciasController extends Controller
         $datos_control->fecha_asignacion = Carbon::now()->locale('es')->translatedFormat('H:i:s \d\e\l l d \d\e F \d\e\l Y');
         $datos_control->elaborado_en = Carbon::now()->locale('es')->translatedFormat('H:i:s \d\e\l l d \d\e F \d\e\l Y');
         $datos_control->jefe_departamento = $jefe_departamento;
+        $datos_control->folioReal = $sentencia->movimientoRegistral->folioReal->folio;
+        $datos_control->distrito = $sentencia->movimientoRegistral->folioReal->distrito;
+        $datos_control->director = $director->name;
         $datos_control->movimiento_folio = $sentencia->movimientoRegistral->folio;
         $datos_control->servicio = $this->nombreServicio($sentencia->servicio);
         $datos_control->solicitante = $sentencia->movimientoRegistral->solicitante;
@@ -49,15 +52,8 @@ class SentenciasController extends Controller
         $datos_control->tipo_servicio = $sentencia->movimientoRegistral->tipo_servicio;
         $datos_control->asigno_folio = $sentencia->movimientoRegistral->folioReal->asignado_por;
 
-        $folioReal = (object)[];
-
-        $folioReal->folio = $sentencia->movimientoRegistral->folioReal->folio;
-        $folioReal->distrito = $sentencia->movimientoRegistral->folioReal->distrito;
-
         $object = (object)[];
 
-        $object->folioReal = $folioReal;
-        $object->director = $director->name;
         $object->predio = $this->predio($sentencia->movimientoRegistral->folioReal->predio);
         $object->datos_control = $datos_control;
         $object->sentencia = $this->sentencia($sentencia);
@@ -79,9 +75,7 @@ class SentenciasController extends Controller
         $qr = $this->generadorQr($firmaElectronica->uuid);
 
         $pdf = Pdf::loadView('sentencias.acto', [
-            'folioReal' => $object->folioReal,
             'sentencia' => $object->sentencia,
-            'director' => $object->director,
             'predio' => $object->predio,
             'firma_electronica' => base64_encode($firmaDirector),
             'datos_control' => $object->datos_control,
@@ -154,9 +148,7 @@ class SentenciasController extends Controller
         $qr = $this->generadorQr($firmaElectronica->uuid);
 
         $pdf = Pdf::loadView('sentencias.acto', [
-            'folioReal' => $objeto->folioReal,
             'sentencia' => $objeto->sentencia,
-            'director' => $objeto->director,
             'predio' => $objeto->predio,
             'firma_electronica' => false,
             'datos_control' => $objeto->datos_control,
