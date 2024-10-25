@@ -223,6 +223,15 @@ class Elaboracion extends Component
 
         $this->authorize('update', $this->movimientoRegistral);
 
+        /* Fusion */
+        if($this->movimientoRegistral->inscripcionPropiedad?->servicio == 'D731' && $this->movimientoRegistral->inscripcionPropiedad?->numero_inmuebles != $this->movimientoRegistral->folioReal->antecedentes->count()){
+
+            $this->dispatch('mostrarMensaje', ['warning', "Debe ingresar todos los antecedentes a fusionar."]);
+
+            return;
+
+        }
+
         $this->validate();
 
         if
