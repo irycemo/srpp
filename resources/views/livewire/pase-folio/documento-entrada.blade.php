@@ -246,6 +246,7 @@
                         <x-table>
 
                             <x-slot name="head">
+                                <x-table.heading >Folio Real</x-table.heading>
                                 <x-table.heading >Tomo</x-table.heading>
                                 <x-table.heading >Registro</x-table.heading>
                                 <x-table.heading ># Propiedad</x-table.heading>
@@ -260,9 +261,10 @@
 
                                     <x-table.row >
 
-                                        <x-table.cell>{{ $antecedente->tomo_antecedente }}</x-table.cell>
-                                        <x-table.cell>{{ $antecedente->registro_antecedente }}</x-table.cell>
-                                        <x-table.cell>{{ $antecedente->numero_propiedad_antecedente }}</x-table.cell>
+                                        <x-table.cell>{{ $antecedente->folioRealAntecedente->folio ?? 'N/A' }}</x-table.cell>
+                                        <x-table.cell>{{ $antecedente->tomo_antecedente  ?? 'N/A'}}</x-table.cell>
+                                        <x-table.cell>{{ $antecedente->registro_antecedente  ?? 'N/A'}}</x-table.cell>
+                                        <x-table.cell>{{ $antecedente->numero_propiedad_antecedente  ?? 'N/A'}}</x-table.cell>
                                         <x-table.cell>{{ $antecedente->distrito_antecedente }}</x-table.cell>
                                         <x-table.cell>{{ $antecedente->seccion_antecedente }}</x-table.cell>
                                         <x-table.cell>
@@ -317,23 +319,29 @@
 
         <x-slot name="content">
 
-            <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-3 mb-3 col-span-2 rounded-lg p-3">
+            <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-3 mb-3 col-span-2 rounded-lg p-3">
 
-                <x-input-group for="tomo" label="Tomo" :error="$errors->first('tomo')" class="w-full">
+                <x-input-group for="folio_real_antecedente" label="Folio real" :error="$errors->first('folio_real_antecedente')" class="w-full">
 
-                    <x-input-text type="number" id="tomo" wire:model="tomo" />
-
-                </x-input-group>
-
-                <x-input-group for="registro" label="Registro" :error="$errors->first('registro')" class="w-full">
-
-                    <x-input-text type="number" id="registro" wire:model="registro" />
+                    <x-input-text type="number" id="folio_real_antecedente" wire:model.lazy="folio_real_antecedente" />
 
                 </x-input-group>
 
-                <x-input-group for="numero_propiedad" label="Número de propiedad" :error="$errors->first('numero_propiedad')" class="w-full">
+                <x-input-group for="tomo" label="Tomo" :error="$errors->first('tomo')" class="w-full" >
 
-                    <x-input-text type="number" id="numero_propiedad" wire:model="numero_propiedad" />
+                    <x-input-text type="number" id="tomo" wire:model.lazy="tomo" :readonly="$folio_real_antecedente != null"/>
+
+                </x-input-group>
+
+                <x-input-group for="registro" label="Registro" :error="$errors->first('registro')" class="w-full" >
+
+                    <x-input-text type="number" id="registro" wire:model.lazy="registro" :readonly="$folio_real_antecedente != null"/>
+
+                </x-input-group>
+
+                <x-input-group for="numero_propiedad" label="Número de propiedad" :error="$errors->first('numero_propiedad')" class="w-full" >
+
+                    <x-input-text type="number" id="numero_propiedad" wire:model.lazy="numero_propiedad" :readonly="$folio_real_antecedente != null"/>
 
                 </x-input-group>
 

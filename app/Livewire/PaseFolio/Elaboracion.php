@@ -61,11 +61,15 @@ class Elaboracion extends Component
     public $tomo;
     public $registro;
     public $numero_propiedad;
+    public $folio_real_antecedente;
+
     public $modal = false;
     public $modalDocumento = false;
     public $editar = false;
     public $crear = false;
+
     public $antecedente;
+
     public $documentos_de_entrada;
     public $actos_contenidos;
 
@@ -147,6 +151,20 @@ class Elaboracion extends Component
 
     }
 
+    public function updatedFolioRealAntecedente(){
+
+        if($this->folio_real_antecedente == ''){
+
+            $this->folio_real_antecedente = null;
+
+        }
+
+        $this->tomo = null;
+        $this->registro = null;
+        $this->numero_propiedad = null;
+
+    }
+
     public function generarFolioReal(){
 
         $folioReal = FolioReal::create([
@@ -224,7 +242,7 @@ class Elaboracion extends Component
         $this->authorize('update', $this->movimientoRegistral);
 
         /* Fusion */
-        if($this->movimientoRegistral->inscripcionPropiedad?->servicio == 'D731' && $this->movimientoRegistral->inscripcionPropiedad?->numero_inmuebles != $this->movimientoRegistral->folioReal->antecedentes->count()){
+        if($this->movimientoRegistral->folioReal && $this->movimientoRegistral->inscripcionPropiedad?->servicio == 'D731' && $this->movimientoRegistral->inscripcionPropiedad?->numero_inmuebles != $this->movimientoRegistral->folioReal->antecedentes->count()){
 
             $this->dispatch('mostrarMensaje', ['warning', "Debe ingresar todos los antecedentes a fusionar."]);
 
@@ -596,6 +614,8 @@ class Elaboracion extends Component
 
                 }
 
+                $this->revisarAntecedentesFusionantes();
+
                 $this->movimientoRegistral->folioReal->update([
                     'estado' => 'elaborado',
                     'asignado_por' => auth()->user()->name
@@ -691,11 +711,14 @@ class Elaboracion extends Component
 
     public function actualizarAntecedente(){
 
+        $this->reset(['tomo', 'registro', 'numero_propiedad', 'folio_real_antecedente']);
+
         $this->validate(
             [
-                'tomo' => 'required',
-                'registro' => 'required',
-                'numero_propiedad' => 'required'
+                'tomo' => Rule::requiredIf($this->folio_real_antecedente == null),
+                'registro' => Rule::requiredIf($this->folio_real_antecedente == null),
+                'numero_propiedad' => Rule::requiredIf($this->folio_real_antecedente == null),
+                'folio_real_antecedente' => 'nullable'
             ]
         );
 
@@ -706,7 +729,7 @@ class Elaboracion extends Component
             $this->antecedente->numero_propiedad_antecedente = $this->numero_propiedad;
             $this->antecedente->save();
 
-            $this->movimientoRegistral->load('folioReal.antecedentes');
+            $this->movimientoRegistral->load('folioReal.antecedentes.folioRealAntecedente');
 
             $this->dispatch('mostrarMensaje', ['success', "El antecedente se actualizó con éxito."]);
 
@@ -723,9 +746,10 @@ class Elaboracion extends Component
 
         $this->validate(
             [
-                'tomo' => 'required',
-                'registro' => 'required',
-                'numero_propiedad' => 'required'
+                'tomo' => Rule::requiredIf($this->folio_real_antecedente == null),
+                'registro' => Rule::requiredIf($this->folio_real_antecedente == null),
+                'numero_propiedad' => Rule::requiredIf($this->folio_real_antecedente == null),
+                'folio_real_antecedente' => 'nullable'
             ]
         );
 
@@ -737,7 +761,109 @@ class Elaboracion extends Component
 
         }
 
-        $antecedente = Antecedente::where('tomo_antecedente', $this->tomo)
+        if($this->folio_real_antecedente){
+
+            $folioReal = FolioReal::where('folio', $this->folio_real_antecedente)->first();
+
+            if(!$folioReal){
+
+                $this->dispatch('mostrarMensaje', ['warning', "El folio real no existe."]);
+
+                return;
+
+            }elseif($folioReal->estado != 'activo'){
+
+                $this->dispatch('mostrarMensaje', ['warning', "El folio real no esta activo."]);
+
+                return;
+
+            }
+
+            $antecedente = Antecedente::where('folio_real_antecedente', $this->folio_real_antecedente)->first();
+
+            if($antecedente){
+
+                $this->dispatch('mostrarMensaje', ['warning', "El folio ya es antecedente de otro folio."]);
+
+                return;
+
+            }
+
+            $antecedente = FolioReal::where('antecedente', $folioReal->id)->first();
+
+            if($antecedente){
+
+                $this->dispatch('mostrarMensaje', ['warning', "El folio ya es antecedente de otro folio."]);
+
+                return;
+
+            }
+
+            $antecedente = Antecedente::where('folio_real_antecedente', $this->folio_real_antecedente)
+                                            ->where('folio_real', $this->movimientoRegistral->folio_real)
+                                            ->first();
+
+            if($antecedente){
+
+                $this->dispatch('mostrarMensaje', ['warning', "El antecedente ya se encuentra en la lista"]);
+
+                return;
+
+            }
+
+            try {
+
+                Antecedente::create([
+                    'folio_real_antecedente' => $folioReal->id,
+                    'folio_real' => $this->movimientoRegistral->folio_real,
+                    'distrito_antecedente' => $this->movimientoRegistral->getRawOriginal('distrito'),
+                    'seccion_antecedente' => $this->movimientoRegistral->seccion,
+                ]);
+
+                $this->movimientoRegistral->load('folioReal.antecedentes.folioRealAntecedente');
+
+                $this->dispatch('mostrarMensaje', ['success', "El antecedente se guardó con éxito."]);
+
+                $this->modal = false;
+
+            } catch (\Throwable $th) {
+                Log::error("Error al crear antecedente en pase a folio por el usuario: (id: " . auth()->user()->id . ") " . auth()->user()->name . ". " . $th);
+                $this->dispatch('mostrarMensaje', ['error', "Ha ocurrido un error."]);
+            }
+
+        }else{
+
+            $antecedente = Antecedente::where('tomo_antecedente', $this->tomo)
+                                    ->where('registro_antecedente', $this->registro)
+                                    ->where('numero_propiedad_antecedente', $this->numero_propiedad)
+                                    ->where('distrito_antecedente', $this->movimientoRegistral->getRawOriginal('distrito'))
+                                    ->where('seccion_antecedente', $this->movimientoRegistral->seccion)
+                                    ->first();
+
+            if($antecedente){
+
+                $this->dispatch('mostrarMensaje', ['warning', "El antecedente ya es antecedente de otro folio."]);
+
+                return;
+
+            }
+
+            $folioReal = FolioReal::where('tomo_antecedente', $this->tomo)
+                                        ->where('registro_antecedente', $this->registro)
+                                        ->where('numero_propiedad_antecedente', $this->numero_propiedad)
+                                        ->where('distrito_antecedente', $this->movimientoRegistral->getRawOriginal('distrito'))
+                                        ->where('seccion_antecedente', $this->movimientoRegistral->seccion)
+                                        ->first();
+
+            if($folioReal){
+
+                $this->dispatch('mostrarMensaje', ['warning', "El antecedente ya tiene folio real."]);
+
+                return;
+
+            }
+
+            $antecedente = Antecedente::where('tomo_antecedente', $this->tomo)
                                     ->where('registro_antecedente', $this->registro)
                                     ->where('numero_propiedad_antecedente', $this->numero_propiedad)
                                     ->where('distrito_antecedente', $this->movimientoRegistral->getRawOriginal('distrito'))
@@ -745,49 +871,37 @@ class Elaboracion extends Component
                                     ->where('folio_real', $this->movimientoRegistral->folio_real)
                                     ->first();
 
-        if($antecedente){
+            if($antecedente){
 
-            $this->dispatch('mostrarMensaje', ['warning', "El antecedente ya se encuentra en la lista."]);
+                $this->dispatch('mostrarMensaje', ['warning', "El antecedente ya se encuentra en la lista."]);
 
-            return;
+                return;
 
-        }
+            }
 
-        $folioReal = FolioReal::where('tomo_antecedente', $this->tomo)
-                                    ->where('registro_antecedente', $this->registro)
-                                    ->where('numero_propiedad_antecedente', $this->numero_propiedad)
-                                    ->where('distrito_antecedente', $this->movimientoRegistral->getRawOriginal('distrito'))
-                                    ->where('seccion_antecedente', $this->movimientoRegistral->seccion)
-                                    ->first();
+            try {
 
-        if($folioReal && $this->movimientoRegistral->inscripcionPropiedad?->servicio == 'D731'){
+                Antecedente::create([
+                    'tomo_antecedente' => $this->tomo,
+                    'registro_antecedente' => $this->registro,
+                    'numero_propiedad_antecedente' => $this->numero_propiedad,
+                    'distrito_antecedente' => $this->movimientoRegistral->getRawOriginal('distrito'),
+                    'seccion_antecedente' => $this->movimientoRegistral->seccion,
+                    'folio_real' => $this->movimientoRegistral->folio_real,
+                ]);
 
-            $this->dispatch('mostrarMensaje', ['warning', "El antecedente ya tiene folio real."]);
+                $this->movimientoRegistral->load('folioReal.antecedentes.folioRealAntecedente');
 
-            return;
+                $this->dispatch('mostrarMensaje', ['success', "El antecedente se guardó con éxito."]);
 
-        }
+                $this->modal = false;
 
-        try {
+            } catch (\Throwable $th) {
+                Log::error("Error al crear antecedente en pase a folio por el usuario: (id: " . auth()->user()->id . ") " . auth()->user()->name . ". " . $th);
+                $this->dispatch('mostrarMensaje', ['error', "Ha ocurrido un error."]);
+            }
 
-            Antecedente::create([
-                'tomo_antecedente' => $this->tomo,
-                'registro_antecedente' => $this->registro,
-                'numero_propiedad_antecedente' => $this->numero_propiedad,
-                'distrito_antecedente' => $this->movimientoRegistral->getRawOriginal('distrito'),
-                'seccion_antecedente' => $this->movimientoRegistral->seccion,
-                'folio_real' => $this->movimientoRegistral->folio_real,
-            ]);
 
-            $this->movimientoRegistral->load('folioReal.antecedentes');
-
-            $this->dispatch('mostrarMensaje', ['success', "El antecedente se eliminó con éxito."]);
-
-            $this->modal = false;
-
-        } catch (\Throwable $th) {
-            Log::error("Error al crear antecedente en pase a folio por el usuario: (id: " . auth()->user()->id . ") " . auth()->user()->name . ". " . $th);
-            $this->dispatch('mostrarMensaje', ['error', "Ha ocurrido un error."]);
         }
 
     }
@@ -802,7 +916,7 @@ class Elaboracion extends Component
 
             $this->dispatch('mostrarMensaje', ['success', "La información se eliminó con éxito."]);
 
-            $this->movimientoRegistral->load('folioReal.antecedentes');
+            $this->movimientoRegistral->load('folioReal.antecedentes.folioRealAntecedente');
 
         } catch (\Throwable $th) {
 
@@ -918,6 +1032,20 @@ class Elaboracion extends Component
 
     }
 
+    public function revisarAntecedentesFusionantes(){
+
+        foreach($this->movimientoRegistral->folioReal->antecedentes as $antecedente){
+
+            if($antecedente->folio_real_antecedente){
+
+                $antecedente->folioRealAntecedente->update(['estado' => 'fusionado']);
+
+            }
+
+        }
+
+    }
+
     public function mount(){
 
         $this->distritos = Constantes::DISTRITOS;
@@ -962,6 +1090,8 @@ class Elaboracion extends Component
                 }
 
             }
+
+            $this->movimientoRegistral->load('folioReal.antecedentes.folioRealAntecedente');
 
         }else{
 

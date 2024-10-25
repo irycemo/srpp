@@ -57,10 +57,13 @@ trait FirmaElectronicaTrait{
 
         $antecedentes = collect();
 
+        $folioReal->load('antecedentes.folioRealAntecedente');
+
         foreach ($folioReal->antecedentes as $antecedente) {
 
             $item = (object)[];
 
+            $item->folio_real = $antecedente->folioRealAntecedente?->folio;
             $item->tomo_antecedente = $antecedente->tomo_antecedente;
             $item->registro_antecedente = $antecedente->registro_antecedente;
             $item->numero_propiedad_antecedente = $antecedente->numero_propiedad_antecedente;

@@ -193,6 +193,7 @@
                         <thead>
 
                             <tr>
+                                <th style="padding-right: 10px;">Folio real</th>
                                 <th style="padding-right: 10px;">Tomo</th>
                                 <th style="padding-right: 10px;">Registro</th>
                                 <th style="padding-right: 10px;">Numero de propiedad</th>
@@ -208,13 +209,16 @@
 
                                 <tr>
                                     <td style="padding-right: 40px;">
-                                        {{ $antecedente->tomo_antecedente }}
+                                        {{ $antecedente->folio_real ?? 'N/A' }}
                                     </td>
                                     <td style="padding-right: 40px;">
-                                        {{ $antecedente->registro_antecedente }}
+                                        {{ $antecedente->tomo_antecedente ?? 'N/A' }}
                                     </td>
                                     <td style="padding-right: 40px;">
-                                        {{ $antecedente->numero_propiedad_antecedente }}
+                                        {{ $antecedente->registro_antecedente ?? 'N/A' }}
+                                    </td>
+                                    <td style="padding-right: 40px;">
+                                        {{ $antecedente->numero_propiedad_antecedente ?? 'N/A' }}
                                     </td>
                                     <td style="padding-right: 40px;">
                                         {{ $antecedente->distrito_antecedente }}
