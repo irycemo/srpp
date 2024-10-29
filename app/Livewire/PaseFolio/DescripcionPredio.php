@@ -117,8 +117,6 @@ class DescripcionPredio extends Component
     #[On('cargarPropiedad')]
     public function cargarPropiedad($id){
 
-        if($this->propiedad->getKey()) return;
-
         $this->propiedad = Predio::find($id);
 
         $this->curt = $this->propiedad->curt;
