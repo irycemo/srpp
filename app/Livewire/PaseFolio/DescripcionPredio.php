@@ -148,6 +148,8 @@ class DescripcionPredio extends Component
         $this->unidad_area = $this->propiedad->unidad_area;
         $this->observaciones = $this->propiedad->descripcion;
 
+        $this->reset('medidas');
+
         foreach ($this->propiedad->colindancias as $colindancia) {
 
             $this->medidas[] = [
