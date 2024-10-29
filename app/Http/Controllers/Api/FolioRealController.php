@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Api;
 
 use App\Models\FolioReal;
+use App\Models\Antecedente;
 use App\Models\Propiedadold;
 use Illuminate\Support\Facades\Log;
 use App\Http\Controllers\Controller;
@@ -16,9 +17,33 @@ class FolioRealController extends Controller
 
         try {
 
+            $folio_real = null;
+
             $validated = $request->validated();
 
-            $folio_real = FolioReal::when(isset($validated['tomo']), function($q) use($validated){
+            $antecedente = Antecedente::when(isset($validated['tomo']), function($q) use($validated){
+                                                $q->where('tomo_antecedente', $validated['tomo']);
+                                            })
+                                        ->when(isset($validated['registro']), function($q) use($validated){
+                                            $q->where('registro_antecedente', $validated['registro']);
+                                        })
+                                        ->when(isset($validated['numero_propiedad']), function($q) use($validated){
+                                            $q->where('numero_propiedad_antecedente', $validated['numero_propiedad']);
+                                        })
+                                        ->when(isset($validated['folio_real']), function($q)use($validated){
+                                            $q->whereHas('folioRealAntecedente', function($q) use($validated){
+                                                $q->where('folio', $validated['folio_real']);
+                                            });
+                                        })->first();
+            if($antecedente){
+
+                $folio_real = FolioReal::where('estado', 'activo')->whereKey($antecedente->folio_real)->first();
+
+            }
+
+            if(!$folio_real){
+
+                $folio_real = FolioReal::when(isset($validated['tomo']), function($q) use($validated){
                                             $q->where('tomo_antecedente', $validated['tomo']);
                                         })
                                         ->when(isset($validated['registro']), function($q) use($validated){
@@ -36,7 +61,10 @@ class FolioRealController extends Controller
                                         ->when(isset($validated['folio_real']), function($q) use($validated){
                                             $q->where('folio', $validated['folio_real']);
                                         })
+                                        ->where('estado', 'activo')
                                         ->first();
+
+            }
 
             if(
                 isset($validated['tomo']) &&
@@ -53,21 +81,13 @@ class FolioRealController extends Controller
                                                 ->where('status', 'V')
                                                 ->first();
 
-                }else{
+            }else{
 
-                    $propiedad = null;
-                }
+                $propiedad = null;
+            }
 
 
             if($folio_real){
-
-                if($folio_real->estado == 'rechazado'){
-
-                    return response()->json([
-                        'error' => 'El folio real esta rechazado',
-                    ], 401);
-
-                }
 
                 return (new FolioRealResource($folio_real))->response()->setStatusCode(200);
 

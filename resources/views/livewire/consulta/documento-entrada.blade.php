@@ -8,9 +8,17 @@
 
             <div class="rounded-lg bg-gray-100 py-1 px-2">
 
+                <strong>Folio real</strong>
+
+                <p>{{ $antecedente->folioRealAntecedente->folio ?? 'N/A' }}</p>
+
+            </div>
+
+            <div class="rounded-lg bg-gray-100 py-1 px-2">
+
                 <strong>Tomo</strong>
 
-                <p>{{ $antecedente->tomo_antecedente }}</p>
+                <p>{{ $antecedente->tomo_antecedente  ?? 'N/A' }}</p>
 
             </div>
 
@@ -18,7 +26,7 @@
 
                 <strong>Registro</strong>
 
-                <p>{{ $antecedente->registro_antecedente }}</p>
+                <p>{{ $antecedente->registro_antecedente  ?? 'N/A' }}</p>
 
             </div>
 
@@ -26,7 +34,7 @@
 
                 <strong>Número de propiedad</strong>
 
-                <p>{{ $antecedente->numero_propiedad_antecedente }}</p>
+                <p>{{ $antecedente->numero_propiedad_antecedente  ?? 'N/A' }}</p>
 
             </div>
 
@@ -45,8 +53,6 @@
                 <p>{{ $antecedente->seccion_antecedente }}</p>
 
             </div>
-
-            <div></div>
 
         @endforeach
 

@@ -9,6 +9,7 @@ use App\Models\FolioReal;
 use Illuminate\Support\Str;
 use App\Models\CodigoPostal;
 use App\Constantes\Constantes;
+use App\Models\Antecedente;
 
 class Consulta extends Component
 {
@@ -101,7 +102,7 @@ class Consulta extends Component
 
         if($this->folio_real || $this->tomo || $this->registro || $this->numero_propiedad || $this->distrito || $this->seccion || $this->codigo_postal || $this->municipio || $this->ciudad || $this->tipo_asentamiento || $this->nombre_asentamiento || $this->localidad_ubicacion || $this->tipo_vialidad || $this->nombre_vialidad || $this->numero_exterior){
 
-            $this->folios_reales = FolioReal::with('predio', 'antecedentes')
+            $this->folios_reales = FolioReal::with('predio')
                                 ->where('estado', 'activo')
                                 ->when($this->folio_real, fn($q, $folio_real) => $q->where('folio', $folio_real) )
                                 ->when($this->tomo, fn($q, $tomo) => $q->where('tomo_antecedente', $tomo) )
@@ -126,6 +127,40 @@ class Consulta extends Component
 
         }
 
+        if($this->folio_real || $this->tomo || $this->registro || $this->numero_propiedad){
+
+            $antecedentes = Antecedente::when($this->tomo, fn($q, $tomo) => $q->where('tomo_antecedente', $tomo))
+                                            ->when($this->registro, fn($q, $registro) => $q->where('registro_antecedente', $registro))
+                                            ->when($this->numero_propiedad, fn($q, $numero_propiedad) => $q->where('numero_propiedad_antecedente', $numero_propiedad))
+                                            ->when($this->folio_real, function($q){
+                                                $q->whereHas('folioRealAntecedente', function($q){
+                                                    $q->where('folio', $this->folio_real);
+                                                });
+                                            })
+                                            ->pluck('folio_real');
+
+            $folios = FolioReal::with('predio')
+                                    ->whereKey($antecedentes)
+                                    ->get();
+
+            if($this->folios_reales->count() == 0){
+
+                $this->folios_reales = $folios;
+
+            }else{
+
+                foreach ($folios as $folio) {
+
+                    if(!$this->folios_reales->where('id', $folio->id)->first())
+                        $this->folios_reales->push($folio);
+
+                }
+
+            }
+
+
+        }
+
         if($this->nombre_propietario || $this->ap_paterno || $this->ap_materno || $this->razon_social){
 
             $personas = Persona::when($this->nombre_propietario, fn($q, $nombre_propietario) => $q->where('nombre', 'like' , '%' . $nombre_propietario . '%'))
@@ -138,7 +173,7 @@ class Consulta extends Component
 
             if(count($predios)){
 
-                $folios = FolioReal::with('predio', 'antecedentes')
+                $folios = FolioReal::with('predio')
                                         ->whereHas('predio', function($q) use($predios){
                                             $q->whereKey($predios);
                                         })
@@ -212,6 +247,7 @@ class Consulta extends Component
             'gravamenes.movimientoRegistral',
             'gravamenes.deudores',
             'gravamenes.acreedores',
+            'antecedentes.folioRealAntecedente'
         );
 
     }

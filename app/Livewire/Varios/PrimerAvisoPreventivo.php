@@ -19,7 +19,15 @@ class PrimerAvisoPreventivo extends Component
 
     use VariosTrait;
 
+    protected function rules(){
+        return [
+            'vario.descripcion' => 'required',
+        ];
+    }
+
     public function inscribir(){
+
+        $this->validate();
 
         if(!Hash::check($this->contraseña, auth()->user()->password)){
 
@@ -62,6 +70,8 @@ class PrimerAvisoPreventivo extends Component
     }
 
     public function guardar(){
+
+        $this->validate();
 
         try {
 

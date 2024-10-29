@@ -86,7 +86,7 @@
 
                             <span class="lg:hidden absolute top-0 left-0 bg-blue-300 px-2 py-1 text-xs text-white font-bold uppercase rounded-br-xl">Tomo</span>
 
-                            {{ $folio->tomo_antecedente }}
+                            {{ $folio->tomo_antecedente ?? 'N/A' }}
 
                         </x-table.cell>
 
@@ -94,7 +94,7 @@
 
                             <span class="lg:hidden absolute top-0 left-0 bg-blue-300 px-2 py-1 text-xs text-white font-bold uppercase rounded-br-xl">Registro</span>
 
-                            {{ $folio->registro_antecedente }}
+                            {{ $folio->registro_antecedente ?? 'N/A' }}
 
                         </x-table.cell>
 
@@ -102,7 +102,7 @@
 
                             <span class="lg:hidden absolute top-0 left-0 bg-blue-300 px-2 py-1 text-xs text-white font-bold uppercase rounded-br-xl"># Propiedad</span>
 
-                            {{ $folio->numero_propiedad_antecedente }}
+                            {{ $folio->numero_propiedad_antecedente ?? 'N/A' }}
 
                         </x-table.cell>
 

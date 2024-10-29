@@ -602,6 +602,11 @@ class Elaboracion extends Component
 
             DB::transaction(function (){
 
+                $this->movimientoRegistral->folioReal->update([
+                    'estado' => 'elaborado',
+                    'asignado_por' => auth()->user()->name
+                ]);
+
                 $this->procesarMovimientos();
 
                 if($this->movimientoRegistral->inscripcionPropiedad){
@@ -615,11 +620,6 @@ class Elaboracion extends Component
                 }
 
                 $this->revisarAntecedentesFusionantes();
-
-                $this->movimientoRegistral->folioReal->update([
-                    'estado' => 'elaborado',
-                    'asignado_por' => auth()->user()->name
-                ]);
 
                 $this->dispatch('imprimir_documento', ['documento' => $this->movimientoRegistral->folio_real]);
 
@@ -1016,11 +1016,19 @@ class Elaboracion extends Component
     public function revisarInscripcionPropiedad(){
 
         if(
-            in_array($this->movimientoRegistral->inscripcionPropiedad->servicio, ['D114', 'D113', 'D116', 'D115', 'D731']) &&
+            in_array($this->movimientoRegistral->inscripcionPropiedad->servicio, ['D114', 'D113', 'D116', 'D115']) &&
             $this->movimientoRegistral->tomo == null &&
             $this->movimientoRegistral->registro == null &&
             $this->movimientoRegistral->numero_propiedad == null
         ){
+
+            $this->movimientoRegistral->update(['estado' => 'concluido']);
+
+            $this->movimientoRegistral->folioReal->update(['estado' => 'activo']);
+
+            (new SistemaTramitesService())->finaliarTramite($this->movimientoRegistral->año, $this->movimientoRegistral->tramite, $this->movimientoRegistral->usuario, 'concluido');
+
+        }elseif( $this->movimientoRegistral->inscripcionPropiedad->servicio == 'D731'){
 
             $this->movimientoRegistral->update(['estado' => 'concluido']);
 
