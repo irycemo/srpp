@@ -13,10 +13,12 @@ use Illuminate\Support\Facades\Hash;
 use App\Http\Services\AsignacionService;
 use App\Traits\Inscripciones\Varios\VariosTrait;
 use App\Http\Controllers\Varios\VariosController;
+use Livewire\WithFileUploads;
 
 class PrimerAvisoPreventivo extends Component
 {
 
+    use WithFileUploads;
     use VariosTrait;
 
     protected function rules(){
