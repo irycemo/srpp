@@ -242,7 +242,7 @@
 
                                     </td>
 
-                                    @if($folioReal->distrito != '02 Uruapan')
+                                    @if($datos_control->distrito != '02 Uruapan')
 
                                         <td style="padding-right: 40px; text-align:center; width: 50%; vertical-align: bottom; white-space: nowrap;">
 
@@ -291,7 +291,7 @@
                             <td style="padding-right: 40px;">
 
                                 <p style="margin: 0"><strong>NÚMERO DE CONTROL: </strong>{{ $datos_control->numero_control }}</p>
-                                <p style="margin: 0"><strong>Movimiento registral:</strong> {{ $datos_control->folioreal }}-{{ $datos_control->movimiento_folio }}</p>
+                                <p style="margin: 0"><strong>Movimiento registral:</strong> {{ $datos_control->folioReal }}-{{ $datos_control->movimiento_folio }}</p>
                                 <p style="margin: 0"><strong>DERECHOS: </strong>${{ number_format($datos_control->monto, 2) }}</p>
                                 <p style="margin: 0"><strong>Tipo de servicio: </strong>{{ $datos_control->tipo_servicio }}</p>
                                 <p style="margin: 0"><strong>Servicio: </strong>{{ $datos_control->servicio }}</p>
