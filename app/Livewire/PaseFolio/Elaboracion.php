@@ -1126,4 +1126,5 @@ class Elaboracion extends Component
 
         return view('livewire.pase-folio.elaboracion')->extends('layouts.admin');
     }
+
 }

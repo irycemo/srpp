@@ -43,6 +43,8 @@ trait InscripcionesIndex{
 
             if($this->actual->folioReal->avisoPreventivo()){
 
+                $this->dispatch('mostrarMensaje', ['warning', "El folio real tiene un aviso preventivo vigente."]);
+
                 return true;
 
             }elseif($this->actual->folio > $primerMovimiento->folio){
@@ -106,7 +108,10 @@ trait InscripcionesIndex{
 
         }
 
+
         if($this->modelo_editar->folioReal->avisoPreventivo()){
+
+
 
             $aviso = $this->modelo_editar->folioReal->avisoPreventivo();
 

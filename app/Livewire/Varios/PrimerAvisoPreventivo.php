@@ -141,6 +141,7 @@ class PrimerAvisoPreventivo extends Component
 
             return User::with('ultimoMovimientoRegistralAsignado')
                             ->where('status', 'activo')
+                            ->where('ubicacion', 'Regional 4')
                             ->whereHas('roles', function($q){
                                 $q->where('name', 'Supervisor uruapan');
                             })
@@ -150,6 +151,7 @@ class PrimerAvisoPreventivo extends Component
 
             return User::with('ultimoMovimientoRegistralAsignado')
                             ->where('status', 'activo')
+                            ->where('ubicacion', '!=', 'Regional 4')
                             ->whereHas('roles', function($q){
                                 $q->where('name', 'Supervisor certificaciones');
                             })

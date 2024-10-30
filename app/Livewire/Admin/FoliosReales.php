@@ -65,10 +65,6 @@ class FoliosReales extends Component
 
                 $movimiento->update(['estado' => 'correccion']);
 
-            }elseif($movimiento->estado = 'captura'){
-
-                $movimiento->update(['estado' => 'nuevo']);
-
             }
 
             $folioReal->audits()->latest()->first()->update(['tags' => 'Envió folio a captura']);
