@@ -139,12 +139,21 @@ class Varios extends Component
 
         }
 
-        $this->actos = Constantes::ACTOS_INSCRIPCION_VARIOS;
+        if($this->vario->acto_contenido == 'SEGUNDO AVISO PREVENTIVO'){
 
-        unset($this->actos['PRIMER AVISO PREVENTIVO']);
-        unset($this->actos['ACLARACIÓN ADMINISTRATIVA']);
-        unset($this->actos['PERSONAS MORALES']);
-        unset($this->actos['PERSONAS MORALES']);
+            $this->actos = ['SEGUNDO AVISO PREVENTIVO'];
+
+        }else{
+
+            $this->actos = Constantes::ACTOS_INSCRIPCION_VARIOS;
+
+            unset($this->actos[0]);
+            unset($this->actos[1]);
+            unset($this->actos[9]);
+            unset($this->actos[10]);
+            unset($this->actos[11]);
+
+        }
 
     }
 

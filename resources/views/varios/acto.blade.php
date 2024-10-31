@@ -186,6 +186,18 @@
                     <p><strong>{{ $vario->acto_contenido }}</strong></p>
                 </div>
 
+                <p class="separador">Descripción del acto</p>
+
+                <p class="parrafo">
+                    {{ $vario->descripcion }}
+                </p>
+
+                <p class="separador">Documento de entrada</p>
+
+                <p class="parrafo">
+                    <strong>Tipo de documento: </strong> {{ $vario->tipo_documento }}; @if(isset($vario->numero_documento))<strong>Número de documento: </strong> {{ $vario->numero_documento }};@endif <strong>Cargo de la autoridad: </strong> {{ $vario->autoridad_cargo }}; <strong>Nombre de la autoridad: </strong> {{ $vario->autoridad_nombre }}; <strong>Número de la autoridad: </strong> {{ $vario->autoridad_numero }}; <strong>Fecha de emisión: </strong> {{ $vario->fecha_emision }}; @if(isset($vario->fecha_inscripcion))<strong>Fecha de inscripción: </strong> {{$vario->fecha_inscripcion }};@endif @if(isset($vario->procedencia))<strong>Dependencia: </strong>{{ $vario->procedencia }} @endif
+                </p>
+
                 @if($vario->acto_contenido == 'PERSONAS MORALES')
 
                     <p class="parrafo">
@@ -271,10 +283,6 @@
                     @include('comun.caratulas.descripcion_inmueble')
 
                     @include('comun.caratulas.propietarios')
-
-                    <p class="parrafo">
-                        <strong>descripción del acto:</strong> {{ $vario->descripcion }}
-                    </p>
 
                 @endif
 

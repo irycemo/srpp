@@ -950,7 +950,7 @@
 
         <div>
 
-            @if(in_array($inscripcion->servicio, ['D114', 'D113', 'D116', 'D115']))
+            @if(in_array($inscripcion->servicio, ['D114', 'D113', 'D116', 'D115']) && $inscripcion->estado != 'correccion')
 
                 <x-input-group for="nuevoFolio" label="Esta inscripción genera nuevo folio real" :error="$errors->first('nuevoFolio')" class="flex gap-3 items-center">
 

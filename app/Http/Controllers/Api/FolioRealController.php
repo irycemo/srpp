@@ -125,5 +125,4 @@ class FolioRealController extends Controller
 
     }
 
-
 }

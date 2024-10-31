@@ -175,8 +175,16 @@
                     <p><strong>{{ $cancelacion->acto_contenido }}</strong></p>
                 </div>
 
+                <p class="separador">Descripción del acto</p>
+
                 <p class="parrafo">
-                    <strong>Descripción del acto:</strong> {{ $cancelacion->observaciones }}
+                    {{ $cancelacion->observaciones }}
+                </p>
+
+                <p class="separador">Documento de entrada</p>
+
+                <p class="parrafo">
+                    <strong>Tipo de documento: </strong> {{ $cancelacion->tipo_documento }}; @if(isset($cancelacion->numero_documento))<strong>Número de documento: </strong> {{ $cancelacion->numero_documento }};@endif <strong>Cargo de la autoridad: </strong> {{ $cancelacion->autoridad_cargo }}; <strong>Nombre de la autoridad: </strong> {{ $cancelacion->autoridad_nombre }}; <strong>Número de la autoridad: </strong> {{ $cancelacion->autoridad_numero }}; <strong>Fecha de emisión: </strong> {{ $cancelacion->fecha_emision }}; @if(isset($cancelacion->fecha_inscripcion))<strong>Fecha de inscripción: </strong> {{$cancelacion->fecha_inscripcion }};@endif @if(isset($cancelacion->procedencia))<strong>Dependencia: </strong>{{ $cancelacion->procedencia }} @endif
                 </p>
 
                 @include('comun.caratulas.ubicacion_inmueble')
@@ -205,7 +213,7 @@
                 </p>
 
                 <p class="parrafo">
-                    {{ $cancelacion->gravamen->observaciones }}
+                    <strong>Descripción del gravamen: </strong>{{ $cancelacion->gravamen->observaciones }}
                 </p>
 
             </div>

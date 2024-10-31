@@ -175,139 +175,99 @@
                     <p><strong>{{ $gravamen->acto_contenido }}</strong></p>
                 </div>
 
-                @if($gravamen->acto_contenido == 'DIVISIÓN DE HIPOTECA')
+                <p class="separador">Descripción del acto</p>
 
-                    <p class="separador">datos del gravamen</p>
+                <p class="parrafo">
+                    {{ $gravamen->observaciones }}
+                </p>
 
-                    <p class="parrafo">
-                        <strong>Fecha de inscripción:</strong>{{ $gravamen->fecha_inscripcion }}. <strong>Valor del gravamen:</strong>${{ number_format($gravamen->valor_gravamen, 2) }} {{ $gravamen->divisa }}.
-                    </p>
+                <p class="separador">Documento de entrada</p>
 
-                    <p class="parrafo">
-                        {{ $gravamen->tipo }}
-                    </p>
+                <p class="parrafo">
+                    <strong>Tipo de documento: </strong> {{ $gravamen->tipo_documento }}; @if(isset($gravamen->numero_documento))<strong>Número de documento: </strong> {{ $gravamen->numero_documento }};@endif <strong>Cargo de la autoridad: </strong> {{ $gravamen->autoridad_cargo }}; <strong>Nombre de la autoridad: </strong> {{ $gravamen->autoridad_nombre }}; <strong>Número de la autoridad: </strong> {{ $gravamen->autoridad_numero }}; <strong>Fecha de emisión: </strong> {{ $gravamen->fecha_emision }}; @if(isset($gravamen->fecha_inscripcion))<strong>Fecha de inscripción: </strong> {{$gravamen->fecha_inscripcion }};@endif @if(isset($gravamen->procedencia))<strong>Dependencia: </strong>{{ $gravamen->procedencia }} @endif
+                </p>
 
-                    <p class="parrafo">
-                        {{ $gravamen->observaciones }}
-                    </p>
+                @include('comun.caratulas.ubicacion_inmueble')
 
-                    <p class="separador">datos de las propiedades gravadas</p>
+                @if(count($predio->colindancias))
 
-                    @foreach ($gravamen->gravamenesHipoteca as $movimiento)
-
-                        <p class="parrafo">
-
-                            <p class="parrafo">
-                                <strong>Folio real:</strong> {{ $datos_control->folioReal }}-{{ $movimiento->movimiento_folio }}.
-                            </p>
-
-                            <p class="separador">datos del gravamen</p>
-
-                            <p class="parrafo">
-                                <strong>Fecha de inscripción:</strong>{{ ($movimiento->fecha_inscripcion) }}. <strong>Valor del gravamen:</strong>${{ number_format($movimiento->valor_gravamen, 2) }} {{ $movimiento->divisa }}.
-                            </p>
-
-                            <p class="parrafo">
-                                {{ $movimiento->tipo }}
-                            </p>
-
-                            <p class="parrafo">
-                                {{ $movimiento->observaciones }}
-                            </p>
-
-                        </p>
-
-                    @endforeach
-
-                @else
-
-                    @include('comun.caratulas.ubicacion_inmueble')
-
-                    @if(count($predio->colindancias))
-
-                        @include('comun.caratulas.colindancias')
-
-                    @endif
-
-                    @include('comun.caratulas.descripcion_inmueble')
-
-                    @include('comun.caratulas.propietarios')
-
-                    <p class="separador">datos del gravamen</p>
-
-                    <p class="parrafo">
-                        <strong>Fecha de inscripción:</strong> {{ $gravamen->fecha_inscripcion }}. <strong>Valor del gravamen:</strong> ${{ number_format($gravamen->valor_gravamen, 2) }} {{ $gravamen->divisa }}.
-                    </p>
-
-                    <p class="parrafo">
-                        <strong>Tipo de gravamen:</strong> {{ $gravamen->tipo }}
-                    </p>
-
-                    <p class="parrafo">
-                        <strong>Descripción del gravamen:</strong> {{ $gravamen->observaciones }}
-                    </p>
-
-                    <p class="separador">deudores</p>
-
-                    <table>
-
-                        <thead>
-
-                            <tr>
-                                <th >Tipo de deudor</th>
-                                <th >Nombre / Razón social</th>
-                            </tr>
-
-                        </thead>
-
-                        <tbody>
-
-                            @foreach ($gravamen->deudores as $deudor)
-
-                            <tr>
-                                <td style="padding-right: 40px;">
-                                    {{ $deudor->tipo_deudor }}
-                                </td>
-                                <td style="padding-right: 40px;">
-                                    {{ $deudor->nombre }} {{ $deudor->ap_paterno }} {{ $deudor->ap_materno }} {{ $deudor->razon_social }}
-                                </td>
-                            </tr>
-
-                            @endforeach
-
-                        </tbody>
-
-                    </table>
-
-                    <p class="separador">acreedores</p>
-
-                    <table>
-
-                        <thead>
-
-                            <tr>
-                                <th >Nombre / Razón social</th>
-                            </tr>
-
-                        </thead>
-
-                        <tbody>
-
-                            @foreach ($gravamen->acreedores as $acreedor)
-
-                                <tr>
-                                    <td style="padding-right: 40px;">
-                                        {{ $acreedor->nombre }} {{ $acreedor->ap_paterno }} {{ $acreedor->ap_materno }} {{ $acreedor->razon_social }}
-                                    </td>
-                                </tr>
-
-                            @endforeach
-
-                        </tbody>
-
-                    </table>
+                    @include('comun.caratulas.colindancias')
 
                 @endif
+
+                @include('comun.caratulas.descripcion_inmueble')
+
+                @include('comun.caratulas.propietarios')
+
+                <p class="separador">datos del gravamen</p>
+
+                <p class="parrafo">
+                    <strong>Fecha de inscripción:</strong> {{ $gravamen->fecha_inscripcion }}. <strong>Valor del gravamen:</strong> ${{ number_format($gravamen->valor_gravamen, 2) }} {{ $gravamen->divisa }}.
+                </p>
+
+                <p class="parrafo">
+                    <strong>Tipo de gravamen:</strong> {{ $gravamen->tipo }}
+                </p>
+
+                <p class="separador">deudores</p>
+
+                <table>
+
+                    <thead>
+
+                        <tr>
+                            <th >Tipo de deudor</th>
+                            <th >Nombre / Razón social</th>
+                        </tr>
+
+                    </thead>
+
+                    <tbody>
+
+                        @foreach ($gravamen->deudores as $deudor)
+
+                        <tr>
+                            <td style="padding-right: 40px;">
+                                {{ $deudor->tipo_deudor }}
+                            </td>
+                            <td style="padding-right: 40px;">
+                                {{ $deudor->nombre }} {{ $deudor->ap_paterno }} {{ $deudor->ap_materno }} {{ $deudor->razon_social }}
+                            </td>
+                        </tr>
+
+                        @endforeach
+
+                    </tbody>
+
+                </table>
+
+                <p class="separador">acreedores</p>
+
+                <table>
+
+                    <thead>
+
+                        <tr>
+                            <th >Nombre / Razón social</th>
+                        </tr>
+
+                    </thead>
+
+                    <tbody>
+
+                        @foreach ($gravamen->acreedores as $acreedor)
+
+                            <tr>
+                                <td style="padding-right: 40px;">
+                                    {{ $acreedor->nombre }} {{ $acreedor->ap_paterno }} {{ $acreedor->ap_materno }} {{ $acreedor->razon_social }}
+                                </td>
+                            </tr>
+
+                        @endforeach
+
+                    </tbody>
+
+                </table>
 
             </div>
 

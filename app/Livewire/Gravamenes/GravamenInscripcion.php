@@ -90,7 +90,7 @@ class GravamenInscripcion extends Component
             'gravamen.valor_gravamen' => 'required|numeric',
             'gravamen.divisa' => ['required', Rule::in($this->divisas)],
             'gravamen.estado' => 'required',
-            'gravamen.observaciones' => utf8_encode('regex:/^[áéíóúÁÉÍÓÚñÑa-zA-Z-0-9$#.() ]*$/'),
+            'gravamen.observaciones' => 'required',
          ];
     }
 

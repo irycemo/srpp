@@ -175,8 +175,15 @@
                     <p><strong>{{ $sentencia->acto_contenido }}</strong></p>
                 </div>
 
+                <p class="separador">Descripción del acto</p>
                 <p class="parrafo">
-                    <strong>Descripción del acto:</strong> {{ $sentencia->descripcion }}
+                    {{ $sentencia->descripcion }}
+                </p>
+
+                <p class="separador">Documento de entrada</p>
+
+                <p class="parrafo">
+                    <strong>Tipo de documento: </strong> {{ $sentencia->tipo_documento }}; @if(isset($sentencia->numero_documento))<strong>Número de documento: </strong> {{ $sentencia->numero_documento }};@endif <strong>Cargo de la autoridad: </strong> {{ $sentencia->autoridad_cargo }}; <strong>Nombre de la autoridad: </strong> {{ $sentencia->autoridad_nombre }}; <strong>Número de la autoridad: </strong> {{ $sentencia->autoridad_numero }}; <strong>Fecha de emisión: </strong> {{ $sentencia->fecha_emision }}; @if(isset($sentencia->fecha_inscripcion))<strong>Fecha de inscripción: </strong> {{$sentencia->fecha_inscripcion }};@endif @if(isset($sentencia->procedencia))<strong>Dependencia: </strong>{{ $sentencia->procedencia }} @endif
                 </p>
 
                 @include('comun.caratulas.ubicacion_inmueble')
