@@ -544,6 +544,8 @@ trait FirmaElectronicaTrait{
 
         }
 
+        $vario->load('movimientoRegistral');
+
         $object = (object)[];
 
         $object->id = $vario->id;

@@ -118,6 +118,18 @@ class FolioReal extends Model implements Auditable
                 : null;
     }
 
+    public function avisosPreventivos(){
+
+        return $this->movimientosRegistrales()
+                        ->withWhereHas('vario', function($q){
+                            $q->whereIn('servicio', ['DL09', 'D110'])
+                                ->where('estado', 'activo');
+                        })
+                        ->whereIn('estado', ['concluido', 'elaborado'])
+                        ->get();
+
+    }
+
     public function avisoPreventivo(){
 
         $movimiento = $this->movimientosRegistrales()
