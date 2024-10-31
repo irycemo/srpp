@@ -24,6 +24,7 @@ class PrimerAvisoPreventivo extends Component
     protected function rules(){
         return [
             'vario.descripcion' => 'required',
+            'vario.acto_contenido' => 'required',
         ];
     }
 

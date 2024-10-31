@@ -81,7 +81,7 @@ class CertificadoGravamenController extends Controller
 
         if($movimientoRegistral->FolioReal->avisoPreventivo()){
 
-            $aviso = $this->aviso($movimientoRegistral->FolioReal->avisoPreventivo());
+            $aviso = $this->vario($movimientoRegistral->FolioReal->avisoPreventivo());
 
         }else{
 

@@ -125,7 +125,7 @@ class FolioReal extends Model implements Auditable
                                             $q->whereIn('servicio', ['DL09', 'D110'])
                                                 ->where('estado', 'activo');
                                         })
-                                        ->where('estado', 'concluido')
+                                        ->whereIn('estado', ['concluido', 'elaborado'])
                                         ->orderBy('fecha_inscripcion', 'desc')
                                         ->first();
 

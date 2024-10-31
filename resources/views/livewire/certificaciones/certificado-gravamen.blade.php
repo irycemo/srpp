@@ -340,7 +340,7 @@
 
                     <div class="p-4 bg-gray-100 mb-2 rounded-lg">
 
-                        <strong>No se encontrarón gravmenes activos</strong>
+                        <strong>No se encontraron gravmenes activos</strong>
 
                     </div>
 

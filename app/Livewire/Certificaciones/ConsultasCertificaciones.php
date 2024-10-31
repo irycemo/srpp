@@ -164,11 +164,17 @@ class ConsultasCertificaciones extends Component
 
             if($movimientoRegistral->certificacion->folio_carpeta_copias){
 
-                $movimientoRegistral->update(['estado' => 'elaborado']);
+                $movimientoRegistral->update([
+                    'estado' => 'elaborado',
+                    'fecha_entrega' => $this->calcularFechaEntrega($movimientoRegistral->tipo_servicio)
+                ]);
 
             }else{
 
-                $movimientoRegistral->update(['estado' => 'nuevo']);
+                $movimientoRegistral->update([
+                    'estado' => 'nuevo',
+                    'fecha_entrega' => $this->calcularFechaEntrega($movimientoRegistral->tipo_servicio)
+                ]);
 
             }
 
@@ -179,6 +185,47 @@ class ConsultasCertificaciones extends Component
         } catch (\Throwable $th) {
             Log::error("Error al reactivar trámite por el usuario: (id: " . auth()->user()->id . ") " . auth()->user()->name . ". " . $th);
             $this->dispatch('mostrarMensaje', ['error', "Ha ocurrido un error."]);
+        }
+
+    }
+
+    public function calcularFechaEntrega($tipo_servicio):string
+    {
+
+        if($tipo_servicio == 'ordinario'){
+
+            $actual = now();
+
+            for ($i=0; $i < 5; $i++) {
+
+                $actual->addDays(1);
+
+                while($actual->isWeekend()){
+
+                    $actual->addDay();
+
+                }
+
+            }
+
+            return $actual->toDateString();
+
+        }elseif($tipo_servicio == 'urgente'){
+
+            $actual = now()->addDays(1);
+
+            while($actual->isWeekend()){
+
+                $actual->addDay();
+
+            }
+
+            return $actual->toDateString();
+
+        }else{
+
+            return now()->toDateString();
+
         }
 
     }
