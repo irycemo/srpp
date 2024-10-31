@@ -43,6 +43,14 @@ trait InscripcionesIndex{
 
             if($this->actual->folioReal->avisoPreventivo()){
 
+                if($this->actual->vario?->acto_contenido == 'SEGUNDO AVISO PREVENTIVO'){
+
+                    $this->ruta($this->modelo_editar);
+
+                    return false;
+
+                }
+
                 $this->dispatch('mostrarMensaje', ['warning', "El folio real tiene un aviso preventivo vigente."]);
 
                 return true;
@@ -111,8 +119,6 @@ trait InscripcionesIndex{
 
         if($this->modelo_editar->folioReal->avisoPreventivo()){
 
-
-
             $aviso = $this->modelo_editar->folioReal->avisoPreventivo();
 
             if($this->modelo_editar->inscripcionPropiedad &&
@@ -124,6 +130,14 @@ trait InscripcionesIndex{
                 $aviso->movimientoRegistral->fecha_emision == $this->modelo_editar->fecha_emision &&
                 $aviso->movimientoRegistral->procedencia == $this->modelo_editar->procedencia
             ){
+
+                $this->ruta($this->modelo_editar);
+
+                return;
+
+            }elseif($this->modelo_editar->vario?->acto_contenido == 'SEGUNDO AVISO PREVENTIVO'){
+
+
 
                 $this->ruta($this->modelo_editar);
 

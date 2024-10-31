@@ -12,7 +12,17 @@ class VariosService{
 
         try {
 
+            if($request['servicio_nombre'] == 'Segundo aviso preventivo'){
+
+                $acto = 'SEGUNDO AVISO PREVENTIVO';
+
+            }else{
+
+                $acto = null;
+            }
+
             Vario::create([
+                'acto_contenido' => $acto,
                 'servicio' => $request['servicio'],
                 'movimiento_registral_id' => $request['movimiento_registral'],
             ]);

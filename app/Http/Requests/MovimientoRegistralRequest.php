@@ -68,6 +68,7 @@ class MovimientoRegistralRequest extends FormRequest
             /* Categoria - MR */
             'categoria_servicio' => 'required',
             'servicio' => 'required',
+            'servicio_nombre' => 'nullable',
 
             /* Documento entrada */
             'tipo_documento' => 'nullable',
