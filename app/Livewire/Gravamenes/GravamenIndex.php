@@ -50,6 +50,15 @@ class GravamenIndex extends Component
                                                     ->when(auth()->user()->ubicacion != 'Regional 4', function($q){
                                                         $q->where('distrito', '!=', 2);
                                                     })
+                                                    ->where(function($q){
+                                                        $q->where('solicitante', 'LIKE', '%' . $this->search . '%')
+                                                            ->orWhere('tomo', 'LIKE', '%' . $this->search . '%')
+                                                            ->orWhere('registro', 'LIKE', '%' . $this->search . '%')
+                                                            ->orWhere('distrito', 'LIKE', '%' . $this->search . '%')
+                                                            ->orWhere('seccion', 'LIKE', '%' . $this->search . '%')
+                                                            ->orWhere('estado', 'LIKE', '%' . $this->search . '%')
+                                                            ->orWhere('tramite', 'LIKE', '%' . $this->search . '%');
+                                                    })
                                                     ->whereIn('estado', ['nuevo', 'captura', 'elaborado'])
                                                     ->where('usuario_asignado', auth()->id())
                                                     ->whereHas('gravamen', function($q){
@@ -70,6 +79,18 @@ class GravamenIndex extends Component
                                                     ->when(auth()->user()->ubicacion != 'Regional 4', function($q){
                                                         $q->where('distrito', '!=', 2);
                                                     })
+                                                    ->where(function($q){
+                                                        $q->whereHas('asignadoA', function($q){
+                                                                $q->where('name', 'LIKE', '%' . $this->search . '%');
+                                                            })
+                                                            ->orWhere('solicitante', 'LIKE', '%' . $this->search . '%')
+                                                            ->orWhere('tomo', 'LIKE', '%' . $this->search . '%')
+                                                            ->orWhere('registro', 'LIKE', '%' . $this->search . '%')
+                                                            ->orWhere('distrito', 'LIKE', '%' . $this->search . '%')
+                                                            ->orWhere('seccion', 'LIKE', '%' . $this->search . '%')
+                                                            ->orWhere('estado', 'LIKE', '%' . $this->search . '%')
+                                                            ->orWhere('tramite', 'LIKE', '%' . $this->search . '%');
+                                                    })
                                                     ->whereIn('estado', ['nuevo', 'captura', 'elaborado', 'finalizado'])
                                                     ->whereHas('gravamen', function($q){
                                                         $q->whereIn('servicio', ['DL07', 'DM68', 'D155', 'D150']);
@@ -87,11 +108,15 @@ class GravamenIndex extends Component
                                                         $q->whereHas('asignadoA', function($q){
                                                                 $q->where('name', 'LIKE', '%' . $this->search . '%');
                                                             })
+                                                            ->orWhereHas('folioReal', function($q){
+                                                                $q->where('folio', $this->search);
+                                                            })
                                                             ->orWhere('solicitante', 'LIKE', '%' . $this->search . '%')
                                                             ->orWhere('tomo', 'LIKE', '%' . $this->search . '%')
                                                             ->orWhere('registro', 'LIKE', '%' . $this->search . '%')
                                                             ->orWhere('distrito', 'LIKE', '%' . $this->search . '%')
                                                             ->orWhere('seccion', 'LIKE', '%' . $this->search . '%')
+                                                            ->orWhere('estado', 'LIKE', '%' . $this->search . '%')
                                                             ->orWhere('tramite', 'LIKE', '%' . $this->search . '%');
                                                     })
                                                     ->when(auth()->user()->ubicacion == 'Regional 4', function($q){
@@ -116,11 +141,15 @@ class GravamenIndex extends Component
                                                         $q->whereHas('asignadoA', function($q){
                                                                 $q->where('name', 'LIKE', '%' . $this->search . '%');
                                                             })
+                                                            ->orWhereHas('folioReal', function($q){
+                                                                $q->where('folio', $this->search);
+                                                            })
                                                             ->orWhere('solicitante', 'LIKE', '%' . $this->search . '%')
                                                             ->orWhere('tomo', 'LIKE', '%' . $this->search . '%')
                                                             ->orWhere('registro', 'LIKE', '%' . $this->search . '%')
                                                             ->orWhere('distrito', 'LIKE', '%' . $this->search . '%')
                                                             ->orWhere('seccion', 'LIKE', '%' . $this->search . '%')
+                                                            ->orWhere('estado', 'LIKE', '%' . $this->search . '%')
                                                             ->orWhere('tramite', 'LIKE', '%' . $this->search . '%');
                                                     })
                                                     ->whereHas('gravamen', function($q){

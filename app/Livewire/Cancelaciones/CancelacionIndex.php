@@ -45,6 +45,7 @@ class CancelacionIndex extends Component
                                                             ->orWhere('registro', 'LIKE', '%' . $this->search . '%')
                                                             ->orWhere('distrito', 'LIKE', '%' . $this->search . '%')
                                                             ->orWhere('seccion', 'LIKE', '%' . $this->search . '%')
+                                                            ->orWhere('estado', 'LIKE', '%' . $this->search . '%')
                                                             ->orWhere('tramite', 'LIKE', '%' . $this->search . '%');
                                                     })
                                                     ->when(auth()->user()->ubicacion == 'Regional 4', function($q){
@@ -75,6 +76,7 @@ class CancelacionIndex extends Component
                                                             ->orWhere('registro', 'LIKE', '%' . $this->search . '%')
                                                             ->orWhere('distrito', 'LIKE', '%' . $this->search . '%')
                                                             ->orWhere('seccion', 'LIKE', '%' . $this->search . '%')
+                                                            ->orWhere('estado', 'LIKE', '%' . $this->search . '%')
                                                             ->orWhere('tramite', 'LIKE', '%' . $this->search . '%');
                                                     })
                                                     ->when(auth()->user()->ubicacion == 'Regional 4', function($q){
@@ -100,11 +102,15 @@ class CancelacionIndex extends Component
                                                         $q->whereHas('asignadoA', function($q){
                                                                 $q->where('name', 'LIKE', '%' . $this->search . '%');
                                                             })
+                                                            ->orWhereHas('folioReal', function($q){
+                                                                $q->where('folio', $this->search);
+                                                            })
                                                             ->orWhere('solicitante', 'LIKE', '%' . $this->search . '%')
                                                             ->orWhere('tomo', 'LIKE', '%' . $this->search . '%')
                                                             ->orWhere('registro', 'LIKE', '%' . $this->search . '%')
                                                             ->orWhere('distrito', 'LIKE', '%' . $this->search . '%')
                                                             ->orWhere('seccion', 'LIKE', '%' . $this->search . '%')
+                                                            ->orWhere('estado', 'LIKE', '%' . $this->search . '%')
                                                             ->orWhere('tramite', 'LIKE', '%' . $this->search . '%');
                                                     })
                                                     ->when(auth()->user()->ubicacion == 'Regional 4', function($q){
@@ -129,11 +135,15 @@ class CancelacionIndex extends Component
                                                         $q->whereHas('asignadoA', function($q){
                                                                 $q->where('name', 'LIKE', '%' . $this->search . '%');
                                                             })
+                                                            ->orWhereHas('folioReal', function($q){
+                                                                $q->where('folio', $this->search);
+                                                            })
                                                             ->orWhere('solicitante', 'LIKE', '%' . $this->search . '%')
                                                             ->orWhere('tomo', 'LIKE', '%' . $this->search . '%')
                                                             ->orWhere('registro', 'LIKE', '%' . $this->search . '%')
                                                             ->orWhere('distrito', 'LIKE', '%' . $this->search . '%')
                                                             ->orWhere('seccion', 'LIKE', '%' . $this->search . '%')
+                                                            ->orWhere('estado', 'LIKE', '%' . $this->search . '%')
                                                             ->orWhere('tramite', 'LIKE', '%' . $this->search . '%');
                                                     })
                                                     ->whereHas('cancelacion', function($q){

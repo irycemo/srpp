@@ -153,7 +153,8 @@ trait InscripcionesIndex{
 
         }
 
-        $movimientoAsignados = MovimientoRegistral::whereIn('estado', ['nuevo', 'captura', 'correccion'])
+        $movimientoAsignados = MovimientoRegistral::with('vario')
+                                                        ->whereIn('estado', ['nuevo', 'captura', 'correccion'])
                                                         ->where('usuario_Asignado', auth()->id())
                                                         ->withWhereHas('folioReal', function($q){
                                                             $q->where('estado', 'activo');

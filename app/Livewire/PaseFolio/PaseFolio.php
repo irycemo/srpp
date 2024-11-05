@@ -283,6 +283,9 @@ class PaseFolio extends Component
                                                             ->orWhere('registro', 'LIKE', '%' . $this->search . '%')
                                                             ->orWhereHas('asignadoA', function($q){
                                                                 $q->where('name', 'LIKE', '%' . $this->search . '%');
+                                                            })
+                                                            ->orWhereHas('supervisor', function($q){
+                                                                $q->where('name', 'LIKE', '%' . $this->search . '%');
                                                             });
                                                     })
                                                     ->orderBy($this->sort, $this->direction)
@@ -302,7 +305,10 @@ class PaseFolio extends Component
                                                         $q->where('tramite', 'LIKE', '%' . $this->search . '%')
                                                             ->orWhere('usuario', 'LIKE', '%' . $this->search . '%')
                                                             ->orWhere('tomo', 'LIKE', '%' . $this->search . '%')
-                                                            ->orWhere('registro', 'LIKE', '%' . $this->search . '%');
+                                                            ->orWhere('registro', 'LIKE', '%' . $this->search . '%')
+                                                            ->orWhereHas('asignadoA', function($q){
+                                                                $q->where('name', 'LIKE', '%' . $this->search . '%');
+                                                            });
                                                     })
                                                     ->when(auth()->user()->ubicacion == 'Regional 4', function($q){
                                                         $q->where('distrito', 2);
@@ -328,7 +334,10 @@ class PaseFolio extends Component
                                                         $q->where('tramite', 'LIKE', '%' . $this->search . '%')
                                                             ->orWhere('usuario', 'LIKE', '%' . $this->search . '%')
                                                             ->orWhere('tomo', 'LIKE', '%' . $this->search . '%')
-                                                            ->orWhere('registro', 'LIKE', '%' . $this->search . '%');
+                                                            ->orWhere('registro', 'LIKE', '%' . $this->search . '%')
+                                                            ->orWhereHas('asignadoA', function($q){
+                                                                $q->where('name', 'LIKE', '%' . $this->search . '%');
+                                                            });
                                                     })
                                                     ->when(auth()->user()->ubicacion == 'Regional 4', function($q){
                                                         $q->where('distrito', 2);
@@ -353,7 +362,10 @@ class PaseFolio extends Component
                                                         $q->where('tramite', 'LIKE', '%' . $this->search . '%')
                                                             ->orWhere('usuario', 'LIKE', '%' . $this->search . '%')
                                                             ->orWhere('tomo', 'LIKE', '%' . $this->search . '%')
-                                                            ->orWhere('registro', 'LIKE', '%' . $this->search . '%');
+                                                            ->orWhere('registro', 'LIKE', '%' . $this->search . '%')
+                                                            ->orWhereHas('asignadoA', function($q){
+                                                                $q->where('name', 'LIKE', '%' . $this->search . '%');
+                                                            });
                                                     })
                                                     ->when(auth()->user()->ubicacion == 'Regional 4', function($q){
                                                         $q->where('distrito', 2);

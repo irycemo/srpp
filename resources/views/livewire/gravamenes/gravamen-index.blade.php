@@ -1,8 +1,32 @@
 <div>
 
-    <x-header>Gravamenes</x-header>
+    <div class="mb-6">
+
+        <x-header>Gravamenes</x-header>
+
+        <div class="flex justify-between">
+
+            <div>
+
+                <input type="text" wire:model.live.debounce.500ms="search" placeholder="Buscar" class="bg-white rounded-full text-sm">
+
+                <select class="bg-white rounded-full text-sm" wire:model.live="pagination">
+
+                    <option value="10">10</option>
+                    <option value="25">25</option>
+                    <option value="50">50</option>
+                    <option value="100">100</option>
+
+                </select>
+
+            </div>
+
+        </div>
+
+    </div>
 
     <div class="overflow-x-auto rounded-lg shadow-xl border-t-2 border-t-gray-500">
+
 
         <x-table>
 

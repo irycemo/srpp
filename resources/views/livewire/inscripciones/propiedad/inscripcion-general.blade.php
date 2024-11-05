@@ -486,6 +486,12 @@
 
             <span class="flex items-center justify-center text-lg text-gray-700 md:col-span-5 col-span-1 sm:col-span-2">Datos Complementarios</span>
 
+            <x-input-group for="inscripcion.zona_ubicacion" label="Zona" :error="$errors->first('inscripcion.zona_ubicacion')" class="w-full">
+
+                <x-input-text id="inscripcion.zona_ubicacion" wire:model="inscripcion.zona_ubicacion" />
+
+            </x-input-group>
+
             <x-input-group for="inscripcion.lote" label="Lote" :error="$errors->first('inscripcion.lote')" class="w-full">
 
                 <x-input-text id="inscripcion.lote" wire:model="inscripcion.lote" />

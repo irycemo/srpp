@@ -79,6 +79,7 @@ class InscripcionGeneral extends Component
             'inscripcion.parcela' => 'nullable',
             'inscripcion.solar' => 'nullable',
             'inscripcion.poblado' => 'nullable',
+            'inscripcion.zona_ubicacion' => 'nullable',
             'inscripcion.numero_exterior_2' => 'nullable',
             'inscripcion.numero_adicional' => 'nullable',
             'inscripcion.numero_adicional_2' => 'nullable',
@@ -605,6 +606,7 @@ class InscripcionGeneral extends Component
                 $this->predio->parcela = $this->inscripcion->parcela;
                 $this->predio->solar = $this->inscripcion->solar;
                 $this->predio->poblado = $this->inscripcion->poblado;
+                $this->predio->zona_ubicacion = $this->inscripcion->zona_ubicacion;
                 $this->predio->numero_exterior_2 = $this->inscripcion->numero_exterior_2;
                 $this->predio->numero_adicional = $this->inscripcion->numero_adicional;
                 $this->predio->numero_adicional_2 = $this->inscripcion->numero_adicional_2;
