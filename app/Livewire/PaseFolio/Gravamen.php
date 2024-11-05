@@ -145,7 +145,9 @@ class Gravamen extends Component
 
     public function reordenar($folio){
 
-        $movimientos = MovimientoRegistral::where('folio', '>', $folio)->get();
+        $movimientos = MovimientoRegistral::where('folio_real', $this->movimientoRegistral->folio_real)
+                                            ->where('folio', '>', $folio)
+                                            ->get();
 
         MovimientoRegistral::disableAuditing();
 
