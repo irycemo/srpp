@@ -82,7 +82,7 @@ class CertificadoGravamen extends Component
 
         $this->moviminetoRegistral = $modelo->movimientoRegistral;
 
-        if($this->moviminetoRegistral->tipo_servicio == 'ordinario'){
+        if($this->moviminetoRegistral->tipo_servicio == 'ordinario' && $this->moviminetoRegistral->getRawOriginal('distrito') != 2){
 
             if(!($this->calcularDiaElaboracion($this->moviminetoRegistral) <= now())){
 
