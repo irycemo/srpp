@@ -152,6 +152,7 @@ class Varios extends Component
             unset($this->actos[9]);
             unset($this->actos[10]);
             unset($this->actos[11]);
+            unset($this->actos[12]);
 
         }
 
