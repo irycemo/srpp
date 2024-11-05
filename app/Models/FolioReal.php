@@ -122,7 +122,7 @@ class FolioReal extends Model implements Auditable
 
         return $this->movimientosRegistrales()
                         ->withWhereHas('vario', function($q){
-                            $q->whereIn('servicio', ['DL09', 'D110'])
+                            $q->whereIn('servicio', ['D146', 'D110'])
                                 ->where('estado', 'activo');
                         })
                         ->whereIn('estado', ['concluido', 'elaborado'])
@@ -134,7 +134,7 @@ class FolioReal extends Model implements Auditable
 
         $movimiento = $this->movimientosRegistrales()
                                         ->whereHas('vario', function($q){
-                                            $q->whereIn('servicio', ['DL09', 'D110'])
+                                            $q->whereIn('servicio', ['D146', 'D110'])
                                                 ->where('estado', 'activo');
                                         })
                                         ->whereIn('estado', ['concluido', 'elaborado'])

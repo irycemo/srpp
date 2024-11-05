@@ -242,7 +242,7 @@ class Elaboracion extends Component
         $this->authorize('update', $this->movimientoRegistral);
 
         /* Fusion */
-        if($this->movimientoRegistral->folioReal && $this->movimientoRegistral->inscripcionPropiedad?->servicio == 'D731' && $this->movimientoRegistral->inscripcionPropiedad?->numero_inmuebles != $this->movimientoRegistral->folioReal->antecedentes->count()){
+        if($this->movimientoRegistral->folioReal && $this->movimientoRegistral->inscripcionPropiedad?->servicio == 'D157' && $this->movimientoRegistral->inscripcionPropiedad?->numero_inmuebles != $this->movimientoRegistral->folioReal->antecedentes->count()){
 
             $this->dispatch('mostrarMensaje', ['warning', "Debe ingresar todos los antecedentes a fusionar."]);
 
@@ -510,7 +510,7 @@ class Elaboracion extends Component
         } */
 
         if(
-            !in_array($this->movimientoRegistral->inscripcionPropiedad?->servicio, ['D114', 'D113', 'D116', 'D115', 'D731']) &&
+            !in_array($this->movimientoRegistral->inscripcionPropiedad?->servicio, ['D114', 'D113', 'D116', 'D115', 'D157']) &&
             $this->movimientoRegistral->tomo != null &&
             $this->movimientoRegistral->registro != null &&
             $this->movimientoRegistral->numero_propiedad != null
@@ -753,7 +753,7 @@ class Elaboracion extends Component
             ]
         );
 
-        if($this->movimientoRegistral->inscripcionPropiedad?->servicio == 'D731' && $this->movimientoRegistral->inscripcionPropiedad?->numero_inmuebles == $this->movimientoRegistral->folioReal->antecedentes->count()){
+        if($this->movimientoRegistral->inscripcionPropiedad?->servicio == 'D157' && $this->movimientoRegistral->inscripcionPropiedad?->numero_inmuebles == $this->movimientoRegistral->folioReal->antecedentes->count()){
 
             $this->dispatch('mostrarMensaje', ['warning', "No puede agregar mas antecedentes a fusionar."]);
 
@@ -1028,7 +1028,7 @@ class Elaboracion extends Component
 
             (new SistemaTramitesService())->finaliarTramite($this->movimientoRegistral->año, $this->movimientoRegistral->tramite, $this->movimientoRegistral->usuario, 'concluido');
 
-        }elseif( $this->movimientoRegistral->inscripcionPropiedad->servicio == 'D731'){
+        }elseif( $this->movimientoRegistral->inscripcionPropiedad->servicio == 'D157'){
 
             $this->movimientoRegistral->update(['estado' => 'concluido']);
 

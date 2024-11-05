@@ -186,7 +186,7 @@
                 @if($observaciones_certificado)
 
                     <p class="parrafo">
-                        <strong>Descripción de la propiedad:</strong> {{ $observaciones_certificado }}
+                        <strong>Observaciones del certificado:</strong> {{ $observaciones_certificado }}
                     </p>
 
                 @endif

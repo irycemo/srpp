@@ -559,7 +559,7 @@ class InscripcionGeneral extends Component
 
                 }else{
 
-                    $this->revisarPorcentajesCorreccion();
+                    $this->revisarProcentajes();
 
                 }
 

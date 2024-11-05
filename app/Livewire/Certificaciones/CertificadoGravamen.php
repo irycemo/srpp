@@ -337,7 +337,7 @@ class CertificadoGravamen extends Component
                 'director' => $objeto->director,
                 'gravamenes' => $objeto->gravamenes,
                 'folioReal' => $objeto->folioReal,
-                'aviso' => $objeto->aviso,
+                'avisos' => $objeto->avisos,
                 'datos_control' => $objeto->datos_control,
                 'firma_electronica' => false,
                 'qr'=> $this->generadorQr($firmaElectronica->uuid)

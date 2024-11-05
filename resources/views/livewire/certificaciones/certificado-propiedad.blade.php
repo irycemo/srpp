@@ -227,6 +227,20 @@
 
             @include('livewire.certificaciones.comun.predios')
 
+            <div class="bg-white rounded-lg p-4 shadow-lg w-full  mx-auto mb-5">
+
+                <div class="lg:w-1/2 mx-auto mb-5">
+
+                    <x-input-group for="observaciones" label="Observaciones" :error="$errors->first('observaciones')" class="w-full">
+
+                        <textarea rows="5" class="bg-white rounded text-sm w-full" wire:model="observaciones"></textarea>
+
+                    </x-input-group>
+
+                </div>
+
+            </div>
+
             <div class="bg-white rounded-lg p-3 flex justify-end shadow-lg gap-3">
 
                 <x-button-red
@@ -264,6 +278,20 @@
             {{-- <p class="text-center bg-white rounded-lg p-4 shadow-lg w-full  mx-auto mb-5"><strong>Cantidad solicitada {{ $certificacion->numero_paginas }}</strong></p> --}}
 
             @include('livewire.certificaciones.comun.propiedad')
+
+            <div class="bg-white rounded-lg p-4 shadow-lg w-full  mx-auto mb-5">
+
+                <div class="lg:w-1/2 mx-auto mb-5">
+
+                    <x-input-group for="observaciones" label="Observaciones" :error="$errors->first('observaciones')" class="w-full">
+
+                        <textarea rows="5" class="bg-white rounded text-sm w-full" wire:model="observaciones"></textarea>
+
+                    </x-input-group>
+
+                </div>
+
+            </div>
 
             <div class="bg-white rounded-lg p-3 flex justify-end shadow-lg gap-3">
 
@@ -319,6 +347,20 @@
             </div>
 
             @include('livewire.certificaciones.comun.predios')
+
+            <div class="bg-white rounded-lg p-4 shadow-lg w-full  mx-auto mb-5">
+
+                <div class="lg:w-1/2 mx-auto mb-5">
+
+                    <x-input-group for="observaciones" label="Observaciones" :error="$errors->first('observaciones')" class="w-full">
+
+                        <textarea rows="5" class="bg-white rounded text-sm w-full" wire:model="observaciones"></textarea>
+
+                    </x-input-group>
+
+                </div>
+
+            </div>
 
             <div class="bg-white rounded-lg p-3 flex justify-end shadow-lg gap-3">
 
@@ -382,6 +424,20 @@
             </div>
 
             @include('livewire.certificaciones.comun.propiedad')
+
+            <div class="bg-white rounded-lg p-4 shadow-lg w-full  mx-auto mb-5">
+
+                <div class="lg:w-1/2 mx-auto mb-5">
+
+                    <x-input-group for="observaciones" label="Observaciones" :error="$errors->first('observaciones')" class="w-full">
+
+                        <textarea rows="5" class="bg-white rounded text-sm w-full" wire:model="observaciones"></textarea>
+
+                    </x-input-group>
+
+                </div>
+
+            </div>
 
             <div class="bg-white rounded-lg p-3 flex justify-end shadow-lg gap-3">
 

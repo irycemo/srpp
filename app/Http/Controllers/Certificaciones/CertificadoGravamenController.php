@@ -26,7 +26,7 @@ class CertificadoGravamenController extends Controller
 
     public function certificadoGravamen(MovimientoRegistral $movimientoRegistral){
 
-        /* $this->authorize('update', $movimientoRegistral); */
+        $this->resetCaratula($movimientoRegistral->id);
 
         $formatter = new NumeroALetras();
 
@@ -161,8 +161,6 @@ class CertificadoGravamenController extends Controller
     }
 
     public function pdfFirmado($pdf, $id, $folio){
-
-        $this->resetCaratula($id);
 
         $pdf->render();
 

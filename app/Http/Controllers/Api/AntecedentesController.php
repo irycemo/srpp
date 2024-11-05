@@ -6,6 +6,7 @@ use App\Models\Propiedadold;
 use Illuminate\Support\Facades\Log;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\AntecedenteRequest;
+use App\Http\Resources\AntecedenteResource;
 
 class AntecedentesController extends Controller
 {
@@ -21,7 +22,7 @@ class AntecedentesController extends Controller
                                             ->where('tomo', $validated['tomo'])
                                             ->where('registro', $validated['registro'])
                                             ->where('status', '!=', 'V')
-                                            ->first();
+                                            ->get();
 
             if(!$antecedentes->count()){
 
@@ -34,6 +35,8 @@ class AntecedentesController extends Controller
                 return response()->json([
                     'antecedentes' => $antecedentes,
                 ], 200);
+
+                return AntecedenteResource::collection($antecedentes)->response()->setStatusCode(200);
 
             }
 

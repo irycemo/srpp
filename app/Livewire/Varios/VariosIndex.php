@@ -51,7 +51,7 @@ class VariosIndex extends Component
                                                     })
                                                     ->where('usuario_asignado', auth()->id())
                                                     ->whereHas('vario', function($q){
-                                                        $q->whereIn('servicio', ['DL09', 'D128', 'D112', 'D149', 'D110']);
+                                                        $q->whereIn('servicio', ['D146', 'D128', 'D112', 'D110']);
                                                     })
                                                     ->whereIn('estado', ['nuevo', 'captura', 'elaborado'])
                                                     ->orderBy($this->sort, $this->direction)
@@ -70,7 +70,7 @@ class VariosIndex extends Component
                                                         $q->where('distrito', '!=', 2);
                                                     })
                                                     ->whereHas('vario', function($q){
-                                                        $q->whereIn('servicio', ['DL09', 'D128', 'D112', 'D149', 'D110']);
+                                                        $q->whereIn('servicio', ['D146', 'D128', 'D112', 'D110']);
                                                     })
                                                     ->whereIn('estado', ['nuevo', 'captura', 'elaborado', 'finalizado'])
                                                     ->orderBy($this->sort, $this->direction)
@@ -100,7 +100,7 @@ class VariosIndex extends Component
                                                         $q->where('distrito', '!=', 2);
                                                     })
                                                     ->whereHas('vario', function($q){
-                                                        $q->whereIn('servicio', ['DL09', 'D128', 'D112', 'D149', 'D110']);
+                                                        $q->whereIn('servicio', ['D146', 'D128', 'D112', 'D110']);
                                                     })
                                                     ->orderBy($this->sort, $this->direction)
                                                     ->paginate($this->pagination);
@@ -123,7 +123,7 @@ class VariosIndex extends Component
                                                             ->orWhere('tramite', 'LIKE', '%' . $this->search . '%');
                                                     })
                                                     ->whereHas('vario', function($q){
-                                                        $q->whereIn('servicio', ['DL09', 'D128', 'D112', 'D149', 'D110']);
+                                                        $q->whereIn('servicio', ['D146', 'D128', 'D112', 'D110']);
                                                     })
                                                     ->orderBy($this->sort, $this->direction)
                                                     ->paginate($this->pagination);

@@ -217,6 +217,7 @@ class CertificadoPropiedad extends Component
 
                 $this->certificacion->actualizado_por = auth()->user()->id;
                 $this->certificacion->tipo_certificado = 3;
+                $this->certificacion->observaciones_certificado = $this->observaciones;
                 $this->certificacion->save();
 
                 $this->procesarPersona($this->nombre, $this->ap_paterno, $this->ap_materno);
@@ -261,6 +262,7 @@ class CertificadoPropiedad extends Component
 
                 $this->certificacion->actualizado_por = auth()->user()->id;
                 $this->certificacion->tipo_certificado = 4;
+                $this->certificacion->observaciones_certificado = $this->observaciones;
                 $this->certificacion->save();
 
                 $this->procesarPersona($this->nombre, $this->ap_paterno, $this->ap_materno);
@@ -301,6 +303,7 @@ class CertificadoPropiedad extends Component
 
                 $this->certificacion->actualizado_por = auth()->user()->id;
                 $this->certificacion->tipo_certificado = 2;
+                $this->certificacion->observaciones_certificado = $this->observaciones;
                 $this->certificacion->save();
 
                 $this->procesarPersona($this->nombre, $this->ap_paterno, $this->ap_materno);
@@ -382,6 +385,7 @@ class CertificadoPropiedad extends Component
 
                 $this->certificacion->actualizado_por = auth()->user()->id;
                 $this->certificacion->tipo_certificado = 1;
+                $this->certificacion->observaciones_certificado = $this->observaciones;
                 $this->certificacion->save();
 
                 $this->procesarPersona($this->nombre, $this->ap_paterno, $this->ap_materno);

@@ -2,7 +2,7 @@
 
     <div class="col-span-2">
 
-        @if($movimientoRegistral->inscripcionPropiedad?->servicio != 'D731')
+        @if($movimientoRegistral->inscripcionPropiedad?->servicio != 'D157')
 
             <div class="grid grid-cols-1 md:grid-cols-3 sm:grid-cols-2 gap-3 mb-3 bg-white rounded-lg p-3 shadow-lg">
 
