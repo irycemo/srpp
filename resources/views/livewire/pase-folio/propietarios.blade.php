@@ -38,9 +38,9 @@
                             <x-table.row >
 
                                 <x-table.cell>{{ $propietario->persona->nombre }} {{ $propietario->persona->ap_paterno }} {{ $propietario->persona->ap_materno }} {{ $propietario->persona->razon_social }}</x-table.cell>
-                                <x-table.cell>{{ number_format($propietario->porcentaje_propiedad, 2) }}%</x-table.cell>
-                                <x-table.cell>{{ number_format($propietario->porcentaje_nuda, 2) }}%</x-table.cell>
-                                <x-table.cell>{{ number_format($propietario->porcentaje_usufructo, 2) }}%</x-table.cell>
+                                <x-table.cell>{{ $propietario->porcentaje_propiedad }}%</x-table.cell>
+                                <x-table.cell>{{ $propietario->porcentaje_nuda }}%</x-table.cell>
+                                <x-table.cell>{{ $propietario->porcentaje_usufructo }}%</x-table.cell>
                                 <x-table.cell>
                                     <div class="flex items-center gap-3">
                                         <x-button-blue
