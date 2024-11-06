@@ -46,7 +46,7 @@ class PrimerAvisoPreventivo extends Component
 
                 $this->vario->estado = 'activo';
                 $this->vario->actualizado_por = auth()->id();
-                $this->vario->fecha_inscripcion = now()->toDateString();
+                $this->vario->fecha_inscripcion = $this->vario->movimientoRegistral->fecha_prelacion;
                 $this->vario->save();
 
                 $this->crearCertificadoGravamen();

@@ -4,6 +4,7 @@ namespace App\Livewire\Varios;
 
 use Exception;
 use App\Models\File;
+use App\Models\Vario;
 use Livewire\Component;
 use Livewire\WithFileUploads;
 use App\Constantes\Constantes;
@@ -42,6 +43,8 @@ class Varios extends Component
         }
 
         try {
+
+            if($this->vario->acto_contenido == 'SEGUNDO AVISO PREVENTIVO') $this->procesarSegundoAvisoPreventivo();
 
             DB::transaction(function () {
 
@@ -90,6 +93,27 @@ class Varios extends Component
         } catch (\Throwable $th) {
             Log::error("Error al guardar inscripción de varios por el usuario: (id: " . auth()->user()->id . ") " . auth()->user()->name . ". " . $th);
             $this->dispatch('mostrarMensaje', ['error', "Ha ocurrido un error."]);
+        }
+
+    }
+
+    public function procesarSegundoAvisoPreventivo(){
+
+        $primerAviso = Vario::whereHas('movimientoRegistral', function($q){
+                                        $q->where('folio_real', $this->vario->movimientoRegistral->folio_real);
+                                    })
+                                    ->where('acto_contenido', 'PRIMER AVISO PREVENTIVO')
+                                    ->where('estado', 'activo')
+                                    ->first();
+
+        if($primerAviso){
+
+            $this->vario->update([
+                'fecha_inscripcion' => $primerAviso->movimientoRegistral->fecha_prelacion
+            ]);
+
+            $primerAviso->update(['estado' => 'inactivo']);
+
         }
 
     }

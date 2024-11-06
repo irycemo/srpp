@@ -81,7 +81,7 @@ class CertificadoGravamenController extends Controller
 
         $avisosCollection = collect();
 
-        if($movimientoRegistral->FolioReal->avisoPreventivo()){
+        if($movimientoRegistral->FolioReal->avisosPreventivos()){
 
             foreach($movimientoRegistral->FolioReal->avisosPreventivos() as $aviso){
 
