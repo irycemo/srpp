@@ -176,7 +176,7 @@
                 </p>
 
                 <p class="parrafo">
-                    EL DIRECTOR DEL REGISTRO PÚBLICO DE LA PROPIEDAD @if($folioReal->distrito == '02 Uruapan' ) <strong>L.A. SANDRO MEDINA MORALES</strong> @else <strong>{{ $director }}</strong>, @endif certifica que habiendose examinado acervo registral correspondiente al distrito de {{ $folioReal->distrito}} se encontro registro de la siguiente propiedad:
+                    EL DIRECTOR DEL REGISTRO PÚBLICO DE LA PROPIEDAD @if($folioReal->distrito == '02 Uruapan' ) <strong>L.A. SANDRO MEDINA MORALES</strong> @else <strong>{{ $director }}</strong>, @endif certifica que habiendose examinado el acervo registral correspondiente al distrito de {{ $folioReal->distrito}} se encontro registro de la siguiente propiedad:
                 </p>
 
                 <p style="text-align: center"><strong>FOLIO REAL:</strong> {{ $folioReal->folio }}</p>
