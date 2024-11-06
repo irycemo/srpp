@@ -785,5 +785,6 @@ class InscripcionGeneral extends Component
         if($this->inscripcion->movimientoRegistral->folioReal->estado != 'activo') abort(401, 'El folio real no esta activo');
 
         return view('livewire.inscripciones.propiedad.inscripcion-general');
+
     }
 }

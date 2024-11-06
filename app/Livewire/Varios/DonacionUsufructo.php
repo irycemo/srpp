@@ -10,7 +10,7 @@ use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Hash;
 use App\Traits\Inscripciones\Varios\VariosTrait;
 
-class ConsolidacionUsufructo extends Component
+class DonacionUsufructo extends Component
 {
 
     use VariosTrait;
@@ -35,31 +35,6 @@ class ConsolidacionUsufructo extends Component
         $this->porcentaje_usufructo = $actor->porcentaje_usufructo;
 
         $this->modalPersona = true;
-
-    }
-
-    public function actualizarPorcentajes(){
-
-        try {
-
-            $this->actor->update([
-                'porcentaje_propiedad' => $this->porcentaje_propiedad,
-                'porcentaje_nuda' => $this->porcentaje_nuda,
-                'porcentaje_usufructo' => $this->porcentaje_usufructo,
-            ]);
-
-            $this->vario->load('actores.persona');
-
-            $this->modalPersona = false;
-
-            $this->dispatch('mostrarMensaje', ['success', "El actor se actualizó con éxito."]);
-
-        } catch (\Throwable $th) {
-
-            Log::error("Error al actualizar propietario en consolidación de usufructo por el usuario: (id: " . auth()->user()->id . ") " . auth()->user()->name . ". " . $th);
-            $this->dispatch('mostrarMensaje', ['error', "Ha ocurrido un error."]);
-
-        }
 
     }
 
@@ -204,7 +179,7 @@ class ConsolidacionUsufructo extends Component
 
     public function mount(){
 
-        $this->vario->acto_contenido = 'CONSOLIDACIÓN DEL USUFRUCTO';
+        $this->vario->acto_contenido = 'DONACIÓN DE USUFRUCTO';
 
         if($this->vario->actores()->count() == 0){
 
@@ -228,6 +203,6 @@ class ConsolidacionUsufructo extends Component
 
     public function render()
     {
-        return view('livewire.varios.consolidacion-usufructo');
+        return view('livewire.varios.donacion-usufructo');
     }
 }
