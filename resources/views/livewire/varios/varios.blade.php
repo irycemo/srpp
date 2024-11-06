@@ -12,6 +12,10 @@
 
         @livewire('varios.personas-morales', ['vario' => $this->vario])
 
+    @elseif($vario->acto_contenido == 'DONACIÓN DE USUFRUCTO')
+
+        @livewire('varios.donacion-usufructo', ['vario' => $this->vario])
+
     {{-- Aclaración administrativa --}}
     @elseif($vario->servicio == 'D112')
 

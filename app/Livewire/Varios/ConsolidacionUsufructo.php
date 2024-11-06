@@ -5,15 +5,18 @@ namespace App\Livewire\Varios;
 use Exception;
 use App\Models\Actor;
 use Livewire\Component;
+use Livewire\WithFileUploads;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Hash;
 use App\Traits\Inscripciones\Varios\VariosTrait;
+use App\Http\Controllers\Varios\VariosController;
 
 class ConsolidacionUsufructo extends Component
 {
 
     use VariosTrait;
+    use WithFileUploads;
 
     public $porcentaje_propiedad;
     public $porcentaje_nuda;
@@ -85,6 +88,8 @@ class ConsolidacionUsufructo extends Component
                 $this->vario->movimientoRegistral->update(['estado' => 'elaborado']);
 
                 $this->actualizarPropietarios();
+
+                (new VariosController())->caratula($this->vario);
 
             });
 
