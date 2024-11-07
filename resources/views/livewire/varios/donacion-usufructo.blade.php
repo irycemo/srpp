@@ -71,6 +71,12 @@
                                             >
                                                 Editar
                                             </x-button-blue>
+                                            <x-button-red
+                                                wire:click="borrarActor({{ $propietario->id }})"
+                                                wire:loading.attr="disabled"
+                                            >
+                                                Borrar
+                                            </x-button-red>
                                         </div>
                                     </x-table.cell>
 

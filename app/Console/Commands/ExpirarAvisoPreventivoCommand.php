@@ -20,7 +20,7 @@ class ExpirarAvisoPreventivoCommand extends Command
      *
      * @var string
      */
-    protected $description = 'Proceso para exiprar avisos preventivos cuya fecha de inscripción ha superado 30 dias para primer aviso y 60 dias para segundo aviso.';
+    protected $description = 'Proceso para exiprar avisos preventivos cuya fecha de inscripción ha superado 30 dias para primer aviso y 90 dias para segundo aviso.';
 
     /**
      * Execute the console command.
@@ -43,7 +43,7 @@ class ExpirarAvisoPreventivoCommand extends Command
 
             $sgundoAvisos = Vario::where('acto_contenido', 'SEGUNDO AVISO PREVENTIVO')
                                     ->where('estado', 'activo')
-                                    ->whereDate('fecha_inscripcion', '<', now()->subDays(60)->format('Y-m-d'))
+                                    ->whereDate('fecha_inscripcion', '<', now()->subDays(90)->format('Y-m-d'))
                                     ->get();
 
             foreach ($sgundoAvisos as $aviso) {

@@ -2,9 +2,10 @@
 
 namespace App\Http\Services;
 
+use App\Models\User;
+use App\Models\Vario;
 use Illuminate\Support\Facades\Log;
 use App\Exceptions\CertificacionServiceException;
-use App\Models\Vario;
 
 class VariosService{
 
@@ -20,16 +21,32 @@ class VariosService{
 
                 $acto = 'DONACIÓN DE USUFRUCTO';
 
+            }elseif($request['servicio_nombre'] == 'Aclaraciones administrativas de inscripciones'){
+
+                $acto = 'ACLARACIÓN ADMINISTRATIVA';
+
             }else{
 
                 $acto = null;
             }
 
-            Vario::create([
+            $vario = Vario::create([
                 'acto_contenido' => $acto,
                 'servicio' => $request['servicio'],
                 'movimiento_registral_id' => $request['movimiento_registral'],
             ]);
+
+            if(in_array($vario->acto_contenido, ['SEGUNDO AVISO PREVENTIVO', 'PRIMER AVISO PREVENTIVO'])){
+
+                $vario->movimientoRegistral->update(['usuario_asignado' => $this->obtenerUsuarioRolAvisos()]);
+
+            }
+
+            if($vario->acto_contenido == 'ACLARACIÓN ADMINISTRATIVA'){
+
+                $vario->movimientoRegistral->update(['usuario_asignado' => $this->obtenerUsuarioRolAclaraciones()]);
+
+            }
 
         } catch (\Throwable $th) {
 
@@ -38,6 +55,34 @@ class VariosService{
             throw new CertificacionServiceException('Error al ingresar inscripción de propiedad con el trámite: ' . $request['año'] . '-' . $request['tramite'] . '-' . $request['usuario'] . ' desde Sistema Trámites.');
 
         }
+
+    }
+
+    public function obtenerUsuarioRolAvisos(){
+
+        $usuario = User::where('status', 'activo')
+                            ->whereHas('roles', function ($q){
+                                $q->where('name', 'Avisos preventivos');
+                            })
+                            ->first();
+
+        if(!$usuario) throw new CertificacionServiceException('No hay usuario con rol de Avisos preventivos.');
+
+        return $usuario->id;
+
+    }
+
+    public function obtenerUsuarioRolAclaraciones(){
+
+        $usuario = User::where('status', 'activo')
+                            ->whereHas('roles', function ($q){
+                                $q->where('name', 'Aclaraciones administrativas');
+                            })
+                            ->first();
+
+        if(!$usuario) throw new CertificacionServiceException('No hay usuario con rol de Aclaraciones administrativas.');
+
+        return $usuario->id;
 
     }
 

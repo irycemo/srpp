@@ -20,9 +20,9 @@ class DonacionUsufructo extends Component
     use VariosTrait;
     use WithFileUploads;
 
-    public $porcentaje_propiedad;
-    public $porcentaje_nuda;
-    public $porcentaje_usufructo;
+    public $porcentaje_propiedad = 0.00;
+    public $porcentaje_nuda = 0.00;
+    public $porcentaje_usufructo = 0.00;
 
     public $modal = false;
     public $editar = false;
@@ -176,7 +176,7 @@ class DonacionUsufructo extends Component
 
         if($persona){
 
-            foreach ($this->aviso->propietarios() as $propietario) {
+            foreach ($this->vario->actores as $propietario) {
 
                 if($persona->id == $propietario->persona_id){
 
