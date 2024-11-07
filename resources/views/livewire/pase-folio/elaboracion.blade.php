@@ -6,7 +6,7 @@
 
 <div>
 
-    <x-header>Pase a folio</x-header>
+    <x-header>Pase a folio <span class="tracking-widest text-sm">(Folio real: {{ $movimientoRegistral->folioReal?->folio }})</span></x-header>
 
     <div x-data="{ activeTab: 4 }">
 

@@ -407,6 +407,8 @@ class DonacionUsufructo extends Component
 
             $actor->delete();
 
+            $this->vario->movimientoRegistral->folioReal->predio->actores()->where('persona_id', $actor->persona_id)->first()->delete();
+
             $this->dispatch('mostrarMensaje', ['success', "La información se eliminó con éxito."]);
 
             $this->resetear();

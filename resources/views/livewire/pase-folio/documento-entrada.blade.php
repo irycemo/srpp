@@ -10,7 +10,7 @@
 
                 <x-input-group for="folio_real" label="Folio real" class="w-full">
 
-                    <x-input-text id="folio_real" value="{{ $movimientoRegistral->folioReal?->folio }}" readonly/>
+                    <x-input-text id="folio_real" value="{{ $movimientoRegistral->folioReal?->folioRealAntecedente?->folio }}" readonly/>
 
                 </x-input-group>
 
