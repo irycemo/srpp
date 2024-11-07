@@ -247,8 +247,6 @@ class DonacionUsufructo extends Component
 
                 $this->resetear();
 
-                $this->vario->refresh();
-
                 $this->vario->load('actores.persona');
 
             });
@@ -386,8 +384,6 @@ class DonacionUsufructo extends Component
 
                 $this->resetear();
 
-                $this->vario->refresh();
-
                 $this->vario->load('actores.persona');
 
             });
@@ -412,8 +408,6 @@ class DonacionUsufructo extends Component
             $this->dispatch('mostrarMensaje', ['success', "La información se eliminó con éxito."]);
 
             $this->resetear();
-
-            $this->vario->refresh();
 
             $this->vario->load('actores.persona');
 

@@ -195,6 +195,14 @@
 
                 @include('comun.caratulas.propietarios')
 
+                @if(isset($datos_control->observaciones_certificado))
+
+                    <p class="parrafo">
+                        <strong>Observaciones del certificado:</strong> {{ $datos_control->observaciones_certificado }}
+                    </p>
+
+                @endif
+
                 <p class="parrafo">
                     A SOLICITUD DE: <strong>{{ $datos_control->solicitante }}</strong> se expide EL PRESENTE CERTIFICADO EN LA CIUDAD DE @if($folioReal->distrito== '02 Uruapan' ) URUAPAN, @else MORELIA, @endif MICHOACÁN, A LAS {{ $datos_control->elaborado_en }}.
                 </p>

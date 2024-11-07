@@ -168,6 +168,8 @@ class CertificadoPropiedad extends Component
 
                     $this->flagUnico = true;
 
+                    $this->dispatch('mostrarMensaje', ['warning', "Se encontró al menos una propiedad."]);
+
                 }
 
             }else{
@@ -180,7 +182,7 @@ class CertificadoPropiedad extends Component
 
         }
 
-        if($this->flagUnico){
+        if($this->flagUnico &&  $this->certificacion->movimientoRegistral->folioReal){
 
             $this->buscarProppietariosEnFolio();
 

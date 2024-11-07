@@ -51,6 +51,7 @@ class CertificadoPropiedadController extends Controller
         $datos_control->tipo_servicio = $movimientoRegistral->tipo_servicio;
         $datos_control->movimiento_folio = $movimientoRegistral->folio;
         $datos_control->asigno_folio = $movimientoRegistral->folioReal->asignado_por;
+        $datos_control->observaciones_certificado = $movimientoRegistral->certificacion->observaciones_certificado;
 
         $personas = collect();
 
@@ -166,6 +167,7 @@ class CertificadoPropiedadController extends Controller
         $datos_control->tipo_servicio = $movimientoRegistral->tipo_servicio;
         $datos_control->movimiento_folio = $movimientoRegistral->folio;
         $datos_control->asigno_folio = $movimientoRegistral->folioReal->asignado_por;
+        $datos_control->observaciones_certificado = $movimientoRegistral->certificacion->observaciones_certificado;
 
         $personas = collect();
 
@@ -282,6 +284,7 @@ class CertificadoPropiedadController extends Controller
         $datos_control->tipo_servicio = $movimientoRegistral->tipo_servicio;
         $datos_control->movimiento_folio = $movimientoRegistral->folio;
         $datos_control->asigno_folio = $movimientoRegistral->folioReal->asignado_por;
+        $datos_control->observaciones_certificado = $movimientoRegistral->certificacion->observaciones_certificado;
 
         $personas = collect();
 
@@ -397,6 +400,7 @@ class CertificadoPropiedadController extends Controller
         $datos_control->tipo_servicio = $movimientoRegistral->tipo_servicio;
         $datos_control->movimiento_folio = $movimientoRegistral->folio;
         $datos_control->asigno_folio = $movimientoRegistral->folioReal->asignado_por;
+        $datos_control->observaciones_certificado = $movimientoRegistral->certificacion->observaciones_certificado;
 
         $object = (object)[];
 
@@ -479,6 +483,7 @@ class CertificadoPropiedadController extends Controller
         $datos_control->monto = $movimientoRegistral->monto;
         $datos_control->tipo_servicio = $movimientoRegistral->tipo_servicio;
         $datos_control->movimiento_folio = $movimientoRegistral->folio;
+        $datos_control->observaciones_certificado = $movimientoRegistral->certificacion->observaciones_certificado;
 
         $personas = collect();
 

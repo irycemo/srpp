@@ -176,7 +176,7 @@
                 </p>
 
                 <p class="parrafo">
-                    EL DIRECTOR DEL REGISTRO PÚBLICO DE LA PROPIEDAD @if($folioReal->distrito == '02 Uruapan' ) <strong>L.A. SANDRO MEDINA MORALES</strong> @else <strong>{{ $director }}</strong>, @endif certifica que habiendose examinado el acervo registral correspondiente al distrito de {{ $folioReal->distrito}} se encontro registro de la siguiente propiedad:
+                    EL DIRECTOR DEL REGISTRO PÚBLICO DE LA PROPIEDAD @if($folioReal->distrito == '02 Uruapan' ) <strong>L.A. SANDRO MEDINA MORALES</strong> @else <strong>{{ $director }}</strong>, @endif certifica que habiendose examinado el acervo registral correspondiente al distrito de {{ $folioReal->distrito}}, en el periodo de 1977 un mil novecientos setenta y siete a la fecha, se encontro registro de la siguiente propiedad:
                 </p>
 
                 <p style="text-align: center"><strong>FOLIO REAL:</strong> {{ $folioReal->folio }}</p>
@@ -188,6 +188,14 @@
                 @include('comun.caratulas.descripcion_inmueble')
 
                 @include('comun.caratulas.propietarios')
+
+                @if(isset($datos_control->observaciones_certificado))
+
+                    <p class="parrafo">
+                        <strong>Observaciones del certificado:</strong> {{ $datos_control->observaciones_certificado }}
+                    </p>
+
+                @endif
 
                 <p class="parrafo">
                     A SOLICITUD DE: <strong>{{ $datos_control->solicitante }}</strong> se expide EL PRESENTE CERTIFICADO EN LA CIUDAD DE @if($folioReal->distrito== '02 Uruapan' ) URUAPAN, @else MORELIA, @endif MICHOACÁN, A LAS {{ $datos_control->elaborado_en }}.

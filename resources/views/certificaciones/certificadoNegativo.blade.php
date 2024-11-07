@@ -177,16 +177,16 @@
                 </p>
 
                 <p class="parrafo">
-                    EL DIRECTOR DEL REGISTRO PÚBLICO DE LA PROPIEDAD @if($distrito == '02 Uruapan' ) <strong>L.A. SANDRO MEDINA MORALES</strong> @else <strong>{{ $director }}</strong>, @endif certifica que habiendose examinado el acervo regsitral correspondiente al distrito  {{ $distrito}} no se encontro registrado a nombre de:
+                    EL DIRECTOR DEL REGISTRO PÚBLICO DE LA PROPIEDAD @if($distrito == '02 Uruapan' ) <strong>L.A. SANDRO MEDINA MORALES</strong> @else <strong>{{ $director }}</strong>, @endif certifica que habiendose examinado el acervo regsitral correspondiente al distrito  {{ $distrito}}, en el periodo de 1977 un mil novecientos setenta y siete a la fecha, no se encontro registrado a nombre de:
                     @foreach ($personas as $persona)
                         <strong> {{ $persona->nombre }} {{ $persona->ap_paterno }} {{ $persona->ap_materno }}</strong>@if(!$loop->last),@endif
                     @endforeach
                 </p>
 
-                @if($observaciones_certificado)
+                @if(isset($datos_control->observaciones_certificado))
 
                     <p class="parrafo">
-                        <strong>Observaciones del certificado:</strong> {{ $observaciones_certificado }}
+                        <strong>Observaciones del certificado:</strong> {{ $datos_control->observaciones_certificado }}
                     </p>
 
                 @endif
