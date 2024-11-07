@@ -108,10 +108,6 @@ class Varios extends Component
 
         if($primerAviso){
 
-            $this->vario->update([
-                'fecha_inscripcion' => $primerAviso->movimientoRegistral->fecha_prelacion
-            ]);
-
             $primerAviso->update(['estado' => 'inactivo']);
 
         }
