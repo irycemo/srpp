@@ -10,6 +10,7 @@ use Livewire\Component;
 use App\Models\Gravamen;
 use App\Models\Escritura;
 use App\Models\FolioReal;
+use App\Models\Sentencia;
 use App\Models\Antecedente;
 use Livewire\Attributes\On;
 use App\Models\Propiedadold;
@@ -293,22 +294,9 @@ class Elaboracion extends Component
                         $this->movimientoRegistral->numero_propiedad
                     ){
 
-                        $gravamenes = DB::connection('mysql2')->select("call spTractoGravamenes(" .
-                                                                            $this->movimientoRegistral->getRawOriginal('distrito') .
-                                                                            "," . $this->movimientoRegistral->tomo .
-                                                                            "," . ($this->movimientoRegistral->tomo_bis ?? '\'\'') .
-                                                                            "," . $this->movimientoRegistral->registro .
-                                                                            "," . ($this->movimientoRegistral->registro_bis ?? '\'\'') .
-                                                                            "," . $this->movimientoRegistral->numero_propiedad .
-                                                                            ")");
+                        $this->consultarGravamenesAntecedente();
 
-                        foreach($gravamenes as $gravamen){
-
-                            if(isset($gravamen->fcancelacion) && isset($gravamen->stGravamen) && $gravamen->stGravamen == 'C') continue;
-
-                            $this->creargravamen($gravamen);
-
-                        }
+                        $this->consultarSentenciasAntecedente();
 
                     }
 
@@ -369,10 +357,78 @@ class Elaboracion extends Component
 
             $this->dispatch('cargarGravamenes');
 
+            $this->dispatch('cargarSentencias');
+
         } catch (\Throwable $th) {
 
             Log::error("Error al guardar documento de entrada en pase a folio por el usuario: (id: " . auth()->user()->id . ") " . auth()->user()->name . ". " . $th);
             $this->dispatch('mostrarMensaje', ['error', "Ha ocurrido un error."]);
+
+        }
+
+    }
+
+    public function consultarSentenciasAntecedente(){
+
+        $sentencias = DB::connection('mysql2')->select("call spQSentencias(" .
+                                                                                $this->movimientoRegistral->getRawOriginal('distrito') .
+                                                                                "," . $this->movimientoRegistral->tomo .
+                                                                                "," . ($this->movimientoRegistral->tomo_bis ?? '\'\'') .
+                                                                                "," . $this->movimientoRegistral->registro .
+                                                                                "," . ($this->movimientoRegistral->registro_bis ?? '\'\'') .
+                                                                                "," . $this->movimientoRegistral->numero_propiedad .
+                                                                                ")");
+
+        foreach($sentencias as $sentencia){
+
+            $this->crearSentencia($sentencia);
+
+        }
+
+    }
+
+    public function crearSentencia($sentencia){
+
+        $movimientoRegistralSentenciaNueva = MovimientoRegistral::create([
+            'seccion' => 'Sentencias',
+            'folio_real' => $this->movimientoRegistral->folio_real,
+            'folio' => $this->movimientoRegistral->folioReal->ultimoFolio() + 1,
+            'distrito' => $this->movimientoRegistral->getRawOriginal('distrito'),
+            'estado' => 'concluido',
+            'usuario_asignado' => auth()->id(),
+            'procedencia' => $sentencia->juzgado_emisor_sentencia,
+            'numero_oficio' => $sentencia->oficio,
+        ]);
+
+        Sentencia::create([
+            'movimiento_registral_id' => $movimientoRegistralSentenciaNueva->id,
+            'fecha_inscripcion' => $sentencia->fecha_inscripción_sentencia,
+            'estado' => 'concluido',
+            'descripcion' => $sentencia->descripción_sentencia . ' ' . $sentencia->información_complementaria,
+            'tomo' => $sentencia->tomo_sentencia,
+            'registro' => $sentencia->registro_sentencia,
+            'hojas' => $sentencia->hojas,
+            'expediente' => $sentencia->expediente,
+        ]);
+
+    }
+
+    public function consultarGravamenesAntecedente(){
+
+        $gravamenes = DB::connection('mysql2')->select("call spTractoGravamenes(" .
+                                                                                $this->movimientoRegistral->getRawOriginal('distrito') .
+                                                                                "," . $this->movimientoRegistral->tomo .
+                                                                                "," . ($this->movimientoRegistral->tomo_bis ?? '\'\'') .
+                                                                                "," . $this->movimientoRegistral->registro .
+                                                                                "," . ($this->movimientoRegistral->registro_bis ?? '\'\'') .
+                                                                                "," . $this->movimientoRegistral->numero_propiedad .
+                                                                                ")");
+
+        foreach($gravamenes as $gravamen){
+
+            if(isset($gravamen->fcancelacion) && isset($gravamen->stGravamen) && $gravamen->stGravamen == 'C') continue;
+
+            $this->creargravamen($gravamen);
 
         }
 

@@ -464,6 +464,12 @@ class MovimientoRegistralService{
 
         }
 
+        if($movimiento_registral->certificacion && in_array($movimiento_registral->certificacion->servicio, ['DL14', 'DL13', 'DC93'])){
+
+            $this->recalcularFechaEntrega($movimiento_registral);
+
+        }
+
         return $array + $auxArray;
 
     }
@@ -643,7 +649,7 @@ class MovimientoRegistralService{
         }
 
         /* Inscripciones: Sentencias */
-        if($servicio == 'D110' && $categoria_servicio == 'Sentencias'){
+        if($servicio == 'D157' && $categoria_servicio == 'Sentencias'){
 
             return $this->asignacionService->obtenerUsuarioSentencias($folioReal, $distrito, $estado);
 
@@ -706,7 +712,7 @@ class MovimientoRegistralService{
         }
 
         /* Inscripciones: Sentencias */
-        if($servicio == 'D110' && $categoria_servicio == 'Sentencias'){
+        if($servicio == 'D157' && $categoria_servicio == 'Sentencias'){
 
             return $this->asignacionService->obtenerSupervisorSentencias($distrito);
 
@@ -758,6 +764,50 @@ class MovimientoRegistralService{
             return FolioReal::where('folio', $request['folio_real'])->first()->ultimoFolio() + 1;
 
         }
+
+    }
+
+    public function recalcularFechaEntrega($movimientoRegistral){
+
+        $fecha = null;
+
+        if($movimientoRegistral->tipo_servicio == 'ordinario'){
+
+            $actual = now();
+
+            for ($i=0; $i < 5; $i++) {
+
+                $actual->addDays(1);
+
+                while($actual->isWeekend()){
+
+                    $actual->addDay();
+
+                }
+
+            }
+
+            $fecha = $actual->toDateString();
+
+        }elseif($movimientoRegistral->tipo_servicio == 'urgente'){
+
+            $actual = now()->addDays(1);
+
+            while($actual->isWeekend()){
+
+                $actual->addDay();
+
+            }
+
+            $fecha = $actual->toDateString();
+
+        }else{
+
+            $fecha = now()->toDateString();
+
+        }
+
+        $movimientoRegistral->update(['fecha_entrega' => $fecha]);
 
     }
 

@@ -247,22 +247,22 @@
 
             @endif
 
-            @if(count($avisos))
+            @if(count($varios))
 
-                <p><strong>REPORTA los siguientes avisos preventivos:</strong></p>
+                <p><strong>REPORTA las siguientes anotaciones:</strong></p>
 
-                @foreach ($avisos as $aviso)
+                @foreach ($varios as $vario)
 
                     <p class="parrafo">
-                        <strong>acto: </strong>{{ $aviso->acto_contenido }}
+                        <strong>acto: </strong>{{ $vario->acto_contenido }}
                     </p>
 
                     <p class="parrafo">
-                        <strong>movimiento registral: </strong>{{ $folioReal->folio }}-{{ $aviso->movimiento_folio }}
+                        <strong>movimiento registral: </strong>{{ $folioReal->folio }}-{{ $vario->movimiento_folio }}
                     </p>
 
                     <p class="parrafo">
-                        <strong>descripción: </strong>{{ $aviso->descripcion }}
+                        <strong>descripción: </strong>{{ $vario->descripcion }}
                     </p>
 
                     <br>

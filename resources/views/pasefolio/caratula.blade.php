@@ -350,17 +350,21 @@
 
                         @endif
 
-                        {{-- @if($folioReal->sentencias) >= 1)
+                        @if(count($folioReal->sentencias) >= 1)
 
                             <p class="separador" style="text-align: center">Sentencias</p>
 
                             @foreach ($folioReal->sentencias as $sentencia)
 
-                                @if($sentencia->movimientoRegistral->folio == 1) @continue @endif
+                                @if($sentencia->movimiento_folio == 1) @continue @endif
 
                                 <p class="parrafo">
 
-                                    <p class="separador">Sentencia ({{ $folioReal->folio }}-{{ $folioReal->movimientosRegistrales()->where('id', $sentencia->movimiento_registral_id)->first()->folio }})</p>
+                                    <p class="separador">Sentencia ({{ $folioReal->folio }}-{{ $sentencia->movimiento_folio }})</p>
+
+                                    <p class="parrafo">
+                                        <strong>Fecha de inscripción: </strong> {{ $sentencia->fecha_inscripcion }}. <strong>Tomo:</strong> {{ $sentencia->tomo }}. <strong>Registro:</strong> {{ $sentencia->registro }}.  @if(isset($sentencia->hojas))<strong>Hojas: </strong> {{ $sentencia->hojas }}.@endif  @if(isset($sentencia->expediente))<strong>Expediente: </strong> {{ $sentencia->expediente }}.@endif
+                                    </p>
 
                                     <p class="parrafo">
                                         <strong>Acto contenido:</strong> {{ $sentencia->acto_contenido }}
@@ -376,7 +380,7 @@
 
                         @endif
 
-                        @if($folioReal->varios) >= 1)
+                        {{-- @if($folioReal->varios) >= 1)
 
                             <p class="separador" style="text-align: center">Varios</p>
 

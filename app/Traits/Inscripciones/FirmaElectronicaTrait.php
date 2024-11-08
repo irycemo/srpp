@@ -55,6 +55,20 @@ trait FirmaElectronicaTrait{
 
         }
 
+        $sentencias = collect();
+
+        foreach ($folioReal->sentencias as $sentencia) {
+
+            $sentencia->load('movimientoRegistral');
+
+            if($sentencia->movimientoRegistral->folio == 1 || $sentencia->movimientoRegistral->estado == 'precalificacion') continue;
+
+            $item = $this->sentencia($sentencia);
+
+            $sentencias->push($item);
+
+        }
+
         $antecedentes = collect();
 
         $folioReal->load('antecedentes.folioRealAntecedente');
@@ -120,6 +134,7 @@ trait FirmaElectronicaTrait{
         $object->antecedentes = $antecedentes;
         $object->escritura = $escritura;
         $object->cancelaciones = $cancelaciones;
+        $object->sentencias = $sentencias;
         $object->asignado_por = $folioReal->asignado_por;
 
         return $object;
@@ -486,8 +501,7 @@ trait FirmaElectronicaTrait{
         $object->tipo_documento = $gravamen->movimientoRegistral->tipo_documento;
         $object->autoridad_nombre = $gravamen->movimientoRegistral->autoridad_nombre;
         $object->autoridad_numero = $gravamen->movimientoRegistral->autoridad_numero;
-        $object->fecha_emision = Carbon::parse($gravamen->movimientoRegistral->fecha_emision)->format('d-m-Y');
-        $object->fecha_inscripcion = Carbon::parse($gravamen->movimientoRegistral->fecha_inscripcion)->format('d-m-Y');
+        $object->fecha_emision = Carbon::parse($gravamen->movimientoRegistral->fecha_emision)->format('d/m/Y');
         $object->procedencia = $gravamen->movimientoRegistral->procedencia;
         $object->gravamenesHipoteca = $gravamenesHipoteca;
 
@@ -513,7 +527,11 @@ trait FirmaElectronicaTrait{
         $object->acto_contenido = $sentencia->acto_contenido;
         $object->estado = $sentencia->estado;
         $object->descripcion = $sentencia->descripcion;
-        $object->fecha_inscripcion = $sentencia->fecha_inscripcion;
+        $object->fecha_inscripcion = Carbon::parse($sentencia->fecha_inscripcion)->format('d/m/Y');
+        $object->hojas = $sentencia->hojas;
+        $object->expediente = $sentencia->expediente;
+        $object->tomo = $sentencia->tomo;
+        $object->registro = $sentencia->registro;
         $object->movimientoCancelado = $movimientoCancelado;
         $object->movimiento_folio = $sentencia->movimientoRegistral->folio;
         $object->numero_documento = $sentencia->movimientoRegistral->numero_documento;
@@ -521,8 +539,8 @@ trait FirmaElectronicaTrait{
         $object->autoridad_nombre = $sentencia->movimientoRegistral->autoridad_nombre;
         $object->tipo_documento = $sentencia->movimientoRegistral->tipo_documento;
         $object->autoridad_numero = $sentencia->movimientoRegistral->autoridad_numero;
-        $object->fecha_emision = Carbon::parse($sentencia->movimientoRegistral->fecha_emision)->format('d-m-Y');
-        $object->fecha_inscripcion = Carbon::parse($sentencia->movimientoRegistral->fecha_inscripcion)->format('d-m-Y');
+        $object->fecha_emision = Carbon::parse($sentencia->movimientoRegistral->fecha_emision)->format('d/m/Y');
+        $object->fecha_inscripcion = Carbon::parse($sentencia->movimientoRegistral->fecha_inscripcion)->format('d/m/Y');
         $object->procedencia = $sentencia->movimientoRegistral->procedencia;
 
         return $object;

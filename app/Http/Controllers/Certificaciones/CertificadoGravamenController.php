@@ -79,15 +79,15 @@ class CertificadoGravamenController extends Controller
         $datos_control->movimiento_folio  = $movimientoRegistral->folio;
         $datos_control->asigno_folio = $movimientoRegistral->folioReal->asignado_por;
 
-        $avisosCollection = collect();
+        $variosCollection = collect();
 
-        if($movimientoRegistral->FolioReal->avisosPreventivos()){
+        if($movimientoRegistral->FolioReal->variosActivos()){
 
-            foreach($movimientoRegistral->FolioReal->avisosPreventivos() as $aviso){
+            foreach($movimientoRegistral->FolioReal->variosActivos() as $aviso){
 
                 $item = $this->vario($aviso->vario);
 
-                $avisosCollection->push($item);
+                $variosCollection->push($item);
 
             }
 
@@ -99,7 +99,7 @@ class CertificadoGravamenController extends Controller
         $object->director = $director->name;
         $object->datos_control = $datos_control;
         $object->folioReal = $folioReal;
-        $object->avisos = $avisosCollection;
+        $object->varios = $variosCollection;
         $object->gravamenes = $gravamenesCollection;
 
         $fielDirector = Credential::openFiles(Storage::disk('efirmas')->path($director->efirma->cer),
@@ -125,7 +125,7 @@ class CertificadoGravamenController extends Controller
             'director' => $object->director,
             'gravamenes' => $object->gravamenes,
             'folioReal' => $object->folioReal,
-            'avisos' => $object->avisos,
+            'varios' => $object->varios,
             'datos_control' => $object->datos_control,
             'firma_electronica' => false,
             'qr'=> $qr
@@ -148,7 +148,7 @@ class CertificadoGravamenController extends Controller
             'director' => $objeto->director,
             'gravamenes' => $objeto->gravamenes,
             'folioReal' => $objeto->folioReal,
-            'avisos' => $objeto->avisos,
+            'varios' => $object->varios,
             'datos_control' => $objeto->datos_control,
             'firma_electronica' => base64_encode($firmaDirector),
             'qr'=> $qr

@@ -35,7 +35,11 @@ class CertificacionesService{
 
             $movimientoRegistral = MovimientoRegistral::find($data['movimiento_registral']);
 
-            $movimientoRegistral->update(['estado' => 'nuevo', 'monto' => $movimientoRegistral->monto + (float)$data['monto']]);
+            $movimientoRegistral->update([
+                'estado' => 'nuevo',
+                'monto' => $movimientoRegistral->monto + (float)$data['monto'],
+                'fecha_entrega' => $this->recalcularFechaEntrega($movimientoRegistral)
+            ]);
 
             $movimientoRegistral->certificacion->update(['numero_paginas' => $movimientoRegistral->certificacion->numero_paginas + (int)$data['numero_paginas']]);
 
@@ -58,6 +62,50 @@ class CertificacionesService{
             'observaciones' => $request['observaciones'],
             'movimiento_registral_id' => $request['movimiento_registral'],
         ];
+
+    }
+
+    public function recalcularFechaEntrega($movimientoRegistral){
+
+        $fecha = null;
+
+        if($movimientoRegistral->tipo_servicio == 'ordinario'){
+
+            $actual = now();
+
+            for ($i=0; $i < 5; $i++) {
+
+                $actual->addDays(1);
+
+                while($actual->isWeekend()){
+
+                    $actual->addDay();
+
+                }
+
+            }
+
+            $fecha = $actual->toDateString();
+
+        }elseif($movimientoRegistral->tipo_servicio == 'urgente'){
+
+            $actual = now()->addDays(1);
+
+            while($actual->isWeekend()){
+
+                $actual->addDay();
+
+            }
+
+            $fecha = $actual->toDateString();
+
+        }else{
+
+            $fecha = now()->toDateString();
+
+        }
+
+        $movimientoRegistral->update(['fecha_entrega' => $fecha]);
 
     }
 

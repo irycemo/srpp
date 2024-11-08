@@ -292,11 +292,11 @@
 
             <div x-transition:enter.duration.500ms x-transition:leave.duration.500ms>
 
-                <span class="flex items-center justify-center text-gray-700 md:col-span-3 col-span-1 sm:col-span-2">Deudores</span>
+                <span class="flex items-center justify-center text-gray-700 md:col-span-3 col-span-1 sm:col-span-2">Actores</span>
 
                 <div class="grid grid-cols-1 sm:grid-cols-2 gap-3  col-span-2 rounded-lg mb-3" x-data>
 
-                    <x-input-group for="tipo_deudor" label="Tipo de deudor" :error="$errors->first('tipo_deudor')" class="w-full">
+                    <x-input-group for="tipo_deudor" label="Tipo" :error="$errors->first('tipo_deudor')" class="w-full">
 
                         <x-input-select id="tipo_deudor" wire:model.live="tipo_deudor" class="w-full">
 
@@ -341,9 +341,9 @@
                         <div class="mb-2 flex justify-end">
 
                             <x-button-blue
-                                wire:click="$dispatch('openModal', { component: 'modals.crear-persona', arguments: { crear: true, title: 'Garante' } } )">
+                                wire:click="$dispatch('openModal', { component: 'modals.crear-persona', arguments: { crear: true, title: 'Deudor' } } )">
 
-                                <img wire:loading wire:target="$dispatch('openModal', { component: 'modals.crear-persona', arguments: { crear: true, title: 'Garante' } } )" class="mx-auto h-4 mr-1" src="{{ asset('storage/img/loading3.svg') }}" alt="Loading">
+                                <img wire:loading wire:target="$dispatch('openModal', { component: 'modals.crear-persona', arguments: { crear: true, title: 'Deudor' } } )" class="mx-auto h-4 mr-1" src="{{ asset('storage/img/loading3.svg') }}" alt="Loading">
                                 Agregar deudor
                             </x-button-blue>
 
@@ -428,7 +428,7 @@
                                 <x-table>
 
                                     <x-slot name="head">
-                                        <x-table.heading >Deudor</x-table.heading>
+                                        <x-table.heading >Deudores</x-table.heading>
                                         <x-table.heading ></x-table.heading>
                                     </x-slot>
 
@@ -500,9 +500,9 @@
                         <div class="mb-2 flex justify-end">
 
                             <x-button-blue
-                                wire:click="$dispatch('openModal', { component: 'modals.crear-persona', arguments: { crear: true, title: 'Garante' } } )">
+                                wire:click="$dispatch('openModal', { component: 'modals.crear-persona', arguments: { crear: true, title: 'Deudor' } } )">
 
-                                <img wire:loading wire:target="$dispatch('openModal', { component: 'modals.crear-persona', arguments: { crear: true, title: 'Garante' } } )" class="mx-auto h-4 mr-1" src="{{ asset('storage/img/loading3.svg') }}" alt="Loading">
+                                <img wire:loading wire:target="$dispatch('openModal', { component: 'modals.crear-persona', arguments: { crear: true, title: 'Deudor' } } )" class="mx-auto h-4 mr-1" src="{{ asset('storage/img/loading3.svg') }}" alt="Loading">
                                 Agregar deudor
                             </x-button-blue>
 
@@ -575,9 +575,9 @@
                         <div class="mb-2 flex justify-end">
 
                             <x-button-blue
-                                wire:click="$dispatch('openModal', { component: 'modals.crear-persona', arguments: { crear: true, title: 'Afianzador' } } )">
+                                wire:click="$dispatch('openModal', { component: 'modals.crear-persona', arguments: { crear: true, title: 'Deudor' } } )">
 
-                                <img wire:loading wire:target="$dispatch('openModal', { component: 'modals.crear-persona', arguments: { crear: true, title: 'Afianzador' } } )" class="mx-auto h-4 mr-1" src="{{ asset('storage/img/loading3.svg') }}" alt="Loading">
+                                <img wire:loading wire:target="$dispatch('openModal', { component: 'modals.crear-persona', arguments: { crear: true, title: 'Fiado' } } )" class="mx-auto h-4 mr-1" src="{{ asset('storage/img/loading3.svg') }}" alt="Loading">
                                 Agregar fiado
                             </x-button-blue>
 
@@ -590,7 +590,7 @@
                                 <x-table>
 
                                     <x-slot name="head">
-                                        <x-table.heading >Fiados</x-table.heading>
+                                        <x-table.heading >Deudores</x-table.heading>
                                         <x-table.heading ></x-table.heading>
                                     </x-slot>
 
@@ -604,7 +604,7 @@
                                                 <x-table.cell>
                                                     <div class="flex items-center gap-3">
                                                         <x-button-blue
-                                                            wire:click="$dispatch('openModal', { component: 'modals.crear-persona', arguments: { editar: true, title: 'Afianzador', id:{{ $deudor->persona->id }} } } )"
+                                                            wire:click="$dispatch('openModal', { component: 'modals.crear-persona', arguments: { editar: true, title: 'Deudor', id:{{ $deudor->persona->id }} } } )"
                                                             wire:loading.attr="disabled"
                                                         >
                                                             Editar

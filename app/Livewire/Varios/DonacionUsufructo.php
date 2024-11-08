@@ -604,7 +604,7 @@ class DonacionUsufructo extends Component
 
     public function mount(){
 
-        $this->vario->acto_contenido = 'DONACIÓN DE USUFRUCTO';
+        $this->vario->acto_contenido = 'DONACIÓN / VENTA DE USUFRUCTO';
 
         if($this->vario->actores()->count() == 0){
 

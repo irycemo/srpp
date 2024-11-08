@@ -8,14 +8,14 @@
 
             <div class="flex justify-end mb-2">
 
-                {{-- <x-button-gray
+                <x-button-gray
                         wire:click="agregarSentencia"
                         wire:loading.attr="disabled"
                         wire:target="agregarSentencia">
 
                         <img wire:loading wire:target="agregarSentencia" class="mx-auto h-4 mr-1" src="{{ asset('storage/img/loading3.svg') }}" alt="Loading">
                         Agregar sentencia
-                </x-button-gray> --}}
+                </x-button-gray>
 
             </div>
 
@@ -194,6 +194,24 @@
 
                     </x-input-group>
 
+                    <x-input-group for="hojas" label="Hojas" :error="$errors->first('hojas')" class="w-full">
+
+                        <x-input-text id="hojas" wire:model="hojas" />
+
+                    </x-input-group>
+
+                    <x-input-group for="expediente" label="Expediente" :error="$errors->first('expediente')" class="w-full">
+
+                        <x-input-text id="expediente" wire:model="expediente" />
+
+                    </x-input-group>
+
+                    <x-input-group for="fecha_inscripcion" label="Fecha de inscripción" :error="$errors->first('fecha_inscripcion')" class="w-full">
+
+                        <x-input-text type="date" id="fecha_inscripcion" wire:model="fecha_inscripcion" />
+
+                    </x-input-group>
+
                     <x-input-group for="procedencia" label="Dependencia" :error="$errors->first('procedencia')" class="w-full">
 
                         <x-input-text id="procedencia" wire:model="procedencia" />
@@ -238,8 +256,6 @@
 
                             <option value="">Seleccione una opción</option>
 
-                            <option value="embargo">Embargo</option>
-
                             @foreach ($actos as $acto)
 
                                 <option value="{{ $acto }}">{{ $acto }}</option>
@@ -276,8 +292,6 @@
         </x-slot>
 
         <x-slot name="footer">
-
-            {{ $errors }}
 
             <div class="flex gap-3">
 

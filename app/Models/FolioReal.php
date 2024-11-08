@@ -101,10 +101,6 @@ class FolioReal extends Model implements Auditable
         return $this->morphMany(File::class, 'fileable');
     }
 
-   /*  public function caratula(){
-        return $this->morphMany(File::class, 'fileable')->where('descripcion', 'caratula');
-    } */
-
     public function caratula(){
 
         return $this->archivos()->where('descripcion', 'caratula')->first()
@@ -118,13 +114,11 @@ class FolioReal extends Model implements Auditable
                 : null;
     }
 
-    public function avisosPreventivos(){
+    public function variosActivos(){
 
         return $this->movimientosRegistrales()
                         ->withWhereHas('vario', function($q){
-                            $q->whereIn('servicio', ['D146', 'D157'])
-                                ->where('estado', 'activo')
-                                ->whereIn('acto_contenido', ['PRIMER AVISO PREVENTIVO', 'SEGUNDO AVISO PREVENTIVO']);
+                            $q->where('estado', 'activo');
                         })
                         ->whereIn('estado', ['concluido', 'elaborado'])
                         ->get();

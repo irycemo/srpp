@@ -113,7 +113,7 @@
 
                 <div class="bg-white p-4 rounded-lg  grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-4 mb-3">
 
-                    <span class="flex items-center justify-center  text-gray-700 md:col-span-3 col-span-1 sm:col-span-2 lg:col-span-6">Datos del gravámen</span>
+                    <span class="flex items-center justify-center  text-gray-700 md:col-span-3 col-span-1 sm:col-span-2 lg:col-span-6">Datos de la sentencia</span>
 
                     <div class="rounded-lg bg-gray-100 py-1 px-2">
 
@@ -128,6 +128,38 @@
                         <strong>Estado</strong>
 
                         <p>{{ $sentencia->estado }}</p>
+
+                    </div>
+
+                    <div class="rounded-lg bg-gray-100 py-1 px-2">
+
+                        <strong>Hojas</strong>
+
+                        <p>{{ $sentencia->hojas }}</p>
+
+                    </div>
+
+                    <div class="rounded-lg bg-gray-100 py-1 px-2">
+
+                        <strong>Expediente</strong>
+
+                        <p>{{ $sentencia->expediente }}</p>
+
+                    </div>
+
+                    <div class="rounded-lg bg-gray-100 py-1 px-2">
+
+                        <strong>Tomo</strong>
+
+                        <p>{{ $sentencia->tomo }}</p>
+
+                    </div>
+
+                    <div class="rounded-lg bg-gray-100 py-1 px-2">
+
+                        <strong>Registro</strong>
+
+                        <p>{{ $sentencia->registro }}</p>
 
                     </div>
 

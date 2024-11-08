@@ -26,4 +26,12 @@ class Sentencia extends Model implements Auditable
         return $this->belongsTo(Predio::class, 'predio_id');
     }
 
+    public function actores(){
+        return $this->morphMany(Actor::class, 'actorable');
+    }
+
+    public function promoventes(){
+        return $this->actores()->with('persona')->where('tipo_actor', 'promovente');
+    }
+
 }

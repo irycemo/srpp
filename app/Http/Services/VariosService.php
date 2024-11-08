@@ -17,9 +17,9 @@ class VariosService{
 
                 $acto = 'SEGUNDO AVISO PREVENTIVO';
 
-            }elseif($request['servicio_nombre'] == 'Donación de usufructo'){
+            }elseif($request['servicio_nombre'] == 'Donación / Venta de usufructo'){
 
-                $acto = 'DONACIÓN DE USUFRUCTO';
+                $acto = 'DONACIÓN / VENTA DE USUFRUCTO';
 
             }elseif($request['servicio_nombre'] == 'Aclaraciones administrativas de inscripciones'){
 

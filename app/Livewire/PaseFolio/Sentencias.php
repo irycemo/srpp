@@ -39,6 +39,9 @@ class Sentencias extends Component
     public $numero_documento;
     public $fecha_emision;
     public $procedencia;
+    public $hojas;
+    public $expediente;
+    public $fecha_inscripcion;
 
     public $acto_contenido;
     public $estado = 'activo';
@@ -81,7 +84,10 @@ class Sentencias extends Component
             'acto_contenido',
             'comentario',
             'label_numero_documento',
-            'selected_id'
+            'selected_id',
+            'hojas',
+            'expediente',
+            'fecha_inscripcion'
         ]);
 
         $this->sentencia = Sentencia::make();
@@ -112,8 +118,8 @@ class Sentencias extends Component
 
         $this->sentencia = $sentencia;
 
-        $this->antecente_tomo = $this->sentencia->movimientoRegistral->tomo;
-        $this->antecente_registro = $this->sentencia->movimientoRegistral->registro;
+        $this->antecente_tomo = $this->sentencia->tomo;
+        $this->antecente_registro = $this->sentencia->registro;
         $this->antecente_distrito = $this->sentencia->movimientoRegistral->getRawOriginal('distrito');
         $this->tipo_documento = $this->sentencia->movimientoRegistral->tipo_documento;
         $this->autoridad_cargo = $this->sentencia->movimientoRegistral->autoridad_cargo;
@@ -165,7 +171,10 @@ class Sentencias extends Component
                 'autoridad_nombre' => 'required',
                 'numero_documento' => 'required',
                 'fecha_emision' => 'required',
-                'procedencia' => 'nullable'
+                'procedencia' => 'nullable',
+                'hojas' => 'nullable',
+                'expediente' => 'nullable',
+                'fecha_inscripcion' => 'required'
             ]);
 
             $this->antecedente = false;
@@ -188,27 +197,30 @@ class Sentencias extends Component
                 if($this->sentencia->getKey()){
 
                     $this->sentencia->movimientoRegistral->update([
-                        'tomo' => $this->antecente_tomo,
-                        'registro' => $this->antecente_registro,
                         'distrito' => $this->antecente_distrito,
                         'folio_real' => $this->movimientoRegistral->folio_real,
                         'actualizado_por' => auth()->id()
                     ]);
 
+                    $this->sentencia->update([
+                        'tomo' => $this->antecente_tomo,
+                        'registro' => $this->antecente_registro,
+                    ]);
+
                 }else{
 
                     $movimiento_registral = MovimientoRegistral::create([
-                        'estado' => 'nuevo',
+                        'estado' => 'concluido',
                         'folio' => $this->movimientoRegistral->folioReal->ultimoFolio() + 1,
                         'seccion' => 'Sentencias',
-                        'tomo' => $this->antecente_tomo,
-                        'registro' => $this->antecente_registro,
                         'distrito' => $this->antecente_distrito,
                         'folio_real' => $this->movimientoRegistral->folio_real,
                         'actualizado_por' => auth()->id()
                     ]);
 
                     $this->sentencia = Sentencia::create([
+                        'tomo' => $this->antecente_tomo,
+                        'registro' => $this->antecente_registro,
                         'movimiento_registral_id' => $movimiento_registral->id,
                         'actualizado_por' => auth()->id()
                     ]);
@@ -240,6 +252,12 @@ class Sentencias extends Component
                 'actualizado_por' => auth()->id()
             ]);
 
+            $this->sentencia->update([
+                'hojas' => $this->hojas,
+                'expediente' => $this->expediente,
+                'fecha_inscripcion' => $this->fecha_inscripcion,
+            ]);
+
         } catch (\Throwable $th) {
             Log::error("Error al guardar documento de entrada de sentencia en pase a folio usuario por el usuario: (id: " . auth()->user()->id . ") " . auth()->user()->name . ". " . $th);
             $this->dispatch('mostrarMensaje', ['error', "Ha ocurrido un error."]);
@@ -258,7 +276,7 @@ class Sentencias extends Component
         try {
 
             $this->sentencia->update([
-                'estado' => 'nuevo',
+                'estado' => 'concluido',
                 'acto_contenido' => $this->acto_contenido,
                 'descripcion' => $this->comentario,
                 'actualizado_por' => auth()->id()

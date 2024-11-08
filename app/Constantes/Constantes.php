@@ -296,7 +296,8 @@ class Constantes{
         'DIVISIÓN DE HIPOTECA',
         'ADHESIÓN DE HIPOTECA',
         'POR ANTECEDENTE',
-        'CRÉDITO REFACCIONARIO'
+        'CRÉDITO REFACCIONARIO',
+        'HABILITACIÓN Ó AVÍO'
     ];
 
     const ACTOS_INSCRIPCION_VARIOS = [
@@ -311,7 +312,7 @@ class Constantes{
         'PERSONAS MORALES',
         'CONSOLIDACIÓN DEL USUFRUCTO',
         'ACLARACIÓN ADMINISTRATIVA',
-        'DONACIÓN DE USUFRUCTO'
+        'DONACIÓN / VENTA DE USUFRUCTO'
     ];
 
     const ACTOS_INSCRIPCION_SENTENCIAS = [
