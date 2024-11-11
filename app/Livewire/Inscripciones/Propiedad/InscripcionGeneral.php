@@ -714,15 +714,11 @@ class InscripcionGeneral extends Component
 
         $this->predio = $this->inscripcion->movimientoRegistral->folioReal->predio;
 
-        if(!$this->inscripcion->acto_contenido){
+        foreach($this->inscripcion->getAttributes() as $attribute => $value){
 
-            foreach($this->inscripcion->getAttributes() as $attribute => $value){
+            if(!$value && isset($this->predio->{ $attribute })){
 
-                if(!$value && isset($this->predio->{ $attribute })){
-
-                    $this->inscripcion->{$attribute} = $this->predio->{ $attribute};
-
-                }
+                $this->inscripcion->{$attribute} = $this->predio->{ $attribute};
 
             }
 
