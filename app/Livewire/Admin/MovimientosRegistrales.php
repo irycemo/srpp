@@ -206,7 +206,9 @@ class MovimientosRegistrales extends Component
                                                             'Certificador Oficialia',
                                                             'Certificador Juridico',
                                                             'Certificador',
-                                                            'Pase a folio'
+                                                            'Pase a folio',
+                                                            'Aclaraciones administrativas',
+                                                            'Avisos preventivos'
                                                         ]);
                                 })
                                 ->orderBy('name')

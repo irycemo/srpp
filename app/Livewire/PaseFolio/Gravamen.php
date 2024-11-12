@@ -168,7 +168,7 @@ class Gravamen extends Component
                 $cancelacionMovimiento = $this->movimientoRegistral->replicate();
 
                 $cancelacionMovimiento->folio = $this->movimientoRegistral->folioReal->ultimoFolio() + 1;
-                $cancelacionMovimiento->estado = 'elaborado';
+                $cancelacionMovimiento->estado = 'concluido';
                 $cancelacionMovimiento->save();
 
                 $cancelacionMovimiento->cancelacion()->create([

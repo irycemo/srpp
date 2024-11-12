@@ -8,14 +8,14 @@
 
             <div class="flex justify-end mb-2">
 
-                {{-- <x-button-gray
+                <x-button-gray
                         wire:click="agregarVario"
                         wire:loading.attr="disabled"
                         wire:target="agregarVario">
 
                         <img wire:loading wire:target="agregarVario" class="mx-auto h-4 mr-1" src="{{ asset('storage/img/loading3.svg') }}" alt="Loading">
                         Agregar movimiento
-                </x-button-gray> --}}
+                </x-button-gray>
 
             </div>
 

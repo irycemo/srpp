@@ -62,7 +62,7 @@ class SentenciasIndex extends Component
                                                         $q->where('distrito', '!=', 2);
                                                     })
                                                     ->whereHas('sentencia', function($q){
-                                                        $q->whereIn('servicio', ['D110']);
+                                                        $q->whereIn('servicio', ['D157']);
                                                     })
                                                     ->whereIn('estado', ['nuevo', 'captura', 'elaborado'])
                                                     ->orderBy($this->sort, $this->direction)
@@ -92,7 +92,7 @@ class SentenciasIndex extends Component
                                                         $q->where('distrito', '!=', 2);
                                                     })
                                                     ->whereHas('sentencia', function($q){
-                                                        $q->whereIn('servicio', ['D110']);
+                                                        $q->whereIn('servicio', ['D157']);
                                                     })
                                                     ->whereIn('estado', ['nuevo', 'captura', 'elaborado', 'finalizado'])
                                                     ->orderBy($this->sort, $this->direction)
@@ -125,7 +125,7 @@ class SentenciasIndex extends Component
                                                         $q->where('distrito', '!=', 2);
                                                     })
                                                     ->whereHas('sentencia', function($q){
-                                                        $q->whereIn('servicio', ['D110']);
+                                                        $q->whereIn('servicio', ['D157']);
                                                     })
                                                     ->orderBy($this->sort, $this->direction)
                                                     ->paginate($this->pagination);
@@ -151,7 +151,7 @@ class SentenciasIndex extends Component
                                                             ->orWhere('tramite', 'LIKE', '%' . $this->search . '%');
                                                     })
                                                     ->whereHas('sentencia', function($q){
-                                                        $q->whereIn('servicio', ['D110']);
+                                                        $q->whereIn('servicio', ['D157']);
                                                     })
                                                     ->orderBy($this->sort, $this->direction)
                                                     ->paginate($this->pagination);
