@@ -552,8 +552,6 @@ class InscripcionGeneral extends Component
 
             DB::transaction(function () {
 
-                $this->predio->save();
-
                 if($this->inscripcion->movimientoRegistral->estado != 'correccion'){
 
                     $this->procesarPropietarios();
@@ -647,9 +645,9 @@ class InscripcionGeneral extends Component
 
                 $this->inscripcion->movimientoRegistral->audits()->latest()->first()->update(['tags' => 'Elaboró inscripción de propiedad']);
 
-                (new PropiedadController())->caratula($this->inscripcion);
-
             });
+
+            (new PropiedadController())->caratula($this->inscripcion);
 
             return redirect()->route('propiedad');
 
