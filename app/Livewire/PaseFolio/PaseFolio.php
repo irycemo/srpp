@@ -351,7 +351,7 @@ class PaseFolio extends Component
 
             $movimientos = MovimientoRegistral::with('actualizadoPor', 'folioReal', 'asignadoA')
                                                     ->where('folio', 1)
-                                                    ->where('estado', 'nuevo')
+                                                    ->whereIn('estado', ['nuevo', 'correccion'])
                                                     ->where(function($q){
                                                         $q->whereNull('folio_real')
                                                             ->orWhereHas('folioReal', function($q){

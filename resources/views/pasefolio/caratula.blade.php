@@ -380,17 +380,21 @@
 
                         @endif
 
-                        {{-- @if($folioReal->varios) >= 1)
+                        @if(count($folioReal->varios) >= 1)
 
                             <p class="separador" style="text-align: center">Varios</p>
 
                             @foreach ($folioReal->varios as $vario)
 
-                                @if($vario->movimientoRegistral->folio == 1) @continue @endif
+                                @if($vario->movimiento_folio == 1) @continue @endif
 
                                 <p class="parrafo">
 
-                                    <p class="separador">Varios ({{ $folioReal->folio }}-{{ $folioReal->movimientosRegistrales()->where('id', $vario->movimiento_registral_id)->first()->folio }})</p>
+                                    <p class="separador">Varios ({{ $folioReal->folio }}-{{ $vario->movimiento_folio }})</p>
+
+                                    <p class="parrafo">
+                                        <strong>Fecha de inscripción: </strong> {{ $vario->fecha_inscripcion }}. <strong>Tomo:</strong> {{ $vario->tomo }}. <strong>Registro:</strong> {{ $vario->registro }}.
+                                    </p>
 
                                     <p class="parrafo">
                                         <strong>Acto contenido:</strong> {{ $vario->acto_contenido }}
@@ -404,7 +408,7 @@
 
                             @endforeach
 
-                        @endif --}}
+                        @endif
 
                         @if(count($folioReal->cancelaciones) >= 1)
 

@@ -69,6 +69,20 @@ trait FirmaElectronicaTrait{
 
         }
 
+        $varios = collect();
+
+        foreach ($folioReal->varios as $vario) {
+
+            $vario->load('movimientoRegistral');
+
+            if($vario->movimientoRegistral->folio == 1 || $vario->movimientoRegistral->estado == 'precalificacion') continue;
+
+            $item = $this->vario($vario);
+
+            $varios->push($item);
+
+        }
+
         $antecedentes = collect();
 
         $folioReal->load('antecedentes.folioRealAntecedente');
@@ -135,6 +149,7 @@ trait FirmaElectronicaTrait{
         $object->escritura = $escritura;
         $object->cancelaciones = $cancelaciones;
         $object->sentencias = $sentencias;
+        $object->varios = $varios;
         $object->asignado_por = $folioReal->asignado_por;
 
         return $object;
@@ -540,7 +555,6 @@ trait FirmaElectronicaTrait{
         $object->tipo_documento = $sentencia->movimientoRegistral->tipo_documento;
         $object->autoridad_numero = $sentencia->movimientoRegistral->autoridad_numero;
         $object->fecha_emision = Carbon::parse($sentencia->movimientoRegistral->fecha_emision)->format('d/m/Y');
-        $object->fecha_inscripcion = Carbon::parse($sentencia->movimientoRegistral->fecha_inscripcion)->format('d/m/Y');
         $object->procedencia = $sentencia->movimientoRegistral->procedencia;
 
         return $object;
@@ -597,7 +611,8 @@ trait FirmaElectronicaTrait{
         $object->acto_contenido = $vario->acto_contenido;
         $object->estado = $vario->estado;
         $object->descripcion = $vario->descripcion;
-        $object->fecha_inscripcion = $vario->fecha_inscripcion;
+        $object->tomo = $vario->movimientoRegistral->tomo;
+        $object->registro = $vario->movimientoRegistral->registro;
         $object->movimiento_folio = $vario->movimientoRegistral->folio;
         $object->folioPersonaMoral = $folioPersonaMoral;
         $object->tipo_documento = $vario->movimientoRegistral->tipo_documento;
@@ -606,7 +621,7 @@ trait FirmaElectronicaTrait{
         $object->autoridad_nombre = $vario->movimientoRegistral->autoridad_nombre;
         $object->autoridad_numero = $vario->movimientoRegistral->autoridad_numero;
         $object->fecha_emision = Carbon::parse($vario->movimientoRegistral->fecha_emision)->format('d-m-Y');
-        $object->fecha_inscripcion = Carbon::parse($vario->movimientoRegistral->fecha_inscripcion)->format('d-m-Y');
+        $object->fecha_inscripcion = Carbon::parse($vario->fecha_inscripcion)->format('d-m-Y');
         $object->procedencia = $vario->movimientoRegistral->procedencia;
 
         return $object;

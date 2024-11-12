@@ -238,8 +238,6 @@
 
                             <option value="">Seleccione una opción</option>
 
-                            <option value="embargo">Embargo</option>
-
                             @foreach ($actos as $acto)
 
                                 <option value="{{ $acto }}">{{ $acto }}</option>
@@ -247,6 +245,12 @@
                             @endforeach
 
                         </x-input-select>
+
+                    </x-input-group>
+
+                    <x-input-group for="fecha_inscripcion" label="Fecha de inscripción" :error="$errors->first('fecha_inscripcion')" class="w-full">
+
+                        <x-input-text type="date" id="fecha_inscripcion" wire:model="fecha_inscripcion" />
 
                     </x-input-group>
 
@@ -278,8 +282,6 @@
         <x-slot name="footer">
 
             <div class="flex gap-3">
-
-                {{ $errors }}
 
                 @if($crear)
 

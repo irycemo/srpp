@@ -196,19 +196,13 @@
 
                     <x-input-group for="hojas" label="Hojas" :error="$errors->first('hojas')" class="w-full">
 
-                        <x-input-text id="hojas" wire:model="hojas" />
+                        <x-input-text type="number" id="hojas" wire:model="hojas" />
 
                     </x-input-group>
 
                     <x-input-group for="expediente" label="Expediente" :error="$errors->first('expediente')" class="w-full">
 
                         <x-input-text id="expediente" wire:model="expediente" />
-
-                    </x-input-group>
-
-                    <x-input-group for="fecha_inscripcion" label="Fecha de inscripción" :error="$errors->first('fecha_inscripcion')" class="w-full">
-
-                        <x-input-text type="date" id="fecha_inscripcion" wire:model="fecha_inscripcion" />
 
                     </x-input-group>
 
@@ -263,6 +257,12 @@
                             @endforeach
 
                         </x-input-select>
+
+                    </x-input-group>
+
+                    <x-input-group for="fecha_inscripcion" label="Fecha de inscripción" :error="$errors->first('fecha_inscripcion')" class="w-full">
+
+                        <x-input-text type="date" id="fecha_inscripcion" wire:model="fecha_inscripcion" />
 
                     </x-input-group>
 

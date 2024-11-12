@@ -40,6 +40,7 @@ class Varios extends Component
     public $numero_documento;
     public $fecha_emision;
     public $procedencia;
+    public $fecha_inscripcion;
 
     public $acto_contenido;
     public $estado = 'activo';
@@ -82,7 +83,8 @@ class Varios extends Component
             'acto_contenido',
             'comentario',
             'label_numero_documento',
-            'selected_id'
+            'selected_id',
+            'fecha_inscripcion'
         ]);
 
         $this->vario = Vario::make();
@@ -124,6 +126,7 @@ class Varios extends Component
         $this->procedencia = $this->vario->movimientoRegistral->procedencia;
         $this->acto_contenido = $this->vario->acto_contenido;
         $this->estado = $this->vario->estado;
+        $this->fecha_inscripcion = $this->vario->fecha_inscripcion;
         $this->comentario = $this->vario->descripcion;
 
         $this->modal = true;
@@ -135,8 +138,6 @@ class Varios extends Component
     }
 
     public function cambiar($string){
-
-        $this->authorize('update', $this->movimientoRegistral);
 
         if($string == 'documento_entrada'){
 
@@ -199,7 +200,7 @@ class Varios extends Component
                 }else{
 
                     $movimiento_registral = MovimientoRegistral::create([
-                        'estado' => 'nuevo',
+                        'estado' => 'concluido',
                         'folio' => $this->movimientoRegistral->folioReal->ultimoFolio() + 1,
                         'seccion' => 'Varios',
                         'tomo' => $this->antecente_tomo,
@@ -211,7 +212,7 @@ class Varios extends Component
 
                     $this->vario = Vario::create([
                         'movimiento_registral_id' => $movimiento_registral->id,
-                        'actualizado_por' => auth()->id()
+                        'actualizado_por' => auth()->id(),
                     ]);
 
                 }
@@ -252,16 +253,18 @@ class Varios extends Component
 
         $this->validate([
             'acto_contenido' => 'required',
-            'comentario' => 'required'
+            'comentario' => 'required',
+            'fecha_inscripcion' => 'required'
         ]);
 
 
         try {
 
             $this->vario->update([
-                'estado' => 'nuevo',
+                'estado' => 'inactivo',
                 'acto_contenido' => $this->acto_contenido,
                 'descripcion' => $this->comentario,
+                'fecha_inscripcion' => $this->fecha_inscripcion,
                 'actualizado_por' => auth()->id()
             ]);
 

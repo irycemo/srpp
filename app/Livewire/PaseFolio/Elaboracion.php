@@ -482,8 +482,6 @@ class Elaboracion extends Component
     #[On('finalizarPaseAFolio')]
     public function finalizarPaseAFolio(){
 
-        $this->authorize('update', $this->movimientoRegistral);
-
         if($this->propiedad) $this->propiedad->refresh();
 
         $pn = 0;
@@ -659,7 +657,6 @@ class Elaboracion extends Component
             DB::transaction(function (){
 
                 $this->movimientoRegistral->folioReal->update([
-                    'estado' => 'elaborado',
                     'asignado_por' => auth()->user()->name
                 ]);
 

@@ -141,8 +141,6 @@ class Sentencias extends Component
 
     public function cambiar($string){
 
-        $this->authorize('update', $this->movimientoRegistral);
-
         if($string == 'documento_entrada'){
 
             $this->validate([
@@ -174,7 +172,6 @@ class Sentencias extends Component
                 'procedencia' => 'nullable',
                 'hojas' => 'nullable',
                 'expediente' => 'nullable',
-                'fecha_inscripcion' => 'required'
             ]);
 
             $this->antecedente = false;
@@ -269,7 +266,8 @@ class Sentencias extends Component
 
         $this->validate([
             'acto_contenido' => 'required',
-            'comentario' => 'required'
+            'comentario' => 'required',
+            'fecha_inscripcion' => 'required'
         ]);
 
 
