@@ -309,6 +309,15 @@ class AsignacionService{
     public function obtenerUsuarioPropiedad($folioReal, $distrito, $estado):int
     {
 
+        if($distrito == 2){
+
+            $roles = ['Pase a folio', 'Registrador Propiedad'];
+
+        }else{
+
+            $roles = ['Registrador Propiedad'];
+        }
+
         $usuarios = User::with('ultimoMovimientoRegistralAsignado')
                                 ->where('status', 'activo')
                                 ->when($distrito == 2, function($q){
@@ -322,9 +331,9 @@ class AsignacionService{
                                         $q->whereIn('name', ['Propiedad', 'Registrador Propiedad']);
                                     });
                                 })
-                                ->when($folioReal === null && $estado != 'precalificacion', function($q){
-                                    $q->whereHas('roles', function($q){
-                                        $q->whereIn('name', ['Pase a folio', 'Registrador Propiedad']);
+                                ->when($folioReal === null && $estado != 'precalificacion', function($q) use($roles){
+                                    $q->whereHas('roles', function($q) use($roles){
+                                        $q->whereIn('name', $roles);
                                     });
                                 })
                                 ->get();
@@ -388,6 +397,15 @@ class AsignacionService{
     public function obtenerUsuarioGravamen($folioReal, $distrito, $estado):int
     {
 
+        if($distrito == 2){
+
+            $roles = ['Pase a folio', 'Registrador Gravamen'];
+
+        }else{
+
+            $roles = ['Registrador Gravamen'];
+        }
+
         $usuarios = User::with('ultimoMovimientoRegistralAsignado')
                                 ->where('status', 'activo')
                                 ->when($distrito == 2, function($q){
@@ -401,9 +419,9 @@ class AsignacionService{
                                         $q->whereIn('name', ['Gravamen', 'Registrador Gravamen']);
                                     });
                                 })
-                                ->when($folioReal === null && $estado != 'precalificacion', function($q){
-                                    $q->whereHas('roles', function($q){
-                                        $q->whereIn('name', ['Pase a folio', 'Registrador Gravamen']);
+                                ->when($folioReal === null && $estado != 'precalificacion', function($q) use($roles){
+                                    $q->whereHas('roles', function($q) use($roles){
+                                        $q->whereIn('name', $roles);
                                     });
                                 })
                                 ->get();
@@ -496,7 +514,7 @@ class AsignacionService{
                                 })
                                 ->when($folioReal === null && $estado != 'precalificacion', function($q){
                                     $q->whereHas('roles', function($q){
-                                        $q->whereIn('name', ['Pase a folio', 'Registrador Cancelación']);
+                                        $q->whereIn('name', ['Registrador Cancelación']);
                                     });
                                 })
                                 ->get();
@@ -561,6 +579,15 @@ class AsignacionService{
     public function obtenerUsuarioVarios($folioReal, $distrito, $estado):int
     {
 
+        if($distrito == 2){
+
+            $roles = ['Pase a folio', 'Registrador Varios'];
+
+        }else{
+
+            $roles = ['Registrador Varios'];
+        }
+
         $usuarios = User::with('ultimoMovimientoRegistralAsignado')
                                 ->where('status', 'activo')
                                 ->when($distrito == 2, function($q){
@@ -574,9 +601,9 @@ class AsignacionService{
                                         $q->whereIn('name', ['Varios', 'Registrador Varios']);
                                     });
                                 })
-                                ->when($folioReal === null && $estado != 'precalificacion', function($q){
-                                    $q->whereHas('roles', function($q){
-                                        $q->whereIn('name', ['Pase a folio', 'Registrador Varios']);
+                                ->when($folioReal === null && $estado != 'precalificacion', function($q) use($roles){
+                                    $q->whereHas('roles', function($q) use($roles){
+                                        $q->whereIn('name', $roles);
                                     });
                                 })
                                 ->get();
@@ -639,6 +666,16 @@ class AsignacionService{
     public function obtenerUsuarioSentencias($folioReal, $distrito, $estado):int
     {
 
+        if($distrito == 2){
+
+            $roles = ['Pase a folio', 'Registrador Sentencias'];
+
+        }else{
+
+            $roles = ['Registrador Sentencias'];
+        }
+
+
         $usuarios = User::with('ultimoMovimientoRegistralAsignado')
                                 ->where('status', 'activo')
                                 ->when($distrito == 2, function($q){
@@ -652,9 +689,9 @@ class AsignacionService{
                                         $q->whereIn('name', ['Sentencias', 'Registrador Sentencias']);
                                     });
                                 })
-                                ->when($folioReal === null && $estado != 'precalificacion', function($q){
-                                    $q->whereHas('roles', function($q){
-                                        $q->whereIn('name', ['Pase a folio', 'Registrador Sentencias']);
+                                ->when($folioReal === null && $estado != 'precalificacion', function($q) use($roles){
+                                    $q->whereHas('roles', function($q) use($roles){
+                                        $q->whereIn('name', $roles);
                                     });
                                 })
                                 ->get();
