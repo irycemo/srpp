@@ -915,11 +915,11 @@ trait PropiedadTrait{
             'status' => 'nuevo'
         ]);
 
-        foreach($this->predio->getAttributes() as $attribute => $value){
+        foreach($this->inscripcion->movimientoRegistral->folioReal->predio->getAttributes() as $attribute => $value){
 
             if(in_array($attribute, ['id', 'folio_real', 'escritura_id', 'superficie_terreno'])) continue;
 
-            $predioNuevo->{$attribute} = $this->predio->{ $attribute};
+            $predioNuevo->{$attribute} = $this->inscripcion->movimientoRegistral->folioReal->predio->{ $attribute};
 
         }
 

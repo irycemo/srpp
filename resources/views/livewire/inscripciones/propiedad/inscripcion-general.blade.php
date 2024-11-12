@@ -574,321 +574,107 @@
 
     </div>
 
-    @if($inscripcion->movimientoRegistral->estado != 'correccion')
+    @if(!$nuevoFolio)
 
-        <div class="grid grid-cols-1 md:grid-cols-3 gap-1 mb-2">
+        @if($inscripcion->movimientoRegistral->estado != 'correccion')
 
-            @if($inscripcion)
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-1 mb-2">
 
-                <div class="mb-3 bg-white rounded-lg p-3 shadow-lg">
+                @if($inscripcion)
 
-                    <span class="flex items-center justify-center text-lg text-gray-700 mb-5">Transmitentes ({{ $inscripcion->transmitentes()->count() }})</span>
+                    <div class="mb-3 bg-white rounded-lg p-3 shadow-lg">
 
-                    <div class="flex justify-end mb-2">
+                        <span class="flex items-center justify-center text-lg text-gray-700 mb-5">Transmitentes ({{ $inscripcion->transmitentes()->count() }})</span>
 
-                        <x-button-gray
-                                wire:click="agregarTransmitente"
-                                wire:loading.attr="disabled"
-                                wire:target="agregarTransmitente">
+                        <div class="flex justify-end mb-2">
 
-                                <img wire:loading wire:target="agregarTransmitente" class="mx-auto h-4 mr-1" src="{{ asset('storage/img/loading3.svg') }}" alt="Loading">
-                                Agregar transmitente
-                        </x-button-gray>
+                            <x-button-gray
+                                    wire:click="agregarTransmitente"
+                                    wire:loading.attr="disabled"
+                                    wire:target="agregarTransmitente">
 
-                    </div>
+                                    <img wire:loading wire:target="agregarTransmitente" class="mx-auto h-4 mr-1" src="{{ asset('storage/img/loading3.svg') }}" alt="Loading">
+                                    Agregar transmitente
+                            </x-button-gray>
 
-                    <x-table>
+                        </div>
 
-                        <x-slot name="head">
-                            <x-table.heading >Nombre / Razón social</x-table.heading>
-                            <x-table.heading >% propiedad</x-table.heading>
-                            <x-table.heading >% nuda</x-table.heading>
-                            <x-table.heading >% usufructo</x-table.heading>
-                            <x-table.heading ></x-table.heading>
-                        </x-slot>
+                        <x-table>
 
-                        <x-slot name="body">
+                            <x-slot name="head">
+                                <x-table.heading >Nombre / Razón social</x-table.heading>
+                                <x-table.heading >% propiedad</x-table.heading>
+                                <x-table.heading >% nuda</x-table.heading>
+                                <x-table.heading >% usufructo</x-table.heading>
+                                <x-table.heading ></x-table.heading>
+                            </x-slot>
 
-                            @foreach ($inscripcion->transmitentes() as $transmitente)
+                            <x-slot name="body">
 
-                                <x-table.row >
+                                @foreach ($inscripcion->transmitentes() as $transmitente)
 
-                                    <x-table.cell>{{ $transmitente->persona->nombre }} {{ $transmitente->persona->ap_paterno }} {{ $transmitente->persona->ap_materno }} {{ $transmitente->persona->razon_social }}</x-table.cell>
-                                    <x-table.cell>{{ $transmitente->porcentaje_propiedad }}</x-table.cell>
-                                    <x-table.cell>{{ $transmitente->porcentaje_nuda }}</x-table.cell>
-                                    <x-table.cell>{{ $transmitente->porcentaje_usufructo }}</x-table.cell>
-                                    <x-table.cell>
-                                        <div class="flex flex-col items-center gap-3">
-                                            <x-button-red
-                                                wire:click="borrarActor({{ $transmitente->id }})"
-                                                wire:loading.attr="disabled">
+                                    <x-table.row >
 
-                                                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-4 h-4">
-                                                    <path stroke-linecap="round" stroke-linejoin="round" d="m14.74 9-.346 9m-4.788 0L9.26 9m9.968-3.21c.342.052.682.107 1.022.166m-1.022-.165L18.16 19.673a2.25 2.25 0 0 1-2.244 2.077H8.084a2.25 2.25 0 0 1-2.244-2.077L4.772 5.79m14.456 0a48.108 48.108 0 0 0-3.478-.397m-12 .562c.34-.059.68-.114 1.022-.165m0 0a48.11 48.11 0 0 1 3.478-.397m7.5 0v-.916c0-1.18-.91-2.164-2.09-2.201a51.964 51.964 0 0 0-3.32 0c-1.18.037-2.09 1.022-2.09 2.201v.916m7.5 0a48.667 48.667 0 0 0-7.5 0" />
-                                                </svg>
+                                        <x-table.cell>{{ $transmitente->persona->nombre }} {{ $transmitente->persona->ap_paterno }} {{ $transmitente->persona->ap_materno }} {{ $transmitente->persona->razon_social }}</x-table.cell>
+                                        <x-table.cell>{{ $transmitente->porcentaje_propiedad }}</x-table.cell>
+                                        <x-table.cell>{{ $transmitente->porcentaje_nuda }}</x-table.cell>
+                                        <x-table.cell>{{ $transmitente->porcentaje_usufructo }}</x-table.cell>
+                                        <x-table.cell>
+                                            <div class="flex flex-col items-center gap-3">
+                                                <x-button-red
+                                                    wire:click="borrarActor({{ $transmitente->id }})"
+                                                    wire:loading.attr="disabled">
 
-                                            </x-button-red>
-                                        </div>
-                                    </x-table.cell>
+                                                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-4 h-4">
+                                                        <path stroke-linecap="round" stroke-linejoin="round" d="m14.74 9-.346 9m-4.788 0L9.26 9m9.968-3.21c.342.052.682.107 1.022.166m-1.022-.165L18.16 19.673a2.25 2.25 0 0 1-2.244 2.077H8.084a2.25 2.25 0 0 1-2.244-2.077L4.772 5.79m14.456 0a48.108 48.108 0 0 0-3.478-.397m-12 .562c.34-.059.68-.114 1.022-.165m0 0a48.11 48.11 0 0 1 3.478-.397m7.5 0v-.916c0-1.18-.91-2.164-2.09-2.201a51.964 51.964 0 0 0-3.32 0c-1.18.037-2.09 1.022-2.09 2.201v.916m7.5 0a48.667 48.667 0 0 0-7.5 0" />
+                                                    </svg>
 
-                                </x-table.row>
+                                                </x-button-red>
+                                            </div>
+                                        </x-table.cell>
 
-                            @endforeach
+                                    </x-table.row>
 
-                        </x-slot>
+                                @endforeach
 
-                        <x-slot name="tfoot"></x-slot>
+                            </x-slot>
 
-                    </x-table>
+                            <x-slot name="tfoot"></x-slot>
 
-                </div>
-
-                <div class="mb-3 bg-white rounded-lg p-3 shadow-lg">
-
-                    <span class="flex items-center justify-center text-lg text-gray-700 mb-5">Adquirientes ({{ $inscripcion->propietarios()->count() }})</span>
-
-                    <div class="flex justify-end mb-2">
-
-                        <x-button-gray
-                                wire:click="agregarPropietario"
-                                wire:loading.attr="disabled"
-                                wire:target="agregarPropietario">
-
-                                <img wire:loading wire:target="agregarPropietario" class="mx-auto h-4 mr-1" src="{{ asset('storage/img/loading3.svg') }}" alt="Loading">
-                                Agregar adquiriente
-                        </x-button-gray>
+                        </x-table>
 
                     </div>
 
-                    <x-table>
+                    <div class="mb-3 bg-white rounded-lg p-3 shadow-lg">
 
-                        <x-slot name="head">
-                            <x-table.heading >Nombre / Razón social</x-table.heading>
-                            <x-table.heading >% propiedad</x-table.heading>
-                            <x-table.heading >% nuda</x-table.heading>
-                            <x-table.heading >% usufructo</x-table.heading>
-                            <x-table.heading ></x-table.heading>
-                        </x-slot>
+                        <span class="flex items-center justify-center text-lg text-gray-700 mb-5">Adquirientes ({{ $inscripcion->propietarios()->count() }})</span>
 
-                        <x-slot name="body">
+                        <div class="flex justify-end mb-2">
 
-                            @foreach ($inscripcion->propietarios() as $propietario)
+                            <x-button-gray
+                                    wire:click="agregarPropietario"
+                                    wire:loading.attr="disabled"
+                                    wire:target="agregarPropietario">
 
-                                <x-table.row >
+                                    <img wire:loading wire:target="agregarPropietario" class="mx-auto h-4 mr-1" src="{{ asset('storage/img/loading3.svg') }}" alt="Loading">
+                                    Agregar adquiriente
+                            </x-button-gray>
 
-                                    <x-table.cell>{{ $propietario->persona->nombre }} {{ $propietario->persona->ap_paterno }} {{ $propietario->persona->ap_materno }} {{ $propietario->persona->razon_social }}</x-table.cell>
-                                    <x-table.cell>{{ $propietario->porcentaje_propiedad }}%</x-table.cell>
-                                    <x-table.cell>{{ $propietario->porcentaje_nuda }}%</x-table.cell>
-                                    <x-table.cell>{{ $propietario->porcentaje_usufructo }}%</x-table.cell>
-                                    <x-table.cell>
-                                        <div class="flex flex-col items-center gap-3">
-                                            <x-button-blue
-                                                wire:click="editarActor({{ $propietario->id }}, 'propietario')"
-                                                wire:traget="editarActor({{ $propietario->id }}, 'propietario')"
-                                                wire:loading.attr="disabled"
-                                            >
+                        </div>
 
-                                                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-4 h-4">
-                                                    <path stroke-linecap="round" stroke-linejoin="round" d="m16.862 4.487 1.687-1.688a1.875 1.875 0 1 1 2.652 2.652L10.582 16.07a4.5 4.5 0 0 1-1.897 1.13L6 18l.8-2.685a4.5 4.5 0 0 1 1.13-1.897l8.932-8.931Zm0 0L19.5 7.125M18 14v4.75A2.25 2.25 0 0 1 15.75 21H5.25A2.25 2.25 0 0 1 3 18.75V8.25A2.25 2.25 0 0 1 5.25 6H10" />
-                                                </svg>
+                        <x-table>
 
-                                            </x-button-blue>
-                                            <x-button-red
-                                                wire:click="borrarActor({{ $propietario->id }})"
-                                                wire:loading.attr="disabled">
+                            <x-slot name="head">
+                                <x-table.heading >Nombre / Razón social</x-table.heading>
+                                <x-table.heading >% propiedad</x-table.heading>
+                                <x-table.heading >% nuda</x-table.heading>
+                                <x-table.heading >% usufructo</x-table.heading>
+                                <x-table.heading ></x-table.heading>
+                            </x-slot>
 
-                                                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-4 h-4">
-                                                    <path stroke-linecap="round" stroke-linejoin="round" d="m14.74 9-.346 9m-4.788 0L9.26 9m9.968-3.21c.342.052.682.107 1.022.166m-1.022-.165L18.16 19.673a2.25 2.25 0 0 1-2.244 2.077H8.084a2.25 2.25 0 0 1-2.244-2.077L4.772 5.79m14.456 0a48.108 48.108 0 0 0-3.478-.397m-12 .562c.34-.059.68-.114 1.022-.165m0 0a48.11 48.11 0 0 1 3.478-.397m7.5 0v-.916c0-1.18-.91-2.164-2.09-2.201a51.964 51.964 0 0 0-3.32 0c-1.18.037-2.09 1.022-2.09 2.201v.916m7.5 0a48.667 48.667 0 0 0-7.5 0" />
-                                                </svg>
+                            <x-slot name="body">
 
-                                            </x-button-red>
-                                        </div>
-                                    </x-table.cell>
-
-                                </x-table.row>
-
-                            @endforeach
-
-                        </x-slot>
-
-                        <x-slot name="tfoot"></x-slot>
-
-                    </x-table>
-
-                </div>
-
-                <div class="mb-3 bg-white rounded-lg p-3 shadow-lg">
-
-                    <span class="flex items-center justify-center text-lg text-gray-700 mb-5">Representantes ({{ $inscripcion->representantes()->count() }})</span>
-
-                    <div class="flex justify-end mb-2">
-
-                        <x-button-gray
-                                wire:click="agregarRepresentante"
-                                wire:loading.attr="disabled"
-                                wire:target="agregarRepresentante">
-
-                                <img wire:loading wire:target="agregarRepresentante" class="mx-auto h-4 mr-1" src="{{ asset('storage/img/loading3.svg') }}" alt="Loading">
-                                Agregar representante
-                        </x-button-gray>
-
-                    </div>
-
-                    <x-table>
-
-                        <x-slot name="head">
-                            <x-table.heading >Nombre / Razón social</x-table.heading>
-                            <x-table.heading >Representados</x-table.heading>
-                            <x-table.heading ></x-table.heading>
-                        </x-slot>
-
-                        <x-slot name="body">
-
-                            @foreach ($inscripcion->representantes() as $representante)
-
-                                <x-table.row >
-
-                                    <x-table.cell>{{ $representante->persona->nombre }} {{ $representante->persona->ap_paterno }} {{ $representante->persona->ap_materno }} {{ $representante->persona->razon_social }}</x-table.cell>
-                                    <x-table.cell>
-
-                                        @foreach ($representante->representados as $representado)
-
-                                            <p>{{ $representado->persona->nombre }} {{ $representado->persona->ap_paterno }} {{ $representado->persona->ap_materno }} {{ $representado->persona->razon_social }}</p>
-
-                                        @endforeach
-
-                                    </x-table.cell>
-                                    <x-table.cell>
-                                        <div class="flex flex-col items-center gap-3">
-                                            <x-button-blue
-                                                wire:click="editarActor({{ $representante->id }}, 'representante')"
-                                                wire:loading.attr="disabled"
-                                            >
-
-                                                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-4 h-4">
-                                                    <path stroke-linecap="round" stroke-linejoin="round" d="m16.862 4.487 1.687-1.688a1.875 1.875 0 1 1 2.652 2.652L10.582 16.07a4.5 4.5 0 0 1-1.897 1.13L6 18l.8-2.685a4.5 4.5 0 0 1 1.13-1.897l8.932-8.931Zm0 0L19.5 7.125M18 14v4.75A2.25 2.25 0 0 1 15.75 21H5.25A2.25 2.25 0 0 1 3 18.75V8.25A2.25 2.25 0 0 1 5.25 6H10" />
-                                                </svg>
-
-                                            </x-button-blue>
-                                            <x-button-red
-                                                wire:click="borrarActor({{ $representante->id }})"
-                                                wire:loading.attr="disabled">
-
-                                                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-4 h-4">
-                                                    <path stroke-linecap="round" stroke-linejoin="round" d="m14.74 9-.346 9m-4.788 0L9.26 9m9.968-3.21c.342.052.682.107 1.022.166m-1.022-.165L18.16 19.673a2.25 2.25 0 0 1-2.244 2.077H8.084a2.25 2.25 0 0 1-2.244-2.077L4.772 5.79m14.456 0a48.108 48.108 0 0 0-3.478-.397m-12 .562c.34-.059.68-.114 1.022-.165m0 0a48.11 48.11 0 0 1 3.478-.397m7.5 0v-.916c0-1.18-.91-2.164-2.09-2.201a51.964 51.964 0 0 0-3.32 0c-1.18.037-2.09 1.022-2.09 2.201v.916m7.5 0a48.667 48.667 0 0 0-7.5 0" />
-                                                </svg>
-
-                                            </x-button-red>
-                                        </div>
-                                    </x-table.cell>
-
-                                </x-table.row>
-
-                            @endforeach
-
-                        </x-slot>
-
-                        <x-slot name="tfoot"></x-slot>
-
-                    </x-table>
-
-                </div>
-
-            @endif
-
-        </div>
-
-        <div class="bg-white rounded-lg p-3 shadow-lg mb-4">
-
-            <div>
-
-                <h4 class="text-lg mb-1 text-center">Distribuición de porcentajes</h4>
-
-            </div>
-
-            <table class="mx-auto">
-
-                <thead class="border-b border-gray-300 ">
-
-                    <tr class="text-sm text-gray-500 text-left traling-wider whitespace-nowrap">
-
-                        <th class="px-2">Nombre / Razón social</th>
-                        <th class="px-2">% Propiedad</th>
-                        <th class="px-2">% Nuda</th>
-                        <th class="px-2">% Usufructo</th>
-
-                    </tr>
-
-                </thead>
-
-                <tbody class="divide-y divide-gray-200">
-
-                    @foreach ($transmitentes as $key => $transmitente)
-
-                        <tr class="text-gray-500 text-sm leading-relaxed">
-                            <td class=" p-2">(Tra.) {{ $transmitente['nombre'] }} {{ $transmitente['ap_paterno'] }} {{ $transmitente['ap_materno'] }} {{ $transmitente['razon_social'] }}</td>
-                            <td class=" p-2">
-                                <input wire:model.live="transmitentes.{{ $key }}.porcentaje_propiedad" type="number" class="bg-white text-sm w-full rounded-md p-2 border border-gray-500 outline-none ring-blue-600 focus:ring-1 focus:border-blue-600">
-                            </td>
-                            <td class=" p-2">
-                                <input wire:model.live="transmitentes.{{ $key }}.porcentaje_nuda" type="number" class="bg-white text-sm w-full rounded-md p-2 border border-gray-500 outline-none ring-blue-600 focus:ring-1 focus:border-blue-600">
-                            </td>
-                            <td class=" p-2">
-                                <input wire:model.live="transmitentes.{{ $key }}.porcentaje_usufructo" type="number" class="bg-white text-sm w-full rounded-md p-2 border border-gray-500 outline-none ring-blue-600 focus:ring-1 focus:border-blue-600">
-                            </td>
-                        </tr>
-
-                    @endforeach
-
-                    @foreach ($this->inscripcion->propietarios() as $adquiriente)
-
-                        <tr class="text-gray-500 text-sm leading-relaxed">
-                            <td class=" px-2">(Adq.){{ $adquiriente->persona->nombre }} {{ $adquiriente->persona->ap_paterno }} {{ $adquiriente->persona->ap_materno }} {{ $adquiriente->persona->razon_social }}</td>
-                            <td class=" px-2">{{ $adquiriente->porcentaje_propiedad ?? '0' }}</td>
-                            <td class=" px-2">{{ $adquiriente->porcentaje_nuda ?? '0' }} </td>
-                            <td class=" px-2">{{ $adquiriente->porcentaje_usufructo ?? '0' }}</td>
-                        </tr>
-
-                    @endforeach
-
-                    <tr class="text-gray-500 text-sm leading-relaxed">
-                        <td class=" px-2">Totales</td>
-                        <td class=" px-2">{{ collect($transmitentes)->sum('porcentaje_propiedad') + $this->inscripcion->propietarios()->sum('porcentaje_propiedad') }}</td>
-                        <td class=" px-2">{{ collect($transmitentes)->sum('porcentaje_nuda') + $this->inscripcion->propietarios()->sum('porcentaje_nuda') }}</td>
-                        <td class=" px-2">{{ collect($transmitentes)->sum('porcentaje_usufructo') + $this->inscripcion->propietarios()->sum('porcentaje_usufructo') }}</td>
-                    </tr>
-
-                </tbody>
-
-            </table>
-
-        </div>
-
-    @else
-
-        <div>
-
-            <div class="p-4 bg-white shadow-xl rounded-xl mb-5">
-
-                <div class="mb-3 bg-white rounded-lg p-3">
-
-                    <span class="flex items-center justify-center text-lg text-gray-700 mb-5">Propietarios</span>
-
-                    <x-table>
-
-                        <x-slot name="head">
-                            <x-table.heading >Nombre / Razón social</x-table.heading>
-                            <x-table.heading >Porcentaje propiedad</x-table.heading>
-                            <x-table.heading >Porcentaje nuda</x-table.heading>
-                            <x-table.heading >Porcentaje usufructo</x-table.heading>
-                            <x-table.heading ></x-table.heading>
-                        </x-slot>
-
-                        <x-slot name="body">
-
-                            @if($predio)
-
-                                @foreach ($predio->propietarios() as $propietario)
+                                @foreach ($inscripcion->propietarios() as $propietario)
 
                                     <x-table.row >
 
@@ -897,19 +683,27 @@
                                         <x-table.cell>{{ $propietario->porcentaje_nuda }}%</x-table.cell>
                                         <x-table.cell>{{ $propietario->porcentaje_usufructo }}%</x-table.cell>
                                         <x-table.cell>
-                                            <div class="flex items-center gap-3">
+                                            <div class="flex flex-col items-center gap-3">
                                                 <x-button-blue
                                                     wire:click="editarActor({{ $propietario->id }}, 'propietario')"
                                                     wire:traget="editarActor({{ $propietario->id }}, 'propietario')"
                                                     wire:loading.attr="disabled"
                                                 >
-                                                    Editar
+
+                                                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-4 h-4">
+                                                        <path stroke-linecap="round" stroke-linejoin="round" d="m16.862 4.487 1.687-1.688a1.875 1.875 0 1 1 2.652 2.652L10.582 16.07a4.5 4.5 0 0 1-1.897 1.13L6 18l.8-2.685a4.5 4.5 0 0 1 1.13-1.897l8.932-8.931Zm0 0L19.5 7.125M18 14v4.75A2.25 2.25 0 0 1 15.75 21H5.25A2.25 2.25 0 0 1 3 18.75V8.25A2.25 2.25 0 0 1 5.25 6H10" />
+                                                    </svg>
+
                                                 </x-button-blue>
-                                                {{-- <x-button-red
+                                                <x-button-red
                                                     wire:click="borrarActor({{ $propietario->id }})"
                                                     wire:loading.attr="disabled">
-                                                    Borrar
-                                                </x-button-red> --}}
+
+                                                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-4 h-4">
+                                                        <path stroke-linecap="round" stroke-linejoin="round" d="m14.74 9-.346 9m-4.788 0L9.26 9m9.968-3.21c.342.052.682.107 1.022.166m-1.022-.165L18.16 19.673a2.25 2.25 0 0 1-2.244 2.077H8.084a2.25 2.25 0 0 1-2.244-2.077L4.772 5.79m14.456 0a48.108 48.108 0 0 0-3.478-.397m-12 .562c.34-.059.68-.114 1.022-.165m0 0a48.11 48.11 0 0 1 3.478-.397m7.5 0v-.916c0-1.18-.91-2.164-2.09-2.201a51.964 51.964 0 0 0-3.32 0c-1.18.037-2.09 1.022-2.09 2.201v.916m7.5 0a48.667 48.667 0 0 0-7.5 0" />
+                                                    </svg>
+
+                                                </x-button-red>
                                             </div>
                                         </x-table.cell>
 
@@ -917,19 +711,229 @@
 
                                 @endforeach
 
-                            @endif
+                            </x-slot>
 
-                        </x-slot>
+                            <x-slot name="tfoot"></x-slot>
 
-                        <x-slot name="tfoot"></x-slot>
+                        </x-table>
 
-                    </x-table>
+                    </div>
+
+                    <div class="mb-3 bg-white rounded-lg p-3 shadow-lg">
+
+                        <span class="flex items-center justify-center text-lg text-gray-700 mb-5">Representantes ({{ $inscripcion->representantes()->count() }})</span>
+
+                        <div class="flex justify-end mb-2">
+
+                            <x-button-gray
+                                    wire:click="agregarRepresentante"
+                                    wire:loading.attr="disabled"
+                                    wire:target="agregarRepresentante">
+
+                                    <img wire:loading wire:target="agregarRepresentante" class="mx-auto h-4 mr-1" src="{{ asset('storage/img/loading3.svg') }}" alt="Loading">
+                                    Agregar representante
+                            </x-button-gray>
+
+                        </div>
+
+                        <x-table>
+
+                            <x-slot name="head">
+                                <x-table.heading >Nombre / Razón social</x-table.heading>
+                                <x-table.heading >Representados</x-table.heading>
+                                <x-table.heading ></x-table.heading>
+                            </x-slot>
+
+                            <x-slot name="body">
+
+                                @foreach ($inscripcion->representantes() as $representante)
+
+                                    <x-table.row >
+
+                                        <x-table.cell>{{ $representante->persona->nombre }} {{ $representante->persona->ap_paterno }} {{ $representante->persona->ap_materno }} {{ $representante->persona->razon_social }}</x-table.cell>
+                                        <x-table.cell>
+
+                                            @foreach ($representante->representados as $representado)
+
+                                                <p>{{ $representado->persona->nombre }} {{ $representado->persona->ap_paterno }} {{ $representado->persona->ap_materno }} {{ $representado->persona->razon_social }}</p>
+
+                                            @endforeach
+
+                                        </x-table.cell>
+                                        <x-table.cell>
+                                            <div class="flex flex-col items-center gap-3">
+                                                <x-button-blue
+                                                    wire:click="editarActor({{ $representante->id }}, 'representante')"
+                                                    wire:loading.attr="disabled"
+                                                >
+
+                                                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-4 h-4">
+                                                        <path stroke-linecap="round" stroke-linejoin="round" d="m16.862 4.487 1.687-1.688a1.875 1.875 0 1 1 2.652 2.652L10.582 16.07a4.5 4.5 0 0 1-1.897 1.13L6 18l.8-2.685a4.5 4.5 0 0 1 1.13-1.897l8.932-8.931Zm0 0L19.5 7.125M18 14v4.75A2.25 2.25 0 0 1 15.75 21H5.25A2.25 2.25 0 0 1 3 18.75V8.25A2.25 2.25 0 0 1 5.25 6H10" />
+                                                    </svg>
+
+                                                </x-button-blue>
+                                                <x-button-red
+                                                    wire:click="borrarActor({{ $representante->id }})"
+                                                    wire:loading.attr="disabled">
+
+                                                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-4 h-4">
+                                                        <path stroke-linecap="round" stroke-linejoin="round" d="m14.74 9-.346 9m-4.788 0L9.26 9m9.968-3.21c.342.052.682.107 1.022.166m-1.022-.165L18.16 19.673a2.25 2.25 0 0 1-2.244 2.077H8.084a2.25 2.25 0 0 1-2.244-2.077L4.772 5.79m14.456 0a48.108 48.108 0 0 0-3.478-.397m-12 .562c.34-.059.68-.114 1.022-.165m0 0a48.11 48.11 0 0 1 3.478-.397m7.5 0v-.916c0-1.18-.91-2.164-2.09-2.201a51.964 51.964 0 0 0-3.32 0c-1.18.037-2.09 1.022-2.09 2.201v.916m7.5 0a48.667 48.667 0 0 0-7.5 0" />
+                                                    </svg>
+
+                                                </x-button-red>
+                                            </div>
+                                        </x-table.cell>
+
+                                    </x-table.row>
+
+                                @endforeach
+
+                            </x-slot>
+
+                            <x-slot name="tfoot"></x-slot>
+
+                        </x-table>
+
+                    </div>
+
+                @endif
+
+            </div>
+
+            <div class="bg-white rounded-lg p-3 shadow-lg mb-4">
+
+                <div>
+
+                    <h4 class="text-lg mb-1 text-center">Distribuición de porcentajes</h4>
+
+                </div>
+
+                <table class="mx-auto">
+
+                    <thead class="border-b border-gray-300 ">
+
+                        <tr class="text-sm text-gray-500 text-left traling-wider whitespace-nowrap">
+
+                            <th class="px-2">Nombre / Razón social</th>
+                            <th class="px-2">% Propiedad</th>
+                            <th class="px-2">% Nuda</th>
+                            <th class="px-2">% Usufructo</th>
+
+                        </tr>
+
+                    </thead>
+
+                    <tbody class="divide-y divide-gray-200">
+
+                        @foreach ($transmitentes as $key => $transmitente)
+
+                            <tr class="text-gray-500 text-sm leading-relaxed">
+                                <td class=" p-2">(Tra.) {{ $transmitente['nombre'] }} {{ $transmitente['ap_paterno'] }} {{ $transmitente['ap_materno'] }} {{ $transmitente['razon_social'] }}</td>
+                                <td class=" p-2">
+                                    <input wire:model.live="transmitentes.{{ $key }}.porcentaje_propiedad" type="number" class="bg-white text-sm w-full rounded-md p-2 border border-gray-500 outline-none ring-blue-600 focus:ring-1 focus:border-blue-600">
+                                </td>
+                                <td class=" p-2">
+                                    <input wire:model.live="transmitentes.{{ $key }}.porcentaje_nuda" type="number" class="bg-white text-sm w-full rounded-md p-2 border border-gray-500 outline-none ring-blue-600 focus:ring-1 focus:border-blue-600">
+                                </td>
+                                <td class=" p-2">
+                                    <input wire:model.live="transmitentes.{{ $key }}.porcentaje_usufructo" type="number" class="bg-white text-sm w-full rounded-md p-2 border border-gray-500 outline-none ring-blue-600 focus:ring-1 focus:border-blue-600">
+                                </td>
+                            </tr>
+
+                        @endforeach
+
+                        @foreach ($this->inscripcion->propietarios() as $adquiriente)
+
+                            <tr class="text-gray-500 text-sm leading-relaxed">
+                                <td class=" px-2">(Adq.){{ $adquiriente->persona->nombre }} {{ $adquiriente->persona->ap_paterno }} {{ $adquiriente->persona->ap_materno }} {{ $adquiriente->persona->razon_social }}</td>
+                                <td class=" px-2">{{ $adquiriente->porcentaje_propiedad ?? '0' }}</td>
+                                <td class=" px-2">{{ $adquiriente->porcentaje_nuda ?? '0' }} </td>
+                                <td class=" px-2">{{ $adquiriente->porcentaje_usufructo ?? '0' }}</td>
+                            </tr>
+
+                        @endforeach
+
+                        <tr class="text-gray-500 text-sm leading-relaxed">
+                            <td class=" px-2">Totales</td>
+                            <td class=" px-2">{{ collect($transmitentes)->sum('porcentaje_propiedad') + $this->inscripcion->propietarios()->sum('porcentaje_propiedad') }}</td>
+                            <td class=" px-2">{{ collect($transmitentes)->sum('porcentaje_nuda') + $this->inscripcion->propietarios()->sum('porcentaje_nuda') }}</td>
+                            <td class=" px-2">{{ collect($transmitentes)->sum('porcentaje_usufructo') + $this->inscripcion->propietarios()->sum('porcentaje_usufructo') }}</td>
+                        </tr>
+
+                    </tbody>
+
+                </table>
+
+            </div>
+
+        @else
+
+            <div>
+
+                <div class="p-4 bg-white shadow-xl rounded-xl mb-5">
+
+                    <div class="mb-3 bg-white rounded-lg p-3">
+
+                        <span class="flex items-center justify-center text-lg text-gray-700 mb-5">Propietarios</span>
+
+                        <x-table>
+
+                            <x-slot name="head">
+                                <x-table.heading >Nombre / Razón social</x-table.heading>
+                                <x-table.heading >Porcentaje propiedad</x-table.heading>
+                                <x-table.heading >Porcentaje nuda</x-table.heading>
+                                <x-table.heading >Porcentaje usufructo</x-table.heading>
+                                <x-table.heading ></x-table.heading>
+                            </x-slot>
+
+                            <x-slot name="body">
+
+                                @if($predio)
+
+                                    @foreach ($predio->propietarios() as $propietario)
+
+                                        <x-table.row >
+
+                                            <x-table.cell>{{ $propietario->persona->nombre }} {{ $propietario->persona->ap_paterno }} {{ $propietario->persona->ap_materno }} {{ $propietario->persona->razon_social }}</x-table.cell>
+                                            <x-table.cell>{{ $propietario->porcentaje_propiedad }}%</x-table.cell>
+                                            <x-table.cell>{{ $propietario->porcentaje_nuda }}%</x-table.cell>
+                                            <x-table.cell>{{ $propietario->porcentaje_usufructo }}%</x-table.cell>
+                                            <x-table.cell>
+                                                <div class="flex items-center gap-3">
+                                                    <x-button-blue
+                                                        wire:click="editarActor({{ $propietario->id }}, 'propietario')"
+                                                        wire:traget="editarActor({{ $propietario->id }}, 'propietario')"
+                                                        wire:loading.attr="disabled"
+                                                    >
+                                                        Editar
+                                                    </x-button-blue>
+                                                    {{-- <x-button-red
+                                                        wire:click="borrarActor({{ $propietario->id }})"
+                                                        wire:loading.attr="disabled">
+                                                        Borrar
+                                                    </x-button-red> --}}
+                                                </div>
+                                            </x-table.cell>
+
+                                        </x-table.row>
+
+                                    @endforeach
+
+                                @endif
+
+                            </x-slot>
+
+                            <x-slot name="tfoot"></x-slot>
+
+                        </x-table>
+
+                    </div>
 
                 </div>
 
             </div>
 
-        </div>
+        @endif
 
     @endif
 
@@ -1252,7 +1256,7 @@
 
                     <option value="">Seleccione una opción</option>
 
-                    @foreach ($predio->propietarios() as $propietario)
+                    @foreach ($inscripcion->movimientoRegistral->folioReal->predio->propietarios() as $propietario)
 
                         <option value="{{ $propietario->id }}">{{ $propietario->persona->nombre }} {{ $propietario->persona->ap_paterno }} {{ $propietario->persona->ap_materno }} {{ $propietario->persona->razon_social }}</option>
 

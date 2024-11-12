@@ -102,29 +102,47 @@ class InscripcionGeneral extends Component
 
     }
 
+    public function updatedNuevoFolio(){
+
+        if($this->nuevoFolio){
+
+            foreach($this->inscripcion->actores as $actor){
+
+                $actor->delete();
+
+            }
+
+        }
+
+    }
+
     public function validaciones(){
 
-        if($this->inscripcion->propietarios()->count() == 0){
+        if(!$this->nuevoFolio){
 
-            $this->dispatch('mostrarMensaje', ['error', "Debe tener almenos un propietario."]);
+            if($this->inscripcion->propietarios()->count() == 0){
 
-            return true;
+                $this->dispatch('mostrarMensaje', ['error', "Debe tener almenos un propietario."]);
 
-        }
+                return true;
 
-        if($this->inscripcion->transmitentes()->count() == 0){
+            }
 
-            $this->dispatch('mostrarMensaje', ['error', "Debe tener almenos un transmitente."]);
+            if($this->inscripcion->transmitentes()->count() == 0){
 
-            return true;
+                $this->dispatch('mostrarMensaje', ['error', "Debe tener almenos un transmitente."]);
 
-        }
+                return true;
 
-        /* if($this->revisarProcentajes()) return true; */
+            }
 
-        if($this->inscripcion->movimientoRegistral->estado != 'correccion'){
+            /* if($this->revisarProcentajes()) return true; */
 
-            if($this->revisarProcentajesFinal()) return true;
+            if($this->inscripcion->movimientoRegistral->estado != 'correccion'){
+
+                if($this->revisarProcentajesFinal()) return true;
+
+            }
 
         }
 
@@ -144,13 +162,11 @@ class InscripcionGeneral extends Component
 
                 $this->inscripcion->save();
 
-                $this->predio->save();
-
                 foreach ($this->medidas as $key =>$medida) {
 
                     if($medida['id'] == null){
 
-                        $aux = $this->predio->colindancias()->create([
+                        $aux = $this->inscripcion->movimientoRegistral->folioReal->predio->colindancias()->create([
                             'viento' => $medida['viento'],
                             'longitud' => $medida['longitud'],
                             'descripcion' => $medida['descripcion'],
@@ -418,7 +434,7 @@ class InscripcionGeneral extends Component
 
         $pp = 0;
 
-        foreach($this->predio->propietarios() as $propietario){
+        foreach($this->inscripcion->movimientoRegistral->folioReal->predio->propietarios() as $propietario){
 
             $pn = $pn + $propietario->porcentaje_nuda;
 
@@ -467,7 +483,7 @@ class InscripcionGeneral extends Component
 
             if($propietario['porcentaje_propiedad'] == 0 && $propietario['porcentaje_nuda'] == 0 && $propietario['porcentaje_usufructo'] == 0){
 
-                $actor = $this->predio->actores()->whereHas('persona', function($q) use($propietario){
+                $actor = $this->inscripcion->movimientoRegistral->folioReal->predio->actores()->whereHas('persona', function($q) use($propietario){
                                                                                 $q->where('nombre', $propietario['nombre'])
                                                                                     ->where('ap_paterno', $propietario['ap_paterno'])
                                                                                     ->where('ap_materno', $propietario['ap_materno'])
@@ -479,7 +495,7 @@ class InscripcionGeneral extends Component
 
             }else{
 
-                 $aux = $this->predio->actores()->whereHas('persona', function($q) use($propietario){
+                 $aux = $this->inscripcion->movimientoRegistral->folioReal->predio->actores()->whereHas('persona', function($q) use($propietario){
                                                                                     $q->where('nombre', $propietario['nombre'])
                                                                                         ->where('ap_paterno', $propietario['ap_paterno'])
                                                                                         ->where('ap_materno', $propietario['ap_materno'])
@@ -511,7 +527,7 @@ class InscripcionGeneral extends Component
 
         foreach($this->inscripcion->propietarios() as $adquiriente){
 
-            $actor = $this->predio->actores()->where('persona_id', $adquiriente->persona_id)->first();
+            $actor = $this->inscripcion->movimientoRegistral->folioReal->predio->actores()->where('persona_id', $adquiriente->persona_id)->first();
 
             if($actor){
 
@@ -523,7 +539,7 @@ class InscripcionGeneral extends Component
 
             }else{
 
-                $this->predio->actores()->create([
+                $this->inscripcion->movimientoRegistral->folioReal->predio->actores()->create([
                     'persona_id' => $adquiriente->persona->id,
                     'tipo_actor' => 'propietario',
                     'porcentaje_propiedad' => $adquiriente->porcentaje_propiedad,
@@ -552,13 +568,17 @@ class InscripcionGeneral extends Component
 
             DB::transaction(function () {
 
-                if($this->inscripcion->movimientoRegistral->estado != 'correccion'){
+                if(!$this->nuevoFolio){
 
-                    $this->procesarPropietarios();
+                    if($this->inscripcion->movimientoRegistral->estado != 'correccion'){
 
-                }else{
+                        $this->procesarPropietarios();
 
-                    $this->revisarProcentajes();
+                    }else{
+
+                        $this->revisarProcentajes();
+
+                    }
 
                 }
 
@@ -566,60 +586,60 @@ class InscripcionGeneral extends Component
                 $this->inscripcion->actualizado_por = auth()->id();
                 $this->inscripcion->save();
 
-                $this->predio->cp_localidad = $this->inscripcion->cp_localidad;
-                $this->predio->cp_oficina = $this->inscripcion->cp_oficina;
-                $this->predio->cp_tipo_predio = $this->inscripcion->cp_tipo_predio;
-                $this->predio->cp_registro = $this->inscripcion->cp_registro;
-                $this->predio->superficie_terreno = $this->inscripcion->superficie_terreno;
-                $this->predio->unidad_area = $this->inscripcion->unidad_area;
-                $this->predio->superficie_construccion = $this->inscripcion->superficie_construccion;
-                $this->predio->monto_transaccion = $this->inscripcion->monto_transaccion;
-                $this->predio->observaciones = $this->inscripcion->observaciones;
-                $this->predio->superficie_judicial = $this->inscripcion->superficie_judicial;
-                $this->predio->superficie_notarial = $this->inscripcion->superficie_notarial;
-                $this->predio->area_comun_terreno = $this->inscripcion->area_comun_terreno;
-                $this->predio->area_comun_construccion = $this->inscripcion->area_comun_construccion;
-                $this->predio->valor_terreno_comun = $this->inscripcion->valor_terreno_comun;
-                $this->predio->valor_construccion_comun = $this->inscripcion->valor_construccion_comun;
-                $this->predio->valor_total_terreno = $this->inscripcion->valor_total_terreno;
-                $this->predio->valor_total_construccion = $this->inscripcion->valor_total_construccion;
-                $this->predio->valor_catastral = $this->inscripcion->valor_catastral;
-                $this->predio->codigo_postal = $this->inscripcion->codigo_postal;
-                $this->predio->nombre_asentamiento = $this->inscripcion->nombre_asentamiento;
-                $this->predio->municipio = $this->inscripcion->municipio;
-                $this->predio->ciudad = $this->inscripcion->ciudad;
-                $this->predio->tipo_asentamiento = $this->inscripcion->tipo_asentamiento;
-                $this->predio->localidad = $this->inscripcion->localidad;
-                $this->predio->tipo_vialidad = $this->inscripcion->tipo_vialidad;
-                $this->predio->nombre_vialidad = $this->inscripcion->nombre_vialidad;
-                $this->predio->numero_exterior = $this->inscripcion->numero_exterior;
-                $this->predio->numero_interior = $this->inscripcion->numero_interior;
-                $this->predio->nombre_edificio = $this->inscripcion->nombre_edificio;
-                $this->predio->departamento_edificio = $this->inscripcion->departamento_edificio;
-                $this->predio->departamento_edificio = $this->inscripcion->departamento_edificio;
-                $this->predio->descripcion = $this->inscripcion->descripcion;
-                $this->predio->lote = $this->inscripcion->lote;
-                $this->predio->manzana = $this->inscripcion->manzana;
-                $this->predio->ejido = $this->inscripcion->ejido;
-                $this->predio->parcela = $this->inscripcion->parcela;
-                $this->predio->solar = $this->inscripcion->solar;
-                $this->predio->poblado = $this->inscripcion->poblado;
-                $this->predio->zona_ubicacion = $this->inscripcion->zona_ubicacion;
-                $this->predio->numero_exterior_2 = $this->inscripcion->numero_exterior_2;
-                $this->predio->numero_adicional = $this->inscripcion->numero_adicional;
-                $this->predio->numero_adicional_2 = $this->inscripcion->numero_adicional_2;
-                $this->predio->lote_fraccionador = $this->inscripcion->lote_fraccionador;
-                $this->predio->manzana_fraccionador = $this->inscripcion->manzana_fraccionador;
-                $this->predio->etapa_fraccionador = $this->inscripcion->etapa_fraccionador;
-                $this->predio->clave_edificio = $this->inscripcion->clave_edificio;
-                $this->predio->actualizado_por = auth()->id();
-                $this->predio->save();
+                $this->inscripcion->movimientoRegistral->folioReal->predio->cp_localidad = $this->inscripcion->cp_localidad;
+                $this->inscripcion->movimientoRegistral->folioReal->predio->cp_oficina = $this->inscripcion->cp_oficina;
+                $this->inscripcion->movimientoRegistral->folioReal->predio->cp_tipo_predio = $this->inscripcion->cp_tipo_predio;
+                $this->inscripcion->movimientoRegistral->folioReal->predio->cp_registro = $this->inscripcion->cp_registro;
+                $this->inscripcion->movimientoRegistral->folioReal->predio->superficie_terreno = $this->inscripcion->superficie_terreno;
+                $this->inscripcion->movimientoRegistral->folioReal->predio->unidad_area = $this->inscripcion->unidad_area;
+                $this->inscripcion->movimientoRegistral->folioReal->predio->superficie_construccion = $this->inscripcion->superficie_construccion;
+                $this->inscripcion->movimientoRegistral->folioReal->predio->monto_transaccion = $this->inscripcion->monto_transaccion;
+                $this->inscripcion->movimientoRegistral->folioReal->predio->observaciones = $this->inscripcion->observaciones;
+                $this->inscripcion->movimientoRegistral->folioReal->predio->superficie_judicial = $this->inscripcion->superficie_judicial;
+                $this->inscripcion->movimientoRegistral->folioReal->predio->superficie_notarial = $this->inscripcion->superficie_notarial;
+                $this->inscripcion->movimientoRegistral->folioReal->predio->area_comun_terreno = $this->inscripcion->area_comun_terreno;
+                $this->inscripcion->movimientoRegistral->folioReal->predio->area_comun_construccion = $this->inscripcion->area_comun_construccion;
+                $this->inscripcion->movimientoRegistral->folioReal->predio->valor_terreno_comun = $this->inscripcion->valor_terreno_comun;
+                $this->inscripcion->movimientoRegistral->folioReal->predio->valor_construccion_comun = $this->inscripcion->valor_construccion_comun;
+                $this->inscripcion->movimientoRegistral->folioReal->predio->valor_total_terreno = $this->inscripcion->valor_total_terreno;
+                $this->inscripcion->movimientoRegistral->folioReal->predio->valor_total_construccion = $this->inscripcion->valor_total_construccion;
+                $this->inscripcion->movimientoRegistral->folioReal->predio->valor_catastral = $this->inscripcion->valor_catastral;
+                $this->inscripcion->movimientoRegistral->folioReal->predio->codigo_postal = $this->inscripcion->codigo_postal;
+                $this->inscripcion->movimientoRegistral->folioReal->predio->nombre_asentamiento = $this->inscripcion->nombre_asentamiento;
+                $this->inscripcion->movimientoRegistral->folioReal->predio->municipio = $this->inscripcion->municipio;
+                $this->inscripcion->movimientoRegistral->folioReal->predio->ciudad = $this->inscripcion->ciudad;
+                $this->inscripcion->movimientoRegistral->folioReal->predio->tipo_asentamiento = $this->inscripcion->tipo_asentamiento;
+                $this->inscripcion->movimientoRegistral->folioReal->predio->localidad = $this->inscripcion->localidad;
+                $this->inscripcion->movimientoRegistral->folioReal->predio->tipo_vialidad = $this->inscripcion->tipo_vialidad;
+                $this->inscripcion->movimientoRegistral->folioReal->predio->nombre_vialidad = $this->inscripcion->nombre_vialidad;
+                $this->inscripcion->movimientoRegistral->folioReal->predio->numero_exterior = $this->inscripcion->numero_exterior;
+                $this->inscripcion->movimientoRegistral->folioReal->predio->numero_interior = $this->inscripcion->numero_interior;
+                $this->inscripcion->movimientoRegistral->folioReal->predio->nombre_edificio = $this->inscripcion->nombre_edificio;
+                $this->inscripcion->movimientoRegistral->folioReal->predio->departamento_edificio = $this->inscripcion->departamento_edificio;
+                $this->inscripcion->movimientoRegistral->folioReal->predio->departamento_edificio = $this->inscripcion->departamento_edificio;
+                $this->inscripcion->movimientoRegistral->folioReal->predio->descripcion = $this->inscripcion->descripcion;
+                $this->inscripcion->movimientoRegistral->folioReal->predio->lote = $this->inscripcion->lote;
+                $this->inscripcion->movimientoRegistral->folioReal->predio->manzana = $this->inscripcion->manzana;
+                $this->inscripcion->movimientoRegistral->folioReal->predio->ejido = $this->inscripcion->ejido;
+                $this->inscripcion->movimientoRegistral->folioReal->predio->parcela = $this->inscripcion->parcela;
+                $this->inscripcion->movimientoRegistral->folioReal->predio->solar = $this->inscripcion->solar;
+                $this->inscripcion->movimientoRegistral->folioReal->predio->poblado = $this->inscripcion->poblado;
+                $this->inscripcion->movimientoRegistral->folioReal->predio->zona_ubicacion = $this->inscripcion->zona_ubicacion;
+                $this->inscripcion->movimientoRegistral->folioReal->predio->numero_exterior_2 = $this->inscripcion->numero_exterior_2;
+                $this->inscripcion->movimientoRegistral->folioReal->predio->numero_adicional = $this->inscripcion->numero_adicional;
+                $this->inscripcion->movimientoRegistral->folioReal->predio->numero_adicional_2 = $this->inscripcion->numero_adicional_2;
+                $this->inscripcion->movimientoRegistral->folioReal->predio->lote_fraccionador = $this->inscripcion->lote_fraccionador;
+                $this->inscripcion->movimientoRegistral->folioReal->predio->manzana_fraccionador = $this->inscripcion->manzana_fraccionador;
+                $this->inscripcion->movimientoRegistral->folioReal->predio->etapa_fraccionador = $this->inscripcion->etapa_fraccionador;
+                $this->inscripcion->movimientoRegistral->folioReal->predio->clave_edificio = $this->inscripcion->clave_edificio;
+                $this->inscripcion->movimientoRegistral->folioReal->predio->actualizado_por = auth()->id();
+                $this->inscripcion->movimientoRegistral->folioReal->predio->save();
 
                 foreach ($this->medidas as $key =>$medida) {
 
                     if($medida['id'] == null){
 
-                        $aux = $this->predio->colindancias()->create([
+                        $aux = $this->inscripcion->movimientoRegistral->folioReal->predio->colindancias()->create([
                             'viento' => $medida['viento'],
                             'longitud' => $medida['longitud'],
                             'descripcion' => $medida['descripcion'],
@@ -710,19 +730,17 @@ class InscripcionGeneral extends Component
 
         }
 
-        $this->predio = $this->inscripcion->movimientoRegistral->folioReal->predio;
-
         foreach($this->inscripcion->getAttributes() as $attribute => $value){
 
-            if(!$value && isset($this->predio->{ $attribute })){
+            if(!$value && isset($this->inscripcion->movimientoRegistral->folioReal->predio->{ $attribute })){
 
-                $this->inscripcion->{$attribute} = $this->predio->{ $attribute};
+                $this->inscripcion->{$attribute} = $this->inscripcion->movimientoRegistral->folioReal->predio->{ $attribute};
 
             }
 
         }
 
-        foreach ($this->predio->colindancias as $colindancia) {
+        foreach ($this->inscripcion->movimientoRegistral->folioReal->predio->colindancias as $colindancia) {
 
             $this->medidas[] = [
                 'id' => $colindancia->id,
