@@ -657,7 +657,7 @@ class Elaboracion extends Component
             DB::transaction(function (){
 
                 $this->movimientoRegistral->folioReal->update([
-                    'estado' => 'activo',
+                    'estado' => 'elaborado',
                     'asignado_por' => auth()->user()->name
                 ]);
 
