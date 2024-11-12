@@ -37,7 +37,7 @@ class VariosIndex extends Component
     public function render()
     {
 
-        if(auth()->user()->hasRole(['Varios', 'Registrador Varios'])){
+        if(auth()->user()->hasRole(['Varios', 'Registrador Varios', 'Aclaraciones administrativas', 'Avisos preventivos'])){
 
             $movimientos = MovimientoRegistral::with('vario', 'actualizadoPor', 'folioReal')
                                                     ->whereHas('folioReal', function($q){
