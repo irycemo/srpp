@@ -200,6 +200,16 @@ class PaseFolio extends Component
 
         $this->modelo_editar = $modelo;
 
+        $cantidad = $this->modelo_editar->audits()->where('tags', 'Reasignó usuario')->count();
+
+        if($cantidad >= 2){
+
+            $this->dispatch('mostrarMensaje', ['warning', "Ya se ha reasignado multiples veces."]);
+
+            return;
+
+        }
+
         $role = null;
 
         if($this->modelo_editar->inscripcionPropiedad){
@@ -257,6 +267,8 @@ class PaseFolio extends Component
             }
 
             $this->modelo_editar->update(['usuario_asignado' => $id]);
+
+            $this->modelo_editar->audits()->latest()->first()->update(['tags' => 'Reasignó usuario']);
 
         } catch (\Throwable $th) {
             Log::error("Error al reasignar aleatoriamente folio real por el usuario: (id: " . auth()->user()->id . ") " . auth()->user()->name . ". " . $th);
