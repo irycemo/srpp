@@ -148,15 +148,15 @@ class PaseFolio extends Component
 
         }elseif($this->modelo_editar->gravamen){
 
-            $role = ['Gravamen'];
+            $role = ['Gravamen', 'Registrador Gravamen'];
 
         }elseif($this->modelo_editar->cancelacion){
 
-            $role = ['Cancelación'];
+            $role = ['Cancelación', 'Registrador Cancelación'];
 
         }elseif($this->modelo_editar->sentencia){
 
-            $role = ['Sentencias'];
+            $role = ['Sentencias', 'Registrador Sentencias'];
 
         }elseif($this->modelo_editar->certificacion){
 
@@ -172,7 +172,7 @@ class PaseFolio extends Component
 
         }elseif($this->modelo_editar->vario){
 
-            $role = ['Varios'];
+            $role = ['Varios', 'Registrador Varios'];
 
         }
 
@@ -193,6 +193,76 @@ class PaseFolio extends Component
             $this->modelo_editar->update(['usuario_asignado' => $id]);
 
         }
+
+    }
+
+    public function reasignarAleatoriamente(MovimientoRegistral $modelo){
+
+        $this->modelo_editar = $modelo;
+
+        $role = null;
+
+        if($this->modelo_editar->inscripcionPropiedad){
+
+            $role = ['Propiedad', 'Registrador Propiedad'];
+
+        }elseif($this->modelo_editar->gravamen){
+
+            $role = ['Gravamen', 'Registrador Gravamen'];
+
+        }elseif($this->modelo_editar->cancelacion){
+
+            $role = ['Cancelación', 'Registrador Cancelación'];
+
+        }elseif($this->modelo_editar->sentencia){
+
+            $role = ['Sentencias', 'Registrador Sentencias'];
+
+        }elseif($this->modelo_editar->certificacion){
+
+            if($this->modelo_editar->certificacion->servicio == 'DL07'){
+
+                $role = ['Certificador Gravamen'];
+
+            }elseif(in_array($this->modelo_editar->certificacion->servicio, ['DL11', 'DL10'])){
+
+                $role = ['Certificador Propiedad'];
+
+            }
+
+        }elseif($this->modelo_editar->vario){
+
+            $role = ['Varios', 'Registrador Varios'];
+
+        }
+
+        try {
+
+            $usuarios = $this->obtenerUsuarios($role);
+
+            if($usuarios->count() === 0){
+
+                $this->dispatch('mostrarMensaje', ['error', "No hay usuarios con rol de " . $role[0] . " disponibles."]);
+
+                throw new Exception("No hay usuarios con rol de " . $role[0] . " disponibles.");
+
+            }
+
+            $id = $usuarios->random()->id;
+
+            while($this->modelo_editar->usuario_asignado == $id){
+
+                $id = $usuarios->random()->id;
+
+            }
+
+            $this->modelo_editar->update(['usuario_asignado' => $id]);
+
+        } catch (\Throwable $th) {
+            Log::error("Error al reasignar aleatoriamente folio real por el usuario: (id: " . auth()->user()->id . ") " . auth()->user()->name . ". " . $th);
+            $this->dispatch('mostrarMensaje', ['error', "Ha ocurrido un error."]);
+        }
+
 
     }
 

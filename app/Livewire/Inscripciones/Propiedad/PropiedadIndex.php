@@ -36,7 +36,6 @@ class PropiedadIndex extends Component
     public function render()
     {
 
-
         if(auth()->user()->hasRole(['Propiedad', 'Registrador Propiedad'])){
 
             $movimientos = MovimientoRegistral::with('inscripcionPropiedad', 'asignadoA', 'actualizadoPor', 'folioReal:id,folio')
