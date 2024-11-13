@@ -12,7 +12,7 @@ class FolioRealPolicy
     public function view(User $user, FolioReal $folioReal): Response
     {
 
-        if (!in_array($folioReal->estado, ['nuevo', 'captura'])) {
+        if ($folioReal->estado == 'activo') {
 
             return Response::deny('El folio real no puede ser modificado.');
 

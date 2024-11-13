@@ -64,7 +64,7 @@ class Gravamen extends Component
 
     }
 
-    #[On('cargarGravamenes')]
+    #[On('cargarSentencias')]
     public function cargarGravamenes(){
 
         $this->gravamenes = GravamenModelo::withWhereHas('movimientoRegistral', function($q){

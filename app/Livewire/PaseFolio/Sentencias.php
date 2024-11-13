@@ -4,6 +4,7 @@ namespace App\Livewire\PaseFolio;
 
 use Livewire\Component;
 use App\Models\Sentencia;
+use Livewire\Attributes\On;
 use App\Constantes\Constantes;
 use Illuminate\Support\Facades\DB;
 use App\Models\MovimientoRegistral;
@@ -61,6 +62,13 @@ class Sentencias extends Component
         'autoridad_nombre' => 'nombre de la autoridad',
         'numero_documento' => 'número del documento',
     ];
+
+    #[On('cargarSentencias')]
+    public function cargarGravamenes(){
+
+        $this->render();
+
+    }
 
     public function resetear(){
 
@@ -129,6 +137,9 @@ class Sentencias extends Component
         $this->procedencia = $this->sentencia->movimientoRegistral->procedencia;
         $this->acto_contenido = $this->sentencia->acto_contenido;
         $this->estado = $this->sentencia->estado;
+        $this->hojas = $this->sentencia->hojas;
+        $this->expediente = $this->sentencia->expediente;
+        $this->fecha_inscripcion = $this->sentencia->fecha_inscripcion;
         $this->comentario = $this->sentencia->descripcion;
 
         $this->modal = true;
@@ -216,6 +227,7 @@ class Sentencias extends Component
                     ]);
 
                     $this->sentencia = Sentencia::create([
+                        'estado' => 'activo',
                         'tomo' => $this->antecente_tomo,
                         'registro' => $this->antecente_registro,
                         'movimiento_registral_id' => $movimiento_registral->id,
@@ -265,6 +277,7 @@ class Sentencias extends Component
     public function guardarSentencia(){
 
         $this->validate([
+            'estado' => 'required',
             'acto_contenido' => 'required',
             'comentario' => 'required',
             'fecha_inscripcion' => 'required'
@@ -274,7 +287,8 @@ class Sentencias extends Component
         try {
 
             $this->sentencia->update([
-                'estado' => 'concluido',
+                'estado' => $this->estado,
+                'fecha_inscripcion' => $this->fecha_inscripcion,
                 'acto_contenido' => $this->acto_contenido,
                 'descripcion' => $this->comentario,
                 'actualizado_por' => auth()->id()

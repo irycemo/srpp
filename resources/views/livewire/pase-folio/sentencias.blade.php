@@ -266,6 +266,18 @@
 
                     </x-input-group>
 
+                    <x-input-group for="estado" label="Estado" :error="$errors->first('estado')" class="w-full">
+
+                        <x-input-select id="estado" wire:model="estado" class="w-full">
+
+                            <option value="">Seleccione una opción</option>
+                            <option value="activo">Activo</option>
+                            <option value="inactivo">Inactivo</option>
+
+                        </x-input-select>
+
+                    </x-input-group>
+
                     <x-input-group for="comentario" label="Comentario de la sentencia" :error="$errors->first('comentario')" class="col-span-3">
 
                         <textarea rows="3" class="w-full bg-white rounded" wire:model="comentario"></textarea>

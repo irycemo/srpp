@@ -33,7 +33,7 @@
 
                             <strong>Tomo</strong>
 
-                            <p>{{ $sentencia->movimientoRegistral->tomo }}</p>
+                            <p>{{ $sentencia->tomo }}</p>
 
                         </div>
 
@@ -41,7 +41,7 @@
 
                             <strong>Regsitro</strong>
 
-                            <p>{{ $sentencia->movimientoRegistral->registro }}</p>
+                            <p>{{ $sentencia->registro }}</p>
 
                         </div>
 

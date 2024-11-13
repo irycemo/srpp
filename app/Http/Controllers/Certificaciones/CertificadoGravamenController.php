@@ -93,6 +93,22 @@ class CertificadoGravamenController extends Controller
 
         }
 
+        $sentenciasCollection = collect();
+
+        if($movimientoRegistral->FolioReal->sentencias){
+
+            $movimientoRegistral->FolioReal->load('sentencias.movimientoRegistral');
+
+            foreach($movimientoRegistral->FolioReal->sentencias as $sentencia){
+
+                $item = $this->sentencia($sentencia);
+
+                $sentenciasCollection->push($item);
+
+            }
+
+        }
+
         $object = (object)[];
 
         $object->predio = $this->predio($movimientoRegistral->folioReal->predio);
@@ -100,6 +116,7 @@ class CertificadoGravamenController extends Controller
         $object->datos_control = $datos_control;
         $object->folioReal = $folioReal;
         $object->varios = $variosCollection;
+        $object->sentencias = $sentenciasCollection;
         $object->gravamenes = $gravamenesCollection;
 
         $fielDirector = Credential::openFiles(Storage::disk('efirmas')->path($director->efirma->cer),
@@ -126,6 +143,7 @@ class CertificadoGravamenController extends Controller
             'gravamenes' => $object->gravamenes,
             'folioReal' => $object->folioReal,
             'varios' => $object->varios,
+            'sentencias' => $object->sentencias,
             'datos_control' => $object->datos_control,
             'firma_electronica' => false,
             'qr'=> $qr
@@ -149,6 +167,7 @@ class CertificadoGravamenController extends Controller
             'gravamenes' => $objeto->gravamenes,
             'folioReal' => $objeto->folioReal,
             'varios' => $object->varios,
+            'sentencias' => $object->sentencias,
             'datos_control' => $objeto->datos_control,
             'firma_electronica' => base64_encode($firmaDirector),
             'qr'=> $qr

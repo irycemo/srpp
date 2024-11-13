@@ -254,18 +254,42 @@
                 @foreach ($varios as $vario)
 
                     <p class="parrafo">
-                        <strong>acto: </strong>{{ $vario->acto_contenido }}
-                    </p>
-
-                    <p class="parrafo">
                         <strong>movimiento registral: </strong>{{ $folioReal->folio }}-{{ $vario->movimiento_folio }}
                     </p>
 
                     <p class="parrafo">
-                        <strong>descripción: </strong>{{ $vario->descripcion }}
+                        <strong>acto contenido: </strong>{{ $vario->acto_contenido }}
+                    </p>
+
+                    <p class="parrafo">
+                        <strong>descripción del acto: </strong>{{ $vario->descripcion }}
                     </p>
 
                     <br>
+
+                @endforeach
+
+            @endif
+
+            @if(count($sentencias))
+
+                <p><strong>REPORTA las siguientes sentencias:</strong></p>
+
+                @foreach ($sentencias as $sentencia)
+
+                    <p class="parrafo">
+
+                        <p class="parrafo"><strong>movimiento registral: </strong>({{ $folioReal->folio }}-{{ $sentencia->movimiento_folio }})</p>
+
+                        <p class="parrafo">
+                            <strong>Acto contenido:</strong> {{ $sentencia->acto_contenido }}
+                        </p>
+
+                        <p class="parrafo">
+                            <strong>Descripción del acto:</strong> {{ $sentencia->descripcion }}
+                        </p>
+
+                    </p>
 
                 @endforeach
 
