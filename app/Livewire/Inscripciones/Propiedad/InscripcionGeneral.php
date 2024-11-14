@@ -47,7 +47,7 @@ class InscripcionGeneral extends Component
             'inscripcion.superficie_terreno' => 'nullable',
             'inscripcion.unidad_area' => 'required',
             'inscripcion.superficie_construccion' => 'nullable',
-            'inscripcion.monto_transaccion' => 'required',
+            'inscripcion.monto_transaccion' => 'required|numeric|min:0',
             'inscripcion.observaciones' => 'nullable',
             'inscripcion.divisa' => 'nullable',
             'inscripcion.superficie_judicial' => 'nullable',

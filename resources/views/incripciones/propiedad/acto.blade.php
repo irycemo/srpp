@@ -215,7 +215,7 @@
 
             @include('comun.caratulas.propietarios')
 
-            @if(count($predio->transmitentes))
+            @if(count($propiedad->transmitentes))
 
                 <p class="separador">transmitentes</p>
 

@@ -159,17 +159,20 @@
                                 <x-table.cell>{{ $garante->persona->nombre }} {{ $garante->persona->ap_paterno }} {{ $garante->persona->ap_materno }} {{ $garante->persona->razon_social }}</x-table.cell>
                                 <x-table.cell>
                                     <div class="flex items-center gap-3">
-                                        <x-button-blue
-                                            wire:click="abrirModalEditar('Garante hipotecario', '{{ $garante->id }}')"
-                                            wire:loading.attr="disabled"
-                                        >
-                                            Editar
-                                        </x-button-blue>
-                                        <x-button-red
-                                            wire:click="borrarDeudor({{ $garante->id }})"
-                                            wire:loading.attr="disabled">
-                                            Borrar
-                                        </x-button-red>
+
+                                        @if(!$propiedad->propietarios()->where('persona_id', $garante->persona_id)->first())
+                                            <x-button-blue
+                                                wire:click="abrirModalEditar('Garante hipotecario', '{{ $garante->id }}')"
+                                                wire:loading.attr="disabled"
+                                            >
+                                                Editar
+                                            </x-button-blue>
+                                            <x-button-red
+                                                wire:click="borrarDeudor({{ $garante->id }})"
+                                                wire:loading.attr="disabled">
+                                                Borrar
+                                            </x-button-red>
+                                        @endif
                                     </div>
                                 </x-table.cell>
 
@@ -343,20 +346,24 @@
                                     </x-table.cell>
                                     <x-table.cell>
                                         <div class="flex items-center gap-3">
-                                            @if($garante->persona)
 
-                                                <x-button-blue
-                                                    wire:click="abrirModalEditar('Garante en coopropiedad', '{{ $garante->id }}')"
-                                                    wire:loading.attr="disabled"
-                                                >
-                                                    Editar
-                                                </x-button-blue>
+                                            @if(!$propiedad->propietarios()->where('persona_id', $garante->persona_id)->first())
+
+                                                @if($garante->persona)
+                                                    <x-button-blue
+                                                        wire:click="abrirModalEditar('Garante en coopropiedad', '{{ $garante->id }}')"
+                                                        wire:loading.attr="disabled"
+                                                    >
+                                                        Editar
+                                                    </x-button-blue>
+                                                @endif
+                                                <x-button-red
+                                                    wire:click="borrarDeudor({{ $garante->id }})"
+                                                    wire:loading.attr="disabled">
+                                                    Borrar
+                                                </x-button-red>
+
                                             @endif
-                                            <x-button-red
-                                                wire:click="borrarDeudor({{ $garante->id }})"
-                                                wire:loading.attr="disabled">
-                                                Borrar
-                                            </x-button-red>
                                         </div>
                                     </x-table.cell>
 
@@ -501,7 +508,7 @@
 
     </div>
 
-    @if($gravamen->acto_contenido == 'DIVISIÓN DE HIPOTECA')
+    {{-- @if($gravamen->acto_contenido == 'DIVISIÓN DE HIPOTECA')
 
         <div class="p-4 bg-white shadow-xl rounded-xl mb-5">
 
@@ -652,7 +659,7 @@
 
         </div>
 
-    @endif
+    @endif --}}
 
     @if(count($errors) > 0)
 

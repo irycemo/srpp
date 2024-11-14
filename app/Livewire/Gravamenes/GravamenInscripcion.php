@@ -123,6 +123,27 @@ class GravamenInscripcion extends Component
 
     }
 
+    public function updatedTipoDeudor(){
+
+        if($this->tipo_deudor == 'D-GARANTE(S) HIPOTECARIO(S)'){
+
+            foreach ($this->propiedad->propietarios() as $propietario) {
+
+                Actor::create([
+                    'actorable_type' => 'App\Models\Gravamen',
+                    'actorable_id' => $this->gravamen->id,
+                    'tipo_actor' => 'deudor',
+                    'persona_id' => $propietario->persona_id,
+                    'tipo_deudor' => $this->tipo_deudor
+                ]);
+            }
+
+        }
+
+        $this->actualizarDeudores();
+
+    }
+
     public function updatedPropietario(){
 
         if($this->propietario === "") return;
