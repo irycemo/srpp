@@ -81,11 +81,13 @@ class CertificadoGravamenController extends Controller
 
         $variosCollection = collect();
 
-        if($movimientoRegistral->FolioReal->variosActivos()){
+        if($movimientoRegistral->FolioReal->varios){
 
-            foreach($movimientoRegistral->FolioReal->variosActivos() as $aviso){
+            $movimientoRegistral->FolioReal->load('varios.movimientoRegistral');
 
-                $item = $this->vario($aviso->vario);
+            foreach($movimientoRegistral->FolioReal->varios as $vario){
+
+                $item = $this->vario($vario);
 
                 $variosCollection->push($item);
 
