@@ -108,25 +108,29 @@
 
             </x-input-group>
 
-            <x-input-group for="inscripcion.monto_transaccion" label="Monto de la transacción" :error="$errors->first('inscripcion.monto_transaccion')" class="w-full relative">
+            @if(!$nuevoFolio)
 
-                <x-input-text type="number" id="inscripcion.monto_transaccion" wire:model="inscripcion.monto_transaccion" />
+                <x-input-group for="inscripcion.monto_transaccion" label="Monto de la transacción" :error="$errors->first('inscripcion.monto_transaccion')" class="w-full relative">
 
-                <div class="absolute right-0 top-6">
+                    <x-input-text type="number" id="inscripcion.monto_transaccion" wire:model="inscripcion.monto_transaccion" />
 
-                    <x-input-select id="inscripcion.divisa" wire:model="inscripcion.divisa">
+                    <div class="absolute right-0 top-6">
 
-                        @foreach ($divisas as $divisa)
+                        <x-input-select id="inscripcion.divisa" wire:model="inscripcion.divisa">
 
-                            <option value="{{ $divisa }}">{{ $divisa }}</option>
+                            @foreach ($divisas as $divisa)
 
-                        @endforeach
+                                <option value="{{ $divisa }}">{{ $divisa }}</option>
 
-                    </x-input-select>
+                            @endforeach
 
-                </div>
+                        </x-input-select>
 
-            </x-input-group>
+                    </div>
+
+                </x-input-group>
+
+            @endif
 
             <x-input-group for="inscripcion.descripcion" label="Descripción" :error="$errors->first('inscripcion.descripcion')" class="sm:col-span-2 lg:col-span-3">
 

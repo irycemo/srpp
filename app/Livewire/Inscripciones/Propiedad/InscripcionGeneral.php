@@ -580,6 +580,8 @@ class InscripcionGeneral extends Component
 
                     }
 
+                    $this->inscripcion->movimientoRegistral->folioReal->predio->monto_transaccion = $this->inscripcion->monto_transaccion;
+
                 }
 
                 $this->inscripcion->fecha_inscripcion = now()->toDateString();
@@ -593,7 +595,6 @@ class InscripcionGeneral extends Component
                 $this->inscripcion->movimientoRegistral->folioReal->predio->superficie_terreno = $this->inscripcion->superficie_terreno;
                 $this->inscripcion->movimientoRegistral->folioReal->predio->unidad_area = $this->inscripcion->unidad_area;
                 $this->inscripcion->movimientoRegistral->folioReal->predio->superficie_construccion = $this->inscripcion->superficie_construccion;
-                $this->inscripcion->movimientoRegistral->folioReal->predio->monto_transaccion = $this->inscripcion->monto_transaccion;
                 $this->inscripcion->movimientoRegistral->folioReal->predio->observaciones = $this->inscripcion->observaciones;
                 $this->inscripcion->movimientoRegistral->folioReal->predio->superficie_judicial = $this->inscripcion->superficie_judicial;
                 $this->inscripcion->movimientoRegistral->folioReal->predio->superficie_notarial = $this->inscripcion->superficie_notarial;

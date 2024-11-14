@@ -215,53 +215,57 @@
 
             @include('comun.caratulas.propietarios')
 
-            <p class="separador">transmitentes</p>
+            @if(count($predio->transmitentes))
 
-            <table>
+                <p class="separador">transmitentes</p>
 
-                <thead>
+                <table>
 
-                    <tr>
-                        <th style="padding-right: 10px;">Nombre / Razón social</th>
-                        <th style="padding-right: 10px;">% de propiedad</th>
-                        <th style="padding-right: 10px;">% de nuda</th>
-                        <th style="padding-right: 10px;">% de usufructo</th>
-                    </tr>
-
-                </thead>
-
-                <tbody>
-
-                    @foreach ($propiedad->transmitentes as $transmitente)
+                    <thead>
 
                         <tr>
-                            <td style="padding-right: 40px;">
-                                <p style="margin:0">{{ $transmitente->nombre }} {{ $transmitente->ap_paterno }} {{ $transmitente->ap_materno }} {{ $transmitente->razon_social }}</p>
-                                @if($transmitente->multiple_nombre)
-                                    <p style="margin:0">({{ $transmitente->multiple_nombre }})</p>
-                                @endif
-                                @if(isset($transmitente->representado_por))
-
-                                    <strong>representado(a) por: </strong>{{ $transmitente->representado_por }}
-
-                                @endif
-                            </td>
-                            <td style="padding-right: 40px;">
-                                <p style="margin:0">{{ $transmitente->porcentaje_propiedad ?? '0.00' }} %</p>
-                            </td>
-                            <td style="padding-right: 40px;">
-                                <p style="margin:0">{{ $transmitente->porcentaje_nuda ?? '0.00' }} %</p>
-                            </td>
-                            <td style="padding-right: 40px;">
-                                <p style="margin:0">{{ $transmitente->porcentaje_usufructo ?? '0.00' }} %</p>
-                            </td>
+                            <th style="padding-right: 10px;">Nombre / Razón social</th>
+                            <th style="padding-right: 10px;">% de propiedad</th>
+                            <th style="padding-right: 10px;">% de nuda</th>
+                            <th style="padding-right: 10px;">% de usufructo</th>
                         </tr>
 
-                    @endforeach
+                    </thead>
 
-                </tbody>
+                    <tbody>
 
-            </table>
+                        @foreach ($propiedad->transmitentes as $transmitente)
+
+                            <tr>
+                                <td style="padding-right: 40px;">
+                                    <p style="margin:0">{{ $transmitente->nombre }} {{ $transmitente->ap_paterno }} {{ $transmitente->ap_materno }} {{ $transmitente->razon_social }}</p>
+                                    @if($transmitente->multiple_nombre)
+                                        <p style="margin:0">({{ $transmitente->multiple_nombre }})</p>
+                                    @endif
+                                    @if(isset($transmitente->representado_por))
+
+                                        <strong>representado(a) por: </strong>{{ $transmitente->representado_por }}
+
+                                    @endif
+                                </td>
+                                <td style="padding-right: 40px;">
+                                    <p style="margin:0">{{ $transmitente->porcentaje_propiedad ?? '0.00' }} %</p>
+                                </td>
+                                <td style="padding-right: 40px;">
+                                    <p style="margin:0">{{ $transmitente->porcentaje_nuda ?? '0.00' }} %</p>
+                                </td>
+                                <td style="padding-right: 40px;">
+                                    <p style="margin:0">{{ $transmitente->porcentaje_usufructo ?? '0.00' }} %</p>
+                                </td>
+                            </tr>
+
+                        @endforeach
+
+                    </tbody>
+
+                </table>
+
+            @endif
 
             <p class="parrafo">
                 A SOLICITUD DE: <strong>{{ $datos_control->solicitante }}</strong> se EXPiDe EL PRESENTE EN LA CIUDAD DE @if($datos_control->distrito == '02 Uruapan' ) uruapan @else MORELIA @endif, MICHOACÁN, A LAS {{ $datos_control->elaborado_en }}.
