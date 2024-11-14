@@ -174,7 +174,26 @@ class ModalGravamen extends ModalComponent
 
     public function updatedTipoDeudor(){
 
-        $this->reset('persona_id');
+        $this->reset('persona_id', 'propietario');
+
+        $this->resetearDeudores();
+
+        if($this->tipo_deudor == 'D-GARANTE(S) HIPOTECARIO(S)'){
+
+            foreach ($this->propiedad->propietarios() as $propietario) {
+
+                Actor::create([
+                    'actorable_type' => 'App\Models\Gravamen',
+                    'actorable_id' => $this->gravamen->id,
+                    'tipo_actor' => 'deudor',
+                    'persona_id' => $propietario->persona_id,
+                    'tipo_deudor' => $this->tipo_deudor
+                ]);
+            }
+
+        }
+
+        $this->actualizarDeudores();
 
     }
 
@@ -370,18 +389,34 @@ class ModalGravamen extends ModalComponent
     #[On('agregarDeudor')]
     public function agregarDeudor($persona = null){
 
+        if($persona){
+
+            $tipo_deudor = 'deudor';
+
+            if($this->gravamen->actores()->where('persona_id', $persona)->first()){
+
+                $this->dispatch('mostrarMensaje', ['error', "La persona ya es un deudor."]);
+
+                return;
+
+            }
+
+        }else{
+
+            $tipo_deudor = $this->tipo_deudor;
+
+        }
+
         try {
 
-            DB::transaction(function () use($persona){
-
-                $this->resetearDeudores();
+            DB::transaction(function () use($persona, $tipo_deudor){
 
                 Actor::create([
                     'actorable_type' => 'App\Models\Gravamen',
                     'actorable_id' => $this->gravamen->id,
                     'tipo_actor' => 'deudor',
                     'persona_id' => $persona,
-                    'tipo_deudor' => $this->tipo_deudor
+                    'tipo_deudor' => $tipo_deudor
                 ]);
 
                 $this->actualizarDeudores();

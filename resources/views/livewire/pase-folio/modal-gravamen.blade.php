@@ -356,7 +356,7 @@
                                 <x-table>
 
                                     <x-slot name="head">
-                                        <x-table.heading >Deudores</x-table.heading>
+                                        <x-table.heading >Nombre / Razón social</x-table.heading>
                                         <x-table.heading ></x-table.heading>
                                     </x-slot>
 
@@ -369,17 +369,24 @@
                                                 <x-table.cell>{{ $garante->persona->nombre }} {{ $garante->persona->ap_paterno }} {{ $garante->persona->ap_materno }} {{ $garante->persona->razon_social }}</x-table.cell>
                                                 <x-table.cell>
                                                     <div class="flex items-center gap-3">
-                                                        <x-button-blue
-                                                            wire:click="$dispatch('openModal', { component: 'modals.crear-persona', arguments: { editar: true, title: 'Garante', id:{{ $garante->persona->id }} } } )"
-                                                            wire:loading.attr="disabled"
-                                                        >
-                                                            Editar
-                                                        </x-button-blue>
-                                                        <x-button-red
-                                                            wire:click="borrarDeudor({{ $garante->id }})"
-                                                            wire:loading.attr="disabled">
-                                                            Borrar
-                                                        </x-button-red>
+
+                                                        @if(!$propiedad->propietarios()->where('persona_id', $garante->persona_id)->first())
+
+                                                            <x-button-blue
+                                                                wire:click="$dispatch('openModal', { component: 'modals.crear-persona', arguments: { editar: true, title: 'Garante', id:{{ $garante->persona->id }} } } )"
+                                                                wire:loading.attr="disabled"
+                                                            >
+                                                                Editar
+                                                            </x-button-blue>
+
+                                                            <x-button-red
+                                                                wire:click="borrarDeudor({{ $garante->id }})"
+                                                                wire:loading.attr="disabled">
+                                                                Borrar
+                                                            </x-button-red>
+
+                                                        @endif
+
                                                     </div>
                                                 </x-table.cell>
 
@@ -536,6 +543,7 @@
                                                     </x-table.cell>
                                                     <x-table.cell>
                                                         <div class="flex items-center gap-3">
+
                                                             @if(!$this->propiedad->propietarios()->where('persona_id', $garante->persona_id)->first())
                                                                 <x-button-blue
                                                                     wire:click="$dispatch('openModal', { component: 'modals.crear-persona', arguments: { editar: true, title: 'Afianzador', id:{{ $garante->persona->id }} } } )"
@@ -543,12 +551,14 @@
                                                                 >
                                                                     Editar
                                                                 </x-button-blue>
+
+                                                                <x-button-red
+                                                                    wire:click="borrarDeudor({{ $garante->id }})"
+                                                                    wire:loading.attr="disabled">
+                                                                    Borrar
+                                                                </x-button-red>
+
                                                             @endif
-                                                            <x-button-red
-                                                                wire:click="borrarDeudor({{ $garante->id }})"
-                                                                wire:loading.attr="disabled">
-                                                                Borrar
-                                                            </x-button-red>
                                                         </div>
                                                     </x-table.cell>
 

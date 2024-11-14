@@ -161,14 +161,14 @@ class Varios extends Component
 
         }elseif($string == 'datos_vario'){
 
-            $this->validate([
+            /* $this->validate([
                 'tipo_documento' => 'required',
                 'autoridad_cargo' => 'required',
                 'autoridad_nombre' => 'required',
                 'numero_documento' => 'required',
                 'fecha_emision' => 'required',
                 'procedencia' => 'nullable'
-            ]);
+            ]); */
 
             $this->antecedente = false;
             $this->documento_entrada = false;
@@ -211,6 +211,7 @@ class Varios extends Component
                     ]);
 
                     $this->vario = Vario::create([
+                        'estado' => $this->estado,
                         'movimiento_registral_id' => $movimiento_registral->id,
                         'actualizado_por' => auth()->id(),
                     ]);

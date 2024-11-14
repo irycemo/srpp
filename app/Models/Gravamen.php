@@ -38,7 +38,7 @@ class Gravamen extends Model implements Auditable
     }
 
     public function garantesHipotecarios(){
-        return $this->actores()->with('persona')->where('tipo_deudor', 'D-GARANTE(S) HIPOTECARIO(S)');
+        return $this->actores()->with('persona')->whereIn('tipo_deudor', ['D-GARANTE(S) HIPOTECARIO(S)', 'deudor']);
     }
 
     public function parteAlicuota(){
@@ -46,7 +46,7 @@ class Gravamen extends Model implements Auditable
     }
 
     public function garantesCoopropiedad(){
-        return $this->actores()->with('persona')->where('tipo_deudor', 'G-GARANTES EN COOPROPIEDAD');
+        return $this->actores()->with('persona')->whereIn('tipo_deudor', ['G-GARANTES EN COOPROPIEDAD', 'deudor']);
     }
 
     public function fianza(){

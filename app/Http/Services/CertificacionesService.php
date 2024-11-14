@@ -67,8 +67,6 @@ class CertificacionesService{
 
     public function recalcularFechaEntrega($movimientoRegistral){
 
-        $fecha = null;
-
         if($movimientoRegistral->tipo_servicio == 'ordinario'){
 
             $actual = now();
@@ -85,7 +83,7 @@ class CertificacionesService{
 
             }
 
-            $fecha = $actual->toDateString();
+            return $actual->toDateString();
 
         }elseif($movimientoRegistral->tipo_servicio == 'urgente'){
 
@@ -97,15 +95,13 @@ class CertificacionesService{
 
             }
 
-            $fecha = $actual->toDateString();
+            return $actual->toDateString();
 
         }else{
 
-            $fecha = now()->toDateString();
+            return now()->toDateString();
 
         }
-
-        $movimientoRegistral->update(['fecha_entrega' => $fecha]);
 
     }
 
