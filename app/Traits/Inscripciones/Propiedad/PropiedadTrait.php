@@ -5,6 +5,7 @@ namespace App\Traits\Inscripciones\Propiedad;
 use App\Models\File;
 use App\Models\User;
 use App\Models\Actor;
+use App\Models\Colindancia;
 use App\Models\Predio;
 use App\Models\Persona;
 use App\Models\FolioReal;
@@ -794,7 +795,7 @@ trait PropiedadTrait{
 
         try {
 
-            $this->predio->colindancias()->where('id', $this->medidas[$index]['id'])->delete();
+            Colindancia::where('id', $this->medidas[$index]['id'])->delete();
 
         } catch (\Throwable $th) {
             Log::error("Error al borrar colindancia en inscripcion de propipedad por el usuario: (id: " . auth()->user()->id . ") " . auth()->user()->name . ". " . $th);
