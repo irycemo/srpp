@@ -31,7 +31,13 @@ class Auditoria extends Component
         'App\Models\Certificacion',
         'App\Models\Rol',
         'App\Models\Permiso',
-        'App\Models\Propiedadold'
+        'App\Models\Propiedadold',
+        'App\Models\FolioReal',
+        'App\Models\Gravamen',
+        'App\Models\Propiedad',
+        'App\Models\Cancelacion',
+        'App\Models\Sentencia',
+        'App\Models\Vario',
     ];
 
     public function ver(Audit $audit){
