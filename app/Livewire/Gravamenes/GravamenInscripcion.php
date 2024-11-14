@@ -365,9 +365,13 @@ class GravamenInscripcion extends Component
 
                     $persona_id = $this->guardarPersona();
 
+                    $tipo_deudor = 'deudor';
+
                 }else{
 
                     $persona_id = Actor::Find($actor)->persona->id;
+
+                    $tipo_deudor = $this->tipo_deudor;
 
                 }
 
@@ -376,7 +380,7 @@ class GravamenInscripcion extends Component
                     'actorable_id' => $this->gravamen->id,
                     'tipo_actor' => 'deudor',
                     'persona_id' => $persona_id,
-                    'tipo_deudor' => $this->tipo_deudor
+                    'tipo_deudor' => $tipo_deudor
                 ]);
 
             });
