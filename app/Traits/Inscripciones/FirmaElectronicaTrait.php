@@ -122,10 +122,15 @@ trait FirmaElectronicaTrait{
 
         $object = (object)[];
 
+        if($folioReal->folioRealAntecedente){
+
+            $object->antecedente = $folioReal->folioRealAntecedente->folio;
+
+        }
+
         $object->id = $folioReal->id;
         $object->estado = $folioReal->estado;
         $object->folio = $folioReal->folio;
-        $object->antecedente = $folioReal->antecedente;
         $object->tomo_antecedente = $folioReal->tomo_antecedente;
         $object->tomo_antecedente_bis = $folioReal->tomo_antecedente_bis;
         $object->registro_antecedente = $folioReal->registro_antecedente;
