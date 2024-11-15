@@ -141,8 +141,8 @@ class Varios extends Component
         if($string == 'documento_entrada'){
 
             $this->validate([
-                'antecente_tomo' => 'required',
-                'antecente_registro' => 'required',
+                'antecente_tomo' => 'nullable',
+                'antecente_registro' => 'nullable',
                 'antecente_distrito' => 'required|same:distritoMovimineto'
             ]);
 
@@ -160,14 +160,14 @@ class Varios extends Component
 
         }elseif($string == 'datos_vario'){
 
-            /* $this->validate([
-                'tipo_documento' => 'required',
-                'autoridad_cargo' => 'required',
-                'autoridad_nombre' => 'required',
-                'numero_documento' => 'required',
-                'fecha_emision' => 'required',
+            $this->validate([
+                'tipo_documento' => 'nullable',
+                'autoridad_cargo' => 'nullable',
+                'autoridad_nombre' => 'nullable',
+                'numero_documento' => 'nullable',
+                'fecha_emision' => 'nullable',
                 'procedencia' => 'nullable'
-            ]); */
+            ]);
 
             $this->antecedente = false;
             $this->documento_entrada = false;
