@@ -96,7 +96,7 @@ return [
         /*
          * If specified, the database dumped file name will contain a timestamp (e.g.: 'Y-m-d-H-i-s').
          */
-        'database_dump_file_timestamp_format' => 'd-m-Y',
+        'database_dump_file_timestamp_format' => 'Y-m-d',
 
         /*
          * The base of the dump filename, either 'database' or 'connection'

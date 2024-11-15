@@ -294,9 +294,19 @@ class Elaboracion extends Component
                         $this->movimientoRegistral->numero_propiedad
                     ){
 
-                        $this->consultarGravamenesAntecedente();
+                        $this->consultarGravamenesAntecedente(
+                            $this->movimientoRegistral->getRawOriginal('distrito'),
+                            $this->movimientoRegistral->tomo,
+                            $this->movimientoRegistral->registro,
+                            $this->movimientoRegistral->numero_propiedad
+                        );
 
-                        $this->consultarSentenciasAntecedente();
+                        $this->consultarSentenciasAntecedente(
+                            $this->movimientoRegistral->getRawOriginal('distrito'),
+                            $this->movimientoRegistral->tomo,
+                            $this->movimientoRegistral->registro,
+                            $this->movimientoRegistral->numero_propiedad
+                        );
 
                     }
 
@@ -368,16 +378,16 @@ class Elaboracion extends Component
 
     }
 
-    public function consultarSentenciasAntecedente(){
+    public function consultarSentenciasAntecedente($distrito, $tomo, $registro, $numero_propiedad){
 
         $sentencias = DB::connection('mysql2')->select("call spQSentencias(" .
-                                                                                $this->movimientoRegistral->getRawOriginal('distrito') .
-                                                                                "," . $this->movimientoRegistral->tomo .
-                                                                                "," . ($this->movimientoRegistral->tomo_bis ?? '\'\'') .
-                                                                                "," . $this->movimientoRegistral->registro .
-                                                                                "," . ($this->movimientoRegistral->registro_bis ?? '\'\'') .
-                                                                                "," . $this->movimientoRegistral->numero_propiedad .
-                                                                                ")");
+                                                                            $distrito .
+                                                                            "," . $tomo .
+                                                                            "," . '\'\'' .
+                                                                            "," . $registro .
+                                                                            "," .  '\'\'' .
+                                                                            "," . $numero_propiedad .
+                                                                            ")");
 
         foreach($sentencias as $sentencia){
 
@@ -413,15 +423,15 @@ class Elaboracion extends Component
 
     }
 
-    public function consultarGravamenesAntecedente(){
+    public function consultarGravamenesAntecedente($distrito, $tomo, $registro, $numero_propiedad){
 
         $gravamenes = DB::connection('mysql2')->select("call spTractoGravamenes(" .
-                                                                                $this->movimientoRegistral->getRawOriginal('distrito') .
-                                                                                "," . $this->movimientoRegistral->tomo .
-                                                                                "," . ($this->movimientoRegistral->tomo_bis ?? '\'\'') .
-                                                                                "," . $this->movimientoRegistral->registro .
-                                                                                "," . ($this->movimientoRegistral->registro_bis ?? '\'\'') .
-                                                                                "," . $this->movimientoRegistral->numero_propiedad .
+                                                                                $distrito .
+                                                                                "," . $tomo .
+                                                                                "," . '\'\'' .
+                                                                                "," . $registro .
+                                                                                "," .  '\'\'' .
+                                                                                "," . $numero_propiedad .
                                                                                 ")");
 
         foreach($gravamenes as $gravamen){
@@ -943,6 +953,20 @@ class Elaboracion extends Component
                     'seccion_antecedente' => $this->movimientoRegistral->seccion,
                     'folio_real' => $this->movimientoRegistral->folio_real,
                 ]);
+
+                $this->consultarGravamenesAntecedente(
+                    $this->movimientoRegistral->getRawOriginal('distrito'),
+                    $this->tomo,
+                    $this->registro,
+                    $this->numero_propiedad
+                );
+
+                $this->consultarSentenciasAntecedente(
+                    $this->movimientoRegistral->getRawOriginal('distrito'),
+                    $this->tomo,
+                    $this->registro,
+                    $this->numero_propiedad
+                );
 
                 $this->movimientoRegistral->load('folioReal.antecedentes.folioRealAntecedente');
 
