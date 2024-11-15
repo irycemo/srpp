@@ -962,15 +962,16 @@ class Elaboracion extends Component
 
     public function borrarAntecedente(Antecedente $antecedente){
 
-        $this->authorize('update', $this->movimientoRegistral);
-
         try {
 
             $antecedente->delete();
 
             $this->dispatch('mostrarMensaje', ['success', "La información se eliminó con éxito."]);
 
+            $this->movimientoRegistral->refresh();
+
             $this->movimientoRegistral->load('folioReal.antecedentes.folioRealAntecedente');
+
 
         } catch (\Throwable $th) {
 

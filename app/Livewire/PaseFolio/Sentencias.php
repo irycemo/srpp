@@ -329,9 +329,11 @@ class Sentencias extends Component
 
             });
 
+            $this->resetear();
+
         } catch (\Throwable $th) {
 
-            Log::error("Error al borrar gravamen por el usuario: (id: " . auth()->user()->id . ") " . auth()->user()->name . ". " . $th);
+            Log::error("Error al borrar sentencia en pase a folio por el usuario: (id: " . auth()->user()->id . ") " . auth()->user()->name . ". " . $th);
             $this->dispatch('mostrarMensaje', ['error', "Ha ocurrido un error."]);
         }
 

@@ -2,7 +2,6 @@
 
 namespace App\Livewire\PaseFolio;
 
-use App\Models\Acto;
 use App\Models\Vario;
 use Livewire\Component;
 use App\Constantes\Constantes;
@@ -303,6 +302,8 @@ class Varios extends Component
                 $this->modalBorrar = false;
 
             });
+
+            $this->resetear();
 
         } catch (\Throwable $th) {
 
