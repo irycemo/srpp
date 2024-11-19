@@ -192,11 +192,11 @@ class PaseFolioController extends Controller
 
                 Storage::disk('caratulas')->delete($archivo->url);
 
+                $archivo->delete();
+
             }
 
         }
-
-        $folioReal->archivos()->delete();
 
     }
 

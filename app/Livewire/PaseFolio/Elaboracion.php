@@ -758,7 +758,7 @@ class Elaboracion extends Component
                     'url' => $pdf
                 ]);
 
-                $this->dispatch('mostrarMensaje', ['success', "El documento de entrada se guardó con éxito."]);
+                $this->dispatch('mostrarMensaje', ['success', "El documento de entrada se guardó con éxitos."]);
 
                 $this->modalDocumento = false;
 
