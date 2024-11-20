@@ -78,7 +78,7 @@ class FolioRealController extends Controller
                                                 ->where('tomo', $validated['tomo'])
                                                 ->where('registro', $validated['registro'])
                                                 ->where('noprop', $validated['numero_propiedad'])
-                                                ->where('status', 'V')
+                                                ->whereIn('status', ['V', 'C'])
                                                 ->first();
 
             }else{

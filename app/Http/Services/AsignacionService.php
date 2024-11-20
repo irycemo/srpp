@@ -3,28 +3,27 @@
 namespace App\Http\Services;
 
 use App\Models\User;
+use App\Models\Asignacion;
 use Illuminate\Support\Facades\Log;
 use App\Exceptions\AsignacionServiceException;
 
 class AsignacionService{
 
-    public function obtenerUltimoUsuarioConAsignacion($usuarios):int
-    {
+    public function obtenerSiguienteUsuario($arrayUsuarios, $idActual){
 
-        $movimientos = [];
+        if($idActual == null) return $arrayUsuarios[0];
 
-        foreach ($usuarios as $usuario) {
+        $key = array_search($idActual, $arrayUsuarios->toArray());
 
-            if(!$usuario->ultimoMovimientoRegistralAsignado)
-                return $usuario->id;
+        if(($key + 1) == count($arrayUsuarios)){
 
-            array_push($movimientos, $usuario->ultimoMovimientoRegistralAsignado);
+            return $arrayUsuarios[0];
+
+        }else{
+
+            return $arrayUsuarios[$key + 1];
 
         }
-
-        return collect($movimientos)->sortBy('created_at')->first()->usuario_asignado;
-
-        /* return MovimientoRegistral::whereIn('id', $ids)->orderBy('created_at')->first()->usuario_asignado; */
 
     }
 
@@ -66,41 +65,42 @@ class AsignacionService{
 
         if($distrito != 2 && $solicitante == 'Oficialia de partes'){
 
+            $idActual = Asignacion::first()?->certificador_uruapan;
+
             if($tipo_servicio == 'ordinario')
 
-                $certificadores = User::with('ultimoMovimientoRegistralAsignado')
-                                        ->where('status', 'activo')
+                $certificadores = User::where('status', 'activo')
                                         ->whereHas('roles', function($q){
                                             $q->where('name', 'Certificador Oficialia');
                                         })
-                                        ->get();
+                                        ->pluck('id');
             else
 
-                $certificadores = User::with('ultimoMovimientoRegistralAsignado')
-                                        ->where('status', 'activo')
+                $certificadores = User::where('status', 'activo')
                                         ->whereHas('roles', function($q){
                                             $q->where('name', 'Certificador Juridico');
                                         })
-                                        ->get();
+                                        ->pluck('id');
 
         }else{
 
-            $certificadores = User::with('ultimoMovimientoRegistralAsignado')
-                                        ->where('status', 'activo')
-                                        ->when($distrito == 2, function($q){
-                                            $q->where('ubicacion', 'Regional 4');
-                                        })
-                                        ->when($distrito != 2, function($q){
-                                            $q->where('ubicacion', '!=', 'Regional 4');
-                                        })
-                                        ->whereHas('roles', function($q){
-                                            $q->where('name', 'Certificador');
-                                        })
-                                        ->get();
+            $idActual = Asignacion::first()?->certificador;
+
+            $certificadores = User::where('status', 'activo')
+                                    ->when($distrito == 2, function($q){
+                                        $q->where('ubicacion', 'Regional 4');
+                                    })
+                                    ->when($distrito != 2, function($q){
+                                        $q->where('ubicacion', '!=', 'Regional 4');
+                                    })
+                                    ->whereHas('roles', function($q){
+                                        $q->where('name', 'Certificador');
+                                    })
+                                    ->pluck('id');
 
         }
 
-        if($certificadores->count() == 0){
+        if(count($certificadores) == 0){
 
             Log::error('No se encontraron usuario para asignar la certificación.');
 
@@ -108,17 +108,27 @@ class AsignacionService{
 
         }else if($random){
 
-            $certificador = $certificadores->shuffle()->first();
+            return array_rand($certificadores, 1);
 
-            return $certificador->id;
+        }else if(count($certificadores) == 1){
 
-        }else if($certificadores->count() == 1){
-
-            return $certificadores->first()->id;
+            return $certificadores[0];
 
         }else{
 
-            return $this->obtenerUltimoUsuarioConAsignacion($certificadores);
+            $actual = $this->obtenerSiguienteUsuario($certificadores, $idActual);
+
+            if($distrito == 2){
+
+                Asignacion::first()->update(['certificador_uruapan' => $actual]);
+
+            }else{
+
+                Asignacion::first()->update(['certificador' => $actual]);
+
+            }
+
+            return $actual;
 
         }
 
@@ -137,41 +147,42 @@ class AsignacionService{
 
         if($distrito != 2 && $solicitante == 'Oficialia de partes'){
 
+            $idActual = Asignacion::first()?->certificado_gravamen_uruapan;
+
             if($tipo_servicio == 'ordinario')
 
-                $certificadores = User::with('ultimoMovimientoRegistralAsignado')
-                                        ->where('status', 'activo')
+                $certificadores = User::where('status', 'activo')
                                         ->whereHas('roles', function($q){
                                             $q->where('name', 'Certificador Oficialia');
                                         })
-                                        ->get();
+                                        ->pluck('id');
             else
 
-                $certificadores = User::with('ultimoMovimientoRegistralAsignado')
-                                        ->where('status', 'activo')
+                $certificadores = User::where('status', 'activo')
                                         ->whereHas('roles', function($q){
                                             $q->where('name', 'Certificador Juridico');
                                         })
-                                        ->get();
+                                        ->pluck('id');
 
         }else{
 
-            $certificadores = User::with('ultimoMovimientoRegistralAsignado')
-                                        ->where('status', 'activo')
-                                        ->when($distrito == 2, function($q){
-                                            $q->where('ubicacion', 'Regional 4');
-                                        })
-                                        ->when($distrito != 2, function($q){
-                                            $q->where('ubicacion', '!=', 'Regional 4');
-                                        })
-                                        ->whereHas('roles', function($q) use($roles){
-                                            $q->whereIn('name', $roles);
-                                        })
-                                        ->get();
+            $idActual = Asignacion::first()?->certificado_gravamen;
+
+            $certificadores = User::where('status', 'activo')
+                                    ->when($distrito == 2, function($q){
+                                        $q->where('ubicacion', 'Regional 4');
+                                    })
+                                    ->when($distrito != 2, function($q){
+                                        $q->where('ubicacion', '!=', 'Regional 4');
+                                    })
+                                    ->whereHas('roles', function($q) use($roles){
+                                        $q->whereIn('name', $roles);
+                                    })
+                                    ->pluck('id');
 
         }
 
-        if($certificadores->count() == 0){
+        if(count($certificadores) == 0){
 
             Log::error('No se encontraron usuario para asignar la certificación.');
 
@@ -179,17 +190,27 @@ class AsignacionService{
 
         }else if($random){
 
-            $certificador = $certificadores->shuffle()->first();
+            return array_rand($certificadores, 1);
 
-            return $certificador->id;
+        }else if(count($certificadores) == 1){
 
-        }else if($certificadores->count() == 1){
-
-            return $certificadores->first()->id;
+            return $certificadores[0];
 
         }else{
 
-            return $this->obtenerUltimoUsuarioConAsignacion($certificadores);
+            $actual = $this->obtenerSiguienteUsuario($certificadores, $idActual);
+
+            if($distrito == 2){
+
+                Asignacion::first()->update(['certificado_gravamen_uruapan' => $actual]);
+
+            }else{
+
+                Asignacion::first()->update(['certificado_gravamen' => $actual]);
+
+            }
+
+            return $actual;
 
         }
 
@@ -209,41 +230,42 @@ class AsignacionService{
 
         if($distrito != 2 && $solicitante == 'Oficialia de partes'){
 
+            $idActual = Asignacion::first()?->certificado_propiedad_uruapan;
+
             if($tipo_servicio == 'ordinario')
 
-                $certificadores = User::with('ultimoMovimientoRegistralAsignado')
-                                        ->where('status', 'activo')
+                $certificadores = User::where('status', 'activo')
                                         ->whereHas('roles', function($q){
                                             $q->where('name', 'Certificador Oficialia');
                                         })
-                                        ->get();
+                                        ->pluck('id');
             else
 
-                $certificadores = User::with('ultimoMovimientoRegistralAsignado')
-                                        ->where('status', 'activo')
+                $certificadores = User::where('status', 'activo')
                                         ->whereHas('roles', function($q){
                                             $q->where('name', 'Certificador Juridico');
                                         })
-                                        ->get();
+                                        ->pluck('id');
 
         }else{
 
-            $certificadores = User::with('ultimoMovimientoRegistralAsignado')
-                                        ->where('status', 'activo')
-                                        ->when($distrito == 2, function($q){
-                                            $q->where('ubicacion', 'Regional 4');
-                                        })
-                                        ->when($distrito != 2, function($q){
-                                            $q->where('ubicacion', '!=', 'Regional 4');
-                                        })
-                                        ->whereHas('roles', function($q) use($roles){
-                                            $q->whereIn('name', $roles);
-                                        })
-                                        ->get();
+            $idActual = Asignacion::first()?->certificado_propiedad;
+
+            $certificadores = User::where('status', 'activo')
+                                    ->when($distrito == 2, function($q){
+                                        $q->where('ubicacion', 'Regional 4');
+                                    })
+                                    ->when($distrito != 2, function($q){
+                                        $q->where('ubicacion', '!=', 'Regional 4');
+                                    })
+                                    ->whereHas('roles', function($q) use($roles){
+                                        $q->whereIn('name', $roles);
+                                    })
+                                    ->pluck('id');
 
         }
 
-        if($certificadores->count() == 0){
+        if(count($certificadores) == 0){
 
             Log::error('No se encontraron usuario para asignar la certificación.');
 
@@ -251,17 +273,29 @@ class AsignacionService{
 
         }else if($random){
 
-            $certificador = $certificadores->shuffle()->first();
+            return array_rand($certificadores, 1);
 
-            return $certificador->id;
+        }else if(count($certificadores) == 1){
 
-        }else if($certificadores->count() == 1){
-
-            return $certificadores->first()->id;
+            return $certificadores[0];
 
         }else{
 
-            return $this->obtenerUltimoUsuarioConAsignacion($certificadores);
+            info($certificadores);
+
+            $actual = $this->obtenerSiguienteUsuario($certificadores, $idActual);
+
+            if($distrito == 2){
+
+                Asignacion::first()->update(['certificado_propiedad_uruapan' => $actual]);
+
+            }else{
+
+                Asignacion::first()->update(['certificado_propiedad' => $actual]);
+
+            }
+
+            return $actual;
 
         }
 
@@ -313,42 +347,58 @@ class AsignacionService{
 
             $roles = ['Pase a folio', 'Registrador Propiedad'];
 
+            $idActual = Asignacion::first()?->propiedad_uruapan;
+
         }else{
 
             $roles = ['Registrador Propiedad'];
+
+            $idActual = Asignacion::first()?->propiedad;
+
         }
 
-        $usuarios = User::with('ultimoMovimientoRegistralAsignado')
-                                ->where('status', 'activo')
-                                ->when($distrito == 2, function($q){
-                                    $q->where('ubicacion', 'Regional 4');
-                                })
-                                ->when($distrito != 2, function($q){
-                                    $q->where('ubicacion', '!=', 'Regional 4');
-                                })
-                                ->when(($folioReal != null) || ($folioReal === null && $estado == 'precalificacion'), function($q){
-                                    $q->whereHas('roles', function($q){
-                                        $q->whereIn('name', ['Propiedad', 'Registrador Propiedad']);
-                                    });
-                                })
-                                ->when($folioReal === null && $estado != 'precalificacion', function($q) use($roles){
-                                    $q->whereHas('roles', function($q) use($roles){
-                                        $q->whereIn('name', $roles);
-                                    });
-                                })
-                                ->get();
+        $usuarios = User::where('status', 'activo')
+                            ->when($distrito == 2, function($q){
+                                $q->where('ubicacion', 'Regional 4');
+                            })
+                            ->when($distrito != 2, function($q){
+                                $q->where('ubicacion', '!=', 'Regional 4');
+                            })
+                            ->when(($folioReal != null) || ($folioReal === null && $estado == 'precalificacion'), function($q){
+                                $q->whereHas('roles', function($q){
+                                    $q->whereIn('name', ['Propiedad', 'Registrador Propiedad']);
+                                });
+                            })
+                            ->when($folioReal === null && $estado != 'precalificacion', function($q) use($roles){
+                                $q->whereHas('roles', function($q) use($roles){
+                                    $q->whereIn('name', $roles);
+                                });
+                            })
+                            ->pluck('id');
 
-        if($usuarios->count() == 0){
+        if(count($usuarios) == 0){
 
             throw new AsignacionServiceException('No se encontraron usuarios de propiedad para asignar al movimiento registral.');
 
-        }else if($usuarios->count() == 1){
+        }else if(count($usuarios) == 1){
 
-            return $usuarios->first()->id;
+            return $usuarios[0];
 
         }else{
 
-            return $this->obtenerUltimoUsuarioConAsignacion($usuarios);
+            $actual = $this->obtenerSiguienteUsuario($usuarios, $idActual);
+
+            if($distrito == 2){
+
+                Asignacion::first()->update(['propiedad_uruapan' => $actual]);
+
+            }else{
+
+                Asignacion::first()->update(['propiedad' => $actual]);
+
+            }
+
+            return $actual;
 
         }
 
@@ -401,42 +451,58 @@ class AsignacionService{
 
             $roles = ['Pase a folio', 'Registrador Gravamen'];
 
+            $idActual = Asignacion::first()?->gravamen_uruapan;
+
         }else{
 
             $roles = ['Registrador Gravamen'];
+
+            $idActual = Asignacion::first()?->gravamen;
+
         }
 
-        $usuarios = User::with('ultimoMovimientoRegistralAsignado')
-                                ->where('status', 'activo')
-                                ->when($distrito == 2, function($q){
-                                    $q->where('ubicacion', 'Regional 4');
-                                })
-                                ->when($distrito != 2, function($q){
-                                    $q->where('ubicacion', '!=', 'Regional 4');
-                                })
-                                ->when(($folioReal != null) || ($folioReal === null && $estado == 'precalificacion'), function($q){
-                                    $q->whereHas('roles', function($q){
-                                        $q->whereIn('name', ['Gravamen', 'Registrador Gravamen']);
-                                    });
-                                })
-                                ->when($folioReal === null && $estado != 'precalificacion', function($q) use($roles){
-                                    $q->whereHas('roles', function($q) use($roles){
-                                        $q->whereIn('name', $roles);
-                                    });
-                                })
-                                ->get();
+        $usuarios = User::where('status', 'activo')
+                            ->when($distrito == 2, function($q){
+                                $q->where('ubicacion', 'Regional 4');
+                            })
+                            ->when($distrito != 2, function($q){
+                                $q->where('ubicacion', '!=', 'Regional 4');
+                            })
+                            ->when(($folioReal != null) || ($folioReal === null && $estado == 'precalificacion'), function($q){
+                                $q->whereHas('roles', function($q){
+                                    $q->whereIn('name', ['Gravamen', 'Registrador Gravamen']);
+                                });
+                            })
+                            ->when($folioReal === null && $estado != 'precalificacion', function($q) use($roles){
+                                $q->whereHas('roles', function($q) use($roles){
+                                    $q->whereIn('name', $roles);
+                                });
+                            })
+                            ->pluck('id');
 
-        if($usuarios->count() == 0){
+        if(count($usuarios) == 0){
 
             throw new AsignacionServiceException('No se encontraron usuarios de gravamen para asignar al movimiento registral.');
 
-        }else if($usuarios->count() == 1){
+        }else if(count($usuarios) == 1){
 
-            return $usuarios->first()->id;
+            return $usuarios[0];
 
         }else{
 
-            return $this->obtenerUltimoUsuarioConAsignacion($usuarios);
+            $actual = $this->obtenerSiguienteUsuario($usuarios, $idActual);
+
+            if($distrito == 2){
+
+                Asignacion::first()->update(['gravamen_uruapan' => $actual]);
+
+            }else{
+
+                Asignacion::first()->update(['gravamen' => $actual]);
+
+            }
+
+            return $actual;
 
         }
 
@@ -487,49 +553,56 @@ class AsignacionService{
 
         if($distrito == 2){
 
-            $registradorCancelacion = User::inRandomOrder()
-                                ->where('status', 'activo')
-                                ->where('ubicacion', 'Regional 4')
-                                ->whereHas('roles', function($q){
-                                    $q->where('name', 'Registrador Cancelación');
-                                })
-                                ->first();
-
-            return $registradorCancelacion->id;
-
-        }
-
-        $usuarios = User::with('ultimoMovimientoRegistralAsignado')
-                                ->where('status', 'activo')
-                                ->when($distrito == 2, function($q){
-                                    $q->where('ubicacion', 'Regional 4');
-                                })
-                                ->when($distrito != 2, function($q){
-                                    $q->where('ubicacion', '!=', 'Regional 4');
-                                })
-                                ->when(($folioReal != null) || ($folioReal === null && $estado == 'precalificacion'), function($q){
-                                    $q->whereHas('roles', function($q){
-                                        $q->whereIn('name', ['Cancelación', 'Registrador Cancelación']);
-                                    });
-                                })
-                                ->when($folioReal === null && $estado != 'precalificacion', function($q){
-                                    $q->whereHas('roles', function($q){
-                                        $q->whereIn('name', ['Registrador Cancelación']);
-                                    });
-                                })
-                                ->get();
-
-        if($usuarios->count() == 0){
-
-            throw new AsignacionServiceException('No se encontraron usuarios de cancelación para asignar al movimiento registral.');
-
-        }else if($usuarios->count() == 1){
-
-            return $usuarios->first()->id;
+            $idActual = Asignacion::first()?->cancelacion_uruapan;
 
         }else{
 
-            return $this->obtenerUltimoUsuarioConAsignacion($usuarios);
+            $idActual = Asignacion::first()?->cancelacion;
+
+        }
+
+        $usuarios = User::where('status', 'activo')
+                            ->when($distrito == 2, function($q){
+                                $q->where('ubicacion', 'Regional 4');
+                            })
+                            ->when($distrito != 2, function($q){
+                                $q->where('ubicacion', '!=', 'Regional 4');
+                            })
+                            ->when(($folioReal != null) || ($folioReal === null && $estado == 'precalificacion'), function($q){
+                                $q->whereHas('roles', function($q){
+                                    $q->whereIn('name', ['Cancelación', 'Registrador Cancelación']);
+                                });
+                            })
+                            ->when($folioReal === null && $estado != 'precalificacion', function($q){
+                                $q->whereHas('roles', function($q){
+                                    $q->whereIn('name', ['Registrador Cancelación']);
+                                });
+                            })
+                            ->pluck('id');
+
+        if(count($usuarios) == 0){
+
+            throw new AsignacionServiceException('No se encontraron usuarios de cancelación para asignar al movimiento registral.');
+
+        }else if(count($usuarios) == 1){
+
+            return $usuarios[0];
+
+        }else{
+
+            $actual = $this->obtenerSiguienteUsuario($usuarios, $idActual);
+
+            if($distrito == 2){
+
+                Asignacion::first()->update(['cancelacion_uruapan' => $actual]);
+
+            }else{
+
+                Asignacion::first()->update(['cancelacion' => $actual]);
+
+            }
+
+            return $actual;
 
         }
 
@@ -583,42 +656,60 @@ class AsignacionService{
 
             $roles = ['Pase a folio', 'Registrador Varios'];
 
+            $idActual = Asignacion::first()?->varios_uruapan;
+
         }else{
 
             $roles = ['Registrador Varios'];
+
+            $idActual = Asignacion::first()?->varios;
+
         }
 
-        $usuarios = User::with('ultimoMovimientoRegistralAsignado')
-                                ->where('status', 'activo')
-                                ->when($distrito == 2, function($q){
-                                    $q->where('ubicacion', 'Regional 4');
-                                })
-                                ->when($distrito != 2, function($q){
-                                    $q->where('ubicacion', '!=', 'Regional 4');
-                                })
-                                ->when(($folioReal != null) || ($folioReal === null && $estado == 'precalificacion'), function($q){
-                                    $q->whereHas('roles', function($q){
-                                        $q->whereIn('name', ['Varios', 'Registrador Varios']);
-                                    });
-                                })
-                                ->when($folioReal === null && $estado != 'precalificacion', function($q) use($roles){
-                                    $q->whereHas('roles', function($q) use($roles){
-                                        $q->whereIn('name', $roles);
-                                    });
-                                })
-                                ->get();
+        $usuarios = User::where('status', 'activo')
+                            ->when($distrito == 2, function($q){
+                                $q->where('ubicacion', 'Regional 4');
+                            })
+                            ->when($distrito != 2, function($q){
+                                $q->where('ubicacion', '!=', 'Regional 4');
+                            })
+                            ->when(($folioReal != null) || ($folioReal === null && $estado == 'precalificacion'), function($q){
+                                $q->whereHas('roles', function($q){
+                                    $q->whereIn('name', ['Varios', 'Registrador Varios']);
+                                });
+                            })
+                            ->when($folioReal === null && $estado != 'precalificacion', function($q) use($roles){
+                                $q->whereHas('roles', function($q) use($roles){
+                                    $q->whereIn('name', $roles);
+                                });
+                            })
+                            ->pluck('id');
 
-        if($usuarios->count() == 0){
+        if(count($usuarios) == 0){
 
             throw new AsignacionServiceException('No se encontraron usuarios de varios para asignar al movimiento registral.');
 
-        }else if($usuarios->count() == 1){
+        }else if(count($usuarios) == 1){
 
-            return $usuarios->first()->id;
+            return $usuarios[0];
 
         }else{
 
-            return $this->obtenerUltimoUsuarioConAsignacion($usuarios);
+            info($usuarios);
+
+            $actual = $this->obtenerSiguienteUsuario($usuarios, $idActual);
+
+            if($distrito == 2){
+
+                Asignacion::first()->update(['varios_uruapan' => $actual]);
+
+            }else{
+
+                Asignacion::first()->update(['varios' => $actual]);
+
+            }
+
+            return $actual;
 
         }
 
@@ -670,43 +761,59 @@ class AsignacionService{
 
             $roles = ['Pase a folio', 'Registrador Sentencias'];
 
+            $idActual = Asignacion::first()?->sentencia_uruapan;
+
         }else{
 
             $roles = ['Registrador Sentencias'];
+
+            $idActual = Asignacion::first()?->sentencia;
+
         }
 
 
-        $usuarios = User::with('ultimoMovimientoRegistralAsignado')
-                                ->where('status', 'activo')
-                                ->when($distrito == 2, function($q){
-                                    $q->where('ubicacion', 'Regional 4');
-                                })
-                                ->when($distrito != 2, function($q){
-                                    $q->where('ubicacion', '!=', 'Regional 4');
-                                })
-                                ->when(($folioReal != null) || ($folioReal === null && $estado == 'precalificacion'), function($q){
-                                    $q->whereHas('roles', function($q){
-                                        $q->whereIn('name', ['Sentencias', 'Registrador Sentencias']);
-                                    });
-                                })
-                                ->when($folioReal === null && $estado != 'precalificacion', function($q) use($roles){
-                                    $q->whereHas('roles', function($q) use($roles){
-                                        $q->whereIn('name', $roles);
-                                    });
-                                })
-                                ->get();
+        $usuarios = User::where('status', 'activo')
+                            ->when($distrito == 2, function($q){
+                                $q->where('ubicacion', 'Regional 4');
+                            })
+                            ->when($distrito != 2, function($q){
+                                $q->where('ubicacion', '!=', 'Regional 4');
+                            })
+                            ->when(($folioReal != null) || ($folioReal === null && $estado == 'precalificacion'), function($q){
+                                $q->whereHas('roles', function($q){
+                                    $q->whereIn('name', ['Sentencias', 'Registrador Sentencias']);
+                                });
+                            })
+                            ->when($folioReal === null && $estado != 'precalificacion', function($q) use($roles){
+                                $q->whereHas('roles', function($q) use($roles){
+                                    $q->whereIn('name', $roles);
+                                });
+                            })
+                            ->pluck('id');
 
-        if($usuarios->count() == 0){
+        if(count($usuarios) == 0){
 
             throw new AsignacionServiceException('No se encontraron usuarios de sentencias para asignar al movimiento registral.');
 
-        }else if($usuarios->count() == 1){
+        }else if(count($usuarios) == 1){
 
-            return $usuarios->first()->id;
+            return $usuarios[0];
 
         }else{
 
-            return $this->obtenerUltimoUsuarioConAsignacion($usuarios);
+            $actual = $this->obtenerSiguienteUsuario($usuarios, $idActual);
+
+            if($distrito == 2){
+
+                Asignacion::first()->update(['sentencia_uruapan' => $actual]);
+
+            }else{
+
+                Asignacion::first()->update(['sentencia' => $actual]);
+
+            }
+
+            return $actual;
 
         }
 
