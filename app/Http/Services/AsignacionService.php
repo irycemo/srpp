@@ -9,6 +9,26 @@ use App\Exceptions\AsignacionServiceException;
 
 class AsignacionService{
 
+    public function obtenerUltimoUsuarioConAsignacion($usuarios):int
+    {
+
+        $movimientos = [];
+
+        foreach ($usuarios as $usuario) {
+
+            if(!$usuario->ultimoMovimientoRegistralAsignado)
+                return $usuario->id;
+
+            array_push($movimientos, $usuario->ultimoMovimientoRegistralAsignado);
+
+        }
+
+        return collect($movimientos)->sortBy('created_at')->first()->usuario_asignado;
+
+        /* return MovimientoRegistral::whereIn('id', $ids)->orderBy('created_at')->first()->usuario_asignado; */
+
+    }
+
     public function obtenerSiguienteUsuario($arrayUsuarios, $idActual){
 
         if($idActual == null) return $arrayUsuarios[0];
