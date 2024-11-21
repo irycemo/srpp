@@ -43,8 +43,9 @@ class FolioRealController extends Controller
 
             if(!$folio_real){
 
-                $folio_real = FolioReal::when(isset($validated['tomo']), function($q) use($validated){
-                                            $q->where('tomo_antecedente', $validated['tomo']);
+                $folio_real = FolioReal::where('estado', 'activo')
+                                        ->when(isset($validated['tomo']), function($q) use($validated){
+                                            $q->orWhere('tomo_antecedente', $validated['tomo']);
                                         })
                                         ->when(isset($validated['registro']), function($q) use($validated){
                                             $q->orWhere('registro_antecedente', $validated['registro']);
@@ -61,7 +62,6 @@ class FolioRealController extends Controller
                                         ->when(isset($validated['folio_real']), function($q) use($validated){
                                             $q->orWhere('folio', $validated['folio_real']);
                                         })
-                                        ->where('estado', 'activo')
                                         ->first();
 
             }
