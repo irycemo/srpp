@@ -19,8 +19,8 @@ class MovimientosRegistrales extends Component
     public MovimientoRegistral $modelo_editar;
 
     public $distritos;
-    public $usuarios;
-    public $supervisores;
+    public $usuarios = [];
+    public $supervisores = [];
     public $años;
 
     public $modalReasignarUsuario = false;
@@ -67,6 +67,64 @@ class MovimientosRegistrales extends Component
             $this->modelo_editar = $modelo;
 
         $this->modalReasignarUsuario = true;
+
+        if($this->modelo_editar->inscripcionPropiedad){
+
+            $this->cargarUsuarios(['Propiedad', 'Registrador Propiedad']);
+
+            $this->cargarSupervisores(['Supervisor propiedad']);
+
+        }
+
+        if($this->modelo_editar->gravamen){
+
+            $this->cargarUsuarios(['Gravamen', 'Registrador Gravamen']);
+
+            $this->cargarSupervisores(['Supervisor gravamen']);
+
+        }
+
+        if($this->modelo_editar->vario){
+
+            $this->cargarUsuarios(['Varios', 'Registrador Varios']);
+
+            $this->cargarSupervisores(['Supervisor Varios']);
+
+        }
+
+        if($this->modelo_editar->cancelacion){
+
+            $this->cargarUsuarios(['Cancelación', 'Registrador cancelación']);
+
+            $this->cargarSupervisores(['Supervisor Cancelación']);
+
+        }
+
+        if($this->modelo_editar->sentencia){
+
+            $this->cargarUsuarios(['Sentencias', 'Registrador sentencias']);
+
+            $this->cargarSupervisores(['Supervisor Sentencias']);
+
+        }
+
+        if($this->modelo_editar->certificacion){
+
+            if($this->modelo_editar->certificacion->servicio == 'DL07'){
+
+                $this->cargarUsuarios(['Certificador Gravamen']);
+
+                $this->cargarSupervisores(['Supervisor certificaciones']);
+
+            }elseif(in_array($this->modelo_editar->certificacion->servicio, ['DL11', 'DL10'])){
+
+                $this->cargarUsuarios(['Certificador Propiedad']);
+
+                $this->cargarSupervisores(['Supervisor certificaciones']);
+
+            }
+
+        }
 
     }
 
@@ -180,6 +238,26 @@ class MovimientosRegistrales extends Component
 
     }
 
+    public function cargarUsuarios($roles){
+
+        $this->usuarios = User::whereHas('roles', function($q) use($roles){
+                                    $q->whereIn('name', $roles);
+                                })
+                                ->orderBy('name')
+                                ->get();
+
+    }
+
+    public function cargarSupervisores($roles){
+
+        $this->supervisores = User::whereHas('roles', function($q)use($roles){
+                                    $q->whereIn('name', $roles);
+                                })
+                                ->orderBy('name')
+                                ->get();
+
+    }
+
     public function mount(): void
     {
 
@@ -188,45 +266,6 @@ class MovimientosRegistrales extends Component
         $this->distritos = Constantes::DISTRITOS;
 
         $this->años = Constantes::AÑOS;
-
-        $this->usuarios = User::whereHas('roles', function($q){
-                                    $q->whereIn('name', [
-                                                            'Registrador Sentencias',
-                                                            'Registrador Varios',
-                                                            'Registrador Cancelación',
-                                                            'Registrador Gravamen',
-                                                            'Registrador Propiedad',
-                                                            'Propiedad',
-                                                            'Gravamen',
-                                                            'Sentencias',
-                                                            'Cancelación',
-                                                            'Varios',
-                                                            'Certificador Propiedad',
-                                                            'Certificador Gravamen',
-                                                            'Certificador Oficialia',
-                                                            'Certificador Juridico',
-                                                            'Certificador',
-                                                            'Pase a folio',
-                                                            'Aclaraciones administrativas',
-                                                            'Avisos preventivos'
-                                                        ]);
-                                })
-                                ->orderBy('name')
-                                ->get();
-
-        $this->supervisores = User::whereHas('roles', function($q){
-                                    $q->whereIn('name', [
-                                                            'Supervisor uruapan',
-                                                            'Supervisor sentencias',
-                                                            'Supervisor varios',
-                                                            'Supervisor cancelación',
-                                                            'Supervisor gravamen',
-                                                            'Supervisor propiedad',
-                                                            'Supervisor certificaciones'
-                                                        ]);
-                                })
-                                ->orderBy('name')
-                                ->get();
 
     }
 

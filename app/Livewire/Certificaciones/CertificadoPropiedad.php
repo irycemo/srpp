@@ -6,14 +6,16 @@ use App\Models\Actor;
 use App\Models\Predio;
 use App\Models\Persona;
 use Livewire\Component;
+use App\Models\FolioReal;
 use App\Models\Personaold;
+use App\Models\Colindancia;
 use App\Models\Propiedadold;
 use App\Models\Certificacion;
+use App\Constantes\Constantes;
 use App\Models\CertificadoPersona;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
 use App\Http\Services\SistemaTramitesService;
-use App\Models\FolioReal;
 
 class CertificadoPropiedad extends Component
 {
@@ -37,6 +39,9 @@ class CertificadoPropiedad extends Component
     public $flagUnico = false;
 
     public $observaciones;
+
+    public $medidas = [];
+    public $vientos;
 
     protected function rules(){
         return [
@@ -258,6 +263,30 @@ class CertificadoPropiedad extends Component
         try{
 
             DB::transaction(function (){
+
+                foreach ($this->medidas as $key =>$medida) {
+
+                    if($medida['id'] == null){
+
+                        $aux = $this->certificacion->movimientoRegistral->folioReal->predio->colindancias()->create([
+                            'viento' => $medida['viento'],
+                            'longitud' => $medida['longitud'],
+                            'descripcion' => $medida['descripcion'],
+                        ]);
+
+                        $this->medidas[$key]['id'] = $aux->id;
+
+                    }else{
+
+                        Colindancia::find($medida['id'])->update([
+                            'viento' => $medida['viento'],
+                            'longitud' => $medida['longitud'],
+                            'descripcion' => $medida['descripcion'],
+                        ]);
+
+                    }
+
+                }
 
                 $this->certificacion->movimientoRegistral->estado = 'elaborado';
                 $this->certificacion->movimientoRegistral->save();
@@ -599,6 +628,50 @@ class CertificadoPropiedad extends Component
         );
 
         CertificadoPersona::create(['certificacion_id' => $this->certificacion->id, 'persona_id' => $persona->id]);
+
+    }
+
+    public function agregarColindancia(){
+
+        $this->medidas[] = ['viento' => null, 'longitud' => null, 'descripcion' => null, 'id' => null];
+
+    }
+
+    public function borrarColindancia($index){
+
+        try {
+
+            Colindancia::where('id', $this->medidas[$index]['id'])->delete();
+
+        } catch (\Throwable $th) {
+            Log::error("Error al borrar colindancia en inscripcion de propipedad por el usuario: (id: " . auth()->user()->id . ") " . auth()->user()->name . ". " . $th);
+            $this->dispatch('mostrarMensaje', ['error', "Hubo un error."]);
+        }
+
+        unset($this->medidas[$index]);
+
+        $this->medidas = array_values($this->medidas);
+
+    }
+
+    public function mount(){
+
+        if($this->certificacion->servicio == 'DL11'){
+
+            $this->vientos = Constantes::VIENTOS;
+
+            foreach ($this->certificacion->movimientoRegistral->folioReal->predio->colindancias as $colindancia) {
+
+                $this->medidas[] = [
+                    'id' => $colindancia->id,
+                    'viento' => $colindancia->viento,
+                    'longitud' => $colindancia->longitud,
+                    'descripcion' => $colindancia->descripcion,
+                ];
+
+            }
+
+        }
 
     }
 

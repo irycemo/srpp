@@ -64,49 +64,49 @@ class AclaracionAdministrativa extends Component
         return [
             'vario.acto_contenido' => 'required',
             'vario.descripcion' => 'required',
-            'predio.superficie_terreno' => 'required',
-            'predio.unidad_area' => 'required',
-            'predio.superficie_construccion' => 'required',
-            'predio.monto_transaccion' => 'required',
-            'predio.observaciones' => 'nullable',
-            'predio.curt' => 'nullable',
-            'predio.superficie_judicial' => 'nullable',
-            'predio.superficie_notarial' => 'nullable',
-            'predio.area_comun_terreno' => 'nullable',
-            'predio.area_comun_construccion' => 'nullable',
-            'predio.valor_terreno_comun' => 'nullable',
-            'predio.valor_construccion_comun' => 'nullable',
-            'predio.valor_total_terreno' => 'nullable',
-            'predio.valor_total_construccion' => 'nullable',
-            'predio.valor_catastral' => 'nullable',
-            'predio.divisa' => 'required',
-            'predio.codigo_postal' => 'nullable',
-            'predio.nombre_asentamiento' => 'nullable',
-            'predio.municipio' => 'nullable',
-            'predio.ciudad' => 'nullable',
-            'predio.tipo_asentamiento' => 'nullable',
-            'predio.localidad' => 'nullable',
-            'predio.tipo_vialidad' => 'nullable',
-            'predio.nombre_vialidad' => 'nullable',
-            'predio.numero_exterior' => 'nullable',
-            'predio.numero_interior' => 'nullable',
-            'predio.nombre_edificio' => 'nullable',
-            'predio.departamento_edificio' => 'nullable',
-            'predio.departamento_edificio' => 'nullable',
-            'predio.descripcion' => 'nullable',
-            'predio.lote' => 'nullable',
-            'predio.manzana' => 'nullable',
-            'predio.ejido' => 'nullable',
-            'predio.parcela' => 'nullable',
-            'predio.solar' => 'nullable',
-            'predio.poblado' => 'nullable',
-            'predio.numero_exterior_2' => 'nullable',
-            'predio.numero_adicional' => 'nullable',
-            'predio.numero_adicional_2' => 'nullable',
-            'predio.lote_fraccionador' => 'nullable',
-            'predio.manzana_fraccionador' => 'nullable',
-            'predio.etapa_fraccionador' => 'nullable',
-            'predio.clave_edificio' => 'nullable',
+            'vario.predio.superficie_terreno' => 'required',
+            'vario.predio.unidad_area' => 'required',
+            'vario.predio.superficie_construccion' => 'required',
+            'vario.predio.monto_transaccion' => 'required',
+            'vario.predio.observaciones' => 'nullable',
+            'vario.predio.curt' => 'nullable',
+            'vario.predio.superficie_judicial' => 'nullable',
+            'vario.predio.superficie_notarial' => 'nullable',
+            'vario.predio.area_comun_terreno' => 'nullable',
+            'vario.predio.area_comun_construccion' => 'nullable',
+            'vario.predio.valor_terreno_comun' => 'nullable',
+            'vario.predio.valor_construccion_comun' => 'nullable',
+            'vario.predio.valor_total_terreno' => 'nullable',
+            'vario.predio.valor_total_construccion' => 'nullable',
+            'vario.predio.valor_catastral' => 'nullable',
+            'vario.predio.divisa' => 'required',
+            'vario.predio.codigo_postal' => 'nullable',
+            'vario.predio.nombre_asentamiento' => 'nullable',
+            'vario.predio.municipio' => 'nullable',
+            'vario.predio.ciudad' => 'nullable',
+            'vario.predio.tipo_asentamiento' => 'nullable',
+            'vario.predio.localidad' => 'nullable',
+            'vario.predio.tipo_vialidad' => 'nullable',
+            'vario.predio.nombre_vialidad' => 'nullable',
+            'vario.predio.numero_exterior' => 'nullable',
+            'vario.predio.numero_interior' => 'nullable',
+            'vario.predio.nombre_edificio' => 'nullable',
+            'vario.predio.departamento_edificio' => 'nullable',
+            'vario.predio.departamento_edificio' => 'nullable',
+            'vario.predio.descripcion' => 'nullable',
+            'vario.predio.lote' => 'nullable',
+            'vario.predio.manzana' => 'nullable',
+            'vario.predio.ejido' => 'nullable',
+            'vario.predio.parcela' => 'nullable',
+            'vario.predio.solar' => 'nullable',
+            'vario.predio.poblado' => 'nullable',
+            'vario.predio.numero_exterior_2' => 'nullable',
+            'vario.predio.numero_adicional' => 'nullable',
+            'vario.predio.numero_adicional_2' => 'nullable',
+            'vario.predio.lote_fraccionador' => 'nullable',
+            'vario.predio.manzana_fraccionador' => 'nullable',
+            'vario.predio.etapa_fraccionador' => 'nullable',
+            'vario.predio.clave_edificio' => 'nullable',
          ];
     }
 
@@ -162,7 +162,7 @@ class AclaracionAdministrativa extends Component
 
         if(!$this->vario->predio_id){
 
-            $this->predio = Predio::create([
+            $predio = Predio::create([
                 'status' => 'varios',
                 'cp_localidad' => $this->vario->movimientoRegistral->folioReal->predio->cp_localidad,
                 'cp_oficina' => $this->vario->movimientoRegistral->folioReal->predio->cp_oficina,
@@ -212,11 +212,11 @@ class AclaracionAdministrativa extends Component
                 'clave_edificio' => $this->vario->movimientoRegistral->folioReal->predio->clave_edificio,
             ]);
 
-            $this->vario->update(['predio_id' => $this->predio->id]);
+            $this->vario->update(['predio_id' => $predio->id]);
 
             foreach ($this->vario->movimientoRegistral->folioReal->predio->colindancias as $colindancia) {
 
-                $this->predio->colindancias()->create([
+                $predio->colindancias()->create([
                     'viento' => $colindancia->viento,
                     'longitud' => $colindancia->longitud,
                     'descripcion' => $colindancia->descripcion,
@@ -226,7 +226,7 @@ class AclaracionAdministrativa extends Component
 
             foreach ($this->vario->movimientoRegistral->folioReal->predio->propietarios() as $actor) {
 
-                $this->predio->actores()->create([
+                $predio->actores()->create([
                     'persona_id' => $actor->persona_id,
                     'tipo_actor' => $actor->tipo_actor,
                     'porcentaje_propiedad' => $actor->porcentaje_propiedad,
@@ -250,13 +250,13 @@ class AclaracionAdministrativa extends Component
 
                 $this->vario->save();
 
-                $this->predio->save();
+                $this->vario->predio->save();
 
                 foreach ($this->medidas as $key =>$medida) {
 
                     if($medida['id'] == null){
 
-                        $aux = $this->predio->colindancias()->create([
+                        $aux = $this->vario->predio->colindancias()->create([
                             'viento' => $medida['viento'],
                             'longitud' => $medida['longitud'],
                             'descripcion' => $medida['descripcion'],
@@ -299,7 +299,7 @@ class AclaracionAdministrativa extends Component
 
         try {
 
-            $this->predio->colindancias()->where('id', $this->medidas[$index]['id'])->delete();
+            $this->vario->predio->colindancias()->where('id', $this->medidas[$index]['id'])->delete();
 
         } catch (\Throwable $th) {
             Log::error("Error al borrar colindancia en sentencia por el usuario: (id: " . auth()->user()->id . ") " . auth()->user()->name . ". " . $th);
@@ -384,7 +384,7 @@ class AclaracionAdministrativa extends Component
 
         if($persona){
 
-            foreach ($this->predio->propietarios() as $propietario) {
+            foreach ($this->vario->predio->propietarios() as $propietario) {
 
                 if($persona->id == $propietario->persona_id){
 
@@ -441,7 +441,7 @@ class AclaracionAdministrativa extends Component
 
                 }
 
-                $this->predio->actores()->create([
+                $this->vario->predio->actores()->create([
                     'persona_id' => $persona->id,
                     'tipo_actor' => 'propietario',
                     'porcentaje_propiedad' => $this->porcentaje_propiedad,
@@ -454,7 +454,7 @@ class AclaracionAdministrativa extends Component
 
                 $this->resetear();
 
-                $this->predio->refresh();
+                $this->vario->predio->refresh();
 
             });
 
@@ -475,7 +475,7 @@ class AclaracionAdministrativa extends Component
 
         $pu = 0;
 
-        foreach($this->predio->propietarios() as $propietario){
+        foreach($this->vario->predio->propietarios() as $propietario){
 
             if($id == $propietario->id)
                 continue;
@@ -509,7 +509,7 @@ class AclaracionAdministrativa extends Component
 
         $pp = 0;
 
-        foreach($this->predio->propietarios() as $propietario){
+        foreach($this->vario->predio->propietarios() as $propietario){
 
             $pn = $pn + $propietario->porcentaje_nuda;
 
@@ -717,58 +717,58 @@ class AclaracionAdministrativa extends Component
 
     public function propcesarPredio(){
 
-        $this->vario->movimientoRegistral->folioReal->predio->cp_localidad = $this->predio->cp_localidad;
-        $this->vario->movimientoRegistral->folioReal->predio->cp_oficina = $this->predio->cp_oficina;
-        $this->vario->movimientoRegistral->folioReal->predio->cp_tipo_predio = $this->predio->cp_tipo_predio;
-        $this->vario->movimientoRegistral->folioReal->predio->cp_registro = $this->predio->cp_registro;
-        $this->vario->movimientoRegistral->folioReal->predio->superficie_terreno = $this->predio->superficie_terreno;
-        $this->vario->movimientoRegistral->folioReal->predio->unidad_area = $this->predio->unidad_area;
-        $this->vario->movimientoRegistral->folioReal->predio->superficie_construccion = $this->predio->superficie_construccion;
-        $this->vario->movimientoRegistral->folioReal->predio->monto_transaccion = $this->predio->monto_transaccion;
-        $this->vario->movimientoRegistral->folioReal->predio->observaciones = $this->predio->observaciones;
-        $this->vario->movimientoRegistral->folioReal->predio->superficie_judicial = $this->predio->superficie_judicial;
-        $this->vario->movimientoRegistral->folioReal->predio->superficie_notarial = $this->predio->superficie_notarial;
-        $this->vario->movimientoRegistral->folioReal->predio->area_comun_terreno = $this->predio->area_comun_terreno;
-        $this->vario->movimientoRegistral->folioReal->predio->area_comun_construccion = $this->predio->area_comun_construccion;
-        $this->vario->movimientoRegistral->folioReal->predio->valor_terreno_comun = $this->predio->valor_terreno_comun;
-        $this->vario->movimientoRegistral->folioReal->predio->valor_construccion_comun = $this->predio->valor_construccion_comun;
-        $this->vario->movimientoRegistral->folioReal->predio->valor_total_terreno = $this->predio->valor_total_terreno;
-        $this->vario->movimientoRegistral->folioReal->predio->valor_total_construccion = $this->predio->valor_total_construccion;
-        $this->vario->movimientoRegistral->folioReal->predio->valor_catastral = $this->predio->valor_catastral;
-        $this->vario->movimientoRegistral->folioReal->predio->codigo_postal = $this->predio->codigo_postal;
-        $this->vario->movimientoRegistral->folioReal->predio->nombre_asentamiento = $this->predio->nombre_asentamiento;
-        $this->vario->movimientoRegistral->folioReal->predio->municipio = $this->predio->municipio;
-        $this->vario->movimientoRegistral->folioReal->predio->ciudad = $this->predio->ciudad;
-        $this->vario->movimientoRegistral->folioReal->predio->tipo_asentamiento = $this->predio->tipo_asentamiento;
-        $this->vario->movimientoRegistral->folioReal->predio->localidad = $this->predio->localidad;
-        $this->vario->movimientoRegistral->folioReal->predio->tipo_vialidad = $this->predio->tipo_vialidad;
-        $this->vario->movimientoRegistral->folioReal->predio->nombre_vialidad = $this->predio->nombre_vialidad;
-        $this->vario->movimientoRegistral->folioReal->predio->numero_exterior = $this->predio->numero_exterior;
-        $this->vario->movimientoRegistral->folioReal->predio->numero_interior = $this->predio->numero_interior;
-        $this->vario->movimientoRegistral->folioReal->predio->nombre_edificio = $this->predio->nombre_edificio;
-        $this->vario->movimientoRegistral->folioReal->predio->departamento_edificio = $this->predio->departamento_edificio;
-        $this->vario->movimientoRegistral->folioReal->predio->departamento_edificio = $this->predio->departamento_edificio;
-        $this->vario->movimientoRegistral->folioReal->predio->descripcion = $this->predio->descripcion;
-        $this->vario->movimientoRegistral->folioReal->predio->lote = $this->predio->lote;
-        $this->vario->movimientoRegistral->folioReal->predio->manzana = $this->predio->manzana;
-        $this->vario->movimientoRegistral->folioReal->predio->ejido = $this->predio->ejido;
-        $this->vario->movimientoRegistral->folioReal->predio->parcela = $this->predio->parcela;
-        $this->vario->movimientoRegistral->folioReal->predio->solar = $this->predio->solar;
-        $this->vario->movimientoRegistral->folioReal->predio->poblado = $this->predio->poblado;
-        $this->vario->movimientoRegistral->folioReal->predio->numero_exterior_2 = $this->predio->numero_exterior_2;
-        $this->vario->movimientoRegistral->folioReal->predio->numero_adicional = $this->predio->numero_adicional;
-        $this->vario->movimientoRegistral->folioReal->predio->numero_adicional_2 = $this->predio->numero_adicional_2;
-        $this->vario->movimientoRegistral->folioReal->predio->lote_fraccionador = $this->predio->lote_fraccionador;
-        $this->vario->movimientoRegistral->folioReal->predio->manzana_fraccionador = $this->predio->manzana_fraccionador;
-        $this->vario->movimientoRegistral->folioReal->predio->etapa_fraccionador = $this->predio->etapa_fraccionador;
-        $this->vario->movimientoRegistral->folioReal->predio->clave_edificio = $this->predio->clave_edificio;
-        $this->vario->movimientoRegistral->folioReal->predio->divisa = $this->predio->divisa;
+        $this->vario->movimientoRegistral->folioReal->predio->cp_localidad = $this->vario->predio->cp_localidad;
+        $this->vario->movimientoRegistral->folioReal->predio->cp_oficina = $this->vario->predio->cp_oficina;
+        $this->vario->movimientoRegistral->folioReal->predio->cp_tipo_predio = $this->vario->predio->cp_tipo_predio;
+        $this->vario->movimientoRegistral->folioReal->predio->cp_registro = $this->vario->predio->cp_registro;
+        $this->vario->movimientoRegistral->folioReal->predio->superficie_terreno = $this->vario->predio->superficie_terreno;
+        $this->vario->movimientoRegistral->folioReal->predio->unidad_area = $this->vario->predio->unidad_area;
+        $this->vario->movimientoRegistral->folioReal->predio->superficie_construccion = $this->vario->predio->superficie_construccion;
+        $this->vario->movimientoRegistral->folioReal->predio->monto_transaccion = $this->vario->predio->monto_transaccion;
+        $this->vario->movimientoRegistral->folioReal->predio->observaciones = $this->vario->predio->observaciones;
+        $this->vario->movimientoRegistral->folioReal->predio->superficie_judicial = $this->vario->predio->superficie_judicial;
+        $this->vario->movimientoRegistral->folioReal->predio->superficie_notarial = $this->vario->predio->superficie_notarial;
+        $this->vario->movimientoRegistral->folioReal->predio->area_comun_terreno = $this->vario->predio->area_comun_terreno;
+        $this->vario->movimientoRegistral->folioReal->predio->area_comun_construccion = $this->vario->predio->area_comun_construccion;
+        $this->vario->movimientoRegistral->folioReal->predio->valor_terreno_comun = $this->vario->predio->valor_terreno_comun;
+        $this->vario->movimientoRegistral->folioReal->predio->valor_construccion_comun = $this->vario->predio->valor_construccion_comun;
+        $this->vario->movimientoRegistral->folioReal->predio->valor_total_terreno = $this->vario->predio->valor_total_terreno;
+        $this->vario->movimientoRegistral->folioReal->predio->valor_total_construccion = $this->vario->predio->valor_total_construccion;
+        $this->vario->movimientoRegistral->folioReal->predio->valor_catastral = $this->vario->predio->valor_catastral;
+        $this->vario->movimientoRegistral->folioReal->predio->codigo_postal = $this->vario->predio->codigo_postal;
+        $this->vario->movimientoRegistral->folioReal->predio->nombre_asentamiento = $this->vario->predio->nombre_asentamiento;
+        $this->vario->movimientoRegistral->folioReal->predio->municipio = $this->vario->predio->municipio;
+        $this->vario->movimientoRegistral->folioReal->predio->ciudad = $this->vario->predio->ciudad;
+        $this->vario->movimientoRegistral->folioReal->predio->tipo_asentamiento = $this->vario->predio->tipo_asentamiento;
+        $this->vario->movimientoRegistral->folioReal->predio->localidad = $this->vario->predio->localidad;
+        $this->vario->movimientoRegistral->folioReal->predio->tipo_vialidad = $this->vario->predio->tipo_vialidad;
+        $this->vario->movimientoRegistral->folioReal->predio->nombre_vialidad = $this->vario->predio->nombre_vialidad;
+        $this->vario->movimientoRegistral->folioReal->predio->numero_exterior = $this->vario->predio->numero_exterior;
+        $this->vario->movimientoRegistral->folioReal->predio->numero_interior = $this->vario->predio->numero_interior;
+        $this->vario->movimientoRegistral->folioReal->predio->nombre_edificio = $this->vario->predio->nombre_edificio;
+        $this->vario->movimientoRegistral->folioReal->predio->departamento_edificio = $this->vario->predio->departamento_edificio;
+        $this->vario->movimientoRegistral->folioReal->predio->departamento_edificio = $this->vario->predio->departamento_edificio;
+        $this->vario->movimientoRegistral->folioReal->predio->descripcion = $this->vario->predio->descripcion;
+        $this->vario->movimientoRegistral->folioReal->predio->lote = $this->vario->predio->lote;
+        $this->vario->movimientoRegistral->folioReal->predio->manzana = $this->vario->predio->manzana;
+        $this->vario->movimientoRegistral->folioReal->predio->ejido = $this->vario->predio->ejido;
+        $this->vario->movimientoRegistral->folioReal->predio->parcela = $this->vario->predio->parcela;
+        $this->vario->movimientoRegistral->folioReal->predio->solar = $this->vario->predio->solar;
+        $this->vario->movimientoRegistral->folioReal->predio->poblado = $this->vario->predio->poblado;
+        $this->vario->movimientoRegistral->folioReal->predio->numero_exterior_2 = $this->vario->predio->numero_exterior_2;
+        $this->vario->movimientoRegistral->folioReal->predio->numero_adicional = $this->vario->predio->numero_adicional;
+        $this->vario->movimientoRegistral->folioReal->predio->numero_adicional_2 = $this->vario->predio->numero_adicional_2;
+        $this->vario->movimientoRegistral->folioReal->predio->lote_fraccionador = $this->vario->predio->lote_fraccionador;
+        $this->vario->movimientoRegistral->folioReal->predio->manzana_fraccionador = $this->vario->predio->manzana_fraccionador;
+        $this->vario->movimientoRegistral->folioReal->predio->etapa_fraccionador = $this->vario->predio->etapa_fraccionador;
+        $this->vario->movimientoRegistral->folioReal->predio->clave_edificio = $this->vario->predio->clave_edificio;
+        $this->vario->movimientoRegistral->folioReal->predio->divisa = $this->vario->predio->divisa;
 
         $this->vario->movimientoRegistral->folioReal->predio->save();
 
         $this->vario->movimientoRegistral->folioReal->predio->colindancias()->delete();
 
-        foreach ($this->predio->colindancias as $colindancia) {
+        foreach ($this->vario->predio->colindancias as $colindancia) {
 
             $colindancia->update(['predio_id' => $this->vario->movimientoRegistral->folioReal->predio->id]);
 
@@ -778,17 +778,17 @@ class AclaracionAdministrativa extends Component
             $propietario->delete();
         }
 
-        foreach ($this->predio->propietarios() as $propietario) {
+        foreach ($this->vario->predio->propietarios() as $propietario) {
             $propietario->update(['actorable_id' => $this->vario->movimientoRegistral->folioReal->predio->id]);
         }
 
-        $this->predio->colindancias()->delete();
+        $this->vario->predio->colindancias()->delete();
 
-        foreach ($this->predio->propietarios() as $propietario) {
+        foreach ($this->vario->predio->propietarios() as $propietario) {
             $propietario->delete();
         }
 
-        $this->predio->delete();
+        $this->vario->predio->delete();
 
     }
 
@@ -854,9 +854,7 @@ class AclaracionAdministrativa extends Component
 
         $this->cargarPredioInicial();
 
-        $this->predio = $this->vario->predio;
-
-        foreach ($this->predio->colindancias as $colindancia) {
+        foreach ($this->vario->predio->colindancias as $colindancia) {
 
             $this->medidas[] = [
                 'id' => $colindancia->id,
