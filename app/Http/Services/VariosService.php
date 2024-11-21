@@ -25,6 +25,10 @@ class VariosService{
 
                 $acto = 'ACLARACIÓN ADMINISTRATIVA';
 
+            }elseif($request['servicio'] == 'D146'){
+
+                $acto = 'PRIMER AVISO PREVENTIVO';
+
             }else{
 
                 $acto = null;

@@ -142,58 +142,45 @@ class PaseFolio extends Component
 
         $role = null;
 
-        if($this->modelo_editar->inscripcionPropiedad){
+        if($this->modelo_editar->asignadoA->hasRole(['Pase a folio'])){
 
-            $role = ['Propiedad', 'Registrador Propiedad'];
+            if($this->modelo_editar->inscripcionPropiedad){
 
-        }elseif($this->modelo_editar->gravamen){
+                $id = (new AsignacionService())->obtenerUsuarioPropiedad(true, $this->modelo_editar->getRawOriginal('distrito'), '');
 
-            $role = ['Gravamen', 'Registrador Gravamen'];
+            }elseif($this->modelo_editar->gravamen){
 
-        }elseif($this->modelo_editar->cancelacion){
+                $id = (new AsignacionService())->obtenerUsuarioGravamen(true, $this->modelo_editar->getRawOriginal('distrito'), '');
 
-            $role = ['Cancelación', 'Registrador Cancelación'];
+            }elseif($this->modelo_editar->cancelacion){
 
-        }elseif($this->modelo_editar->sentencia){
+                $id = (new AsignacionService())->obtenerUsuarioCancelacion(true, $this->modelo_editar->getRawOriginal('distrito'), '');
 
-            $role = ['Sentencias', 'Registrador Sentencias'];
+            }elseif($this->modelo_editar->sentencia){
 
-        }elseif($this->modelo_editar->certificacion){
+                $id = (new AsignacionService())->obtenerUsuarioSentencias(true, $this->modelo_editar->getRawOriginal('distrito'), '');
 
-            if($this->modelo_editar->certificacion->servicio == 'DL07'){
+            }elseif($this->modelo_editar->certificacion){
 
-                $role = ['Certificador Gravamen'];
+                if($this->modelo_editar->certificacion->servicio == 'DL07'){
 
-            }elseif(in_array($this->modelo_editar->certificacion->servicio, ['DL11', 'DL10'])){
+                    $id = (new AsignacionService())->obtenerCertificadorGravamen($this->modelo_editar->getRawOriginal('distrito'), '', $this->modelo_editar->tipo_servicio, false, true);
 
-                $role = ['Certificador Propiedad'];
+                }elseif(in_array($this->modelo_editar->certificacion->servicio, ['DL11', 'DL10'])){
 
-            }
+                    $id = (new AsignacionService())->obtenerCertificadorPropiedad($this->modelo_editar->getRawOriginal('distrito'), '', $this->modelo_editar->tipo_servicio, false, true);
 
-        }elseif($this->modelo_editar->vario){
+                }
 
-            $role = ['Varios', 'Registrador Varios'];
+            }elseif($this->modelo_editar->vario){
 
-        }
-
-        if($this->modelo_editar->asignadoA->hasRole(['Pase a folio', 'Jefe de departamento certificaciones', 'Jefe de departamento inscripciones'])){
-
-            $usuarios = $this->obtenerUsuarios($role);
-
-            if($usuarios->count() === 0){
-
-                $this->dispatch('mostrarMensaje', ['error', "No hay usuarios con rol de " . $role[0] . " disponibles."]);
-
-                throw new Exception("No hay usuarios con rol de " . $role[0] . " disponibles.");
+                $id = (new AsignacionService())->obtenerUsuarioVarios(true, $this->modelo_editar->getRawOriginal('distrito'), '');
 
             }
-
-            $id = (new AsignacionService())->obtenerUltimoUsuarioConAsignacion($usuarios);
 
             $this->modelo_editar->update(['usuario_asignado' => $id]);
 
         }
-
     }
 
     public function reasignarAleatoriamente(MovimientoRegistral $modelo){
@@ -276,22 +263,6 @@ class PaseFolio extends Component
         }
 
 
-    }
-
-    public function obtenerUsuarios($role){
-
-        return User::with('ultimoMovimientoRegistralAsignado')
-                            ->where('status', 'activo')
-                            ->when($this->modelo_editar->getRawOriginal('distrito') == 2, function($q){
-                                $q->where('ubicacion', 'Regional 4');
-                            })
-                            ->when($this->modelo_editar->getRawOriginal('distrito') != 2, function($q){
-                                $q->where('ubicacion', '!=', 'Regional 4');
-                            })
-                            ->whereHas('roles', function($q) use ($role){
-                                $q->whereIn('name', $role);
-                            })
-                            ->get();
     }
 
     public function pasarCaptura(MovimientoRegistral $modelo){
