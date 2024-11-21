@@ -64,7 +64,7 @@ class FolioRealController extends Controller
                                         ->where('estado', 'activo')
                                         ->first();
 
-                info($validated['folio_real']);
+                info($validated);
                 info($folio_real);
 
             }
