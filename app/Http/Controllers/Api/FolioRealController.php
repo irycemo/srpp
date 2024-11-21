@@ -47,20 +47,20 @@ class FolioRealController extends Controller
                                         ->when(isset($validated['folio_real']), function($q) use($validated){
                                             $q->where('folio', $validated['folio_real']);
                                         })
-                                        ->when(isset($validated['tomo']) && $validated['tomo'] != null, function($q) use($validated){
-                                            $q->where('tomo_antecedente', $validated['tomo']);
+                                        ->when(isset($validated['tomo']), function($q) use($validated){
+                                            $q->orWhere('tomo_antecedente', $validated['tomo']);
                                         })
-                                        ->when(isset($validated['registro']) && $validated['registro'] != null, function($q) use($validated){
-                                            $q->where('registro_antecedente', $validated['registro']);
+                                        ->when(isset($validated['registro']), function($q) use($validated){
+                                            $q->orWhere('registro_antecedente', $validated['registro']);
                                         })
-                                        ->when(isset($validated['distrito']) && $validated['distrito'] != null, function($q) use($validated){
-                                            $q->where('distrito_antecedente', $validated['distrito']);
+                                        ->when(isset($validated['distrito']), function($q) use($validated){
+                                            $q->orWhere('distrito_antecedente', $validated['distrito']);
                                         })
-                                        ->when(isset($validated['seccion']) && $validated['seccion'] != null, function($q) use($validated){
-                                            $q->where('seccion_antecedente', $validated['seccion']);
+                                        ->when(isset($validated['seccion']), function($q) use($validated){
+                                            $q->orWhere('seccion_antecedente', $validated['seccion']);
                                         })
-                                        ->when(isset($validated['numero_propiedad']) && $validated['numero_propiedad'] != null, function($q) use($validated){
-                                            $q->where('numero_propiedad_antecedente', $validated['numero_propiedad']);
+                                        ->when(isset($validated['numero_propiedad']), function($q) use($validated){
+                                            $q->orWhere('numero_propiedad_antecedente', $validated['numero_propiedad']);
                                         })
                                         ->first();
 
