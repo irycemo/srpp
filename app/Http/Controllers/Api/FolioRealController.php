@@ -48,19 +48,19 @@ class FolioRealController extends Controller
                                             $q->where('folio', $validated['folio_real']);
                                         })
                                         ->when(isset($validated['tomo']), function($q) use($validated){
-                                            $q->orWhere('tomo_antecedente', $validated['tomo']);
+                                            $q->where('tomo_antecedente', $validated['tomo']);
                                         })
                                         ->when(isset($validated['registro']), function($q) use($validated){
-                                            $q->orWhere('registro_antecedente', $validated['registro']);
+                                            $q->where('registro_antecedente', $validated['registro']);
                                         })
                                         ->when(isset($validated['distrito']), function($q) use($validated){
-                                            $q->orWhere('distrito_antecedente', $validated['distrito']);
+                                            $q->where('distrito_antecedente', $validated['distrito']);
                                         })
                                         ->when(isset($validated['seccion']), function($q) use($validated){
-                                            $q->orWhere('seccion_antecedente', $validated['seccion']);
+                                            $q->where('seccion_antecedente', $validated['seccion']);
                                         })
                                         ->when(isset($validated['numero_propiedad']), function($q) use($validated){
-                                            $q->orWhere('numero_propiedad_antecedente', $validated['numero_propiedad']);
+                                            $q->where('numero_propiedad_antecedente', $validated['numero_propiedad']);
                                         })
                                         ->first();
 
