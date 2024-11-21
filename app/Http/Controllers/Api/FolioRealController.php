@@ -48,19 +48,19 @@ class FolioRealController extends Controller
                                             $q->where('folio', $validated['folio_real']);
                                         })
                                         ->when(isset($validated['tomo']) && $validated['tomo'] != null, function($q) use($validated){
-                                            $q->here('tomo_antecedente', $validated['tomo']);
+                                            $q->where('tomo_antecedente', $validated['tomo']);
                                         })
                                         ->when(isset($validated['registro']) && $validated['registro'] != null, function($q) use($validated){
-                                            $q->here('registro_antecedente', $validated['registro']);
+                                            $q->where('registro_antecedente', $validated['registro']);
                                         })
                                         ->when(isset($validated['distrito']) && $validated['distrito'] != null, function($q) use($validated){
-                                            $q->here('distrito_antecedente', $validated['distrito']);
+                                            $q->where('distrito_antecedente', $validated['distrito']);
                                         })
                                         ->when(isset($validated['seccion']) && $validated['seccion'] != null, function($q) use($validated){
-                                            $q->here('seccion_antecedente', $validated['seccion']);
+                                            $q->where('seccion_antecedente', $validated['seccion']);
                                         })
                                         ->when(isset($validated['numero_propiedad']) && $validated['numero_propiedad'] != null, function($q) use($validated){
-                                            $q->here('numero_propiedad_antecedente', $validated['numero_propiedad']);
+                                            $q->where('numero_propiedad_antecedente', $validated['numero_propiedad']);
                                         })
                                         ->first();
 
