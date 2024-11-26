@@ -293,11 +293,15 @@ class Constantes{
         'EMBARGO',
         'RESERVA DE DOMINIO',
         'CONVENIO',
+        'CONVENIO MODIFICATORIO',
         'DIVISIÓN DE HIPOTECA',
         'ADHESIÓN DE HIPOTECA',
         'POR ANTECEDENTE',
         'CRÉDITO REFACCIONARIO',
-        'HABILITACIÓN Ó AVÍO'
+        'HABILITACIÓN Ó AVÍO',
+        'SESIÓN DE DERECHOS LITIGIOSOS',
+        'REESTRUCTURA DE CREDITOS',
+
     ];
 
     const ACTOS_INSCRIPCION_VARIOS = [

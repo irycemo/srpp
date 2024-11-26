@@ -301,8 +301,6 @@ class AsignacionService{
 
         }else{
 
-            info($certificadores);
-
             $actual = $this->obtenerSiguienteUsuario($certificadores, $idActual);
 
             if($distrito == 2){
@@ -714,8 +712,6 @@ class AsignacionService{
             return $usuarios[0];
 
         }else{
-
-            info($usuarios);
 
             $actual = $this->obtenerSiguienteUsuario($usuarios, $idActual);
 

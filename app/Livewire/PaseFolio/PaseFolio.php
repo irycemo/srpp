@@ -306,6 +306,22 @@ class PaseFolio extends Component
 
     }
 
+    public function obtenerUsuarios($role){
+
+        return User::with('ultimoMovimientoRegistralAsignado')
+                            ->where('status', 'activo')
+                            ->when($this->modelo_editar->getRawOriginal('distrito') == 2, function($q){
+                                $q->where('ubicacion', 'Regional 4');
+                            })
+                            ->when($this->modelo_editar->getRawOriginal('distrito') != 2, function($q){
+                                $q->where('ubicacion', '!=', 'Regional 4');
+                            })
+                            ->whereHas('roles', function($q) use ($role){
+                                $q->whereIn('name', $role);
+                            })
+                            ->get();
+    }
+
     public function mount(){
 
         $this->crearModeloVacio();
@@ -434,4 +450,5 @@ class PaseFolio extends Component
 
         return view('livewire.pase-folio.pase-folio', compact('movimientos'))->extends('layouts.admin');
     }
+
 }

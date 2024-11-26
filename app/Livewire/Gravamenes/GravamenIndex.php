@@ -62,7 +62,7 @@ class GravamenIndex extends Component
                                                     ->whereIn('estado', ['nuevo', 'captura', 'elaborado'])
                                                     ->where('usuario_asignado', auth()->id())
                                                     ->whereHas('gravamen', function($q){
-                                                        $q->whereIn('servicio', ['DL07', 'DM68', 'D155', 'D150']);
+                                                        $q->whereIn('servicio', ['D127', 'D153', 'D150', 'D155', 'DM68', 'D154']);
                                                     })
                                                     ->orderBy($this->sort, $this->direction)
                                                     ->paginate($this->pagination);
@@ -93,7 +93,7 @@ class GravamenIndex extends Component
                                                     })
                                                     ->whereIn('estado', ['nuevo', 'captura', 'elaborado', 'finalizado'])
                                                     ->whereHas('gravamen', function($q){
-                                                        $q->whereIn('servicio', ['DL07', 'DM68', 'D155', 'D150']);
+                                                        $q->whereIn('servicio', ['D127', 'D153', 'D150', 'D155', 'DM68', 'D154']);
                                                     })
                                                     ->orderBy($this->sort, $this->direction)
                                                     ->paginate($this->pagination);
@@ -126,7 +126,7 @@ class GravamenIndex extends Component
                                                         $q->where('distrito', '!=', 2);
                                                     })
                                                     ->whereHas('gravamen', function($q){
-                                                        $q->whereIn('servicio', ['DL07', 'DM68', 'D155', 'D150']);
+                                                        $q->whereIn('servicio', ['D127', 'D153', 'D150', 'D155', 'DM68', 'D154']);
                                                     })
                                                     ->orderBy($this->sort, $this->direction)
                                                     ->paginate($this->pagination);
@@ -153,7 +153,7 @@ class GravamenIndex extends Component
                                                             ->orWhere('tramite', 'LIKE', '%' . $this->search . '%');
                                                     })
                                                     ->whereHas('gravamen', function($q){
-                                                        $q->whereIn('servicio', ['DL07', 'DM68', 'D155', 'D150']);
+                                                        $q->whereIn('servicio', ['D127', 'D153', 'D150', 'D155', 'DM68', 'D154']);
                                                     })
                                                     ->orderBy($this->sort, $this->direction)
                                                     ->paginate($this->pagination);

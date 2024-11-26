@@ -628,7 +628,7 @@ class MovimientoRegistralService{
         }
 
         /* Inscripciones: Gravamen */
-        if(in_array($servicio, ['DL07', 'DM68', 'D155', 'D150']) && $categoria_servicio == 'Inscripciones - Gravamenes'){
+        if(in_array($servicio, ['D127', 'D153', 'D150', 'D155', 'DM68', 'D154']) && $categoria_servicio == 'Inscripciones - Gravamenes'){
 
             return $this->asignacionService->obtenerUsuarioGravamen($folioReal, $distrito, $estado);
 
@@ -691,7 +691,7 @@ class MovimientoRegistralService{
         }
 
         /* Inscripciones: Gravamen */
-        if(in_array($servicio, ['DL07', 'DM68', 'D155', 'D150']) && $categoria_servicio == 'Inscripciones - Gravamenes'){
+        if(in_array($servicio, ['D127', 'D153', 'D150', 'D155', 'DM68', 'D154']) && $categoria_servicio == 'Inscripciones - Gravamenes'){
 
             return $this->asignacionService->obtenerSupervisorGravamen($distrito);
 
