@@ -70,7 +70,7 @@ class MovimientosRegistrales extends Component
 
         if($this->modelo_editar->inscripcionPropiedad){
 
-            $this->cargarUsuarios(['Propiedad', 'Registrador Propiedad']);
+            $this->cargarUsuarios(['Propiedad', 'Registrador Propiedad', 'Pase a folio']);
 
             $this->cargarSupervisores(['Supervisor propiedad']);
 
@@ -78,7 +78,7 @@ class MovimientosRegistrales extends Component
 
         if($this->modelo_editar->gravamen){
 
-            $this->cargarUsuarios(['Gravamen', 'Registrador Gravamen']);
+            $this->cargarUsuarios(['Gravamen', 'Registrador Gravamen', 'Pase a folio']);
 
             $this->cargarSupervisores(['Supervisor gravamen']);
 
@@ -86,7 +86,7 @@ class MovimientosRegistrales extends Component
 
         if($this->modelo_editar->vario){
 
-            $this->cargarUsuarios(['Varios', 'Registrador Varios']);
+            $this->cargarUsuarios(['Varios', 'Registrador Varios', 'Pase a folio']);
 
             $this->cargarSupervisores(['Supervisor Varios']);
 
@@ -94,7 +94,7 @@ class MovimientosRegistrales extends Component
 
         if($this->modelo_editar->cancelacion){
 
-            $this->cargarUsuarios(['Cancelación', 'Registrador cancelación']);
+            $this->cargarUsuarios(['Cancelación', 'Registrador cancelación', 'Pase a folio']);
 
             $this->cargarSupervisores(['Supervisor Cancelación']);
 
@@ -102,7 +102,7 @@ class MovimientosRegistrales extends Component
 
         if($this->modelo_editar->sentencia){
 
-            $this->cargarUsuarios(['Sentencias', 'Registrador sentencias']);
+            $this->cargarUsuarios(['Sentencias', 'Registrador sentencias', 'Pase a folio']);
 
             $this->cargarSupervisores(['Supervisor Sentencias']);
 
@@ -112,13 +112,13 @@ class MovimientosRegistrales extends Component
 
             if($this->modelo_editar->certificacion->servicio == 'DL07'){
 
-                $this->cargarUsuarios(['Certificador Gravamen']);
+                $this->cargarUsuarios(['Certificador Gravamen', 'Pase a folio']);
 
                 $this->cargarSupervisores(['Supervisor certificaciones']);
 
             }elseif(in_array($this->modelo_editar->certificacion->servicio, ['DL11', 'DL10'])){
 
-                $this->cargarUsuarios(['Certificador Propiedad']);
+                $this->cargarUsuarios(['Certificador Propiedad', 'Pase a folio']);
 
                 $this->cargarSupervisores(['Supervisor certificaciones']);
 

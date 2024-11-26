@@ -418,6 +418,12 @@
 
 <div class=" flex justify-end items-center bg-white rounded-lg p-2 shadow-lg gap-3">
 
+    <x-input-group for="folio_matriz" label="Folio matriz" :error="$errors->first('folio_matriz')" class="flex gap-3 items-center mr-auto">
+
+        <x-checkbox wire:model.live="folio_matriz"/>
+
+    </x-input-group>
+
     @if ($movimientoRegistral->folioReal)
 
         @if(!$movimientoRegistral->folioReal->documentoEntrada())

@@ -316,7 +316,7 @@
 
     @if ($folioReal)
 
-        <x-h4 class="mb-5">Folio real: {{ $folioReal->folio }} <span class="text-sm tracking-widest capitalize">({{ $folioReal->estado }})</span></x-h4>
+        <x-h4 class="mb-5">Folio real: {{ $folioReal->folio }} <span class="text-sm tracking-widest capitalize">({{ $folioReal->estado }}) @if($folioReal->matriz) matriz @endif</span></x-h4>
 
         <div x-data="{ activeTab: 8 }">
 

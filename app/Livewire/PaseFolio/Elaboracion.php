@@ -78,6 +78,8 @@ class Elaboracion extends Component
 
     public $documento;
 
+    public $folio_matriz = false;
+
     protected function rules(){
         return [
             'tipo_documento' => 'required',
@@ -171,6 +173,7 @@ class Elaboracion extends Component
         $folioReal = FolioReal::create([
             'estado' => 'captura',
             'folio' => (FolioReal::max('folio') ?? 0) + 1,
+            'matriz' => $this->folio_matriz,
             'tomo_antecedente' => $this->movimientoRegistral->tomo,
             'tomo_antecedente_bis' => $this->movimientoRegistral->tomo_bis,
             'registro_antecedente' => $this->movimientoRegistral->registro,
@@ -226,7 +229,8 @@ class Elaboracion extends Component
                 'fecha_inscripcion' => $this->fecha_inscripcion,
                 'procedencia' => $this->procedencia,
                 'acto_contenido_antecedente' => $this->acto_contenido_antecedente,
-                'observaciones_antecedente' => $this->observaciones_antecedente
+                'observaciones_antecedente' => $this->observaciones_antecedente,
+                'matriz' => $this->folio_matriz,
             ]);
 
             $this->propiedad = Predio::create([
@@ -348,6 +352,7 @@ class Elaboracion extends Component
 
                 $this->movimientoRegistral->folioReal->update([
                     'tipo_documento' => $this->tipo_documento,
+                    'matriz' => $this->folio_matriz,
                     'autoridad_cargo' => $this->autoridad_cargo,
                     'autoridad_nombre' => $this->autoridad_nombre,
                     'autoridad_numero' => $this->autoridad_numero,
@@ -1101,6 +1106,12 @@ class Elaboracion extends Component
             $this->movimientoRegistral->numero_propiedad == null
         ){
 
+            if(!$this->movimientoRegistral->folioReal->documentoEntrada()){
+
+                throw new Exception('El documento de entrada es obligatorio');
+
+            }
+
             $this->movimientoRegistral->update(['estado' => 'concluido']);
 
             $this->movimientoRegistral->folioReal->update(['estado' => 'activo']);
@@ -1114,6 +1125,12 @@ class Elaboracion extends Component
             $this->movimientoRegistral->folioReal->update(['estado' => 'activo']);
 
             (new SistemaTramitesService())->finaliarTramite($this->movimientoRegistral->año, $this->movimientoRegistral->tramite, $this->movimientoRegistral->usuario, 'concluido');
+
+        }
+
+        if($this->movimientoRegistral->folioReal?->folioRealAntecedente?->matriz){
+
+            $this->movimientoRegistral->update(['estado' => 'concluido']);
 
         }
 
@@ -1154,6 +1171,7 @@ class Elaboracion extends Component
             $this->procedencia = $this->movimientoRegistral->folioReal->procedencia;
             $this->acto_contenido_antecedente = $this->movimientoRegistral->folioReal->acto_contenido_antecedente;
             $this->observaciones_antecedente = $this->movimientoRegistral->folioReal->observaciones_antecedente;
+            $this->folio_matriz = $this->movimientoRegistral->folioReal->matriz ? true : false;
 
             $this->propiedad = Predio::where('folio_real', $this->movimientoRegistral->folio_real)->first();
 

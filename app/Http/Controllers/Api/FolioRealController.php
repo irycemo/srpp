@@ -37,14 +37,13 @@ class FolioRealController extends Controller
                                         })->first();
             if($antecedente){
 
-                $folio_real = FolioReal::where('estado', 'activo')->whereKey($antecedente->folio_real)->first();
+                $folio_real = FolioReal::whereKey($antecedente->folio_real)->first();
 
             }
 
             if(!$folio_real){
 
-                $folio_real = FolioReal::where('estado', 'activo')
-                                        ->when(isset($validated['folio_real']), function($q) use($validated){
+                $folio_real = FolioReal::when(isset($validated['folio_real']), function($q) use($validated){
                                             $q->where('folio', $validated['folio_real']);
                                         })
                                         ->when(isset($validated['tomo']), function($q) use($validated){
@@ -88,6 +87,14 @@ class FolioRealController extends Controller
 
 
             if($folio_real){
+
+                if(in_array($folio_real->estado, ['nuevo', 'matriz'])){
+
+                    return response()->json([
+                        'error' => 'El folio real no esta activo',
+                    ], 401);
+
+                }
 
                 return (new FolioRealResource($folio_real))->response()->setStatusCode(200);
 
