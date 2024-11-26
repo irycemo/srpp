@@ -136,68 +136,93 @@
 
                                 <span class="lg:hidden absolute top-0 left-0 bg-blue-300 px-2 py-1 text-xs text-white font-bold uppercase rounded-br-xl">Acciones</span>
 
-                                <div class="flex justify-center lg:justify-start gap-2">
+                                <div class="ml-3 relative" x-data="{ open_drop_down:false }">
 
-                                    @if(in_array($movimiento->estado, ['nuevo', 'captura', 'correccion']) && !auth()->user()->hasRole(['Supervisor varios', 'Supervisor uruapan']))
+                                    <div>
 
-                                        <x-button-blue
-                                            wire:click="elaborar({{  $movimiento->id }})"
-                                            wire:loading.attr="disabled"
-                                            wire:target="elaborar({{  $movimiento->id }})">
-                                            Elaborar
-                                        </x-button-blue>
+                                        <button x-on:click="open_drop_down=true" type="button" class="rounded-full focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-offset-gray-800 focus:ring-white">
 
-                                        <x-button-red
-                                            wire:click="abrirModalRechazar({{  $movimiento->id }})"
-                                            wire:loading.attr="disabled"
-                                            wire:target="abrirModalRechazar({{  $movimiento->id }})">
+                                            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-6 h-6">
+                                                <path stroke-linecap="round" stroke-linejoin="round" d="M6.75 12a.75.75 0 1 1-1.5 0 .75.75 0 0 1 1.5 0ZM12.75 12a.75.75 0 1 1-1.5 0 .75.75 0 0 1 1.5 0ZM18.75 12a.75.75 0 1 1-1.5 0 .75.75 0 0 1 1.5 0Z" />
+                                            </svg>
 
-                                            <img wire:loading wire:target="abrirModalRechazar({{  $movimiento->id }})" class="mx-auto h-4 mr-1" src="{{ asset('storage/img/loading3.svg') }}" alt="Loading">
-                                            Rechazar
-                                        </x-button-red>
+                                        </button>
 
-                                    @elseif($movimiento->estado == 'elaborado' && !auth()->user()->hasRole(['Supervisor varios', 'Supervisor uruapan']))
+                                    </div>
 
-                                        <x-button-blue
-                                            wire:click="imprimir({{  $movimiento->id }})"
-                                            wire:loading.attr="disabled"
-                                            wire:target="imprimir({{  $movimiento->id }})">
-                                            Imprimir
-                                        </x-button-blue>
+                                    <div x-cloak x-show="open_drop_down" x-on:click="open_drop_down=false" x-on:click.away="open_drop_down=false" class="z-50 origin-top-right absolute right-0 mt-2 w-48 rounded-md shadow-lg py-1 bg-white ring-1 ring-black ring-opacity-5 focus:outline-none" role="menu" aria-orientation="vertical" aria-labelledby="user-menu">
 
-                                        <x-button-green
-                                            wire:click="abrirModalFinalizar({{  $movimiento->id }})"
-                                            wire:loading.attr="disabled"
-                                            wire:target="abrirModalFinalizar({{  $movimiento->id }})">
-                                            Finalizar
-                                        </x-button-green>
+                                        @if(in_array($movimiento->estado, ['nuevo', 'captura', 'correccion']) && !auth()->user()->hasRole(['Supervisor varios', 'Supervisor uruapan']))
 
-                                    @elseif($movimiento->estado == 'finalizado' && auth()->user()->hasRole(['Jefe de departamento inscripciones', 'Supervisor varios', 'Supervisor uruapan']))
+                                            <button
+                                                wire:click="elaborar({{  $movimiento->id }})"
+                                                wire:loading.attr="disabled"
+                                                class="w-full text-left block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 focus:outline-none focus:bg-gray-100"
+                                                role="menuitem">
+                                                Elaborar
+                                            </button>
 
-                                        <x-button-blue
-                                            wire:click="imprimir({{  $movimiento->id }})"
-                                            wire:loading.attr="disabled"
-                                            wire:target="imprimir({{  $movimiento->id }})">
-                                            Imprimir
-                                        </x-button-blue>
+                                            <button
+                                                wire:click="abrirModalRechazar({{  $movimiento->id }})"
+                                                wire:loading.attr="disabled"
+                                                class="w-full text-left block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 focus:outline-none focus:bg-gray-100"
+                                                role="menuitem">
 
-                                        <x-button-green
-                                            wire:click="abrirModalConcluir({{  $movimiento->id }})"
-                                            wire:loading.attr="disabled"
-                                            wire:target="abrirModalConcluir({{  $movimiento->id }})">
-                                            Concluir
-                                        </x-button-green>
+                                                Rechazar
 
-                                    @elseif(in_array($movimiento->estado, ['nuevo', 'captura', 'elaborado']) && auth()->user()->hasRole(['Jefe de departamento inscripciones', 'Supervisor varios', 'Supervisor uruapan']))
+                                            </button>
 
-                                        <x-button-red
-                                            wire:click="abrirModalReasignar({{  $movimiento->id }})"
-                                            wire:loading.attr="disabled"
-                                            wire:target="abrirModalReasignar({{  $movimiento->id }})">
-                                            Reasignar
-                                        </x-button-red>
+                                        @elseif($movimiento->estado == 'elaborado'  && !auth()->user()->hasRole(['Supervisor varios', 'Supervisor uruapan']))
 
-                                    @endif
+                                            <button
+                                                wire:click="imprimir({{  $movimiento->id }})"
+                                                wire:loading.attr="disabled"
+                                                class="w-full text-left block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 focus:outline-none focus:bg-gray-100"
+                                                role="menuitem">
+                                                Imprimir
+                                            </button>
+
+                                            <button
+                                                wire:click="abrirModalFinalizar({{  $movimiento->id }})"
+                                                wire:loading.attr="disabled"
+                                                class="w-full text-left block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 focus:outline-none focus:bg-gray-100"
+                                                role="menuitem">
+                                                Finalizar
+                                            </button>
+
+                                        @elseif($movimiento->estado == 'finalizado' && auth()->user()->hasRole(['Jefe de departamento inscripciones', 'Supervisor varios', 'Supervisor uruapan']))
+
+                                            <button
+                                                wire:click="imprimir({{  $movimiento->id }})"
+                                                wire:loading.attr="disabled"
+                                                class="w-full text-left block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 focus:outline-none focus:bg-gray-100"
+                                                role="menuitem">
+                                                Imprimir
+                                            </button>
+
+                                            <button
+                                                wire:click="abrirModalConcluir({{  $movimiento->id }})"
+                                                wire:loading.attr="disabled"
+                                                class="w-full text-left block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 focus:outline-none focus:bg-gray-100"
+                                                role="menuitem">
+                                                Concluir
+                                            </button>
+
+                                        @endif
+
+                                        @if(in_array($movimiento->estado, ['nuevo', 'captura', 'elaborado']) && auth()->user()->hasRole(['Jefe de departamento inscripciones', 'Supervisor varios', 'Supervisor uruapan']))
+
+                                            <button
+                                                wire:click="abrirModalReasignar({{  $movimiento->id }})"
+                                                wire:loading.attr="disabled"
+                                                class="w-full text-left block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 focus:outline-none focus:bg-gray-100"
+                                                role="menuitem">
+                                                Reasignar
+                                            </button>
+
+                                        @endif
+
+                                    </div>
 
                                 </div>
 

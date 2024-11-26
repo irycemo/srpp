@@ -173,79 +173,99 @@
 
                                 <span class="lg:hidden absolute top-0 left-0 bg-blue-300 px-2 py-1 text-xs text-white font-bold uppercase rounded-br-xl">Acciones</span>
 
-                                <div class="flex flex-col justify-center lg:justify-start gap-2">
+                                <div class="ml-3 relative" x-data="{ open_drop_down:false }">
 
-                                    @if (auth()->user()->hasRole(['Certificador Gravamen', 'Certificador Oficialia', 'Certificador Juridico']))
+                                    <div>
 
-                                        <x-button-red
-                                            wire:click="abrirModalRechazar({{ $certificado->certificacion->id }})"
-                                            wire:loading.attr="disabled"
-                                        >
-                                            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" class="w-4 h-4 mr-2">
-                                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z" />
+                                        <button x-on:click="open_drop_down=true" type="button" class="rounded-full focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-offset-gray-800 focus:ring-white">
+
+                                            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-6 h-6">
+                                                <path stroke-linecap="round" stroke-linejoin="round" d="M6.75 12a.75.75 0 1 1-1.5 0 .75.75 0 0 1 1.5 0ZM12.75 12a.75.75 0 1 1-1.5 0 .75.75 0 0 1 1.5 0ZM18.75 12a.75.75 0 1 1-1.5 0 .75.75 0 0 1 1.5 0Z" />
                                             </svg>
 
-                                            <span>Rechazar</span>
+                                        </button>
 
-                                        </x-button-red>
+                                    </div>
 
-                                        <x-button-blue
-                                            wire:click="visualizarGravamenes({{ $certificado->certificacion->id }})"
-                                            wire:loading.attr="disabled">
+                                    <div x-cloak x-show="open_drop_down" x-on:click="open_drop_down=false" x-on:click.away="open_drop_down=false" class="z-50 origin-top-right absolute right-0 mt-2 w-48 rounded-md shadow-lg py-1 bg-white ring-1 ring-black ring-opacity-5 focus:outline-none" role="menu" aria-orientation="vertical" aria-labelledby="user-menu">
 
-                                            <span>Revisar</span>
+                                        @if (auth()->user()->hasRole(['Certificador Gravamen', 'Certificador Oficialia', 'Certificador Juridico']))
 
-                                        </x-button-blue>
+                                            <button
+                                                wire:click="abrirModalRechazar({{ $certificado->certificacion->id }})"
+                                                wire:loading.attr="disabled"
+                                                class="w-full text-left block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 focus:outline-none focus:bg-gray-100"
+                                                role="menuitem">
 
-                                    @elseif(auth()->user()->hasRole('Jefe de departamento certificaciones') && $certificado->estado != 'elaborado')
+                                                Rechazar
 
-                                        <x-button-red
-                                            wire:click="abrirModalRechazar({{ $certificado->certificacion->id }})"
-                                            wire:loading.attr="disabled">
+                                            </button>
 
-                                            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" class="w-4 h-4 mr-2">
-                                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z" />
-                                            </svg>
+                                            <button
+                                                wire:click="visualizarGravamenes({{ $certificado->certificacion->id }})"
+                                                wire:loading.attr="disabled"
+                                                class="w-full text-left block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 focus:outline-none focus:bg-gray-100"
+                                                role="menuitem">
 
-                                            <span>Rechazar</span>
+                                                Revisar
 
-                                        </x-button-red>
+                                            </button>
 
-                                        <x-button-blue
-                                            wire:click="visualizarGravamenes({{ $certificado->certificacion->id }})"
-                                            wire:loading.attr="disabled">
+                                        @elseif(auth()->user()->hasRole('Jefe de departamento certificaciones') && $certificado->estado != 'elaborado')
 
-                                            <span>Revisar</span>
+                                            <button
+                                                wire:click="abrirModalRechazar({{ $certificado->certificacion->id }})"
+                                                wire:loading.attr="disabled"
+                                                class="w-full text-left block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 focus:outline-none focus:bg-gray-100"
+                                                role="menuitem">
 
-                                        </x-button-blue>
+                                                Rechazar
 
-                                    @elseif(auth()->user()->hasRole(['Supervisor certificaciones', 'Jefe de departamento certificaciones', 'Supervisor uruapan']) && $certificado->estado == 'elaborado')
+                                            </button>
 
-                                        @if ($certificado->certificacion->reimpreso_en == null)
+                                            <button
+                                                wire:click="visualizarGravamenes({{ $certificado->certificacion->id }})"
+                                                wire:loading.attr="disabled"
+                                                class="w-full text-left block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 focus:outline-none focus:bg-gray-100"
+                                                role="menuitem">
 
-                                            <x-button-blue
-                                                wire:click="reimprimir({{ $certificado->id }})"
-                                                wire:loading.attr="disabled">
+                                                Revisar
 
-                                                <span>Reimprimir</span>
+                                            </button>
 
-                                            </x-button-blue>
+                                        @elseif(auth()->user()->hasRole(['Supervisor certificaciones', 'Jefe de departamento certificaciones', 'Supervisor uruapan']) && $certificado->estado == 'elaborado')
+
+                                            @if ($certificado->certificacion->reimpreso_en == null)
+
+                                                <button
+                                                    wire:click="reimprimir({{ $certificado->id }})"
+                                                    wire:loading.attr="disabled"
+                                                    class="w-full text-left block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 focus:outline-none focus:bg-gray-100"
+                                                    role="menuitem">
+
+                                                    Reimprimir
+
+                                                </button>
+
+                                            @endif
+
+                                            @if($certificado->estado == 'elaborado')
+
+                                                <button
+                                                    wire:click="abrirModalFinalizar({{ $certificado->certificacion->id }})"
+                                                    wire:loading.attr="disabled"
+                                                    class="w-full text-left block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 focus:outline-none focus:bg-gray-100"
+                                                    role="menuitem">
+
+                                                    <span>Finalizar</span>
+
+                                                </button>
+
+                                            @endif
 
                                         @endif
 
-                                        @if($certificado->estado == 'elaborado')
-
-                                            <x-button-green
-                                                wire:click="abrirModalFinalizar({{ $certificado->certificacion->id }})"
-                                                wire:loading.attr="disabled">
-
-                                                <span>Finalizar</span>
-
-                                            </x-button-green>
-
-                                        @endif
-
-                                    @endif
+                                    </div>
 
                                 </div>
 
