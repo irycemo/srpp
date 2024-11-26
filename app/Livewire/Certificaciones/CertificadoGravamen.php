@@ -498,7 +498,7 @@ class CertificadoGravamen extends Component
                                                 ->orderBy($this->sort, $this->direction)
                                                 ->paginate($this->pagination);
 
-        }elseif(auth()->user()->hasRole(['Administrador', 'Operador'])){
+        }elseif(auth()->user()->hasRole(['Administrador', 'Operador', 'Director'])){
 
             $certificados = MovimientoRegistral::with('asignadoA', 'supervisor', 'actualizadoPor', 'certificacion.actualizadoPor', 'folioReal:id,folio')
                                                 ->whereHas('folioReal', function($q){

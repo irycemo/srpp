@@ -43,7 +43,7 @@
                 <x-table.heading sortable wire:click="sortBy('fecha_entrega')" :direction="$sort === 'fecha_entrega' ? $direction : null">Fecha de entrega</x-table.heading>
                 <x-table.heading sortable wire:click="sortBy('created_at')" :direction="$sort === 'created_at' ? $direction : null">Ingreso</x-table.heading>
                 <x-table.heading sortable wire:click="sortBy('updated_at')" :direction="$sort === 'updated_at' ? $direction : null">Actualizado</x-table.heading>
-                @if (!auth()->user()->hasRole(['Administrador', 'Operador']))
+                @if (!auth()->user()->hasRole(['Administrador', 'Operador', 'Director']))
 
                     <x-table.heading >Acciones</x-table.heading>
 
@@ -133,7 +133,7 @@
 
                         </x-table.cell>
 
-                        @if (!auth()->user()->hasRole(['Administrador', 'Operador']))
+                        @if (!auth()->user()->hasRole(['Administrador', 'Operador', 'Director']))
 
                             <x-table.cell>
 
