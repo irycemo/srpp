@@ -40,6 +40,7 @@ class Elaboracion extends Component
     public $procedencia;
     public $acto_contenido_antecedente;
     public $observaciones_antecedente;
+    public $cargos_autoridad;
 
     /* Escritura */
     public $escritura_numero;
@@ -1114,21 +1115,24 @@ class Elaboracion extends Component
 
             $this->movimientoRegistral->update(['estado' => 'concluido']);
 
-            $this->movimientoRegistral->folioReal->update(['estado' => 'activo']);
-
             (new SistemaTramitesService())->finaliarTramite($this->movimientoRegistral->año, $this->movimientoRegistral->tramite, $this->movimientoRegistral->usuario, 'concluido');
 
         }elseif( $this->movimientoRegistral->inscripcionPropiedad->servicio == 'D157'){
 
             $this->movimientoRegistral->update(['estado' => 'concluido']);
 
-            $this->movimientoRegistral->folioReal->update(['estado' => 'activo']);
-
             (new SistemaTramitesService())->finaliarTramite($this->movimientoRegistral->año, $this->movimientoRegistral->tramite, $this->movimientoRegistral->usuario, 'concluido');
 
         }
 
         if($this->movimientoRegistral->folioReal?->folioRealAntecedente?->matriz){
+
+            $this->movimientoRegistral->update(['estado' => 'concluido']);
+
+        }
+
+        /* Inscripción de folio real */
+        if($this->movimientoRegistral->inscripcionPropiedad->servicio == 'D118' && $this->movimientoRegistral->monto == 0){
 
             $this->movimientoRegistral->update(['estado' => 'concluido']);
 
@@ -1157,6 +1161,8 @@ class Elaboracion extends Component
         $this->estados = Constantes::ESTADOS;
 
         $this->actos_contenidos = Constantes::ACTOS_INSCRIPCION_PROPIEDAD;
+
+        $this->cargos_autoridad = Constantes::CARGO_AUTORIDAD;
 
         if($this->movimientoRegistral->folioReal){
 

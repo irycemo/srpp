@@ -344,6 +344,15 @@ class Constantes{
         'RESOLUCIÓN JUDICIAL'
     ];
 
+    const CARGO_AUTORIDAD = [
+        'NOTARIO',
+        'FORANEO',
+        'JUEZ',
+        'FUNCIONARIO',
+        'SERVIDOR PÚBLICO',
+        'PARTICULAR'
+    ];
+
     const RECHAZO_MOTIVOS = [
         'Presenta Gravamen (HIPOTECA).  Art. 1107, 1198, 1199 Frac. I, Código Civil del Estado de Michoacán; en relación con el diverso 27, de La 	Ley de la Función Registral y Catastral del Estado de Michoacán.',
         'No Presenta Traslado de Dominio Autorizado.  Art. 86 de la Ley de la Función Registral y Catastral del Estado de Michoacán de Ocampo.',

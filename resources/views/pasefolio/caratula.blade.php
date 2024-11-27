@@ -261,7 +261,7 @@
 
                     @if($folioReal->observaciones_antecedente)
 
-                        <p class="parrafo"><strong>Observaciones en el antecedente:</strong> {{ $folioReal->observaciones_antecedente }}</p>
+                        <p class="parrafo"><strong>descripción del acto:</strong> {{ $folioReal->observaciones_antecedente }}</p>
 
                     @endif
 
@@ -275,7 +275,7 @@
 
                     @if($folioReal->escritura->comentario)
 
-                        <p class="parrafo"><strong>Observaciones en el antecedente:</strong> {{ $folioReal->escritura->comentario }}</p>
+                        <p class="parrafo"><strong>descripción del acto:</strong> {{ $folioReal->escritura->comentario }}</p>
 
                     @endif
 

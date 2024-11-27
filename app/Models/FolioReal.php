@@ -6,6 +6,7 @@ use Carbon\Carbon;
 use App\Models\File;
 use App\Models\Vario;
 use App\Models\Predio;
+use App\Models\Bloqueo;
 use App\Models\Gravamen;
 use App\Models\Propiedad;
 use App\Models\Sentencia;
@@ -72,6 +73,10 @@ class FolioReal extends Model implements Auditable
 
     public function predio(){
         return $this->hasOne(Predio::class, 'folio_real');
+    }
+
+    public function bloqueos(){
+        return $this->hasMany(Bloqueo::class);
     }
 
     public function getDistritoAttribute(){

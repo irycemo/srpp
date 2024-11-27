@@ -75,9 +75,12 @@
                     <x-input-select id="autoridad_cargo" wire:model.live="autoridad_cargo" class="w-full">
 
                         <option value="">Seleccione una opción</option>
-                        <option value="juez">Juez(a)</option>
-                        <option value="funcionario">Funcionario</option>
-                        <option value="servidor público">Servidor público</option>
+
+                        @foreach ($cargos_autoridad as $item)
+
+                            <option value="{{ $item }}">{{ $item }}</option>
+
+                        @endforeach
 
                     </x-input-select>
 

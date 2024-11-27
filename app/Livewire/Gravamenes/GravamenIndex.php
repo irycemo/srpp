@@ -59,7 +59,7 @@ class GravamenIndex extends Component
                                                             ->orWhere('estado', 'LIKE', '%' . $this->search . '%')
                                                             ->orWhere('tramite', 'LIKE', '%' . $this->search . '%');
                                                     })
-                                                    ->whereIn('estado', ['nuevo', 'captura', 'elaborado'])
+                                                    ->whereIn('estado', ['nuevo', 'captura', 'elaborado', 'correccion'])
                                                     ->where('usuario_asignado', auth()->id())
                                                     ->whereHas('gravamen', function($q){
                                                         $q->whereIn('servicio', ['D127', 'D153', 'D150', 'D155', 'DM68', 'D154']);
@@ -91,7 +91,7 @@ class GravamenIndex extends Component
                                                             ->orWhere('estado', 'LIKE', '%' . $this->search . '%')
                                                             ->orWhere('tramite', 'LIKE', '%' . $this->search . '%');
                                                     })
-                                                    ->whereIn('estado', ['nuevo', 'captura', 'elaborado', 'finalizado'])
+                                                    ->whereIn('estado', ['nuevo', 'captura', 'elaborado', 'finalizado', 'correccion'])
                                                     ->whereHas('gravamen', function($q){
                                                         $q->whereIn('servicio', ['D127', 'D153', 'D150', 'D155', 'DM68', 'D154']);
                                                     })

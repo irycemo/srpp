@@ -70,7 +70,7 @@
 
         <div class="flex gap-3 items-center w-full lg:w-1/2 justify-center mx-auto">
 
-            <x-input-group for="gravamen.observaciones" label="Comentario del gravámen" :error="$errors->first('gravamen.observaciones')" class="w-full">
+            <x-input-group for="gravamen.observaciones" label="Descripción del acto contenido" :error="$errors->first('gravamen.observaciones')" class="w-full">
 
                 <textarea rows="3" class="w-full bg-white rounded" wire:model="gravamen.observaciones"></textarea>
 

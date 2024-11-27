@@ -133,9 +133,9 @@
 
                     <div class="rounded-lg bg-gray-100 py-1 px-2 md:col-span-3 col-span-1 sm:col-span-2 lg:col-span-6">
 
-                        <strong>Comentario de la inscripción</strong>
+                        <strong>Descripción del acto</strong>
 
-                        <p>{{ $inscripcion->observaciones }}</p>
+                        <p>{{ $inscripcion->descripcion_acto }}</p>
 
                     </div>
 
