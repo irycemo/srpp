@@ -76,7 +76,7 @@ class InscripcionesPropiedadService{
     public function revisarFolioMatriz(MovimientoRegistral $movimiento)
     {
 
-        if($movimiento->folioReal->matriz){
+        if($movimiento->folioReal?->matriz){
 
             $folioReal = FolioReal::create([
                 'estado' => 'captura',

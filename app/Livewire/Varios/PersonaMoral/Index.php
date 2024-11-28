@@ -59,7 +59,7 @@ class Index extends Component
                                                         $q->where('distrito', '!=', 2);
                                                     })
                                                     ->where('usuario_asignado', auth()->id())
-                                                    ->whereIn('estado', ['nuevo', 'captura', 'elaborado'])
+                                                    ->whereIn('estado', ['nuevo', 'captura', 'elaborado', 'correccion'])
                                                     ->orderBy($this->sort, $this->direction)
                                                     ->paginate($this->pagination);
 
@@ -78,7 +78,7 @@ class Index extends Component
                                                     ->when(auth()->user()->ubicacion != 'Regional 4', function($q){
                                                         $q->where('distrito', '!=', 2);
                                                     })
-                                                    ->whereIn('estado', ['nuevo', 'captura', 'elaborado', 'finalizado'])
+                                                    ->whereIn('estado', ['nuevo', 'captura', 'elaborado', 'correccion', 'finalizado'])
                                                     ->orderBy($this->sort, $this->direction)
                                                     ->paginate($this->pagination);
 

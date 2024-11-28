@@ -62,6 +62,8 @@ class Usuarios extends Component
 
         $this->validate();
 
+        if($this->revisarUsuariosUnicos()) return;
+
         if(User::where('name', $this->modelo_editar->name)->first()){
 
             $this->dispatch('mostrarMensaje', ['error', "El usuario " . $this->modelo_editar->name . " ya esta registrado."]);
@@ -100,6 +102,8 @@ class Usuarios extends Component
     public function actualizar(){
 
         $this->validate();
+
+        if($this->revisarUsuariosUnicos()) return;
 
         try{
 
@@ -164,6 +168,36 @@ class Usuarios extends Component
             Log::error("Error al resetear contraseña por el usuario: (id: " . auth()->user()->id . ") " . auth()->user()->name . ". " . $th);
             $this->dispatch('mostrarMensaje', ['error', "Ha ocurrido un error."]);
             $this->resetearTodo();
+        }
+
+    }
+
+    public function revisarUsuariosUnicos(){
+
+        $role = Role::find($this->role)->first();
+
+        if($role->name == 'Jefe de departamento inscripciones' && User::where('status', 'activo')->whereHas('roles', function($q){ $q->where('name', 'Jefe de departamento inscripciones'); })->first()){
+
+            $this->dispatch('mostrarMensaje', ['error', "Solo puede haber un Jefe de departamento inscripciones activo a la vez."]);
+
+            return true;
+
+        }
+
+        if($role->name == 'Jefe de departamento certificaciones' && User::where('status', 'activo')->whereHas('roles', function($q){ $q->where('name', 'Jefe de departamento certificaciones'); })->first()){
+
+            $this->dispatch('mostrarMensaje', ['error', "Solo puede haber un Jefe de departamento certificaciones activo a la vez."]);
+
+            return true;
+
+        }
+
+        if($role->name == 'Director' && User::where('status', 'activo')->whereHas('roles', function($q){ $q->where('name', 'Director'); })->first()){
+
+            $this->dispatch('mostrarMensaje', ['error', "Solo puede haber un Director activo a la vez."]);
+
+            return true;
+
         }
 
     }

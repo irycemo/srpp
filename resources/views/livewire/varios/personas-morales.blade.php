@@ -26,7 +26,7 @@
 
         <div class="flex gap-3 items-center w-full lg:w-1/2 justify-center mx-auto">
 
-            <x-input-group for="denominacion" label="Denominación" :error="$errors->first('denominacion')" class="w-full">
+            <x-input-group for="denominacion" label="Denominación ó razón social" :error="$errors->first('denominacion')" class="w-full">
 
                 <x-input-text id="denominacion" wire:model="denominacion" />
 
@@ -35,12 +35,6 @@
             <x-input-group for="fecha_celebracion" label="Fecha de celebarción" :error="$errors->first('fecha_celebracion')" class="w-full">
 
                 <x-input-text type="date" id="fecha_celebracion" wire:model="fecha_celebracion" />
-
-            </x-input-group>
-
-            <x-input-group for="fecha_inscripcion" label="Fecha de inscripción" :error="$errors->first('fecha_inscripcion')" class="w-full">
-
-                <x-input-text type="datetime-local" id="fecha_inscripcion" wire:model="fecha_inscripcion" />
 
             </x-input-group>
 
