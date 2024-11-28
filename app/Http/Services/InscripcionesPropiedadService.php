@@ -126,6 +126,7 @@ class InscripcionesPropiedadService{
                             ->whereHas('roles', function ($q){
                                 $q->where('name', 'Pase a folio');
                             })
+                            ->inRandomOrder()
                             ->first();
 
         if(!$usuario) throw new CertificacionServiceException('No hay usuario con rol de Pase a folio.');
