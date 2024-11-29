@@ -68,7 +68,7 @@ class AsignacionService{
                                 $q->where('ubicacion', '!=', 'Regional 4');
                             })
                             ->whereHas('roles', function($q) {
-                                    $q->whereIn('name', 'Pase a folio');
+                                    $q->where('name', 'Pase a folio');
                             })
                             ->pluck('id');
 
