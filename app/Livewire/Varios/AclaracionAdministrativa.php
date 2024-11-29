@@ -7,13 +7,14 @@ use App\Models\Predio;
 use App\Models\Persona;
 use Livewire\Component;
 use App\Models\Colindancia;
+use Livewire\WithFileUploads;
 use App\Constantes\Constantes;
 use Illuminate\Validation\Rule;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Hash;
 use App\Traits\Inscripciones\Varios\VariosTrait;
-use Livewire\WithFileUploads;
+use App\Http\Controllers\Varios\VariosController;
 
 class AclaracionAdministrativa extends Component
 {
@@ -809,6 +810,7 @@ class AclaracionAdministrativa extends Component
                 $this->vario->estado = 'activo';
                 $this->vario->actualizado_por = auth()->id();
                 $this->vario->fecha_inscripcion = now()->toDateString();
+                $this->vario->predio_id = null;
                 $this->vario->save();
 
                 $this->vario->movimientoRegistral->update(['estado' => 'elaborado']);
