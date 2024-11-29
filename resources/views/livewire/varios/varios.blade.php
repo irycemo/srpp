@@ -12,7 +12,7 @@
 
         @livewire('varios.personas-morales', ['vario' => $this->vario])
 
-    @elseif($vario->acto_contenido == 'DONACIÓN DE USUFRUCTO')
+    @elseif($vario->acto_contenido == 'DONACIÓN / VENTA DE USUFRUCTO')
 
         @livewire('varios.donacion-usufructo', ['vario' => $this->vario])
 
