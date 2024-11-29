@@ -815,6 +815,8 @@ class AclaracionAdministrativa extends Component
 
                 $this->propcesarPredio();
 
+                (new VariosController())->caratula($this->vario);
+
             });
 
             return redirect()->route('varios');
@@ -836,13 +838,13 @@ class AclaracionAdministrativa extends Component
 
         }
 
-        /* if(!$this->vario->movimientoRegistral->documentoEntrada()){
+        if(!$this->vario->movimientoRegistral->documentoEntrada()){
 
             $this->dispatch('mostrarMensaje', ['error', "Debe subir el documento de entrada."]);
 
             return;
 
-        } */
+        }
 
         $this->modalContraseña = true;
 
