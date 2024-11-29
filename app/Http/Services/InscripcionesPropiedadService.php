@@ -2,7 +2,6 @@
 
 namespace App\Http\Services;
 
-use App\Models\User;
 use App\Models\Predio;
 use App\Models\FolioReal;
 use App\Models\Propiedad;
@@ -27,7 +26,9 @@ class InscripcionesPropiedadService{
 
             if($request['servicio_nombre'] == 'Captura especial de folio real'){
 
-                $propiedad->movimientoRegistral->update(['usuario_asignado' => $this->obtenerUsuarioPaseAFolio()]);
+                $usuario = (new AsignacionService())->obtenerUsuarioPaseAFolio($propiedad->movimientoRegistral->getRawOriginal('distrito'));
+
+                $propiedad->movimientoRegistral->update(['usuario_asignado' => $usuario]);
 
                 $propiedad->update([
                     'acto_contenido' => 'CAPTURA ESPECIAL DE FOLIO REAL',
@@ -117,21 +118,6 @@ class InscripcionesPropiedadService{
             ]);
 
         }
-
-    }
-
-    public function obtenerUsuarioPaseAFolio(){
-
-        $usuario = User::where('status', 'activo')
-                            ->whereHas('roles', function ($q){
-                                $q->where('name', 'Pase a folio');
-                            })
-                            ->inRandomOrder()
-                            ->first();
-
-        if(!$usuario) throw new CertificacionServiceException('No hay usuario con rol de Pase a folio.');
-
-        return $usuario->id;
 
     }
 

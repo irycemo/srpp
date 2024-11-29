@@ -3,9 +3,13 @@
 namespace App\Imports;
 
 use Exception;
-use App\Models\FolioReal;
-use App\Constantes\Constantes;
+use App\Models\Actor;
 use App\Models\Predio;
+use App\Models\Persona;
+use App\Models\FolioReal;
+use App\Models\Colindancia;
+use App\Constantes\Constantes;
+use App\Models\MovimientoRegistral;
 use Illuminate\Validation\Rule;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\DB;
@@ -21,6 +25,8 @@ class FolioRealImport implements ToCollection, WithHeadingRow, WithValidation, W
 
     public $data;
     public $foliosReales = [];
+
+    public function __construct(public MovimientoRegistral $movimientoRegistral){}
 
     public function rules():array
     {
@@ -115,6 +121,8 @@ class FolioRealImport implements ToCollection, WithHeadingRow, WithValidation, W
                     $actores = $this->procesarActores($row['actores_gravamen'], $key);
 
                     $predio = $this->crearPredio($row);
+
+                    $this->procesarRealacionesDePredio($predio->id, $colindancias, $propietarios, $transmitentes);
 
                 }
 
@@ -419,6 +427,80 @@ class FolioRealImport implements ToCollection, WithHeadingRow, WithValidation, W
             'solar' => $linea['solar'],
             'zona_ubicacion' => $linea['zona_ubicacion'],
         ]);
+
+    }
+
+    public function procesarRealacionesDePredio($predioId, $colindancias, $propietarios, $transmitentes):void
+    {
+
+        foreach ($colindancias as $colindancia) {
+
+            Colindancia::create([
+                'predio_id' => $predioId,
+                'viento' => $colindancia[0],
+                'longitud' => $colindancia[1],
+                'descripcion' => $colindancia[2],
+            ]);
+
+        }
+
+        foreach ($propietarios as $propietario) {
+
+            Actor::create([
+                'actorable_type' => 'App\Models\Predio',
+                'actorable_id' => $predioId,
+                'persona_id' => $this->persona($propietario),
+                'tipo_actor' => 'propietario',
+                'porcentaje_propiedad' => $propietario[1],
+                'porcentaje_nuda' => $propietario[2],
+                'porcentaje_usufructo' => $propietario[3],
+            ]);
+
+        }
+
+        foreach ($transmitentes as $transmitente) {
+
+            Actor::create([
+                'actorable_type' => 'App\Models\Predio',
+                'actorable_id' => $predioId,
+                'persona_id' => $this->persona($transmitente),
+                'tipo_actor' => 'transmitente'
+            ]);
+
+        }
+
+    }
+
+    public function persona($array):int
+    {
+
+        $persona = Persona::when($array[0] == 'FISICA', function($q) use($array){
+                                $q->where('nombre', $array[4])
+                                    ->where('ap_paterno', $array[5])
+                                    ->where('ap_materno', $array[6]);
+                            })
+                            ->when($array[0] == 'MORAL', function($q) use($array){
+                                $q->where('razon_social', $array[7]);
+                            })
+                            ->first();
+
+        if(!$persona){
+
+            $persona = Persona::create([
+                        'tipo' => $array[0],
+                        'nombre' => $array[4],
+                        'ap_paterno' => $array[5],
+                        'ap_materno' => $array[6],
+                        'razon_social' => $array[7],
+                        ]);
+
+            return $persona->id;
+
+        }else{
+
+            return $persona->id;
+
+        }
 
     }
 
