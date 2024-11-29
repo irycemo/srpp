@@ -163,16 +163,31 @@ class DonacionUsufructo extends Component
 
         }
 
-        $persona = Persona::query()
-                    ->where(function($q){
-                        $q->when($this->nombre, fn($q) => $q->where('nombre', $this->nombre))
-                            ->when($this->ap_paterno, fn($q) => $q->where('ap_paterno', $this->ap_paterno))
-                            ->when($this->ap_materno, fn($q) => $q->where('ap_materno', $this->ap_materno));
-                    })
-                    ->when($this->razon_social, fn($q) => $q->orWhere('razon_social', $this->razon_social))
-                    ->when($this->rfc, fn($q) => $q->orWhere('rfc', $this->rfc))
-                    ->when($this->curp, fn($q) => $q->orWhere('curp', $this->curp))
-                    ->first();
+        if($this->rfc){
+
+            $persona = Persona::where('rfc', $this->rfc)->first();
+
+        }elseif($this->curp){
+
+            $persona = Persona::where('curp', $this->curp)->first();
+
+        }else{
+
+            if($this->tipo_persona == 'FISICA'){
+
+                $persona = Persona::query()
+                            ->where('nombre', $this->nombre)
+                            ->where('ap_paterno', $this->ap_paterno)
+                            ->where('ap_materno', $this->ap_materno)
+                            ->first();
+
+            }else{
+
+                $persona = Persona::where('razon_social', $this->razon_social)->first();
+
+            }
+
+        }
 
         if($persona){
 

@@ -113,7 +113,31 @@ class PersonasMorales extends Component
             'municipio' => 'nullable|' . utf8_encode('regex:/^[áéíóúÁÉÍÓÚñÑa-zA-Z-0-9$#.() ]*$/'),
         ]);
 
-        $persona = Persona::where('rfc', $this->rfc)->first();
+        if($this->rfc){
+
+            $persona = Persona::where('rfc', $this->rfc)->first();
+
+        }elseif($this->curp){
+
+            $persona = Persona::where('curp', $this->curp)->first();
+
+        }else{
+
+            if($this->tipo_persona == 'FISICA'){
+
+                $persona = Persona::query()
+                            ->where('nombre', $this->nombre)
+                            ->where('ap_paterno', $this->ap_paterno)
+                            ->where('ap_materno', $this->ap_materno)
+                            ->first();
+
+            }else{
+
+                $persona = Persona::where('razon_social', $this->razon_social)->first();
+
+            }
+
+        }
 
         if(!$persona){
 
