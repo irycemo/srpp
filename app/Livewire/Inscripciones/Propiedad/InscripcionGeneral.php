@@ -516,9 +516,9 @@ class InscripcionGeneral extends Component
             if($transmitente){
 
                 $transmitente->update([
-                    'porcentaje_propiedad' => $transmitente->porcentaje_propiedad - $propietario['porcentaje_propiedad'],
-                    'porcentaje_nuda' => $transmitente->porcentaje_nuda - $propietario['porcentaje_nuda'],
-                    'porcentaje_usufructo' => $transmitente->porcentaje_usufructo - $propietario['porcentaje_usufructo'],
+                    'porcentaje_propiedad' => abs($transmitente->porcentaje_propiedad - $propietario['porcentaje_propiedad']),
+                    'porcentaje_nuda' => abs($transmitente->porcentaje_nuda - $propietario['porcentaje_nuda']),
+                    'porcentaje_usufructo' => abs($transmitente->porcentaje_usufructo - $propietario['porcentaje_usufructo']),
                 ]);
 
             }

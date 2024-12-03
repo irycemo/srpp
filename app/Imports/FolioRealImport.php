@@ -6,13 +6,14 @@ use Exception;
 use App\Models\Actor;
 use App\Models\Predio;
 use App\Models\Persona;
+use App\Models\Gravamen;
 use App\Models\FolioReal;
 use App\Models\Colindancia;
 use App\Constantes\Constantes;
-use App\Models\MovimientoRegistral;
 use Illuminate\Validation\Rule;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\DB;
+use App\Models\MovimientoRegistral;
 use Maatwebsite\Excel\Concerns\ToCollection;
 use Illuminate\Validation\ValidationException;
 use Maatwebsite\Excel\Concerns\SkipsEmptyRows;
@@ -91,6 +92,7 @@ class FolioRealImport implements ToCollection, WithHeadingRow, WithValidation, W
             'acto_contenido_gravamen' => ['required', Rule::in(Constantes::ACTOS_INSCRIPCION_GRAVAMEN)],
             'tipo_gravamen' => 'required|string',
             'valor_gravamen' => 'required|numeric',
+            'divisa_gravamen' => ['required', Rule::in(Constantes::DIVISAS)],
             'fecha_inscripcion_gravamen' => 'required|date',
             'comentario_gravamen' => 'required|date',
             'actores_gravamen' => 'required',
@@ -104,6 +106,17 @@ class FolioRealImport implements ToCollection, WithHeadingRow, WithValidation, W
         try {
 
             DB::transaction(function () use($rows){
+
+                $gravamen = Gravamen::make([
+                    'acto_contenido' => $rows['acto_contenido_gravamen'],
+                    'servicio' => '----',
+                    'estado' => 'activo',
+                    'tipo' => $rows['tipo_gravamen'],
+                    'valor_gravamen' => $rows['valor_gravamen'],
+                    'divisa' => $rows['divisa_gravamen'],
+                    'fecha_inscripcion' => $rows['fecha_inscripcion_gravamen'],
+                    'observaciones' => $rows['descripcion_acto_gravamen'],
+                ]);
 
                 foreach ($rows as $key => $row)
                 {
