@@ -764,6 +764,8 @@ class GravamenInscripcion extends Component
                 $this->gravamen->movimientoRegistral->actualizado_por = auth()->id();
                 $this->gravamen->movimientoRegistral->save();
 
+                $this->gravamen->save();
+
             });
 
             $this->dispatch('mostrarMensaje', ['success', "La información se guardó con éxito."]);
