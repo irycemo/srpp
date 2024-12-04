@@ -362,13 +362,13 @@
 
             <x-input-group for="vario.predio.nombre_asentamiento" label="Nombre del asentamiento" :error="$errors->first('vario.predio.nombre_asentamiento')" class="w-full">
 
-                <x-input-text id="vario.predio.nombre_asentamiento" wire:model="vario.predio.nombre_asentamiento" readonly/>
+                <x-input-text id="vario.predio.nombre_asentamiento" wire:model="vario.predio.nombre_asentamiento"/>
 
             </x-input-group>
 
             <x-input-group for="vario.predio.municipio" label="Municipio" :error="$errors->first('vario.predio.municipio')" class="w-full">
 
-                <x-input-text id="vario.predio.municipio" wire:model="vario.predio.municipio" readonly/>
+                <x-input-text id="vario.predio.municipio" wire:model="vario.predio.municipio"/>
 
             </x-input-group>
 
@@ -380,7 +380,7 @@
 
             <x-input-group for="vario.predio.tipo_asentamiento" label="Tipo de asentamiento" :error="$errors->first('vario.predio.tipo_asentamiento')" class="w-full">
 
-                <x-input-text id="vario.predio.tipo_asentamiento" wire:model="vario.predio.tipo_asentamiento" readonly/>
+                <x-input-text id="vario.predio.tipo_asentamiento" wire:model="vario.predio.tipo_asentamiento"/>
 
             </x-input-group>
 
