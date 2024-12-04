@@ -86,7 +86,7 @@ class MovimientosRegistrales extends Component
 
         if($this->modelo_editar->vario){
 
-            $this->cargarUsuarios(['Varios', 'Registrador Varios', 'Pase a folio']);
+            $this->cargarUsuarios(['Varios', 'Registrador Varios', 'Pase a folio', 'Aclaraciones administrativas', 'Avisos preventivos']);
 
             $this->cargarSupervisores(['Supervisor Varios']);
 
