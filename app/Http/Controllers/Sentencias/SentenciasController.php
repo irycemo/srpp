@@ -46,7 +46,7 @@ class SentenciasController extends Controller
         $datos_control->distrito = $sentencia->movimientoRegistral->folioReal->distrito;
         $datos_control->director = $director->name;
         $datos_control->movimiento_folio = $sentencia->movimientoRegistral->folio;
-        $datos_control->servicio = $this->nombreServicio($sentencia->servicio);
+        $datos_control->servicio = $this->nombreServicio($sentencia->movimientoRegistral->año, $sentencia->movimientoRegistral->tramite, $sentencia->movimientoRegistral->usuario);
         $datos_control->solicitante = $sentencia->movimientoRegistral->solicitante;
         $datos_control->monto = $sentencia->movimientoRegistral->monto;
         $datos_control->tipo_servicio = $sentencia->movimientoRegistral->tipo_servicio;

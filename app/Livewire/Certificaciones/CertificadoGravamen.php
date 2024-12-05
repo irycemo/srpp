@@ -467,7 +467,7 @@ class CertificadoGravamen extends Component
 
             $certificados = MovimientoRegistral::with('asignadoA', 'supervisor', 'actualizadoPor', 'certificacion.actualizadoPor', 'folioReal:id,folio')
                                                 ->whereHas('folioReal', function($q){
-                                                    $q->where('estado', 'activo');
+                                                    $q->whereIn('estado', ['activo', 'centinela']);
                                                 })
                                                 ->where(function($q){
                                                     $q->whereHas('asignadoA', function($q){

@@ -30,8 +30,4 @@ class Sentencia extends Model implements Auditable
         return $this->morphMany(Actor::class, 'actorable');
     }
 
-    public function promoventes(){
-        return $this->actores()->with('persona')->where('tipo_actor', 'promovente');
-    }
-
 }

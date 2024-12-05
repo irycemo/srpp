@@ -65,6 +65,8 @@ class Varios extends Component
 
         } catch (Exception $ex) {
 
+            Log::error("Error al finalizar inscripcion de varios por el usuario: (id: " . auth()->user()->id . ") " . auth()->user()->name . ". " . $ex);
+
             $this->dispatch('mostrarMensaje', ['error', $ex->getMessage()]);
 
         } catch (\Throwable $th) {

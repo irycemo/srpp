@@ -40,7 +40,7 @@
 
     </div>
 
-    <div class="bg-white p-4 rounded-lg mb-3 flex gap-3 items-center justify-between">
+    <div class="bg-white p-4 rounded-lg mb-3 flex gap-3 items-center justify-between shadow-lg">
 
         <div>
 

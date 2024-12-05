@@ -46,7 +46,7 @@ class PropiedadController extends Controller
         $datos_control->distrito = $propiedad->movimientoRegistral->folioReal->distrito;
         $datos_control->director = $director->name;
         $datos_control->movimiento_folio = $propiedad->movimientoRegistral->folio;
-        $datos_control->servicio = $this->nombreServicio($propiedad->servicio);
+        $datos_control->servicio = $this->nombreServicio($gravamen->movimientoRegistral->año, $gravamen->movimientoRegistral->tramite, $gravamen->movimientoRegistral->usuario);
         $datos_control->solicitante = $propiedad->movimientoRegistral->solicitante;
         $datos_control->monto = $propiedad->movimientoRegistral->monto;
         $datos_control->tipo_servicio = $propiedad->movimientoRegistral->tipo_servicio;

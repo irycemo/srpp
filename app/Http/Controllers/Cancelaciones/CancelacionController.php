@@ -46,7 +46,7 @@ class CancelacionController extends Controller
         $datos_control->distrito = $cancelacion->movimientoRegistral->folioReal->distrito;
         $datos_control->director = $director->name;
         $datos_control->movimiento_folio = $cancelacion->movimientoRegistral->folio;
-        $datos_control->servicio = $this->nombreServicio($cancelacion->servicio);
+        $datos_control->servicio = $this->nombreServicio($cancelacion->movimientoRegistral->año, $cancelacion->movimientoRegistral->tramite, $cancelacion->movimientoRegistral->usuario);
         $datos_control->solicitante = $cancelacion->movimientoRegistral->solicitante;
         $datos_control->monto = $cancelacion->movimientoRegistral->monto;
         $datos_control->tipo_servicio = $cancelacion->movimientoRegistral->tipo_servicio;

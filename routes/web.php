@@ -1,6 +1,5 @@
 <?php
 
-use App\Models\User;
 use App\Livewire\Admin\Roles;
 use App\Livewire\Admin\Efirmas;
 use App\Livewire\Admin\Ranchos;
@@ -47,6 +46,7 @@ use App\Http\Controllers\Cancelaciones\CancelacionController;
 use App\Livewire\Inscripciones\Propiedad\PropiedadInscripcion;
 use App\Http\Controllers\Certificaciones\CertificadoGravamenController;
 use App\Http\Controllers\Certificaciones\CertificadoPropiedadController;
+use App\Livewire\Admin\Centinela;
 
 /*
 |--------------------------------------------------------------------------
@@ -79,6 +79,8 @@ Route::group(['middleware' => ['auth', 'esta.activo']], function(){
     Route::get('folios_reales', FoliosReales::class)->middleware('permission:Lista de folios reales')->name('folios_reales');
 
     Route::get('movimientos_registrales', MovimientosRegistrales::class)->middleware('permission:Lista de movimientos registrales')->name('movimientos_registrales');
+
+    Route::get('centinela', Centinela::class)->middleware('permission:Centinela')->name('centinela');
 
     Route::get('propiedades', Propiedades::class)->middleware('permission:Lista de propiedades')->name('propiedades');
 

@@ -44,6 +44,14 @@ class FoliosReales extends Component
 
     public function enviarCaptura(FolioReal $folioReal){
 
+        if(in_array($this->folioReal->estado, ['bloqueado', 'centinela'])){
+
+            $this->dispatch('mostrarMensaje', ['error', "El folio esta bloqueado no es posible enviarlo a captura."]);
+
+            return;
+
+        }
+
         if($movimiento = $folioReal->movimientosRegistrales()->count() >= 2){
 
             $this->dispatch('mostrarMensaje', ['error', "El folio tiene mas de 1 movimiento registral no es posible enviarlo a captura."]);

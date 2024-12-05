@@ -46,7 +46,7 @@ class VariosController extends Controller
         $datos_control->distrito = $vario->movimientoRegistral->folioReal->distrito;
         $datos_control->director = $director->name;
         $datos_control->movimiento_folio = $vario->movimientoRegistral->folio;
-        $datos_control->servicio = $this->nombreServicio($vario->servicio);
+        $datos_control->servicio = $this->nombreServicio($vario->movimientoRegistral->año, $vario->movimientoRegistral->tramite, $vario->movimientoRegistral->usuario);
         $datos_control->solicitante = $vario->movimientoRegistral->solicitante;
         $datos_control->monto = $vario->movimientoRegistral->monto;
         $datos_control->tipo_servicio = $vario->movimientoRegistral->tipo_servicio;

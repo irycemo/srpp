@@ -23,7 +23,8 @@ class Constantes{
         'Folios reales',
         'Movimientos Registrales',
         'Personas morales',
-        'Efirmas'
+        'Efirmas',
+        'Centinela'
     ];
 
     /* USUARIOS */

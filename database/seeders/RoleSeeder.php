@@ -79,6 +79,8 @@ class RoleSeeder extends Seeder
         Permission::create(['name' => 'Lista de movimientos registrales', 'area' => 'Movimientos Registrales'])->syncRoles([$role1]);
         Permission::create(['name' => 'Reasignar movimiento', 'area' => 'Movimientos Registrales'])->syncRoles([$role1]);
 
+        Permission::create(['name' => 'Centinela', 'area' => 'Centinela'])->syncRoles([$role1]);
+
         Permission::create(['name' => 'Lista de distritos', 'area' => 'Distritos'])->syncRoles([$role1]);
         Permission::create(['name' => 'Crear distrito', 'area' => 'Distritos'])->syncRoles([$role1]);
         Permission::create(['name' => 'Editar distrito', 'area' => 'Distritos'])->syncRoles([$role1]);

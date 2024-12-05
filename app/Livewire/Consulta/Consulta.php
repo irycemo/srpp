@@ -103,7 +103,6 @@ class Consulta extends Component
         if($this->folio_real || $this->tomo || $this->registro || $this->numero_propiedad || $this->distrito || $this->seccion || $this->codigo_postal || $this->municipio || $this->ciudad || $this->tipo_asentamiento || $this->nombre_asentamiento || $this->localidad_ubicacion || $this->tipo_vialidad || $this->nombre_vialidad || $this->numero_exterior){
 
             $this->folios_reales = FolioReal::with('predio')
-                                ->where('estado', 'activo')
                                 ->when($this->folio_real, fn($q, $folio_real) => $q->where('folio', $folio_real) )
                                 ->when($this->tomo, fn($q, $tomo) => $q->where('tomo_antecedente', $tomo) )
                                 ->when($this->registro, fn($q, $registro) => $q->where('registro_antecedente', $registro) )

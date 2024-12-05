@@ -1,0 +1,951 @@
+<?php
+
+namespace App\Livewire\Sentencias;
+
+use App\Models\File;
+use App\Models\Actor;
+use App\Models\Predio;
+use App\Models\Persona;
+use Livewire\Component;
+use App\Models\Sentencia;
+use App\Models\Colindancia;
+use Livewire\WithFileUploads;
+use Illuminate\Validation\Rule;
+use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Facades\Http;
+use Illuminate\Support\Facades\Storage;
+use Illuminate\Http\Client\ConnectionException;
+use App\Http\Controllers\Sentencias\SentenciasController;
+use App\Constantes\Constantes;
+use App\Traits\Inscripciones\Sentencias\SentenciaTrait;
+
+class Rectificatoria extends Component
+{
+
+    use WithFileUploads;
+    use SentenciaTrait;
+
+    public $areas;
+    public $divisas;
+    public $vientos;
+    public $tipos_vialidades;
+    public $tipos_asentamientos;
+    public $modalPropietario = false;
+    public $crear = false;
+    public $editar = false;
+
+    public $medidas = [];
+
+    public Sentencia $sentencia;
+
+    public $predio;
+    public $sentenciaPredio;
+
+    public $actor;
+
+    public $tipo_propietario;
+    public $porcentaje_propiedad = 0.00;
+    public $porcentaje_nuda = 0.00;
+    public $porcentaje_usufructo = 0.00;
+    public $tipo_persona;
+    public $nombre;
+    public $ap_paterno;
+    public $ap_materno;
+    public $curp;
+    public $rfc;
+    public $razon_social;
+    public $fecha_nacimiento;
+    public $nacionalidad;
+    public $estado_civil;
+    public $calle;
+    public $numero_exterior_propietario;
+    public $numero_interior_propietario;
+    public $colonia;
+    public $cp;
+    public $entidad;
+    public $ciudad;
+    public $municipio_propietario;
+
+    public $folio_real;
+    public $folio_movimiento;
+    public $movimientoCancelar;
+
+
+    protected function rules(){
+        return [
+            'sentencia.acto_contenido' => 'required',
+            'sentencia.descripcion' => 'required',
+            'sentencia.tipo' => 'required',
+            'sentencia.hojas' => 'nullable',
+            'sentencia.expediente' => 'nullable',
+            'sentencia.tomo' => 'nullable',
+            'sentencia.registro' => 'nullable',
+            'sentenciaPredio.superficie_terreno' => 'required',
+            'sentenciaPredio.unidad_area' => 'required',
+            'sentenciaPredio.superficie_construccion' => 'required',
+            'sentenciaPredio.monto_transaccion' => 'required',
+            'sentenciaPredio.observaciones' => 'nullable',
+            'sentenciaPredio.curt' => 'nullable',
+            'sentenciaPredio.superficie_judicial' => 'nullable',
+            'sentenciaPredio.superficie_notarial' => 'nullable',
+            'sentenciaPredio.area_comun_terreno' => 'nullable',
+            'sentenciaPredio.area_comun_construccion' => 'nullable',
+            'sentenciaPredio.valor_terreno_comun' => 'nullable',
+            'sentenciaPredio.valor_construccion_comun' => 'nullable',
+            'sentenciaPredio.valor_total_terreno' => 'nullable',
+            'sentenciaPredio.valor_total_construccion' => 'nullable',
+            'sentenciaPredio.valor_catastral' => 'nullable',
+            'sentenciaPredio.divisa' => 'required',
+            'sentenciaPredio.codigo_postal' => 'nullable',
+            'sentenciaPredio.nombre_asentamiento' => 'nullable',
+            'sentenciaPredio.municipio' => 'nullable',
+            'sentenciaPredio.ciudad' => 'nullable',
+            'sentenciaPredio.tipo_asentamiento' => 'nullable',
+            'sentenciaPredio.localidad' => 'nullable',
+            'sentenciaPredio.tipo_vialidad' => 'nullable',
+            'sentenciaPredio.nombre_vialidad' => 'nullable',
+            'sentenciaPredio.numero_exterior' => 'nullable',
+            'sentenciaPredio.numero_interior' => 'nullable',
+            'sentenciaPredio.nombre_edificio' => 'nullable',
+            'sentenciaPredio.departamento_edificio' => 'nullable',
+            'sentenciaPredio.departamento_edificio' => 'nullable',
+            'sentenciaPredio.descripcion' => 'nullable',
+            'sentenciaPredio.lote' => 'nullable',
+            'sentenciaPredio.manzana' => 'nullable',
+            'sentenciaPredio.ejido' => 'nullable',
+            'sentenciaPredio.parcela' => 'nullable',
+            'sentenciaPredio.solar' => 'nullable',
+            'sentenciaPredio.poblado' => 'nullable',
+            'sentenciaPredio.numero_exterior_2' => 'nullable',
+            'sentenciaPredio.numero_adicional' => 'nullable',
+            'sentenciaPredio.numero_adicional_2' => 'nullable',
+            'sentenciaPredio.lote_fraccionador' => 'nullable',
+            'sentenciaPredio.manzana_fraccionador' => 'nullable',
+            'sentenciaPredio.etapa_fraccionador' => 'nullable',
+            'sentenciaPredio.clave_edificio' => 'nullable',
+         ];
+    }
+
+    public function updated($property, $value){
+
+        if(in_array($property, ['porcentaje_nuda', 'porcentaje_usufructo', 'porcentaje_propiedad']) && $value == ''){
+
+            $this->$property = 0;
+
+        }
+
+        if(in_array($property, ['porcentaje_nuda', 'porcentaje_usufructo'])){
+
+            $this->reset('porcentaje_propiedad');
+
+        }elseif($property == 'porcentaje_propiedad'){
+
+            $this->reset(['porcentaje_nuda', 'porcentaje_usufructo']);
+
+        }
+
+    }
+
+    public function consultarArchivo(){
+
+        try {
+
+            $response = Http::withToken(env('SISTEMA_TRAMITES_TOKEN'))
+                                ->accept('application/json')
+                                ->asForm()
+                                ->post(env('SISTEMA_TRAMITES_CONSULTAR_ARCHIVO'), [
+                                                                                    'año' => $this->sentencia->movimientoRegistral->año,
+                                                                                    'tramite' => $this->sentencia->movimientoRegistral->tramite,
+                                                                                    'usuario' => $this->sentencia->movimientoRegistral->usuario,
+                                                                                    'estado' => 'nuevo'
+                                                                                ]);
+
+            $data = collect(json_decode($response, true));
+
+            if($response->status() == 200){
+
+                $this->dispatch('ver_documento', ['url' => $data['url']]);
+
+            }else{
+
+                $this->dispatch('mostrarMensaje', ['error', "No se encontro el documento."]);
+
+            }
+
+        } catch (ConnectionException $th) {
+
+            Log::error("Error al cargar archivo en varios: (id: " . auth()->user()->id . ") " . auth()->user()->name . ". " . $th);
+
+            $this->dispatch('mostrarMensaje', ['error', "Ha ocurrido un error."]);
+
+        }
+
+    }
+
+    public function inscribir(){
+
+        if(!Hash::check($this->contraseña, auth()->user()->password)){
+
+            $this->dispatch('mostrarMensaje', ['error', "Contraseña incorrecta."]);
+
+            return;
+
+        }
+
+        try {
+
+            DB::transaction(function () {
+
+                $this->sentencia->estado = 'activo';
+                $this->sentencia->actualizado_por = auth()->id();
+                $this->sentencia->fecha_inscripcion = now()->toDateString();
+                $this->sentencia->save();
+
+                $this->sentencia->movimientoRegistral->update(['estado' => 'elaborado']);
+
+                foreach ($this->medidas as $key =>$medida) {
+
+                    if($medida['id'] == null){
+
+                        $aux = $this->sentenciaPredio->colindancias()->create([
+                            'viento' => $medida['viento'],
+                            'longitud' => $medida['longitud'],
+                            'descripcion' => $medida['descripcion'],
+                        ]);
+
+                        $this->medidas[$key]['id'] = $aux->id;
+
+                    }else{
+
+                        Colindancia::find($medida['id'])->update([
+                            'viento' => $medida['viento'],
+                            'longitud' => $medida['longitud'],
+                            'descripcion' => $medida['descripcion'],
+                        ]);
+
+                    }
+
+                }
+
+                $this->procesarPredio();
+
+                $this->sentencia->movimientoRegistral->update(['estado' => 'elaborado', 'actualizado_por' => auth()->id()]);
+
+                $this->sentencia->movimientoRegistral->audits()->latest()->first()->update(['tags' => 'Elaboró inscripción de sentencia']);
+
+                (new SentenciasController())->caratula($this->sentencia);
+
+            });
+
+            return redirect()->route('sentencias');
+
+        } catch (\Throwable $th) {
+            Log::error("Error al finalizar inscripcion de sentencia por el usuario: (id: " . auth()->user()->id . ") " . auth()->user()->name . ". " . $th);
+            $this->dispatch('mostrarMensaje', ['error', "Ha ocurrido un error."]);
+        }
+
+    }
+
+    public function guardar(){
+
+        try {
+
+            DB::transaction(function () {
+
+                if($this->sentencia->movimientoRegistral->estado != 'correccion')
+                    $this->sentencia->movimientoRegistral->estado = 'captura';
+
+                $this->sentencia->movimientoRegistral->actualizado_por = auth()->id();
+                $this->sentencia->movimientoRegistral->save();
+
+                $this->sentenciaPredio->save();
+
+                $this->sentencia->save();
+
+                foreach ($this->medidas as $key =>$medida) {
+
+                    if($medida['id'] == null){
+
+                        $aux = $this->sentenciaPredio->colindancias()->create([
+                            'viento' => $medida['viento'],
+                            'longitud' => $medida['longitud'],
+                            'descripcion' => $medida['descripcion'],
+                        ]);
+
+                        $this->medidas[$key]['id'] = $aux->id;
+
+                    }else{
+
+                        Colindancia::find($medida['id'])->update([
+                            'viento' => $medida['viento'],
+                            'longitud' => $medida['longitud'],
+                            'descripcion' => $medida['descripcion'],
+                        ]);
+
+                    }
+
+                }
+
+            });
+
+            $this->dispatch('mostrarMensaje', ['success', "La información se guardó con éxito."]);
+
+        } catch (\Throwable $th) {
+            Log::error("Error al guardar sentencia por el usuario: (id: " . auth()->user()->id . ") " . auth()->user()->name . ". " . $th);
+            $this->dispatch('mostrarMensaje', ['error', "Ha ocurrido un error."]);
+        }
+
+    }
+
+    public function agregarColindancia(){
+
+        $this->medidas[] = ['viento' => null, 'longitud' => null, 'descripcion' => null, 'id' => null];
+
+    }
+
+    public function borrarColindancia($index){
+
+        $this->authorize('update',  $this->sentencia->movimientoRegistral);
+
+        try {
+
+            $this->sentenciaPredio->colindancias()->where('id', $this->medidas[$index]['id'])->delete();
+
+        } catch (\Throwable $th) {
+            Log::error("Error al borrar colindancia en sentencia por el usuario: (id: " . auth()->user()->id . ") " . auth()->user()->name . ". " . $th);
+            $this->dispatch('mostrarMensaje', ['error', "Hubo un error."]);
+        }
+
+        unset($this->medidas[$index]);
+
+        $this->medidas = array_values($this->medidas);
+
+    }
+
+    public function agregarPropietario(){
+
+        $this->modalPropietario = true;
+        $this->crear = true;
+
+    }
+
+    public function guardarPropietario(){
+
+        $this->authorize('update', $this->sentencia->movimientoRegistral);
+
+        $this->validate([
+            'porcentaje_propiedad' => 'nullable|numeric|min:0|max:100',
+            'porcentaje_nuda' => 'nullable|numeric|min:0|max:100',
+            'porcentaje_usufructo' => 'nullable|numeric|min:0|max:100',
+            'tipo_persona' => 'required',
+            'nombre' => [
+                Rule::requiredIf($this->tipo_persona === 'FISICA')
+            ],
+            'ap_paterno' => Rule::requiredIf($this->tipo_persona === 'FISICA'),
+            'ap_materno' => Rule::requiredIf($this->tipo_persona === 'FISICA'),
+            'curp' => [
+                'nullable',
+                'regex:/^[A-Z]{1}[AEIOUX]{1}[A-Z]{2}[0-9]{2}(0[1-9]|1[0-2])(0[1-9]|1[0-9]|2[0-9]|3[0-1])[HM]{1}(AS|BC|BS|CC|CS|CH|CL|CM|DF|DG|GT|GR|HG|JC|MC|MN|MS|NT|NL|OC|PL|QT|QR|SP|SL|SR|TC|TS|TL|VZ|YN|ZS|NE)[B-DF-HJ-NP-TV-Z]{3}[0-9A-Z]{1}[0-9]{1}$/i'
+            ],
+            'rfc' => [
+                'nullable',
+                'regex:/^([A-ZÑ&]{3,4}) ?(?:- ?)?(\d{2}(?:0[1-9]|1[0-2])(?:0[1-9]|[12]\d|3[01])) ?(?:- ?)?([A-Z\d]{2})([A\d])$/'
+            ],
+            'razon_social' => [Rule::requiredIf($this->tipo_persona === 'MORAL')],
+            'fecha_nacimiento' => 'nullable',
+            'nacionalidad' => 'nullable',
+            'estado_civil' => 'nullable',
+            'calle' => 'nullable',
+            'numero_exterior_propietario' => 'nullable',
+            'numero_interior_propietario' => 'nullable',
+            'colonia' => 'nullable',
+            'cp' => 'nullable|numeric',
+            'ciudad' => 'nullable',
+            'entidad' => 'nullable',
+            'municipio_propietario' => 'nullable',
+        ]);
+
+        if($this->porcentaje_propiedad === 0 && $this->porcentaje_nuda === 0 && $this->porcentaje_usufructo === 0){
+
+            $this->dispatch('mostrarMensaje', ['error', "La suma de los porcentajes no puede ser 0."]);
+
+            return;
+
+        }
+
+        if($this->revisarProcentajes()){
+
+            $this->dispatch('mostrarMensaje', ['error', "La suma de los porcentajes no puede exceder el 100%."]);
+
+            return;
+
+        }
+
+        if($this->rfc){
+
+            $persona = Persona::where('rfc', $this->rfc)->first();
+
+        }elseif($this->curp){
+
+            $persona = Persona::where('curp', $this->curp)->first();
+
+        }else{
+
+            if($this->tipo_persona == 'FISICA'){
+
+                $persona = Persona::query()
+                            ->where('nombre', $this->nombre)
+                            ->where('ap_paterno', $this->ap_paterno)
+                            ->where('ap_materno', $this->ap_materno)
+                            ->first();
+
+            }else{
+
+                $persona = Persona::where('razon_social', $this->razon_social)->first();
+
+            }
+
+        }
+
+        if($persona){
+
+            foreach ($this->predio->propietarios() as $propietario) {
+
+                if($persona->id == $propietario->persona_id){
+
+                    $this->dispatch('mostrarMensaje', ['error', "La persona ya es un propietario."]);
+
+                    return;
+
+                }
+
+            }
+
+        }
+
+        try {
+
+            DB::transaction(function () use ($persona){
+
+                if($persona != null){
+
+                    $persona->update([
+                        'estado_civil' => $this->estado_civil,
+                        'calle' => $this->calle,
+                        'numero_exterior' => $this->numero_exterior_propietario,
+                        'numero_interior' => $this->numero_interior_propietario,
+                        'colonia' => $this->colonia,
+                        'cp' => $this->cp,
+                        'entidad' => $this->entidad,
+                        'municipio' => $this->municipio_propietario,
+                        'actualizado_por' => auth()->id()
+                    ]);
+
+                }else{
+
+                    $persona = Persona::create([
+                        'tipo' => $this->tipo_persona,
+                        'nombre' => $this->nombre,
+                        'ap_paterno' => $this->ap_paterno,
+                        'ap_materno' => $this->ap_materno,
+                        'curp' => $this->curp,
+                        'rfc' => $this->rfc,
+                        'razon_social' => $this->razon_social,
+                        'fecha_nacimiento' => $this->fecha_nacimiento,
+                        'nacionalidad' => $this->nacionalidad,
+                        'estado_civil' => $this->estado_civil,
+                        'calle' => $this->calle,
+                        'numero_exterior' => $this->numero_exterior_propietario,
+                        'numero_interior' => $this->numero_interior_propietario,
+                        'colonia' => $this->colonia,
+                        'cp' => $this->cp,
+                        'entidad' => $this->entidad,
+                        'municipio' => $this->municipio_propietario,
+                        'creado_por' => auth()->id()
+                    ]);
+
+                }
+
+                $this->sentenciaPredio->actores()->create([
+                    'persona_id' => $persona->id,
+                    'tipo_actor' => 'propietario',
+                    'porcentaje_propiedad' => $this->porcentaje_propiedad,
+                    'porcentaje_nuda' => $this->porcentaje_nuda,
+                    'porcentaje_usufructo' => $this->porcentaje_usufructo,
+                    'creado_por' => auth()->id()
+                ]);
+
+                $this->dispatch('mostrarMensaje', ['success', "El propietario se guardó con éxito."]);
+
+                $this->resetear();
+
+                $this->sentenciaPredio->refresh();
+
+            });
+
+        } catch (\Throwable $th) {
+
+            Log::error("Error al guardar propietario en pase a folio por el usuario: (id: " . auth()->user()->id . ") " . auth()->user()->name . ". " . $th);
+            $this->dispatch('mostrarMensaje', ['error', "Ha ocurrido un error."]);
+
+        }
+
+    }
+
+    public function editarActor(Actor $actor, $tipo){
+
+        $this->resetear();
+
+        $this->actor = $actor;
+
+        $this->tipo_propietario = $actor->tipo_actor;
+        $this->porcentaje_propiedad = $actor->porcentaje_propiedad;
+        $this->porcentaje_nuda = $actor->porcentaje_nuda;
+        $this->porcentaje_usufructo = $actor->porcentaje_usufructo;
+        $this->tipo_persona = $actor->persona->tipo;
+        $this->nombre = $actor->persona->nombre;
+        $this->ap_paterno = $actor->persona->ap_paterno;
+        $this->ap_materno = $actor->persona->ap_materno;
+        $this->curp = $actor->persona->curp;
+        $this->rfc = $actor->persona->rfc;
+        $this->razon_social = $actor->persona->razon_social;
+        $this->fecha_nacimiento = $actor->persona->fecha_nacimiento;
+        $this->nacionalidad = $actor->persona->nacionalidad;
+        $this->estado_civil = $actor->persona->estado_civil;
+        $this->calle = $actor->persona->calle;
+        $this->numero_exterior_propietario = $actor->persona->numero_exterior;
+        $this->numero_interior_propietario = $actor->persona->numero_interior;
+        $this->colonia = $actor->persona->colonia;
+        $this->cp = $actor->persona->cp;
+        $this->entidad = $actor->persona->entidad;
+        $this->municipio_propietario = $actor->persona->municipio;
+
+        $this->modalPropietario = true;
+
+        $this->crear = false;
+
+        $this->editar = true;
+
+    }
+
+    public function actualizarActor(){
+
+        $this->validate([
+            'porcentaje_propiedad' => 'nullable|numeric|min:0|max:100',
+            'porcentaje_nuda' => 'nullable|numeric|min:0|max:100',
+            'porcentaje_usufructo' => 'nullable|numeric|min:0|max:100',
+            'tipo_persona' => 'required',
+            'nombre' => [
+                Rule::requiredIf($this->tipo_persona === 'FISICA')
+            ],
+            'ap_paterno' => Rule::requiredIf($this->tipo_persona === 'FISICA'),
+            'ap_materno' => Rule::requiredIf($this->tipo_persona === 'FISICA'),
+            'curp' => [
+                'nullable',
+                'regex:/^[A-Z]{1}[AEIOUX]{1}[A-Z]{2}[0-9]{2}(0[1-9]|1[0-2])(0[1-9]|1[0-9]|2[0-9]|3[0-1])[HM]{1}(AS|BC|BS|CC|CS|CH|CL|CM|DF|DG|GT|GR|HG|JC|MC|MN|MS|NT|NL|OC|PL|QT|QR|SP|SL|SR|TC|TS|TL|VZ|YN|ZS|NE)[B-DF-HJ-NP-TV-Z]{3}[0-9A-Z]{1}[0-9]{1}$/i'
+            ],
+            'rfc' => [
+                'nullable',
+                'regex:/^([A-ZÑ&]{3,4}) ?(?:- ?)?(\d{2}(?:0[1-9]|1[0-2])(?:0[1-9]|[12]\d|3[01])) ?(?:- ?)?([A-Z\d]{2})([A\d])$/'
+            ],
+            'razon_social' => [Rule::requiredIf($this->tipo_persona === 'MORAL')],
+            'fecha_nacimiento' => 'nullable',
+            'nacionalidad' => 'nullable',
+            'estado_civil' => 'nullable',
+            'calle' => 'nullable',
+            'numero_exterior_propietario' => 'nullable',
+            'numero_interior_propietario' => 'nullable',
+            'colonia' => 'nullable',
+            'cp' => 'nullable|numeric',
+            'ciudad' => 'nullable',
+            'entidad' => 'nullable',
+            'municipio_propietario' => 'nullable',
+        ]);
+
+        if($this->porcentaje_propiedad == 0 && $this->porcentaje_nuda == 0 && $this->porcentaje_usufructo == 0){
+
+            $this->dispatch('mostrarMensaje', ['error', "La suma de los porcentajes no puede ser 0."]);
+
+            return;
+
+        }
+
+        if($this->revisarProcentajes($this->actor->id)){
+
+            $this->dispatch('mostrarMensaje', ['error', "La suma de los porcentajes no puede exceder el 100%."]);
+
+            return;
+
+        }
+
+        try {
+
+            DB::transaction(function () {
+
+                $this->actor->persona->update([
+                    'tipo' => $this->tipo_persona,
+                    'nombre' => $this->nombre,
+                    'ap_paterno' => $this->ap_paterno,
+                    'ap_materno' => $this->ap_materno,
+                    'curp' => $this->curp,
+                    'rfc' => $this->rfc,
+                    'razon_social' => $this->razon_social,
+                    'fecha_nacimiento' => $this->fecha_nacimiento,
+                    'nacionalidad' => $this->nacionalidad,
+                    'estado_civil' => $this->estado_civil,
+                    'calle' => $this->calle,
+                    'numero_exterior' => $this->numero_exterior_propietario,
+                    'numero_interior' => $this->numero_interior_propietario,
+                    'colonia' => $this->colonia,
+                    'cp' => $this->cp,
+                    'entidad' => $this->entidad,
+                    'municipio' => $this->municipio_propietario,
+                    'creado_por' => auth()->id()
+                ]);
+
+                $this->actor->update([
+                    'tipo_propietario' => $this->tipo_propietario,
+                    'porcentaje_propiedad' => $this->porcentaje_propiedad,
+                    'porcentaje_nuda' => $this->porcentaje_nuda,
+                    'porcentaje_usufructo' => $this->porcentaje_usufructo,
+                    'actualizado_por' => auth()->id()
+                ]);
+
+                $this->dispatch('mostrarMensaje', ['success', "La información se actualizó con éxito."]);
+
+                $this->resetear();
+
+            });
+
+        } catch (\Throwable $th) {
+
+            Log::error("Error al actualizar actor en pase a folio por el usuario: (id: " . auth()->user()->id . ") " . auth()->user()->name . ". " . $th);
+            $this->dispatch('mostrarMensaje', ['error', "Ha ocurrido un error."]);
+
+        }
+
+    }
+
+    public function borrarActor(Actor $actor){
+
+        $this->authorize('update', $this->sentencia->movimientoRegistral);
+
+        try {
+
+            $actor->delete();
+
+            $this->dispatch('mostrarMensaje', ['success', "La información se eliminó con éxito."]);
+
+            $this->resetear();
+
+        } catch (\Throwable $th) {
+
+            Log::error("Error al borrar actor en pase a folio por el usuario: (id: " . auth()->user()->id . ") " . auth()->user()->name . ". " . $th);
+            $this->dispatch('mostrarMensaje', ['error', "Ha ocurrido un error."]);
+
+        }
+
+    }
+
+    public function resetear(){
+
+        $this->reset([
+            'tipo_propietario',
+            'porcentaje_propiedad',
+            'porcentaje_nuda',
+            'porcentaje_usufructo',
+            'tipo_persona',
+            'nombre',
+            'ap_paterno',
+            'ap_materno',
+            'curp',
+            'rfc',
+            'razon_social',
+            'fecha_nacimiento',
+            'nacionalidad',
+            'estado_civil',
+            'calle',
+            'numero_exterior_propietario',
+            'numero_interior_propietario',
+            'colonia',
+            'cp',
+            'entidad',
+            'municipio_propietario',
+            'modalPropietario'
+        ]);
+    }
+
+    public function revisarProcentajes($id = null){
+
+        $pp = 0;
+
+        $pn = 0;
+
+        $pu = 0;
+
+        foreach($this->sentenciaPredio->propietarios() as $propietario){
+
+            if($id == $propietario->id)
+                continue;
+
+            $pn = $pn + $propietario->porcentaje_nuda;
+
+            $pu = $pu + $propietario->porcentaje_usufructo;
+
+            $pp = $pp + $propietario->porcentaje_propiedad;
+
+        }
+
+        $pp = $pp + (float)$this->porcentaje_propiedad;
+
+        $pn = $pn + (float)$this->porcentaje_nuda + $pp;
+
+        $pu = $pu + (float)$this->porcentaje_usufructo + $pp;
+
+        if($pn > 100 || $pu > 100)
+            return true;
+        else
+            return false;
+
+    }
+
+    public function cargarPredioInicial(){
+
+        if(!$this->sentencia->predio_id){
+
+            $predio = Predio::create([
+                'status' => 'sentencia',
+                'cp_localidad' => $this->sentencia->movimientoRegistral->folioReal->predio->cp_localidad,
+                'cp_oficina' => $this->sentencia->movimientoRegistral->folioReal->predio->cp_oficina,
+                'cp_tipo_predio' => $this->sentencia->movimientoRegistral->folioReal->predio->cp_tipo_predio,
+                'cp_registro' => $this->sentencia->movimientoRegistral->folioReal->predio->cp_registro,
+                'superficie_terreno' => $this->sentencia->movimientoRegistral->folioReal->predio->superficie_terreno,
+                'unidad_area' => $this->sentencia->movimientoRegistral->folioReal->predio->unidad_area,
+                'superficie_construccion' => $this->sentencia->movimientoRegistral->folioReal->predio->superficie_construccion,
+                'monto_transaccion' => $this->sentencia->movimientoRegistral->folioReal->predio->monto_transaccion,
+                'observaciones' => $this->sentencia->movimientoRegistral->folioReal->predio->observaciones,
+                'superficie_judicial' => $this->sentencia->movimientoRegistral->folioReal->predio->superficie_judicial,
+                'superficie_notarial' => $this->sentencia->movimientoRegistral->folioReal->predio->superficie_notarial,
+                'area_comun_terreno' => $this->sentencia->movimientoRegistral->folioReal->predio->area_comun_terreno,
+                'area_comun_construccion' => $this->sentencia->movimientoRegistral->folioReal->predio->area_comun_construccion,
+                'valor_terreno_comun' => $this->sentencia->movimientoRegistral->folioReal->predio->valor_terreno_comun,
+                'valor_construccion_comun' => $this->sentencia->movimientoRegistral->folioReal->predio->valor_construccion_comun,
+                'valor_total_terreno' => $this->sentencia->movimientoRegistral->folioReal->predio->valor_total_terreno,
+                'valor_total_construccion' => $this->sentencia->movimientoRegistral->folioReal->predio->valor_total_construccion,
+                'valor_catastral' => $this->sentencia->movimientoRegistral->folioReal->predio->valor_catastral,
+                'codigo_postal' => $this->sentencia->movimientoRegistral->folioReal->predio->codigo_postal,
+                'nombre_asentamiento' => $this->sentencia->movimientoRegistral->folioReal->predio->nombre_asentamiento,
+                'municipio' => $this->sentencia->movimientoRegistral->folioReal->predio->municipio,
+                'ciudad' => $this->sentencia->movimientoRegistral->folioReal->predio->ciudad,
+                'tipo_asentamiento' => $this->sentencia->movimientoRegistral->folioReal->predio->tipo_asentamiento,
+                'localidad' => $this->sentencia->movimientoRegistral->folioReal->predio->localidad,
+                'tipo_vialidad' => $this->sentencia->movimientoRegistral->folioReal->predio->tipo_vialidad,
+                'nombre_vialidad' => $this->sentencia->movimientoRegistral->folioReal->predio->nombre_vialidad,
+                'numero_exterior' => $this->sentencia->movimientoRegistral->folioReal->predio->numero_exterior,
+                'numero_interior' => $this->sentencia->movimientoRegistral->folioReal->predio->numero_interior,
+                'nombre_edificio' => $this->sentencia->movimientoRegistral->folioReal->predio->nombre_edificio,
+                'departamento_edificio' => $this->sentencia->movimientoRegistral->folioReal->predio->departamento_edificio,
+                'departamento_edificio' => $this->sentencia->movimientoRegistral->folioReal->predio->departamento_edificio,
+                'descripcion' => $this->sentencia->movimientoRegistral->folioReal->predio->descripcion,
+                'lote' => $this->sentencia->movimientoRegistral->folioReal->predio->lote,
+                'manzana' => $this->sentencia->movimientoRegistral->folioReal->predio->manzana,
+                'ejido' => $this->sentencia->movimientoRegistral->folioReal->predio->ejido,
+                'parcela' => $this->sentencia->movimientoRegistral->folioReal->predio->parcela,
+                'solar' => $this->sentencia->movimientoRegistral->folioReal->predio->solar,
+                'poblado' => $this->sentencia->movimientoRegistral->folioReal->predio->poblado,
+                'numero_exterior_2' => $this->sentencia->movimientoRegistral->folioReal->predio->numero_exterior_2,
+                'numero_adicional' => $this->sentencia->movimientoRegistral->folioReal->predio->numero_adicional,
+                'numero_adicional_2' => $this->sentencia->movimientoRegistral->folioReal->predio->numero_adicional_2,
+                'lote_fraccionador' => $this->sentencia->movimientoRegistral->folioReal->predio->lote_fraccionador,
+                'manzana_fraccionador' => $this->sentencia->movimientoRegistral->folioReal->predio->manzana_fraccionador,
+                'etapa_fraccionador' => $this->sentencia->movimientoRegistral->folioReal->predio->etapa_fraccionador,
+                'clave_edificio' => $this->sentencia->movimientoRegistral->folioReal->predio->clave_edificio,
+            ]);
+
+            $this->sentencia->update(['predio_id' => $predio->id]);
+
+            foreach ($this->sentencia->movimientoRegistral->folioReal->predio->colindancias as $colindancia) {
+
+                $this->sentencia->predio->colindancias()->create([
+                    'viento' => $colindancia->viento,
+                    'longitud' => $colindancia->longitud,
+                    'descripcion' => $colindancia->descripcion,
+                ]);
+
+            }
+
+            foreach ($this->sentencia->movimientoRegistral->folioReal->predio->propietarios() as $actor) {
+
+                $this->sentencia->predio->actores()->create([
+                    'persona_id' => $actor->persona_id,
+                    'tipo_actor' => $actor->tipo_actor,
+                    'porcentaje_propiedad' => $actor->porcentaje_propiedad,
+                    'porcentaje_nuda' => $actor->porcentaje_nuda,
+                    'porcentaje_usufructo' => $actor->porcentaje_usufructo,
+                ]);
+
+            }
+
+        }
+
+    }
+
+    public function procesarPredio(){
+
+        $this->sentencia->movimientoRegistral->folioReal->predio->cp_localidad = $this->sentenciaPredio->cp_localidad;
+        $this->sentencia->movimientoRegistral->folioReal->predio->cp_oficina = $this->sentenciaPredio->cp_oficina;
+        $this->sentencia->movimientoRegistral->folioReal->predio->cp_tipo_predio = $this->sentenciaPredio->cp_tipo_predio;
+        $this->sentencia->movimientoRegistral->folioReal->predio->cp_registro = $this->sentenciaPredio->cp_registro;
+        $this->sentencia->movimientoRegistral->folioReal->predio->superficie_terreno = $this->sentenciaPredio->superficie_terreno;
+        $this->sentencia->movimientoRegistral->folioReal->predio->unidad_area = $this->sentenciaPredio->unidad_area;
+        $this->sentencia->movimientoRegistral->folioReal->predio->superficie_construccion = $this->sentenciaPredio->superficie_construccion;
+        $this->sentencia->movimientoRegistral->folioReal->predio->monto_transaccion = $this->sentenciaPredio->monto_transaccion;
+        $this->sentencia->movimientoRegistral->folioReal->predio->observaciones = $this->sentenciaPredio->observaciones;
+        $this->sentencia->movimientoRegistral->folioReal->predio->superficie_judicial = $this->sentenciaPredio->superficie_judicial;
+        $this->sentencia->movimientoRegistral->folioReal->predio->superficie_notarial = $this->sentenciaPredio->superficie_notarial;
+        $this->sentencia->movimientoRegistral->folioReal->predio->area_comun_terreno = $this->sentenciaPredio->area_comun_terreno;
+        $this->sentencia->movimientoRegistral->folioReal->predio->area_comun_construccion = $this->sentenciaPredio->area_comun_construccion;
+        $this->sentencia->movimientoRegistral->folioReal->predio->valor_terreno_comun = $this->sentenciaPredio->valor_terreno_comun;
+        $this->sentencia->movimientoRegistral->folioReal->predio->valor_construccion_comun = $this->sentenciaPredio->valor_construccion_comun;
+        $this->sentencia->movimientoRegistral->folioReal->predio->valor_total_terreno = $this->sentenciaPredio->valor_total_terreno;
+        $this->sentencia->movimientoRegistral->folioReal->predio->valor_total_construccion = $this->sentenciaPredio->valor_total_construccion;
+        $this->sentencia->movimientoRegistral->folioReal->predio->valor_catastral = $this->sentenciaPredio->valor_catastral;
+        $this->sentencia->movimientoRegistral->folioReal->predio->codigo_postal = $this->sentenciaPredio->codigo_postal;
+        $this->sentencia->movimientoRegistral->folioReal->predio->nombre_asentamiento = $this->sentenciaPredio->nombre_asentamiento;
+        $this->sentencia->movimientoRegistral->folioReal->predio->municipio = $this->sentenciaPredio->municipio;
+        $this->sentencia->movimientoRegistral->folioReal->predio->ciudad = $this->sentenciaPredio->ciudad;
+        $this->sentencia->movimientoRegistral->folioReal->predio->tipo_asentamiento = $this->sentenciaPredio->tipo_asentamiento;
+        $this->sentencia->movimientoRegistral->folioReal->predio->localidad = $this->sentenciaPredio->localidad;
+        $this->sentencia->movimientoRegistral->folioReal->predio->tipo_vialidad = $this->sentenciaPredio->tipo_vialidad;
+        $this->sentencia->movimientoRegistral->folioReal->predio->nombre_vialidad = $this->sentenciaPredio->nombre_vialidad;
+        $this->sentencia->movimientoRegistral->folioReal->predio->numero_exterior = $this->sentenciaPredio->numero_exterior;
+        $this->sentencia->movimientoRegistral->folioReal->predio->numero_interior = $this->sentenciaPredio->numero_interior;
+        $this->sentencia->movimientoRegistral->folioReal->predio->nombre_edificio = $this->sentenciaPredio->nombre_edificio;
+        $this->sentencia->movimientoRegistral->folioReal->predio->departamento_edificio = $this->sentenciaPredio->departamento_edificio;
+        $this->sentencia->movimientoRegistral->folioReal->predio->departamento_edificio = $this->sentenciaPredio->departamento_edificio;
+        $this->sentencia->movimientoRegistral->folioReal->predio->descripcion = $this->sentenciaPredio->descripcion;
+        $this->sentencia->movimientoRegistral->folioReal->predio->lote = $this->sentenciaPredio->lote;
+        $this->sentencia->movimientoRegistral->folioReal->predio->manzana = $this->sentenciaPredio->manzana;
+        $this->sentencia->movimientoRegistral->folioReal->predio->ejido = $this->sentenciaPredio->ejido;
+        $this->sentencia->movimientoRegistral->folioReal->predio->parcela = $this->sentenciaPredio->parcela;
+        $this->sentencia->movimientoRegistral->folioReal->predio->solar = $this->sentenciaPredio->solar;
+        $this->sentencia->movimientoRegistral->folioReal->predio->poblado = $this->sentenciaPredio->poblado;
+        $this->sentencia->movimientoRegistral->folioReal->predio->numero_exterior_2 = $this->sentenciaPredio->numero_exterior_2;
+        $this->sentencia->movimientoRegistral->folioReal->predio->numero_adicional = $this->sentenciaPredio->numero_adicional;
+        $this->sentencia->movimientoRegistral->folioReal->predio->numero_adicional_2 = $this->sentenciaPredio->numero_adicional_2;
+        $this->sentencia->movimientoRegistral->folioReal->predio->lote_fraccionador = $this->sentenciaPredio->lote_fraccionador;
+        $this->sentencia->movimientoRegistral->folioReal->predio->manzana_fraccionador = $this->sentenciaPredio->manzana_fraccionador;
+        $this->sentencia->movimientoRegistral->folioReal->predio->etapa_fraccionador = $this->sentenciaPredio->etapa_fraccionador;
+        $this->sentencia->movimientoRegistral->folioReal->predio->clave_edificio = $this->sentenciaPredio->clave_edificio;
+
+        $this->sentencia->movimientoRegistral->folioReal->predio->save();
+
+        $this->sentencia->movimientoRegistral->folioReal->predio->colindancias()->delete();
+
+        foreach ($this->sentenciaPredio->colindancias as $colindancia) {
+
+            $colindancia->update(['predio_id' => $this->sentencia->movimientoRegistral->folioReal->predio->id]);
+
+        }
+
+        foreach ($this->sentencia->movimientoRegistral->folioReal->predio->propietarios() as $propietario) {
+            $propietario->delete();
+        }
+
+        foreach ($this->sentenciaPredio->propietarios() as $propietario) {
+            $propietario->update(['actorable_id' => $this->sentencia->movimientoRegistral->folioReal->predio->id]);
+        }
+
+        $this->sentenciaPredio->colindancias()->delete();
+
+        foreach ($this->sentenciaPredio->propietarios() as $propietario) {
+            $propietario->delete();
+        }
+
+        $this->sentenciaPredio->delete();
+
+        $this->sentencia->predio_id = null;
+
+    }
+
+    public function mount(){
+
+        if(!$this->sentencia->movimientoRegistral->documentoEntrada()){
+
+            try {
+
+                $response = Http::withToken(env('SISTEMA_TRAMITES_TOKEN'))
+                                    ->accept('application/json')
+                                    ->asForm()
+                                    ->post(env('SISTEMA_TRAMITES_CONSULTAR_ARCHIVO'), [
+                                                                                        'año' => $this->sentencia->movimientoRegistral->año,
+                                                                                        'tramite' => $this->sentencia->movimientoRegistral->tramite,
+                                                                                        'usuario' => $this->sentencia->movimientoRegistral->usuario,
+                                                                                        'estado' => 'nuevo'
+                                                                                    ]);
+
+                $data = collect(json_decode($response, true));
+
+                if($response->status() == 200){
+
+                    $contents = file_get_contents($data['url']);
+
+                    $filename = basename($data['url']);
+
+                    Storage::disk('documento_entrada')->put($filename, $contents);
+
+                    File::create([
+                        'fileable_id' => $this->sentencia->movimientoRegistral->id,
+                        'fileable_type' => 'App\Models\MovimientoRegistral',
+                        'descripcion' => 'documento_entrada',
+                        'url' => $filename
+                    ]);
+
+                }
+
+            } catch (ConnectionException $th) {
+
+                Log::error("Error al cargar archivo en cancelación: (id: " . auth()->user()->id . ") " . auth()->user()->name . ". " . $th);
+
+                $this->dispatch('mostrarMensaje', ['error', "Ha ocurrido un error."]);
+
+            }
+
+        }
+
+        $this->cargarPredioInicial();
+
+        $this->sentenciaPredio = $this->sentencia->predio;
+
+        foreach ($this->sentencia->predio->colindancias as $colindancia) {
+
+            $this->medidas[] = [
+                'id' => $colindancia->id,
+                'viento' => $colindancia->viento,
+                'longitud' => $colindancia->longitud,
+                'descripcion' => $colindancia->descripcion,
+            ];
+
+        }
+
+        $this->actos = Constantes::ACTOS_INSCRIPCION_SENTENCIAS;
+
+        $this->areas = Constantes::UNIDADES;
+
+        $this->divisas = Constantes::DIVISAS;
+
+        $this->vientos = Constantes::VIENTOS;
+
+        $this->tipos_vialidades = Constantes::TIPO_VIALIDADES;
+
+        $this->tipos_asentamientos = Constantes::TIPO_ASENTAMIENTO;
+
+    }
+
+    public function render()
+    {
+        return view('livewire.sentencias.rectificatoria');
+    }
+}

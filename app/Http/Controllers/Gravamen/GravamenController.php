@@ -46,7 +46,7 @@ class GravamenController extends Controller
         $datos_control->distrito = $gravamen->movimientoRegistral->folioReal->distrito;
         $datos_control->director = $director->name;
         $datos_control->movimiento_folio = $gravamen->movimientoRegistral->folio;
-        $datos_control->servicio = $this->nombreServicio($gravamen->servicio);
+        $datos_control->servicio = $this->nombreServicio($gravamen->movimientoRegistral->año, $gravamen->movimientoRegistral->tramite, $gravamen->movimientoRegistral->usuario);
         $datos_control->solicitante = $gravamen->movimientoRegistral->solicitante;
         $datos_control->monto = $gravamen->movimientoRegistral->monto;
         $datos_control->tipo_servicio = $gravamen->movimientoRegistral->tipo_servicio;

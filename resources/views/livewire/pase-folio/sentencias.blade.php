@@ -278,6 +278,12 @@
 
                     </x-input-group>
 
+                    <x-input-group for="tipo" label="Tipo de sentencia" :error="$errors->first('tipo')" class="col-span-3">
+
+                        <x-input-text id="tipo" wire:model="tipo" />
+
+                    </x-input-group>
+
                     <x-input-group for="comentario" label="Comentario de la sentencia" :error="$errors->first('comentario')" class="col-span-3">
 
                         <textarea rows="3" class="w-full bg-white rounded" wire:model="comentario"></textarea>

@@ -88,15 +88,17 @@ class FolioRealController extends Controller
 
             if($folio_real){
 
-                if(in_array($folio_real->estado, ['nuevo', 'matriz'])){
+                if(in_array($folio_real->estado, ['bloqueado', 'centinela'])){
 
                     return response()->json([
-                        'error' => 'El folio real no esta activo',
+                        'error' => 'El folio real esta bloqueado',
                     ], 401);
 
-                }
+                }elseif($folio_real->estado == 'activo'){
 
-                return (new FolioRealResource($folio_real))->response()->setStatusCode(200);
+                    return (new FolioRealResource($folio_real))->response()->setStatusCode(200);
+
+                }
 
             }elseif(isset($validated['folio_real']) && !$folio_real){
 

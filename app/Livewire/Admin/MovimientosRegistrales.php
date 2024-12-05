@@ -199,6 +199,8 @@ class MovimientosRegistrales extends Component
             $this->modelo_editar->actualizado_por = auth()->id();
             $this->modelo_editar->save();
 
+            $this->revisarMovimientoCorreccion();
+
             $this->modelo_editar->audits()->latest()->first()->update(['tags' => 'Cambio estado a corrección']);
 
             $this->dispatch('mostrarMensaje', ['success', "La información se actualizó con éxito."]);
@@ -255,6 +257,24 @@ class MovimientosRegistrales extends Component
                                 })
                                 ->orderBy('name')
                                 ->get();
+
+    }
+
+    public function revisarMovimientoCorreccion(){
+
+        if($this->modelo_editar->sentencia){
+
+            if($this->modelo_editar->sentencia->acto_contenido == 'CANCELACIÓN DE SENTENCIA'){
+
+                $cancelado = MovimientoRegistral::where('movimiento_padre', $this->modelo_editar->id)->first();
+
+                $cancelado->update(['movimiento_padre' => null]);
+
+                $cancelado->sentencia->update(['estado' => 'activo']);
+
+            }
+
+        }
 
     }
 

@@ -196,7 +196,7 @@
 
     @if($folioReal->predio->numero_adicional)
 
-        <div class="rounded-lg bg-gray-100">
+        <div class="rounded-lg bg-gray-100 py-1 px-2">
 
             <strong>Número adicional</strong>
 
@@ -208,7 +208,7 @@
 
     @if($folioReal->predio->numero_adicional_2)
 
-        <div class="rounded-lg bg-gray-100">
+        <div class="rounded-lg bg-gray-100 py-1 px-2">
 
             <strong>Número adicional 2</strong>
 
@@ -220,7 +220,7 @@
 
     @if($folioReal->predio->lote_fraccionador)
 
-        <div class="rounded-lg bg-gray-100">
+        <div class="rounded-lg bg-gray-100py-1 px-2">
 
             <strong>Lote del fraccionador</strong>
 
@@ -232,7 +232,7 @@
 
     @if($folioReal->predio->manzana_fraccionador)
 
-        <div class="rounded-lg bg-gray-100">
+        <div class="rounded-lg bg-gray-100py-1 px-2">
 
             <strong>Manzana del fraccionador</strong>
 
@@ -244,7 +244,7 @@
 
     @if($folioReal->predio->etapa_fraccionador)
 
-        <div class="rounded-lg bg-gray-100">
+        <div class="rounded-lg bg-gray-100 py-1 px-2">
 
             <strong>Etapa del fraccionador</strong>
 
@@ -256,7 +256,7 @@
 
     @if($folioReal->predio->clave_edificio)
 
-        <div class="rounded-lg bg-gray-100">
+        <div class="rounded-lg bg-gray-100 py-1 px-2">
 
             <strong>Clave del edificio</strong>
 

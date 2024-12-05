@@ -37,7 +37,8 @@ class FolioReal extends Model implements Auditable
             'captura' => 'yellow-400',
             'rechazado' => 'red-400',
             'activo' => 'green-400',
-            'bloqueado' => 'black',
+            'bloqueado' => 'red-400',
+            'centinela' => 'red-400',
             'elaborado' => 'green-400',
             'matriz' => 'indigo-400'
         ][$this->estado] ?? 'gray-400';

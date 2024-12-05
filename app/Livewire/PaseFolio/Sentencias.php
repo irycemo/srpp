@@ -35,6 +35,7 @@ class Sentencias extends Component
     public $antecente_distrito;
 
     public $tipo_documento;
+    public $tipo;
     public $autoridad_cargo;
     public $autoridad_nombre;
     public $numero_documento;
@@ -290,6 +291,7 @@ class Sentencias extends Component
                 'estado' => $this->estado,
                 'fecha_inscripcion' => $this->fecha_inscripcion,
                 'acto_contenido' => $this->acto_contenido,
+                'tipo' => $this->tipo,
                 'descripcion' => $this->comentario,
                 'actualizado_por' => auth()->id()
             ]);
