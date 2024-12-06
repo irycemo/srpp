@@ -355,6 +355,7 @@
                                 <p style="margin: 0"><strong>Tipo de servicio: </strong>{{ $datos_control->tipo_servicio }}</p>
                                 <p style="margin: 0"><strong>Servicio: </strong>{{ $datos_control->servicio }}</p>
                                 <p style="margin: 0"><strong>Elaborado en: </strong>{{ $datos_control->elaborado_en }}</p>
+                                <p style="margin: 0"><strong>Fecha de prelación: </strong>{{ $propiedad->fecha_prelacion }}</p>
                                 <p style="margin: 0"><strong>Registrado POR: </strong>{{  $datos_control->registrado_por }}</p>
                                 <p style="margin: 0"><strong>Folio real asignado por:</strong> {{ $datos_control->asigno_folio }}</p>
 
