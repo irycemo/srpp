@@ -201,7 +201,6 @@ class Rectificatoria extends Component
                 $this->sentencia->estado = 'activo';
                 $this->sentencia->actualizado_por = auth()->id();
                 $this->sentencia->fecha_inscripcion = now()->toDateString();
-                $this->sentencia->save();
 
                 $this->sentencia->movimientoRegistral->update(['estado' => 'elaborado']);
 
@@ -230,6 +229,8 @@ class Rectificatoria extends Component
                 }
 
                 $this->procesarPredio();
+
+                $this->sentencia->save();
 
                 $this->sentencia->movimientoRegistral->update(['estado' => 'elaborado', 'actualizado_por' => auth()->id()]);
 
@@ -919,7 +920,7 @@ class Rectificatoria extends Component
 
         $this->sentenciaPredio = $this->sentencia->predio;
 
-        foreach ($this->sentencia->predio->colindancias as $colindancia) {
+        foreach ($this->sentenciaPredio->colindancias as $colindancia) {
 
             $this->medidas[] = [
                 'id' => $colindancia->id,

@@ -42,7 +42,7 @@ class GravamenIndex extends Component
 
             $movimientos = MovimientoRegistral::with('gravamen', 'actualizadoPor', 'folioReal')
                                                     ->whereHas('folioReal', function($q){
-                                                        $q->where('estado', 'activo');
+                                                        $q->whereIn('estado', ['activo', 'centinela']);
                                                     })
                                                     ->when(auth()->user()->ubicacion == 'Regional 4', function($q){
                                                         $q->where('distrito', 2);
@@ -71,7 +71,7 @@ class GravamenIndex extends Component
 
             $movimientos = MovimientoRegistral::with('gravamen', 'actualizadoPor', 'folioReal', 'asignadoA')
                                                     ->whereHas('folioReal', function($q){
-                                                        $q->where('estado', 'activo');
+                                                        $q->whereIn('estado', ['activo', 'centinela']);
                                                     })
                                                     ->when(auth()->user()->ubicacion == 'Regional 4', function($q){
                                                         $q->where('distrito', 2);
@@ -102,7 +102,7 @@ class GravamenIndex extends Component
 
             $movimientos = MovimientoRegistral::with('gravamen', 'asignadoA', 'actualizadoPor', 'folioReal')
                                                     ->whereHas('folioReal', function($q){
-                                                        $q->where('estado', 'activo');
+                                                        $q->whereIn('estado', ['activo', 'centinela']);
                                                     })
                                                     ->where(function($q){
                                                         $q->whereHas('asignadoA', function($q){
@@ -135,7 +135,7 @@ class GravamenIndex extends Component
 
             $movimientos = MovimientoRegistral::with('gravamen', 'asignadoA', 'actualizadoPor', 'folioReal')
                                                     ->whereHas('folioReal', function($q){
-                                                        $q->where('estado', 'activo');
+                                                        $q->whereIn('estado', ['activo', 'centinela', 'bloqueado']);
                                                     })
                                                     ->where(function($q){
                                                         $q->whereHas('asignadoA', function($q){

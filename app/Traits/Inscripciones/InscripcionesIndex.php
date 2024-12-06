@@ -77,6 +77,14 @@ trait InscripcionesIndex{
 
     public function elaborar(MovimientoRegistral $movimientoRegistral){
 
+        if($movimientoRegistral->folioReal->estado == 'centinela'){
+
+            $this->dispatch('mostrarMensaje', ['warning', "El folio real esta en centinela."]);
+
+            return;
+
+        }
+
         if(auth()->user()->hasRole('Jefe de departamento inscripciones')){
 
             $this->actual = $movimientoRegistral;

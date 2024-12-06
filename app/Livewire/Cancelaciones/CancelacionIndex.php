@@ -34,7 +34,7 @@ class CancelacionIndex extends Component
             $movimientos = MovimientoRegistral::with('cancelacion', 'asignadoA', 'actualizadoPor', 'folioReal:id,folio')
                                                     ->where('usuario_asignado', auth()->id())
                                                     ->whereHas('folioReal', function($q){
-                                                        $q->where('estado', 'activo');
+                                                        $q->whereIn('estado', ['activo', 'centinela']);
                                                     })
                                                     ->where(function($q){
                                                         $q->whereHas('asignadoA', function($q){
@@ -65,7 +65,7 @@ class CancelacionIndex extends Component
 
             $movimientos = MovimientoRegistral::with('cancelacion', 'asignadoA', 'actualizadoPor', 'folioReal:id,folio')
                                                     ->whereHas('folioReal', function($q){
-                                                        $q->where('estado', 'activo');
+                                                        $q->whereIn('estado', ['activo', 'centinela']);
                                                     })
                                                     ->where(function($q){
                                                         $q->whereHas('asignadoA', function($q){
@@ -96,7 +96,7 @@ class CancelacionIndex extends Component
 
             $movimientos = MovimientoRegistral::with('cancelacion', 'asignadoA', 'actualizadoPor', 'folioReal:id,folio')
                                                     ->whereHas('folioReal', function($q){
-                                                        $q->where('estado', 'activo');
+                                                        $q->whereIn('estado', ['activo', 'centinela']);
                                                     })
                                                     ->where(function($q){
                                                         $q->whereHas('asignadoA', function($q){
@@ -129,7 +129,7 @@ class CancelacionIndex extends Component
 
             $movimientos = MovimientoRegistral::with('cancelacion', 'asignadoA', 'actualizadoPor', 'folioReal:id,folio')
                                                     ->whereHas('folioReal', function($q){
-                                                        $q->where('estado', 'activo');
+                                                        $q->whereIn('estado', ['activo', 'centinela', 'bloqueado']);
                                                     })
                                                     ->where(function($q){
                                                         $q->whereHas('asignadoA', function($q){

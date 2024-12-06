@@ -103,6 +103,8 @@ class CertificadoGravamenController extends Controller
 
             foreach($movimientoRegistral->FolioReal->sentencias as $sentencia){
 
+                if($sentencia->estado != 'activo') continue;
+
                 $item = $this->sentencia($sentencia);
 
                 $sentenciasCollection->push($item);
