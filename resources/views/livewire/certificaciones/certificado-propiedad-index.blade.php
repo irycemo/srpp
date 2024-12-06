@@ -53,13 +53,13 @@
                 @if (auth()->user()->hasRole(['Supervisor certificaciones', 'Administrador', 'Jefe de departamento certificaciones', 'Supervisor uruapan', 'Operador']))
                     <x-table.heading sortable wire:click="sortBy('usuario_asignado')" :direction="$sort === 'usuario_asignado' ? $direction : null" >Asignado a</x-table.heading>
                 @endif
-                @if (auth()->user()->hasRole(['Administrador', 'Operador']))
+                @if (auth()->user()->hasRole(['Administrador', 'Operador', 'Jefe de departamento jurídico']))
                     <x-table.heading >Reimpreso en</x-table.heading>
                 @endif
                 <x-table.heading sortable wire:click="sortBy('fecha_entrega')" :direction="$sort === 'fecha_entrega' ? $direction : null">Fecha de entrega</x-table.heading>
                 <x-table.heading sortable wire:click="sortBy('created_at')" :direction="$sort === 'created_at' ? $direction : null">Ingreso</x-table.heading>
                 <x-table.heading sortable wire:click="sortBy('updated_at')" :direction="$sort === 'updated_at' ? $direction : null">Actualizado</x-table.heading>
-                @if (!auth()->user()->hasRole(['Administrador', 'Operador']))
+                @if (!auth()->user()->hasRole(['Administrador', 'Operador', 'Jefe de departamento jurídico']))
                     <x-table.heading >Acciones</x-table.heading>
                 @endif
 
@@ -133,7 +133,7 @@
 
                         @endif
 
-                        @if (auth()->user()->hasRole(['Administrador', 'Operador']))
+                        @if (auth()->user()->hasRole(['Administrador', 'Operador', 'Jefe de departamento jurídico', 'Director']))
 
                             <x-table.cell>
 
@@ -173,7 +173,7 @@
 
                             <span class="lg:hidden absolute top-0 left-0 bg-blue-300 px-2 py-1 text-xs text-white font-bold uppercase rounded-br-xl">Acciones</span>
 
-                            @if (!auth()->user()->hasRole(['Administrador', 'Operador']))
+                            @if (!auth()->user()->hasRole(['Administrador', 'Operador', 'Jefe de departamento jurídico']))
 
                                 <div class="ml-3 relative" x-data="{ open_drop_down:false }">
 
