@@ -193,6 +193,14 @@ class MovimientosRegistrales extends Component
 
         } */
 
+        if(in_array($this->modelo_editar->folioReal->estado, ['bloqueado', 'centinela'])){
+
+            $this->dispatch('mostrarMensaje', ['warning', "El folio esta bloqueado."]);
+
+            return;
+
+        }
+
         try {
 
             $this->modelo_editar->estado = 'correccion';

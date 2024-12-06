@@ -145,7 +145,7 @@ Route::group(['middleware' => ['auth', 'esta.activo']], function(){
     /* Sentencias */
     Route::get('sentencias', SentenciasIndex::class)->middleware('permission:Sentencias')->name('sentencias');
     Route::get('sentencias/{sentencia}', Sentencia::class)->middleware('permission:Sentencias inscripción')->name('sentencias.inscripcion');
-    Route::get('sentencias_pdf/{sentencia}', [SentenciasController::class, 'acto'])->middleware('permission:Sentencias inscripción')->name('sentencias.inscripcion.acto');
+    Route::get('sentencias_pdf/{sentencia}', [SentenciasController::class, 'pdf'])->middleware('permission:Sentencias inscripción')->name('sentencias.inscripcion.acto');
 
     /* Cancelaciones */
     Route::get('cancelacion', CancelacionIndex::class)->middleware('permission:Cancelaciones')->name('cancelacion');

@@ -169,5 +169,34 @@ class SentenciasController extends Controller
 
     }
 
+    public function pdf(Sentencia $sentencia){
+
+        $firmaElectronica = $sentencia->movimientoRegistral->firmaElectronica;
+
+        $objeto = json_decode($firmaElectronica->cadena_original);
+
+        $qr = $this->generadorQr($firmaElectronica->uuid);
+
+        $pdf = Pdf::loadView('sentencias.acto', [
+            'sentencia' => $objeto->sentencia,
+            'predio' => $objeto->predio,
+            'firma_electronica' => false,
+            'datos_control' => $objeto->datos_control,
+            'qr'=> $qr
+        ]);
+
+        $pdf->render();
+
+        $dom_pdf = $pdf->getDomPDF();
+
+        $canvas = $dom_pdf->get_canvas();
+
+        $canvas->page_text(480, 745, "Página: {PAGE_NUM} de {PAGE_COUNT}", null, 9, array(1,1,1));
+
+        $canvas->page_text(35, 745, $firmaElectronica->movimientoRegistral->folioReal->folio . '-' .$firmaElectronica->movimientoRegistral->folio, null, 9, array(1, 1, 1));
+
+        return $pdf->stream('documento.pdf');
+
+    }
 
 }

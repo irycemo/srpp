@@ -90,7 +90,7 @@
 
                             @if ($usuario->roles()->count())
 
-                                {{ preg_replace('/[\[\]\"]/', '', $usuario->getRoleNames()) }}
+                                {{ implode(', ', $usuario->getRoleNames()->toArray()) }}
 
                             @endif
 

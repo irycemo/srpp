@@ -69,6 +69,20 @@ class Bloqueadora extends Component
 
         }
 
+        foreach ($this->sentencia->movimientoRegistral->folioReal->movimientosRegistrales as $movimiento) {
+
+            if($this->sentencia->movimientoRegistral->id == $movimiento->id) continue;
+
+            if($movimiento->estado != 'concluido'){
+
+                $this->dispatch('mostrarMensaje', ['error', "El movimiento registral: " . $this->sentencia->movimientoRegistral->folioReal->folio . '-' . $movimiento->folio . ' no esta concluido.']);
+
+                return;
+
+            }
+
+        }
+
         try {
 
             DB::transaction(function () {
@@ -90,13 +104,15 @@ class Bloqueadora extends Component
                                                                                        'creado_por' => auth()->id()
                                                                                     ]);
 
-                $this->sentencia->movimientoRegistral->update(['estado' => 'elaborado', 'actualizado_por' => auth()->id()]);
+                $this->sentencia->movimientoRegistral->update(['estado' => 'finalizado', 'actualizado_por' => auth()->id()]);
 
                 $this->sentencia->movimientoRegistral->audits()->latest()->first()->update(['tags' => 'Elaboró inscripción de sentencia']);
 
                 (new SentenciasController())->caratula($this->sentencia);
 
             });
+
+            $this->dispatch('imprimir_documento', ['caratula' => $this->sentencia->id]);
 
             return redirect()->route('sentencias');
 

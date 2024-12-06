@@ -240,3 +240,17 @@
     </div>
 
 </div>
+
+<script>
+
+    window.addEventListener('imprimir_documento', event => {
+
+        const documento = event.detail[0].caratula;
+
+        var url = "{{ route('sentencias.inscripcion.acto', '')}}" + "/" + documento;
+
+        window.open(url, '_blank');
+
+    });
+
+</script>
