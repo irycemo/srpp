@@ -67,7 +67,7 @@ class GravamenIndex extends Component
                                                     ->orderBy($this->sort, $this->direction)
                                                     ->paginate($this->pagination);
 
-        }elseif(auth()->user()->hasRole(['Supervisor gravamen', 'Supervisor uruapan'])){
+        }elseif(auth()->user()->hasRole(['Supervisor inscripciones', 'Supervisor uruapan'])){
 
             $movimientos = MovimientoRegistral::with('gravamen', 'actualizadoPor', 'folioReal', 'asignadoA')
                                                     ->whereHas('folioReal', function($q){

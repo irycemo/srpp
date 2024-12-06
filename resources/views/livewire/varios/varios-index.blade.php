@@ -36,7 +36,7 @@
                 <x-table.heading sortable wire:click="sortBy('estado')" :direction="$sort === 'estado' ? $direction : null">Estado</x-table.heading>
                 <x-table.heading sortable wire:click="sortBy('tipo_servicio')" :direction="$sort === 'tipo_servicio' ? $direction : null" >Tipo de servicio</x-table.heading>
                 <x-table.heading sortable wire:click="sortBy('distrito')" :direction="$sort === 'distrito' ? $direction : null" >Distrito</x-table.heading>
-                @if(auth()->user()->hasRole(['Supervisor varios', 'Supervisor uruapan', 'Administrador', 'Jefe de departamento inscripciones', 'Operador']))
+                @if(auth()->user()->hasRole(['Supervisor inscripciones', 'Supervisor uruapan', 'Administrador', 'Jefe de departamento inscripciones', 'Operador']))
                     <x-table.heading sortable wire:click="sortBy('usuario_asignado')" :direction="$sort === 'usuario_asignado' ? $direction : null">Usuario asignado</x-table.heading>
                 @endif
                 <x-table.heading sortable wire:click="sortBy('fecha_entrega')" :direction="$sort === 'fecha_entrega' ? $direction : null" >Fecha de entrega</x-table.heading>
@@ -94,7 +94,7 @@
 
                         </x-table.cell>
 
-                        @if(auth()->user()->hasRole(['Supervisor varios', 'Supervisor uruapan', 'Administrador', 'Jefe de departamento inscripciones', 'Operador']))
+                        @if(auth()->user()->hasRole(['Supervisor inscripciones', 'Supervisor uruapan', 'Administrador', 'Jefe de departamento inscripciones', 'Operador']))
 
                             <x-table.cell>
 
@@ -152,7 +152,7 @@
 
                                     <div x-cloak x-show="open_drop_down" x-on:click="open_drop_down=false" x-on:click.away="open_drop_down=false" class="z-50 origin-top-right absolute right-0 mt-2 w-48 rounded-md shadow-lg py-1 bg-white ring-1 ring-black ring-opacity-5 focus:outline-none" role="menu" aria-orientation="vertical" aria-labelledby="user-menu">
 
-                                        @if(in_array($movimiento->estado, ['nuevo', 'captura', 'correccion']) && !auth()->user()->hasRole(['Supervisor varios', 'Supervisor uruapan']))
+                                        @if(in_array($movimiento->estado, ['nuevo', 'captura', 'correccion']) && !auth()->user()->hasRole(['Supervisor inscripciones', 'Supervisor uruapan']))
 
                                             <button
                                                 wire:click="elaborar({{  $movimiento->id }})"
@@ -172,7 +172,7 @@
 
                                             </button>
 
-                                        @elseif($movimiento->estado == 'elaborado'  && !auth()->user()->hasRole(['Supervisor varios', 'Supervisor uruapan']))
+                                        @elseif($movimiento->estado == 'elaborado'  && !auth()->user()->hasRole(['Supervisor inscripciones', 'Supervisor uruapan']))
 
                                             <button
                                                 wire:click="imprimir({{  $movimiento->id }})"
@@ -190,7 +190,7 @@
                                                 Finalizar
                                             </button>
 
-                                        @elseif($movimiento->estado == 'finalizado' && auth()->user()->hasRole(['Jefe de departamento inscripciones', 'Supervisor varios', 'Supervisor uruapan']))
+                                        @elseif($movimiento->estado == 'finalizado' && auth()->user()->hasRole(['Jefe de departamento inscripciones', 'Supervisor inscripciones', 'Supervisor uruapan']))
 
                                             <button
                                                 wire:click="imprimir({{  $movimiento->id }})"
@@ -210,7 +210,7 @@
 
                                         @endif
 
-                                        @if(in_array($movimiento->estado, ['nuevo', 'captura', 'elaborado']) && auth()->user()->hasRole(['Jefe de departamento inscripciones', 'Supervisor varios', 'Supervisor uruapan']))
+                                        @if(in_array($movimiento->estado, ['nuevo', 'captura', 'elaborado']) && auth()->user()->hasRole(['Jefe de departamento inscripciones', 'Supervisor inscripciones', 'Supervisor uruapan']))
 
                                             <button
                                                 wire:click="abrirModalReasignar({{  $movimiento->id }})"

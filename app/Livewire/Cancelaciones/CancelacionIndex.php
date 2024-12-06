@@ -61,7 +61,7 @@ class CancelacionIndex extends Component
                                                     ->orderBy($this->sort, $this->direction)
                                                     ->paginate($this->pagination);
 
-        }if(auth()->user()->hasRole(['Supervisor cancelación', 'Supervisor uruapan'])){
+        }if(auth()->user()->hasRole(['Supervisor inscripciones', 'Supervisor uruapan'])){
 
             $movimientos = MovimientoRegistral::with('cancelacion', 'asignadoA', 'actualizadoPor', 'folioReal:id,folio')
                                                     ->whereHas('folioReal', function($q){

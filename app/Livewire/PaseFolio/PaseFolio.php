@@ -328,7 +328,7 @@ class PaseFolio extends Component
 
         $this->motivos = Constantes::RECHAZO_MOTIVOS;
 
-        $this->supervisor = in_array(auth()->user()->getRoleNames()->first(), ['Supervisor varios', 'Supervisor cancelación', 'Supervisor sentencias', 'Supervisor gravamen', 'Supervisor propiedad', 'Supervisor certificaciones', 'Supervisor uruapan']);
+        $this->supervisor = in_array(auth()->user()->getRoleNames()->first(), ['Supervisor inscripciones', 'Supervisor certificaciones', 'Supervisor uruapan']);
 
     }
 
@@ -360,7 +360,7 @@ class PaseFolio extends Component
                                                     ->orderBy($this->sort, $this->direction)
                                                     ->paginate($this->pagination);
 
-        }elseif(auth()->user()->hasRole(['Supervisor sentencias', 'Supervisor varios', 'Supervisor cancelación', 'Supervisor gravamen', 'Supervisor propiedad', 'Supervisor uruapan', 'Supervisor certificaciones', 'Supervisor uruapan'])){
+        }elseif(auth()->user()->hasRole(['Supervisor inscripciones', 'Supervisor certificaciones', 'Supervisor uruapan'])){
 
             $movimientos = MovimientoRegistral::with('actualizadoPor', 'folioReal', 'asignadoA')
                                                     ->where('folio', 1)
