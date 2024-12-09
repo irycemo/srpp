@@ -209,7 +209,7 @@
 
                                         @endif
 
-                                        @if(auth()->user()->hasRole('Jefe de departamento certificaciones', 'Jefe de departamento inscripciones') || $supervisor)
+                                        @if(auth()->user()->hasRole(['Jefe de departamento certificaciones', 'Jefe de departamento inscripciones']) || $supervisor)
 
                                             <button
                                                 wire:click="reasignarAleatoriamente({{ $movimiento->id }})"

@@ -20,12 +20,14 @@ use Illuminate\Http\Client\ConnectionException;
 use App\Http\Controllers\Sentencias\SentenciasController;
 use App\Constantes\Constantes;
 use App\Traits\Inscripciones\Sentencias\SentenciaTrait;
+use Spatie\LivewireFilepond\WithFilePond;
 
 class Rectificatoria extends Component
 {
 
     use WithFileUploads;
     use SentenciaTrait;
+    use WithFilePond;
 
     public $areas;
     public $divisas;
@@ -75,6 +77,7 @@ class Rectificatoria extends Component
 
     protected function rules(){
         return [
+            'documento' => 'nullable|mimes:pdf|max:10000',
             'sentencia.acto_contenido' => 'required',
             'sentencia.descripcion' => 'required',
             'sentencia.tipo' => 'required',

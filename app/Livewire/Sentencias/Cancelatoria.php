@@ -15,12 +15,14 @@ use Illuminate\Support\Facades\Storage;
 use Illuminate\Http\Client\ConnectionException;
 use App\Traits\Inscripciones\Sentencias\SentenciaTrait;
 use App\Http\Controllers\Sentencias\SentenciasController;
+use Spatie\LivewireFilepond\WithFilePond;
 
 class Cancelatoria extends Component
 {
 
     use SentenciaTrait;
     use WithFileUploads;
+    use WithFilePond;
 
     public $folio_movimiento;
 
@@ -37,6 +39,7 @@ class Cancelatoria extends Component
             'sentencia.expediente' => 'nullable',
             'sentencia.tomo' => 'nullable',
             'sentencia.registro' => 'nullable',
+            'documento' => 'nullable|mimes:pdf|max:10000'
         ];
 
     }

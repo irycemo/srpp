@@ -843,7 +843,7 @@ trait PropiedadTrait{
 
         $this->reset('documento');
 
-        $this->dispatch('removeFiles');
+        /* $this->dispatch('removeFiles'); */
 
         $this->modalDocumento = true;
 

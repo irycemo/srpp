@@ -17,12 +17,14 @@ use Illuminate\Support\Facades\Storage;
 use Illuminate\Http\Client\ConnectionException;
 use App\Traits\Inscripciones\Propiedad\PropiedadTrait;
 use App\Http\Controllers\InscripcionesPropiedad\PropiedadController;
+use Spatie\LivewireFilepond\WithFilePond;
 
 class InscripcionGeneral extends Component
 {
 
     use PropiedadTrait;
     use WithFileUploads;
+    use WithFilePond;
 
     public $transmitentes = [];
 
@@ -87,6 +89,7 @@ class InscripcionGeneral extends Component
             'inscripcion.manzana_fraccionador' => 'nullable',
             'inscripcion.etapa_fraccionador' => 'nullable',
             'inscripcion.clave_edificio' => 'nullable',
+            'documento' => 'nullable|mimes:pdf|max:10000'
          ];
     }
 

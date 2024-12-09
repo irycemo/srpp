@@ -13,12 +13,14 @@ use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Hash;
 use App\Traits\Inscripciones\Varios\VariosTrait;
 use App\Http\Controllers\Varios\VariosController;
+use Spatie\LivewireFilepond\WithFilePond;
 
 class DonacionUsufructo extends Component
 {
 
     use VariosTrait;
     use WithFileUploads;
+    use WithFilePond;
 
     public $porcentaje_propiedad = 0.00;
     public $porcentaje_nuda = 0.00;
@@ -52,6 +54,7 @@ class DonacionUsufructo extends Component
         return [
             'vario.acto_contenido' => 'required',
             'vario.descripcion' => 'required',
+            'documento' => 'nullable|mimes:pdf|max:10000'
          ];
     }
 

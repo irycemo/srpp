@@ -16,12 +16,14 @@ use Illuminate\Support\Facades\Storage;
 use Illuminate\Http\Client\ConnectionException;
 use App\Traits\Inscripciones\Varios\VariosTrait;
 use App\Http\Controllers\Varios\VariosController;
+use Spatie\LivewireFilepond\WithFilePond;
 
 class Varios extends Component
 {
 
     use WithFileUploads;
     use VariosTrait;
+    use WithFilePond;
 
     public $actos;
 
@@ -29,6 +31,7 @@ class Varios extends Component
         return [
             'vario.acto_contenido' => 'required',
             'vario.descripcion' => 'required',
+            'documento' => 'nullable|mimes:pdf|max:10000'
          ];
     }
 

@@ -23,11 +23,13 @@ use Illuminate\Support\Facades\Log;
 use App\Livewire\PaseFolio\PaseFolio;
 use App\Http\Services\AsignacionService;
 use App\Http\Services\SistemaTramitesService;
+use Spatie\LivewireFilepond\WithFilePond;
 
 class Elaboracion extends Component
 {
 
     use WithFileUploads;
+    use WithFilePond;
 
     /* Documento entrada */
     public $tipo_documento;
@@ -101,7 +103,8 @@ class Elaboracion extends Component
             'escritura_estado_notario' => Rule::requiredIf(in_array($this->tipo_documento, ['ESCRITURA PÚBLICA', 'ESCRITURA PRIVADA'])),
             'escritura_observaciones' => 'nullable',
             'acto_contenido_antecedente' => 'required',
-            'observaciones_antecedente' => 'nullable'
+            'observaciones_antecedente' => 'nullable',
+            'documento' => 'nullable|mimes:pdf|max:10000'
         ];
     }
 

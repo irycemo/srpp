@@ -485,7 +485,7 @@
 
     <x-slot name="content">
 
-        <x-filepond wire:model.live="documento" accept="['application/pdf']"/>
+        <x-filepond::upload wire:model="documento" :accepted-file-types="['application/pdf']"/>
 
         <div>
 

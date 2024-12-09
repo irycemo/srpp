@@ -22,11 +22,13 @@ use Illuminate\Support\Facades\Storage;
 use App\Http\Services\AsignacionService;
 use Illuminate\Http\Client\ConnectionException;
 use App\Http\Controllers\Gravamen\GravamenController;
+use Spatie\LivewireFilepond\WithFilePond;
 
 class GravamenInscripcion extends Component
 {
 
     use WithFileUploads;
+    use WithFilePond;
 
     public $distritos;
     public $actos;
@@ -91,6 +93,7 @@ class GravamenInscripcion extends Component
             'gravamen.divisa' => ['required', Rule::in($this->divisas)],
             'gravamen.estado' => 'required',
             'gravamen.observaciones' => 'required',
+            'documento' => 'nullable|mimes:pdf|max:10000'
          ];
     }
 

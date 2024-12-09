@@ -683,6 +683,10 @@ class MovimientoRegistralService{
 
             return $this->asignacionService->obtenerSupervisorCertificaciones($distrito);
 
+        }else{
+
+            return $this->asignacionService->obtenerSupervisorInscripciones($distrito);
+
         }
 
         $inscripcionesPropiedad = ['D122', 'D114', 'D125', 'D126', 'D124', 'D121', 'D120', 'D119', 'D123', 'D118', 'D116', 'D115', 'D113', 'D157'];

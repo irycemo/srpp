@@ -15,12 +15,14 @@ use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Hash;
 use App\Traits\Inscripciones\Varios\VariosTrait;
 use App\Http\Controllers\Varios\VariosController;
+use Spatie\LivewireFilepond\WithFilePond;
 
 class AclaracionAdministrativa extends Component
 {
 
     use WithFileUploads;
     use VariosTrait;
+    use WithFilePond;
 
     public $modalPropietario = false;
     public $crear = false;
@@ -108,6 +110,7 @@ class AclaracionAdministrativa extends Component
             'vario.predio.manzana_fraccionador' => 'nullable',
             'vario.predio.etapa_fraccionador' => 'nullable',
             'vario.predio.clave_edificio' => 'nullable',
+            'documento' => 'nullable|mimes:pdf|max:10000'
          ];
     }
 

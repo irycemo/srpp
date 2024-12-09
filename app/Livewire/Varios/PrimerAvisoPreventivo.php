@@ -14,17 +14,20 @@ use App\Http\Services\AsignacionService;
 use App\Traits\Inscripciones\Varios\VariosTrait;
 use App\Http\Controllers\Varios\VariosController;
 use Livewire\WithFileUploads;
+use Spatie\LivewireFilepond\WithFilePond;
 
 class PrimerAvisoPreventivo extends Component
 {
 
     use WithFileUploads;
     use VariosTrait;
+    use WithFilePond;
 
     protected function rules(){
         return [
             'vario.descripcion' => 'required',
             'vario.acto_contenido' => 'required',
+            'documento' => 'nullable|mimes:pdf|max:10000'
         ];
     }
 

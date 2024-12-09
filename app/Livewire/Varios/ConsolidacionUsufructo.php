@@ -11,12 +11,14 @@ use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Hash;
 use App\Traits\Inscripciones\Varios\VariosTrait;
 use App\Http\Controllers\Varios\VariosController;
+use Spatie\LivewireFilepond\WithFilePond;
 
 class ConsolidacionUsufructo extends Component
 {
 
     use VariosTrait;
     use WithFileUploads;
+    use WithFilePond;
 
     public $porcentaje_propiedad;
     public $porcentaje_nuda;
@@ -25,7 +27,8 @@ class ConsolidacionUsufructo extends Component
     protected function rules(){
         return [
             'vario.acto_contenido' => 'required',
-            'vario.descripcion' => 'required'
+            'vario.descripcion' => 'required',
+            'documento' => 'nullable|mimes:pdf|max:10000'
          ];
     }
 

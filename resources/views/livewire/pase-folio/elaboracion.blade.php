@@ -90,6 +90,8 @@
 
     </div>
 
+    @filepondScripts
+
 </div>
 
 @push('scripts')

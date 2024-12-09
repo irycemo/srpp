@@ -17,11 +17,13 @@ use App\Http\Services\SistemaTramitesService;
 use App\Models\Cancelacion as ModelCancelacion;
 use Illuminate\Http\Client\ConnectionException;
 use App\Http\Controllers\Cancelaciones\CancelacionController;
+use Spatie\LivewireFilepond\WithFilePond;
 
 class Cancelacion extends Component
 {
 
     use WithFileUploads;
+    use WithFilePond;
 
     public $modalContraseña = false;
     public $modalRechazar = false;
@@ -46,6 +48,7 @@ class Cancelacion extends Component
             'cancelacion.observaciones' => 'required',
             'gravamenCancelarMovimiento' => 'required',
             'valor' => Rule::requiredIf($this->cancelacion->acto_contenido === 'PARCIAL'),
+            'documento' => 'nullable|mimes:pdf|max:10000'
          ];
     }
 

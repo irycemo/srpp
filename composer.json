@@ -24,6 +24,7 @@
         "rap2hpoutre/laravel-log-viewer": "^2.4",
         "spatie/laravel-backup": "^9.1",
         "spatie/laravel-permission": "^5.11",
+        "spatie/livewire-filepond": "^1.4",
         "spatie/pdf-to-image": "^3.1",
         "wire-elements/modal": "^2.0"
     },
