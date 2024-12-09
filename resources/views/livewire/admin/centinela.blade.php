@@ -84,7 +84,7 @@
                                         {{ $bloqueo->created_at }}
                                     </x-table.cell>
                                     <x-table.cell>
-                                        <span class="font-semibold">@if($bloqueo->actualizadoPor != null)Desbloqueado por: {{$bloqueo->actualizadoPor->name}} @else Desbloqueado: @endif</span> <br>
+                                        <span class="font-semibold">@if($bloqueo->actualizadoPor != null)Desbloqueado por: {{$bloqueo->actualizadoPor->name}} @endif</span> <br>
 
                                         {{ $bloqueo->updated_at }}
                                     </x-table.cell>

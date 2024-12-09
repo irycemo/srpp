@@ -44,7 +44,7 @@ class FoliosReales extends Component
 
     public function enviarCaptura(FolioReal $folioReal){
 
-        if(in_array($this->folioReal->estado, ['bloqueado', 'centinela'])){
+        if(in_array($folioReal->estado, ['bloqueado', 'centinela'])){
 
             $this->dispatch('mostrarMensaje', ['error', "El folio esta bloqueado no es posible enviarlo a captura."]);
 
