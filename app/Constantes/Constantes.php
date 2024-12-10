@@ -343,7 +343,8 @@ class Constantes{
         'ESCRITURA INSTITUCIONAL',
         'OFICIO',
         'TÍTULO DE PROPIEDAD',
-        'RESOLUCIÓN JUDICIAL'
+        'RESOLUCIÓN JUDICIAL',
+        'CONTRATO'
     ];
 
     const CARGO_AUTORIDAD = [
