@@ -222,7 +222,7 @@
 
                 <h4 class="text-xl font-semibold">Propietarios, Actores gravamen, Acreedores</h4>
 
-                <p class="">Para personas fisicas: <strong>TIPO:NOMBRE:APELLIDO PATERNO:APELLIDO MATERNO</strong>. Cada elemento separado por el carácter '<strong>:</strong>'. Debe usar el carácter '<strong>|</strong>' para separar propietarios.</p>
+                <p class="">Para personas fisicas: <strong>TIPO:NOMBRE:APELLIDO PATERNO:APELLIDO MATERNO</strong>. Cada elemento separado por el carácter '<strong>:</strong>'. Debe usar el carácter '<strong>|</strong>' para separarlos.</p>
 
                 <p class="">Valores permitidos para TIPO:</p>
 
@@ -237,7 +237,7 @@
 
                 <p class="">Ejemplo para más de una persona fisica: <strong>FISICA:MARIA:MORALES:AVILA|FISICA:MARIO:DUARTE:DIAZ|FISICA:JUAN:JUAREZ:RUIZ</strong></p>
 
-                <p class="">Para personas morales: <strong>TIPO:RAZON SOCIAL</strong>. Cada elemento separado por el carácter '<strong>:</strong>'. Debe usar el carácter '<strong>|</strong>' para separar propietarios.</p>
+                <p class="">Para personas morales: <strong>TIPO:RAZON SOCIAL</strong>. Cada elemento separado por el carácter '<strong>:</strong>'. Debe usar el carácter '<strong>|</strong>' para separarlos.</p>
 
                 <p class="">Ejemplo para una persona fisica: <strong>MORAL:GOBIERNO DEL ESTADO DE MICHOACAN DE OCAMPO</strong></p>
 
