@@ -221,7 +221,15 @@ trait InscripcionesIndex{
 
         if($movimientoRegistral->inscripcionPropiedad){
 
-            return redirect()->route('propiedad.inscripcion', $movimientoRegistral->inscripcionPropiedad);
+            if(in_array($movimientoRegistral->inscripcionPropiedad->servicio, ['D121', 'D120', 'D123', 'D122', 'D119'])){
+
+                return redirect()->route('propiedad.subdivision', $movimientoRegistral->inscripcionPropiedad);
+
+            }else{
+
+                return redirect()->route('propiedad.inscripcion', $movimientoRegistral->inscripcionPropiedad);
+
+            }
 
         }
 

@@ -1,6 +1,6 @@
 <div>
 
-    <x-header>Inscripción de propiedad <span class="text-sm tracking-widest">Folio real: {{ $inscripcion->movimientoRegistral->folioReal->folio }}</span></x-header>
+    <x-header>Inscripción de propiedad <span class="text-sm tracking-widest">Folio real: {{ $inscripcion->movimientoRegistral->folioReal->folio }} - {{ $inscripcion->movimientoRegistral->folio }}</span></x-header>
 
     <div class="bg-white rounded-lg p-2 shadow-xl grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-1 text-sm mb-3">
 

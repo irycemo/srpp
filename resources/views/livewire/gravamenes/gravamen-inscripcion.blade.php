@@ -6,7 +6,7 @@
 
 <div>
 
-    <x-header>Inscripción de gravamen</x-header>
+    <x-header>Inscripción de gravamen  <span class="text-sm tracking-widest">Folio real: {{ $gravamen->movimientoRegistral->folioReal->folio }} - {{ $gravamen->movimientoRegistral->folio }}</span></x-header>
 
     <div class="p-4 bg-white shadow-xl rounded-xl mb-5">
 

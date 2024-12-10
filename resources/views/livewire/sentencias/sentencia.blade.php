@@ -1,6 +1,6 @@
 <div>
 
-    <x-header>Sentencia <span class="text-sm tracking-widest">Folio real: {{ $sentencia->movimientoRegistral->folioReal->folio }}</span></x-header>
+    <x-header>Sentencia  <span class="text-sm tracking-widest">Folio real: {{ $sentencia->movimientoRegistral->folioReal->folio }} - {{ $sentencia->movimientoRegistral->folio }}</span></x-header>
 
     @if($sentencia->acto_contenido == 'SENTENCIA RECTIFICACTORIA')
 

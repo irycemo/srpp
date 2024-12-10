@@ -7,6 +7,7 @@ use App\Livewire\Varios\Varios;
 use App\Livewire\Admin\Permisos;
 use App\Livewire\Admin\Usuarios;
 use App\Livewire\Admin\Auditoria;
+use App\Livewire\Admin\Centinela;
 use App\Livewire\Admin\Distritos;
 use App\Livewire\Admin\Tenencias;
 use App\Livewire\Admin\Municipios;
@@ -37,16 +38,17 @@ use App\Http\Controllers\Gravamen\GravamenController;
 use App\Livewire\Certificaciones\CertificadoGravamen;
 use App\Livewire\Certificaciones\CertificadoPropiedad;
 use App\Http\Controllers\PaseFolio\PaseFolioController;
+use App\Livewire\Inscripciones\Propiedad\Subdivisiones;
 use App\Livewire\Inscripciones\Propiedad\PropiedadIndex;
 use App\Http\Controllers\Sentencias\SentenciasController;
 use App\Http\Controllers\Certificaciones\CopiasController;
 use App\Livewire\Certificaciones\ConsultasCertificaciones;
 use App\Livewire\Certificaciones\CertificadoPropiedadIndex;
+use App\Livewire\Inscripciones\Propiedad\SubdivisionesIndex;
 use App\Http\Controllers\Cancelaciones\CancelacionController;
 use App\Livewire\Inscripciones\Propiedad\PropiedadInscripcion;
 use App\Http\Controllers\Certificaciones\CertificadoGravamenController;
 use App\Http\Controllers\Certificaciones\CertificadoPropiedadController;
-use App\Livewire\Admin\Centinela;
 
 /*
 |--------------------------------------------------------------------------
@@ -135,6 +137,8 @@ Route::group(['middleware' => ['auth', 'esta.activo']], function(){
 
     /* Propiedad */
     Route::get('propiedad', PropiedadIndex::class)->middleware('permission:Propiedad')->name('propiedad');
+    Route::get('subdivisiones', SubdivisionesIndex::class)->middleware('permission:Subdivisiones')->name('propiedad.subdivisiones_index');
+    Route::get('subdivision/{propiedad}', Subdivisiones::class)->middleware('permission:Subdivisiones')->name('propiedad.subdivision');
     Route::get('propiedad/{propiedad}', PropiedadInscripcion::class)->middleware('permission:Propiedad inscripción')->name('propiedad.inscripcion');
 
     /* Gravamen */

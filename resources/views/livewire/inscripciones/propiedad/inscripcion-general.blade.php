@@ -118,6 +118,8 @@
 
                         <x-input-select id="inscripcion.divisa" wire:model="inscripcion.divisa">
 
+                            <option value="">-</option>
+
                             @foreach ($divisas as $divisa)
 
                                 <option value="{{ $divisa }}">{{ $divisa }}</option>

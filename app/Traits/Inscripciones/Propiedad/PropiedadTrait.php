@@ -939,7 +939,8 @@ trait PropiedadTrait{
 
         Propiedad::create([
             'movimiento_registral_id' => $movimiento->id,
-            'servicio' => $this->inscripcion->servicio
+            'servicio' => $this->inscripcion->servicio,
+            'descripcion_acto' => 'Movimiento registral que da origen al Folio Real'
         ]);
 
         $predioNuevo = Predio::create([

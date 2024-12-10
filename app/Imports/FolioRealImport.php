@@ -3,11 +3,13 @@
 namespace App\Imports;
 
 use Exception;
+use App\Models\File;
 use App\Models\Actor;
 use App\Models\Predio;
 use App\Models\Persona;
 use App\Models\Gravamen;
 use App\Models\FolioReal;
+use App\Models\Propiedad;
 use App\Models\Colindancia;
 use App\Constantes\Constantes;
 use Illuminate\Validation\Rule;
@@ -54,22 +56,22 @@ class FolioRealImport implements ToCollection, WithHeadingRow, WithValidation, W
             'colindancias' => 'required',
             'tipo_vialidad' => ['required', Rule::in(Constantes::TIPO_VIALIDADES)],
             'tipo_asentamiento' => ['required', Rule::in(Constantes::TIPO_ASENTAMIENTO)],
-            'nombre_vialidad' => 'nullable|string',
-            'nombre_asentamiento' => 'nullable|string',
-            'numero_exterior' => 'nullable|string',
-            'numero_exterior_2' => 'nullable|string',
-            'numero_adicional' => 'nullable|string',
-            'numero_adicional_2' => 'nullable|string',
-            'numero_interior' => 'nullable|string',
-            'lote' => 'nullable|string',
-            'manzana_ubicacion' => 'nullable|string',
+            'nombre_vialidad' => 'nullable',
+            'nombre_asentamiento' => 'nullable',
+            'numero_exterior' => 'nullable',
+            'numero_exterior_2' => 'nullable',
+            'numero_adicional' => 'nullable',
+            'numero_adicional_2' => 'nullable',
+            'numero_interior' => 'nullable',
+            'lote' => 'nullable',
+            'manzana_ubicacion' => 'nullable',
             'codigo_postal' => 'nullable|numeric',
-            'lote_fraccionador' => 'nullable|string',
-            'manzana_fraccionador' => 'nullable|string',
-            'etapa_fraccionador' => 'nullable|string',
-            'nombre_edificio' => 'nullable|string',
-            'clave_edificio' => 'nullable|string',
-            'departamento_edificio' => 'nullable|string',
+            'lote_fraccionador' => 'nullable',
+            'manzana_fraccionador' => 'nullable',
+            'etapa_fraccionador' => 'nullable',
+            'nombre_edificio' => 'nullable',
+            'clave_edificio' => 'nullable',
+            'departamento_edificio' => 'nullable',
             'municipio_ubicacion' => 'required|string',
             'ciudad' => 'nullable|string',
             'localidad_ubicacion' => 'nullable|string',
@@ -79,22 +81,12 @@ class FolioRealImport implements ToCollection, WithHeadingRow, WithValidation, W
             'solar' => 'nullable|string',
             'zona_ubicacion' => 'nullable|string',
             'propietarios' => 'required',
-            'transmitentes' => 'required',
-            'tomo_gravamen' => 'required|numeric',
-            'registro_gravamen' => 'required|numeric',
-            'distrito_gravamen' => 'required|numeric|min:1|max:19',
-            'tipo_documento_gravamen' => 'required|in:escritura,oficio,contrato,acta de embargo,convenio,fianza',
-            'cargo_autoridad_gravamen' => 'required|string',
-            'nombre_autoridad_gravamen' => 'required|string',
-            'fecha_emision_gravamen' => 'required|date',
-            'numero_documento_gravamen' => 'required|string',
-            'procedencia_gravamen' => 'required|string',
             'acto_contenido_gravamen' => ['required', Rule::in(Constantes::ACTOS_INSCRIPCION_GRAVAMEN)],
             'tipo_gravamen' => 'required|string',
             'valor_gravamen' => 'required|numeric',
             'divisa_gravamen' => ['required', Rule::in(Constantes::DIVISAS)],
-            'fecha_inscripcion_gravamen' => 'required|date',
-            'comentario_gravamen' => 'required|date',
+            'fecha_inscripcion_gravamen' => 'required',
+            'descripcion_acto_gravamen' => 'required',
             'actores_gravamen' => 'required',
             'acreedores_gravamen' => 'required',
         ];
@@ -103,20 +95,26 @@ class FolioRealImport implements ToCollection, WithHeadingRow, WithValidation, W
 
     public function collection(Collection $rows){
 
+        if($this->movimientoRegistral->inscripcionPropiedad->numero_inmuebles != count($rows)){
+
+            throw new Exception("El número de propiedades del trámite (" . $this->movimientoRegistral->inscripcionPropiedad->numero_inmuebles . ") no corresponde con el numero de regsitros en el archivo");
+
+        }
+
         try {
 
             DB::transaction(function () use($rows){
 
-                $gravamen = Gravamen::make([
-                    'acto_contenido' => $rows['acto_contenido_gravamen'],
+                $gravamen = [
+                    'acto_contenido' => $rows[0]['acto_contenido_gravamen'],
                     'servicio' => '----',
                     'estado' => 'activo',
-                    'tipo' => $rows['tipo_gravamen'],
-                    'valor_gravamen' => $rows['valor_gravamen'],
-                    'divisa' => $rows['divisa_gravamen'],
-                    'fecha_inscripcion' => $rows['fecha_inscripcion_gravamen'],
-                    'observaciones' => $rows['descripcion_acto_gravamen'],
-                ]);
+                    'tipo' => $rows[0]['tipo_gravamen'],
+                    'valor_gravamen' => $rows[0]['valor_gravamen'],
+                    'divisa' => $rows[0]['divisa_gravamen'],
+                    'fecha_inscripcion' => $rows[0]['fecha_inscripcion_gravamen'],
+                    'observaciones' => $rows[0]['descripcion_acto_gravamen'],
+                ];
 
                 foreach ($rows as $key => $row)
                 {
@@ -127,17 +125,23 @@ class FolioRealImport implements ToCollection, WithHeadingRow, WithValidation, W
 
                     $propietarios = $this->procesarPropietarios($row['propietarios'], $key);
 
-                    $transmitentes = $this->procesarTransmitentes($row['transmitentes'], $key);
-
                     $acreedores = $this->procesarAcreedores($row['acreedores_gravamen'], $key);
 
                     $actores = $this->procesarActores($row['actores_gravamen'], $key);
 
-                    $predio = $this->crearPredio($row);
+                    $folioReal = $this->generarFolioReal();
 
-                    $this->procesarRealacionesDePredio($predio->id, $colindancias, $propietarios, $transmitentes);
+                    $predio = $this->crearPredio($folioReal->id, $row);
+
+                    $this->procesarRealacionesDePredio($predio->id, $colindancias, $propietarios);
+
+                    $this->generarGravamen($folioReal->id, $gravamen, $acreedores, $actores);
+
+                    $this->foliosReales [] = $folioReal->load('folioRealAntecedente');
 
                 }
+
+                $this->movimientoRegistral->update(['estado' => 'concluido']);
 
                 $this->data = $this->foliosReales;
 
@@ -171,16 +175,16 @@ class FolioRealImport implements ToCollection, WithHeadingRow, WithValidation, W
             $campos = explode(':', $colindancia);
 
             if(!in_array($campos[0], Constantes::VIENTOS))
-                throw new Exception("Error en el campo viento de las colindancias en la linea " . $linea);
+                throw new Exception("Error en el campo viento de las colindancias en la línea " . $linea);
 
             if(!isset($campos[1]) || !isset($campos[2]))
-                throw new Exception("Error en los campos de las colindancias en la linea " . $linea);
+                throw new Exception("Error en los campos de las colindancias en la línea " . $linea);
 
             if(isset($campos[3]))
-                throw new Exception("Error en los campos de las colindancias en la lineass " . $linea);
+                throw new Exception("Error en los campos de las colindancias en la líneass " . $linea);
 
             if($campos[1] == '' || $campos[2] == '')
-                throw new Exception("Error en los campos de las colindancias en la lineass " . $linea);
+                throw new Exception("Error en los campos de las colindancias en la líneass " . $linea);
 
             $colindanciasArreglo [] = [
                 'viento' => $campos[0],
@@ -206,68 +210,12 @@ class FolioRealImport implements ToCollection, WithHeadingRow, WithValidation, W
             $campos = explode(':', $propietario);
 
             if(!in_array($campos[0], ['FISICA', 'MORAL']))
-                throw new Exception("Error en el campo tipo de persona de los propietarios en la linea " . $linea);
-
-            if(isset($campos[1]) && !is_numeric((float)$campos[1]) || isset($campos[2]) && !is_numeric((float)$campos[2]) || isset($campos[3]) && !is_numeric((float)$campos[3]))
-                throw new Exception("Error en los campos de los propietarios en la linea " . $linea);
-
-            if($campos[0] === 'FISICA'){
-
-                if(!isset($campos[4]) || !isset($campos[5]) || !isset($campos[6]))
-                    throw new Exception("Error en los campos de los propietarios en la linea " . $linea);
-
-                $persona = [
-                    'tipo' => $campos[0],
-                    'porcentaje_propiedad' => $campos[1],
-                    'porcentaje_nuda' => $campos[2],
-                    'porcentaje_usufructo' => $campos[3],
-                    'nombre' => $campos[4],
-                    'ap_paterno' => $campos[5],
-                    'ap_materno' => $campos[6],
-                ];
-
-            }else{
-
-                if(!isset($campos[7]))
-                    throw new Exception("Error en los campos de los propietarios en la linea " . $linea);
-
-                $persona = [
-                    'tipo' => $campos[0],
-                    'porcentaje_propiedad' => $campos[1],
-                    'porcentaje_nuda' => $campos[2],
-                    'porcentaje_usufructo' => $campos[3],
-                    'razon_social' => $campos[7]
-                ];
-
-            }
-
-            $propietariosArreglo [] = $persona;
-
-        }
-
-
-        return $propietariosArreglo;
-
-    }
-
-    public function procesarTransmitentes($transmitentes, $linea):array
-    {
-
-        $array = explode('|', $transmitentes);
-
-        $transmitentesArreglo = [];
-
-        foreach ($array as $transmitente) {
-
-            $campos = explode(':', $transmitente);
-
-            if(!in_array($campos[0], ['FISICA', 'MORAL']))
-                throw new Exception("Error en el campo tipo de persona de los transmitentes en la linea " . $linea);
+                throw new Exception("Error en el campo tipo de persona de los propietarios en la línea " . $linea);
 
             if($campos[0] === 'FISICA'){
 
                 if(!isset($campos[1]) || !isset($campos[2]) || !isset($campos[3]))
-                    throw new Exception("Error en los campos de los transmitentes en la linea " . $linea);
+                    throw new Exception("Error en los campos de los propietarios en la línea " . $linea);
 
                 $persona = [
                     'tipo' => $campos[0],
@@ -278,22 +226,22 @@ class FolioRealImport implements ToCollection, WithHeadingRow, WithValidation, W
 
             }else{
 
-                if(!isset($campos[4]))
-                    throw new Exception("Error en los campos de los transmitentes en la linea " . $linea);
+                if(!isset($campos[1]))
+                    throw new Exception("Error en los campos de los propietarios en la línea " . $linea);
 
                 $persona = [
                     'tipo' => $campos[0],
-                    'razon_social' => $campos[4]
+                    'razon_social' => $campos[1]
                 ];
 
             }
 
-            $transmitentesArreglo [] = $persona;
+            $propietariosArreglo [] = $persona;
 
         }
 
 
-        return $transmitentesArreglo;
+        return $propietariosArreglo;
 
     }
 
@@ -309,12 +257,12 @@ class FolioRealImport implements ToCollection, WithHeadingRow, WithValidation, W
             $campos = explode(':', $acreedor);
 
             if(!in_array($campos[0], ['FISICA', 'MORAL']))
-                throw new Exception("Error en el campo tipo de persona de los acreedores del gravamen en la linea " . $linea);
+                throw new Exception("Error en el campo tipo de persona de los acreedores del gravamen en la línea " . $linea);
 
             if($campos[0] === 'FISICA'){
 
                 if(!isset($campos[1]) || !isset($campos[2]) || !isset($campos[3]))
-                    throw new Exception("Error en los campos de los acreedores del gravamen en la linea " . $linea);
+                    throw new Exception("Error en los campos de los acreedores del gravamen en la línea " . $linea);
 
                 $acreedor = [
                     'tipo' => $campos[0],
@@ -325,12 +273,12 @@ class FolioRealImport implements ToCollection, WithHeadingRow, WithValidation, W
 
             }else{
 
-                if(!isset($campos[4]))
-                    throw new Exception("Error en los campos de los acreedores del gravamen en la linea " . $linea);
+                if(!isset($campos[1]))
+                    throw new Exception("Error en los campos de los acreedores del gravamen en la línea " . $linea);
 
                 $acreedor = [
                     'tipo' => $campos[0],
-                    'razon_social' => $campos[4]
+                    'razon_social' => $campos[1]
                 ];
 
             }
@@ -344,7 +292,7 @@ class FolioRealImport implements ToCollection, WithHeadingRow, WithValidation, W
 
     }
 
-    public function procesaractores($actores, $linea):array
+    public function procesarActores($actores, $linea):array
     {
 
         $array = explode('|', $actores);
@@ -355,13 +303,13 @@ class FolioRealImport implements ToCollection, WithHeadingRow, WithValidation, W
 
             $campos = explode(':', $actor);
 
-            if(!in_array($campos[0], Constantes::TIPO_DEUDOR))
-                throw new Exception("Error en el campo tipo de persona de los actores del gravamen en la linea " . $linea);
+            if(!in_array($campos[0], ['FISICA', 'MORAL']))
+                throw new Exception("Error en el campo tipo de persona de los actores del gravamen en la línea " . $linea);
 
             if($campos[0] === 'FISICA'){
 
                 if(!isset($campos[1]) || !isset($campos[2]) || !isset($campos[3]))
-                    throw new Exception("Error en los campos de los actores del gravamen en la linea " . $linea);
+                    throw new Exception("Error en los campos de los actores del gravamen en la línea " . $linea);
 
                 $actor = [
                     'tipo' => $campos[0],
@@ -372,12 +320,12 @@ class FolioRealImport implements ToCollection, WithHeadingRow, WithValidation, W
 
             }else{
 
-                if(!isset($campos[4]))
-                    throw new Exception("Error en los campos de los actores del gravamen en la linea " . $linea);
+                if(!isset($campos[1]))
+                    throw new Exception("Error en los campos de los actores del gravamen en la línea " . $linea);
 
                 $actor = [
                     'tipo' => $campos[0],
-                    'razon_social' => $campos[4]
+                    'razon_social' => $campos[1]
                 ];
 
             }
@@ -391,14 +339,16 @@ class FolioRealImport implements ToCollection, WithHeadingRow, WithValidation, W
 
     }
 
-    public function crearPredio($linea):Predio
+    public function crearPredio($folioRealId, $linea):Predio
     {
 
         return Predio::create([
-            'localidad' => $linea['localidad'],
-            'oficina' => $linea['oficina'],
-            'tipo' => $linea['tipo'],
-            'registro' => $linea['registro'],
+            'status' => 'nuevo',
+            'folio_real' => $folioRealId,
+            'cp_localidad' => $linea['localidad'],
+            'cp_oficina' => $linea['oficina'],
+            'cp_tipo_predio' => $linea['tipo'],
+            'cp_registro' => $linea['registro'],
             'superficie_terreno' => $linea['superficie_terreno'],
             'superficie_construccion' => $linea['superficie_construccion'],
             'superficie_judicial' => $linea['superficie_judicial'],
@@ -423,7 +373,7 @@ class FolioRealImport implements ToCollection, WithHeadingRow, WithValidation, W
             'numero_adicional_2' => $linea['numero_adicional_2'],
             'numero_interior' => $linea['numero_interior'],
             'lote' => $linea['lote'],
-            'manzana_ubicacion' => $linea['manzana_ubicacion'],
+            'manzana' => $linea['manzana_ubicacion'],
             'codigo_postal' => $linea['codigo_postal'],
             'lote_fraccionador' => $linea['lote_fraccionador'],
             'manzana_fraccionador' => $linea['manzana_fraccionador'],
@@ -431,9 +381,9 @@ class FolioRealImport implements ToCollection, WithHeadingRow, WithValidation, W
             'nombre_edificio' => $linea['nombre_edificio'],
             'clave_edificio' => $linea['clave_edificio'],
             'departamento_edificio' => $linea['departamento_edificio'],
-            'municipio_ubicacion' => $linea['municipio_ubicacion'],
+            'municipio' => $linea['municipio_ubicacion'],
             'ciudad' => $linea['ciudad'],
-            'localidad_ubicacion' => $linea['localidad_ubicacion'],
+            'localidad' => $linea['localidad_ubicacion'],
             'poblado' => $linea['poblado'],
             'ejido' => $linea['ejido'],
             'parcela' => $linea['parcela'],
@@ -443,16 +393,16 @@ class FolioRealImport implements ToCollection, WithHeadingRow, WithValidation, W
 
     }
 
-    public function procesarRealacionesDePredio($predioId, $colindancias, $propietarios, $transmitentes):void
+    public function procesarRealacionesDePredio($predioId, $colindancias, $propietarios):void
     {
 
         foreach ($colindancias as $colindancia) {
 
             Colindancia::create([
                 'predio_id' => $predioId,
-                'viento' => $colindancia[0],
-                'longitud' => $colindancia[1],
-                'descripcion' => $colindancia[2],
+                'viento' => $colindancia['viento'],
+                'longitud' => $colindancia['longitud'],
+                'descripcion' => $colindancia['descripcion'],
             ]);
 
         }
@@ -464,14 +414,14 @@ class FolioRealImport implements ToCollection, WithHeadingRow, WithValidation, W
                 'actorable_id' => $predioId,
                 'persona_id' => $this->persona($propietario),
                 'tipo_actor' => 'propietario',
-                'porcentaje_propiedad' => $propietario[1],
-                'porcentaje_nuda' => $propietario[2],
-                'porcentaje_usufructo' => $propietario[3],
+                'porcentaje_propiedad' => 100,
+                'porcentaje_nuda' => 0,
+                'porcentaje_usufructo' => 0,
             ]);
 
         }
 
-        foreach ($transmitentes as $transmitente) {
+        foreach ($propietarios as $transmitente) {
 
             Actor::create([
                 'actorable_type' => 'App\Models\Predio',
@@ -487,31 +437,127 @@ class FolioRealImport implements ToCollection, WithHeadingRow, WithValidation, W
     public function persona($array):int
     {
 
-        $persona = Persona::when($array[0] == 'FISICA', function($q) use($array){
-                                $q->where('nombre', $array[4])
-                                    ->where('ap_paterno', $array[5])
-                                    ->where('ap_materno', $array[6]);
+        $persona = Persona::when($array['tipo'] == 'FISICA', function($q) use($array){
+                                $q->where('nombre', $array['nombre'])
+                                    ->where('ap_paterno', $array['ap_paterno'])
+                                    ->where('ap_materno', $array['ap_materno']);
                             })
-                            ->when($array[0] == 'MORAL', function($q) use($array){
-                                $q->where('razon_social', $array[7]);
+                            ->when($array['tipo'] == 'MORAL', function($q) use($array){
+                                $q->where('razon_social', $array['razon_social']);
                             })
                             ->first();
 
         if(!$persona){
 
-            $persona = Persona::create([
-                        'tipo' => $array[0],
-                        'nombre' => $array[4],
-                        'ap_paterno' => $array[5],
-                        'ap_materno' => $array[6],
-                        'razon_social' => $array[7],
-                        ]);
+            if($array['tipo'] == 'FISICA'){
+
+                $persona = Persona::create([
+                    'tipo' => $array['tipo'],
+                    'nombre' => $array['nombre'],
+                    'ap_paterno' => $array['ap_paterno'],
+                    'ap_materno' => $array['ap_materno'],
+                    ]);
+
+            }else{
+
+                $persona = Persona::create([
+                    'tipo' => $array['tipo'],
+                    'razon_social' => $array['razon_social'],
+                    ]);
+
+            }
 
             return $persona->id;
 
         }else{
 
             return $persona->id;
+
+        }
+
+    }
+
+    public function generarFolioReal():FolioReal
+    {
+
+        $folioRealNuevo = FolioReal::create([
+            'antecedente' => $this->movimientoRegistral->folio_real,
+            'estado' => 'captura',
+            'folio' => (FolioReal::max('folio') ?? 0) + 1,
+            'distrito_antecedente' => $this->movimientoRegistral->getRawOriginal('distrito'),
+            'seccion_antecedente' => $this->movimientoRegistral->seccion,
+            'tipo_documento' => $this->movimientoRegistral->tipo_documento,
+            'numero_documento' => $this->movimientoRegistral->numero_documento,
+            'autoridad_cargo' => $this->movimientoRegistral->autoridad_cargo,
+            'autoridad_nombre' => $this->movimientoRegistral->autoridad_nombre,
+            'autoridad_numero' => $this->movimientoRegistral->autoridad_numero,
+            'fecha_emision' => $this->movimientoRegistral->fecha_emision,
+            'fecha_inscripcion' => $this->movimientoRegistral->fecha_inscripcion,
+            'procedencia' => $this->movimientoRegistral->tipo_documento,
+        ]);
+
+        $documentoEntrada = File::where('fileable_type', 'App\Models\MovimientoRegistral')
+                                    ->where('fileable_id', $this->movimientoRegistral->id)
+                                    ->where('descripcion', 'documento_entrada')
+                                    ->first();
+
+        File::create([
+            'fileable_id' => $folioRealNuevo->id,
+            'fileable_type' => 'App\Models\FolioReal',
+            'descripcion' => 'documento_entrada',
+            'url' => $documentoEntrada->url
+        ]);
+
+        $movimientoRegistralPropiedad = $this->movimientoRegistral->replicate();
+
+        $movimientoRegistralPropiedad->movimiento_padre = $this->movimientoRegistral->id;
+        $movimientoRegistralPropiedad->folio = 1;
+        $movimientoRegistralPropiedad->estado = 'nuevo';
+        $movimientoRegistralPropiedad->folio_real = $folioRealNuevo->id;
+        $movimientoRegistralPropiedad->save();
+
+        Propiedad::create([
+            'movimiento_registral_id' => $movimientoRegistralPropiedad->id,
+            'servicio' => $this->movimientoRegistral->inscripcionPropiedad->servicio,
+            'descripcion_acto' => 'Movimiento registral que da origen al Folio Real'
+        ]);
+
+        return $folioRealNuevo;
+
+    }
+
+    public function generarGravamen($folioRealId, $gravamen, $acreedores, $actores):void
+    {
+
+        $movimientoRegistralGravamen = $this->movimientoRegistral->replicate();
+
+        $movimientoRegistralGravamen->folio_real = $folioRealId;
+        $movimientoRegistralGravamen->folio = 2;
+        $movimientoRegistralGravamen->estado = 'concluido';
+        $movimientoRegistralGravamen->save();
+
+        $gravamen = Gravamen::create(['movimiento_registral_id' => $movimientoRegistralGravamen->id,] + $gravamen);
+
+        foreach ($acreedores as $acreedor) {
+
+            Actor::create([
+                'actorable_type' => 'App\Models\Gravamen',
+                'actorable_id' => $gravamen->id,
+                'persona_id' => $this->persona($acreedor),
+                'tipo_actor' => 'acreedor'
+            ]);
+
+        }
+
+        foreach ($actores as $actor) {
+
+            Actor::create([
+                'actorable_type' => 'App\Models\Gravamen',
+                'actorable_id' => $gravamen->id,
+                'persona_id' => $this->persona($actor),
+                'tipo_actor' => 'deudor',
+                'tipo_deudor' => ''
+            ]);
 
         }
 

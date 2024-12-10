@@ -15,8 +15,6 @@ class PropiedadInscripcion extends Component
     public $inscripcion;
     public $propiedad;
 
-
-
     protected function rules(){
         return [
             'inscripcion.acto_contenido' => 'required'

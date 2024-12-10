@@ -1,6 +1,6 @@
 <div>
 
-    <x-header>Varios</x-header>
+    <x-header>Varios  <span class="text-sm tracking-widest">Folio real: {{ $vario->movimientoRegistral->folioReal->folio }} - {{ $vario->movimientoRegistral->folio }}</span></x-header>
 
     @if($vario->acto_contenido == 'PERSONAS MORALES')
 

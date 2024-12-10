@@ -1,6 +1,6 @@
 <div>
 
-    <x-header>Cancelación de gravamen</x-header>
+    <x-header>Cancelación de gravamen  <span class="text-sm tracking-widest">Folio real: {{ $cancelacion->movimientoRegistral->folioReal->folio }} - {{ $cancelacion->movimientoRegistral->folio }}</span></x-header>
 
     <div class="p-4 bg-white shadow-xl rounded-xl mb-5">
 

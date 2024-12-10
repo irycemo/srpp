@@ -501,6 +501,8 @@ class Elaboracion extends Component
     #[On('finalizarPaseAFolio')]
     public function finalizarPaseAFolio(){
 
+        $this->validate();
+
         if($this->propiedad) $this->propiedad->refresh();
 
         $pn = 0;

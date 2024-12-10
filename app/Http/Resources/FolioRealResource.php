@@ -21,7 +21,8 @@ class FolioRealResource extends JsonResource
             'numero_propiedad' => $this->numero_propiedad_antecedente,
             'distrito' => $this->distrito_antecedente,
             'seccion' => $this->seccion_antecedente,
-            'folio' => $this->folio
+            'folio' => $this->folio,
+            'matriz' => $this->matriz
         ];
     }
 }

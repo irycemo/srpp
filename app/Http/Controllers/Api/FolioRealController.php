@@ -85,7 +85,6 @@ class FolioRealController extends Controller
                 $propiedad = null;
             }
 
-
             if($folio_real){
 
                 if(in_array($folio_real->estado, ['bloqueado', 'centinela'])){
@@ -96,7 +95,15 @@ class FolioRealController extends Controller
 
                 }elseif($folio_real->estado == 'activo'){
 
+                    info("entra");
+
                     return (new FolioRealResource($folio_real))->response()->setStatusCode(200);
+
+                }else{
+
+                    return response()->json([
+                        'error' => 'El folio real no esta activo',
+                    ], 401);
 
                 }
 
