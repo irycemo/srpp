@@ -103,7 +103,7 @@ class CertificadoGravamenController extends Controller
 
             foreach($movimientoRegistral->FolioReal->sentencias as $sentencia){
 
-                if($sentencia->estado != 'activo') continue;
+                if($sentencia->estado != 'activo' || $sentencia->acto_contenido == 'CANCELACIÓN DE SENTENCIA') continue;
 
                 $item = $this->sentencia($sentencia);
 
