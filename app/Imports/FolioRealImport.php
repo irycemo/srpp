@@ -107,7 +107,7 @@ class FolioRealImport implements ToCollection, WithHeadingRow, WithValidation, W
 
                 $gravamen = [
                     'acto_contenido' => $rows[0]['acto_contenido_gravamen'],
-                    'servicio' => '----',
+                    'servicio' => 'D127',
                     'estado' => 'activo',
                     'tipo' => $rows[0]['tipo_gravamen'],
                     'valor_gravamen' => $rows[0]['valor_gravamen'],
@@ -556,7 +556,7 @@ class FolioRealImport implements ToCollection, WithHeadingRow, WithValidation, W
                 'actorable_id' => $gravamen->id,
                 'persona_id' => $this->persona($actor),
                 'tipo_actor' => 'deudor',
-                'tipo_deudor' => ''
+                'tipo_deudor' => 'I-DEUDOR ÚNICO'
             ]);
 
         }

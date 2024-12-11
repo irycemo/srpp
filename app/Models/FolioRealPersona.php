@@ -4,6 +4,7 @@ namespace App\Models;
 
 use App\Models\Actor;
 use App\Traits\ModelosTrait;
+use App\Models\MovimientoRegistral;
 use Illuminate\Database\Eloquent\Model;
 use OwenIt\Auditing\Contracts\Auditable;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
@@ -19,6 +20,10 @@ class FolioRealPersona extends Model implements Auditable
 
     public function actores(){
         return $this->morphMany(Actor::class, 'actorable');
+    }
+
+    public function movimientosRegistrales(){
+        return $this->hasMany(MovimientoRegistral::class, 'folio_real_persona');
     }
 
 }

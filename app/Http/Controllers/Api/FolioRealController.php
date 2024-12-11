@@ -95,8 +95,6 @@ class FolioRealController extends Controller
 
                 }elseif($folio_real->estado == 'activo'){
 
-                    info("entra");
-
                     return (new FolioRealResource($folio_real))->response()->setStatusCode(200);
 
                 }else{

@@ -14,8 +14,6 @@ class GravamenController extends Controller
 
         $data = $request->validated();
 
-        info($data);
-
         $movimientoRegistral = MovimientoRegistral::when(isset($data['folio']), function($q) use($data){
                                                             $q->where('folio', $data['folio']);
                                                         })
