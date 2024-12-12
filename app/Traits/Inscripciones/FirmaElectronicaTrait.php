@@ -507,6 +507,7 @@ trait FirmaElectronicaTrait{
         $object->servicio = $gravamen->servicio;
         $object->acto_contenido = $gravamen->acto_contenido;
         $object->estado = $gravamen->estado;
+        $object->expediente = $gravamen->expediente;
         $object->tipo = $gravamen->tipo;
         $object->valor_gravamen = $gravamen->valor_gravamen;
         $object->divisa = $gravamen->divisa;

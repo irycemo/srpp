@@ -50,6 +50,7 @@ class ModalGravamen extends ModalComponent
     public $procedencia = null;
 
     public $tipo = null;
+    public $expediente = null;
     public $acto_contenido = null;
     public $valor_gravamen = null;
     public $divisa = null;
@@ -265,6 +266,7 @@ class ModalGravamen extends ModalComponent
 
             $this->validate([
                 'tipo' => 'required',
+                'expediente' => 'nullable',
                 'acto_contenido' => ['required', Rule::in(Constantes::ACTOS_INSCRIPCION_GRAVAMEN)],
                 'valor_gravamen' => 'required',
                 'divisa' => ['required' , Rule::in(Constantes::DIVISAS)],
@@ -363,6 +365,7 @@ class ModalGravamen extends ModalComponent
             'acto_contenido' => $this->acto_contenido,
             'valor_gravamen' => $this->valor_gravamen,
             'divisa' => $this->divisa,
+            'expediente' => $this->expediente,
             'fecha_inscripcion' => $this->fecha_inscripcion,
             'estado' => $this->estado,
             'observaciones' => $this->comentario,
@@ -649,6 +652,7 @@ class ModalGravamen extends ModalComponent
 
                     $this->tipo = $this->movimientoRegistral->gravamen->tipo;
                     $this->acto_contenido = $this->movimientoRegistral->gravamen->acto_contenido;
+                    $this->expediente = $this->movimientoRegistral->gravamen->expediente;
                     $this->valor_gravamen = $this->movimientoRegistral->gravamen->valor_gravamen;
                     $this->divisa = $this->movimientoRegistral->gravamen->divisa;
                     $this->fecha_inscripcion = $this->movimientoRegistral->gravamen->fecha_inscripcion;

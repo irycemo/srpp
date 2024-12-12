@@ -92,6 +92,7 @@ class GravamenInscripcion extends Component
             'gravamen.valor_gravamen' => 'required|numeric',
             'gravamen.divisa' => ['required', Rule::in($this->divisas)],
             'gravamen.estado' => 'required',
+            'gravamen.expediente' => 'nullable',
             'gravamen.observaciones' => 'required',
             'documento' => 'nullable|mimes:pdf|max:10000'
          ];

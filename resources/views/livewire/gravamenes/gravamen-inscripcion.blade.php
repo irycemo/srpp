@@ -34,7 +34,7 @@
 
         <div class="flex gap-3 items-center w-full lg:w-1/2 justify-center mx-auto mb-4">
 
-            <x-input-group for="gravamen.tipo" label="Tipo" :error="$errors->first('gravamen.tipo')" class="w-full col-span-2">
+            <x-input-group for="gravamen.tipo" label="Tipo" :error="$errors->first('gravamen.tipo')" class="w-full">
 
                 <x-input-text id="gravamen.tipo" wire:model="gravamen.tipo" />
 
@@ -43,6 +43,12 @@
         </div>
 
         <div class="flex gap-3 items-center w-full lg:w-1/2 justify-center mx-auto mb-4">
+
+            <x-input-group for="gravamen.expediente" label="Expediente" :error="$errors->first('gravamen.expediente')" class="">
+
+                <x-input-text id="gravamen.expediente" wire:model="gravamen.expediente" />
+
+            </x-input-group>
 
             <x-input-group for="gravamen.valor_gravamen" label="Valor del gravamen" :error="$errors->first('gravamen.valor_gravamen')" class="w-full relative">
 
