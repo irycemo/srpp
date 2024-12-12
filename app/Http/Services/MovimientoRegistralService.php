@@ -25,7 +25,8 @@ class MovimientoRegistralService{
         public InscripcionesGravamenService $inscripcionesGravamenService,
         public InscripcionesCancelacionService $inscripcionesCancelacionService,
         public VariosService $variosService,
-        public SentenciasService $sentenciasService
+        public SentenciasService $sentenciasService,
+        public ReformaMoralService $reformaMoralService
     ){}
 
     public function store(MovimientoRegistralRequest $request)
@@ -125,6 +126,13 @@ class MovimientoRegistralService{
 
 
             $this->sentenciasService->store($request + ['movimiento_registral' => $id]);
+
+        }
+
+        if($request['categoria_servicio'] == 'Folio real de persona moral'){
+
+
+            $this->reformaMoralService->store($request + ['movimiento_registral' => $id]);
 
         }
 
@@ -659,6 +667,13 @@ class MovimientoRegistralService{
 
         }
 
+        /* Inscripciones: Folio real de persona moral */
+        if($categoria_servicio == 'Folio real de persona moral'){
+
+            return $this->asignacionService->obtenerUsuarioFolioRealMoral($distrito);
+
+        }
+
     }
 
     public function obtenerSupervisor($servicio, $categoria_servicio, $distrito):int
@@ -713,7 +728,7 @@ class MovimientoRegistralService{
         }
 
         /* Inscripciones: Varios */
-        if(in_array($servicio, ['D146', 'D128', 'D112', 'D110', 'D157', 'DL19', 'D149', 'DL16']) && $categoria_servicio == 'Varios, Arrendamientos, Avisos Preventivos'){
+        if(in_array($servicio, ['D146', 'D128', 'D112', 'D110', 'D157', 'DL19', 'D149', 'DL16']) && in_array($categoria_servicio, ['Varios, Arrendamientos, Avisos Preventivos', 'Folio real de persona moral'])){
 
             return $this->asignacionService->obtenerSupervisorVarios($distrito);
 

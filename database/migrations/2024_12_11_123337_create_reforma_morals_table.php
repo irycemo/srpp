@@ -14,10 +14,10 @@ return new class extends Migration
         Schema::create('reforma_morals', function (Blueprint $table) {
             $table->id();
             $table->foreignId('movimiento_registral_id')->constrained()->onDelete('cascade');
-            $table->string('acto_contenido');
-            $table->date('fecha_inscripcion');
-            $table->date('fecha_protocolizacion');
-            $table->text('descripcion');
+            $table->string('acto_contenido')->nullable();
+            $table->date('fecha_inscripcion')->nullable();
+            $table->date('fecha_protocolizacion')->nullable();
+            $table->text('descripcion')->nullable();
             $table->timestamps();
         });
     }

@@ -7,8 +7,9 @@ use App\Traits\ModelosTrait;
 use App\Models\MovimientoRegistral;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
+use OwenIt\Auditing\Contracts\Auditable;
 
-class ReformaMoral extends Model
+class ReformaMoral extends Model implements Auditable
 {
 
     use HasFactory;

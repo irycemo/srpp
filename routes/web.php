@@ -23,7 +23,6 @@ use App\Http\Controllers\ManualController;
 use App\Livewire\Gravamenes\GravamenIndex;
 use App\Livewire\Cancelaciones\Cancelacion;
 use App\Livewire\Certificaciones\Consultas;
-use App\Livewire\Varios\PersonaMoral\Index;
 use App\Livewire\Sentencias\SentenciasIndex;
 use App\Http\Controllers\DashboardController;
 use App\Livewire\Admin\MovimientosRegistrales;
@@ -49,6 +48,7 @@ use App\Http\Controllers\Cancelaciones\CancelacionController;
 use App\Livewire\Inscripciones\Propiedad\PropiedadInscripcion;
 use App\Http\Controllers\Certificaciones\CertificadoGravamenController;
 use App\Http\Controllers\Certificaciones\CertificadoPropiedadController;
+use App\Livewire\PersonaMoral\PaseAFolio;
 
 /*
 |--------------------------------------------------------------------------
@@ -162,7 +162,7 @@ Route::group(['middleware' => ['auth', 'esta.activo']], function(){
     Route::get('varios_pdf/{vario}', [VariosController::class, 'acto'])->middleware('permission:Varios inscripción')->name('varios.inscripcion.acto');
 
     /* Personas morales */
-    Route::get('personas_morales', Index::class)->middleware('permission:Personas morales')->name('personas_morales');
+    Route::get('personas_morales', PaseAFolio::class)->middleware('permission:Personas morales')->name('personas_morales');
 
     /* Consultas */
     Route::get('consultas', Consulta::class)->middleware('permission:Consultas')->name('consultas');

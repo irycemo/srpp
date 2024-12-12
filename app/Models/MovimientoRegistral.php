@@ -7,6 +7,7 @@ use App\Models\Gravamen;
 use App\Models\FolioReal;
 use App\Models\Propiedad;
 use App\Models\Cancelacion;
+use App\Models\ReformaMoral;
 use App\Traits\ModelosTrait;
 use App\Models\Certificacion;
 use App\Constantes\Constantes;
@@ -75,6 +76,10 @@ class MovimientoRegistral extends Model implements Auditable
 
     public function vario(){
         return $this->hasOne(Vario::class);
+    }
+
+    public function reformaMoral(){
+        return $this->hasOne(ReformaMoral::class);
     }
 
     public function supervisor(){

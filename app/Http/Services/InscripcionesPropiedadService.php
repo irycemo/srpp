@@ -2,6 +2,7 @@
 
 namespace App\Http\Services;
 
+use App\Models\User;
 use App\Models\Predio;
 use App\Models\FolioReal;
 use App\Models\Propiedad;
@@ -21,6 +22,10 @@ class InscripcionesPropiedadService{
             if(in_array($propiedad->servicio, ['D114', 'D113', 'D116', 'D115'])){
 
                 $this->revisarFolioMatriz($propiedad->movimientoRegistral);
+
+            }elseif(in_array($propiedad->servicio, ['D121', 'D120', 'D123', 'D122', 'D119', 'D124', 'D125', 'D126'])){
+
+                $propiedad->movimientoRegistral->update(['usuario_asignado' => $this->obtenerUsuarioRolFraccionamientos($propiedad->movimientoRegistral->getRawOriginal('distrito'),)]);
 
             }
 
@@ -118,6 +123,27 @@ class InscripcionesPropiedadService{
             ]);
 
         }
+
+    }
+
+    public function obtenerUsuarioRolFraccionamientos($distrito){
+
+        $usuario = User::inRandomOrder()
+                            ->where('status', 'activo')
+                            ->when($distrito == 2, function($q){
+                                $q->where('ubicacion', 'Regional 4');
+                            })
+                            ->when($distrito != 2, function($q){
+                                $q->where('ubicacion', '!=', 'Regional 4');
+                            })
+                            ->whereHas('roles', function ($q){
+                                $q->where('name', 'Registrador fraccionamientos');
+                            })
+                            ->first();
+
+        if(!$usuario) throw new CertificacionServiceException('No hay usuario con rol de Registrador fraccionamientos.');
+
+        return $usuario->id;
 
     }
 

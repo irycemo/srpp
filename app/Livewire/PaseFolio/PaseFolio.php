@@ -338,6 +338,7 @@ class PaseFolio extends Component
         if(auth()->user()->hasRole('Administrador')){
 
             $movimientos = MovimientoRegistral::with('actualizadoPor', 'asignadoA', 'folioReal', 'supervisor')
+                                                    ->doesnthave('reformaMoral')
                                                     ->where('folio', 1)
                                                     ->where(function($q){
                                                         $q->whereNull('folio_real')
@@ -363,6 +364,7 @@ class PaseFolio extends Component
         }elseif(auth()->user()->hasRole(['Supervisor inscripciones', 'Supervisor certificaciones', 'Supervisor uruapan'])){
 
             $movimientos = MovimientoRegistral::with('actualizadoPor', 'folioReal', 'asignadoA')
+                                                    ->doesnthave('reformaMoral')
                                                     ->where('folio', 1)
                                                     ->where(function($q){
                                                         $q->whereNull('folio_real')
@@ -392,6 +394,7 @@ class PaseFolio extends Component
         }elseif(auth()->user()->hasRole(['Jefe de departamento certificaciones', 'Jefe de departamento inscripciones'])){
 
             $movimientos = MovimientoRegistral::with('actualizadoPor', 'folioReal', 'asignadoA')
+                                                    ->doesnthave('reformaMoral')
                                                     ->where('folio', 1)
                                                     ->where(function($q){
                                                         $q->whereNull('folio_real')
@@ -419,6 +422,7 @@ class PaseFolio extends Component
         }else{
 
             $movimientos = MovimientoRegistral::with('actualizadoPor', 'folioReal', 'asignadoA')
+                                                    ->doesnthave('reformaMoral')
                                                     ->where('folio', 1)
                                                     ->whereIn('estado', ['nuevo', 'correccion'])
                                                     ->where(function($q){

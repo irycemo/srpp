@@ -958,6 +958,8 @@ trait PropiedadTrait{
 
         $predioNuevo->save();
 
+        return $folioRealNuevo->folio;
+
     }
 
     public function usuarioAsignado(){

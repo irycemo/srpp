@@ -962,4 +962,58 @@ class AsignacionService{
 
     }
 
+    public function obtenerUsuarioFolioRealMoral($distrito):int
+    {
+
+        if($distrito == 2){
+
+            $idActual = Asignacion::first()?->folio_real_moral_uruapan;
+
+        }else{
+
+            $idActual = Asignacion::first()?->folio_real_moral;
+
+        }
+
+
+        $usuarios = User::where('status', 'activo')
+                            ->when($distrito == 2, function($q){
+                                $q->where('ubicacion', 'Regional 4');
+                            })
+                            ->when($distrito != 2, function($q){
+                                $q->where('ubicacion', '!=', 'Regional 4');
+                            })
+                            ->whereHas('roles', function($q){
+                                    $q->where('name', 'Folio real moral');
+                            })
+                            ->pluck('id');
+
+        if(count($usuarios) == 0){
+
+            throw new AsignacionServiceException('No se encontraron usuarios de folio real de persona moral para asignar al movimiento registral.');
+
+        }else if(count($usuarios) == 1){
+
+            return $usuarios[0];
+
+        }else{
+
+            $actual = $this->obtenerSiguienteUsuario($usuarios, $idActual);
+
+            if($distrito == 2){
+
+                Asignacion::first()->update(['folio_real_moral_uruapan' => $actual]);
+
+            }else{
+
+                Asignacion::first()->update(['folio_real_moral' => $actual]);
+
+            }
+
+            return $actual;
+
+        }
+
+    }
+
 }

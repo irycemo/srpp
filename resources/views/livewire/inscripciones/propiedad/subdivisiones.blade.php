@@ -104,7 +104,7 @@
 
                 <x-slot name="head">
 
-                    <x-table.heading >Folio real</x-table.heading>
+                    <x-table.heading>Folio real</x-table.heading>
                     <x-table.heading>Estado</x-table.heading>
                     <x-table.heading>Folio Antecedente</x-table.heading>
 
@@ -138,7 +138,7 @@
 
                                 {{ $folio->folioRealAntecedente->folio }}
 
-                            </x-table.cell>f
+                            </x-table.cell>
 
                         </x-table.row>
 

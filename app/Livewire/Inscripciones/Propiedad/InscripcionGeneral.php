@@ -587,6 +587,14 @@ class InscripcionGeneral extends Component
 
                 }
 
+                if($this->nuevoFolio) {
+
+                    $folio = $this->generarNuevoFolioReal();
+
+                    $this->inscripcion->descripcion_acto = $this->inscripcion->descripcion_acto . '. ESTE MOVIMIENTO REGISTRAL DA ORIGEN AL FOLIO REAL: ' . $folio;
+
+                }
+
                 $this->inscripcion->fecha_inscripcion = now()->toDateString();
                 $this->inscripcion->actualizado_por = auth()->id();
                 $this->inscripcion->save();
@@ -662,8 +670,6 @@ class InscripcionGeneral extends Component
                     }
 
                 }
-
-                if($this->nuevoFolio) $this->generarNuevoFolioReal();
 
                 $this->inscripcion->movimientoRegistral->update(['estado' => 'elaborado', 'actualizado_por' => auth()->id()]);
 
