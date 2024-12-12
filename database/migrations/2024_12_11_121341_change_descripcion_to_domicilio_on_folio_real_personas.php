@@ -12,8 +12,8 @@ return new class extends Migration
     public function up(): void
     {
         Schema::table('folio_real_personas', function (Blueprint $table) {
-            $table->renameColumn('`descripcion`', 'domicilio');
-            $table->renameColumn('`fecha_celebracion`', 'fecha_constitucion');
+            $table->renameColumn('descripcion', 'domicilio');
+            $table->renameColumn('fecha_celebracion', 'fecha_constitucion');
             $table->string('tipo')->nullable()->after('numero_hojas');
             $table->unsignedInteger('capital')->nullable()->after('numero_hojas');
             $table->unsignedInteger('duracion')->nullable()->after('numero_hojas');
