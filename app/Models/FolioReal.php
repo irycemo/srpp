@@ -15,6 +15,7 @@ use App\Models\Cancelacion;
 use App\Traits\ModelosTrait;
 use App\Models\Certificacion;
 use App\Constantes\Constantes;
+use App\Models\FirmaElectronica;
 use App\Models\MovimientoRegistral;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Facades\Storage;
@@ -74,6 +75,10 @@ class FolioReal extends Model implements Auditable
 
     public function predio(){
         return $this->hasOne(Predio::class, 'folio_real');
+    }
+
+    public function firmasElectronicas(){
+        return $this->hasMany(FirmaElectronica::class, 'folio_real');
     }
 
     public function bloqueos(){

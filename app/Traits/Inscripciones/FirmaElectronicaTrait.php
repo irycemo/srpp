@@ -129,6 +129,7 @@ trait FirmaElectronicaTrait{
         }
 
         $object->id = $folioReal->id;
+        $object->matriz = $folioReal->matriz;
         $object->estado = $folioReal->estado;
         $object->folio = $folioReal->folio;
         $object->tomo_antecedente = $folioReal->tomo_antecedente;

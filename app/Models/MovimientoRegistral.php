@@ -94,8 +94,16 @@ class MovimientoRegistral extends Model implements Auditable
         return $this->morphMany(File::class, 'fileable');
     }
 
+    public function firmasElectronicas(){
+        return $this->hasMany(FirmaElectronica::class, 'movimiento_registral_id');
+    }
+
     public function firmaElectronica(){
         return $this->hasOne(FirmaElectronica::class)->where('estado', 'activo');
+    }
+
+    public function movimientosHijos(){
+        return $this->hasMany(MovimientoRegistral::class, 'movimiento_padre');
     }
 
     public function caratula(){

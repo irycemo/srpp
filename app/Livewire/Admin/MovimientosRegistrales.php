@@ -7,8 +7,10 @@ use Livewire\Component;
 use Livewire\WithPagination;
 use App\Constantes\Constantes;
 use App\Traits\ComponentesTrait;
+use Illuminate\Support\Facades\DB;
 use App\Models\MovimientoRegistral;
 use Illuminate\Support\Facades\Log;
+use App\Http\Services\FolioRealService;
 
 class MovimientosRegistrales extends Component
 {
@@ -26,6 +28,8 @@ class MovimientosRegistrales extends Component
     public $modalReasignarUsuario = false;
     public $modalReasignarSupervisor = false;
     public $modalCorreccion = false;
+
+    public $mensaje;
 
     public $filters = [
         'año' => '',
@@ -168,6 +172,12 @@ class MovimientosRegistrales extends Component
 
         $this->modalCorreccion = true;
 
+        if($modelo->inscripcionPropiedad && in_array($modelo->inscripcionPropiedad->servicio, ['D121', 'D120', 'D123', 'D122', 'D119', 'D124', 'D125', 'D126'])){
+
+            $this->mensaje = "Al enviar a corrección borrara " . $modelo->movimientosHijos->count() . ' folios reales. ';
+
+        }
+
     }
 
     public function correccion(){
@@ -203,17 +213,33 @@ class MovimientosRegistrales extends Component
 
         try {
 
-            $this->modelo_editar->estado = 'correccion';
-            $this->modelo_editar->actualizado_por = auth()->id();
-            $this->modelo_editar->save();
+            DB::transaction(function () {
 
-            $this->revisarMovimientoCorreccion();
+                if(in_array($this->modelo_editar->inscripcionPropiedad?->servicio, ['D121', 'D120', 'D123', 'D122', 'D119', 'D124', 'D125', 'D126'])){
 
-            $this->modelo_editar->audits()->latest()->first()->update(['tags' => 'Cambio estado a corrección']);
+                    $folios = $this->modelo_editar->movimientosHijos()->pluck('folio_real') ;
 
-            $this->dispatch('mostrarMensaje', ['success', "La información se actualizó con éxito."]);
+                    foreach($folios as $folio){
 
-            $this->modalCorreccion = false;
+                        (new FolioRealService())->borrarFolioReal($folio);
+
+                    }
+
+                }
+
+                $this->modelo_editar->estado = 'correccion';
+                $this->modelo_editar->actualizado_por = auth()->id();
+                $this->modelo_editar->save();
+
+                $this->revisarMovimientoCorreccion();
+
+                $this->modelo_editar->audits()->latest()->first()->update(['tags' => 'Cambio estado a corrección']);
+
+                $this->dispatch('mostrarMensaje', ['success', "La información se actualizó con éxito."]);
+
+                $this->modalCorreccion = false;
+
+            });
 
         } catch (\Throwable $th) {
 

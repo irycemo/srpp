@@ -249,7 +249,7 @@
 
         <div class="space-y-2 mb-5 bg-white rounded-lg p-4">
 
-            <p class=""><strong>Formato de fechas:</strong> dd-mm-YYYY</p>
+            <p class=""><strong>Formato de fechas:</strong> YYYY-mm-dd</p>
 
         </div>
 

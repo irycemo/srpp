@@ -88,6 +88,29 @@ class FoliosReales extends Component
 
     }
 
+    public function cambiarAFolioMatriz(FolioReal $folioReal){
+
+        try {
+
+            $folioReal->update([
+                'matriz' => true,
+                'actualizado_por' => auth()->id()
+            ]);
+
+            $folioReal->audits()->latest()->first()->update(['tags' => 'Convirtio a folio matriz']);
+
+            $this->dispatch('mostrarMensaje', ['success', "El folio ahora es matriz."]);
+
+        } catch (\Throwable $th) {
+
+            $this->dispatch('mostrarMensaje', ['error', "Hubo un error."]);
+
+            Log::error("Error al cambiar a folio matriz por el usuario: (id: " . auth()->user()->id . ") " . auth()->user()->name . ". " . $th);
+
+        }
+
+    }
+
     public function abrirModalReasignar(FolioReal $modelo){
 
         if($this->modelo_editar->isNot($modelo))

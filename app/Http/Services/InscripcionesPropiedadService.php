@@ -19,10 +19,12 @@ class InscripcionesPropiedadService{
 
             $propiedad = Propiedad::create($this->requestCrear($request));
 
+            /* Revisar si son para folio matriz */
             if(in_array($propiedad->servicio, ['D114', 'D113', 'D116', 'D115'])){
 
                 $this->revisarFolioMatriz($propiedad->movimientoRegistral);
 
+            /* Fraccionamientos */
             }elseif(in_array($propiedad->servicio, ['D121', 'D120', 'D123', 'D122', 'D119', 'D124', 'D125', 'D126'])){
 
                 $propiedad->movimientoRegistral->update(['usuario_asignado' => $this->obtenerUsuarioRolFraccionamientos($propiedad->movimientoRegistral->getRawOriginal('distrito'),)]);

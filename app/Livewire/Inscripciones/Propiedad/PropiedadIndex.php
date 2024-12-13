@@ -65,7 +65,7 @@ class PropiedadIndex extends Component
                                                         $q->where('distrito', '!=', 2);
                                                     })
                                                     ->whereHas('inscripcionPropiedad', function($q){
-                                                        $q->whereIn('servicio', ['D158', 'D114', 'D125', 'D126', 'D124', 'D113', 'D115', 'D116', 'D118']);
+                                                        $q->whereIn('servicio', ['D158', 'D114', 'D113', 'D115', 'D116', 'D118']);
                                                     })
                                                     ->whereIn('estado', ['nuevo', 'captura', 'elaborado', 'correccion'])
                                                     ->orderBy($this->sort, $this->direction)
@@ -99,7 +99,7 @@ class PropiedadIndex extends Component
                                                         $q->where('distrito', '!=', 2);
                                                     })
                                                     ->whereHas('inscripcionPropiedad', function($q){
-                                                        $q->whereIn('servicio', ['D158', 'D114', 'D125', 'D126', 'D124', 'D113', 'D115', 'D116', 'D118']);
+                                                        $q->whereIn('servicio', ['D158', 'D114', 'D113', 'D115', 'D116', 'D118']);
                                                     })
                                                     ->whereIn('estado', ['nuevo', 'captura', 'elaborado', 'finalizado', 'correccion'])
                                                     ->orderBy($this->sort, $this->direction)
@@ -136,7 +136,7 @@ class PropiedadIndex extends Component
                                                         $q->where('distrito', '!=', 2);
                                                     })
                                                     ->whereHas('inscripcionPropiedad', function($q){
-                                                        $q->whereIn('servicio', ['D158', 'D114', 'D125', 'D126', 'D124', 'D113', 'D115', 'D116', 'D118']);
+                                                        $q->whereIn('servicio', ['D158', 'D114', 'D113', 'D115', 'D116', 'D118']);
                                                     })
                                                     ->orderBy($this->sort, $this->direction)
                                                     ->paginate($this->pagination);
@@ -166,7 +166,7 @@ class PropiedadIndex extends Component
                                                             });
                                                     })
                                                     ->whereHas('inscripcionPropiedad', function($q){
-                                                        $q->whereIn('servicio', ['D158', 'D114', 'D125', 'D126', 'D124', 'D113', 'D115', 'D116', 'D118']);
+                                                        $q->whereIn('servicio', ['D158', 'D114', 'D113', 'D115', 'D116', 'D118']);
                                                     })
                                                     ->orderBy($this->sort, $this->direction)
                                                     ->paginate($this->pagination);

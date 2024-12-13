@@ -95,6 +95,8 @@ class Subdivisiones extends Component
 
             $this->data = $import->data;
 
+            $this->propiedad->movimientoRegistral->folioReal->update(['estado' => 'cancelado']);
+
             $this->dispatch('mostrarMensaje', ['success', "Los folios reales se generaron con éxito"]);
 
             $this->reset('documento');

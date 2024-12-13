@@ -74,7 +74,7 @@ class RoleSeeder extends Seeder
 
         Permission::create(['name' => 'Lista de folios reales', 'area' => 'Folios reales'])->syncRoles([$role1]);
         Permission::create(['name' => 'Envia a captura', 'area' => 'Folios reales'])->syncRoles([$role1]);
-        Permission::create(['name' => 'Bloquear usuario', 'area' => 'Folios reales'])->syncRoles([$role1]);
+        Permission::create(['name' => 'Convertir en matriz', 'area' => 'Folios reales'])->syncRoles([$role1]);
 
         Permission::create(['name' => 'Lista de movimientos registrales', 'area' => 'Movimientos Registrales'])->syncRoles([$role1]);
         Permission::create(['name' => 'Reasignar movimiento', 'area' => 'Movimientos Registrales'])->syncRoles([$role1]);

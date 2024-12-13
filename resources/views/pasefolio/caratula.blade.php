@@ -182,7 +182,7 @@
                     EL DIRECTOR DEL REGISTRO PÚBLICO DE LA PROPIEDAD <strong>{{ $director }}</strong>, AUTORIZA EL PRESENTE FOLIO REAL PARA LOS ASIENTOS RELATIVOS A EL INMUEBLE QUE A CONTINUACIÓN SE DESCRIBE:
                 </p>
 
-                <p style="text-align: center" class="titulo"><strong>FOLIO REAL:</strong> {{ $folioReal->folio }}</p>
+                <p style="text-align: center" class="titulo"><strong>FOLIO REAL:</strong> {{ $folioReal->folio }} @if($folioReal->matriz) Matriz @endif</p>
 
                 @if(count($folioReal->antecedentes))
 
@@ -251,7 +251,7 @@
 
                 <p class="separador">Documento de entrada</p>
 
-                @if(in_array($folioReal->tipo_documento, ['OFICIO', 'TÍTULO DE PROPIEDAD','ESCRITURA INSTITUCIONAL', 'RESOLUCIÓN JUDICIAL']))
+                @if(in_array($folioReal->tipo_documento, ['OFICIO', 'TÍTULO DE PROPIEDAD','ESCRITURA INSTITUCIONAL', 'RESOLUCIÓN JUDICIAL', 'CONTRATO']))
 
                     <p class="parrafo">
                         <strong>Tipo de documento: </strong> {{ $folioReal->tipo_documento }}; <strong>Número de documento: </strong> {{ $folioReal->numero_documento }}; <strong>Cargo de la autoridad: </strong> {{ $folioReal->autoridad_cargo }}; <strong>Nombre de la autoridad: </strong> {{ $folioReal->autoridad_nombre }}; <strong>Número de la autoridad: </strong> {{ $folioReal->autoridad_numero }}; <strong>Fecha de emisión: </strong> {{ $folioReal->fecha_emision }}; <strong>Fecha de inscripción: </strong> {{$folioReal->fecha_inscripcion }}; <strong>Dependencia: </strong>{{ $folioReal->procedencia }}

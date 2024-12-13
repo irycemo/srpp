@@ -8,6 +8,7 @@ use App\Models\Actor;
 use App\Models\Predio;
 use App\Models\Persona;
 use App\Models\Gravamen;
+use App\Models\Escritura;
 use App\Models\FolioReal;
 use App\Models\Propiedad;
 use App\Models\Colindancia;
@@ -81,14 +82,14 @@ class FolioRealImport implements ToCollection, WithHeadingRow, WithValidation, W
             'solar' => 'nullable|string',
             'zona_ubicacion' => 'nullable|string',
             'propietarios' => 'required',
-            'acto_contenido_gravamen' => ['required', Rule::in(Constantes::ACTOS_INSCRIPCION_GRAVAMEN)],
-            'tipo_gravamen' => 'required|string',
-            'valor_gravamen' => 'required|numeric',
-            'divisa_gravamen' => ['required', Rule::in(Constantes::DIVISAS)],
-            'fecha_inscripcion_gravamen' => 'required|date_format:d-m-Y',
-            'descripcion_acto_gravamen' => 'required',
-            'actores_gravamen' => 'required',
-            'acreedores_gravamen' => 'required',
+            'acto_contenido_gravamen' => ['nullable', Rule::in(Constantes::ACTOS_INSCRIPCION_GRAVAMEN)],
+            'tipo_gravamen' => ['required_unless:acto_contenido_gravamen,null', 'nullable', 'string'],
+            'valor_gravamen' => [ 'numeric', 'required_unless:acto_contenido_gravamen,null', 'nullable'],
+            'divisa_gravamen' => [ Rule::in(Constantes::DIVISAS), 'nullable'],
+            'fecha_inscripcion_gravamen' => [ 'date_format:Y-m-d', 'required_unless:acto_contenido_gravamen,null', 'nullable'],
+            'descripcion_acto_gravamen' => [ 'required_unless:acto_contenido_gravamen,null', 'nullable'],
+            'actores_gravamen' => [ 'required_unless:acto_contenido_gravamen,null', 'nullable'],
+            'acreedores_gravamen' => [ 'required_unless:acto_contenido_gravamen,null', 'nullable'],
         ];
 
     }
@@ -125,17 +126,27 @@ class FolioRealImport implements ToCollection, WithHeadingRow, WithValidation, W
 
                     $propietarios = $this->procesarPropietarios($row['propietarios'], $key);
 
-                    $acreedores = $this->procesarAcreedores($row['acreedores_gravamen'], $key);
-
-                    $actores = $this->procesarActores($row['actores_gravamen'], $key);
-
                     $folioReal = $this->generarFolioReal();
 
                     $predio = $this->crearPredio($folioReal->id, $row);
 
                     $this->procesarRealacionesDePredio($predio->id, $colindancias, $propietarios);
 
-                    $this->generarGravamen($folioReal->id, $gravamen, $acreedores, $actores);
+                    if(in_array($this->movimientoRegistral->tipo_documento, ['ESCRITURA PÚBLICA', 'ESCRITURA PRIVADA'])){
+
+                        $this->procesarEscritura($predio);
+
+                    }
+
+                    if($row['acto_contenido_gravamen']){
+
+                        $acreedores = $this->procesarAcreedores($row['acreedores_gravamen'], $key);
+
+                        $actores = $this->procesarActores($row['actores_gravamen'], $key);
+
+                        $this->generarGravamen($folioReal->id, $gravamen, $acreedores, $actores);
+
+                    }
 
                     $this->foliosReales [] = $folioReal->load('folioRealAntecedente');
 
@@ -414,7 +425,7 @@ class FolioRealImport implements ToCollection, WithHeadingRow, WithValidation, W
                 'actorable_id' => $predioId,
                 'persona_id' => $this->persona($propietario),
                 'tipo_actor' => 'propietario',
-                'porcentaje_propiedad' => 100,
+                'porcentaje_propiedad' => 100 / count($propietarios),
                 'porcentaje_nuda' => 0,
                 'porcentaje_usufructo' => 0,
             ]);
@@ -431,6 +442,20 @@ class FolioRealImport implements ToCollection, WithHeadingRow, WithValidation, W
             ]);
 
         }
+
+    }
+
+    public function procesarEscritura(Predio $predio):void
+    {
+
+        $escritura = Escritura::create([
+            'fecha_inscripcion' => $this->movimientoRegistral->fecha_emision,
+            'notaria' => $this->movimientoRegistral->autoridad_numero,
+            'nombre_notario' => $this->movimientoRegistral->autoridad_nombre,
+            'numero' => $this->movimientoRegistral->numero_documento,
+        ]);
+
+        $predio->update(['escritura_id' => $escritura->id]);
 
     }
 
@@ -572,6 +597,19 @@ class FolioRealImport implements ToCollection, WithHeadingRow, WithValidation, W
     {
         return [
             0 => $this,
+        ];
+    }
+
+    public function customValidationMessages()
+    {
+        return [
+            'tipo_gravamen.required_unless' => 'El campo tipo_gravamen es requerido si el acto de gravamen tiene valor.',
+            'valor_gravamen.required_unless' => 'El campo valor_gravamen es requerido si el acto de gravamen tiene valor.',
+            'divisa_gravamen.required_unless' => 'El campo divisa_gravamen es requerido si el acto de gravamen tiene valor.',
+            'fecha_inscripcion_gravamen.required_unless' => 'El campo fecha_inscripcion_gravamen es requerido si el acto de gravamen tiene valor.',
+            'descripcion_acto_gravamen.required_unless' => 'El campo descripcion_acto_gravamen es requerido si el acto de gravamen tiene valor.',
+            'actores_gravamen.required_unless' => 'El campo actores_gravamen es requerido si el acto de gravamen tiene valor.',
+            'acreedores_gravamen.required_unless' => 'El campo acreedores_gravamen es requerido si el acto de gravamen tiene valor.',
         ];
     }
 

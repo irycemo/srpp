@@ -437,7 +437,7 @@
         </x-slot>
 
         <x-slot name="content">
-            ¿Esta seguro que desea cambiar estado a corrección?
+            {{ $mensaje }} ¿Esta seguro que desea cambiar estado a corrección?
         </x-slot>
 
         <x-slot name="footer">
