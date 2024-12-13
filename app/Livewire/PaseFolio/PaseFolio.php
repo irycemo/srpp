@@ -109,6 +109,12 @@ class PaseFolio extends Component
 
             DB::transaction(function (){
 
+                if($this->movimientoRegistral->folioReal?->folioRealAntecedente?->matriz){
+
+                    $this->movimientoRegistral->update(['estado' => 'concluido']);
+
+                }
+
                 $this->revisarMovimientosPrecalificacion();
 
                 $this->modelo_editar->folioReal->update([

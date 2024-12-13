@@ -1130,12 +1130,6 @@ class Elaboracion extends Component
 
         }
 
-        if($this->movimientoRegistral->folioReal?->folioRealAntecedente?->matriz){
-
-            $this->movimientoRegistral->update(['estado' => 'concluido']);
-
-        }
-
         /* Inscripción de folio real */
         if($this->movimientoRegistral->inscripcionPropiedad->servicio == 'D118' && $this->movimientoRegistral->monto == 0){
 

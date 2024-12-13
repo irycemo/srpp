@@ -85,7 +85,7 @@ class FolioRealImport implements ToCollection, WithHeadingRow, WithValidation, W
             'tipo_gravamen' => 'required|string',
             'valor_gravamen' => 'required|numeric',
             'divisa_gravamen' => ['required', Rule::in(Constantes::DIVISAS)],
-            'fecha_inscripcion_gravamen' => 'required',
+            'fecha_inscripcion_gravamen' => 'required|date_format:d-m-Y',
             'descripcion_acto_gravamen' => 'required',
             'actores_gravamen' => 'required',
             'acreedores_gravamen' => 'required',
