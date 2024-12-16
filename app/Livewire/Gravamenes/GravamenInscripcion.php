@@ -668,7 +668,7 @@ class GravamenInscripcion extends Component
 
         }
 
-        if(!$this->gravamen->movimientoRegistral->acreedores()->count()){
+        if(!$this->gravamen->acreedores()->count()){
 
             $this->dispatch('mostrarMensaje', ['error', "Debe ingresar los acreedores."]);
 
@@ -676,7 +676,7 @@ class GravamenInscripcion extends Component
 
         }
 
-        if(!$this->gravamen->movimientoRegistral->deudores()->count()){
+        if(!$this->gravamen->deudores()->count()){
 
             $this->dispatch('mostrarMensaje', ['error', "Debe ingresar los deudores."]);
 
