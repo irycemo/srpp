@@ -109,9 +109,9 @@ class PaseFolio extends Component
 
             DB::transaction(function (){
 
-                if($this->movimientoRegistral->folioReal?->folioRealAntecedente?->matriz){
+                if($this->modelo_editar->folioReal?->folioRealAntecedente?->matriz){
 
-                    $this->movimientoRegistral->update(['estado' => 'concluido']);
+                    $this->modelo_editar->update(['estado' => 'concluido']);
 
                 }
 

@@ -668,6 +668,22 @@ class GravamenInscripcion extends Component
 
         }
 
+        if(!$this->gravamen->movimientoRegistral->acreedores()->count()){
+
+            $this->dispatch('mostrarMensaje', ['error', "Debe ingresar los acreedores."]);
+
+            return;
+
+        }
+
+        if(!$this->gravamen->movimientoRegistral->deudores()->count()){
+
+            $this->dispatch('mostrarMensaje', ['error', "Debe ingresar los deudores."]);
+
+            return;
+
+        }
+
         $this->modalContraseña = true;
 
     }
