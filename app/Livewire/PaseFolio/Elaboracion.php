@@ -560,14 +560,6 @@ class Elaboracion extends Component
 
         }
 
-        if(!$this->movimientoRegistral->tipo_documento){
-
-            $this->dispatch('mostrarMensaje', ['error', "Debe guardar el documento de entrada."]);
-
-            return;
-
-        }
-
         /* if($this->propiedad->colindancias->count() == 0){
 
             $this->dispatch('mostrarMensaje', ['error', "El predio debe tener al menos una colindancia."]);

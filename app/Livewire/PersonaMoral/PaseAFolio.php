@@ -86,7 +86,7 @@ class PaseAFolio extends Component
                                                     ->orderBy($this->sort, $this->direction)
                                                     ->paginate($this->pagination);
 
-        }elseif(auth()->user()->hasRole(['Administrador', 'Operador', 'Jefe de departamento'])){
+        }elseif(auth()->user()->hasRole(['Administrador', 'Operador', 'Jefe de departamento jurídico', 'Jefe de departamento inscripciones', 'Director'])){
 
             $movimientos = MovimientoRegistral::with('asignadoA', 'actualizadoPor', 'folioRealPersona')
                                                 ->has('reformaMoral')
