@@ -89,7 +89,7 @@ class InscripcionGeneral extends Component
             'inscripcion.manzana_fraccionador' => 'nullable',
             'inscripcion.etapa_fraccionador' => 'nullable',
             'inscripcion.clave_edificio' => 'nullable',
-            'documento' => 'nullable|mimes:pdf|max:10000'
+            'documento' => 'nullable|mimes:pdf|max:100000'
          ];
     }
 

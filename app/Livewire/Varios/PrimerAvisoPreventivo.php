@@ -27,7 +27,7 @@ class PrimerAvisoPreventivo extends Component
         return [
             'vario.descripcion' => 'required',
             'vario.acto_contenido' => 'required',
-            'documento' => 'nullable|mimes:pdf|max:10000'
+            'documento' => 'nullable|mimes:pdf|max:100000'
         ];
     }
 

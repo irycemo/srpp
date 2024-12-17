@@ -48,7 +48,7 @@ class Cancelacion extends Component
             'cancelacion.observaciones' => 'required',
             'gravamenCancelarMovimiento' => 'required',
             'valor' => Rule::requiredIf($this->cancelacion->acto_contenido === 'PARCIAL'),
-            'documento' => 'nullable|mimes:pdf|max:10000'
+            'documento' => 'nullable|mimes:pdf|max:100000'
          ];
     }
 

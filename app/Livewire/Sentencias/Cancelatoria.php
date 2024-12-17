@@ -39,7 +39,7 @@ class Cancelatoria extends Component
             'sentencia.expediente' => 'nullable',
             'sentencia.tomo' => 'nullable',
             'sentencia.registro' => 'nullable',
-            'documento' => 'nullable|mimes:pdf|max:10000'
+            'documento' => 'nullable|mimes:pdf|max:100000'
         ];
 
     }

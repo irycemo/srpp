@@ -94,7 +94,7 @@ class GravamenInscripcion extends Component
             'gravamen.estado' => 'required',
             'gravamen.expediente' => 'nullable',
             'gravamen.observaciones' => 'required',
-            'documento' => 'nullable|mimes:pdf|max:10000'
+            'documento' => 'nullable|mimes:pdf|max:100000'
          ];
     }
 
