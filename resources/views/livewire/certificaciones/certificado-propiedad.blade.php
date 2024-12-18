@@ -422,7 +422,7 @@
 
                 <div class="lg:w-1/2 mx-auto mb-5">
 
-                @include('livewire.certificaciones.comun.propietario')
+                @include('livewire.certificaciones.comun.propietarios')
 
                 @if($certificacion->movimientoRegistral->folioReal)
 

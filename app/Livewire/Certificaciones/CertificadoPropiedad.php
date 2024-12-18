@@ -119,11 +119,11 @@ class CertificadoPropiedad extends Component
             foreach ($propietariosOld as $propietario) {
 
                 $predio = PropiedadOld::where('distrito', $propietario->distrito)
-                                            ->where('tomo', $propietario->tomo)
-                                            ->where('registro', $propietario->registro)
-                                            ->where('noprop', $propietario->noprop)
-                                            ->where('status', '!=', 'V')
-                                            ->first();
+                                        ->where('tomo', $propietario->tomo)
+                                        ->where('registro', $propietario->registro)
+                                        ->where('noprop', $propietario->noprop)
+                                        ->where('status', '!=', 'V')
+                                        ->first();
 
                 array_push($this->prediosOld, $predio);
 
@@ -189,7 +189,7 @@ class CertificadoPropiedad extends Component
 
         if($this->flagUnico &&  $this->certificacion->movimientoRegistral->folioReal){
 
-            $this->buscarProppietariosEnFolio();
+            $this->buscarPropietarioEnFolio();
 
         }
 
@@ -434,7 +434,7 @@ class CertificadoPropiedad extends Component
 
     }
 
-    public function buscarProppietariosEnFolio(){
+    public function buscarPropietarioEnFolio(){
 
         $this->validate();
 
