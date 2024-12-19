@@ -244,7 +244,7 @@
 
             <x-input-group for="inscripcion.valor_total_terreno" label="Valor total del terreno" :error="$errors->first('inscripcion.valor_total_terreno')" class="w-full">
 
-                <x-input-text type="number" id="inscripcion.valor_total_terreno" wire:model="valor_total_terreno" />
+                <x-input-text type="number" id="inscripcion.valor_total_terreno" wire:model="inscripcion.valor_total_terreno" />
 
             </x-input-group>
 
@@ -1594,12 +1594,6 @@
                 <div class="bg-gray-100 p-2 rounded-lg">
 
                     <p><strong>Superficie de construcción:</strong> {{ $inscripcion->superficie_construccion }} {{ $inscripcion->unidad_area }}</p>
-
-                </div>
-
-                <div class="bg-gray-100 p-2 rounded-lg">
-
-                    <p><strong>Monto de la transacción:</strong> {{ $inscripcion->monto_transaccion }} {{ $inscripcion->divisa }}</p>
 
                 </div>
 

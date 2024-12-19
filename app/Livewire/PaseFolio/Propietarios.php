@@ -320,7 +320,7 @@ class Propietarios extends Component
 
                 if($persona->id == $propietario->persona_id){
 
-                    $this->dispatch('mostrarMensaje', ['error', "La persona ya es un propietario."]);
+                    $this->dispatch('mostrarMensaje', ['error', "La persona ya es un adquiriente."]);
 
                     return;
 
@@ -401,7 +401,7 @@ class Propietarios extends Component
                     'creado_por' => auth()->id()
                 ]);
 
-                $this->dispatch('mostrarMensaje', ['success', "El propietario se guardó con éxito."]);
+                $this->dispatch('mostrarMensaje', ['success', "El adquiriente se guardó con éxito."]);
 
                 $this->dispatch('recargar', ['id' => $actor->id, 'description' => $actor->persona->nombre . ' ' . $actor->persona->ap_paterno . ' ' . $actor->persona->ap_materno . ' ' . $actor->persona->razon_social]);
 
@@ -415,7 +415,7 @@ class Propietarios extends Component
 
         } catch (\Throwable $th) {
 
-            Log::error("Error al guardar propietario en pase a folio por el usuario: (id: " . auth()->user()->id . ") " . auth()->user()->name . ". " . $th);
+            Log::error("Error al guardar adquiriente en pase a folio por el usuario: (id: " . auth()->user()->id . ") " . auth()->user()->name . ". " . $th);
             $this->dispatch('mostrarMensaje', ['error', "Ha ocurrido un error."]);
 
         }

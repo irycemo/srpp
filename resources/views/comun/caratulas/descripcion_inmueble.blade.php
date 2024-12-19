@@ -48,8 +48,16 @@
         <strong>valor de construcción común:</strong> {{ $predio->valor_construccion_comun }} {{ $predio->divisa }};
     @endif
 
+    @if ($predio->valor_total_terreno)
+        <strong>valor total de terreno:</strong> {{ $predio->valor_total_terreno }} {{ $predio->divisa }};
+    @endif
+
+    @if ($predio->valor_total_construccion)
+        <strong>valor total de construcción:</strong> {{ $predio->valor_total_construccion }} {{ $predio->divisa }};
+    @endif
+
     @if ($predio->valor_catastral)
-        <strong>valor de construcción común:</strong> {{ $predio->valor_catastral }} {{ $predio->divisa }};
+        <strong>valor catastral:</strong> {{ $predio->valor_catastral }} {{ $predio->divisa }};
     @endif
 
 </p>

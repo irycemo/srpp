@@ -4,7 +4,7 @@
 
         <div class="mb-3 bg-white rounded-lg p-3 shadow-lg">
 
-            <span class="flex items-center justify-center text-lg text-gray-700 mb-5">Propietarios</span>
+            <span class="flex items-center justify-center text-lg text-gray-700 mb-5">Adquirientes</span>
 
             <div class="flex justify-end mb-2">
 
@@ -14,7 +14,7 @@
                         wire:target="agregarPropietario">
 
                         <img wire:loading wire:target="agregarPropietario" class="mx-auto h-4 mr-1" src="{{ asset('storage/img/loading3.svg') }}" alt="Loading">
-                        Agregar propietario
+                        Agregar adquiriente
                 </x-button-gray>
 
             </div>
@@ -230,9 +230,9 @@
         <x-slot name="title">
 
             @if($crear)
-                Nuevo Propietario
+                Nuevo Adquiriente
             @elseif($editar)
-                Editar Propietario
+                Editar Adquiriente
             @endif
 
         </x-slot>

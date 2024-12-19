@@ -55,9 +55,9 @@ class FolioRealController extends Controller
                                         ->when(isset($validated['distrito']), function($q) use($validated){
                                             $q->where('distrito_antecedente', $validated['distrito']);
                                         })
-                                        ->when(isset($validated['seccion']), function($q) use($validated){
+                                        /* ->when(isset($validated['seccion']), function($q) use($validated){
                                             $q->where('seccion_antecedente', $validated['seccion']);
-                                        })
+                                        }) */
                                         ->when(isset($validated['numero_propiedad']), function($q) use($validated){
                                             $q->where('numero_propiedad_antecedente', $validated['numero_propiedad']);
                                         })
