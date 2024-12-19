@@ -14,9 +14,9 @@ class FolioRealService{
 
         $folioReal->predio->actores->each->delete();
 
-        $folioReal->predio->escritura?->delete();
-
         $folioReal->predio->delete();
+
+        $folioReal->predio->escritura?->delete();
 
         foreach ($folioReal->movimientosRegistrales as $movimiento) {
 
