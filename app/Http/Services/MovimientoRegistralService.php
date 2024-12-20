@@ -94,7 +94,7 @@ class MovimientoRegistralService{
 
         }
 
-        if($request['categoria_servicio'] == 'Inscripciones - Propiedad'){
+        if(in_array($request['categoria_servicio'], ['Inscripciones - Propiedad', 'Subdivisiones'])){
 
 
             $this->inscripcionesPropiedadService->store($request + ['movimiento_registral' => $id]);

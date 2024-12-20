@@ -495,7 +495,7 @@ class AsignacionService{
                                 $q->where('ubicacion', '!=', 'Regional 4');
                             })
                             ->whereHas('roles', function($q){
-                                $q->whereIn('name', ['Propiedad', 'Registrador fraccionamientos']);
+                                $q->where('name', 'Registrador fraccionamientos');
                             })
                             ->pluck('id');
 
