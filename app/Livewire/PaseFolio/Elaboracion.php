@@ -688,10 +688,6 @@ class Elaboracion extends Component
 
                     $this->revisarInscripcionPropiedad();
 
-                }elseif($this->movimientoRegistral->cancelacion){
-
-                    $this->revisarCancelaciones();
-
                 }
 
                 $this->revisarAntecedentesFusionantes();
@@ -1086,23 +1082,6 @@ class Elaboracion extends Component
 
     }
 
-    public function revisarCancelaciones(){
-
-        $cancelacion = $this->movimientoRegistral->folioReal->movimientosRegistrales->where('tomo_gravamen', $this->movimientoRegistral->tomo_gravamen)
-                                                                                        ->where('registro_gravamen', $this->movimientoRegistral->registro_gravamen)
-                                                                                        ->where('folio', '>', 1)
-                                                                                        ->first();
-
-        if(!$cancelacion){
-
-            (new SistemaTramitesService())->rechazarTramite($this->movimientoRegistral->año, $this->movimientoRegistral->tramite, $this->movimientoRegistral->usuario, 'Se rechaza en pase a folio debido a que el folio real no tiene gravamenes con la información ingresada.');
-
-            $this->movimientoRegistral->update(['estado' => 'rechazado']);
-
-        }
-
-    }
-
     public function revisarInscripcionPropiedad(){
 
         if(
@@ -1117,23 +1096,6 @@ class Elaboracion extends Component
                 throw new Exception('El documento de entrada es obligatorio');
 
             }
-
-            $this->movimientoRegistral->update(['estado' => 'concluido']);
-
-            (new SistemaTramitesService())->finaliarTramite($this->movimientoRegistral->año, $this->movimientoRegistral->tramite, $this->movimientoRegistral->usuario, 'concluido');
-
-        }elseif( $this->movimientoRegistral->inscripcionPropiedad->servicio == 'D157'){
-
-            $this->movimientoRegistral->update(['estado' => 'concluido']);
-
-            (new SistemaTramitesService())->finaliarTramite($this->movimientoRegistral->año, $this->movimientoRegistral->tramite, $this->movimientoRegistral->usuario, 'concluido');
-
-        }
-
-        /* Inscripción de folio real */
-        if($this->movimientoRegistral->inscripcionPropiedad->servicio == 'D118' && $this->movimientoRegistral->monto == 0){
-
-            $this->movimientoRegistral->update(['estado' => 'concluido']);
 
         }
 

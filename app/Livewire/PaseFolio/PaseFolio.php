@@ -115,6 +115,12 @@ class PaseFolio extends Component
 
                 }
 
+                if($this->modelo_editar->inscripcionPropiedad)
+                    $this->revisarInscripcionPropiedad();
+
+                if($this->modelo_editar->cancelacion)
+                    $this->revisarCancelaciones();
+
                 $this->revisarMovimientosPrecalificacion();
 
                 $this->modelo_editar->folioReal->update([
@@ -301,6 +307,59 @@ class PaseFolio extends Component
                 'estado' => 'nuevo',
                 'folio_real' => $this->modelo_editar->folio_real
             ]);
+
+        }
+
+    }
+
+    public function revisarInscripcionPropiedad(){
+
+        if(
+            in_array($this->modelo_editar->inscripcionPropiedad->servicio, ['D114', 'D113', 'D116', 'D115']) &&
+            $this->modelo_editar->tomo == null &&
+            $this->modelo_editar->registro == null &&
+            $this->modelo_editar->numero_propiedad == null
+        ){
+
+            if(!$this->modelo_editar->folioReal->documentoEntrada()){
+
+                throw new Exception('El documento de entrada es obligatorio');
+
+            }
+
+            $this->modelo_editar->update(['estado' => 'concluido']);
+
+            (new SistemaTramitesService())->finaliarTramite($this->modelo_editar->año, $this->modelo_editar->tramite, $this->modelo_editar->usuario, 'concluido');
+
+        }elseif( $this->modelo_editar->inscripcionPropiedad->servicio == 'D157'){
+
+            $this->modelo_editar->update(['estado' => 'concluido']);
+
+            (new SistemaTramitesService())->finaliarTramite($this->modelo_editar->año, $this->modelo_editar->tramite, $this->modelo_editar->usuario, 'concluido');
+
+        }
+
+        /* Inscripción de folio real */
+        if($this->modelo_editar->inscripcionPropiedad->servicio == 'D118' && $this->modelo_editar->monto <= 3){
+
+            $this->modelo_editar->update(['estado' => 'concluido']);
+
+        }
+
+    }
+
+    public function revisarCancelaciones(){
+
+        $cancelacion = $this->modelo_editar->folioReal->movimientosRegistrales->where('tomo_gravamen', $this->modelo_editar->tomo_gravamen)
+                                                                                        ->where('registro_gravamen', $this->modelo_editar->registro_gravamen)
+                                                                                        ->where('folio', '>', 1)
+                                                                                        ->first();
+
+        if(!$cancelacion){
+
+            (new SistemaTramitesService())->rechazarTramite($this->modelo_editar->año, $this->modelo_editar->tramite, $this->modelo_editar->usuario, 'Se rechaza en pase a folio debido a que el folio real no tiene gravamenes con la información ingresada.');
+
+            $this->modelo_editar->update(['estado' => 'rechazado']);
 
         }
 

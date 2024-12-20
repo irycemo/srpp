@@ -473,6 +473,60 @@ class AsignacionService{
 
     }
 
+    /* Inscripciones : Subdivisiones */
+    public function obtenerUsuarioSubdivisiones($distrito):int
+    {
+
+        if($distrito == 2){
+
+            $idActual = Asignacion::first()?->fraccionador_uruapan;
+
+        }else{
+
+            $idActual = Asignacion::first()?->fraccionador;
+
+        }
+
+        $usuarios = User::where('status', 'activo')
+                            ->when($distrito == 2, function($q){
+                                $q->where('ubicacion', 'Regional 4');
+                            })
+                            ->when($distrito != 2, function($q){
+                                $q->where('ubicacion', '!=', 'Regional 4');
+                            })
+                            ->whereHas('roles', function($q){
+                                $q->whereIn('name', ['Propiedad', 'Registrador fraccionamientos']);
+                            })
+                            ->pluck('id');
+
+        if(count($usuarios) == 0){
+
+            throw new AsignacionServiceException('No se encontraron usuarios de propiedad para asignar al movimiento registral.');
+
+        }else if(count($usuarios) == 1){
+
+            return $usuarios[0];
+
+        }else{
+
+            $actual = $this->obtenerSiguienteUsuario($usuarios, $idActual);
+
+            if($distrito == 2){
+
+                Asignacion::first()->update(['fraccionador_uruapan' => $actual]);
+
+            }else{
+
+                Asignacion::first()->update(['fraccionador' => $actual]);
+
+            }
+
+            return $actual;
+
+        }
+
+    }
+
     public function obtenerSupervisorPropiedad($distrito):int
     {
 
