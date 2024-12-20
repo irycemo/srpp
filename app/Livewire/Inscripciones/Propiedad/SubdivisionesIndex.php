@@ -25,7 +25,7 @@ class SubdivisionesIndex extends Component
 
         $this->usuarios = User::where('status', 'activo')
                                         ->whereHas('roles', function($q){
-                                            $q->whereIn('name', ['Propiedad', 'Registrador Propiedad']);
+                                            $q->where('name', 'Registrador fraccionamientos');
                                         })
                                         ->orderBy('name')
                                         ->get();
@@ -35,7 +35,7 @@ class SubdivisionesIndex extends Component
     public function render()
     {
 
-        if(auth()->user()->hasRole(['Propiedad', 'Registrador Propiedad'])){
+        if(auth()->user()->hasRole(['Propiedad', 'Registrador fraccionamientos'])){
 
             $movimientos = MovimientoRegistral::with('inscripcionPropiedad', 'asignadoA', 'actualizadoPor', 'folioReal:id,folio')
                                                     ->where('usuario_asignado', auth()->id())

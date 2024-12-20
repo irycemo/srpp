@@ -36,7 +36,7 @@ class PropiedadIndex extends Component
     public function render()
     {
 
-        if(auth()->user()->hasRole(['Propiedad', 'Registrador Propiedad'])){
+        if(auth()->user()->hasRole(['Propiedad', 'Registrador Propiedad', 'Registrador fraccionamientos'])){
 
             $movimientos = MovimientoRegistral::with('inscripcionPropiedad', 'asignadoA', 'actualizadoPor', 'folioReal:id,folio')
                                                     ->where('usuario_asignado', auth()->id())
