@@ -331,7 +331,7 @@ class MovimientoRegistralService{
 
             return $auxArray + $array + [
                 'usuario_asignado' => $this->obtenerUsuarioAsignado($documento_entrada, $folioReal, $request['servicio'], $request['distrito'], $request['solicitante'], $request['tipo_servicio'],$request['categoria_servicio'], $auxArray['estado'], false),
-                'usuario_supervisor' => $this->obtenerSupervisor($request['servicio'], $request['categoria_servicio'], $request['distrito']),
+                'usuario_supervisor' => $this->obtenerSupervisor($request['servicio'], $request['distrito']),
                 'solicitante' => $request['nombre_solicitante']
             ];
 
@@ -683,7 +683,7 @@ class MovimientoRegistralService{
 
     }
 
-    public function obtenerSupervisor($servicio, $categoria_servicio, $distrito):int
+    public function obtenerSupervisor($servicio, $distrito):int
     {
 
         if($distrito == 2){
@@ -708,43 +708,6 @@ class MovimientoRegistralService{
         }else{
 
             return $this->asignacionService->obtenerSupervisorInscripciones($distrito);
-
-        }
-
-        $inscripcionesPropiedad = ['D122', 'D114', 'D125', 'D126', 'D124', 'D121', 'D120', 'D119', 'D123', 'D118', 'D116', 'D115', 'D113', 'D157'];
-
-        /* Inscripciones: Propiedad */
-        if(in_array($servicio, $inscripcionesPropiedad) && $categoria_servicio == 'Inscripciones - Propiedad'){
-
-            return $this->asignacionService->obtenerSupervisorPropiedad($distrito);
-
-        }
-
-        /* Inscripciones: Gravamen */
-        if(in_array($servicio, ['D127', 'D153', 'D150', 'D155', 'DM68', 'D154']) && $categoria_servicio == 'Inscripciones - Gravamenes'){
-
-            return $this->asignacionService->obtenerSupervisorGravamen($distrito);
-
-        }
-
-        /* Inscripciones: Cancelaciones */
-        if($servicio == 'D156'){
-
-            return $this->asignacionService->obtenerSupervisorCancelacion($distrito);
-
-        }
-
-        /* Inscripciones: Varios */
-        if(in_array($servicio, ['D146', 'D128', 'D112', 'D110', 'D157', 'DL19', 'D149', 'DL16']) && in_array($categoria_servicio, ['Varios, Arrendamientos, Avisos Preventivos', 'Folio real de persona moral'])){
-
-            return $this->asignacionService->obtenerSupervisorVarios($distrito);
-
-        }
-
-        /* Inscripciones: Sentencias */
-        if($servicio == 'D157' && $categoria_servicio == 'Sentencias'){
-
-            return $this->asignacionService->obtenerSupervisorSentencias($distrito);
 
         }
 

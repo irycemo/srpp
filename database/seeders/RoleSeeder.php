@@ -129,6 +129,7 @@ class RoleSeeder extends Seeder
         Permission::create(['name' => 'Propiedad', 'area' => 'Inscripciones'])->syncRoles([$role1, $role7, $role9, $role8]);
         Permission::create(['name' => 'Propiedad inscripción', 'area' => 'Inscripciones'])->syncRoles([$role1, $role7, $role9, $role8]);
         Permission::create(['name' => 'Subdivisiones', 'area' => 'Inscripciones'])->syncRoles([$role1, $role7, $role9, $role8]);
+        Permission::create(['name' => 'Fraccionamientos', 'area' => 'Inscripciones'])->syncRoles([$role1, $role7, $role9, $role8]);
 
         Permission::create(['name' => 'Gravamen', 'area' => 'Inscripciones'])->syncRoles([$role1]);
         Permission::create(['name' => 'Gravamen inscripción', 'area' => 'Inscripciones'])->syncRoles([$role1]);

@@ -10,7 +10,7 @@ use App\Traits\ComponentesTrait;
 use App\Models\MovimientoRegistral;
 use App\Traits\Inscripciones\InscripcionesIndex;
 
-class SubdivisionesIndex extends Component
+class FraccionamientosIndex extends Component
 {
 
     use WithPagination;
@@ -64,7 +64,7 @@ class SubdivisionesIndex extends Component
                                                         $q->where('distrito', '!=', 2);
                                                     })
                                                     ->whereHas('inscripcionPropiedad', function($q){
-                                                        $q->where('servicio', 'D127');
+                                                        $q->whereIn('servicio', ['D121', 'D120', 'D123', 'D122', 'D119', 'D124', 'D125', 'D126']);
                                                     })
                                                     ->whereIn('estado', ['nuevo', 'captura', 'elaborado', 'correccion'])
                                                     ->orderBy($this->sort, $this->direction)
@@ -98,7 +98,7 @@ class SubdivisionesIndex extends Component
                                                         $q->where('distrito', '!=', 2);
                                                     })
                                                     ->whereHas('inscripcionPropiedad', function($q){
-                                                        $q->where('servicio', 'D127');
+                                                        $q->whereIn('servicio', ['D121', 'D120', 'D123', 'D122', 'D119', 'D124', 'D125', 'D126']);
                                                     })
                                                     ->whereIn('estado', ['nuevo', 'captura', 'elaborado', 'finalizado', 'correccion'])
                                                     ->orderBy($this->sort, $this->direction)
@@ -135,7 +135,7 @@ class SubdivisionesIndex extends Component
                                                         $q->where('distrito', '!=', 2);
                                                     })
                                                     ->whereHas('inscripcionPropiedad', function($q){
-                                                        $q->where('servicio', 'D127');
+                                                        $q->whereIn('servicio', ['D121', 'D120', 'D123', 'D122', 'D119', 'D124', 'D125', 'D126']);
                                                     })
                                                     ->orderBy($this->sort, $this->direction)
                                                     ->paginate($this->pagination);
@@ -165,13 +165,14 @@ class SubdivisionesIndex extends Component
                                                             });
                                                     })
                                                     ->whereHas('inscripcionPropiedad', function($q){
-                                                        $q->where('servicio', 'D127');
+                                                        $q->whereIn('servicio', ['D121', 'D120', 'D123', 'D122', 'D119', 'D124', 'D125', 'D126']);
                                                     })
                                                     ->orderBy($this->sort, $this->direction)
                                                     ->paginate($this->pagination);
 
         }
 
-        return view('livewire.inscripciones.propiedad.subdivisiones-index', compact('movimientos'))->extends('layouts.admin');
+        return view('livewire.inscripciones.propiedad.fraccionamientos-index', compact('movimientos'))->extends('layouts.admin');
     }
+
 }

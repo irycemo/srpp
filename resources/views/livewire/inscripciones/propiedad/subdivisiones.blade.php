@@ -6,91 +6,75 @@
 
     </div>
 
-    @if($propiedad->movimientoRegistral->estado != 'concluido')
+    @if($propiedad->movimientoRegistral->estado != 'elaborado')
 
-        <div class="space-y-2 mb-5 bg-white rounded-lg p-2">
+        <div class="mb-5 bg-white rounded-lg p-2 w-1/3 mx-auto space-y-2">
 
-            @if(!$propiedad->movimientoRegistral->documentoEntrada())
+            <div class="rounded-lg bg-gray-100 py-1 px-2">
 
-                <x-button-blue
-                    wire:click="abrirModalDocumento"
-                    wire:loading.attr="disabled"
-                    wire:target="abrirModalDocumento">
+                <strong>Folio real matriz</strong>
 
-                    <img wire:loading wire:target="abrirModalDocumento" class="mx-auto h-4 mr-1" src="{{ asset('storage/img/loading3.svg') }}" alt="Loading">
+                <p>{{ $propiedad->movimientoRegistral->folioReal->folio }}</p>
 
-                    Subir documento de entrada
+            </div>
 
-                </x-button-blue>
+            <div class="rounded-lg bg-gray-100 py-1 px-2">
 
-            @else
+                <strong>Superficie actual</strong>
 
-                <div class="inline-block">
+                <p>{{ $propiedad->movimientoRegistral->folioReal->predio->superficie_terreno_formateada }} {{ $propiedad->movimientoRegistral->folioReal->predio->unidad_area }}</p>
 
-                    <x-link-blue target="_blank" href="{{ $propiedad->movimientoRegistral->documentoEntrada() }}">Ver documento de entrada</x-link-blue>
+            </div>
 
-                </div>
+            <div class="rounded-lg bg-gray-100 py-1 px-2">
 
-            @endif
+                <strong>Subdivisiones</strong>
 
-        </div>
+                <p>{{ $propiedad->numero_inmuebles }}</p>
 
-        <div class="space-y-2 mb-5 bg-white rounded-lg p-2">
+            </div>
 
-            <div class="md:w-1/2 lg:w-1/4 mx-auto items-center text-center">
+            <div class="flex justify-between pt-5">
 
-                <div class="mb-5">
+                @if(!$propiedad->movimientoRegistral->documentoEntrada())
 
-                    <x-filepond::upload wire:model="documento" :accepted-file-types="['application/vnd.ms-excel', 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet', '.xlsx']"/>
-
-                </div>
-
-                <div>
-
-                    @error('documento') <span class="error text-sm text-red-500">{{ $message }}</span> @enderror
-
-                </div>
-
-                @if($documento)
-
-                    <button
-                        class="bg-blue-400 hover:shadow-lg w-full justify-center text-white text-xs md:text-sm px-3 py-1 items-center rounded-full mr-2 hover:bg-blue-700 flex focus:outline-none"
-                        wire:click="procesar"
+                    <x-button-blue
+                        wire:click="abrirModalDocumento"
                         wire:loading.attr="disabled"
-                        wire:target="procesar">
+                        wire:target="abrirModalDocumento">
 
-                        <img wire:loading wire:target="procesar" class="h-4 mr-1" src="{{ asset('storage/img/loading3.svg') }}" alt="Loading">
+                        <img wire:loading wire:target="abrirModalDocumento" class="mx-auto h-4 mr-1" src="{{ asset('storage/img/loading3.svg') }}" alt="Loading">
 
-                        Procesar
-                    </button>
+                        Subir documento de entrada
+
+                    </x-button-blue>
 
                 @else
 
-                    <button
-                        class="bg-green-400 hover:shadow-lg w-full justify-center text-white text-xs md:text-sm px-3 py-1 items-center rounded-full mr-2 hover:bg-green-700 flex focus:outline-none"
-                        wire:click="descargarFicha"
-                        wire:loading.attr="disabled"
-                        wire:target="descargarFicha">
+                    <div class="inline-block">
 
-                        <div wire:loading.flex wire:target="descargarFicha" class="flex absolute top-1 right-1 items-center">
-                            <svg class="animate-spin h-5 w-5 text-blue-400" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
-                                <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
-                                <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
-                            </svg>
-                        </div>
+                        <x-link-blue target="_blank" href="{{ $propiedad->movimientoRegistral->documentoEntrada() }}">Ver documento de entrada</x-link-blue>
 
-                        Descargar ficha técnica
-                    </button>
+                    </div>
 
                 @endif
+
+                <x-button-blue
+                    wire:click="subdividir"
+                    wire:loading.attr="disabled"
+                    wire:target="subdividir">
+
+                    <img wire:loading wire:target="subdividir" class="mx-auto h-4 mr-1" src="{{ asset('storage/img/loading3.svg') }}" alt="Loading">
+
+                    Hacer subdivisión
+
+                </x-button-blue>
 
             </div>
 
         </div>
 
-    @endif
-
-    @if ($data != null)
+    @else
 
         <div class="mb-6">
 
@@ -112,7 +96,7 @@
 
                 <x-slot name="body">
 
-                    @forelse ($data as $folio)
+                    @forelse ($foliosReales as $folio)
 
                         <x-table.row wire:loading.class.delaylongest="opacity-50" wire:key="row-{{ $folio->id }}">
 
@@ -183,73 +167,6 @@
                 <img class="mx-auto h-16" src="{{ asset('storage/img/loading.svg') }}" alt="">
 
             </div>
-
-        </div>
-
-    @else
-
-        <div class="space-y-2 mb-5 bg-white rounded-lg p-4">
-
-            <div class="space-y-2">
-
-                <h4 class="text-xl font-semibold">Colindancias</h4>
-
-                <p class="">Las colindancias deben tener la siguiente estrctura: <strong>VIENTO:LONGITUD:DESCRIPCION</strong>. Cada elemento separado por el carácter '<strong>:</strong>'. Debe usar el carácter '<strong>|</strong>' para separar colindancias.</p>
-
-                <p class="">Valores permitidos para VIENTO:</p>
-
-                <ul class="ml-10 grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6">
-
-                    @foreach ($vientos as $viento)
-
-                        <li class="list-disc">{{ $viento }}</li>
-
-                    @endforeach
-
-                </ul>
-
-                <p class="">Ejemplo para una colindancia: <strong>NORTE:100:Colinda 100 metros al norte</strong></p>
-
-                <p class="">Ejemplo para más de una colindancia: <strong>NORTE:100:Colinda 100 metros al norte|SUR:50:Colinda 50 metros al sur|ESTE:10:colinda 10 metros al este</strong></p>
-
-            </div>
-
-        </div>
-
-        <div class="space-y-2 mb-5 bg-white rounded-lg p-4">
-
-            <div class="space-y-2">
-
-                <h4 class="text-xl font-semibold">Propietarios, Actores gravamen, Acreedores</h4>
-
-                <p class="">Para personas fisicas: <strong>TIPO:NOMBRE:APELLIDO PATERNO:APELLIDO MATERNO</strong>. Cada elemento separado por el carácter '<strong>:</strong>'. Debe usar el carácter '<strong>|</strong>' para separarlos.</p>
-
-                <p class="">Valores permitidos para TIPO:</p>
-
-                <ul class="ml-10 grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6">
-
-                        <li class="list-disc">FISICA</li>
-                        <li class="list-disc">MORAL</li>
-
-                </ul>
-
-                <p class="">Ejemplo para una persona fisica: <strong>FISICA:MARIA:MORALES:AVILA</strong></p>
-
-                <p class="">Ejemplo para más de una persona fisica: <strong>FISICA:MARIA:MORALES:AVILA|FISICA:MARIO:DUARTE:DIAZ|FISICA:JUAN:JUAREZ:RUIZ</strong></p>
-
-                <p class="">Para personas morales: <strong>TIPO:RAZON SOCIAL</strong>. Cada elemento separado por el carácter '<strong>:</strong>'. Debe usar el carácter '<strong>|</strong>' para separarlos.</p>
-
-                <p class="">Ejemplo para una persona fisica: <strong>MORAL:GOBIERNO DEL ESTADO DE MICHOACAN DE OCAMPO</strong></p>
-
-                <p class="">Ejemplo para más de una persona fisica: <strong>MORAL:GOBIERNO DEL ESTADO DE MICHOACAN DE OCAMPO|MORAL:H. AYUNTAMIENTO DE MORELIA|MORAL:SERVICIO POSTAL MEXICANO</strong></p>
-
-            </div>
-
-        </div>
-
-        <div class="space-y-2 mb-5 bg-white rounded-lg p-4">
-
-            <p class=""><strong>Formato de fechas:</strong> YYYY-mm-dd</p>
 
         </div>
 

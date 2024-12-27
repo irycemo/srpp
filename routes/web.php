@@ -48,6 +48,8 @@ use App\Http\Controllers\Cancelaciones\CancelacionController;
 use App\Livewire\Inscripciones\Propiedad\PropiedadInscripcion;
 use App\Http\Controllers\Certificaciones\CertificadoGravamenController;
 use App\Http\Controllers\Certificaciones\CertificadoPropiedadController;
+use App\Livewire\Inscripciones\Propiedad\Fraccionamientos;
+use App\Livewire\Inscripciones\Propiedad\FraccionamientosIndex;
 use App\Livewire\PersonaMoral\PaseAFolio;
 
 /*
@@ -137,7 +139,9 @@ Route::group(['middleware' => ['auth', 'esta.activo']], function(){
 
     /* Propiedad */
     Route::get('propiedad', PropiedadIndex::class)->middleware('permission:Propiedad')->name('propiedad');
+    Route::get('fraccionamientos', FraccionamientosIndex::class)->middleware('permission:Fraccionamientos')->name('propiedad.fraccionamientos_index');
     Route::get('subdivisiones', SubdivisionesIndex::class)->middleware('permission:Subdivisiones')->name('propiedad.subdivisiones_index');
+    Route::get('fraccionamiento/{propiedad}', Fraccionamientos::class)->middleware('permission:Fraccionamientos')->name('propiedad.fraccionamiento');
     Route::get('subdivision/{propiedad}', Subdivisiones::class)->middleware('permission:Subdivisiones')->name('propiedad.subdivision');
     Route::get('propiedad/{propiedad}', PropiedadInscripcion::class)->middleware('permission:Propiedad inscripción')->name('propiedad.inscripcion');
 

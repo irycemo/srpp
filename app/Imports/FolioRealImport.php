@@ -154,6 +154,8 @@ class FolioRealImport implements ToCollection, WithHeadingRow, WithValidation, W
 
                 $this->movimientoRegistral->update(['estado' => 'concluido']);
 
+                $this->movimientoRegistral->FolioReal->update(['estado' => 'inactivo']);
+
                 $this->data = $this->foliosReales;
 
             });
