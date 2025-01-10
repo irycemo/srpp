@@ -394,7 +394,7 @@ class CertificadoPropiedadController extends Controller
         $datos_control->numero_control = $movimientoRegistral->año . '-' . $movimientoRegistral->tramite . '-' . $movimientoRegistral->usuario;
         $datos_control->verificado_por = auth()->user()->name;
         $datos_control->elaborado_en = Carbon::now()->locale('es')->translatedFormat('H:i:s \d\e\l l d \d\e F \d\e\l Y');
-        $datos_control->servicio = $this->nombreServicio($movimientoRegistral->certificacion->servicio);
+        $datos_control->servicio = $this->nombreServicio($movimientoRegistral->año, $movimientoRegistral->tramite, $movimientoRegistral->usuario);
         $datos_control->solicitante = $movimientoRegistral->solicitante;
         $datos_control->monto = $movimientoRegistral->monto;
         $datos_control->tipo_servicio = $movimientoRegistral->tipo_servicio;

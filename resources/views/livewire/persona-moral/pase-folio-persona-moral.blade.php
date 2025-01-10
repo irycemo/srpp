@@ -1,6 +1,42 @@
 <div>
 
-    <x-header>Folio real de persona moral</x-header>
+    <div class="mb-6">
+
+        <x-header>Folio real de persona moral</x-header>
+
+        <div class="flex justify-between">
+
+            <div class="flex gap-3">
+
+                <input type="text" wire:model.live.debounce.500ms="search" placeholder="Buscar" class="bg-white rounded-full text-sm">
+
+                <x-input-select class="bg-white rounded-full text-sm w-min" wire:model.live="pagination">
+
+                    <option value="10">10</option>
+                    <option value="25">25</option>
+                    <option value="50">50</option>
+                    <option value="100">100</option>
+
+                </x-input-select>
+
+            </div>
+
+            @can('Asignación')
+
+                <a href="{{ route('asignacion') }}" class="bg-gray-500 hover:shadow-lg hover:bg-gray-700 text-sm py-2 px-4 text-white rounded-full hidden md:block items-center justify-center focus:outline-gray-400 focus:outline-offset-2">
+
+                    <img wire:loading wire:target="abrirModalCrear" class="mx-auto h-4 mr-1" src="{{ asset('storage/img/loading3.svg') }}" alt="Loading">
+                    Asignar nuevo folio
+
+                </a>
+
+                <a href="{{ route('asignacion') }}" class="bg-gray-500 hover:shadow-lg hover:bg-gray-700 float-right text-sm py-2 px-4 text-white rounded-full md:hidden focus:outline-gray-400 focus:outline-offset-2">+</a>
+
+            @endcan
+
+        </div>
+
+    </div>
 
     <div class="overflow-x-auto rounded-lg shadow-xl border-t-2 border-t-gray-500">
 

@@ -11,7 +11,7 @@ use App\Traits\ComponentesTrait;
 use App\Models\MovimientoRegistral;
 use App\Traits\Inscripciones\InscripcionesIndex;
 
-class PaseAFolio extends Component
+class PaseFolioPersonaMoral extends Component
 {
 
     use WithPagination;
@@ -108,7 +108,7 @@ class PaseAFolio extends Component
 
         }
 
-        return view('livewire.persona-moral.pase-a-folio', compact('movimientos'))->extends('layouts.admin');
+        return view('livewire.persona-moral.pase-folio-persona-moral', compact('movimientos'))->extends('layouts.admin');
 
     }
 }

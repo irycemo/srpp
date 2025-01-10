@@ -53,6 +53,12 @@
 
                 @endif
 
+                @can('Área Personas morales')
+
+                    @include('layouts.sidebar-personas-morales')
+
+                @endif
+
                 @can('Consultas')
 
                     @include('layouts.sidebar-consultas')

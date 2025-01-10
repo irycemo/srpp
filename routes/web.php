@@ -19,6 +19,7 @@ use App\Livewire\PaseFolio\PaseFolio;
 use Illuminate\Support\Facades\Route;
 use App\Livewire\Sentencias\Sentencia;
 use App\Livewire\PaseFolio\Elaboracion;
+use App\Livewire\PersonaMoral\PaseAFolio;
 use App\Http\Controllers\ManualController;
 use App\Livewire\Gravamenes\GravamenIndex;
 use App\Livewire\Cancelaciones\Cancelacion;
@@ -33,6 +34,7 @@ use App\Livewire\Gravamenes\GravamenInscripcion;
 use App\Http\Controllers\Varios\VariosController;
 use App\Livewire\Certificaciones\CopiasCertificadas;
 use App\Livewire\Inscripciones\ConsultarInscripcion;
+use App\Livewire\PersonaMoral\PaseFolioPersonaMoral;
 use App\Http\Controllers\Gravamen\GravamenController;
 use App\Livewire\Certificaciones\CertificadoGravamen;
 use App\Livewire\Certificaciones\CertificadoPropiedad;
@@ -42,15 +44,16 @@ use App\Livewire\Inscripciones\Propiedad\PropiedadIndex;
 use App\Http\Controllers\Sentencias\SentenciasController;
 use App\Http\Controllers\Certificaciones\CopiasController;
 use App\Livewire\Certificaciones\ConsultasCertificaciones;
+use App\Livewire\Inscripciones\Propiedad\Fraccionamientos;
 use App\Livewire\Certificaciones\CertificadoPropiedadIndex;
 use App\Livewire\Inscripciones\Propiedad\SubdivisionesIndex;
 use App\Http\Controllers\Cancelaciones\CancelacionController;
 use App\Livewire\Inscripciones\Propiedad\PropiedadInscripcion;
+use App\Livewire\Inscripciones\Propiedad\FraccionamientosIndex;
 use App\Http\Controllers\Certificaciones\CertificadoGravamenController;
 use App\Http\Controllers\Certificaciones\CertificadoPropiedadController;
-use App\Livewire\Inscripciones\Propiedad\Fraccionamientos;
-use App\Livewire\Inscripciones\Propiedad\FraccionamientosIndex;
-use App\Livewire\PersonaMoral\PaseAFolio;
+use App\Livewire\PersonaMoral\Asiganacion;
+use App\Livewire\PersonaMoral\Reformas;
 
 /*
 |--------------------------------------------------------------------------
@@ -166,7 +169,9 @@ Route::group(['middleware' => ['auth', 'esta.activo']], function(){
     Route::get('varios_pdf/{vario}', [VariosController::class, 'acto'])->middleware('permission:Varios inscripción')->name('varios.inscripcion.acto');
 
     /* Personas morales */
-    Route::get('personas_morales', PaseAFolio::class)->middleware('permission:Personas morales')->name('personas_morales');
+    Route::get('pase_folio_persona_moral', PaseFolioPersonaMoral::class)->middleware('permission:Personas morales')->name('pase_folio_personas_morales');
+    Route::get('reformas', Reformas::class)->middleware('permission:Reformas')->name('reformas');
+    Route::get('asignacion/{movimientoRegistral?}', Asiganacion::class)->middleware('permission:Asignación')->name('asignacion');
 
     /* Consultas */
     Route::get('consultas', Consulta::class)->middleware('permission:Consultas')->name('consultas');
