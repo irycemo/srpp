@@ -167,13 +167,13 @@
 
                                         @if(in_array($movimiento->estado, ['nuevo', 'captura', 'correccion']) && !auth()->user()->hasRole(['Supervisor varios', 'Supervisor uruapan']))
 
-                                            <button
-                                                wire:click="elaborar({{  $movimiento->id }})"
+                                            <a
+                                                href="{{ route('asignacion', $movimiento->id) }}"
                                                 wire:loading.attr="disabled"
                                                 class="w-full text-left block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 focus:outline-none focus:bg-gray-100"
                                                 role="menuitem">
                                                 Elaborar
-                                            </button>
+                                            </a>
 
                                             <button
                                                 wire:click="abrirModalRechazar({{  $movimiento->id }})"

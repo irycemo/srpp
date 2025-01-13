@@ -259,7 +259,13 @@ trait InscripcionesIndex{
 
             return redirect()->route('sentencias.inscripcion', $movimientoRegistral->sentencia);
 
-        }
+        }/*
+
+        if($movimientoRegistral->reformaMoral){
+
+            return redirect()->route('asignacion', $movimientoRegistral);
+
+        } */
 
     }
 

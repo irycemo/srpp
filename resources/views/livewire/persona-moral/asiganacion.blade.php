@@ -2,65 +2,71 @@
 
     <x-header>Asignación de folio real de persona moral</x-header>
 
-    @if(!$movimientoRegistral)
+    <div class="p-4 bg-white shadow-xl rounded-xl mb-5 space-y-3">
 
-        <div class="p-4 bg-white shadow-xl rounded-xl mb-5 space-y-3">
+        <span class="flex items-center justify-center text-lg text-gray-700 md:col-span-3 col-span-1 sm:col-span-2">Escritura</span>
 
-            <span class="flex items-center justify-center text-lg text-gray-700 md:col-span-3 col-span-1 sm:col-span-2">Documento de entrada</span>
+        <div class="flex gap-3 items-center w-full lg:w-1/2 justify-center mx-auto">
 
-            <div class="flex gap-3 items-center w-full lg:w-1/2 justify-center mx-auto">
+            <x-input-group for="numero_escritura" label="Número de escritura" :error="$errors->first('numero_escritura')" class="w-full">
 
-                <x-input-group for="escritura_numero" label="Número de escritura" :error="$errors->first('escritura_numero')" class="w-full">
+                <x-input-text type="number" id="numero_escritura" wire:model="numero_escritura" />
 
-                    <x-input-text type="number" id="escritura_numero" wire:model="escritura_numero" />
+            </x-input-group>
 
-                </x-input-group>
+            <x-input-group for="notaria" label="Número de notaría" :error="$errors->first('notaria')" class="w-full">
 
-                <x-input-group for="escritura_notaria" label="Número de notaría" :error="$errors->first('escritura_notaria')" class="w-full">
+                <x-input-text type="number" id="notaria" wire:model="notaria" />
 
-                    <x-input-text type="number" id="escritura_notaria" wire:model="escritura_notaria" />
+            </x-input-group>
 
-                </x-input-group>
+            <x-input-group for="nombre_notario" label="Nombre del notario" :error="$errors->first('nombre_notario')" class="w-full">
 
-                <x-input-group for="escritura_nombre_notario" label="Nombre del notario" :error="$errors->first('escritura_nombre_notario')" class="w-full">
+                <x-input-text id="nombre_notario" wire:model="nombre_notario" />
 
-                    <x-input-text id="escritura_nombre_notario" wire:model="escritura_nombre_notario" />
-
-                </x-input-group>
-
-            </div>
-
-            <div class="flex gap-3 items-center w-full lg:w-1/2 justify-center mx-auto">
-
-                <x-input-group for="escritura_fecha_inscripcion" label="Fecha de inscripcion" :error="$errors->first('escritura_fecha_inscripcion')" class="w-full">
-
-                    <x-input-text type="date" id="escritura_fecha_inscripcion" wire:model="escritura_fecha_inscripcion" />
-
-                </x-input-group>
-
-                <x-input-group for="escritura_fecha_escritura" label="Fecha de la escritura" :error="$errors->first('escritura_fecha_escritura')" class="w-full">
-
-                    <x-input-text type="date" id="escritura_fecha_escritura" wire:model="escritura_fecha_escritura" />
-
-                </x-input-group>
-
-                <x-input-group for="escritura_numero_hojas" label="Número de hojas" :error="$errors->first('escritura_numero_hojas')" class="w-full">
-
-                    <x-input-text type="number" id="escritura_numero_hojas" wire:model="escritura_numero_hojas" />
-
-                </x-input-group>
-
-                <x-input-group for="escritura_numero_paginas" label="Número de paginas" :error="$errors->first('escritura_numero_paginas')" class="w-full">
-
-                    <x-input-text type="number" id="escritura_numero_paginas" wire:model="escritura_numero_paginas" />
-
-                </x-input-group>
-
-            </div>
+            </x-input-group>
 
         </div>
 
-    @endif
+        <div class="flex gap-3 items-center w-full lg:w-1/2 justify-center mx-auto">
+
+            <x-input-group for="escritura_fecha_inscripcion" label="Fecha de inscripcion" :error="$errors->first('escritura_fecha_inscripcion')" class="w-full">
+
+                <x-input-text type="date" id="escritura_fecha_inscripcion" wire:model="escritura_fecha_inscripcion" />
+
+            </x-input-group>
+
+            <x-input-group for="escritura_fecha_escritura" label="Fecha de la escritura" :error="$errors->first('escritura_fecha_escritura')" class="w-full">
+
+                <x-input-text type="date" id="escritura_fecha_escritura" wire:model="escritura_fecha_escritura" />
+
+            </x-input-group>
+
+            <x-input-group for="numero_hojas" label="Número de hojas" :error="$errors->first('numero_hojas')" class="w-full">
+
+                <x-input-text type="number" id="numero_hojas" wire:model="numero_hojas" />
+
+            </x-input-group>
+
+            <x-input-group for="numero_paginas" label="Número de paginas" :error="$errors->first('numero_paginas')" class="w-full">
+
+                <x-input-text type="number" id="numero_paginas" wire:model="numero_paginas" />
+
+            </x-input-group>
+
+        </div>
+
+        <div class="flex gap-3 items-center w-full lg:w-1/2 justify-center mx-auto">
+
+            <x-input-group for="observaciones_escritura" label="Observaciones" :error="$errors->first('observaciones_escritura')" class="w-full">
+
+                <textarea rows="3" class="w-full bg-white rounded" wire:model="observaciones_escritura"></textarea>
+
+            </x-input-group>
+
+        </div>
+
+    </div>
 
     <div class="p-4 bg-white shadow-xl rounded-xl mb-5 space-y-3">
 
@@ -110,13 +116,25 @@
 
             </x-input-group>
 
+            <x-input-group for="tipo" label="Tipo" :error="$errors->first('tipo')" class="w-full">
+
+                <x-input-select id="tipo" wire:model="tipo" class="w-full">
+
+                    <option value="">Seleccione una opción</option>
+                    <option value="lucrativa">Lucrativa</option>
+                    <option value="no_lucrativa">No lucrativa</option>
+
+                </x-input-select>
+
+            </x-input-group>
+
         </div>
 
         <div class="flex gap-3 items-center w-full lg:w-1/2 justify-center mx-auto">
 
-            <x-input-group for="descripcion" label="Descripción" :error="$errors->first('descripcion')" class="w-full">
+            <x-input-group for="domicilio" label="Domicilio" :error="$errors->first('domicilio')" class="w-full">
 
-                <textarea rows="3" class="w-full bg-white rounded" wire:model="descripcion"></textarea>
+                <textarea rows="3" class="w-full bg-white rounded" wire:model="domicilio"></textarea>
 
             </x-input-group>
 
@@ -224,16 +242,7 @@
 
             @if(!$movimientoRegistral->documentoEntrada())
 
-                <x-button-blue
-                    wire:click="abrirModalFinalizar"
-                    wire:loading.attr="disabled"
-                    wire:target="abrirModalFinalizar">
 
-                    <img wire:loading wire:target="abrirModalFinalizar" class="mx-auto h-4 mr-1" src="{{ asset('storage/img/loading3.svg') }}" alt="Loading">
-
-                    Subir documento de entrada
-
-                </x-button-blue>
 
             @else
 

@@ -19,12 +19,6 @@ class PaseFolioPersonaMoral extends Component
     use ComponentesTrait;
     use InscripcionesIndex;
 
-    public function elaborar(MovimientoRegistral $movimientoRegistral){
-
-        $this->ruta($movimientoRegistral);
-
-    }
-
     public function mount(){
 
         $this->crearModeloVacio();

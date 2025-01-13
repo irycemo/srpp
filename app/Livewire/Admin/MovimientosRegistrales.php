@@ -76,7 +76,7 @@ class MovimientosRegistrales extends Component
 
             $this->cargarUsuarios(['Propiedad', 'Registrador Propiedad', 'Pase a folio']);
 
-            $this->cargarSupervisores(['Supervisor propiedad']);
+            $this->cargarSupervisores(['Supervisor inscripciones']);
 
         }
 
@@ -84,7 +84,7 @@ class MovimientosRegistrales extends Component
 
             $this->cargarUsuarios(['Gravamen', 'Registrador Gravamen', 'Pase a folio']);
 
-            $this->cargarSupervisores(['Supervisor gravamen']);
+            $this->cargarSupervisores(['Supervisor inscripciones']);
 
         }
 
@@ -92,7 +92,7 @@ class MovimientosRegistrales extends Component
 
             $this->cargarUsuarios(['Varios', 'Registrador Varios', 'Pase a folio', 'Aclaraciones administrativas', 'Avisos preventivos']);
 
-            $this->cargarSupervisores(['Supervisor Varios']);
+            $this->cargarSupervisores(['Supervisor inscripciones']);
 
         }
 
@@ -100,7 +100,7 @@ class MovimientosRegistrales extends Component
 
             $this->cargarUsuarios(['Cancelación', 'Registrador cancelación', 'Pase a folio']);
 
-            $this->cargarSupervisores(['Supervisor Cancelación']);
+            $this->cargarSupervisores(['Supervisor inscripciones']);
 
         }
 
@@ -108,7 +108,15 @@ class MovimientosRegistrales extends Component
 
             $this->cargarUsuarios(['Sentencias', 'Registrador sentencias', 'Pase a folio']);
 
-            $this->cargarSupervisores(['Supervisor Sentencias']);
+            $this->cargarSupervisores(['Supervisor inscripciones']);
+
+        }
+
+        if($this->modelo_editar->reformaMoral){
+
+            $this->cargarUsuarios(['Folio real moral']);
+
+            $this->cargarSupervisores(['Supervisor inscripciones']);
 
         }
 

@@ -340,6 +340,10 @@ class Constantes{
         'CANCELACIÓN PARCIAL DE GRAVAMEN',
     ];
 
+    const ACTOS_REFORMAS_MORALES = [
+        'INSCRIPCIÓN DE FOLIO REAL DE PERSONA MORAL',
+    ];
+
     const DOCUMENTOS_DE_ENTRADA = [
         'ESCRITURA PÚBLICA',
         'ESCRITURA PRIVADA',
