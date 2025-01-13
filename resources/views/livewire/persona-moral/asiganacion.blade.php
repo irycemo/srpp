@@ -160,54 +160,51 @@
 
             <div class="">
 
-                <div class="mb-2 flex justify-end">
-
-                    <x-button-blue wire:click="abrirModalCrear">Agregar participante</x-button-blue>
-
-                </div>
+                @livewire('comun.actores.socio', ['sub_tipos' => $actores, 'modelo' => $movimientoRegistral->folioRealPersona])
 
                 <div>
 
-                    <x-table>
+                    @if($movimientoRegistral?->folioRealPersona)
 
-                        <x-slot name="head">
-                            <x-table.heading >Participante</x-table.heading>
-                            <x-table.heading >Tipo</x-table.heading>
-                            <x-table.heading ></x-table.heading>
-                        </x-slot>
+                        <x-table>
 
-                        <x-slot name="body">
+                            <x-slot name="head">
+                                <x-table.heading >Participante</x-table.heading>
+                                <x-table.heading >Tipo</x-table.heading>
+                                <x-table.heading ></x-table.heading>
+                            </x-slot>
 
-                            {{-- @foreach ($reforma?->actores as $participante)
+                            <x-slot name="body">
 
-                                <x-table.row >
+                                @foreach ($movimientoRegistral->folioRealPersona->actores as $participante)
 
-                                    <x-table.cell>{{ $participante->persona->razon_social }}</x-table.cell>
-                                    <x-table.cell>
-                                        <div class="flex items-center gap-3">
-                                            <x-button-blue
-                                                wire:click="abrirModalEditarActor({{ $participante->id }})"
-                                                wire:loading.attr="disabled"
-                                            >
-                                                Editar
-                                            </x-button-blue>
-                                            <x-button-red
-                                                wire:click="borrarActor({{ $participante->id }})"
-                                                wire:loading.attr="disabled">
-                                                Borrar
-                                            </x-button-red>
-                                        </div>
-                                    </x-table.cell>
+                                    <x-table.row >
 
-                                </x-table.row>
+                                        <x-table.cell>{{ $participante->persona->nombre }} {{ $participante->persona->ap_paterno }} {{ $participante->persona->ap_materno }} {{ $participante->persona->razon_social }}</x-table.cell>
+                                        <x-table.cell>{{ $participante->tipo_socio }}</x-table.cell>
+                                        <x-table.cell>
+                                            <div class="flex items-center gap-3">
 
-                            @endforeach --}}
+                                                <livewire:comun.actores.socio :sub_tipos="$actores" :modelo="$movimientoRegistral->folioRealPersona" :actor="$participante" wire:key="{{ $participante->id }}" />
+                                                <x-button-red
+                                                    wire:click="eliminarActor({{ $participante->id }})"
+                                                    wire:loading.attr="disabled">
+                                                    Borrar
+                                                </x-button-red>
+                                            </div>
+                                        </x-table.cell>
 
-                        </x-slot>
+                                    </x-table.row>
 
-                        <x-slot name="tfoot"></x-slot>
+                                @endforeach
 
-                    </x-table>
+                            </x-slot>
+
+                            <x-slot name="tfoot"></x-slot>
+
+                        </x-table>
+
+                    @endif
 
                 </div>
 
@@ -238,17 +235,17 @@
 
     <div class="bg-white rounded-lg p-3 flex justify-end shadow-lg gap-3">
 
-        @if($movimientoRegistral)
+        @if($movimientoRegistral->folioRealPersona)
 
-            @if(!$movimientoRegistral->documentoEntrada())
+            @if(!$movimientoRegistral->folioRealPersona->documentoEntrada())
 
-
+                @livewire('comun.documento-entrada', ['folioRealPersonaMoral' => $movimientoRegistral->folioRealPersona])
 
             @else
 
                 <div class="inline-block">
 
-                    <x-link-blue target="_blank" href="{{ $vario->movimientoRegistral->documentoEntrada() }}">Documento de entrada</x-link-blue>
+                    <x-link-blue target="_blank" href="{{ $movimientoRegistral->folioRealPersona->documentoEntrada() }}">Documento de entrada</x-link-blue>
 
                 </div>
 
@@ -279,5 +276,7 @@
         </x-button-green>
 
     </div>
+
+    @filepondScripts
 
 </div>

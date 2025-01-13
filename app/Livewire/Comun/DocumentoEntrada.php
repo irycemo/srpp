@@ -6,12 +6,16 @@ use App\Models\File;
 use Livewire\Component;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
+use Spatie\LivewireFilepond\WithFilePond;
 
 class DocumentoEntrada extends Component
 {
 
+    use WithFilePond;
+
     public $movimientoRegistral;
     public $folioReal;
+    public $folioRealPersonaMoral;
 
     public $modal = false;
 
@@ -48,6 +52,8 @@ class DocumentoEntrada extends Component
 
             });
 
+            $this->dispatch('refresh');
+
         } catch (\Throwable $th) {
 
             Log::error("Error al guardar documento de entrada por el usuario: (id: " . auth()->user()->id . ") " . auth()->user()->name . ". " . $th);
@@ -65,11 +71,17 @@ class DocumentoEntrada extends Component
 
             $this->id = $this->movimientoRegistral->id;
 
-        }else{
+        }elseif($this->folioReal){
 
             $this->modelo = 'App\Models\FolioReal';
 
             $this->id = $this->folioReal->id;
+
+        }else{
+
+            $this->modelo = 'App\Models\FolioRealPersona';
+
+            $this->id = $this->folioRealPersonaMoral->id;
 
         }
 

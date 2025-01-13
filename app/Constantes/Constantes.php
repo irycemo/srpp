@@ -409,4 +409,17 @@ class Constantes{
         'Previo a la Inscripción de la lotificación, Fusión, Lotificación y/Fraccionamiento. Es necesario Inscribir previamente, los actos contractuales de los inmuebles destinados a vías públicas y destinados al H. Ayuntamiento y/o Gobierno del Estado. Artículo 159, 331 del Código de Desarrollo Urbano del Estado de Michoacán.'
     ];
 
+    const ACTORES_FOLIO_REAL_PERSONA_MORAL = [
+        'PRESIDENTE DEL CONSEJO DE ADMINISTRACIÓN',
+        'VICEPRESIDENTE DEL CONSEJO DE ADMINISTRACIÓN',
+        'SECRETARIO DEL CONSEJO DE ADMINISTRACIÓN',
+        'TESORERO',
+        'VOCAL',
+        'PRESIDENTE DEL CONSEJO DE VIGILANCIA',
+        'VICEPRESIDENTE DEL CONSEJO DE VIGILANCIA',
+        'SECRETARIO DEL CONSEJO DE VIGILANCIA',
+        'ESCRUTADOR',
+        'SOCIO'
+    ];
+
 }

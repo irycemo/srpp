@@ -2,15 +2,16 @@
 
 namespace App\Livewire\PersonaMoral;
 
+use App\Models\Actor;
 use Livewire\Component;
 use App\Models\Escritura;
+use App\Models\ReformaMoral;
 use App\Constantes\Constantes;
 use App\Models\FolioRealPersona;
 use Illuminate\Support\Facades\DB;
 use App\Models\MovimientoRegistral;
 use Illuminate\Support\Facades\Log;
 use App\Http\Services\AsignacionService;
-use App\Models\ReformaMoral;
 
 class Asiganacion extends Component
 {
@@ -37,6 +38,10 @@ class Asiganacion extends Component
     public $numero_hojas;
     public $numero_paginas;
     public $observaciones_escritura;
+
+    public $actores;
+
+    protected $listeners = ['refresh' => 'refreshActores'];
 
     protected function rules(){
         return [
@@ -149,6 +154,8 @@ class Asiganacion extends Component
 
             $this->dispatch('mostrarMensaje', ['success', "La información se guardo con éxito."]);
 
+            $this->dispatch('cargarModelo', [get_class($this->movimientoRegistral->folioRealPersona), $this->movimientoRegistral->folio_real_persona]);
+
         } catch (\Throwable $th) {
 
             Log::error("Error al guardar folio de persona moral por el usuario: (id: " . auth()->user()->id . ") " . auth()->user()->name . ". " . $th);
@@ -215,7 +222,34 @@ class Asiganacion extends Component
 
     }
 
+    public function refreshActores(){
+
+        $this->movimientoRegistral->folioRealPersona->load('actores.persona');
+
+    }
+
+    public function eliminarActor(Actor $actor){
+
+        try {
+
+            $actor->delete();
+
+            $this->dispatch('mostrarMensaje', ['success', "El socio se eliminó con éxito."]);
+
+            $this->refreshActores();
+
+        } catch (\Throwable $th) {
+
+            Log::error("Error al eliminar socio por el usuario: (id: " . auth()->user()->id . ") " . auth()->user()->name . ". " . $th);
+            $this->dispatch('mostrarMensaje', ['error', "Ha ocurrido un error."]);
+
+        }
+
+    }
+
     public function mount(){
+
+        $this->actores = Constantes::ACTORES_FOLIO_REAL_PERSONA_MORAL;
 
         $this->distritos = Constantes::DISTRITOS;
 
@@ -241,6 +275,8 @@ class Asiganacion extends Component
                 $this->nombre_notario = $this->movimientoRegistral->folioRealPersona->escritura->nombre_notario;
                 $this->observaciones_escritura = $this->movimientoRegistral->folioRealPersona->escritura->comentario;
 
+                $this->movimientoRegistral->folioRealPersona->load('actores.persona');
+
             }
 
         }else{
@@ -255,4 +291,5 @@ class Asiganacion extends Component
     {
         return view('livewire.persona-moral.asiganacion')->extends('layouts.admin');
     }
+
 }
