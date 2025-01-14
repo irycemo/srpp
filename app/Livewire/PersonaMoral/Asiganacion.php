@@ -11,6 +11,7 @@ use App\Models\FolioRealPersona;
 use Illuminate\Support\Facades\DB;
 use App\Models\MovimientoRegistral;
 use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Facades\Hash;
 use App\Http\Services\AsignacionService;
 
 class Asiganacion extends Component
@@ -29,6 +30,8 @@ class Asiganacion extends Component
     public $tipo;
     public $domicilio;
 
+    public $objeto;
+
     public Escritura $escritura;
     public $escritura_fecha_inscripcion;
     public $escritura_fecha_escritura;
@@ -40,6 +43,9 @@ class Asiganacion extends Component
     public $observaciones_escritura;
 
     public $actores;
+
+    public $modalContraseña = false;
+    public $contraseña;
 
     protected $listeners = ['refresh' => 'refreshActores'];
 
@@ -56,11 +62,11 @@ class Asiganacion extends Component
             'distrito' => 'required',
             'numero_paginas' => 'required|numeric|min:1',
             'observaciones' => 'nullable',
-            'escritura_fecha_inscripcion' => 'required|date|before:today',
             'escritura_fecha_escritura' => 'required|date|before:today',
             'tipo' => 'required',
             'observaciones_escritura' => 'nullable',
-            'domicilio' => 'required'
+            'domicilio' => 'required',
+            'objeto' => 'required'
          ];
     }
 
@@ -133,6 +139,8 @@ class Asiganacion extends Component
                             'actualizado_por' => auth()->id()
                         ]);
 
+                        $this->movimientoRegistral->folioRealPersona->objetos()->whereNull('fecha_baja')->first()->update(['objeto' => $this->objeto]);
+
                         $this->movimientoRegistral->folioRealPersona->escritura->update([
                             'numero' => $this->numero_escritura,
                             'fecha_inscripcion' => $this->escritura_fecha_inscripcion,
@@ -181,7 +189,7 @@ class Asiganacion extends Component
         ReformaMoral::create([
             'movimiento_registral_id' => $this->movimientoRegistral->id,
             'acto_contenido' => 'INSCRIPCIÓN DE FOLIO REAL DE PERSONA MORAL',
-            'descripcion' => 'ESTE MOVMIENTO REGISTRAL DA ORIGEN AL FOLIO REAL DE PERSONA MORAL'
+            'descripcion' => 'ESTE MOVIMIENTO REGISTRAL DA ORIGEN AL FOLIO REAL DE PERSONA MORAL'
         ]);
 
     }
@@ -201,6 +209,11 @@ class Asiganacion extends Component
             'domicilio' => $this->domicilio,
             'observaciones' => $this->observaciones,
             'creado_por' => auth()->id()
+        ]);
+
+        $this->folioRealPersonaMoral->objetos()->create([
+            'fecha_alta' => now()->toDateString(),
+            'objeto' => $this->objeto
         ]);
 
     }
@@ -247,6 +260,65 @@ class Asiganacion extends Component
 
     }
 
+    public function finalizar(){
+
+        if(!$this->movimientoRegistral?->folioRealPersona){
+
+            $this->dispatch('mostrarMensaje', ['error', "Debe guardar la información para finalizar."]);
+
+            return;
+
+        }
+
+        if(!$this->movimientoRegistral?->folioRealPersona->actores()->count()){
+
+            $this->dispatch('mostrarMensaje', ['error', "Debe ingresar al menos un participante."]);
+
+            return;
+        }
+
+        $this->modalContraseña = true;
+
+    }
+
+    public function inscribir(){
+
+        try {
+
+            if(!Hash::check($this->contraseña, auth()->user()->password)){
+
+                $this->dispatch('mostrarMensaje', ['error', "Contraseña incorrecta."]);
+
+                return;
+
+            }
+
+            $this->guardar();
+
+            DB::transaction(function () {
+
+                $this->movimientoRegistral->folioRealPersona->escritura->update([
+                    'fecha_inscripcion' => now()->toDateString(),
+                    'actualizado_por' => auth()->id()
+                ]);
+
+                $this->movimientoRegistral->folioRealPersona->update([
+                    'estado' => 'elaborado',
+                    'fecha_inscripcion' => now()->toDateString(),
+                    'actualizado_por' => auth()->id()
+                ]);
+
+            });
+
+            return redirect()->route('pase_folio_personas_morales');
+
+        } catch (\Throwable $th) {
+            Log::error("Error al inscribir folio real de persona moral por el usuario: (id: " . auth()->user()->id . ") " . auth()->user()->name . ". " . $th);
+            $this->dispatch('mostrarMensaje', ['error', "Ha ocurrido un error."]);
+        }
+
+    }
+
     public function mount(){
 
         $this->actores = Constantes::ACTORES_FOLIO_REAL_PERSONA_MORAL;
@@ -274,6 +346,8 @@ class Asiganacion extends Component
                 $this->notaria = $this->movimientoRegistral->folioRealPersona->escritura->notaria;
                 $this->nombre_notario = $this->movimientoRegistral->folioRealPersona->escritura->nombre_notario;
                 $this->observaciones_escritura = $this->movimientoRegistral->folioRealPersona->escritura->comentario;
+
+                $this->objeto = $this->movimientoRegistral->folioRealPersona->objetos()->whereNull('fecha_baja')->first()?->objeto;
 
                 $this->movimientoRegistral->folioRealPersona->load('actores.persona');
 

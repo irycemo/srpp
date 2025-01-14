@@ -81,6 +81,7 @@ trait ActoresTrait{
             'ciudad' => 'nullable',
             'entidad' => 'nullable',
             'municipio' => 'nullable',
+            'sub_tipo' => 'required'
         ];
     }
 
@@ -120,7 +121,7 @@ trait ActoresTrait{
 
         if(!$this->modelo){
 
-            $this->dispatch('mostrarMensaje', ['error', "Debe cargar primero el modelo."]);
+            $this->dispatch('mostrarMensaje', ['error', "Debe guardar primero."]);
 
             return;
 

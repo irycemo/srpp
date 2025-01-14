@@ -3,6 +3,7 @@
 namespace App\Http\Services;
 
 use App\Models\Persona;
+use Exception;
 
 class PersonaService{
 
@@ -11,7 +12,23 @@ class PersonaService{
 
         $persona = null;
 
-        if($rfc){
+        if($rfc && $curp){
+
+            $personaRfc = Persona::where('rfc', $rfc)->first();
+
+            $personaCurp = Persona::where('curp', $curp)->first();
+
+            if($personaRfc?->id != $personaCurp?->id){
+
+                throw new Exception('Ya esta registrada otra persona con la misma CURP o RFC');
+
+            }else{
+
+                $persona = $personaRfc;
+
+            }
+
+        }elseif($rfc){
 
             $persona = Persona::where('rfc', $rfc)->first();
 

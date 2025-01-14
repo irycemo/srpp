@@ -83,6 +83,8 @@ class Socio extends Component
 
             }
 
+            $this->modal = false;
+
             $this->resetearTodo();
 
             $this->dispatch('mostrarMensaje', ['success', "El participante se creó con éxito."]);
@@ -124,19 +126,32 @@ class Socio extends Component
                         'numero_interior' => $this->numero_interior,
                         'colonia' => $this->colonia,
                         'cp' => $this->cp,
+                        'ciudad' => $this->ciudad,
                         'entidad' => $this->entidad,
+                        'nacionalidad' => $this->nacionalidad,
                         'municipio' => $this->municipio,
                         'actualizado_por' => auth()->id()
                     ]);
 
-                    $this->actor->delete();
+                    if($persona->id != $this->actor->persona_id){
 
-                    $this->modelo->actores()->create([
-                        'persona_id' => $persona->id,
-                        'tipo_actor' => 'socio',
-                        'tipo_socio' => $this->sub_tipo,
-                        'creado_por' => auth()->id()
-                    ]);
+                        $this->actor->delete();
+
+                        $this->modelo->actores()->create([
+                            'persona_id' => $persona->id,
+                            'tipo_actor' => 'socio',
+                            'tipo_socio' => $this->sub_tipo,
+                            'creado_por' => auth()->id()
+                        ]);
+
+                    }else{
+
+                        $this->actor->update([
+                            'tipo_socio' => $this->sub_tipo,
+                            'actualizado_por' => auth()->id()
+                        ]);
+
+                    }
 
                 });
 
@@ -179,7 +194,7 @@ class Socio extends Component
 
             }
 
-            $this->resetearTodo();
+            $this->modal = false;
 
             $this->dispatch('mostrarMensaje', ['success', "El participante se actualizó con éxito."]);
 
@@ -224,6 +239,8 @@ class Socio extends Component
             $this->entidad = $this->actor->persona->entidad;
             $this->ciudad = $this->actor->persona->ciudad;
             $this->municipio = $this->actor->persona->municipio;
+
+            $this->sub_tipo = $this->actor->tipo_socio;
 
         }else{
 

@@ -30,11 +30,11 @@
 
         <div class="flex gap-3 items-center w-full lg:w-1/2 justify-center mx-auto">
 
-            <x-input-group for="escritura_fecha_inscripcion" label="Fecha de inscripcion" :error="$errors->first('escritura_fecha_inscripcion')" class="w-full">
+            {{-- <x-input-group for="escritura_fecha_inscripcion" label="Fecha de inscripcion" :error="$errors->first('escritura_fecha_inscripcion')" class="w-full">
 
                 <x-input-text type="date" id="escritura_fecha_inscripcion" wire:model="escritura_fecha_inscripcion" />
 
-            </x-input-group>
+            </x-input-group> --}}
 
             <x-input-group for="escritura_fecha_escritura" label="Fecha de la escritura" :error="$errors->first('escritura_fecha_escritura')" class="w-full">
 
@@ -132,6 +132,16 @@
 
         <div class="flex gap-3 items-center w-full lg:w-1/2 justify-center mx-auto">
 
+            <x-input-group for="objeto" label="Objeto" :error="$errors->first('objeto')" class="w-full">
+
+                <textarea rows="3" class="w-full bg-white rounded" wire:model="objeto"></textarea>
+
+            </x-input-group>
+
+        </div>
+
+        <div class="flex gap-3 items-center w-full lg:w-1/2 justify-center mx-auto">
+
             <x-input-group for="domicilio" label="Domicilio" :error="$errors->first('domicilio')" class="w-full">
 
                 <textarea rows="3" class="w-full bg-white rounded" wire:model="domicilio"></textarea>
@@ -178,14 +188,16 @@
 
                                 @foreach ($movimientoRegistral->folioRealPersona->actores as $participante)
 
-                                    <x-table.row >
+                                    <x-table.row wire:key="row-{{ $participante->id }}">
 
                                         <x-table.cell>{{ $participante->persona->nombre }} {{ $participante->persona->ap_paterno }} {{ $participante->persona->ap_materno }} {{ $participante->persona->razon_social }}</x-table.cell>
                                         <x-table.cell>{{ $participante->tipo_socio }}</x-table.cell>
                                         <x-table.cell>
                                             <div class="flex items-center gap-3">
 
-                                                <livewire:comun.actores.socio :sub_tipos="$actores" :modelo="$movimientoRegistral->folioRealPersona" :actor="$participante" wire:key="{{ $participante->id }}" />
+                                                <div>
+                                                    <livewire:comun.actores.socio :sub_tipos="$actores" :modelo="$movimientoRegistral->folioRealPersona" :actor="$participante" wire:key="button-{{ $participante->id }}" />
+                                                </div>
                                                 <x-button-red
                                                     wire:click="eliminarActor({{ $participante->id }})"
                                                     wire:loading.attr="disabled">
@@ -276,6 +288,52 @@
         </x-button-green>
 
     </div>
+
+    <x-dialog-modal wire:model="modalContraseña" maxWidth="sm">
+
+        <x-slot name="title">
+
+            Ingresa tu contraseña
+
+        </x-slot>
+
+        <x-slot name="content">
+
+            <x-input-group for="contraseña" label="Contraseña" :error="$errors->first('contraseña')" class="w-full">
+
+                <x-input-text type="password" id="contraseña" wire:model="contraseña" />
+
+            </x-input-group>
+
+        </x-slot>
+
+        <x-slot name="footer">
+
+            <div class="flex gap-3">
+
+                <x-button-blue
+                    wire:click="inscribir"
+                    wire:loading.attr="disabled"
+                    wire:target="inscribir">
+
+                    <img wire:loading wire:target="inscribir" class="mx-auto h-4 mr-1" src="{{ asset('storage/img/loading3.svg') }}" alt="Loading">
+
+                    <span>Ingresar contraseña</span>
+                </x-button-blue>
+
+                <x-button-red
+                    wire:click="$toggle('modalContraseña')"
+                    wire:loading.attr="disabled"
+                    wire:target="$toggle('modalContraseña')"
+                    type="button">
+                    Cerrar
+                </x-button-red>
+
+            </div>
+
+        </x-slot>
+
+    </x-dialog-modal>
 
     @filepondScripts
 

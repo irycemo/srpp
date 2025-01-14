@@ -87,7 +87,15 @@
 
                             <span class="lg:hidden absolute top-0 left-0 bg-blue-300 px-2 py-1 text-xs text-white font-bold uppercase rounded-br-xl">Estado</span>
 
-                            <span class="bg-{{ $movimiento->estado_color }} py-1 px-2 rounded-full text-white text-xs">{{ ucfirst($movimiento->estado) }}</span>
+                            @if($movimiento->folioRealPersona)
+
+                                <span class="bg-{{ $movimiento->folioRealPersona?->estado_color }} py-1 px-2 rounded-full text-white text-xs">{{ ucfirst($movimiento->folioRealPersona?->estado) }}</span>
+
+                            @else
+
+                                <span class="bg-{{ $movimiento->estado_color }} py-1 px-2 rounded-full text-white text-xs">{{ ucfirst($movimiento->estado) }}</span>
+
+                            @endif
 
                         </x-table.cell>
 
@@ -165,72 +173,58 @@
 
                                     <div x-cloak x-show="open_drop_down" x-on:click="open_drop_down=false" x-on:click.away="open_drop_down=false" class="z-50 origin-top-right absolute right-0 mt-2 w-48 rounded-md shadow-lg py-1 bg-white ring-1 ring-black ring-opacity-5 focus:outline-none" role="menu" aria-orientation="vertical" aria-labelledby="user-menu">
 
-                                        @if(in_array($movimiento->estado, ['nuevo', 'captura', 'correccion']) && !auth()->user()->hasRole(['Supervisor varios', 'Supervisor uruapan']))
+                                        @if($movimiento->folioRealPersona)
 
-                                            <a
-                                                href="{{ route('asignacion', $movimiento->id) }}"
-                                                wire:loading.attr="disabled"
-                                                class="w-full text-left block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 focus:outline-none focus:bg-gray-100"
-                                                role="menuitem">
-                                                Elaborar
-                                            </a>
+                                            @if($movimiento->folioRealPersona->estado == 'elaborado' )
 
-                                            <button
-                                                wire:click="abrirModalRechazar({{  $movimiento->id }})"
-                                                wire:loading.attr="disabled"
-                                                class="w-full text-left block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 focus:outline-none focus:bg-gray-100"
-                                                role="menuitem">
+                                                <button
+                                                    wire:click="pasarCaptura({{ $movimiento->id }})"
+                                                    wire:loading.attr="disabled"
+                                                    class="w-full text-left block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 focus:outline-none focus:bg-gray-100"
+                                                    role="menuitem">
+                                                    Corregir
+                                                </button>
 
-                                                Rechazar
+                                                <button
+                                                    wire:click="abrirModalFinalizar({{ $movimiento->id }})"
+                                                    wire:loading.attr="disabled"
+                                                    class="w-full text-left block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 focus:outline-none focus:bg-gray-100"
+                                                    role="menuitem">
+                                                    Finalizar
+                                                </button>
 
-                                            </button>
+                                            @elseif(!$supervisor)
 
-                                        @elseif($movimiento->estado == 'elaborado'  && !auth()->user()->hasRole(['Supervisor varios', 'Supervisor uruapan']))
+                                                <a class="w-full text-left block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 focus:outline-none focus:bg-gray-100" href="{{ route('asignacion', $movimiento->id) }}">Elaborar</a>
 
-                                            <button
-                                                wire:click="imprimir({{  $movimiento->id }})"
-                                                wire:loading.attr="disabled"
-                                                class="w-full text-left block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 focus:outline-none focus:bg-gray-100"
-                                                role="menuitem">
-                                                Imprimir
-                                            </button>
+                                            @endif
 
-                                            <button
-                                                wire:click="abrirModalFinalizar({{  $movimiento->id }})"
-                                                wire:loading.attr="disabled"
-                                                class="w-full text-left block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 focus:outline-none focus:bg-gray-100"
-                                                role="menuitem">
-                                                Finalizar
-                                            </button>
+                                        @elseif(!$supervisor)
 
-                                        @elseif($movimiento->estado == 'finalizado' && auth()->user()->hasRole(['Jefe de departamento inscripciones', 'Supervisor varios', 'Supervisor uruapan']))
-
-                                            <button
-                                                wire:click="imprimir({{  $movimiento->id }})"
-                                                wire:loading.attr="disabled"
-                                                class="w-full text-left block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 focus:outline-none focus:bg-gray-100"
-                                                role="menuitem">
-                                                Imprimir
-                                            </button>
-
-                                            <button
-                                                wire:click="abrirModalConcluir({{  $movimiento->id }})"
-                                                wire:loading.attr="disabled"
-                                                class="w-full text-left block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 focus:outline-none focus:bg-gray-100"
-                                                role="menuitem">
-                                                Concluir
-                                            </button>
+                                            <a class="w-full text-left block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 focus:outline-none focus:bg-gray-100" href="{{ route('asignacion', $movimiento->id) }}">Elaborar</a>
 
                                         @endif
 
-                                        @if(in_array($movimiento->estado, ['nuevo', 'captura', 'elaborado']) && auth()->user()->hasRole(['Jefe de departamento inscripciones', 'Supervisor varios', 'Supervisor uruapan']))
+                                        @if(auth()->user()->hasRole(['Jefe de departamento certificaciones', 'Jefe de departamento inscripciones']) || $supervisor)
 
                                             <button
-                                                wire:click="abrirModalReasignar({{  $movimiento->id }})"
+                                                wire:click="reasignarAleatoriamente({{ $movimiento->id }})"
                                                 wire:loading.attr="disabled"
                                                 class="w-full text-left block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 focus:outline-none focus:bg-gray-100"
                                                 role="menuitem">
                                                 Reasignar
+                                            </button>
+
+                                        @endif
+
+                                        @if($movimiento->año)
+
+                                            <button
+                                                wire:click="abrirModalRechazar({{ $movimiento->id }})"
+                                                wire:loading.attr="disabled"
+                                                class="w-full text-left block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 focus:outline-none focus:bg-gray-100"
+                                                role="menuitem">
+                                                Rechazar
                                             </button>
 
                                         @endif
@@ -413,20 +407,20 @@
 
     </x-dialog-modal>
 
-    <x-confirmation-modal wire:model="modalConcluir" maxWidth="sm">
+    <x-confirmation-modal wire:model="modalFinalizar" maxWidth="sm">
 
         <x-slot name="title">
-            Concluir movimiento registral
+            Finalizar
         </x-slot>
 
         <x-slot name="content">
-            ¿Esta seguro que desea concluir el movimiento registral?
+            ¿Esta seguro que desea finalizar el folio real?
         </x-slot>
 
         <x-slot name="footer">
 
             <x-secondary-button
-                wire:click="$toggle('modalConcluir')"
+                wire:click="$toggle('modalFinalizar')"
                 wire:loading.attr="disabled"
             >
                 No
@@ -434,11 +428,11 @@
 
             <x-danger-button
                 class="ml-2"
-                wire:click="concluir"
+                wire:click="finalizar"
                 wire:loading.attr="disabled"
-                wire:target="concluir"
+                wire:target="finalizar"
             >
-                Concluir
+                Finalizar
             </x-danger-button>
 
         </x-slot>
