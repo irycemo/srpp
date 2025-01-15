@@ -64,9 +64,71 @@
 
                 </x-input-group>
 
+                <div class="sm:col-span-2 lg:col-span-3 flex gap-3">
+
+                    <x-button-blue
+                        wire:click="buscarPersonas"
+                        wire:target="buscarPersonas"
+                        wire:loading.attr="disabled"
+                        class="w-full">
+                        Buscar persona
+                    </x-button-blue>
+
+                    <x-button-blue class="w-full" wire:click="$set('flag_agregar', 'true')">Agregar nuevo</x-button-blue>
+
+                </div>
+
             </div>
 
-            @include('livewire.comun.actores.modal-content')
+            @if($flag_agregar)
+
+                @include('livewire.comun.actores.modal-content')
+
+            @else
+
+                <x-table>
+
+                    <x-slot name="head">
+                        <x-table.heading >Nombre / Razón social</x-table.heading>
+                        <x-table.heading >Tipo</x-table.heading>
+                        <x-table.heading ></x-table.heading>
+                    </x-slot>
+
+                    <x-slot name="body">
+
+                        @forelse ($personas as $persona)
+
+                            <x-table.row wire:key="row-{{ $persona->id }}">
+
+                                <x-table.cell>{{ $persona->nombre }} {{ $persona->ap_paterno }} {{ $persona->ap_materno }} {{ $persona->razon_social }}</x-table.cell>
+                                <x-table.cell></x-table.cell>
+                                <x-table.cell>
+                                    <div class="flex items-center gap-3">
+                                        <x-button-red
+                                            wire:click="agregarPersona({{ $persona->id }})"
+                                            wire:loading.attr="disabled">
+                                            Borrar
+                                        </x-button-red>
+                                    </div>
+                                </x-table.cell>
+
+                            </x-table.row>
+
+                        @empty
+
+                            <div class="text-center">
+                                <span class="p-4 w-full tracking-widest">Sin resultados</span>
+                            </div>
+
+                        @endforelse
+
+                    </x-slot>
+
+                    <x-slot name="tfoot"></x-slot>
+
+                </x-table>
+
+            @endif
 
         </x-slot>
 

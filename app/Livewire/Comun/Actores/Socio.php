@@ -33,32 +33,13 @@ class Socio extends Component
 
             if($persona){
 
+                throw new Exception('Ya existe un persona registrada con la información ingresada.');
+
                 foreach($this->modelo->actores as $actor){
 
                     if($actor->persona_id == $persona->id) throw new Exception('La persona ya es un participante.');
 
                 }
-
-                $persona->update([
-                    'estado_civil' => $this->estado_civil,
-                    'calle' => $this->calle,
-                    'numero_exterior' => $this->numero_exterior,
-                    'numero_interior' => $this->numero_interior,
-                    'colonia' => $this->colonia,
-                    'cp' => $this->cp,
-                    'ciudad' => $this->ciudad,
-                    'entidad' => $this->entidad,
-                    'nacionalidad' => $this->nacionalidad,
-                    'municipio' => $this->municipio,
-                    'actualizado_por' => auth()->id()
-                ]);
-
-                $this->modelo->actores()->create([
-                    'persona_id' => $persona->id,
-                    'tipo_actor' => 'socio',
-                    'tipo_socio' => $this->sub_tipo,
-                    'creado_por' => auth()->id()
-                ]);
 
             }else{
 

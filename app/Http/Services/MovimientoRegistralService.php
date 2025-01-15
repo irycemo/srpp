@@ -366,6 +366,7 @@ class MovimientoRegistralService{
             'registro_gravamen',
             'seccion',
             'numero_oficio',
+            'numero_documento',
             'tipo_documento',
             'autoridad_cargo',
             'autoridad_nombre',

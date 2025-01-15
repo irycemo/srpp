@@ -3,11 +3,13 @@
 namespace App\Traits;
 
 use App\Models\Actor;
+use App\Models\Persona;
 use Illuminate\Validation\Rule;
 
 trait ActoresTrait{
 
     public Actor $actor;
+    public $personas = [];
 
     public $tipo_actor;
     public $sub_tipos;
@@ -41,6 +43,7 @@ trait ActoresTrait{
     public $modal = false;
     public $crear = false;
     public $editar = false;
+    public $flag_agregar = false;
 
     public function getListeners()
     {
@@ -113,7 +116,9 @@ trait ActoresTrait{
             'modal',
             'editar',
             'crear',
-            'sub_tipo'
+            'sub_tipo',
+            'flag_agregar',
+            'personas'
         ]);
     }
 
@@ -144,6 +149,46 @@ trait ActoresTrait{
     public function cargarModelo($object){
 
         $this->modelo = $object[0]::find($object[1]);
+
+    }
+
+    public function buscarPersonas(){
+
+        if(!$this->nombre && !$this->ap_materno && !$this->ap_paterno && !$this->razon_social && !$this->rfc && !$this->curp){
+
+            $this->dispatch('mostrarMensaje', ['warning', "Debe ingresar información."]);
+
+            return;
+
+        }
+
+        $this->validate([
+            'nombre' => Rule::requiredIf($this->ap_materno && $this->ap_paterno),
+            'ap_materno' => Rule::requiredIf($this->nombre && $this->ap_paterno),
+            'ap_paterno' => Rule::requiredIf($this->ap_materno && $this->nombre),
+        ]);
+
+        $this->personas = Persona::when($this->rfc && $this->rfc != '', function($q){
+                                            $q->where('rfc', $this->rfc);
+                                        })
+                                        ->when($this->curp && $this->curp != '', function($q){
+                                            $q->where('curp', $this->curp);
+                                        })
+                                        ->when($this->nombre && $this->nombre != '', function($q){
+                                            $q->where('nombre', $this->nombre);
+                                        })
+                                        ->when($this->ap_materno && $this->ap_materno != '', function($q){
+                                            $q->where('ap_materno', $this->ap_materno);
+                                        })
+                                        ->when($this->ap_paterno && $this->ap_paterno != '', function($q){
+                                            $q->where('ap_paterno', $this->ap_paterno);
+                                        })
+                                        ->when($this->razon_social && $this->razon_social != '', function($q){
+                                            $q->where('razon_social', $this->razon_social);
+                                        })
+                                        ->get();
+
+        $this->flag_agregar = false;
 
     }
 
