@@ -39,6 +39,20 @@ class Socio extends Component
 
                 }
 
+                $persona->update([
+                    'estado_civil' => $this->estado_civil,
+                    'calle' => $this->calle,
+                    'numero_exterior' => $this->numero_exterior,
+                    'numero_interior' => $this->numero_interior,
+                    'colonia' => $this->colonia,
+                    'cp' => $this->cp,
+                    'ciudad' => $this->ciudad,
+                    'entidad' => $this->entidad,
+                    'nacionalidad' => $this->nacionalidad,
+                    'municipio' => $this->municipio,
+                    'actualizado_por' => auth()->id()
+                ]);
+
                 $this->modelo->actores()->create([
                     'persona_id' => $persona->id,
                     'tipo_actor' => 'socio',
@@ -115,82 +129,27 @@ class Socio extends Component
 
             $persona = $personaService->buscarPersona($this->rfc, $this->curp, $this->tipo_persona, $this->nombre, $this->ap_materno, $this->ap_paterno, $this->razon_social);
 
-            if($persona){
+            if($persona && ($persona->id != $this->actor->persona_id)){
 
-                DB::transaction(function () use($persona){
-
-                    $persona->update([
-                        'estado_civil' => $this->estado_civil,
-                        'calle' => $this->calle,
-                        'numero_exterior' => $this->numero_exterior,
-                        'numero_interior' => $this->numero_interior,
-                        'colonia' => $this->colonia,
-                        'cp' => $this->cp,
-                        'ciudad' => $this->ciudad,
-                        'entidad' => $this->entidad,
-                        'nacionalidad' => $this->nacionalidad,
-                        'municipio' => $this->municipio,
-                        'actualizado_por' => auth()->id()
-                    ]);
-
-                    if($persona->id != $this->actor->persona_id){
-
-                        $this->actor->delete();
-
-                        $this->modelo->actores()->create([
-                            'persona_id' => $persona->id,
-                            'tipo_actor' => 'socio',
-                            'tipo_socio' => $this->sub_tipo,
-                            'creado_por' => auth()->id()
-                        ]);
-
-                    }else{
-
-                        $this->actor->update([
-                            'tipo_socio' => $this->sub_tipo,
-                            'actualizado_por' => auth()->id()
-                        ]);
-
-                    }
-
-                });
+                throw new Exception("Ya existe una persona con el RFC o CURP ingresada.");
 
             }else{
 
-                DB::transaction(function () use($personaService){
-
-                    $persona = $personaService->crearPersona([
-                        'tipo' => $this->tipo_persona,
-                        'nombre' => $this->nombre,
-                        'multiple_nombre' => $this->multiple_nombre,
-                        'ap_paterno' => $this->ap_paterno,
-                        'ap_materno' => $this->ap_materno,
-                        'curp' => $this->curp,
-                        'rfc' => $this->rfc,
-                        'razon_social' => $this->razon_social,
-                        'fecha_nacimiento' => $this->fecha_nacimiento,
-                        'nacionalidad' => $this->nacionalidad,
-                        'estado_civil' => $this->estado_civil,
-                        'calle' => $this->calle,
-                        'numero_exterior' => $this->numero_exterior,
-                        'numero_interior' => $this->numero_interior,
-                        'colonia' => $this->colonia,
-                        'cp' => $this->cp,
-                        'entidad' => $this->entidad,
-                        'ciudad' => $this->ciudad,
-                        'municipio' => $this->municipio,
-                    ]);
-
-                    $this->actor->delete();
-
-                    $this->modelo->actores()->create([
-                        'persona_id' => $persona->id,
-                        'tipo_actor' => 'socio',
-                        'tipo_socio' => $this->sub_tipo,
-                        'creado_por' => auth()->id()
-                    ]);
-
-                });
+                $this->actor->persona->update([
+                    'curp' => $this->curp,
+                    'rfc' => $this->rfc,
+                    'estado_civil' => $this->estado_civil,
+                    'calle' => $this->calle,
+                    'numero_exterior' => $this->numero_exterior,
+                    'numero_interior' => $this->numero_interior,
+                    'colonia' => $this->colonia,
+                    'cp' => $this->cp,
+                    'ciudad' => $this->ciudad,
+                    'entidad' => $this->entidad,
+                    'nacionalidad' => $this->nacionalidad,
+                    'municipio' => $this->municipio,
+                    'actualizado_por' => auth()->id()
+                ]);
 
             }
 
@@ -217,8 +176,6 @@ class Socio extends Component
     public function mount(){
 
         if(isset($this->actor)){
-
-            $this->tipo_actor = $this->actor->tipo_actor;
 
             $this->tipo_persona = $this->actor->persona->tipo;
             $this->nombre = $this->actor->persona->nombre;

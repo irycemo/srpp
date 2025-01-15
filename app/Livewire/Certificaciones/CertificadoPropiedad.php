@@ -329,6 +329,30 @@ class CertificadoPropiedad extends Component
 
             DB::transaction(function (){
 
+                foreach ($this->medidas as $key =>$medida) {
+
+                    if($medida['id'] == null){
+
+                        $aux = $this->certificacion->movimientoRegistral->folioReal->predio->colindancias()->create([
+                            'viento' => $medida['viento'],
+                            'longitud' => $medida['longitud'],
+                            'descripcion' => $medida['descripcion'],
+                        ]);
+
+                        $this->medidas[$key]['id'] = $aux->id;
+
+                    }else{
+
+                        Colindancia::find($medida['id'])->update([
+                            'viento' => $medida['viento'],
+                            'longitud' => $medida['longitud'],
+                            'descripcion' => $medida['descripcion'],
+                        ]);
+
+                    }
+
+                }
+
                 $this->certificacion->movimientoRegistral->estado = 'elaborado';
                 $this->certificacion->movimientoRegistral->save();
 
@@ -410,6 +434,30 @@ class CertificadoPropiedad extends Component
         try{
 
             DB::transaction(function (){
+
+                foreach ($this->medidas as $key =>$medida) {
+
+                    if($medida['id'] == null){
+
+                        $aux = $this->certificacion->movimientoRegistral->folioReal->predio->colindancias()->create([
+                            'viento' => $medida['viento'],
+                            'longitud' => $medida['longitud'],
+                            'descripcion' => $medida['descripcion'],
+                        ]);
+
+                        $this->medidas[$key]['id'] = $aux->id;
+
+                    }else{
+
+                        Colindancia::find($medida['id'])->update([
+                            'viento' => $medida['viento'],
+                            'longitud' => $medida['longitud'],
+                            'descripcion' => $medida['descripcion'],
+                        ]);
+
+                    }
+
+                }
 
                 $this->certificacion->movimientoRegistral->estado = 'elaborado';
                 $this->certificacion->movimientoRegistral->save();
@@ -656,20 +704,16 @@ class CertificadoPropiedad extends Component
 
     public function mount(){
 
-        if($this->certificacion->servicio == 'DL11'){
+        $this->vientos = Constantes::VIENTOS;
 
-            $this->vientos = Constantes::VIENTOS;
+        foreach ($this->certificacion->movimientoRegistral->folioReal->predio->colindancias as $colindancia) {
 
-            foreach ($this->certificacion->movimientoRegistral->folioReal->predio->colindancias as $colindancia) {
-
-                $this->medidas[] = [
-                    'id' => $colindancia->id,
-                    'viento' => $colindancia->viento,
-                    'longitud' => $colindancia->longitud,
-                    'descripcion' => $colindancia->descripcion,
-                ];
-
-            }
+            $this->medidas[] = [
+                'id' => $colindancia->id,
+                'viento' => $colindancia->viento,
+                'longitud' => $colindancia->longitud,
+                'descripcion' => $colindancia->descripcion,
+            ];
 
         }
 

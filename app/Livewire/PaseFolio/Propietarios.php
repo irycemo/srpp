@@ -864,7 +864,7 @@ class Propietarios extends Component
 
         $pu = $pu + (float)$this->porcentaje_usufructo + $pp;
 
-        if($pn > 100 || $pu > 100)
+        if((int)$pn > 100 || (int)$pu > 100)
             return true;
         else
             return false;
