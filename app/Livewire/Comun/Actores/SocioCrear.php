@@ -10,7 +10,7 @@ use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
 use App\Http\Services\PersonaService;
 
-class Socio extends Component
+class SocioCrear extends Component
 {
 
     use ActoresTrait;
@@ -82,7 +82,7 @@ class Socio extends Component
 
             $this->resetearTodo();
 
-            $this->dispatch('mostrarMensaje', ['success', "El participante se creó con éxito."]);
+            $this->dispatch('mostrarMensaje', ['success', "El socio se creó con éxito."]);
 
             $this->dispatch('refresh');
 
@@ -158,6 +158,7 @@ class Socio extends Component
 
         if(isset($this->actor)){
 
+            $this->persona = $this->actor->persona;
             $this->tipo_persona = $this->actor->persona->tipo;
             $this->nombre = $this->actor->persona->nombre;
             $this->multiple_nombre = $this->actor->persona->multiple_nombre;
@@ -190,6 +191,6 @@ class Socio extends Component
 
     public function render()
     {
-        return view('livewire.comun.actores.socio');
+        return view('livewire.comun.actores.socio-crear');
     }
 }

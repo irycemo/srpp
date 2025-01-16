@@ -170,7 +170,7 @@
 
             <div class="">
 
-                @livewire('comun.actores.socio', ['sub_tipos' => $actores, 'modelo' => $movimientoRegistral->folioRealPersona])
+                @livewire('comun.actores.socio-crear', ['sub_tipos' => $actores, 'modelo' => $movimientoRegistral->folioRealPersona])
 
                 <div>
 
@@ -196,7 +196,7 @@
                                             <div class="flex items-center gap-3">
 
                                                 <div>
-                                                    <livewire:comun.actores.socio :sub_tipos="$actores" :modelo="$movimientoRegistral->folioRealPersona" :actor="$participante" wire:key="button-{{ $participante->id }}" />
+                                                    <livewire:comun.actores.socio-actualizar :sub_tipos="$actores" :modelo="$movimientoRegistral->folioRealPersona" :actor="$participante" wire:key="button-{{ $participante->id }}" />
                                                 </div>
                                                 <x-button-red
                                                     wire:click="eliminarActor({{ $participante->id }})"

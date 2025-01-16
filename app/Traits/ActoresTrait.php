@@ -10,6 +10,7 @@ trait ActoresTrait{
 
     public Actor $actor;
     public $personas = [];
+    public $persona;
 
     public $tipo_actor;
     public $sub_tipos;
@@ -154,6 +155,8 @@ trait ActoresTrait{
 
     public function buscarPersonas(){
 
+        $this->flag_agregar = false;
+
         if(!$this->nombre && !$this->ap_materno && !$this->ap_paterno && !$this->razon_social && !$this->rfc && !$this->curp){
 
             $this->dispatch('mostrarMensaje', ['warning', "Debe ingresar información."]);
@@ -163,9 +166,17 @@ trait ActoresTrait{
         }
 
         $this->validate([
-            'nombre' => Rule::requiredIf($this->ap_materno && $this->ap_paterno),
-            'ap_materno' => Rule::requiredIf($this->nombre && $this->ap_paterno),
-            'ap_paterno' => Rule::requiredIf($this->ap_materno && $this->nombre),
+            'nombre' => Rule::requiredIf($this->ap_materno || $this->ap_paterno),
+            'ap_materno' => Rule::requiredIf($this->nombre || $this->ap_paterno),
+            'ap_paterno' => Rule::requiredIf($this->ap_materno || $this->nombre),
+            'curp' => [
+                'nullable',
+                'regex:/^[A-Z]{1}[AEIOUX]{1}[A-Z]{2}[0-9]{2}(0[1-9]|1[0-2])(0[1-9]|1[0-9]|2[0-9]|3[0-1])[HM]{1}(AS|BC|BS|CC|CS|CH|CL|CM|DF|DG|GT|GR|HG|JC|MC|MN|MS|NT|NL|OC|PL|QT|QR|SP|SL|SR|TC|TS|TL|VZ|YN|ZS|NE)[B-DF-HJ-NP-TV-Z]{3}[0-9A-Z]{1}[0-9]{1}$/i'
+            ],
+            'rfc' => [
+                'nullable',
+                'regex:/^([A-ZÑ&]{3,4}) ?(?:- ?)?(\d{2}(?:0[1-9]|1[0-2])(?:0[1-9]|[12]\d|3[01])) ?(?:- ?)?([A-Z\d]{2})([A\d])$/'
+            ],
         ]);
 
         $this->personas = Persona::when($this->rfc && $this->rfc != '', function($q){
@@ -188,7 +199,49 @@ trait ActoresTrait{
                                         })
                                         ->get();
 
-        $this->flag_agregar = false;
+    }
+
+    public function agregarNuevo(){
+
+        $this->flag_agregar = true;
+
+        $this->reset([
+            'nombre',
+            'ap_paterno',
+            'ap_materno',
+            'curp',
+            'rfc',
+        ]);
+
+    }
+
+    public function seleccionar($id){
+
+        $this->persona = collect($this->personas)->where('id', $id)->first();
+
+        $this->flag_agregar = true;
+
+        $this->editar = true;
+
+        $this->tipo_persona = $this->persona->tipo;
+        $this->nombre = $this->persona->nombre;
+        $this->multiple_nombre = $this->persona->multiple_nombre;
+        $this->ap_paterno = $this->persona->ap_paterno;
+        $this->ap_materno = $this->persona->ap_materno;
+        $this->curp = $this->persona->curp;
+        $this->rfc = $this->persona->rfc;
+        $this->razon_social = $this->persona->razon_social;
+        $this->fecha_nacimiento = $this->persona->fecha_nacimiento;
+        $this->nacionalidad = $this->persona->nacionalidad;
+        $this->estado_civil = $this->persona->estado_civil;
+        $this->calle = $this->persona->calle;
+        $this->numero_exterior = $this->persona->numero_exterior;
+        $this->numero_interior = $this->persona->numero_interior;
+        $this->colonia = $this->persona->colonia;
+        $this->cp = $this->persona->cp;
+        $this->entidad = $this->persona->entidad;
+        $this->ciudad = $this->persona->ciudad;
+        $this->municipio = $this->persona->municipio;
 
     }
 

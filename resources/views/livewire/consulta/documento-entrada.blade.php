@@ -181,7 +181,7 @@
 
         </div>
 
-    @elseif($folioReal->tipo_documento === 'ESCRITURA PÚBLICA' || $folioReal->tipo_documento === 'ESCRITURA PRIVADA')
+    @elseif($folioReal->predio->escritura)
 
         <div class="rounded-lg bg-gray-100 py-1 px-2">
 

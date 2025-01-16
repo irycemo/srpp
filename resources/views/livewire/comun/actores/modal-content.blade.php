@@ -18,7 +18,7 @@
 
     <x-input-group for="tipo_persona" label="Tipo de persona" :error="$errors->first('tipo_persona')" class="w-full">
 
-        <x-input-select id="tipo_persona" wire:model.live="tipo_persona" class="w-full" :disabled="$editar && $actor->getKey()">
+        <x-input-select id="tipo_persona" wire:model.live="tipo_persona" class="w-full" :disabled="$editar && $persona->getKey()">
 
             <option value="">Seleccione una opción</option>
             <option value="MORAL">MORAL</option>
@@ -36,19 +36,19 @@
 
         <x-input-group for="nombre" label="Nombre(s)" :error="$errors->first('nombre')" class="w-full">
 
-            <x-input-text id="nombre" wire:model="nombre" :readonly="$editar && $actor->persona->nombre" />
+            <x-input-text id="nombre" wire:model="nombre" :readonly="$editar && $persona->nombre" />
 
         </x-input-group>
 
         <x-input-group for="ap_paterno" label="Apellido paterno" :error="$errors->first('ap_paterno')" class="w-full">
 
-            <x-input-text id="ap_paterno" wire:model="ap_paterno" :readonly="$editar && $actor->persona->ap_paterno" />
+            <x-input-text id="ap_paterno" wire:model="ap_paterno" :readonly="$editar && $persona->ap_paterno" />
 
         </x-input-group>
 
         <x-input-group for="ap_materno" label="Apellido materno" :error="$errors->first('ap_materno')" class="w-full">
 
-            <x-input-text id="ap_materno" wire:model="ap_materno" :readonly="$editar && $actor->persona->ap_materno" />
+            <x-input-text id="ap_materno" wire:model="ap_materno" :readonly="$editar && $persona->ap_materno" />
 
         </x-input-group>
 
@@ -64,7 +64,7 @@
 
         <x-input-group for="curp" label="CURP" :error="$errors->first('curp')" class="w-full">
 
-            <x-input-text id="curp" wire:model="curp" :readonly="$editar && $actor->persona->curp" />
+            <x-input-text id="curp" wire:model="curp" :readonly="$editar && $persona->curp" />
 
         </x-input-group>
 
@@ -84,7 +84,7 @@
 
         <x-input-group for="razon_social" label="Razon social" :error="$errors->first('razon_social')" class="w-full">
 
-            <x-input-text id="razon_social" wire:model="razon_social" :readonly="$editar && $actor->persona->razon_social" />
+            <x-input-text id="razon_social" wire:model="razon_social" :readonly="$editar && $persona->razon_social" />
 
         </x-input-group>
 
@@ -92,7 +92,7 @@
 
     <x-input-group for="rfc" label="RFC" :error="$errors->first('rfc')" class="w-full">
 
-        <x-input-text id="rfc" wire:model="rfc" :readonly="$editar && $actor->persona->rfc" />
+        <x-input-text id="rfc" wire:model="rfc" :readonly="$editar && $persona->rfc" />
 
     </x-input-group>
 
