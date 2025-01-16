@@ -9,8 +9,8 @@ use Illuminate\Validation\Rule;
 trait ActoresTrait{
 
     public Actor $actor;
+    public Persona $persona;
     public $personas = [];
-    public $persona;
 
     public $tipo_actor;
     public $sub_tipos;
@@ -65,14 +65,6 @@ trait ActoresTrait{
             ],
             'ap_paterno' => 'nullable',
             'ap_materno' => 'nullable',
-            'curp' => [
-                'nullable',
-                'regex:/^[A-Z]{1}[AEIOUX]{1}[A-Z]{2}[0-9]{2}(0[1-9]|1[0-2])(0[1-9]|1[0-9]|2[0-9]|3[0-1])[HM]{1}(AS|BC|BS|CC|CS|CH|CL|CM|DF|DG|GT|GR|HG|JC|MC|MN|MS|NT|NL|OC|PL|QT|QR|SP|SL|SR|TC|TS|TL|VZ|YN|ZS|NE)[B-DF-HJ-NP-TV-Z]{3}[0-9A-Z]{1}[0-9]{1}$/i'
-            ],
-            'rfc' => [
-                'nullable',
-                'regex:/^([A-ZÑ&]{3,4}) ?(?:- ?)?(\d{2}(?:0[1-9]|1[0-2])(?:0[1-9]|[12]\d|3[01])) ?(?:- ?)?([A-Z\d]{2})([A\d])$/'
-            ],
             'razon_social' => [Rule::requiredIf($this->tipo_persona === 'MORAL')],
             'fecha_nacimiento' => 'nullable',
             'nacionalidad' => 'nullable',
@@ -89,7 +81,40 @@ trait ActoresTrait{
         ];
     }
 
+    public function updatedTipoPersona(){
+
+        if($this->tipo_persona == 'FISICA'){
+
+            $this->reset('razon_social');
+
+        }elseif($this->tipo_persona == 'MORAL'){
+
+            $this->reset([
+                'nombre',
+                'ap_paterno',
+                'ap_materno',
+                'curp',
+                'fecha_nacimiento',
+                'estado_civil',
+                'multiple_nombre'
+            ]);
+
+        }
+
+    }
+
     public function resetearTodo(){
+
+        $this->resetearCampos();
+
+        $this->modal = false;
+
+        $this->flag_agregar = false;
+
+        $this->persona = Persona::make();
+    }
+
+    public function resetearCampos(){
 
         $this->reset([
             'porcentaje_propiedad',
@@ -114,13 +139,10 @@ trait ActoresTrait{
             'entidad',
             'ciudad',
             'municipio',
-            'modal',
-            'editar',
-            'crear',
             'sub_tipo',
-            'flag_agregar',
-            'personas'
+            'personas',
         ]);
+
     }
 
     public function abrirModal(){
@@ -205,13 +227,9 @@ trait ActoresTrait{
 
         $this->flag_agregar = true;
 
-        $this->reset([
-            'nombre',
-            'ap_paterno',
-            'ap_materno',
-            'curp',
-            'rfc',
-        ]);
+        $this->resetearCampos();
+
+        $this->persona = Persona::make();
 
     }
 

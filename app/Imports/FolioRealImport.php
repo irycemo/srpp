@@ -51,7 +51,7 @@ class FolioRealImport implements ToCollection, WithHeadingRow, WithValidation, W
             'valor_total_terreno' => 'nullable|numeric',
             'valor_total_construccion' => 'nullable|numeric',
             'valor_catastral' => 'nullable|numeric',
-            'monto_transaccion' => 'nullable|numeric',
+            'monto_transaccion' => 'required|numeric',
             'divisa' => ['required', Rule::in(Constantes::DIVISAS)],
             'unidad_area' => ['required', Rule::in(Constantes::UNIDADES)],
             'colindancias' => 'required',

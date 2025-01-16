@@ -195,7 +195,7 @@
                                         <x-table.cell>
                                             <div class="flex items-center gap-3">
 
-                                                <div>
+                                                <div class="flex w-full">
                                                     <livewire:comun.actores.socio-actualizar :sub_tipos="$actores" :modelo="$movimientoRegistral->folioRealPersona" :actor="$participante" wire:key="button-{{ $participante->id }}" />
                                                 </div>
                                                 <x-button-red
