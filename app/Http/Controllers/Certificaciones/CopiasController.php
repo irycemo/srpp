@@ -32,6 +32,14 @@ class CopiasController extends Controller
             $q->where('name', 'Director');
         })->first()->name);
 
+        if($certificacion->movimientoRegistral->FolioReal){
+
+            $folio_real = $certificacion->movimientoRegistral->FolioReal->folio;
+
+            $folio_real_numero = $formatter->toWords($folio_real);
+
+        }
+
         $distrito = Str::upper($certificacion->movimientoRegistral->distrito);
 
         $registro = $certificacion->movimientoRegistral->registro;
