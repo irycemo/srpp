@@ -5,6 +5,8 @@ namespace App\Http\Controllers\Api;
 use App\Models\FolioReal;
 use App\Models\Antecedente;
 use App\Models\Propiedadold;
+use Illuminate\Http\Request;
+use App\Models\MovimientoRegistral;
 use Illuminate\Support\Facades\Log;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\FolioRealRequest;
@@ -134,6 +136,64 @@ class FolioRealController extends Controller
             return response()->json([
                 'error' => $th->getMessage(),
             ], 500);
+
+        }
+
+    }
+
+    public function consultarFolioMovimiento(Request $request){
+
+        $validated = $request->validate(['folio_real' => 'required', 'asiento_registral' => 'nullable']);
+
+        $folio_real = FolioReal::where('folio', $validated['folio_real'])->first();
+
+        if(!$folio_real){
+
+            return response()->json([
+                'error' => "El folio real no existe.",
+            ], 404);
+
+        }else{
+
+            if(in_array($folio_real->estado, ['bloqueado', 'centinela'])){
+
+                return response()->json([
+                    'error' => 'El folio real esta bloqueado',
+                ], 401);
+
+            }elseif($folio_real->estado != 'activo'){
+
+                return response()->json([
+                    'error' => 'El folio real no esta activo',
+                ], 401);
+
+            }else{
+
+                if(isset($validated['asiento_registral'])){
+
+                    $movimiento = MovimientoRegistral::where('folio_real', $folio_real->id)
+                                                        ->where('folio', $validated['asiento_registral'])
+                                                        ->first();
+
+                    if(!$movimiento){
+
+                        return response()->json([
+                            'error' => "El movimiento registral real no existe.",
+                        ], 404);
+
+                    }else{
+
+                        return (new FolioRealResource($folio_real))->response()->setStatusCode(200);
+
+                    }
+
+                }else{
+
+                    return (new FolioRealResource($folio_real))->response()->setStatusCode(200);
+
+                }
+
+            }
 
         }
 

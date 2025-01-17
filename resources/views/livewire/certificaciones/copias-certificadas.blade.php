@@ -281,6 +281,50 @@
 
                                                 </button>
 
+                                            @elseif($copia->certificacion->movimiento_registral)
+
+                                                <button
+                                                    wire:click="imprimirDocumentoEntradaMovimiento({{ $copia->certificacion->id }})"
+                                                    wire:loading.attr="disabled"
+                                                    class="w-full text-left block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 focus:outline-none focus:bg-gray-100"
+                                                    role="menuitem">
+
+                                                    <span>Documento de entrada</span>
+
+                                                </button>
+
+                                                <button
+                                                    wire:click="imprimirCaratulaMovimiento({{ $copia->certificacion->id }})"
+                                                    wire:loading.attr="disabled"
+                                                    class="w-full text-left block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 focus:outline-none focus:bg-gray-100"
+                                                    role="menuitem">
+
+                                                    <span>Caratula</span>
+
+                                                </button>
+
+                                            @elseif(!$copia->certificacion->movimiento_registral && $copia->certificacion->folio_real)
+
+                                                <button
+                                                    wire:click="imprimirDocumentoEntradaFolio({{ $copia->certificacion->id }})"
+                                                    wire:loading.attr="disabled"
+                                                    class="w-full text-left block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 focus:outline-none focus:bg-gray-100"
+                                                    role="menuitem">
+
+                                                    <span>Documento de entrada</span>
+
+                                                </button>
+
+                                                <button
+                                                    wire:click="imprimirCaratulaFolio({{ $copia->certificacion->id }})"
+                                                    wire:loading.attr="disabled"
+                                                    class="w-full text-left block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 focus:outline-none focus:bg-gray-100"
+                                                    role="menuitem">
+
+                                                    <span>Imprimir caratula</span>
+
+                                                </button>
+
                                             @endif
 
                                             @if(auth()->user()->hasRole(['Supervisor certificaciones', 'Certificador Oficialia', 'Certificador Juridico', 'Jefe de departamento certificaciones']))

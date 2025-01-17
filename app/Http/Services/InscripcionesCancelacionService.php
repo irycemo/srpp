@@ -2,9 +2,10 @@
 
 namespace App\Http\Services;
 
+use App\Models\FolioReal;
+use App\Models\Cancelacion;
 use Illuminate\Support\Facades\Log;
 use App\Exceptions\CertificacionServiceException;
-use App\Models\Cancelacion;
 
 class InscripcionesCancelacionService{
 
@@ -12,7 +13,18 @@ class InscripcionesCancelacionService{
 
         try {
 
+            if(isset($request['asiento_registral'])){
+
+                $gravamen = FolioReal::where('folio', $request['folio_real'])->first()->movimientosRegistrales()->where('folio', $request['asiento_registral'])->first()->id;
+
+            }else{
+
+                $gravamen = null;
+
+            }
+
             Cancelacion::create([
+                'gravamen' => $gravamen,
                 'servicio' => $request['servicio'],
                 'movimiento_registral_id' => $request['movimiento_registral'],
             ]);

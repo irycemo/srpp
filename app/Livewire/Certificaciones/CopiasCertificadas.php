@@ -12,6 +12,12 @@ use Illuminate\Support\Facades\DB;
 use App\Models\MovimientoRegistral;
 use Illuminate\Support\Facades\Log;
 use App\Http\Services\SistemaTramitesService;
+use App\Http\Controllers\Varios\VariosController;
+use App\Http\Controllers\Gravamen\GravamenController;
+use App\Http\Controllers\PaseFolio\PaseFolioController;
+use App\Http\Controllers\Sentencias\SentenciasController;
+use App\Http\Controllers\Cancelaciones\CancelacionController;
+use App\Http\Controllers\InscripcionesPropiedad\PropiedadController;
 
 class CopiasCertificadas extends Component
 {
@@ -412,6 +418,90 @@ class CopiasCertificadas extends Component
         }
 
         return $diaElaboracion;
+
+    }
+
+    public function imprimirCaratulaMovimiento(Certificacion $modelo){
+
+        $movimientoRegistral = $modelo->movimientoRegistral->folioReal->movimientosRegistrales()->where('folio', $modelo->movimiento_registral)->first();
+
+        try {
+
+            if($movimientoRegistral->inscripcionPropiedad){
+
+                $pdf = (new PropiedadController())->reimprimirFirmado($movimientoRegistral->firmaElectronica);
+
+            }
+
+            if($movimientoRegistral->gravamen){
+
+                $pdf = (new GravamenController())->reimprimirFirmado($movimientoRegistral->firmaElectronica);
+
+            }
+
+            if($movimientoRegistral->vario){
+
+                $pdf = (new VariosController())->reimprimirFirmado($movimientoRegistral->firmaElectronica);
+
+            }
+
+            if($movimientoRegistral->cancelacion){
+
+                $pdf = (new CancelacionController())->reimprimirFirmado($movimientoRegistral->firmaElectronica);
+
+            }
+
+            if($movimientoRegistral->sentencia){
+
+                $pdf = (new SentenciasController())->reimprimirFirmado($movimientoRegistral->firmaElectronica);
+
+            }
+
+            return response()->streamDownload(
+                fn () => print($pdf->output()),
+                'documento.pdf'
+            );
+
+        } catch (\Throwable $th) {
+            Log::error("Error al reimiprimir caratula de inscripción en copias certificadas por el usuario: (id: " . auth()->user()->id . ") " . auth()->user()->name . ". " . $th);
+            $this->dispatch('mostrarMensaje', ['error', "Ha ocurrido un error."]);
+        }
+
+    }
+
+    public function imprimirDocumentoEntradaMovimiento(Certificacion $modelo){
+
+        $movimientoRegistral = $modelo->movimientoRegistral->folioReal->movimientosRegistrales()->where('folio', $modelo->movimiento_registral)->first();
+
+        $this->js('window.open(\' '. $movimientoRegistral->documentoEntrada() . '\', \'_blank\');');
+
+    }
+
+    public function imprimirCaratulaFolio(Certificacion $modelo){
+
+        $folio = $modelo->movimientoRegistral->folioReal;
+
+        try {
+
+            $pdf = (new PaseFolioController())->reimprimirFirmado($folio->firmaElectronica);
+
+            return response()->streamDownload(
+                fn () => print($pdf->output()),
+                'documento.pdf'
+            );
+
+        } catch (\Throwable $th) {
+            Log::error("Error al reimiprimir caratula de folio real en copias certificadas por el usuario: (id: " . auth()->user()->id . ") " . auth()->user()->name . ". " . $th);
+            $this->dispatch('mostrarMensaje', ['error', "Ha ocurrido un error."]);
+        }
+
+    }
+
+    public function imprimirDocumentoEntradaFolio(Certificacion $modelo){
+
+        $folio = $modelo->movimientoRegistral->folioReal;
+
+        $this->js('window.open(\' '. $folio->documentoEntrada() . '\', \'_blank\');');
 
     }
 

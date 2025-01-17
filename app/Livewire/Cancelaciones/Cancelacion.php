@@ -343,18 +343,27 @@ class Cancelacion extends Component
 
         }
 
-        $this->gravamenCancelarMovimiento = MovimientoRegistral::where('folio_real', $this->cancelacion->movimientoRegistral->folio_real)
-                                                                    ->where('tomo_gravamen', $this->cancelacion->movimientoRegistral->tomo_gravamen)
-                                                                    ->where('registro_gravamen', $this->cancelacion->movimientoRegistral->registro_gravamen)
-                                                                    ->whereHas('gravamen', function($q){
-                                                                        $q->where('estado', 'activo');
-                                                                    })
-                                                                    ->first();
 
-        if($this->gravamenCancelarMovimiento && !$this->cancelacion->gravamen){
+        if(!$this->cancelacion->gravamen){
 
-            $this->cancelacion->gravamen = $this->gravamenCancelarMovimiento->id;
-            $this->cancelacion->save();
+            $this->gravamenCancelarMovimiento = MovimientoRegistral::where('folio_real', $this->cancelacion->movimientoRegistral->folio_real)
+                                                                        ->where('tomo_gravamen', $this->cancelacion->movimientoRegistral->tomo_gravamen)
+                                                                        ->where('registro_gravamen', $this->cancelacion->movimientoRegistral->registro_gravamen)
+                                                                        ->whereHas('gravamen', function($q){
+                                                                            $q->where('estado', 'activo');
+                                                                        })
+                                                                        ->first();
+
+            if($this->gravamenCancelarMovimiento){
+
+                $this->cancelacion->gravamen = $this->gravamenCancelarMovimiento->id;
+                $this->cancelacion->save();
+
+            }
+
+        }else{
+
+            $this->gravamenCancelarMovimiento = $this->cancelacion->gravamenCancelado;
 
         }
 

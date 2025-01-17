@@ -617,4 +617,34 @@ class CertificadoPropiedadController extends Controller
 
     }
 
+    public function reimprimirFirmado(FirmaElectronica $firmaElectronica){
+
+        $objeto = json_decode($firmaElectronica->cadena_original);
+
+        $qr = $this->generadorQr($firmaElectronica->uuid);
+
+        $pdf = Pdf::loadView('certificaciones.certificadoNegativo', [
+            'distrito' => $objeto->distrito,
+            'director' => $objeto->director,
+            'personas' => $objeto->personas,
+            'datos_control' => $objeto->datos_control,
+            'observaciones_certificado' => $objeto->observaciones_certificado,
+            'firma_electronica' => base64_encode($firmaElectronica->cadena_encriptada),
+            'qr'=> $qr
+        ]);
+
+        $pdf->render();
+
+        $dom_pdf = $pdf->getDomPDF();
+
+        $canvas = $dom_pdf->get_canvas();
+
+        $canvas->page_text(480, 745, "Página: {PAGE_NUM} de {PAGE_COUNT}", null, 9, array(1,1,1));
+
+        $canvas->page_text(35, 745, $firmaElectronica->movimientoRegistral->folioReal->folio . '-' .$firmaElectronica->movimientoRegistral->folio, null, 9, array(1, 1, 1));
+
+        return $pdf;
+
+    }
+
 }

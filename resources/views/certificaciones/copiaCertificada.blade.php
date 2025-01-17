@@ -145,9 +145,19 @@
                 <p class="parrafo">
                     EL CIUDADANO <strong>@if($distrito == '02 URUAPAN') Lic. SANDRO MEDINA MORALES COORDINADOR REGIONAL URUAPAN @else LICENCIADO EN DERECHO {{ $director }}, DIRECTOR DEL REGISTRO PÚBLICO DE LA PROPIEDAD @endif </strong>
                     EN EL ESTADO DE MICHOACÁN DE OCAMPO QUE ACTUA CONFORME A LA LEY, CERTIFICA QUE LA PRESENTE COPIA ES
-                    FIELMENTE TOMADA DE LA QUE OBRE EN EL REGISTRO NÚMERO <strong>{{ $registro }} @if($registro_bis) BIS @endif</strong> <strong>({{ $registro_letras }})</strong>
-                    DEL TOMO <strong>{{ $tomo }} @if($tomo_bis) BIS @endif</strong> <strong>({{ $tomo_letras }})</strong> DEL LIBRO DE <STRONG>{{ $seccion }}</STRONG> CORRESPONDIENTE AL
-                    DISTRITO DE <strong>{{ $distrito }}</strong>, Y SE COMPULSA
+                    FIELMENTE TOMADA DE LA QUE OBRE EN EL
+
+                    @if($folio_real)
+                        FOLIO REAL NÚMERO <strong>{{ $folio_real }} ({{ $folio_real_letra }})</strong>
+                        @if($movimiento_registral)
+                            movimiento registral <strong>{{ $movimiento_registral }} ({{ $movimiento_registral_letra }})</strong>
+                        @endif
+                    @else
+                        REGISTRO NÚMERO <strong>{{ $registro }} @if($registro_bis) BIS @endif</strong> <strong>({{ $registro_letras }})</strong>
+                        DEL TOMO <strong>{{ $tomo }} @if($tomo_bis) BIS @endif</strong> <strong>({{ $tomo_letras }})</strong>
+                        DEL LIBRO DE <STRONG>{{ $seccion }}</STRONG>
+                    @endif
+                    CORRESPONDIENTE AL DISTRITO DE <strong>{{ $distrito }}</strong>, Y SE COMPULSA
                     EN <strong>{{ $paginas }}</strong> <strong>({{ $paginas_letras }})</strong>  PAGINA(S) UTILES DEBIDAMENTE COTEJADAS
                     EN <strong>CARPETA CON FOLIO NO. {{ $folio_carpeta }}</strong> PARA ENTREGARSE A LA ORDEN DE: <strong>{{ $solicitante }}</strong>, DOY FE.-
                 </p>

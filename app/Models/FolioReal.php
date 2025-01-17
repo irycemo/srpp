@@ -81,6 +81,10 @@ class FolioReal extends Model implements Auditable
         return $this->hasMany(FirmaElectronica::class, 'folio_real');
     }
 
+    public function firmaElectronica(){
+        return $this->hasOne(FirmaElectronica::class, 'folio_real')->where('estado', 'activo');
+    }
+
     public function bloqueos(){
         return $this->hasMany(Bloqueo::class);
     }

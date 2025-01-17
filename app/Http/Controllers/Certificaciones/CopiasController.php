@@ -32,11 +32,31 @@ class CopiasController extends Controller
             $q->where('name', 'Director');
         })->first()->name);
 
-        if($certificacion->movimientoRegistral->FolioReal){
+        if($certificacion->folio_real){
 
-            $folio_real = $certificacion->movimientoRegistral->FolioReal->folio;
+            $folio_real = $certificacion->folio_real;
 
-            $folio_real_numero = $formatter->toWords($folio_real);
+            $folio_real_letra = $formatter->toWords($folio_real);
+
+        }else{
+
+            $folio_real = null;
+
+            $folio_real_letra = null;
+
+        }
+
+        if($certificacion->movimiento_registral){
+
+            $movimiento_registral = $certificacion->movimiento_registral;
+
+            $movimiento_registral_letra = $formatter->toWords($movimiento_registral);
+
+        }else{
+
+            $movimiento_registral = null;
+
+            $movimiento_registral_letra = null;
 
         }
 
@@ -135,7 +155,11 @@ class CopiasController extends Controller
                 'tipo_servicio',
                 'seccion',
                 'qr',
-                'servicio'
+                'servicio',
+                'folio_real',
+                'folio_real_letra',
+                'movimiento_registral',
+                'movimiento_registral_letra',
             ));
 
         }else{
@@ -170,7 +194,11 @@ class CopiasController extends Controller
                 'tipo_servicio',
                 'seccion',
                 'qr',
-                'servicio'
+                'servicio',
+                'folio_real',
+                'folio_real_letra',
+                'movimiento_registral',
+                'movimiento_registral_letra',
             ));
 
         }

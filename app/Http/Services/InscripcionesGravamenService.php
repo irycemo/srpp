@@ -13,6 +13,7 @@ class InscripcionesGravamenService{
         try {
 
             Gravamen::create([
+                'estado' => 'activo',
                 'servicio' => $request['servicio'],
                 'movimiento_registral_id' => $request['movimiento_registral'],
             ]);
