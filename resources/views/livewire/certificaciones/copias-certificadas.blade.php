@@ -271,15 +271,31 @@
 
                                             @if(!$copia->certificacion->folio_carpeta_copias)
 
-                                                <button
-                                                    wire:click="abrirModalEditar({{ $copia->certificacion->id }})"
-                                                    wire:loading.attr="disabled"
-                                                    class="w-full text-left block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 focus:outline-none focus:bg-gray-100"
-                                                    role="menuitem">
+                                                @if(auth()->user()->hasRole(['Certificador Juridico']))
 
-                                                    <span>Elaborar</span>
+                                                    <button
+                                                        wire:click="finalizarSupervisor({{ $copia->certificacion->id }})"
+                                                        wire:loading.attr="disabled"
+                                                        class="w-full text-left block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 focus:outline-none focus:bg-gray-100"
+                                                        role="menuitem">
 
-                                                </button>
+                                                        <span>Elaborar</span>
+
+                                                    </button>
+
+                                                @else
+
+                                                    <button
+                                                        wire:click="abrirModalEditar({{ $copia->certificacion->id }})"
+                                                        wire:loading.attr="disabled"
+                                                        class="w-full text-left block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 focus:outline-none focus:bg-gray-100"
+                                                        role="menuitem">
+
+                                                        <span>Elaborar</span>
+
+                                                    </button>
+
+                                                @endif
 
                                             @elseif($copia->certificacion->movimiento_registral)
 

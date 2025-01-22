@@ -203,6 +203,14 @@ class CopiasController extends Controller
 
         }
 
+        $pdf->render();
+
+        $dom_pdf = $pdf->getDomPDF();
+
+        $canvas = $dom_pdf->get_canvas();
+
+        $canvas->page_text(480, 745, "Página: {PAGE_NUM} de {PAGE_COUNT}", null, 9, array(1,1,1));
+
         return $pdf->stream('documento.pdf');
 
     }
@@ -257,6 +265,34 @@ class CopiasController extends Controller
 
         $año_letras = $formatter->toWords($año);
 
+        if($certificacion->folio_real){
+
+            $folio_real = $certificacion->folio_real;
+
+            $folio_real_letra = $formatter->toWords($folio_real);
+
+        }else{
+
+            $folio_real = null;
+
+            $folio_real_letra = null;
+
+        }
+
+        if($certificacion->movimiento_registral){
+
+            $movimiento_registral = $certificacion->movimiento_registral;
+
+            $movimiento_registral_letra = $formatter->toWords($movimiento_registral);
+
+        }else{
+
+            $movimiento_registral = null;
+
+            $movimiento_registral_letra = null;
+
+        }
+
         $numero_control = $certificacion->movimientoRegistral->año . '-' .$certificacion->movimientoRegistral->tramite . '-' .$certificacion->movimientoRegistral->usuario;
 
         $superviso = Str::upper($certificacion->movimientoRegistral->supervisor->name);
@@ -270,6 +306,7 @@ class CopiasController extends Controller
         $fecha_entrega = $certificacion->movimientoRegistral->fecha_entrega;
 
         $tipo_servicio = Str::upper($certificacion->movimientoRegistral->tipo_servicio);
+
 
         $seccion = Str::upper($certificacion->movimientoRegistral->seccion);
 
@@ -307,8 +344,20 @@ class CopiasController extends Controller
             'tipo_servicio',
             'seccion',
             'qr',
-            'servicio'
+            'servicio',
+            'folio_real',
+            'folio_real_letra',
+            'movimiento_registral',
+            'movimiento_registral_letra',
         ));
+
+        $pdf->render();
+
+        $dom_pdf = $pdf->getDomPDF();
+
+        $canvas = $dom_pdf->get_canvas();
+
+        $canvas->page_text(480, 745, "Página: {PAGE_NUM} de {PAGE_COUNT}", null, 9, array(1,1,1));
 
         return $pdf->stream('documento.pdf');
 

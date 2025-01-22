@@ -74,7 +74,6 @@ class Rectificatoria extends Component
     public $folio_movimiento;
     public $movimientoCancelar;
 
-
     protected function rules(){
         return [
             'documento' => 'nullable|mimes:pdf|max:100000',

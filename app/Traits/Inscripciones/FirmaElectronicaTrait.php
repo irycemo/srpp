@@ -661,10 +661,36 @@ trait FirmaElectronicaTrait{
         $object->autoridad_nombre = $cancelacion->movimientoRegistral->autoridad_nombre;
         $object->autoridad_numero = $cancelacion->movimientoRegistral->autoridad_numero;
         $object->fecha_emision = Carbon::parse($cancelacion->movimientoRegistral->fecha_emision)->format('d/m/Y');
-        $object->fecha_inscripcion = Carbon::parse($cancelacion->movimientoRegistral->fecha_inscripcion)->format('d/m/Y');
         $object->fecha_prelacion = Carbon::parse($cancelacion->movimientoRegistral->fecha_prelacion)->format('d/m/Y');
         $object->procedencia = $cancelacion->movimientoRegistral->procedencia;
         $object->gravamen = $this->gravamen($cancelacion->gravamenCancelado->gravamen);
+
+        return $object;
+
+    }
+
+    public function subdivision(Propiedad $subdivision):object
+    {
+
+        $folios_generados = FolioReal::where('antecedente', $subdivision->movimientoRegistral->folio_real)->pluck('folio');
+
+        $object = (object)[];
+
+        $object->id = $subdivision->id;
+        $object->servicio = $subdivision->servicio;
+        $object->acto_contenido = $subdivision->acto_contenido;
+        $object->observaciones = $subdivision->observaciones;
+        $object->fecha_inscripcion = Carbon::parse($subdivision->fecha_inscripcion)->format('d/m/Y');
+        $object->movimiento_folio = $subdivision->movimientoRegistral->folio;
+        $object->numero_documento = $subdivision->movimientoRegistral->numero_documento;
+        $object->tipo_documento = $subdivision->movimientoRegistral->tipo_documento;
+        $object->autoridad_cargo = $subdivision->movimientoRegistral->autoridad_cargo;
+        $object->autoridad_nombre = $subdivision->movimientoRegistral->autoridad_nombre;
+        $object->autoridad_numero = $subdivision->movimientoRegistral->autoridad_numero;
+        $object->fecha_emision = Carbon::parse($subdivision->movimientoRegistral->fecha_emision)->format('d/m/Y');
+        $object->fecha_prelacion = Carbon::parse($subdivision->movimientoRegistral->fecha_prelacion)->format('d/m/Y');
+        $object->procedencia = $subdivision->movimientoRegistral->procedencia;
+        $object->folios_generados = $folios_generados;
 
         return $object;
 

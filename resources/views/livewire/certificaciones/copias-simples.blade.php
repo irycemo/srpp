@@ -227,7 +227,7 @@
 
                                         @can('Reimprimir documento')
 
-                                            @if ($copia->certificacion->reimpreso_en == null && $copia->certificacion->folio_carpeta_copias != null)
+                                            @if (!$copia->certificacion->reimpreso_en && $copia->certificacion->folio_carpeta_copias)
 
                                                 <button
                                                     wire:click="reimprimir({{ $copia->certificacion->id }})"
@@ -271,7 +271,37 @@
 
                                         @endcan
 
-                                        @can('Finalizar copias certificadas')
+                                        @can('Finalizar copias simples')
+
+                                            @if(!$copia->certificacion->folio_carpeta_copias)
+
+                                                @if(auth()->user()->hasRole(['Certificador Juridico']))
+
+                                                    <button
+                                                        wire:click="finalizarSupervisor({{ $copia->certificacion->id }})"
+                                                        wire:loading.attr="disabled"
+                                                        class="w-full text-left block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 focus:outline-none focus:bg-gray-100"
+                                                        role="menuitem">
+
+                                                        <span>Elaborar</span>
+
+                                                    </button>
+
+                                                @else
+
+                                                    <button
+                                                        wire:click="finalizar({{ $copia->certificacion->id }})"
+                                                        wire:loading.attr="disabled"
+                                                        class="w-full text-left block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 focus:outline-none focus:bg-gray-100"
+                                                        role="menuitem">
+
+                                                        <span>Elaborar</span>
+
+                                                    </button>
+
+                                                @endif
+
+                                            @endif
 
                                             @if(auth()->user()->hasRole(['Supervisor certificaciones', 'Certificador Oficialia', 'Certificador Juridico', 'Jefe de departamento certificaciones']))
 
@@ -287,13 +317,51 @@
 
                                             @else
 
+
+
+                                            @endif
+
+                                            @if($copia->certificacion->movimiento_registral)
+
                                                 <button
-                                                    wire:click="abrirModalEditar({{ $copia->certificacion->id }})"
+                                                    wire:click="imprimirDocumentoEntradaMovimiento({{ $copia->certificacion->id }})"
                                                     wire:loading.attr="disabled"
                                                     class="w-full text-left block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 focus:outline-none focus:bg-gray-100"
                                                     role="menuitem">
 
-                                                    <span>Elaborar</span>
+                                                    <span>Documento de entrada</span>
+
+                                                </button>
+
+                                                <button
+                                                    wire:click="imprimirCaratulaMovimiento({{ $copia->certificacion->id }})"
+                                                    wire:loading.attr="disabled"
+                                                    class="w-full text-left block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 focus:outline-none focus:bg-gray-100"
+                                                    role="menuitem">
+
+                                                    <span>Caratula</span>
+
+                                                </button>
+
+                                            @elseif(!$copia->certificacion->movimiento_registral && $copia->certificacion->folio_real)
+
+                                                <button
+                                                    wire:click="imprimirDocumentoEntradaFolio({{ $copia->certificacion->id }})"
+                                                    wire:loading.attr="disabled"
+                                                    class="w-full text-left block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 focus:outline-none focus:bg-gray-100"
+                                                    role="menuitem">
+
+                                                    <span>Documento de entrada</span>
+
+                                                </button>
+
+                                                <button
+                                                    wire:click="imprimirCaratulaFolio({{ $copia->certificacion->id }})"
+                                                    wire:loading.attr="disabled"
+                                                    class="w-full text-left block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 focus:outline-none focus:bg-gray-100"
+                                                    role="menuitem">
+
+                                                    <span>Imprimir caratula</span>
 
                                                 </button>
 
@@ -388,13 +456,12 @@
 
         <x-slot name="footer">
 
-            <div class="float-righ">
+            <div class="flex gap-4">
 
                 <x-button-blue
                     wire:click="finalizar"
                     wire:loading.attr="disabled"
-                    wire:target="finalizar"
-                    class="bg-blue-400 hover:shadow-lg text-white font-bold px-4 py-2 rounded-full text-sm mb-2 hover:bg-blue-700 flaot-left mr-1 focus:outline-none">
+                    wire:target="finalizar">
 
                     <img wire:loading wire:target="finalizar" class="mx-auto h-4 mr-1" src="{{ asset('storage/img/loading3.svg') }}" alt="Loading">
 
@@ -404,8 +471,7 @@
                 <x-button-red
                     wire:click="resetearTodo"
                     wire:loading.attr="disabled"
-                    wire:target="resetearTodo"
-                    class="bg-red-400 hover:shadow-lg text-white font-bold px-4 py-2 rounded-full text-sm mb-2 hover:bg-red-700 flaot-left focus:outline-none">
+                    wire:target="resetearTodo">
                     <span>Cerrar</span>
                 </x-button-red>
 

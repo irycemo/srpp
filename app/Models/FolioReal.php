@@ -46,7 +46,7 @@ class FolioReal extends Model implements Auditable
     }
 
     public function movimientosRegistrales(){
-        return $this->hasMany(MovimientoRegistral::class, 'folio_real');
+        return $this->hasMany(MovimientoRegistral::class, 'folio_real')->where('folio', '>=', 1);
     }
 
     public function gravamenes(){
@@ -70,7 +70,7 @@ class FolioReal extends Model implements Auditable
     }
 
     public function certificaciones(){
-        return $this->hasManyThrough(Certificacion::class, MovimientoRegistral::class, 'folio_real', 'movimiento_registral_id', 'id', 'id');
+        return $this->hasManyThrough(Certificacion::class, MovimientoRegistral::class, 'folio_real', 'movimiento_registral_id', 'id', 'id')->where('folio', '>=', 1);
     }
 
     public function predio(){

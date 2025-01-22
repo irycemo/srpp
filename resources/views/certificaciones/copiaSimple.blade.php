@@ -8,10 +8,6 @@
 </head>
 <style>
 
-    /* @page {
-        margin: 0cm 0cm;
-    } */
-
     header{
         position: fixed;
         top: 0cm;
@@ -52,7 +48,6 @@
     }
 
     .container{
-        font-size: 14px;
         display: flex;
         align-content: space-around;
     }
@@ -62,17 +57,15 @@
     }
 
     .firma{
-        margin-top: 100px;
         text-align: center;
     }
 
     .control{
-        margin-top: 100px;
         text-align: center;
     }
 
     .atte{
-        margin-bottom: 40px;
+        margin-bottom: 10px;
     }
 
     .borde{
@@ -98,6 +91,7 @@
         font-size: 12px;
         text-align: right;
         padding-right: 10px;
+        text-transform: lowercase;
     }
 
     .fot{
@@ -116,15 +110,40 @@
         display: block;
     }
 
+    .no-break{
+        page-break-inside: avoid;
+    }
+
+    table{
+        margin-bottom: 5px;
+        margin-left: auto;
+        margin-right: auto;
+    }
+
+    .separador{
+        text-align: justify;
+        border-bottom: 1px solid black;
+        padding: 0 20px 0 20px;
+        border-radius: 25px;
+        border-color: gray;
+        letter-spacing: 5px;
+        margin: 0 0 5px 0;
+    }
+
+    .titulo{
+        text-align: center;
+        font-size: 13px;
+        font-weight: bold;
+        margin: 0;
+    }
+
 
 </style>
 <body>
 
     <header>
 
-
-            <img src="{{ public_path('storage/img/encabezado.png') }}" alt="encabezado">
-
+        <img src="{{ public_path('storage/img/encabezado.png') }}" alt="encabezado">
 
     </header>
 
@@ -138,88 +157,73 @@
 
     <main>
 
-        <div class="container">
+        <div style="text-align: center; font-weight: bold; font-size: 11px;">
+            <p style="margin: 0">GOBIERNO DEL ESTADO DE MICHOACÁN DE OCAMPO</p>
+            <P style="margin: 0">SECRETARÍA DE FINANZAS Y ADMINISTRACIÓN</P>
+            <P style="margin: 0">INSTITUTO REGISTRAL Y CATASTRAL DEL ESTADO DE MICHOACÁN</P>
+            <P style="margin: 0">DIRECCIÓN DEL REGISTRO PÚBLICO  DE LA PROPIEDAD</P>
+        </div>
 
-            <div>
+        <div style="font-size: 10px; margin-top: 20px;">
 
-                <p class="parrafo">
-                    LA PRESENTE COPIA ES TOMADA DE LA QUE OBRE EN EL REGISTRO NÚMERO <strong>{{ $registro }} @if($registro_bis) BIS @endif</strong> <strong>({{ $registro_letras }})</strong>
-                    DEL TOMO <strong>{{ $tomo }} @if($tomo_bis) BIS @endif</strong> <strong>({{ $tomo_letras }})</strong> DEL LIBRO DE <STRONG>{{ $seccion }}</STRONG> CORRESPONDIENTE AL
-                    DISTRITO DE <strong>@if($distrito == '02 URUAPAN') URUAPAN @else {{ $distrito }} @endif</strong>, Y SE COMPULSA
-                    EN <strong>{{ $paginas }}</strong> <strong>({{ $paginas_letras }})</strong>  PAGINA(S) UTILES
-                    PARA ENTREGARSE EN <strong>CARPETA CON FOLIO NO. {{ $folio_carpeta }}</strong> A LA ORDEN DE: <strong>{{ $solicitante }}</strong>
-                    A LAS {{ $hora }} ({{ $hora_letras }}) HORAS {{ $minutos }} ({{ $minutos_letras }})
-                    MINUTOS DEL DÍA {{ $dia }} ({{ $dia_letras }}) DE {{ $mes }} DEL {{ $año }} ({{ $año_letras }})
-                </p>
+            <p class="titulo">Copias simples</p>
 
-            </div>
+            <p class="parrafo">
+                LA PRESENTE COPIA ES TOMADA DE LA QUE OBRE EN EL
 
-            <div class="control">
+                @if($folio_real)
+                    FOLIO REAL NÚMERO <strong>{{ $folio_real }} ({{ $folio_real_letra }})</strong>
+                    @if($movimiento_registral)
+                        movimiento registral <strong>{{ $movimiento_registral }} ({{ $movimiento_registral_letra }})</strong>
+                    @endif
+                @else
+                    REGISTRO NÚMERO <strong>{{ $registro }} @if($registro_bis) BIS @endif</strong> <strong>({{ $registro_letras }})</strong>
+                    DEL TOMO <strong>{{ $tomo }} @if($tomo_bis) BIS @endif</strong> <strong>({{ $tomo_letras }})</strong>
+                    DEL LIBRO DE <STRONG>{{ $seccion }}</STRONG>
+                @endif
 
-                <strong>DATOS DE CONTROL</strong>
+                CORRESPONDIENTE AL
+                DISTRITO DE <strong>@if($distrito == '02 URUAPAN') URUAPAN @else {{ $distrito }} @endif</strong>, Y SE COMPULSA
+                EN <strong>{{ $paginas }}</strong> <strong>({{ $paginas_letras }})</strong>  PAGINA(S) UTILES
+                PARA ENTREGARSE
+                @if($folio_carpeta)EN <strong>CARPETA CON FOLIO NO. {{ $folio_carpeta }}</strong> @endif
+                A LA ORDEN DE: <strong>{{ $solicitante }}</strong>
+                A LAS {{ $hora }} ({{ $hora_letras }}) HORAS {{ $minutos }} ({{ $minutos_letras }})
+                MINUTOS DEL DÍA {{ $dia }} ({{ $dia_letras }}) DE {{ $mes }} DEL {{ $año }} ({{ $año_letras }})
+            </p>
 
-                <table class="tabla">
+        </div>
 
-                    <tbody>
+        <div class="control no-break">
 
-                        <tr>
-                            <td>NÚMERO DE CONTROL</td>
-                            <td>{{ $numero_control }}</td>
-                            <td>SUPERVISO</td>
-                            <td>{{ $superviso }}</td>
-                        </tr>
+            <p class="separador">DATOS DE CONTROL</p>
 
-                        <tr>
-                            <td>FOLIO DE CARPETA</td>
-                            <td>{{ $folio_carpeta }}</td>
-                            <td>ELABORO</td>
-                            <td>{{ $elaboro }}</td>
-                        </tr>
+            <table style="margin-top: 10px">
 
-                        <tr>
-                            <td>DERECHOS</td>
-                            <td>${{ number_format($derechos, 2) }}</td>
-                            <td>FECHA EXPEDICION</td>
-                            <td>{{ now()->format('d-m-Y') }}</td>
-                        </tr>
+                <tbody>
+                    <tr>
+                        <td style="padding-right: 40px;">
 
-                        <tr>
-                            <td>SERVICIO</td>
-                            <td>{{ $tipo_servicio }}</td>
-                            <td>FECHA ENTREGA</td>
-                            <td>{{ $fecha_entrega->format('d-m-Y') }}</td>
-                        </tr>
+                            <img class="qr" src="{{ $qr }}" alt="QR">
+                        </td>
+                        <td style="padding-right: 40px;">
 
-                    </tbody>
+                            <p style="margin: 0"><strong>NÚMERO DE CONTROL: </strong>{{ $numero_control }}</p>
+                            <p style="margin: 0"><strong>DERECHOS: </strong>${{ number_format($derechos, 2) }}</p>
+                            <p style="margin: 0"><strong>Tipo de servicio: </strong>{{ $tipo_servicio }}</p>
+                            <p style="margin: 0"><strong>Servicio: </strong>{{ $servicio }}</p>
+                            <p style="margin: 0"><strong>Elaborado en: </strong>{{ now()->format('d/m/Y') }}</p>
+                            <p style="margin: 0"><strong>elaborado por:</strong> {{ $elaboro }}</p>
 
-                </table>
+                        </td>
+                    </tr>
+                </tbody>
 
-                <div class="">
-
-                    <img class="qr" src="{{ $qr }}" alt="QR">
-
-                </div>
-
-            </div>
+            </table>
 
         </div>
 
     </main>
-
-    <script type="text/php">
-        if (isset($pdf)) {
-            $x = 280;
-            $y = 810;
-            $text = "Página: {PAGE_NUM} de {PAGE_COUNT}";
-            $font = null;
-            $size = 9;
-            $color = array(0,0,0);
-            $word_space = 0.0;  //  default
-            $char_space = 0.0;  //  default
-            $angle = 0.0;   //  default
-            $pdf->page_text($x, $y, $text, $font, $size, $color, $word_space, $char_space, $angle);
-        }
-    </script>
 
 </body>
 </html>

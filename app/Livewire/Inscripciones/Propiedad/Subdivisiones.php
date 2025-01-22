@@ -2,14 +2,15 @@
 
 namespace App\Livewire\Inscripciones\Propiedad;
 
-use App\Http\Services\AsignacionService;
 use App\Models\File;
 use Livewire\Component;
 use App\Models\FolioReal;
 use App\Models\Propiedad;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
+use App\Http\Services\AsignacionService;
 use Spatie\LivewireFilepond\WithFilePond;
+use App\Http\Controllers\Subdivisiones\SubdivisionesController;
 
 class Subdivisiones extends Component
 {
@@ -154,6 +155,15 @@ class Subdivisiones extends Component
             $this->foliosReales = Folioreal::whereKey($this->folioIds)->with('folioRealAntecedente')->get();
 
             $this->dispatch('mostrarMensaje', ['success', "Los folios reales se generaron con éxito"]);
+
+            (new SubdivisionesController())->caratula($this->propiedad);
+
+            $pdf = (new SubdivisionesController())->reimprimir($this->propiedad->movimientoRegistral->firmaElectronica);
+
+            return response()->streamDownload(
+                fn () => print($pdf->output()),
+                'documento.pdf'
+            );
 
         } catch (\Throwable $th) {
 

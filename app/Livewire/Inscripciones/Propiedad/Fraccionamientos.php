@@ -7,6 +7,7 @@ use App\Models\File;
 use Livewire\Component;
 use App\Models\Propiedad;
 use App\Constantes\Constantes;
+use App\Http\Controllers\Subdivisiones\SubdivisionesController;
 use App\Imports\FolioRealImport;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
@@ -54,9 +55,9 @@ class Fraccionamientos extends Component
                     'url' => $pdf
                 ]);
 
-                $this->modalDocumento = false;
-
             });
+
+            $this->modalDocumento = false;
 
         } catch (\Throwable $th) {
 
@@ -98,6 +99,15 @@ class Fraccionamientos extends Component
             $this->dispatch('mostrarMensaje', ['success', "Los folios reales se generaron con éxito"]);
 
             $this->reset('documento');
+
+            (new SubdivisionesController())->caratula($this->propiedad);
+
+            $pdf = (new SubdivisionesController())->reimprimir($this->propiedad->movimientoRegistral->firmaElectronica);
+
+            return response()->streamDownload(
+                fn () => print($pdf->output()),
+                'documento.pdf'
+            );
 
         } catch (\Maatwebsite\Excel\Validators\ValidationException $e) {
 
