@@ -157,14 +157,14 @@
 
     <main>
 
-        <div style="text-align: center; font-weight: bold; font-size: 11px;">
+        <div style="text-align: center; font-weight: bold; font-size: 13px;">
             <p style="margin: 0">GOBIERNO DEL ESTADO DE MICHOACÁN DE OCAMPO</p>
             <P style="margin: 0">SECRETARÍA DE FINANZAS Y ADMINISTRACIÓN</P>
             <P style="margin: 0">INSTITUTO REGISTRAL Y CATASTRAL DEL ESTADO DE MICHOACÁN</P>
             <P style="margin: 0">DIRECCIÓN DEL REGISTRO PÚBLICO  DE LA PROPIEDAD</P>
         </div>
 
-        <div style="font-size: 10px; margin-top: 20px;">
+        <div style="font-size: 12px; margin-top: 20px;">
 
             <p class="titulo">Copias simples</p>
 
