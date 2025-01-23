@@ -19,7 +19,6 @@ use App\Livewire\PaseFolio\PaseFolio;
 use Illuminate\Support\Facades\Route;
 use App\Livewire\Sentencias\Sentencia;
 use App\Livewire\PaseFolio\Elaboracion;
-use App\Livewire\PersonaMoral\PaseAFolio;
 use App\Http\Controllers\ManualController;
 use App\Livewire\Gravamenes\GravamenIndex;
 use App\Livewire\Cancelaciones\Cancelacion;
@@ -54,6 +53,7 @@ use App\Http\Controllers\Certificaciones\CertificadoGravamenController;
 use App\Http\Controllers\Certificaciones\CertificadoPropiedadController;
 use App\Livewire\PersonaMoral\Asiganacion;
 use App\Livewire\PersonaMoral\Reformas;
+use App\Livewire\PersonaMoral\ReformasIndex;
 
 /*
 |--------------------------------------------------------------------------
@@ -170,8 +170,9 @@ Route::group(['middleware' => ['auth', 'esta.activo']], function(){
 
     /* Personas morales */
     Route::get('pase_folio_persona_moral', PaseFolioPersonaMoral::class)->middleware('permission:Personas morales')->name('pase_folio_personas_morales');
-    Route::get('reformas', Reformas::class)->middleware('permission:Reformas')->name('reformas');
+    Route::get('reformas', ReformasIndex::class)->middleware('permission:Reformas')->name('reformas');
     Route::get('asignacion/{movimientoRegistral?}', Asiganacion::class)->middleware('permission:Asignación')->name('asignacion');
+    Route::get('reformas/{movimientoRegistral}', Reformas::class)->middleware('permission:Reformas inscripción')->name('reformas.inscripcion');
 
     /* Consultas */
     Route::get('consultas', Consulta::class)->middleware('permission:Consultas')->name('consultas');

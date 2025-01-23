@@ -4,10 +4,10 @@ namespace App\Livewire\PersonaMoral;
 
 use Livewire\Component;
 
-class Reformas extends Component
+class ReformasIndex extends Component
 {
     public function render()
     {
-        return view('livewire.persona-moral.reformas')->extends('layouts.admin');
+        return view('livewire.persona-moral.reformas-index');
     }
 }
