@@ -182,7 +182,7 @@
                     EL DIRECTOR DEL REGISTRO PÚBLICO DE LA PROPIEDAD <strong>{{ $director }}</strong>, AUTORIZA EL PRESENTE FOLIO REAL PARA LOS ASIENTOS RELATIVOS A EL INMUEBLE QUE A CONTINUACIÓN SE DESCRIBE:
                 </p>
 
-                <p style="text-align: center" class="titulo"><strong>FOLIO REAL:</strong> {{ $folioReal->folio }} @if($folioReal->matriz) Matriz @endif</p>
+                <p style="text-align: center" class="titulo"><strong>FOLIO REAL: I-</strong>{{ $folioReal->folio }} @if($folioReal->matriz) Matriz @endif</p>
 
                 @if(count($folioReal->antecedentes))
 

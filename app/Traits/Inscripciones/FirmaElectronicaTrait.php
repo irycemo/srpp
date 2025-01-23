@@ -726,4 +726,65 @@ trait FirmaElectronicaTrait{
 
     }
 
+    public function folioRealPersonaMoral($folioReal){
+
+        $folioReal->load('actores.persona', 'objetos');
+
+        $escritura = (object)[];
+
+        if($folioReal->escritura){
+
+            $escritura->numero = $folioReal->escritura->numero;
+            $escritura->fecha_inscripcion = Carbon::parse($folioReal->escritura->fecha_inscripcion)->format('d/m/Y');
+            $escritura->fecha_escritura = Carbon::parse($folioReal->escritura->fecha_escritura)->format('d/m/Y');
+            $escritura->numero_hojas = $folioReal->escritura->numero_hojas;
+            $escritura->numero_paginas = $folioReal->escritura->numero_paginas;
+            $escritura->notaria = $folioReal->escritura->notaria;
+            $escritura->nombre_notario = $folioReal->escritura->nombre_notario;
+            $escritura->estado_notario = $folioReal->escritura->estado_notario;
+            $escritura->comentario = $folioReal->escritura->comentario;
+            $escritura->acto_contenido_antecedente = $folioReal->escritura->acto_contenido_antecedente;
+            $escritura->comentario = $folioReal->escritura->comentario;
+
+        }
+
+        $participantes = collect();
+
+        foreach ($folioReal->actores as $actor) {
+
+            $item = (object)[];
+
+            $item->nombre = $actor->persona->nombre;
+            $item->ap_paterno = $actor->persona->ap_paterno;
+            $item->ap_materno = $actor->persona->ap_materno;
+            $item->multiple_nombre = $actor->persona->multiple_nombre;
+            $item->razon_social = $actor->persona->razon_social;
+            $item->tipo_socio = $actor->tipo_socio;
+
+            $participantes->push($item);
+
+        }
+
+        $object = (object)[];
+
+        $object->id = $folioReal->id;
+        $object->folio = $folioReal->folio;
+        $object->denominacion = $folioReal->denominacion;
+        $object->fecha_inscripcion = Carbon::parse($folioReal->fecha_inscripcion)->format('d/m/Y');
+        $object->fecha_constitucion = Carbon::parse($folioReal->fecha_constitucion)->format('d/m/Y');
+        $object->distrito = $folioReal->distrito;
+        $object->duracion = $folioReal->duracion;
+        $object->capital = $folioReal->capital;
+        $object->tipo = $folioReal->tipo;
+        $object->domicilio = $folioReal->domicilio;
+        $object->observaciones = $folioReal->observaciones;
+        $object->asignado_por = $folioReal->asignado_por;
+        $object->escritura = $escritura;
+        $object->objeto = $folioReal->objetos()->whereNull('fecha_baja')->first()->objeto;
+        $object->participantes = $participantes;
+
+        return $object;
+
+    }
+
 }

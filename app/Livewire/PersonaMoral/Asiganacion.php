@@ -7,6 +7,7 @@ use Livewire\Component;
 use App\Models\Escritura;
 use App\Models\ReformaMoral;
 use App\Constantes\Constantes;
+use App\Http\Controllers\FolioPersonaMoralController\FolioPersonaMoralController;
 use App\Models\FolioRealPersona;
 use Illuminate\Support\Facades\DB;
 use App\Models\MovimientoRegistral;
@@ -160,6 +161,10 @@ class Asiganacion extends Component
 
             });
 
+            $this->movimientoRegistral->refresh();
+
+            $this->refreshActores();
+
             $this->dispatch('mostrarMensaje', ['success', "La información se guardo con éxito."]);
 
             $this->dispatch('cargarModelo', [get_class($this->movimientoRegistral->folioRealPersona), $this->movimientoRegistral->folio_real_persona]);
@@ -262,6 +267,14 @@ class Asiganacion extends Component
 
     public function finalizar(){
 
+        if(!$this->movimientoRegistral?->folioRealPersona->documentoEntrada()){
+
+            $this->dispatch('mostrarMensaje', ['error', "Debe guardar el documento de entrada."]);
+
+            return;
+
+        }
+
         if(!$this->movimientoRegistral?->folioRealPersona){
 
             $this->dispatch('mostrarMensaje', ['error', "Debe guardar la información para finalizar."]);
@@ -303,10 +316,13 @@ class Asiganacion extends Component
                 ]);
 
                 $this->movimientoRegistral->folioRealPersona->update([
+                    'asignado_por' => auth()->user()->name,
                     'estado' => 'elaborado',
                     'fecha_inscripcion' => now()->toDateString(),
                     'actualizado_por' => auth()->id()
                 ]);
+
+                (new FolioPersonaMoralController())->caratula($this->movimientoRegistral->reformaMoral);
 
             });
 
@@ -331,7 +347,7 @@ class Asiganacion extends Component
 
                 $this->denominacion = $this->movimientoRegistral->folioRealPersona->denominacion;
                 $this->fecha_constitucion = $this->movimientoRegistral->folioRealPersona->fecha_constitucion;
-                $this->distrito = $this->movimientoRegistral->folioRealPersona->distrito;
+                $this->distrito = $this->movimientoRegistral->folioRealPersona->getRawOriginal('distrito');
                 $this->duracion = $this->movimientoRegistral->folioRealPersona->duracion;
                 $this->capital = $this->movimientoRegistral->folioRealPersona->capital;
                 $this->tipo = $this->movimientoRegistral->folioRealPersona->tipo;

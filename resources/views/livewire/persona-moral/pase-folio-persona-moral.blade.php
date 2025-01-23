@@ -178,6 +178,14 @@
                                             @if($movimiento->folioRealPersona->estado == 'elaborado' )
 
                                                 <button
+                                                    wire:click="imprimir({{ $movimiento->id }})"
+                                                    wire:loading.attr="disabled"
+                                                    class="w-full text-left block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 focus:outline-none focus:bg-gray-100"
+                                                    role="menuitem">
+                                                    Imprimir
+                                                </button>
+
+                                                <button
                                                     wire:click="pasarCaptura({{ $movimiento->id }})"
                                                     wire:loading.attr="disabled"
                                                     class="w-full text-left block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 focus:outline-none focus:bg-gray-100"
@@ -276,57 +284,6 @@
         </x-table>
 
     </div>
-
-    <x-dialog-modal wire:model="modalFinalizar" maxWidth="sm">
-
-        <x-slot name="title">
-
-            Subir archivo
-
-        </x-slot>
-
-        <x-slot name="content">
-
-            <x-filepond wire:model.live="documento" accept="['application/pdf']"/>
-
-            <div>
-
-                @error('documento') <span class="error text-sm text-red-500">{{ $message }}</span> @enderror
-
-            </div>
-
-        </x-slot>
-
-        <x-slot name="footer">
-
-            <div class="flex gap-3">
-
-                <x-button-blue
-                    wire:click="finalizar"
-                    wire:loading.attr="disabled"
-                    wire:target="finalizar">
-
-                    <img wire:loading wire:target="finalizar" class="mx-auto h-4 mr-1" src="{{ asset('storage/img/loading3.svg') }}" alt="Loading">
-
-                    <span>Finalizar</span>
-
-                </x-button-blue>
-
-                <x-button-red
-                    wire:click="$toggle('modalFinalizar')"
-                    wire:loading.attr="disabled"
-                    wire:target="$toggle('modalFinalizar')"
-                    type="button">
-
-                    <span>Cerrar</span>
-
-                </x-button-red>
-
-            </div>
-
-        </x-slot>
-
-    </x-dialog-modal>
 
     <x-dialog-modal wire:model="modalRechazar">
 

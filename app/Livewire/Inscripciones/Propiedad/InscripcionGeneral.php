@@ -29,6 +29,7 @@ class InscripcionGeneral extends Component
     public $transmitentes = [];
 
     public $nuevoFolio;
+    public $actos;
 
     protected function rules(){
         return [
@@ -696,6 +697,8 @@ class InscripcionGeneral extends Component
     }
 
     public function mount(){
+
+        $this->actos = Constantes::ACTOS_INSCRIPCION_PROPIEDAD;
 
         if(!$this->inscripcion->movimientoRegistral->documentoEntrada()){
 

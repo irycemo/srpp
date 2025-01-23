@@ -6,6 +6,7 @@ use App\Models\File;
 use App\Models\Actor;
 use App\Models\Escritura;
 use App\Traits\ModelosTrait;
+use App\Constantes\Constantes;
 use App\Models\ObjetoPersonaMOral;
 use App\Models\MovimientoRegistral;
 use Illuminate\Database\Eloquent\Model;
@@ -60,6 +61,10 @@ class FolioRealPersona extends Model implements Auditable
 
     public function objetos(){
         return $this->hasMany(ObjetoPersonaMOral::class, 'folio_real_persona');
+    }
+
+    public function getDistritoAttribute(){
+        return Constantes::DISTRITOS[$this->attributes['distrito']];
     }
 
 }

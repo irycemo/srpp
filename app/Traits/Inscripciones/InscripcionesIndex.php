@@ -10,6 +10,7 @@ use App\Http\Services\SistemaTramitesService;
 use App\Http\Controllers\Varios\VariosController;
 use App\Http\Controllers\Gravamen\GravamenController;
 use App\Http\Controllers\Cancelaciones\CancelacionController;
+use App\Http\Controllers\FolioPersonaMoralController\FolioPersonaMoralController;
 use App\Http\Controllers\InscripcionesPropiedad\PropiedadController;
 use App\Http\Controllers\Sentencias\SentenciasController;
 use App\Http\Controllers\Subdivisiones\SubdivisionesController;
@@ -325,6 +326,12 @@ trait InscripcionesIndex{
             if($movimientoRegistral->sentencia){
 
                 $pdf = (new SentenciasController())->reimprimir($movimientoRegistral->firmaElectronica);
+
+            }
+
+            if($movimientoRegistral->reformaMoral){
+
+                $pdf = (new FolioPersonaMoralController())->reimprimir($movimientoRegistral->firmaElectronica);
 
             }
 
