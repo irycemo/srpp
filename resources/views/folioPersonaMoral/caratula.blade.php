@@ -174,7 +174,7 @@
 
                 <div>
 
-                    <p class="titulo">CARATULA DE ASIGNACION DE FOLIO REAL DE PERSONA MORAL </p>
+                    <p class="titulo">CARATULA DE ASIGNACION DE FOLIO REAL DE PERSONAS MORALES</p>
 
                 </div>
 
