@@ -235,7 +235,7 @@ class CertificadoPropiedadController extends Controller
 
         $canvas->page_text(480, 745, "Página: {PAGE_NUM} de {PAGE_COUNT}", null, 9, array(1, 1, 1));
 
-        $canvas->page_text(35, 745, $movimientoRegistral->folioReal->folio  .'-' . $movimientoRegistral->folio, null, 9, array(1, 1, 1));
+        $canvas->page_text(35, 745, 'I-' . $movimientoRegistral->folioReal->folio  .'-' . $movimientoRegistral->folio, null, 9, array(1, 1, 1));
 
         $objeto = json_decode($firmaElectronica->cadena_original);
 
@@ -278,7 +278,7 @@ class CertificadoPropiedadController extends Controller
         $datos_control->numero_control = $movimientoRegistral->año . '-' . $movimientoRegistral->tramite . '-' . $movimientoRegistral->usuario;
         $datos_control->verificado_por = auth()->user()->name;
         $datos_control->elaborado_en = Carbon::now()->locale('es')->translatedFormat('H:i:s \d\e\l l d \d\e F \d\e\l Y');
-        $datos_control->servicio = $this->nombreServicio($movimientoRegistral->certificacion->servicio);
+        $datos_control->servicio = $this->nombreServicio($movimientoRegistral->año, $movimientoRegistral->tramite, $movimientoRegistral->usuario);
         $datos_control->solicitante = $movimientoRegistral->solicitante;
         $datos_control->monto = $movimientoRegistral->monto;
         $datos_control->tipo_servicio = $movimientoRegistral->tipo_servicio;
@@ -351,7 +351,7 @@ class CertificadoPropiedadController extends Controller
 
         $canvas->page_text(480, 745, "Página: {PAGE_NUM} de {PAGE_COUNT}", null, 9, array(1, 1, 1));
 
-        $canvas->page_text(35, 745, $movimientoRegistral->folioReal->folio  .'-' . $movimientoRegistral->folio, null, 9, array(1, 1, 1));
+        $canvas->page_text(35, 745, 'I-' . $movimientoRegistral->folioReal->folio  .'-' . $movimientoRegistral->folio, null, 9, array(1, 1, 1));
 
         $objeto = json_decode($firmaElectronica->cadena_original);
 
@@ -445,7 +445,7 @@ class CertificadoPropiedadController extends Controller
 
         $canvas->page_text(480, 745, "Página: {PAGE_NUM} de {PAGE_COUNT}", null, 9, array(1, 1, 1));
 
-        $canvas->page_text(35, 745, $movimientoRegistral->folioReal->folio  .'-' . $movimientoRegistral->folio, null, 9, array(1, 1, 1));
+        $canvas->page_text(35, 745, 'I-' . $movimientoRegistral->folioReal->folio  .'-' . $movimientoRegistral->folio, null, 9, array(1, 1, 1));
 
         $objeto = json_decode($firmaElectronica->cadena_original);
 
@@ -478,7 +478,7 @@ class CertificadoPropiedadController extends Controller
         $datos_control->numero_control = $movimientoRegistral->año . '-' . $movimientoRegistral->tramite . '-' . $movimientoRegistral->usuario;
         $datos_control->verificado_por = auth()->user()->name;
         $datos_control->elaborado_en = Carbon::now()->locale('es')->translatedFormat('H:i:s \d\e\l l d \d\e F \d\e\l Y');
-        $datos_control->servicio = $this->nombreServicio($movimientoRegistral->certificacion->servicio);
+        $datos_control->servicio = $this->nombreServicio($movimientoRegistral->año, $movimientoRegistral->tramite, $movimientoRegistral->usuario);
         $datos_control->solicitante = $movimientoRegistral->solicitante;
         $datos_control->monto = $movimientoRegistral->monto;
         $datos_control->tipo_servicio = $movimientoRegistral->tipo_servicio;
@@ -641,7 +641,7 @@ class CertificadoPropiedadController extends Controller
 
         $canvas->page_text(480, 745, "Página: {PAGE_NUM} de {PAGE_COUNT}", null, 9, array(1,1,1));
 
-        $canvas->page_text(35, 745, $firmaElectronica->movimientoRegistral->folioReal->folio . '-' .$firmaElectronica->movimientoRegistral->folio, null, 9, array(1, 1, 1));
+        $canvas->page_text(35, 745, 'I-' . $firmaElectronica->movimientoRegistral->folioReal->folio . '-' .$firmaElectronica->movimientoRegistral->folio, null, 9, array(1, 1, 1));
 
         return $pdf;
 

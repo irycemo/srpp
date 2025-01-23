@@ -90,7 +90,7 @@ class SentenciasController extends Controller
 
         $canvas->page_text(480, 745, "Página: {PAGE_NUM} de {PAGE_COUNT}", null, 10, array(1, 1, 1));
 
-        $canvas->page_text(35, 745, $sentencia->movimientoRegistral->folioReal->folio  .'-' . $sentencia->movimientoRegistral->folio, null, 9, array(1, 1, 1));
+        $canvas->page_text(35, 745, 'I-' . $sentencia->movimientoRegistral->folioReal->folio  .'-' . $sentencia->movimientoRegistral->folio, null, 9, array(1, 1, 1));
 
         $canvas->page_script(function ($pageNumber, $pageCount, $canvas, $fontMetrics) {
             $w = $canvas->get_width();
@@ -163,7 +163,7 @@ class SentenciasController extends Controller
 
         $canvas->page_text(480, 745, "Página: {PAGE_NUM} de {PAGE_COUNT}", null, 9, array(1,1,1));
 
-        $canvas->page_text(35, 745, $firmaElectronica->movimientoRegistral->folioReal->folio . '-' .$firmaElectronica->movimientoRegistral->folio, null, 9, array(1, 1, 1));
+        $canvas->page_text(35, 745, 'I-' . $firmaElectronica->movimientoRegistral->folioReal->folio . '-' .$firmaElectronica->movimientoRegistral->folio, null, 9, array(1, 1, 1));
 
         return $pdf;
 
@@ -193,7 +193,7 @@ class SentenciasController extends Controller
 
         $canvas->page_text(480, 745, "Página: {PAGE_NUM} de {PAGE_COUNT}", null, 9, array(1,1,1));
 
-        $canvas->page_text(35, 745, $firmaElectronica->movimientoRegistral->folioReal->folio . '-' .$firmaElectronica->movimientoRegistral->folio, null, 9, array(1, 1, 1));
+        $canvas->page_text(35, 745, 'I-' . $firmaElectronica->movimientoRegistral->folioReal->folio . '-' .$firmaElectronica->movimientoRegistral->folio, null, 9, array(1, 1, 1));
 
         return $pdf->stream('documento.pdf');
 
@@ -221,7 +221,7 @@ class SentenciasController extends Controller
 
         $canvas->page_text(480, 745, "Página: {PAGE_NUM} de {PAGE_COUNT}", null, 9, array(1,1,1));
 
-        $canvas->page_text(35, 745, $firmaElectronica->movimientoRegistral->folioReal->folio . '-' .$firmaElectronica->movimientoRegistral->folio, null, 9, array(1, 1, 1));
+        $canvas->page_text(35, 745, 'I-' . $firmaElectronica->movimientoRegistral->folioReal->folio . '-' .$firmaElectronica->movimientoRegistral->folio, null, 9, array(1, 1, 1));
 
         return $pdf;
 
