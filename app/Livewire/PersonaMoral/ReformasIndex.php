@@ -37,12 +37,12 @@ class ReformasIndex extends Component
 
         if(auth()->user()->hasRole(['Folio real moral'])){
 
-            $movimientos = MovimientoRegistral::with('gravamen', 'actualizadoPor', 'folioReal')
+            $movimientos = MovimientoRegistral::with('reformaMoral', 'actualizadoPor', 'folioRealPersona')
                                                     ->has('reformaMoral')
                                                     ->WhereHas('folioRealPersona', function($q){
                                                         $q->where('estado', 'activo');
                                                     })
-                                                    ->whereIn('estado', ['nuevo', 'captura', 'elaborado'])
+                                                    ->whereIn('estado', ['nuevo', 'captura', 'elaborado', 'correccion'])
                                                     ->where('usuario_asignado', auth()->user()->id)
                                                     ->when(auth()->user()->ubicacion == 'Regional 4', function($q){
                                                         $q->where('distrito', 2);
@@ -55,9 +55,10 @@ class ReformasIndex extends Component
 
         }elseif(auth()->user()->hasRole(['Supervisor inscripciones', 'Supervisor uruapan'])){
 
-            $movimientos = MovimientoRegistral::with('gravamen', 'actualizadoPor', 'folioReal', 'asignadoA')
-                                                    ->whereHas('folioReal', function($q){
-                                                        $q->whereIn('estado', ['activo', 'centinela']);
+            $movimientos = MovimientoRegistral::with('reformaMoral', 'actualizadoPor', 'folioRealPersona', 'asignadoA')
+                                                    ->has('reformaMoral')
+                                                    ->WhereHas('folioRealPersona', function($q){
+                                                        $q->where('estado', 'activo');
                                                     })
                                                     ->when(auth()->user()->ubicacion == 'Regional 4', function($q){
                                                         $q->where('distrito', 2);
@@ -73,22 +74,18 @@ class ReformasIndex extends Component
                                                             ->orWhere('tomo', 'LIKE', '%' . $this->search . '%')
                                                             ->orWhere('registro', 'LIKE', '%' . $this->search . '%')
                                                             ->orWhere('distrito', 'LIKE', '%' . $this->search . '%')
-                                                            ->orWhere('seccion', 'LIKE', '%' . $this->search . '%')
-                                                            ->orWhere('estado', 'LIKE', '%' . $this->search . '%')
-                                                            ->orWhere('tramite', 'LIKE', '%' . $this->search . '%');
+                                                            ->orWhere('estado', 'LIKE', '%' . $this->search . '%');
                                                     })
                                                     ->whereIn('estado', ['nuevo', 'captura', 'elaborado', 'finalizado', 'correccion'])
-                                                    ->whereHas('gravamen', function($q){
-                                                        $q->whereIn('servicio', ['D127', 'D153', 'D150', 'D155', 'DM68', 'D154']);
-                                                    })
                                                     ->orderBy($this->sort, $this->direction)
                                                     ->paginate($this->pagination);
 
         }elseif(auth()->user()->hasRole(['Jefe de departamento inscripciones'])){
 
-            $movimientos = MovimientoRegistral::with('gravamen', 'asignadoA', 'actualizadoPor', 'folioReal')
-                                                    ->whereHas('folioReal', function($q){
-                                                        $q->whereIn('estado', ['activo', 'centinela']);
+            $movimientos = MovimientoRegistral::with('reformaMoral', 'actualizadoPor', 'folioRealPersona', 'asignadoA')
+                                                    ->has('reformaMoral')
+                                                    ->WhereHas('folioRealPersona', function($q){
+                                                        $q->where('estado', 'activo');
                                                     })
                                                     ->where(function($q){
                                                         $q->whereHas('asignadoA', function($q){
@@ -101,18 +98,13 @@ class ReformasIndex extends Component
                                                             ->orWhere('tomo', 'LIKE', '%' . $this->search . '%')
                                                             ->orWhere('registro', 'LIKE', '%' . $this->search . '%')
                                                             ->orWhere('distrito', 'LIKE', '%' . $this->search . '%')
-                                                            ->orWhere('seccion', 'LIKE', '%' . $this->search . '%')
-                                                            ->orWhere('estado', 'LIKE', '%' . $this->search . '%')
-                                                            ->orWhere('tramite', 'LIKE', '%' . $this->search . '%');
+                                                            ->orWhere('estado', 'LIKE', '%' . $this->search . '%');
                                                     })
                                                     ->when(auth()->user()->ubicacion == 'Regional 4', function($q){
                                                         $q->where('distrito', 2);
                                                     })
                                                     ->when(auth()->user()->ubicacion != 'Regional 4', function($q){
                                                         $q->where('distrito', '!=', 2);
-                                                    })
-                                                    ->whereHas('gravamen', function($q){
-                                                        $q->whereIn('servicio', ['D127', 'D153', 'D150', 'D155', 'DM68', 'D154']);
                                                     })
                                                     ->orderBy($this->sort, $this->direction)
                                                     ->paginate($this->pagination);
@@ -120,8 +112,9 @@ class ReformasIndex extends Component
         }elseif(auth()->user()->hasRole(['Administrador', 'Operador', 'Director', 'Jefe de departamento jurídico'])){
 
             $movimientos = MovimientoRegistral::with('gravamen', 'asignadoA', 'actualizadoPor', 'folioReal')
-                                                    ->whereHas('folioReal', function($q){
-                                                        $q->whereIn('estado', ['activo', 'centinela', 'bloqueado']);
+                                                    ->has('reformaMoral')
+                                                    ->WhereHas('folioRealPersona', function($q){
+                                                        $q->where('estado', 'activo');
                                                     })
                                                     ->where(function($q){
                                                         $q->whereHas('asignadoA', function($q){
@@ -134,19 +127,14 @@ class ReformasIndex extends Component
                                                             ->orWhere('tomo', 'LIKE', '%' . $this->search . '%')
                                                             ->orWhere('registro', 'LIKE', '%' . $this->search . '%')
                                                             ->orWhere('distrito', 'LIKE', '%' . $this->search . '%')
-                                                            ->orWhere('seccion', 'LIKE', '%' . $this->search . '%')
-                                                            ->orWhere('estado', 'LIKE', '%' . $this->search . '%')
-                                                            ->orWhere('tramite', 'LIKE', '%' . $this->search . '%');
-                                                    })
-                                                    ->whereHas('gravamen', function($q){
-                                                        $q->whereIn('servicio', ['D127', 'D153', 'D150', 'D155', 'DM68', 'D154']);
+                                                            ->orWhere('estado', 'LIKE', '%' . $this->search . '%');
                                                     })
                                                     ->orderBy($this->sort, $this->direction)
                                                     ->paginate($this->pagination);
 
         }
 
-        return view('livewire.persona-moral.reformas-index', compact('moviminetos'))->extends('layouts.admin');
+        return view('livewire.persona-moral.reformas-index', compact('movimientos'))->extends('layouts.admin');
 
     }
 

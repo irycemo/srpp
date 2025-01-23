@@ -199,4 +199,68 @@ class FolioRealController extends Controller
 
     }
 
+    public function consultarFolioRealPersonaMoral(FolioRealRequest $request){
+
+        try {
+
+            $folio_real = null;
+
+            $validated = $request->validated();
+
+
+
+            if($folio_real){
+
+                if(in_array($folio_real->estado, ['bloqueado', 'centinela'])){
+
+                    return response()->json([
+                        'error' => 'El folio real esta bloqueado',
+                    ], 401);
+
+                }elseif($folio_real->estado == 'activo'){
+
+                    return (new FolioRealResource($folio_real))->response()->setStatusCode(200);
+
+                }else{
+
+                    return response()->json([
+                        'error' => 'El folio real no esta activo',
+                    ], 401);
+
+                }
+
+            }elseif(isset($validated['folio_real']) && !$folio_real){
+
+                return response()->json([
+                    'folio_real' => null,
+                ], 404);
+
+            }elseif(!$folio_real){
+
+                if($propiedad){
+
+                    return response()->json([
+                        'error' => 'La propiedad ya ha sido vendida',
+                    ], 401);
+
+                }
+
+                return response()->json([
+                    'folio_real' => null,
+                ], 204);
+
+            }
+
+        }catch (\Throwable $th) {
+
+            Log::error("Error al consultar folio real mediante api: " . $th);
+
+            return response()->json([
+                'error' => $th->getMessage(),
+            ], 500);
+
+        }
+
+    }
+
 }
