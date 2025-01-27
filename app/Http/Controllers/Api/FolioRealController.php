@@ -6,11 +6,13 @@ use App\Models\FolioReal;
 use App\Models\Antecedente;
 use App\Models\Propiedadold;
 use Illuminate\Http\Request;
+use App\Models\FolioRealPersona;
 use App\Models\MovimientoRegistral;
 use Illuminate\Support\Facades\Log;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\FolioRealRequest;
 use App\Http\Resources\FolioRealResource;
+use App\Http\Resources\FolioRealPersonaMoral;
 
 class FolioRealController extends Controller
 {
@@ -207,9 +209,33 @@ class FolioRealController extends Controller
 
             $validated = $request->validated();
 
+            $folio_real = FolioRealPersona::when(isset($validated['tomo']), function($q) use($validated){
+                                                    $q->where('tomo_antecedente', $validated['tomo']);
+                                                })
+                                            ->when(isset($validated['registro']), function($q) use($validated){
+                                                $q->where('registro_antecedente', $validated['registro']);
+                                            })
+                                            ->when(isset($validated['distrito']), function($q) use($validated){
+                                                $q->where('distrito', $validated['distrito']);
+                                            })
+                                            ->when(isset($validated['folio_real']), function($q) use($validated){
+                                                $q->where('folio', $validated['folio_real']);
+                                            })
+                                            ->first();
 
+            if(!$folio_real && isset($validated['folio_real'])){
 
-            if($folio_real){
+                return response()->json([
+                    'error' => "El folio real de persona moral no existe.",
+                ], 404);
+
+            }if(!$folio_real && !isset($validated['folio_real'])){
+
+                return response()->json([
+                    'error' => "El folio real de persona moral no existe.",
+                ], 204);
+
+            }else{
 
                 if(in_array($folio_real->estado, ['bloqueado', 'centinela'])){
 
@@ -219,7 +245,7 @@ class FolioRealController extends Controller
 
                 }elseif($folio_real->estado == 'activo'){
 
-                    return (new FolioRealResource($folio_real))->response()->setStatusCode(200);
+                    return (new FolioRealPersonaMoral($folio_real))->response()->setStatusCode(200);
 
                 }else{
 
@@ -228,26 +254,6 @@ class FolioRealController extends Controller
                     ], 401);
 
                 }
-
-            }elseif(isset($validated['folio_real']) && !$folio_real){
-
-                return response()->json([
-                    'folio_real' => null,
-                ], 404);
-
-            }elseif(!$folio_real){
-
-                if($propiedad){
-
-                    return response()->json([
-                        'error' => 'La propiedad ya ha sido vendida',
-                    ], 401);
-
-                }
-
-                return response()->json([
-                    'folio_real' => null,
-                ], 204);
 
             }
 

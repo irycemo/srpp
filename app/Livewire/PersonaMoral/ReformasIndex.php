@@ -111,16 +111,16 @@ class ReformasIndex extends Component
 
         }elseif(auth()->user()->hasRole(['Administrador', 'Operador', 'Director', 'Jefe de departamento jurídico'])){
 
-            $movimientos = MovimientoRegistral::with('gravamen', 'asignadoA', 'actualizadoPor', 'folioReal')
+            $movimientos = MovimientoRegistral::with('asignadoA', 'actualizadoPor', 'folioRealPersona')
                                                     ->has('reformaMoral')
                                                     ->WhereHas('folioRealPersona', function($q){
                                                         $q->where('estado', 'activo');
                                                     })
-                                                    ->where(function($q){
+                                                   /*  ->where(function($q){
                                                         $q->whereHas('asignadoA', function($q){
                                                                 $q->where('name', 'LIKE', '%' . $this->search . '%');
                                                             })
-                                                            ->orWhereHas('folioReal', function($q){
+                                                            ->orWhereHas('folioRealPersona', function($q){
                                                                 $q->where('folio', $this->search);
                                                             })
                                                             ->orWhere('solicitante', 'LIKE', '%' . $this->search . '%')
@@ -128,7 +128,7 @@ class ReformasIndex extends Component
                                                             ->orWhere('registro', 'LIKE', '%' . $this->search . '%')
                                                             ->orWhere('distrito', 'LIKE', '%' . $this->search . '%')
                                                             ->orWhere('estado', 'LIKE', '%' . $this->search . '%');
-                                                    })
+                                                    }) */
                                                     ->orderBy($this->sort, $this->direction)
                                                     ->paginate($this->pagination);
 

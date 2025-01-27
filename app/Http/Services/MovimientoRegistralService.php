@@ -15,6 +15,7 @@ use App\Http\Services\InscripcionesCancelacionService;
 use App\Exceptions\MovimientoRegistralServiceException;
 use App\Http\Requests\MovimientoRegistralUpdateRequest;
 use App\Http\Requests\MovimientoRegistralCambiarTipoServicioRequest;
+use App\Models\FolioRealPersona;
 
 class MovimientoRegistralService{
 
@@ -256,6 +257,16 @@ class MovimientoRegistralService{
 
             }
 
+            if(isset($request['folio_real_persona_moral'])){
+
+                $folioRealPersonaMoral = FolioRealPersona::where('folio', $request['folio_real_persona_moral'])->first();
+
+            }else{
+
+                $folioRealPersonaMoral = null;
+
+            }
+
             $documento_entrada = [
                 'tipo_documento' => $request['tipo_documento'] ?? null,
                 'autoridad_cargo' => $request['autoridad_cargo'] ?? null,
@@ -323,7 +334,8 @@ class MovimientoRegistralService{
 
                 $auxArray = $array + [
                     'folio_real' => $folioReal ? $folioReal->id : null,
-                    'folio' => $this->calcularFolio($request),
+                    'folio_real_persona' => $folioRealPersonaMoral ? $folioRealPersonaMoral->id : null,
+                    'folio' => $folioRealPersonaMoral ? $this->calcularFolio($request) : $this->calcularFolioPersonaMoral($request),
                     'estado' => 'nuevo',
                 ];
 
@@ -758,6 +770,12 @@ class MovimientoRegistralService{
             return FolioReal::where('folio', $request['folio_real'])->first()->ultimoFolio() + 1;
 
         }
+
+    }
+
+    public function calcularFolioPersonaMoral($request){
+
+        return FolioRealPersona::where('folio', $request['folio_real_persona_moral'])->first()->ultimoFolio() + 1;
 
     }
 

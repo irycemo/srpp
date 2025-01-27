@@ -30,6 +30,8 @@ Route::middleware('auth:sanctum')->group(function () {
 
     Route::post('consultar_folio_real', [FolioRealController::class, 'consultarFolioReal']);
 
+    Route::post('consultar_folio_real_persona_moral', [FolioRealController::class, 'consultarFolioRealPersonaMoral']);
+
     Route::post('consultar_folio_movimiento', [FolioRealController::class, 'consultarFolioMovimiento']);
 
     Route::post('consultar_gravamen', [GravamenController::class, 'consultarGravamen']);

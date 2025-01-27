@@ -24,6 +24,7 @@ class MovimientoRegistralRequest extends FormRequest
         return [
             /* Antecedente */
             'folio_real' => 'nullable',
+            'folio_real_persona_moral' => 'nullable',
             'tomo' => 'nullable',
             'tomo_bis' => 'nullable',
             'registro' => 'nullable',

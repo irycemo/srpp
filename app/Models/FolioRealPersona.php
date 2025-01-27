@@ -67,4 +67,16 @@ class FolioRealPersona extends Model implements Auditable
         return Constantes::DISTRITOS[$this->attributes['distrito']];
     }
 
+    public function ultimoFolio():int
+    {
+
+        $folio = MovimientoRegistral::where('folio_real_persona', $this->id)->orderBy('folio', 'desc')->first()->folio;
+
+        if($folio)
+            return $folio;
+        else
+            return 0;
+
+    }
+
 }
