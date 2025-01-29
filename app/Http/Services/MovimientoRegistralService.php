@@ -335,7 +335,7 @@ class MovimientoRegistralService{
                 $auxArray = $array + [
                     'folio_real' => $folioReal ? $folioReal->id : null,
                     'folio_real_persona' => $folioRealPersonaMoral ? $folioRealPersonaMoral->id : null,
-                    'folio' => $folioRealPersonaMoral ? $this->calcularFolio($request) : $this->calcularFolioPersonaMoral($request),
+                    'folio' => $folioRealPersonaMoral ? $this->calcularFolioPersonaMoral($request) : $this->calcularFolio($request),
                     'estado' => 'nuevo',
                 ];
 
