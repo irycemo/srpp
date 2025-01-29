@@ -667,7 +667,7 @@ class MovimientoRegistralService{
         }
 
         /* Inscripciones: Varios */
-        if(in_array($servicio, ['D146', 'D128', 'D112', 'D110', 'D157', 'DL19', 'D149', 'DL16']) && $categoria_servicio == 'Varios, Arrendamientos, Avisos Preventivos'){
+        if(in_array($servicio, ['D128', 'D112', 'D110', 'D157', 'DL19', 'D149', 'DL16', 'DN83']) && $categoria_servicio == 'Varios, Arrendamientos, Avisos Preventivos'){
 
             return $this->asignacionService->obtenerUsuarioVarios($folioReal, $distrito, $estado);
 

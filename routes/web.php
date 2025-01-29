@@ -172,7 +172,7 @@ Route::group(['middleware' => ['auth', 'esta.activo']], function(){
     Route::get('pase_folio_persona_moral', PaseFolioPersonaMoral::class)->middleware('permission:Personas morales')->name('pase_folio_personas_morales');
     Route::get('reformas', ReformasIndex::class)->middleware('permission:Reformas')->name('reformas');
     Route::get('asignacion/{movimientoRegistral?}', Asiganacion::class)->middleware('permission:Asignación')->name('asignacion');
-    Route::get('reformas/{movimientoRegistral}', Reformas::class)->middleware('permission:Reformas inscripción')->name('reformas.inscripcion');
+    Route::get('reformas/{reformaMoral}', Reformas::class)->middleware('permission:Reformas inscripción')->name('reformas.inscripcion');
 
     /* Consultas */
     Route::get('consultas', Consulta::class)->middleware('permission:Consultas')->name('consultas');
