@@ -425,4 +425,16 @@ class Constantes{
         'SOCIO'
     ];
 
+    const ACTORES_GRAVAMEN = [
+        'DEUDOR',
+        'GARANTE HIPOTECARIO',
+        'GARANTE PARTE ALICUOTA',
+        'OBLIGADO SOLIDARIO',
+        'AVAL',
+        'DEUDOR SOLIDARIO',
+        'FIADOR',
+        'DEMANDADO',
+        'CONSENTIMIENTO CONYUGAL',
+    ];
+
 }
