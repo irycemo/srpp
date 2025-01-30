@@ -140,7 +140,7 @@ class Asiganacion extends Component
                             'actualizado_por' => auth()->id()
                         ]);
 
-                        $this->movimientoRegistral->folioRealPersona->objetos()->whereNull('fecha_baja')->first()->update(['objeto' => $this->objeto]);
+                        $this->movimientoRegistral->folioRealPersona->objetos()->where('estado', 'captura')->first()->update(['objeto' => $this->objeto]);
 
                         $this->movimientoRegistral->folioRealPersona->escritura->update([
                             'numero' => $this->numero_escritura,
@@ -218,6 +218,7 @@ class Asiganacion extends Component
 
         $this->folioRealPersonaMoral->objetos()->create([
             'fecha_alta' => now()->toDateString(),
+            'estado' => 'captura',
             'objeto' => $this->objeto
         ]);
 
@@ -296,17 +297,17 @@ class Asiganacion extends Component
 
     public function inscribir(){
 
+        if(!Hash::check($this->contraseña, auth()->user()->password)){
+
+            $this->dispatch('mostrarMensaje', ['error', "Contraseña incorrecta."]);
+
+            return;
+
+        }
+
+        $this->guardar();
+
         try {
-
-            if(!Hash::check($this->contraseña, auth()->user()->password)){
-
-                $this->dispatch('mostrarMensaje', ['error', "Contraseña incorrecta."]);
-
-                return;
-
-            }
-
-            $this->guardar();
 
             DB::transaction(function () {
 
@@ -321,6 +322,8 @@ class Asiganacion extends Component
                     'fecha_inscripcion' => now()->toDateString(),
                     'actualizado_por' => auth()->id()
                 ]);
+
+                $this->movimientoRegistral->folioRealPersona->objetos()->where('estado', 'captura')->first()->update(['estado' => 'activo']);
 
                 (new FolioPersonaMoralController())->caratula($this->movimientoRegistral->reformaMoral);
 
@@ -363,7 +366,7 @@ class Asiganacion extends Component
                 $this->nombre_notario = $this->movimientoRegistral->folioRealPersona->escritura->nombre_notario;
                 $this->observaciones_escritura = $this->movimientoRegistral->folioRealPersona->escritura->comentario;
 
-                $this->objeto = $this->movimientoRegistral->folioRealPersona->objetos()->whereNull('fecha_baja')->first()?->objeto;
+                $this->objeto = $this->movimientoRegistral->folioRealPersona->objetos()->where('estado', 'captura')->first()?->objeto;
 
                 $this->movimientoRegistral->folioRealPersona->load('actores.persona');
 

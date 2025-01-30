@@ -5,6 +5,10 @@ namespace App\Livewire\PersonaMoral;
 use Livewire\Component;
 use App\Models\ReformaMoral;
 use App\Constantes\Constantes;
+use App\Http\Controllers\Reformas\ReformaController;
+use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Facades\Hash;
 
 class Reformas extends Component
 {
@@ -16,11 +20,11 @@ class Reformas extends Component
     public $denominacion;
     public $capital;
     public $duracion;
-    public $observaciones;
     public $tipo;
     public $domicilio;
 
     public $objeto;
+    public $nuevo_objeto;
 
     public $modalContraseña = false;
     public $contraseña;
@@ -29,19 +33,21 @@ class Reformas extends Component
 
     protected function rules(){
         return [
+            'reformaMoral.descripcion' => 'required',
             'denominacion' => 'required',
             'capital' => 'required|numeric|min:0',
             'duracion' => 'required|numeric|min:0',
-            'observaciones' => 'nullable',
             'tipo' => 'required',
-            'observaciones_escritura' => 'nullable',
             'domicilio' => 'required',
+            'nuevo_objeto' => 'nullable'
          ];
     }
 
     protected $validationAttributes  = [
         'denominacion' => 'denominación',
         'duracion' => 'duración',
+        'nuevo_objeto' => 'nuevo objeto',
+        'reformaMoral.descripcion' => 'descripción del acto'
     ];
 
     public function refreshActores(){
@@ -50,9 +56,118 @@ class Reformas extends Component
 
     }
 
+    public function guardar(){
+
+        $this->validate();
+
+        try {
+
+            DB::transaction(function () {
+
+                $this->reformaMoral->acto_contenido = 'ACTA DE ASAMBLEA';
+                $this->reformaMoral->save();
+
+                $this->reformaMoral->movimientoRegistral->folioRealPersona->actualizado_por = auth()->id();
+                $this->reformaMoral->movimientoRegistral->folioRealPersona->save();
+
+                if($this->nuevo_objeto){
+
+                    $objeto = $this->reformaMoral->movimientoRegistral->folioRealPersona->objetos()->where('estado', 'captura')->first();
+
+                    if($objeto){
+
+                        $objeto->update(['objeto' => $this->nuevo_objeto]);
+
+                    }else{
+
+                        $this->reformaMoral->movimientoRegistral->folioRealPersona->objetos()->create(['estado' => 'captura', 'objeto' => $this->nuevo_objeto]);
+                    }
+
+                }
+
+            });
+
+            $this->refreshActores();
+
+            $this->dispatch('mostrarMensaje', ['success', "La información se guardo con éxito."]);
+
+
+        } catch (\Throwable $th) {
+            Log::error("Error al guardar acta de asamblea por el usuario: (id: " . auth()->user()->id . ") " . auth()->user()->name . ". " . $th);
+            $this->dispatch('mostrarMensaje', ['error', "Ha ocurrido un error."]);
+        }
+
+    }
+
+    public function finalizar(){
+
+        if(!$this->reformaMoral->movimientoRegistral->documentoEntrada()){
+
+            $this->dispatch('mostrarMensaje', ['error', "Debe guardar el documento de entrada."]);
+
+            return;
+
+        }
+
+        if(!$this->reformaMoral->movimientoRegistral?->folioRealPersona->actores()->count()){
+
+            $this->dispatch('mostrarMensaje', ['error', "Debe ingresar al menos un participante."]);
+
+            return;
+        }
+
+        $this->modalContraseña = true;
+
+    }
+
+    public function inscribir(){
+
+        if(!Hash::check($this->contraseña, auth()->user()->password)){
+
+            $this->dispatch('mostrarMensaje', ['error', "Contraseña incorrecta."]);
+
+            return;
+
+        }
+
+        $this->guardar();
+
+        try {
+
+            DB::transaction(function () {
+
+                $this->reformaMoral->update(['fecha_inscripcion' => now()->toDateString()]);
+
+                $this->reformaMoral->movimientoRegistral->update(['estado' => 'elaborado', 'actualizado_por' => auth()->id()]);
+
+                $this->reformaMoral->movimientoRegistral->folioRealPersona->objetos()->where('estado', 'captura')->first()?->update(['estado' => 'activo']);
+
+                (new ReformaController())->caratula($this->reformaMoral);
+
+            });
+
+            return redirect()->route('reformas');
+
+        } catch (\Throwable $th) {
+            Log::error("Error al inscribir acta de asamblea por el usuario: (id: " . auth()->user()->id . ") " . auth()->user()->name . ". " . $th);
+            $this->dispatch('mostrarMensaje', ['error', "Ha ocurrido un error."]);
+        }
+
+    }
+
     public function mount(){
 
         $this->actores = Constantes::ACTORES_FOLIO_REAL_PERSONA_MORAL;
+
+        $this->denominacion = $this->reformaMoral->movimientoRegistral->folioRealPersona->denominacion;
+        $this->capital = $this->reformaMoral->movimientoRegistral->folioRealPersona->capital;
+        $this->duracion = $this->reformaMoral->movimientoRegistral->folioRealPersona->duracion;
+        $this->tipo = $this->reformaMoral->movimientoRegistral->folioRealPersona->tipo;
+        $this->domicilio = $this->reformaMoral->movimientoRegistral->folioRealPersona->domicilio;
+        $this->objeto = $this->reformaMoral->movimientoRegistral->folioRealPersona->objetos()->where('estado', 'activo')->first()->objeto;
+        $this->nuevo_objeto = $this->reformaMoral->movimientoRegistral->folioRealPersona->objetos()->where('estado', 'captura')->first()?->objeto;
+
+        $this->refreshActores();
 
     }
 

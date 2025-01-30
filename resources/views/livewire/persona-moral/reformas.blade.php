@@ -1,8 +1,18 @@
 <div>
 
-    <x-header>Acta de asamblea <span class="text-sm tracking-widest">Folio real: PM-{{ $reformaMoral->movimientoRegistral->folioRealPersona->folio }} - {{ $reformaMoral->movimientoRegistral->folio }}</span></x-header>
+    <x-header>Acta de asamblea <span class="text-sm tracking-widest">Folio real: PM - {{ $reformaMoral->movimientoRegistral->folioRealPersona->folio }} - {{ $reformaMoral->movimientoRegistral->folio }}</span></x-header>
 
     <div class="p-4 bg-white shadow-xl rounded-xl mb-5 space-y-3">
+
+        <div class="flex gap-3 items-center w-full lg:w-1/2 justify-center mx-auto">
+
+            <x-input-group for="reformaMoral.descripcion" label="Descripción del acto" :error="$errors->first('reformaMoral.descripcion')" class="w-full">
+
+                <textarea rows="3" class="w-full bg-white rounded" wire:model="reformaMoral.descripcion"></textarea>
+
+            </x-input-group>
+
+        </div>
 
         <div class="flex gap-3 items-center w-full lg:w-1/2 justify-center mx-auto">
 
@@ -44,9 +54,19 @@
 
         <div class="flex gap-3 items-center w-full lg:w-1/2 justify-center mx-auto">
 
-            <x-input-group for="objeto" label="Objeto" :error="$errors->first('objeto')" class="w-full">
+            <x-input-group for="objeto" label="Objeto actual" :error="$errors->first('objeto')" class="w-full">
 
-                <textarea rows="3" class="w-full bg-white rounded" wire:model="objeto"></textarea>
+                <textarea rows="3" class="w-full bg-white rounded" wire:model="objeto" readonly></textarea>
+
+            </x-input-group>
+
+        </div>
+
+        <div class="flex gap-3 items-center w-full lg:w-1/2 justify-center mx-auto">
+
+            <x-input-group for="nuevo_objeto" label="Nuevo objeto" :error="$errors->first('nuevo_objeto')" class="w-full">
+
+                <textarea rows="3" class="w-full bg-white rounded" wire:model="nuevo_objeto"></textarea>
 
             </x-input-group>
 
@@ -57,16 +77,6 @@
             <x-input-group for="domicilio" label="Domicilio" :error="$errors->first('domicilio')" class="w-full">
 
                 <textarea rows="3" class="w-full bg-white rounded" wire:model="domicilio"></textarea>
-
-            </x-input-group>
-
-        </div>
-
-        <div class="flex gap-3 items-center w-full lg:w-1/2 justify-center mx-auto">
-
-            <x-input-group for="observaciones" label="Observaciones" :error="$errors->first('observaciones')" class="w-full">
-
-                <textarea rows="3" class="w-full bg-white rounded" wire:model="observaciones"></textarea>
 
             </x-input-group>
 
@@ -143,15 +153,15 @@
         <div class="mb-5 bg-white rounded-lg p-2 shadow-lg flex gap-2 flex-wrap ">
 
             <ul class="flex gap-2 felx flex-wrap list-disc ml-5">
-            @foreach ($errors->all() as $error)
+                @foreach ($errors->all() as $error)
 
-                <li class="text-red-500 text-xs md:text-sm ml-5">
-                    {{ $error }}
-                </li>
+                    <li class="text-red-500 text-xs md:text-sm ml-5">
+                        {{ $error }}
+                    </li>
 
-            @endforeach
+                @endforeach
 
-        </ul>
+            </ul>
 
         </div>
 
@@ -161,15 +171,15 @@
 
         @if($reformaMoral->movimientoRegistral->folioRealPersona)
 
-            @if(!$reformaMoral->movimientoRegistral->folioRealPersona->documentoEntrada())
+            @if(!$reformaMoral->movimientoRegistral->documentoEntrada())
 
-                @livewire('comun.documento-entrada', ['folioRealPersonaMoral' => $reformaMoral->movimientoRegistral->folioRealPersona])
+                @livewire('comun.documento-entrada', ['movimientoRegistral' => $reformaMoral->movimientoRegistral])
 
             @else
 
                 <div class="inline-block">
 
-                    <x-link-blue target="_blank" href="{{ $reformaMoral->movimientoRegistral->folioRealPersona->documentoEntrada() }}">Documento de entrada</x-link-blue>
+                    <x-link-blue target="_blank" href="{{ $reformaMoral->movimientoRegistral->documentoEntrada() }}">Documento de entrada</x-link-blue>
 
                 </div>
 

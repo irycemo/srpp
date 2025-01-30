@@ -770,21 +770,36 @@ trait FirmaElectronicaTrait{
         $object->id = $folioReal->id;
         $object->folio = $folioReal->folio;
         $object->denominacion = $folioReal->denominacion;
+        $object->domicilio = $folioReal->domicilio;
         $object->fecha_inscripcion = Carbon::parse($folioReal->fecha_inscripcion)->format('d/m/Y');
         $object->fecha_constitucion = Carbon::parse($folioReal->fecha_constitucion)->format('d/m/Y');
         $object->distrito = $folioReal->distrito;
         $object->duracion = $folioReal->duracion;
         $object->capital = $folioReal->capital;
         $object->tipo = $folioReal->tipo;
-        $object->domicilio = $folioReal->domicilio;
+
         $object->observaciones = $folioReal->observaciones;
         $object->asignado_por = $folioReal->asignado_por;
         $object->escritura = $escritura;
-        $object->objeto = $folioReal->objetos()->whereNull('fecha_baja')->first()->objeto;
+        $object->objeto = $folioReal->objetos()->where('estado', 'activo')->first()->objeto;
         $object->participantes = $participantes;
 
         return $object;
 
     }
 
+    public function reforma($reforma){
+
+        $object = (object)[];
+
+        $object->fecha_inscripcion = Carbon::parse($reforma->fecha_inscripcion)->format('d/m/Y');
+        $object->fecha_constitucion = Carbon::parse($reforma->fecha_protocolizacion)->format('d/m/Y');
+        $object->acto_contenido = $reforma->acto_contenido;
+        $object->descripcion = $reforma->descripcion;
+        $object->folioReal = $this->folioRealPersonaMoral($reforma->movimientoRegistral->folioRealPersona);
+        $object->fecha_prelacion = Carbon::parse($reforma->movimientoRegistral->fecha_prelacion)->format('d/m/Y');
+
+        return $object;
+
+    }
 }

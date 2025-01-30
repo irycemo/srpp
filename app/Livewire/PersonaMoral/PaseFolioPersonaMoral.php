@@ -5,8 +5,8 @@ namespace App\Livewire\PersonaMoral;
 use App\Models\User;
 use Livewire\Component;
 use Livewire\WithPagination;
-use Livewire\WithFileUploads;
 use App\Constantes\Constantes;
+use App\Http\Controllers\FolioPersonaMoralController\FolioPersonaMoralController;
 use Barryvdh\DomPDF\Facade\Pdf;
 use App\Traits\ComponentesTrait;
 use Illuminate\Support\Facades\DB;
@@ -19,7 +19,6 @@ class PaseFolioPersonaMoral extends Component
 {
 
     use WithPagination;
-    use WithFileUploads;
     use ComponentesTrait;
     use InscripcionesIndex;
 
@@ -121,6 +120,24 @@ class PaseFolioPersonaMoral extends Component
             Log::error("Error al rechazar pase a folio de persona moral por el usuario: (id: " . auth()->user()->id . ") " . auth()->user()->name . ". " . $th);
             $this->dispatch('mostrarMensaje', ['error', "Ha ocurrido un error."]);
             $this->reset(['modal', 'observaciones']);
+        }
+
+    }
+
+    public function imprimir(MovimientoRegistral $modelo){
+
+        try {
+
+            $pdf = (new FolioPersonaMoralController())->reimprimir($modelo->firmaElectronica);
+
+            return response()->streamDownload(
+                fn () => print($pdf->output()),
+                'documento.pdf'
+            );
+
+        } catch (\Throwable $th) {
+            Log::error("Error al reimiprimir caratula de inscripción por el usuario: (id: " . auth()->user()->id . ") " . auth()->user()->name . ". " . $th);
+            $this->dispatch('mostrarMensaje', ['error', "Ha ocurrido un error."]);
         }
 
     }
