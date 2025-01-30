@@ -256,8 +256,8 @@ class Constantes{
         'EUR'
     ];
 
-    const ACTORES_GRAVAMEN = [
-        'DEUDOR',
+    const TIPO_DEUDOR = [
+        'I-DEUDOR ÚNICO',
         'D-GARANTE(S) HIPOTECARIO(S)',
         'P-PARTE ALICUOTA',
         'G-GARANTES EN COOPROPIEDAD',
