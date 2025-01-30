@@ -1,6 +1,6 @@
 <div>
 
-    <x-header>Varios  <span class="text-sm tracking-widest">Folio real: {{ $vario->movimientoRegistral->folioReal->folio }} - {{ $vario->movimientoRegistral->folio }}</span></x-header>
+    <x-header>Varios  <span class="text-sm tracking-widest">Folio real: I - {{ $vario->movimientoRegistral->folioReal->folio }} - {{ $vario->movimientoRegistral->folio }}</span></x-header>
 
     @if($vario->acto_contenido == 'PERSONAS MORALES')
 
@@ -11,7 +11,7 @@
         @livewire('varios.donacion-usufructo', ['vario' => $this->vario])
 
     {{-- Aclaración administrativa --}}
-    @elseif($vario->servicio == 'D112')
+    @elseif($vario->servicio == 'D112' || $vario->acto_contenido == 'ESCRITURA ACLARATORIA')
 
         @livewire('varios.aclaracion-administrativa', ['vario' => $this->vario])
 

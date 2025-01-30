@@ -256,8 +256,8 @@ class Constantes{
         'EUR'
     ];
 
-    const TIPO_DEUDOR = [
-        'I-DEUDOR ÚNICO',
+    const ACTORES_GRAVAMEN = [
+        'DEUDOR',
         'D-GARANTE(S) HIPOTECARIO(S)',
         'P-PARTE ALICUOTA',
         'G-GARANTES EN COOPROPIEDAD',
@@ -326,7 +326,8 @@ class Constantes{
         'DONACIÓN / VENTA DE USUFRUCTO',
         'ANOTACIONES MARGINALES',
         'AUTORIZACIÓN DEFINITIVA SUBDIVISION PLANO LOTIFICACIÓN',
-        'RATIFICACIÓN'
+        'RATIFICACIÓN',
+        'ESCRITURA ACLARATORIA'
     ];
 
     const ACTOS_INSCRIPCION_SENTENCIAS = [

@@ -872,7 +872,7 @@ class AclaracionAdministrativa extends Component
 
     public function mount(){
 
-        $this->vario->acto_contenido = 'ACLARACIÓN ADMINISTRATIVA';
+        $this->vario->acto_contenido = $this->vario->acto_contenido ?? 'ACLARACIÓN ADMINISTRATIVA';
 
         $this->cargarPredioInicial();
 

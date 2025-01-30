@@ -4,7 +4,6 @@ namespace App\Livewire\Certificaciones;
 
 use Livewire\Component;
 use Livewire\WithPagination;
-use Livewire\WithFileUploads;
 use App\Constantes\Constantes;
 use Barryvdh\DomPDF\Facade\Pdf;
 use App\Traits\ComponentesTrait;
@@ -17,7 +16,6 @@ class CertificadoPropiedadIndex extends Component
 {
 
     use WithPagination;
-    use WithFileUploads;
     use ComponentesTrait;
 
     public MovimientoRegistral $modelo_editar;

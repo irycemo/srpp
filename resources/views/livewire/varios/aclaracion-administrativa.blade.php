@@ -4,7 +4,7 @@
 
         <div class="flex gap-3 items-center w-full lg:w-1/2 justify-center mx-auto">
 
-            <span>Aclaración administrativa</span>
+            <span>{{ $vario->acto_contenido }}</span>
 
         </div>
 

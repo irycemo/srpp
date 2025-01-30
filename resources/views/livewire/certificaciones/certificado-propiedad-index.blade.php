@@ -21,19 +21,6 @@
 
             </div>
 
-            {{-- @if(auth()->user()->hasRole(['Certificador Propiedad', 'Certificador Oficialia', 'Certificador Juridico']))
-
-                <button wire:click="$set('modalCarga', '!modalCarga')" wire:loading.attr="disabled" class="bg-gray-500 hover:shadow-lg hover:bg-gray-700 text-sm py-2 px-4 text-white rounded-full hidden md:block items-center justify-center focus:outline-gray-400 focus:outline-offset-2">
-
-                    <img wire:loading wire:target="modalCarga" class="mx-auto h-4 mr-1" src="{{ asset('storage/img/loading3.svg') }}" alt="Loading">
-                    Imprimir carga de trabajo
-
-                </button>
-
-                <button wire:click="$set('modalCarga', '!modalCarga')" class="bg-gray-500 hover:shadow-lg hover:bg-gray-700 float-right text-sm py-2 px-4 text-white rounded-full focus:outline-none md:hidden">+</button>
-
-           @endif --}}
-
         </div>
 
     </div>
@@ -69,7 +56,7 @@
 
                 @forelse ($certificados as $certificado)
 
-                    @if($certificado->tomo && $certificado->registro && $certificado->numero_propiedad && !$certificado->folio_real) @continue @endif
+                    {{-- @if($certificado->tomo && $certificado->registro && $certificado->numero_propiedad && !$certificado->folio_real) @continue @endif --}}
 
                     <x-table.row wire:loading.class.delaylongest="opacity-50" wire:key="row-{{ $certificado->id }}">
 
@@ -391,91 +378,6 @@
                     wire:loading.attr="disabled"
                     wire:target="$set('modalRechazar',false)">
                     Cerrar
-                </x-button-red>
-
-            </div>
-
-        </x-slot>
-
-    </x-dialog-modal>
-
-    <x-dialog-modal wire:model="modalCarga" maxWidth="sm">
-
-        <x-slot name="title">
-
-            Carga de trabajo
-
-        </x-slot>
-
-        <x-slot name="content">
-
-            <div class="flex flex-col md:flex-row justify-between md:space-x-3 mb-5">
-
-                <div class="flex-auto ">
-
-                    <div>
-
-                        <Label>Fecha inicial</Label>
-                    </div>
-
-                    <div>
-
-                        <input type="date" class="bg-white rounded text-sm w-full" wire:model="fecha_inicio">
-
-                    </div>
-
-                    <div>
-
-                        @error('fecha_inicio') <span class="error text-sm text-red-500">{{ $message }}</span> @enderror
-
-                    </div>
-
-                </div>
-
-                <div class="flex-auto ">
-
-                    <div>
-
-                        <Label>Fecha final</Label>
-                    </div>
-
-                    <div>
-
-                        <input type="date" class="bg-white rounded text-sm w-full" wire:model="fecha_final">
-
-                    </div>
-
-                    <div>
-
-                        @error('fecha_final') <span class="error text-sm text-red-500">{{ $message }}</span> @enderror
-
-                    </div>
-
-                </div>
-
-            </div>
-
-        </x-slot>
-
-        <x-slot name="footer">
-
-            <div class="flex items-center justify-end space-x-3">
-
-                <x-button-blue
-                    wire:click="imprimirCarga"
-                    wire:loading.attr="disabled"
-                    wire:target="imprimirCarga">
-
-                    <img wire:loading wire:target="imprimirCarga" class="mx-auto h-4 mr-1" src="{{ asset('storage/img/loading3.svg') }}" alt="Loading">
-
-                    <span>Imprimir</span>
-                </x-button-blue>
-
-                <x-button-red
-                    wire:click="$toggle('modalCarga')"
-                    wire:loading.attr="disabled"
-                    wire:target="$toggle('modalCarga')">
-                    <span>Cerrar</span>
                 </x-button-red>
 
             </div>
