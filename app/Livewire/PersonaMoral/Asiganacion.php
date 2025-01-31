@@ -151,7 +151,7 @@ class Asiganacion extends Component
                             'actualizado_por' => auth()->id()
                         ]);
 
-                        $this->movimientoRegistral->folioRealPersona->objetos()->where('estado', 'captura')->first()?->update(['objeto' => $this->objeto]);
+                        $this->movimientoRegistral->folioRealPersona->objetos()->where('estado', ['captura', 'activo'])->first()?->update(['objeto' => $this->objeto]);
 
                         $this->movimientoRegistral->folioRealPersona->escritura->update([
                             'numero' => $this->numero_escritura,
@@ -347,7 +347,7 @@ class Asiganacion extends Component
                     'actualizado_por' => auth()->id()
                 ]);
 
-                $this->movimientoRegistral->folioRealPersona->objetos()->where('estado', 'captura')->first()->update(['estado' => 'activo']);
+                $this->movimientoRegistral->folioRealPersona->objetos()->where('estado', ['captura', 'activo'])->first()?->update(['estado' => 'activo']);
 
                 (new FolioPersonaMoralController())->caratula($this->movimientoRegistral->reformaMoral);
 
@@ -395,7 +395,7 @@ class Asiganacion extends Component
                 $this->nombre_notario = $this->movimientoRegistral->folioRealPersona->escritura->nombre_notario;
                 $this->observaciones_escritura = $this->movimientoRegistral->folioRealPersona->escritura->comentario;
 
-                $this->objeto = $this->movimientoRegistral->folioRealPersona->objetos()->where('estado', 'captura')->first()?->objeto;
+                $this->objeto = $this->movimientoRegistral->folioRealPersona->objetos()->whereIn('estado', ['captura', 'activo'])->first()?->objeto;
 
                 $this->movimientoRegistral->folioRealPersona->load('actores.persona');
 
