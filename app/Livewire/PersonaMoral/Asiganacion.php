@@ -67,6 +67,7 @@ class Asiganacion extends Component
             'numero_paginas' => 'required|numeric|min:1',
             'observaciones' => 'nullable',
             'escritura_fecha_escritura' => 'required|date|before:today',
+            'escritura_fecha_inscripcion' => 'required|date|before:today',
             'tipo' => 'required',
             'observaciones_escritura' => 'nullable',
             'domicilio' => 'required',
