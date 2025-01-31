@@ -369,6 +369,9 @@ class Asiganacion extends Component
 
         if(isset($this->movimientoRegistral)){
 
+            $this->tomo = $this->movimientoRegistral->tomo;
+            $this->registro = $this->movimientoRegistral->registro;
+
             if($this->movimientoRegistral->folioRealPersona){
 
                 $this->denominacion = $this->movimientoRegistral->folioRealPersona->denominacion;
