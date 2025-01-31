@@ -706,14 +706,18 @@ class CertificadoPropiedad extends Component
 
         $this->vientos = Constantes::VIENTOS;
 
-        foreach ($this->certificacion->movimientoRegistral->folioReal?->predio->colindancias as $colindancia) {
+        if($this->certificacion->movimientoRegistral->folioReal->predio){
 
-            $this->medidas[] = [
-                'id' => $colindancia->id,
-                'viento' => $colindancia->viento,
-                'longitud' => $colindancia->longitud,
-                'descripcion' => $colindancia->descripcion,
-            ];
+            foreach ($this->certificacion->movimientoRegistral->folioReal->predio->colindancias as $colindancia) {
+
+                $this->medidas[] = [
+                    'id' => $colindancia->id,
+                    'viento' => $colindancia->viento,
+                    'longitud' => $colindancia->longitud,
+                    'descripcion' => $colindancia->descripcion,
+                ];
+
+            }
 
         }
 

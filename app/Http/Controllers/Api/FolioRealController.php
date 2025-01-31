@@ -223,6 +223,12 @@ class FolioRealController extends Controller
                                             })
                                             ->first();
 
+            if(!$folio_real){
+
+
+
+            }
+
             if(!$folio_real && isset($validated['folio_real'])){
 
                 return response()->json([
