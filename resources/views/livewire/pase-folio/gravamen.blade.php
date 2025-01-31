@@ -8,14 +8,11 @@
 
             <div class="flex justify-end mb-2">
 
-                <x-button-gray
-                        wire:click="agregarGravamen"
-                        wire:loading.attr="disabled"
-                        wire:target="agregarGravamen">
+                @if($movimientoRegistral->folio_real)
 
-                        <img wire:loading wire:target="agregarGravamen" class="mx-auto h-4 mr-1" src="{{ asset('storage/img/loading3.svg') }}" alt="Loading">
-                        Agregar gravamen
-                </x-button-gray>
+                    @livewire('pase-folio.gravamen-modal', ['folioReal' => $movimientoRegistral->folioReal])
+
+                @endif
 
             </div>
 

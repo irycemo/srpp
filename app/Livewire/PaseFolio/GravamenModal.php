@@ -2,6 +2,7 @@
 
 namespace App\Livewire\PaseFolio;
 
+use App\Constantes\Constantes;
 use Livewire\Component;
 
 class GravamenModal extends Component
@@ -9,25 +10,21 @@ class GravamenModal extends Component
 
     public $folioReal;
 
+    public $modal = false;
+    public $editar = false;
+    public $crear = false;
+
+    public $actores;
+
     public function agregarGravamen(){
 
-        if(!$this->movimientoRegistral->folioReal){
+        $this->modal = true;
 
-            $this->dispatch('mostrarMensaje', ['error', "Primero debe ingresar los datos de propiedad."]);
+    }
 
-            return;
+    public function mount(){
 
-        }
-
-        if($this->propiedad->propietarios()->count() == 0){
-
-            $this->dispatch('mostrarMensaje', ['error', "Primero debe ingresar los propietarios."]);
-
-            return;
-
-        }
-
-        $this->dispatch("openModal", 'pase-folio.modal-gravamen', ['movimientoRegistral' => $this->movimientoRegistral->id, 'crear' => false]);
+        $this->actores = Constantes::ACTORES_GRAVAMEN;
 
     }
 

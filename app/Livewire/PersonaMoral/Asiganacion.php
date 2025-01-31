@@ -336,7 +336,6 @@ class Asiganacion extends Component
             DB::transaction(function () {
 
                 $this->movimientoRegistral->folioRealPersona->escritura->update([
-                    'fecha_inscripcion' => now()->toDateString(),
                     'actualizado_por' => auth()->id()
                 ]);
 
