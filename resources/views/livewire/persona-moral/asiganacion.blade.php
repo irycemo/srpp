@@ -4,6 +4,28 @@
 
     <div class="p-4 bg-white shadow-xl rounded-xl mb-5 space-y-3">
 
+        <span class="flex items-center justify-center text-lg text-gray-700 md:col-span-3 col-span-1 sm:col-span-2">Antecedente</span>
+
+        <div class="flex gap-3 items-center w-full lg:w-1/4 justify-center mx-auto">
+
+            <x-input-group for="tomo" label="Tomo" :error="$errors->first('tomo')" class="w-full">
+
+                <x-input-text type="number" id="tomo" wire:model="tomo"/>
+
+            </x-input-group>
+
+            <x-input-group for="registro" label="Registro" :error="$errors->first('registro')" class="w-full">
+
+                <x-input-text type="number" id="registro" wire:model="registro" />
+
+            </x-input-group>
+
+        </div>
+
+    </div>
+
+    <div class="p-4 bg-white shadow-xl rounded-xl mb-5 space-y-3">
+
         <span class="flex items-center justify-center text-lg text-gray-700 md:col-span-3 col-span-1 sm:col-span-2">Escritura</span>
 
         <div class="flex gap-3 items-center w-full lg:w-1/2 justify-center mx-auto">

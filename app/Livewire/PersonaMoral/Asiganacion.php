@@ -14,6 +14,7 @@ use App\Models\MovimientoRegistral;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Hash;
 use App\Http\Services\AsignacionService;
+use Exception;
 
 class Asiganacion extends Component
 {
@@ -30,6 +31,8 @@ class Asiganacion extends Component
     public $distrito;
     public $tipo;
     public $domicilio;
+    public $tomo;
+    public $registro;
 
     public $objeto;
 
@@ -127,6 +130,11 @@ class Asiganacion extends Component
 
                     }else{
 
+                        $folio = FolioRealPersona::where('tomo_antecedente', $this->tomo)->where('registro_antecedente', $this->registro)->first();
+
+                        if($folio && ($folio->id != $this->movimientoRegistral->folio_real_persona))
+                            throw new Exception('Ya existe un folio de persona moral con el tomo y registro ingresados.');
+
                         $this->movimientoRegistral->folioRealPersona->update([
                             'denominacion' => $this->denominacion,
                             'estado' => 'captura',
@@ -137,10 +145,12 @@ class Asiganacion extends Component
                             'tipo' => $this->tipo,
                             'domicilio' => $this->domicilio,
                             'observaciones' => $this->observaciones,
+                            'tomo_antecedente' => $this->tomo,
+                            'registro_antecedente' => $this->registro,
                             'actualizado_por' => auth()->id()
                         ]);
 
-                        $this->movimientoRegistral->folioRealPersona->objetos()->where('estado', 'captura')->first()->update(['objeto' => $this->objeto]);
+                        $this->movimientoRegistral->folioRealPersona->objetos()->where('estado', 'captura')->first()?->update(['objeto' => $this->objeto]);
 
                         $this->movimientoRegistral->folioRealPersona->escritura->update([
                             'numero' => $this->numero_escritura,
@@ -169,7 +179,15 @@ class Asiganacion extends Component
 
             $this->dispatch('cargarModelo', [get_class($this->movimientoRegistral->folioRealPersona), $this->movimientoRegistral->folio_real_persona]);
 
+        } catch (Exception $ex) {
+
+            $this->movimientoRegistral = MovimientoRegistral::make();
+
+            $this->dispatch('mostrarMensaje', ['error', $ex->getMessage()]);
+
         } catch (\Throwable $th) {
+
+            $this->movimientoRegistral = MovimientoRegistral::make();
 
             Log::error("Error al guardar folio de persona moral por el usuario: (id: " . auth()->user()->id . ") " . auth()->user()->name . ". " . $th);
             $this->dispatch('mostrarMensaje', ['error', "Ha ocurrido un error."]);
@@ -201,6 +219,9 @@ class Asiganacion extends Component
 
     public function crearFolioRealPersonaMoral(){
 
+        if(FolioRealPersona::where('tomo_antecedente', $this->tomo)->where('registro_antecedente', $this->registro)->first())
+            throw new Exception('Ya existe un folio de persona moral con el tomo y registro ingresados.');
+
         $this->folioRealPersonaMoral = FolioRealPersona::create([
             'folio' => (FolioRealPersona::max('folio') ?? 0) + 1,
             'denominacion' => $this->denominacion,
@@ -213,6 +234,8 @@ class Asiganacion extends Component
             'tipo' => $this->tipo,
             'domicilio' => $this->domicilio,
             'observaciones' => $this->observaciones,
+            'tomo_antecedente' => $this->tomo,
+            'registro_antecedente' => $this->registro,
             'creado_por' => auth()->id()
         ]);
 
@@ -355,6 +378,8 @@ class Asiganacion extends Component
                 $this->capital = $this->movimientoRegistral->folioRealPersona->capital;
                 $this->tipo = $this->movimientoRegistral->folioRealPersona->tipo;
                 $this->domicilio = $this->movimientoRegistral->folioRealPersona->domicilio;
+                $this->tomo = $this->movimientoRegistral->folioRealPersona->tomo_antecedente;
+                $this->registro = $this->movimientoRegistral->folioRealPersona->registro_antecedente;
                 $this->observaciones = $this->movimientoRegistral->folioRealPersona->observaciones;
 
                 $this->numero_escritura = $this->movimientoRegistral->folioRealPersona->escritura->numero;
