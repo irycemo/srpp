@@ -8,7 +8,7 @@
 
 <p class="parrafo">
 
-    <strong>Fecha de inscripción:</strong> {{ $folioReal->fecha_inscripcion }}; <strong>Fecha de constitución:</strong> {{ $folioReal->fecha_constitucion }}; <strong>Capital:</strong> ${{ number_format($folioReal->capital, 2) }}; @if($folioReal->duracion) <strong>Duración:</strong> {{ $folioReal->duracion }} años; @endif <strong>Tipo:</strong> {{ str_replace('_', ' ', $folioReal->tipo) }}; <strong>Distrito:</strong> {{ $folioReal->distrito }}
+    <strong>Fecha de inscripción:</strong> {{ $folioReal->fecha_inscripcion }}; <strong>Fecha de constitución:</strong> {{ $folioReal->fecha_constitucion }}; <strong>Capital:</strong> ${{ number_format($folioReal->capital, 2) }}; @if($folioReal->duracion) <strong>Duración:</strong> {{ $folioReal->duracion }} años; @endif <strong>Tipo:</strong> {{ str_replace('_', ' ', $folioReal->tipo) }}
 
 </p>
 
