@@ -462,6 +462,8 @@
 
         window.addEventListener('imprimir_certificado_colindancias', event => {
 
+            alert("")
+
             const documento = event.detail[0].certificacion;
 
             var url = "{{ route('certificado_propiedad_colindancias_pdf', '')}}" + "/" + documento;

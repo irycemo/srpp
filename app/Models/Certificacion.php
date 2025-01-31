@@ -34,4 +34,13 @@ class Certificacion extends Model implements Auditable
         return $this->hasMany(CertificadoPersona::class);
     }
 
+    /*
+        Certificados de propiedad
+        1 ->
+        2 ->
+        3 ->
+        4 ->
+        5 ->
+    */
+
 }

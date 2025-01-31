@@ -156,6 +156,10 @@ class CertificadoPropiedadIndex extends Component
 
             $this->dispatch('imprimir_negativo', ['certificacion' => $movimientoRegistral->id]);
 
+        }if($movimientoRegistral->certificacion->tipo_certificado == 4){
+
+            $this->dispatch('imprimir_certificado_colindancias', ['certificacion' => $movimientoRegistral->id]);
+
         }
 
     }
