@@ -13,6 +13,7 @@ use App\Http\Controllers\Controller;
 use App\Http\Requests\FolioRealRequest;
 use App\Http\Resources\FolioRealResource;
 use App\Http\Resources\FolioRealPersonaMoral;
+use App\Models\Asociacion;
 
 class FolioRealController extends Controller
 {
@@ -223,19 +224,13 @@ class FolioRealController extends Controller
                                             })
                                             ->first();
 
-            if(!$folio_real){
-
-
-
-            }
-
             if(!$folio_real && isset($validated['folio_real'])){
 
                 return response()->json([
                     'error' => "El folio real de persona moral no existe.",
                 ], 404);
 
-            }if(!$folio_real && !isset($validated['folio_real'])){
+            }elseif(!$folio_real && !isset($validated['folio_real'])){
 
                 return response()->json([
                     'error' => "El folio real de persona moral no existe.",

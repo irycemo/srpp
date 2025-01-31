@@ -27,7 +27,7 @@ class ReformasIndex extends Component
 
             if($this->actual->folio > $primerMovimiento->folio){
 
-                $this->dispatch('mostrarMensaje', ['warning', "El movimiento registral: (" . $this->actual->folioReal->folio . '-' . $primerMovimiento->folio . ') debe elaborarce primero.']);
+                $this->dispatch('mostrarMensaje', ['warning', "El movimiento registral: (" . $this->actual->folioRealPersona->folio . '-' . $primerMovimiento->folio . ') debe elaborarce primero.']);
 
                 return true;
 
