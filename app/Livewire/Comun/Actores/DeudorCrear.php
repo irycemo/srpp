@@ -31,6 +31,12 @@ class DeudorCrear extends Component
 
     }
 
+    protected $listeners = ['abrir'];
+
+    public function abrir(){
+        $this->modal = true;
+    }
+
     public function guardar(){
 
         $this->validate();

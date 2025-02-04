@@ -131,10 +131,14 @@ class Asiganacion extends Component
 
                     }else{
 
-                        $folio = FolioRealPersona::where('tomo_antecedente', $this->tomo)->where('registro_antecedente', $this->registro)->first();
+                        if($this->tomo && $this->registro){
 
-                        if($folio && ($folio->id != $this->movimientoRegistral->folio_real_persona))
-                            throw new Exception('Ya existe un folio de persona moral con el tomo y registro ingresados.');
+                            $folio = FolioRealPersona::where('tomo_antecedente', $this->tomo)->where('registro_antecedente', $this->registro)->first();
+
+                            if($folio && ($folio->id != $this->movimientoRegistral->folio_real_persona))
+                                throw new Exception('Ya existe un folio de persona moral con el tomo y registro ingresados.');
+
+                        }
 
                         $this->movimientoRegistral->folioRealPersona->update([
                             'denominacion' => $this->denominacion,
@@ -151,7 +155,7 @@ class Asiganacion extends Component
                             'actualizado_por' => auth()->id()
                         ]);
 
-                        $this->movimientoRegistral->folioRealPersona->objetos()->where('estado', ['captura', 'activo'])->first()?->update(['objeto' => $this->objeto]);
+                        $this->movimientoRegistral->folioRealPersona->objetos()->whereIn('estado', ['captura', 'activo'])->first()?->update(['objeto' => $this->objeto, 'estado' => 'captura']);
 
                         $this->movimientoRegistral->folioRealPersona->escritura->update([
                             'numero' => $this->numero_escritura,
@@ -220,7 +224,7 @@ class Asiganacion extends Component
 
     public function crearFolioRealPersonaMoral(){
 
-        if(FolioRealPersona::where('tomo_antecedente', $this->tomo)->where('registro_antecedente', $this->registro)->first())
+        if($this->tomo && $this->registro && FolioRealPersona::where('tomo_antecedente', $this->tomo)->where('registro_antecedente', $this->registro)->first())
             throw new Exception('Ya existe un folio de persona moral con el tomo y registro ingresados.');
 
         $this->folioRealPersonaMoral = FolioRealPersona::create([
@@ -346,7 +350,7 @@ class Asiganacion extends Component
                     'actualizado_por' => auth()->id()
                 ]);
 
-                $this->movimientoRegistral->folioRealPersona->objetos()->where('estado', ['captura', 'activo'])->first()?->update(['estado' => 'activo']);
+                $this->movimientoRegistral->folioRealPersona->objetos()->whereIn('estado', ['captura', 'activo'])->first()?->update(['estado' => 'activo']);
 
                 (new FolioPersonaMoralController())->caratula($this->movimientoRegistral->reformaMoral);
 

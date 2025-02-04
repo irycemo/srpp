@@ -72,11 +72,11 @@ class ReformasIndex extends Component
 
         }
 
-        $movimientoAsignados = MovimientoRegistral::whereIn('estado', ['nuevo', 'captura', 'correccion'])
-                                                    ->where('usuario_Asignado', auth()->id())
-                                                    ->withWhereHas('folioReal', function($q){
+        $movimientoAsignados = MovimientoRegistral::withWhereHas('folioRealPersona', function($q){
                                                         $q->where('estado', 'activo');
                                                     })
+                                                    ->whereIn('estado', ['nuevo', 'captura', 'correccion'])
+                                                    ->where('usuario_Asignado', auth()->id())
                                                     ->orderBy('created_at')
                                                     ->get();
 
@@ -109,7 +109,7 @@ class ReformasIndex extends Component
                 /* Revisar si es el que debe hacer ($this->actual) */
                 if($this->modelo_editar->id != $this->actual->id){
 
-                    $this->dispatch('mostrarMensaje', ['error', "Debe elaborar el movimiento registral " . $this->actual->folioReal->folio . '-' . $this->actual->folio . ' primero.']);
+                    $this->dispatch('mostrarMensaje', ['error', "Debe elaborar el movimiento registral " . $this->actual->folioRealPersona->folio . '-' . $this->actual->folio . ' primero.']);
 
                     return;
 
