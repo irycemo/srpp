@@ -2,13 +2,14 @@
 
 namespace App\Livewire\PersonaMoral;
 
+use App\Models\Actor;
 use Livewire\Component;
 use App\Models\ReformaMoral;
 use App\Constantes\Constantes;
-use App\Http\Controllers\Reformas\ReformaController;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Hash;
+use App\Http\Controllers\Reformas\ReformaController;
 
 class Reformas extends Component
 {
@@ -151,6 +152,25 @@ class Reformas extends Component
         } catch (\Throwable $th) {
             Log::error("Error al inscribir acta de asamblea por el usuario: (id: " . auth()->user()->id . ") " . auth()->user()->name . ". " . $th);
             $this->dispatch('mostrarMensaje', ['error', "Ha ocurrido un error."]);
+        }
+
+    }
+
+    public function eliminarActor(Actor $actor){
+
+        try {
+
+            $actor->delete();
+
+            $this->dispatch('mostrarMensaje', ['success', "El actor se eliminó con éxito."]);
+
+            $this->refreshActores();
+
+        } catch (\Throwable $th) {
+
+            Log::error("Error al eliminar socio en acta de asamblea por el usuario: (id: " . auth()->user()->id . ") " . auth()->user()->name . ". " . $th);
+            $this->dispatch('mostrarMensaje', ['error', "Ha ocurrido un error."]);
+
         }
 
     }

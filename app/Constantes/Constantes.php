@@ -422,7 +422,9 @@ class Constantes{
         'VICEPRESIDENTE DEL CONSEJO DE VIGILANCIA',
         'SECRETARIO DEL CONSEJO DE VIGILANCIA',
         'ESCRUTADOR',
-        'SOCIO'
+        'SOCIO',
+        'REPRESENTANTE LEGAL',
+        'APODERADO JURÍDICO'
     ];
 
     const ACTORES_GRAVAMEN = [
