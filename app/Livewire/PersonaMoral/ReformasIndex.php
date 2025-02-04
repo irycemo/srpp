@@ -107,7 +107,7 @@ class ReformasIndex extends Component
                 }
 
                 /* Revisar si es el que debe hacer ($this->actual) */
-                if($this->modelo_editar->id != $this->actual->id){
+                if($movimientoRegistral->id != $this->actual->id){
 
                     $this->dispatch('mostrarMensaje', ['error', "Debe elaborar el movimiento registral " . $this->actual->folioRealPersona->folio . '-' . $this->actual->folio . ' primero.']);
 
@@ -115,7 +115,7 @@ class ReformasIndex extends Component
 
                 }else{
 
-                    $this->ruta($this->modelo_editar);
+                    $this->ruta($movimientoRegistral);
 
                     break;
 
