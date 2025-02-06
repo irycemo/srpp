@@ -252,7 +252,7 @@
 
                     <x-slot name="body">
 
-                        @foreach ($gravamen->actores as $participante)
+                        @foreach ($gravamen->deudores as $participante)
 
                             <x-table.row wire:key="row-{{ $participante->id }}">
 

@@ -227,7 +227,7 @@
                         <strong> Y COMO DEUDOR(ES): </strong>
                         @foreach ($gravamen->deudores as $deudor)
 
-                            {{ $deudor->nombre }} {{ $deudor->ap_paterno }} {{ $deudor->ap_materno }}{{ $deudor->razon_social }}@if(!$loop->last), @else; @endif
+                            {{ $deudor->tipo_deudor }}: {{ $deudor->nombre }} {{ $deudor->ap_paterno }} {{ $deudor->ap_materno }}{{ $deudor->razon_social }}@if(!$loop->last), @else; @endif
 
                         @endforeach
                         <strong>POR LA CANTIDAD DE: </strong> ${{ number_format($gravamen->valor_gravamen, 2) }} {{ $gravamen->valor_gravamen_letras }} {{ $gravamen->divisa }}.

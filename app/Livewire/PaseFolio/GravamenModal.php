@@ -179,7 +179,7 @@ class GravamenModal extends Component
 
     public function refresh(){
 
-        $this->gravamen->load('actores.persona', 'acreedores.persona');
+        $this->gravamen->load('deudores.persona', 'acreedores.persona');
 
     }
 

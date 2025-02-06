@@ -339,7 +339,7 @@
                                         <strong>deudores: </strong>
                                         @foreach ($gravamen->deudores as $deudor)
 
-                                            {{ $deudor->nombre }} {{ $deudor->ap_paterno }} {{ $deudor->ap_materno }} {{ $deudor->razon_social }}@if(!$loop->last), @endif
+                                        {{ $deudor->tipo_deudor }}: {{ $deudor->nombre }} {{ $deudor->ap_paterno }} {{ $deudor->ap_materno }} {{ $deudor->razon_social }}@if(!$loop->last), @endif
 
                                         @endforeach
                                     </p>

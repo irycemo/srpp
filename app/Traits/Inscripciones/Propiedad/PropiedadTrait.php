@@ -5,11 +5,12 @@ namespace App\Traits\Inscripciones\Propiedad;
 use App\Models\File;
 use App\Models\User;
 use App\Models\Actor;
-use App\Models\Colindancia;
 use App\Models\Predio;
 use App\Models\Persona;
+use App\Models\Gravamen;
 use App\Models\FolioReal;
 use App\Models\Propiedad;
+use App\Models\Colindancia;
 use Illuminate\Validation\Rule;
 use Illuminate\Support\Facades\DB;
 use App\Models\MovimientoRegistral;
@@ -992,6 +993,31 @@ trait PropiedadTrait{
             return  auth()->id();
 
         }
+
+    }
+
+    public function generarGravamenReservaDominio(){
+
+        $movimiento = $this->inscripcion->movimientoRegistral->replicate();
+        $movimiento->folio = $movimiento->folio + 1;
+        $movimiento->estado = 'nuevo';
+        $movimiento->save();
+
+        $url = $this->inscripcion->movimientoRegistral->archivos()->where('descripcion', 'caratula')->first()->url;
+
+        File::create([
+            'fileable_id' => $movimiento->id,
+            'fileable_type' => 'App\Models\MovimientoRegistral',
+            'descripcion' => 'documento_entrada',
+            'url' => $url
+        ]);
+
+        Gravamen::create([
+            'movimiento_registral_id' => $movimiento->id,
+            'acto_contenido' => 'RESERVA DE DOMINIO',
+            'servicio' => 'D150',
+            'estado' => 'activo'
+        ]);
 
     }
 
