@@ -2,19 +2,23 @@
 
 namespace App\Livewire\PaseFolio;
 
+use App\Models\Actor;
 use Livewire\Component;
 use App\Models\Gravamen;
+use App\Models\FolioReal;
 use App\Constantes\Constantes;
 use Illuminate\Validation\Rule;
 use App\Models\MovimientoRegistral;
+use Illuminate\Support\Facades\Log;
+use App\Livewire\Comun\Actores\DeudorCrear;
+use App\Livewire\Comun\Actores\AcreedorCrear;
 
 class GravamenModal extends Component
 {
 
     public $folioReal;
-    public Gravamen $gravamen;
+    public $gravamen;
 
-    public $modal = false;
     public $editar = false;
     public $crear = false;
     public $reserva_dominio = false;
@@ -67,23 +71,115 @@ class GravamenModal extends Component
         'fecha_inscripcion' => 'fecha de inscripción',
     ];
 
-    protected $listeners = ['abrir'];
+    protected function messages()
+    {
+        return [
+            'antecente_tomo.required_if' => 'El campo tomo es obligatorio.',
+            'antecente_registro.required_if' => 'El campo tomo es obligatorio.',
+            'fecha_inscripcion.before' => 'La fecha debe ser anterior al día de hoy'
+        ];
+    }
 
-    public function abrir(){
-        $this->modal = true;
+    protected $listeners = ['refresh', 'cargarGravamen'];
+
+    public function updatedReservaDominio(){
+
+        if($this->reserva_dominio){
+
+            $this->acto_contenido = 'RESERVA DE DOMINIO';
+
+        }
+
     }
 
     public function agregarGravamen(){
 
-        $this->modal = true;
+        dd("entra");
+
+        if(!$this->editar){
+
+            $this->reset([
+                'editar',
+                'reserva_dominio',
+                'antecedente',
+                'documento_entrada',
+                'datos_gravamen',
+                'deudores',
+                'acreedores',
+                'antecente_tomo',
+                'antecente_registro',
+                'antecente_distrito',
+                'distritoMovimineto',
+                'tipo_documento',
+                'autoridad_cargo',
+                'autoridad_nombre',
+                'numero_documento',
+                'fecha_emision',
+                'procedencia',
+                'tipo',
+                'expediente',
+                'acto_contenido',
+                'valor_gravamen',
+                'divisa',
+                'fecha_inscripcion',
+                'estado',
+                'comentario',
+                'label_numero_documento'
+            ]);
+
+        }
 
     }
 
-    public function modalClick(){
+    public function cargarGravamen($id){
+
+        $this->gravamen = Gravamen::with('actores.persona', 'acreedores.persona')->whereKey($id)->first();
+
+        $this->antecente_tomo = $this->gravamen->movimientoRegistral->tomo_gravamen;
+        $this->antecente_registro = $this->gravamen->movimientoRegistral->registro_gravamen;
+        $this->antecente_distrito = $this->gravamen->movimientoRegistral->getOriginal('distrito');
+        $this->tipo_documento = $this->gravamen->movimientoRegistral->tipo_documento;
+        $this->autoridad_cargo = $this->gravamen->movimientoRegistral->autoridad_cargo;
+        $this->autoridad_nombre = $this->gravamen->movimientoRegistral->autoridad_nombre;
+        $this->numero_documento = $this->gravamen->movimientoRegistral->numero_documento;
+        $this->fecha_emision = $this->gravamen->movimientoRegistral->fecha_emision;
+        $this->procedencia = $this->gravamen->movimientoRegistral->procedencia;
+        $this->tipo = $this->gravamen->tipo;
+        $this->expediente = $this->gravamen->expediente;
+        $this->acto_contenido = $this->gravamen->acto_contenido;
+        $this->valor_gravamen = $this->gravamen->valor_gravamen;
+        $this->divisa = $this->gravamen->divisa;
+        $this->fecha_inscripcion = $this->gravamen->fecha_inscripcion;
+        $this->estado = $this->gravamen->estado;
+        $this->comentario = $this->gravamen->observaciones;
+
+        $this->folioReal = FolioReal::find($this->gravamen->movimientoRegistral->folio_real);
+
+        $this->editar = true;
+
+        if($this->gravamen->acto_contenido == 'RESERVA DE DOMINIO') $this->reserva_dominio = true;
+
+    }
+
+    public function abrirModalCrear($tipo){
 
         $this->modal = false;
 
-        $this->dispatch('abrir');
+        if($tipo == 'deudor'){
+
+            $this->dispatch('abrir')->to(DeudorCrear::class);
+
+        }else{
+
+            $this->dispatch('abrir')->to(AcreedorCrear::class);
+
+        }
+
+    }
+
+    public function refresh(){
+
+        $this->gravamen->load('actores.persona', 'acreedores.persona');
 
     }
 
@@ -92,8 +188,8 @@ class GravamenModal extends Component
         if($string == 'documento_entrada'){
 
             $this->validate([
-                'antecente_tomo' => 'required',
-                'antecente_registro' => 'required',
+                'antecente_tomo' => 'required_if:reserva_dominio,false',
+                'antecente_registro' => 'required_if:reserva_dominio,false',
             ]);
 
             $this->antecedente = false;
@@ -137,10 +233,9 @@ class GravamenModal extends Component
                 'tipo' => 'required',
                 'expediente' => 'nullable',
                 'acto_contenido' => ['required', Rule::in(Constantes::ACTOS_INSCRIPCION_GRAVAMEN)],
-                'valor_gravamen' => 'required',
+                'valor_gravamen' => ['required', 'numeric', 'regex:/^[\d]{0,15}(\.[\d]{1,2})?$/'],
                 'divisa' => ['required' , Rule::in(Constantes::DIVISAS)],
-                'fecha_inscripcion' => 'required',
-                'estado' => 'required',
+                'fecha_inscripcion' => ['required', 'date', 'before:today'],
                 'comentario' => 'required',
             ]);
 
@@ -156,7 +251,7 @@ class GravamenModal extends Component
 
             if(!$this->gravamen->deudores->count() && $this->acto_contenido != 'POR ANTECEDENTE'){
 
-                $this->dispatch('mostrarMensaje', ['error', "Debe ingresar la información de deudores."]);
+                $this->dispatch('mostrarMensaje', ['warning', "Debe ingresar la información de los actores."]);
 
                 return;
 
@@ -174,6 +269,53 @@ class GravamenModal extends Component
 
     }
 
+    public function regresarA($string){
+
+        if($string == 'documento_entrada'){
+
+            $this->antecedente = false;
+            $this->documento_entrada = true;
+            $this->datos_gravamen = false;
+            $this->deudores = false;
+            $this->acreedores = false;
+
+        }elseif($string == 'antecedente'){
+
+            $this->antecedente = true;
+            $this->documento_entrada = false;
+            $this->datos_gravamen = false;
+            $this->deudores = false;
+            $this->acreedores = false;
+
+        }elseif($string == 'datos_gravamen'){
+
+            $this->antecedente = false;
+            $this->documento_entrada = false;
+            $this->datos_gravamen = true;
+            $this->deudores = false;
+            $this->acreedores = false;
+
+        }elseif($string == 'deudores'){
+
+            $this->antecedente = false;
+            $this->documento_entrada = false;
+            $this->datos_gravamen = false;
+            $this->deudores = true;
+            $this->acreedores = false;
+
+        }elseif($string == 'acreedores'){
+
+            $this->antecedente = false;
+            $this->documento_entrada = false;
+            $this->datos_gravamen = false;
+            $this->deudores = false;
+            $this->acreedores = true;
+            $this->crear = true;
+
+        }
+
+    }
+
     public function guardarAntecedente(){
 
         if($this->gravamen->getKey()){
@@ -181,7 +323,7 @@ class GravamenModal extends Component
             $this->gravamen->movimientoRegistral->update([
                 'tomo_gravamen' => $this->antecente_tomo,
                 'registro_gravamen' => $this->antecente_registro,
-                'folio_real' => $this->movimientoRegistral->folio_real,
+                'folio_real' => $this->folioReal->id,
                 'actualizado_por' => auth()->id()
             ]);
 
@@ -208,7 +350,74 @@ class GravamenModal extends Component
 
     }
 
-    public function inactivar(){}
+    public function guardarDocumentoEntrada(){
+
+        $this->gravamen->movimientoRegistral->update([
+            'tipo_documento' => $this->tipo_documento,
+            'autoridad_cargo' => $this->autoridad_cargo,
+            'autoridad_nombre' => $this->autoridad_nombre,
+            'numero_documento' => $this->numero_documento,
+            'fecha_emision' => $this->fecha_emision,
+            'procedencia' => $this->procedencia,
+            'actualizado_por' => auth()->id()
+        ]);
+
+    }
+
+    public function guardarGravamen(){
+
+        $this->gravamen->update([
+            'tipo' => $this->tipo,
+            'acto_contenido' => $this->acto_contenido,
+            'valor_gravamen' => $this->valor_gravamen,
+            'divisa' => $this->divisa,
+            'expediente' => $this->expediente,
+            'fecha_inscripcion' => $this->fecha_inscripcion,
+            'estado' => $this->estado,
+            'observaciones' => $this->comentario,
+            'actualizado_por' => auth()->id()
+        ]);
+
+    }
+
+    public function eliminarActor(Actor $actor){
+
+        try {
+
+            $actor->delete();
+
+            $this->dispatch('mostrarMensaje', ['success', "La información se eliminó con éxito."]);
+
+            $this->refresh();
+
+        } catch (\Throwable $th) {
+
+            Log::error("Error al eliminar actor en gravamen de pase a folio por el usuario: (id: " . auth()->user()->id . ") " . auth()->user()->name . ". " . $th);
+            $this->dispatch('mostrarMensaje', ['error', "Ha ocurrido un error."]);
+
+        }
+
+    }
+
+    public function cerrar(){
+
+        $this->dispatch('cargarGravamenes');
+
+    }
+
+    public function finalizar(){
+
+        if(!$this->gravamen->acreedores()->count()){
+
+            $this->dispatch('mostrarMensaje', ['warning', "Debe ingresar los acreedores."]);
+
+            return;
+
+        }
+
+        $this->dispatch('cargarGravamenes');
+
+    }
 
     public function mount(){
 
@@ -218,7 +427,11 @@ class GravamenModal extends Component
 
         $this->actos = Constantes::ACTOS_INSCRIPCION_GRAVAMEN;
 
-        $this->gravamen = Gravamen::make();
+        if(!$this->gravamen){
+
+            $this->gravamen = Gravamen::make();
+
+        }
 
     }
 

@@ -2,11 +2,144 @@
 
     <div class="grid grid-cols-1 sm:grid-cols-3 gap-3">
 
-        <div class=" gap-3 mb-3 col-span-2 bg-white rounded-lg p-3 shadow-lg">
+         @if($mostrarLista)
 
-            <span class="flex items-center justify-center text-lg text-gray-700 mb-5">Gravamenes</span>
+            <div class=" gap-3 mb-3 col-span-2 bg-white rounded-lg p-3 shadow-lg">
 
-            <div class="flex justify-end mb-2">
+                <span class="flex items-center justify-center text-lg text-gray-700 mb-5">Gravamenes</span>
+
+                <div class="flex justify-end mb-2">
+
+                    @if($movimientoRegistral->folio_real)
+
+                        <x-button-gray
+                            wire:click="agregarGravamen"
+                            wire:loading.attr="disabled"
+                            wire:target="agregarGravamen">
+
+                            <img wire:loading wire:target="agregarGravamen" class="mx-auto h-4 mr-1" src="{{ asset('storage/img/loading3.svg') }}" alt="Loading">
+                            Agregar gravamen
+                        </x-button-gray>
+
+                    @endif
+
+                </div>
+
+                <div class="overflow-auto">
+
+                    <x-table >
+
+                        <x-slot name="head">
+                            <x-table.heading >Estado</x-table.heading>
+                            <x-table.heading >Acto contenido</x-table.heading>
+                            <x-table.heading >Tomo</x-table.heading>
+                            <x-table.heading >Registro</x-table.heading>
+                            <x-table.heading >Distrito</x-table.heading>
+                            <x-table.heading ></x-table.heading>
+                        </x-slot>
+
+                        <x-slot name="body">
+
+                            @if($gravamenes)
+
+                                @foreach ($gravamenes as $gravamen)
+
+                                    <x-table.row >
+
+                                        <x-table.cell>
+                                            @if($gravamen->estado == 'activo')
+
+                                                <span class="bg-green-400 py-1 px-2 rounded-full text-white text-xs">{{ ucfirst($gravamen->estado) }}</span>
+
+                                            @elseif(!$gravamen->acreedores()->count())
+
+                                                <span class="bg-yellow-400 py-1 px-2 rounded-full text-white text-xs">Incompleto</span>
+
+                                            @elseif($gravamen->estado == 'inactivo')
+
+                                                <span class="bg-yellow-400 py-1 px-2 rounded-full text-white text-xs">{{ ucfirst($gravamen->estado) }}</span>
+
+                                            @elseif($gravamen->estado == 'cancelado')
+
+                                                <span class="bg-red-400 py-1 px-2 rounded-full text-white text-xs">{{ ucfirst($gravamen->estado) }}</span>
+
+                                            @elseif($gravamen->estado == 'parcial')
+
+                                                <span class="bg-yellow-400 py-1 px-2 rounded-full text-white text-xs">{{ ucfirst($gravamen->estado) }}</span>
+
+                                            @endif
+                                        </x-table.cell>
+                                        <x-table.cell>{{ $gravamen->acto_contenido }}</x-table.cell>
+                                        <x-table.cell>{{ $gravamen->movimientoRegistral->tomo_gravamen }}</x-table.cell>
+                                        <x-table.cell>{{ $gravamen->movimientoRegistral->registro_gravamen }}</x-table.cell>
+                                        <x-table.cell>{{ $gravamen->movimientoRegistral->distrito }}</x-table.cell>
+                                        <x-table.cell>
+                                            <div class="flex items-center gap-3">
+
+                                                <div>
+
+                                                    <x-button-blue
+                                                        @click="$wire.dispatch('mostrar', {{ $gravamen->id }})"
+                                                        wire:loading.attr="disabled"
+                                                        wire:target="editarGravamen({{ $gravamen->id }})">
+
+                                                        <img wire:loading wire:target="editarGravamen({{ $gravamen->id }})" class="mx-auto h-4 mr-1" src="{{ asset('storage/img/loading3.svg') }}" alt="Loading">
+                                                        Editar
+                                                    </x-button-blue>
+
+                                                </div>
+
+                                                @if(auth()->user()->ubicacion == 'Regional 4')
+
+                                                    <x-button-red
+                                                            wire:click="abrirModalBorrar({{ $gravamen->id }})"
+                                                            wire:loading.attr="disabled"
+                                                        >
+                                                            Eliminar
+                                                    </x-button-red>
+
+                                                @endif
+
+                                                @if($gravamen->acreedores()->count() && !in_array($gravamen->estado, ['cancelado', 'parcial']))
+
+                                                    <x-button-red
+                                                        wire:click="abrirModalCancelar({{ $gravamen->id }})"
+                                                        wire:loading.attr="disabled"
+                                                    >
+                                                        Cancelar
+                                                    </x-button-red>
+
+                                                    <x-button-blue
+                                                        wire:click="abrirModalInactivar({{ $gravamen->id }})"
+                                                        wire:loading.attr="disabled"
+                                                        class="whitespace-nowrap"
+                                                    >
+                                                        Sin afectación
+                                                    </x-button-blue>
+
+                                                @endif
+                                            </div>
+                                        </x-table.cell>
+
+                                    </x-table.row>
+
+                                @endforeach
+
+                            @endif
+
+                        </x-slot>
+
+                        <x-slot name="tfoot"></x-slot>
+
+                    </x-table>
+
+                </div>
+
+            </div>
+
+        @else
+
+            <div class=" gap-3 mb-3 col-span-2 bg-white rounded-lg p-3 shadow-lg">
 
                 @if($movimientoRegistral->folio_real)
 
@@ -16,105 +149,7 @@
 
             </div>
 
-            <x-table>
-
-                <x-slot name="head">
-                    <x-table.heading >Estado</x-table.heading>
-                    <x-table.heading >Acto contenido</x-table.heading>
-                    <x-table.heading >Tomo</x-table.heading>
-                    <x-table.heading >Registro</x-table.heading>
-                    <x-table.heading >Distrito</x-table.heading>
-                    <x-table.heading ></x-table.heading>
-                </x-slot>
-
-                <x-slot name="body">
-
-                    @if($gravamenes)
-
-                        @foreach ($gravamenes as $gravamen)
-
-                            <x-table.row >
-
-                                <x-table.cell>
-                                    @if($gravamen->estado == 'activo')
-
-                                        <span class="bg-green-400 py-1 px-2 rounded-full text-white text-xs">{{ ucfirst($gravamen->estado) }}</span>
-
-                                    @elseif(!$gravamen->acreedores()->count())
-
-                                        <span class="bg-yellow-400 py-1 px-2 rounded-full text-white text-xs">Incompleto</span>
-
-                                    @elseif($gravamen->estado == 'inactivo')
-
-                                        <span class="bg-yellow-400 py-1 px-2 rounded-full text-white text-xs">{{ ucfirst($gravamen->estado) }}</span>
-
-                                    @elseif($gravamen->estado == 'cancelado')
-
-                                        <span class="bg-red-400 py-1 px-2 rounded-full text-white text-xs">{{ ucfirst($gravamen->estado) }}</span>
-
-                                    @elseif($gravamen->estado == 'parcial')
-
-                                        <span class="bg-yellow-400 py-1 px-2 rounded-full text-white text-xs">{{ ucfirst($gravamen->estado) }}</span>
-
-                                    @endif
-                                </x-table.cell>
-                                <x-table.cell>{{ $gravamen->acto_contenido }}</x-table.cell>
-                                <x-table.cell>{{ $gravamen->movimientoRegistral->tomo_gravamen }}</x-table.cell>
-                                <x-table.cell>{{ $gravamen->movimientoRegistral->registro_gravamen }}</x-table.cell>
-                                <x-table.cell>{{ $gravamen->movimientoRegistral->distrito }}</x-table.cell>
-                                <x-table.cell>
-                                    <div class="flex items-center gap-3">
-                                        <x-button-blue
-                                            wire:click="$dispatch('openModal', { component: 'pase-folio.modal-gravamen', arguments: { editar: true, gravamen: {{ $gravamen->id }}, movimientoRegistral: {{ $gravamen->movimientoRegistral->id }} } } )"
-                                            wire:loading.attr="disabled"
-                                        >
-                                            Editar
-                                        </x-button-blue>
-
-                                        @if(auth()->user()->ubicacion == 'Regional 4')
-
-                                            <x-button-red
-                                                    wire:click="abrirModalBorrar({{ $gravamen->id }})"
-                                                    wire:loading.attr="disabled"
-                                                >
-                                                    Eliminar
-                                            </x-button-red>
-
-                                        @endif
-
-                                        @if($gravamen->acreedores()->count() && !in_array($gravamen->estado, ['cancelado', 'parcial']))
-
-                                            <x-button-red
-                                                wire:click="abrirModalCancelar({{ $gravamen->id }})"
-                                                wire:loading.attr="disabled"
-                                            >
-                                                Cancelar
-                                            </x-button-red>
-
-                                            <x-button-blue
-                                                wire:click="abrirModalInactivar({{ $gravamen->id }})"
-                                                wire:loading.attr="disabled"
-                                            >
-                                                Sin afectación
-                                            </x-button-blue>
-
-                                        @endif
-                                    </div>
-                                </x-table.cell>
-
-                            </x-table.row>
-
-                        @endforeach
-
-                    @endif
-
-                </x-slot>
-
-                <x-slot name="tfoot"></x-slot>
-
-            </x-table>
-
-        </div>
+        @endif
 
         @include('livewire.pase-folio.informacion_base_datos')
 
@@ -277,4 +312,22 @@
 
     </x-dialog-modal>
 
+    @push('scripts')
+
+        <script>
+            window.addEventListener('mostrar', event => {
+
+                @this.set('mostrarLista', 0, true)
+
+                setTimeout(() => { @this.editarGravamen(event.detail) }, 500)
+
+            });
+
+
+        </script>
+
+    @endpush
+
 </div>
+
+

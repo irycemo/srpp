@@ -10,7 +10,7 @@ use App\Traits\ActoresTrait;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
 
-class SocioActualizar extends Component
+class AcreedorActualizar extends Component
 {
 
     use ActoresTrait;
@@ -28,7 +28,7 @@ class SocioActualizar extends Component
                 'unique:personas,rfc,' . $this->actor->persona_id,
                 'regex:/^([A-ZÑ&]{3,4}) ?(?:- ?)?(\d{2}(?:0[1-9]|1[0-2])(?:0[1-9]|[12]\d|3[01])) ?(?:- ?)?([A-Z\d]{2})([A\d])$/'
             ],
-            'sub_tipo' => 'required'
+            'sub_tipo' => 'nullable'
         ];
 
     }
@@ -66,7 +66,6 @@ class SocioActualizar extends Component
                 ]);
 
                 $this->actor->update([
-                    'tipo_socio' => $this->sub_tipo,
                     'actualizado_por' => auth()->id()
                 ]);
 
@@ -85,7 +84,7 @@ class SocioActualizar extends Component
 
         } catch (\Throwable $th) {
 
-            Log::error("Error al actualizar socio por el usuario: (id: " . auth()->user()->id . ") " . auth()->user()->name . ". " . $th);
+            Log::error("Error al actualizar acreedor por el usuario: (id: " . auth()->user()->id . ") " . auth()->user()->name . ". " . $th);
             $this->dispatch('mostrarMensaje', ['error', "Ha ocurrido un error."]);
 
         }
@@ -118,7 +117,7 @@ class SocioActualizar extends Component
             $this->ciudad = $this->actor->persona->ciudad;
             $this->municipio = $this->actor->persona->municipio;
 
-            $this->sub_tipo = $this->actor->tipo_socio;
+            $this->sub_tipo = $this->actor->tipo_deudor;
 
         }else{
 
@@ -132,6 +131,6 @@ class SocioActualizar extends Component
 
     public function render()
     {
-        return view('livewire.comun.actores.socio-actualizar');
+        return view('livewire.comun.actores.acreedor-actualizar');
     }
 }

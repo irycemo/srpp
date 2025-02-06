@@ -22,7 +22,6 @@ use App\Models\MovimientoRegistral;
 use Illuminate\Support\Facades\Log;
 use App\Livewire\PaseFolio\PaseFolio;
 use App\Http\Services\AsignacionService;
-use App\Http\Services\SistemaTramitesService;
 use Spatie\LivewireFilepond\WithFilePond;
 
 class Elaboracion extends Component
@@ -90,12 +89,12 @@ class Elaboracion extends Component
             'autoridad_nombre' => Rule::requiredIf(in_array($this->tipo_documento, ['OFICIO', 'TÍTULO DE PROPIEDAD', 'RESOLUCIÓN JUDICIAL', 'ESCRITURA INSTITUCIONAL'])),
             'autoridad_numero' => 'nullable',
             'numero_documento' => Rule::requiredIf(in_array($this->tipo_documento, ['OFICIO', 'TÍTULO DE PROPIEDAD', 'RESOLUCIÓN JUDICIAL', 'ESCRITURA INSTITUCIONAL'])),
-            'fecha_emision' => Rule::requiredIf(in_array($this->tipo_documento, ['OFICIO', 'TÍTULO DE PROPIEDAD', 'RESOLUCIÓN JUDICIAL', 'ESCRITURA INSTITUCIONAL'])),
-            'fecha_inscripcion' => Rule::requiredIf(in_array($this->tipo_documento, ['OFICIO', 'TÍTULO DE PROPIEDAD', 'RESOLUCIÓN JUDICIAL', 'ESCRITURA INSTITUCIONAL'])),
+            'fecha_emision' => [Rule::requiredIf(in_array($this->tipo_documento, ['OFICIO', 'TÍTULO DE PROPIEDAD', 'RESOLUCIÓN JUDICIAL', 'ESCRITURA INSTITUCIONAL'])), 'nullable', 'date', 'date_format:Y-m-d'],
+            'fecha_inscripcion' => [Rule::requiredIf(in_array($this->tipo_documento, ['OFICIO', 'TÍTULO DE PROPIEDAD', 'RESOLUCIÓN JUDICIAL', 'ESCRITURA INSTITUCIONAL'])), 'nullable', 'date', 'date_format:Y-m-d'],
             'procedencia' => Rule::requiredIf(in_array($this->tipo_documento, ['OFICIO', 'TÍTULO DE PROPIEDAD', 'RESOLUCIÓN JUDICIAL', 'ESCRITURA INSTITUCIONAL'])),
             'escritura_numero' => Rule::requiredIf(in_array($this->tipo_documento, ['ESCRITURA PÚBLICA', 'ESCRITURA PRIVADA'])),
-            'escritura_fecha_inscripcion' => Rule::requiredIf(in_array($this->tipo_documento, ['ESCRITURA PÚBLICA', 'ESCRITURA PRIVADA'])),
-            'escritura_fecha_escritura' => Rule::requiredIf(in_array($this->tipo_documento, ['ESCRITURA PÚBLICA', 'ESCRITURA PRIVADA'])),
+            'escritura_fecha_inscripcion' => [Rule::requiredIf(in_array($this->tipo_documento, ['ESCRITURA PÚBLICA', 'ESCRITURA PRIVADA'])), 'nullable', 'date', 'date_format:Y-m-d'],
+            'escritura_fecha_escritura' => [Rule::requiredIf(in_array($this->tipo_documento, ['ESCRITURA PÚBLICA', 'ESCRITURA PRIVADA'])), 'nullable', 'date', 'date_format:Y-m-d'],
             'escritura_numero_hojas' => 'nullable',
             'escritura_numero_paginas' => 'nullable',
             'escritura_notaria' => Rule::requiredIf(in_array($this->tipo_documento, ['ESCRITURA PÚBLICA', 'ESCRITURA PRIVADA'])),
@@ -117,6 +116,7 @@ class Elaboracion extends Component
         'fecha_emision' => 'fecha de emisión',
         'fecha_inscripcion' => 'fecha de inscripción',
         'escritura_fecha_escritura' => 'fecha de la escitura',
+        'escritura_fecha_inscripcion' => 'fecha de inscripción',
         'escritura_numero_hojas' => 'número de hojas',
         'escritura_numero_paginas' => 'número de paginas',
         'escritura_notaria' => 'número de notaría',
@@ -125,6 +125,13 @@ class Elaboracion extends Component
         'escritura_observaciones' => 'observaciones',
         'acto_contenido_antecedente' => 'acto contenido',
         'observaciones_antecedente' => 'observaciones'
+    ];
+
+    protected $messages = [
+        'fecha_emision.date_format' => 'El formato de la fecha no es valido.',
+        'fecha_inscripcion.date_format' => 'El formato de la fecha no es valido.',
+        'escritura_fecha_escritura.date_format' => 'El formato de la fecha no es valido.',
+        'escritura_fecha_inscripcion.date_format' => 'El formato de la fecha no es valido.',
     ];
 
     public function resetAll(){

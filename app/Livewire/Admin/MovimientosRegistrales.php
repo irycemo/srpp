@@ -190,18 +190,18 @@ class MovimientosRegistrales extends Component
 
     public function correccion(){
 
-        /* $movimiento = $this->modelo_editar->folioReal->movimientosRegistrales()
+        $movimiento = $this->modelo_editar->folioReal->movimientosRegistrales()
                                                         ->whereIn('estado', ['finalizado', 'concluido'])
                                                         ->where('folio', '>', $this->modelo_editar->folio)
                                                         ->first();
 
         if($movimiento){
 
-            $this->dispatch('mostrarMensaje', ['warning', "El folio real ya tiene movimientos registrales posteriores finalizados."]);
+            $this->dispatch('mostrarMensaje', ['warning', "El folio real ya tiene movimientos registrales posteriores concluidos ó finalizados."]);
 
             return;
 
-        } */
+        }
 
         /* if($this->modelo_editar->fecha_entrega->addDays(30) < now()){
 

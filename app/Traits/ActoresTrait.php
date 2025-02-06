@@ -45,6 +45,7 @@ trait ActoresTrait{
     public $crear = false;
     public $editar = false;
     public $flag_agregar = false;
+    public $visible = true;
 
     public function getListeners()
     {
@@ -77,7 +78,6 @@ trait ActoresTrait{
             'ciudad' => 'nullable',
             'entidad' => 'nullable',
             'municipio' => 'nullable',
-            'sub_tipo' => 'required'
         ];
     }
 
@@ -147,19 +147,19 @@ trait ActoresTrait{
 
     public function abrirModal(){
 
-        if(!$this->modelo){
-
-            $this->dispatch('mostrarMensaje', ['error', "Debe guardar primero."]);
-
-            return;
-
-        }
-
         if($this->actor->getKey()){
 
             $this->editar = true;
 
         }else{
+
+            if(!$this->modelo){
+
+                $this->dispatch('mostrarMensaje', ['error', "Debe guardar primero."]);
+
+                return;
+
+            }
 
             $this->crear = true;
 

@@ -1,20 +1,24 @@
 <div class="flex justify-center gap-3 mb-3 col-span-2 rounded-lg p-3">
 
-    <x-input-group for="sub_tipo" label="Tipo de {{ $tipo_actor }}" :error="$errors->first('sub_tipo')" class="w-full">
+    @if($sub_tipos)
 
-        <x-input-select id="sub_tipo" wire:model="sub_tipo" class="w-full">
+        <x-input-group for="sub_tipo" label="Tipo de {{ $tipo_actor }}" :error="$errors->first('sub_tipo')" class="w-full">
 
-            <option value="">Seleccione una opción</option>
+            <x-input-select id="sub_tipo" wire:model="sub_tipo" class="w-full">
 
-            @foreach ($sub_tipos as $tipo)
+                <option value="">Seleccione una opción</option>
 
-                <option value="{{ $tipo }}">{{ $tipo }}</option>
+                @foreach ($sub_tipos as $tipo)
 
-            @endforeach
+                    <option value="{{ $tipo }}">{{ $tipo }}</option>
 
-        </x-input-select>
+                @endforeach
 
-    </x-input-group>
+            </x-input-select>
+
+        </x-input-group>
+
+    @endif
 
     <x-input-group for="tipo_persona" label="Tipo de persona" :error="$errors->first('tipo_persona')" class="w-full">
 

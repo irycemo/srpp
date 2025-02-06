@@ -23,6 +23,7 @@ class Gravamen extends Component
     public $modalBorrar = false;
     public $modalCancelacion = false;
     public $modalInactivar = false;
+    public $mostrarLista = true;
     public $contraseña;
 
     public $folio_cancelacion;
@@ -60,7 +61,15 @@ class Gravamen extends Component
 
         }
 
-        $this->dispatch("openModal", 'pase-folio.modal-gravamen', ['movimientoRegistral' => $this->movimientoRegistral->id, 'crear' => false]);
+        $this->dispatch("agregarGravamen")->to(GravamenModal::class);
+
+        $this->mostrarLista = false;
+
+    }
+
+    public function editarGravamen($id){
+
+        $this->dispatch("cargarGravamen", $id)->to(GravamenModal::class);
 
     }
 
@@ -72,6 +81,8 @@ class Gravamen extends Component
                                                                 ->where('folio','!=', 1);
                                                         })
                                                         ->get();
+
+        $this->mostrarLista = true;
 
     }
 

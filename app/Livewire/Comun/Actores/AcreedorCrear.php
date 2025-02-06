@@ -11,7 +11,7 @@ use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
 use App\Http\Services\PersonaService;
 
-class DeudorCrear extends Component
+class AcreedorCrear extends Component
 {
 
     use ActoresTrait;
@@ -27,7 +27,7 @@ class DeudorCrear extends Component
                 'nullable',
                 'regex:/^([A-ZÑ&]{3,4}) ?(?:- ?)?(\d{2}(?:0[1-9]|1[0-2])(?:0[1-9]|[12]\d|3[01])) ?(?:- ?)?([A-Z\d]{2})([A\d])$/'
             ],
-            'sub_tipo' => 'required'
+            'sub_tipo' => 'nullable'
         ];
 
     }
@@ -52,8 +52,7 @@ class DeudorCrear extends Component
 
                 $this->modelo->actores()->create([
                     'persona_id' => $persona->id,
-                    'tipo_actor' => 'deudor',
-                    'tipo_deudor' => $this->sub_tipo,
+                    'tipo_actor' => 'acreedor',
                     'creado_por' => auth()->id()
                 ]);
 
@@ -95,8 +94,7 @@ class DeudorCrear extends Component
 
                     $this->modelo->actores()->create([
                         'persona_id' => $persona->id,
-                        'tipo_actor' => 'socio',
-                        'tipo_deudor' => $this->sub_tipo,
+                        'tipo_actor' => 'acreedor',
                         'creado_por' => auth()->id()
                     ]);
 
@@ -106,7 +104,7 @@ class DeudorCrear extends Component
 
             $this->resetearTodo();
 
-            $this->dispatch('mostrarMensaje', ['success', "El actor se creó con éxito."]);
+            $this->dispatch('mostrarMensaje', ['success', "El acreedor se creó con éxito."]);
 
             $this->dispatch('refresh');
 
@@ -117,7 +115,7 @@ class DeudorCrear extends Component
 
         } catch (\Throwable $th) {
 
-            Log::error("Error al crear deudor por el usuario: (id: " . auth()->user()->id . ") " . auth()->user()->name . ". " . $th);
+            Log::error("Error al crear acreedor por el usuario: (id: " . auth()->user()->id . ") " . auth()->user()->name . ". " . $th);
             $this->dispatch('mostrarMensaje', ['error', "Ha ocurrido un error."]);
 
         }
@@ -169,7 +167,7 @@ class DeudorCrear extends Component
 
         } catch (\Throwable $th) {
 
-            Log::error("Error al actualizar deudor por el usuario: (id: " . auth()->user()->id . ") " . auth()->user()->name . ". " . $th);
+            Log::error("Error al actualizar acreedor por el usuario: (id: " . auth()->user()->id . ") " . auth()->user()->name . ". " . $th);
             $this->dispatch('mostrarMensaje', ['error', "Ha ocurrido un error."]);
 
         }
@@ -178,7 +176,7 @@ class DeudorCrear extends Component
 
     public function mount(){
 
-        $this->tipo_actor = 'actor';
+        $this->tipo_actor = 'acreedor';
 
         $this->actor = Actor::make();
 
@@ -188,6 +186,6 @@ class DeudorCrear extends Component
 
     public function render()
     {
-        return view('livewire.comun.actores.deudor-crear');
+        return view('livewire.comun.actores.acreedor-crear');
     }
 }
