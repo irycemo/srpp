@@ -1003,7 +1003,7 @@ trait PropiedadTrait{
         $movimiento->estado = 'nuevo';
         $movimiento->save();
 
-        $url = $this->inscripcion->movimientoRegistral->archivos()->where('descripcion', 'caratula')->first()->url;
+        $url = $this->inscripcion->movimientoRegistral->archivos()->where('descripcion', 'documento_entrada')->first()->url;
 
         File::create([
             'fileable_id' => $movimiento->id,

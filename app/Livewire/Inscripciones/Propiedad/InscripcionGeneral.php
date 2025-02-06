@@ -29,6 +29,7 @@ class InscripcionGeneral extends Component
     public $transmitentes = [];
 
     public $nuevoFolio;
+    public $reservaDominio;
     public $actos;
 
     protected function rules(){

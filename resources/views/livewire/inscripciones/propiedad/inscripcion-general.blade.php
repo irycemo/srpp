@@ -18,6 +18,26 @@
 
         </x-input-group>
 
+        <div class="w-full lg:w-1/4 mx-auto mb-2">
+
+            @if(in_array($inscripcion->servicio, ['D114', 'D113', 'D116', 'D115']) && $inscripcion->estado != 'correccion')
+
+                <x-input-group for="nuevoFolio" label="Esta inscripción genera nuevo folio real" :error="$errors->first('nuevoFolio')" class="flex gap-3 items-center">
+
+                    <x-checkbox wire:model.live="nuevoFolio"/>
+
+                </x-input-group>
+
+            @endif
+
+            <x-input-group for="reservaDominio" label="Reserva de dominio" :error="$errors->first('reservaDominio')" class="flex gap-3 items-center">
+
+                <x-checkbox wire:model.live="reservaDominio"/>
+
+            </x-input-group>
+
+        </div>
+
     </div>
 
     <div class="bg-white rounded-lg p-4 shadow-lg mb-4">
@@ -973,20 +993,6 @@
     @endif
 
     <div class="bg-white rounded-lg p-3  justify-between shadow-lg flex">
-
-        <div>
-
-            @if(in_array($inscripcion->servicio, ['D114', 'D113', 'D116', 'D115']) && $inscripcion->estado != 'correccion')
-
-                <x-input-group for="nuevoFolio" label="Esta inscripción genera nuevo folio real" :error="$errors->first('nuevoFolio')" class="flex gap-3 items-center">
-
-                    <x-checkbox wire:model.live="nuevoFolio"/>
-
-                </x-input-group>
-
-            @endif
-
-        </div>
 
         <div class="flex  gap-3">
 
