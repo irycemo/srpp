@@ -95,7 +95,7 @@ class DeudorCrear extends Component
 
                     $this->modelo->actores()->create([
                         'persona_id' => $persona->id,
-                        'tipo_actor' => 'socio',
+                        'tipo_actor' => 'deudor',
                         'tipo_deudor' => $this->sub_tipo,
                         'creado_por' => auth()->id()
                     ]);
