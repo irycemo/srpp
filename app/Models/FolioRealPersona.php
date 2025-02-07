@@ -5,6 +5,7 @@ namespace App\Models;
 use App\Models\File;
 use App\Models\Actor;
 use App\Models\Escritura;
+use App\Models\ReformaMoral;
 use App\Traits\ModelosTrait;
 use App\Constantes\Constantes;
 use App\Models\ObjetoPersonaMOral;
@@ -45,6 +46,10 @@ class FolioRealPersona extends Model implements Auditable
         return $this->hasMany(MovimientoRegistral::class, 'folio_real_persona');
     }
 
+    public function reformas(){
+        return $this->hasManyThrough(ReformaMoral::class, MovimientoRegistral::class, 'folio_real_persona', 'movimiento_registral_id', 'id', 'id');
+    }
+
     public function escritura(){
         return $this->belongsTo(Escritura::class);
     }
@@ -70,10 +75,10 @@ class FolioRealPersona extends Model implements Auditable
     public function ultimoFolio():int
     {
 
-        $folio = MovimientoRegistral::where('folio_real_persona', $this->id)->orderBy('folio', 'desc')->first()->folio;
+        $movimiento = MovimientoRegistral::where('folio_real_persona', $this->id)->orderBy('folio', 'desc')->first();
 
-        if($folio)
-            return $folio;
+        if($movimiento)
+            return $movimiento->folio;
         else
             return 0;
 

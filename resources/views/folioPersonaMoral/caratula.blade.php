@@ -192,6 +192,30 @@
 
                 @include('comun.caratulas.folio_persona_moral')
 
+                @if(count($folioReal->reformas))
+
+                    <p class="separador" style="text-align: center">Actas de asamblea</p>
+
+                    @foreach ($folioReal->reformas as $reforma)
+
+                        <p class="parrafo">
+
+                            <p class="separador">Acta de asamblea ({{ $folioReal->folio }}-{{ $reforma->movimiento_folio }})</p>
+
+                            <p class="parrafo">
+                                <strong>Tomo: </strong> {{ $reforma->tomo }}; <strong>Registro: </strong> {{ $reforma->registro }}; <strong>Notaria: </strong> {{ $reforma->autoridad_numero }}; <strong>Número de escritura: </strong> {{ $reforma->numero_documento }}; <strong>Fecha de constitución: </strong> {{ $reforma->fecha_constitucion }}; <strong>Fecha de inscripción: </strong> {{ $reforma->fecha_inscripcion }}
+                            </p>
+
+                            <p class="parrafo">
+                                <strong>Descripción: </strong> {{ $reforma->descripcion }}
+                            </p>
+
+                        </p>
+
+                    @endforeach
+
+                @endif
+
                 <div class="firma no-break">
 
                     <p class="atte">

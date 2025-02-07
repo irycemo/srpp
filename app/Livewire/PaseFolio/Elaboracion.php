@@ -830,6 +830,21 @@ class Elaboracion extends Component
             ]
         );
 
+        $propiedad = Propiedadold::where('distrito', $this->movimientoRegistral->getRawOriginal('distrito'))
+                                                ->where('tomo', $this->tomo)
+                                                ->where('registro', $this->registro)
+                                                ->where('noprop', $this->numero_propiedad)
+                                                ->whereIn('status', ['V', 'C'])
+                                                ->first();
+
+        if($propiedad){
+
+            $this->dispatch('mostrarMensaje', ['warning', "El antecedente no puede ser fusionado."]);
+
+            return;
+
+        }
+
         if($this->movimientoRegistral->inscripcionPropiedad?->servicio == 'D157' && $this->movimientoRegistral->inscripcionPropiedad?->numero_inmuebles == $this->movimientoRegistral->folioReal->antecedentes->count()){
 
             $this->dispatch('mostrarMensaje', ['warning', "No puede agregar mas antecedentes a fusionar."]);

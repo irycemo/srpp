@@ -2,19 +2,21 @@
 
 namespace App\Livewire\PersonaMoral;
 
+use Exception;
+use Carbon\Carbon;
 use App\Models\Actor;
 use Livewire\Component;
 use App\Models\Escritura;
+use App\Models\Asociacion;
 use App\Models\ReformaMoral;
 use App\Constantes\Constantes;
-use App\Http\Controllers\FolioPersonaMoralController\FolioPersonaMoralController;
 use App\Models\FolioRealPersona;
 use Illuminate\Support\Facades\DB;
 use App\Models\MovimientoRegistral;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Hash;
 use App\Http\Services\AsignacionService;
-use Exception;
+use App\Http\Controllers\FolioPersonaMoralController\FolioPersonaMoralController;
 
 class Asiganacion extends Component
 {
@@ -97,23 +99,17 @@ class Asiganacion extends Component
 
                 if(!$this->movimientoRegistral->getKey()){
 
-                    $this->crearMovimientoRegistral();
+                    $this->crearEscritura();
 
                     $this->crearFolioRealPersonaMoral();
 
-                    $this->movimientoRegistral->update([
-                        'folio_real_persona' => $this->folioRealPersonaMoral->id,
-                    ]);
-
-                    $this->crearEscritura();
-
-                    $this->folioRealPersonaMoral->update([
-                        'escritura_id' => $this->escritura->id,
-                    ]);
+                    $this->crearMovimientoRegistral();
 
                 }else{
 
                     if(!$this->movimientoRegistral->folio_real_persona){
+
+                        $this->crearEscritura();
 
                         $this->crearFolioRealPersonaMoral();
 
@@ -122,14 +118,9 @@ class Asiganacion extends Component
                             'actualizado_por' => auth()->id()
                         ]);
 
-                        $this->crearEscritura();
-
-                        $this->folioRealPersonaMoral->update([
-                            'escritura_id' => $this->escritura->id,
-                            'actualizado_por' => auth()->id()
-                        ]);
-
                     }else{
+
+                        $this->folioRealPersonaMoral = $this->movimientoRegistral->folioRealPersona;
 
                         if($this->tomo && $this->registro){
 
@@ -138,9 +129,19 @@ class Asiganacion extends Component
                             if($folio && ($folio->id != $this->movimientoRegistral->folio_real_persona))
                                 throw new Exception('Ya existe un folio de persona moral con el tomo y registro ingresados.');
 
+                            if($this->folioRealPersonaMoral->tomo_antecedente != $this->tomo || $this->folioRealPersonaMoral->registro_antecedente != $this->registro){
+
+                                $this->cargarAsambleasAnteriores();
+
+                                $this->folioRealPersonaMoral->movimientosRegistrales()
+                                                            ->where('folio', 0)
+                                                            ->first()?->update(['folio' => $this->movimientoRegistral->folioRealPersona->ultimoFolio() + 1]);
+
+                            }
+
                         }
 
-                        $this->movimientoRegistral->folioRealPersona->update([
+                        $this->folioRealPersonaMoral->update([
                             'denominacion' => $this->denominacion,
                             'estado' => 'captura',
                             'fecha_constitucion' => $this->fecha_constitucion,
@@ -155,9 +156,9 @@ class Asiganacion extends Component
                             'actualizado_por' => auth()->id()
                         ]);
 
-                        $this->movimientoRegistral->folioRealPersona->objetos()->whereIn('estado', ['captura', 'activo'])->first()?->update(['objeto' => $this->objeto, 'estado' => 'captura']);
+                        $this->folioRealPersonaMoral->objetos()->whereIn('estado', ['captura', 'activo'])->first()?->update(['objeto' => $this->objeto, 'estado' => 'captura']);
 
-                        $this->movimientoRegistral->folioRealPersona->escritura->update([
+                        $this->folioRealPersonaMoral->escritura->update([
                             'numero' => $this->numero_escritura,
                             'fecha_inscripcion' => $this->escritura_fecha_inscripcion,
                             'fecha_escritura' => $this->escritura_fecha_escritura,
@@ -188,7 +189,11 @@ class Asiganacion extends Component
 
             $this->movimientoRegistral = MovimientoRegistral::make();
 
+            $this->folioRealPersonaMoral = FolioRealPersona::make();
+
             $this->dispatch('mostrarMensaje', ['error', $ex->getMessage()]);
+
+            Log::error("Error al guardar folio de persona moral por el usuario: (id: " . auth()->user()->id . ") " . auth()->user()->name . ". " . $ex);
 
         } catch (\Throwable $th) {
 
@@ -205,12 +210,13 @@ class Asiganacion extends Component
 
         $this->movimientoRegistral = MovimientoRegistral::create([
             'estado' => 'nuevo',
-            'folio' => 1,
+            'folio' => $this->folioRealPersonaMoral->ultimoFolio() + 1,
             'seccion' => 'Folio real de persona moral',
             'distrito' => $this->distrito,
             'fecha_entrega' => now()->toDateString(),
             'tipo_servicio' => 'extra_urgente',
             'usuario_asignado' => auth()->id(),
+            'folio_real_persona' => $this->folioRealPersonaMoral->id,
             'usuario_supervisor' => (new AsignacionService())->obtenerSupervisorInscripciones($this->distrito)
         ]);
 
@@ -241,7 +247,8 @@ class Asiganacion extends Component
             'observaciones' => $this->observaciones,
             'tomo_antecedente' => $this->tomo,
             'registro_antecedente' => $this->registro,
-            'creado_por' => auth()->id()
+            'creado_por' => auth()->id(),
+            'escritura_id' => $this->escritura->id,
         ]);
 
         $this->folioRealPersonaMoral->objetos()->create([
@@ -249,6 +256,9 @@ class Asiganacion extends Component
             'estado' => 'captura',
             'objeto' => $this->objeto
         ]);
+
+        if($this->tomo && $this->registro)
+            $this->cargarAsambleasAnteriores();
 
     }
 
@@ -320,6 +330,70 @@ class Asiganacion extends Component
         }
 
         $this->modalContraseña = true;
+
+    }
+
+    public function borrarReformas(){
+
+        $this->folioRealPersonaMoral->reformas->load('movimientoRegistral');
+
+        foreach ($this->folioRealPersonaMoral->reformas as $reforma) {
+
+            if($reforma->acto_contenido == 'ACTA DE ASAMBLEA'){
+
+                $movimiento = $reforma->movimientoRegistral;
+
+                $reforma->delete();
+
+                $movimiento->delete();
+
+            }else{
+
+                $reforma->movimientoRegistral->update(['folio' => 0]);
+
+            }
+
+        }
+
+    }
+
+    public function cargarAsambleasAnteriores(){
+
+        $this->borrarReformas();
+
+        $asociacion = Asociacion::with('movimientos')
+                                    ->where('distrito', $this->distrito)
+                                    ->where('tomo', $this->tomo)
+                                    ->where('registro', $this->registro)
+                                    ->first();
+
+        foreach($asociacion->movimientos as $movimiento){
+
+            $movimientoRegistral = MovimientoRegistral::create([
+                'folio_real_persona' => $this->folioRealPersonaMoral->id,
+                'estado' => 'concluido',
+                'tomo' => $movimiento->tomoMov,
+                'registro' => $movimiento->registroMov,
+                'folio' => $this->folioRealPersonaMoral->ultimoFolio() + 1,
+                'seccion' => 'Folio real de persona moral',
+                'distrito' => $this->distrito,
+                'fecha_entrega' => now()->toDateString(),
+                'tipo_servicio' => 'extra_urgente',
+                'usuario_asignado' => auth()->id(),
+                'numero_documento' => $movimiento->nescrituraMov,
+                'autoridad_numero' => $movimiento->notarioMov,
+                'usuario_supervisor' => (new AsignacionService())->obtenerSupervisorInscripciones($this->distrito)
+            ]);
+
+            ReformaMoral::create([
+                'movimiento_registral_id' => $movimientoRegistral->id,
+                'acto_contenido' => 'ACTA DE ASAMBLEA',
+                'fecha_inscripcion' => Carbon::parse($movimiento->finscripcionMov),
+                'fecha_protocolizacion' => Carbon::parse($movimiento->fechaFirmaMov),
+                'descripcion' => 'ESTE MOVIMIENTO SE INGRESO MEDIANTE LA ASIGNACIÓN DE FOLIO REAL DE PERONAS MORALES. ' . $movimiento->descripcionMov . 'Intervinientes: ' . $movimiento->intervinientesMov
+            ]);
+
+        }
 
     }
 

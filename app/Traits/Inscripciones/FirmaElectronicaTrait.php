@@ -728,7 +728,7 @@ trait FirmaElectronicaTrait{
 
     public function folioRealPersonaMoral($folioReal){
 
-        $folioReal->load('actores.persona', 'objetos');
+        $folioReal->load('actores.persona', 'objetos', 'reformas');
 
         $escritura = (object)[];
 
@@ -765,6 +765,30 @@ trait FirmaElectronicaTrait{
 
         }
 
+        $reformas = collect();
+
+        foreach ($folioReal->reformas as $reforma) {
+
+            if($reforma->acto_contenido != 'ACTA DE ASAMBLEA') continue;
+
+            $reforma->load('movimientoRegistral');
+
+            $item = (object)[];
+
+            $item->fecha_inscripcion = Carbon::parse($reforma->fecha_inscripcion)->format('d/m/Y');
+            $item->fecha_constitucion = Carbon::parse($reforma->fecha_protocolizacion)->format('d/m/Y');
+            $item->acto_contenido = $reforma->acto_contenido;
+            $item->movimiento_folio = $reforma->movimientoRegistral->folio;
+            $item->tomo = $reforma->movimientoRegistral->tomo;
+            $item->registro = $reforma->movimientoRegistral->registro;
+            $item->numero_documento = $reforma->movimientoRegistral->numero_documento;
+            $item->autoridad_numero = $reforma->movimientoRegistral->autoridad_numero;
+            $item->descripcion = $reforma->descripcion;
+
+            $reformas->push($item);
+
+        }
+
         $object = (object)[];
 
         $object->id = $folioReal->id;
@@ -776,6 +800,8 @@ trait FirmaElectronicaTrait{
         $object->distrito = $folioReal->distrito;
         $object->duracion = $folioReal->duracion;
         $object->capital = $folioReal->capital;
+        $object->tomo = $folioReal->tomo_antecedente;
+        $object->registro = $folioReal->registro_antecedente;
         $object->tipo = $folioReal->tipo;
 
         $object->observaciones = $folioReal->observaciones;
@@ -783,6 +809,7 @@ trait FirmaElectronicaTrait{
         $object->escritura = $escritura;
         $object->objeto = $folioReal->objetos()->where('estado', 'activo')->first()->objeto;
         $object->participantes = $participantes;
+        $object->reformas = $reformas;
 
         return $object;
 
