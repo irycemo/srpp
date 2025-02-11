@@ -12,13 +12,13 @@
 
         <x-slot name="content">
 
-            @include('livewire.comun.actores.modal-content-search')
-
             @if($flag_agregar)
 
                 @include('livewire.comun.actores.modal-content-form')
 
             @else
+
+                @include('livewire.comun.actores.modal-content-search')
 
                 @include('livewire.comun.actores.modal-content-table')
 

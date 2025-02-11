@@ -143,6 +143,22 @@ trait ActoresTrait{
             'personas',
         ]);
 
+        $this->persona = Persona::make();
+
+        $this->flag_agregar = false;
+
+        $this->resetErrorBag();
+
+        $this->resetValidation();
+
+    }
+
+    public function agregarNuevo(){
+
+        $this->resetearCampos();
+
+        $this->flag_agregar = true;
+
     }
 
     public function abrirModal(){
@@ -223,16 +239,6 @@ trait ActoresTrait{
 
     }
 
-    public function agregarNuevo(){
-
-        $this->flag_agregar = true;
-
-        $this->resetearCampos();
-
-        $this->persona = Persona::make();
-
-    }
-
     public function seleccionar($id){
 
         $this->persona = collect($this->personas)->where('id', $id)->first();
@@ -260,6 +266,8 @@ trait ActoresTrait{
         $this->entidad = $this->persona->entidad;
         $this->ciudad = $this->persona->ciudad;
         $this->municipio = $this->persona->municipio;
+
+        $this->reset('personas');
 
     }
 
