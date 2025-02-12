@@ -6,16 +6,20 @@ use App\Models\File;
 use Livewire\Component;
 use App\Models\FolioReal;
 use App\Models\Propiedad;
+use App\Constantes\Constantes;
+use Illuminate\Validation\Rule;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
 use App\Http\Services\AsignacionService;
 use Spatie\LivewireFilepond\WithFilePond;
+use App\Traits\Inscripciones\ColindanciasTrait;
 use App\Http\Controllers\Subdivisiones\SubdivisionesController;
 
 class Subdivisiones extends Component
 {
 
     use WithFilePond;
+    use ColindanciasTrait;
 
     public Propiedad $propiedad;
 
@@ -23,9 +27,41 @@ class Subdivisiones extends Component
     public $documento_entrada;
 
     public $modalDocumento = false;
+    public $modalContraseña = false;
 
     public $folioIds = [];
     public $foliosReales = [];
+
+    public $actos;
+
+    protected function rules(){
+        return [
+            'propiedad.acto_contenido' => 'required',
+            'propiedad.descripcion_acto' => 'required',
+            'propiedad.superficie_terreno' => [
+                'nullable',
+                'numeric',
+                Rule::requiredIf($this->propiedad->acto_contenido == 'SUBDIVISIÓN CON RESTO'),
+                'lt:' . $this->propiedad->movimientoRegistral->folioReal->predio->superficie_terreno,
+                'gt:0'
+            ],
+         ];
+    }
+
+    protected function validationAttributes()
+    {
+        return $this->validationAttributesColindancias;
+    }
+
+    public function updatedPropiedadActoContenido(){
+
+        if($this->propiedad->acto_contenido == 'SUBDIVISIÓN CON RESTO'){
+
+            $this->cargarColindancias($this->propiedad->movimientoRegistral->folioReal->predio);
+
+        }
+
+    }
 
     public function abrirModalDocumento(){
 
@@ -65,19 +101,41 @@ class Subdivisiones extends Component
 
     }
 
-    public function subdividir(){
+    public function finalizar(){
+
+        $this->validate();
 
         if(!$this->propiedad->movimientoRegistral->documentoEntrada()){
 
-            $this->dispatch('mostrarMensaje', ['warning', "Debe subir el documento de entrada primero."]);
+            $this->dispatch('mostrarMensaje', ['error', "Debe subir el documento de entrada."]);
 
             return;
 
         }
 
+        $this->modalContraseña = true;
+
+    }
+
+    public function inscribir(){
+
         try {
 
             DB::transaction(function (){
+
+                if($this->propiedad->acto_contenido != 'SUBDIVISIÓN CON RESTO'){
+
+                    $this->propiedad->movimientoRegistral->folioReal->predio->update(['superficie_terreno' => 0]);
+
+                    $this->propiedad->movimientoRegistral->folioReal->update(['estado' => 'inactivo']);
+
+                }else{
+
+                    $this->propiedad->movimientoRegistral->folioReal->predio->update(['superficie_terreno' => $this->propiedad->superficie_terreno]);
+
+                    $this->guardarColindancias($this->propiedad->movimientoRegistral->folioReal->predio);
+
+                }
 
                 for ($i=0; $i < $this->propiedad->numero_inmuebles; $i++) {
 
@@ -113,6 +171,18 @@ class Subdivisiones extends Component
                     ]);
 
                     $predio = $this->propiedad->movimientoRegistral->folioReal->predio->replicate();
+                    $predio->superficie_terreno = null;
+                    $predio->superficie_construccion = null;
+                    $predio->superficie_notarial = null;
+                    $predio->superficie_judicial = null;
+                    $predio->area_comun_terreno = null;
+                    $predio->area_comun_construccion = null;
+                    $predio->valor_terreno_comun = null;
+                    $predio->valor_construccion_comun = null;
+                    $predio->valor_total_terreno = null;
+                    $predio->valor_total_construccion = null;
+                    $predio->valor_catastral = null;
+                    $predio->monto_transaccion = null;
                     $predio->folio_real = $folioReal->id;
                     $predio->creado_por = auth()->id();
                     $predio->save();
@@ -150,15 +220,17 @@ class Subdivisiones extends Component
 
                 $this->propiedad->movimientoRegistral->audits()->latest()->first()->update(['tags' => 'Elaboró inscripción de subdivisión']);
 
+                (new SubdivisionesController())->caratula($this->propiedad);
+
             });
 
             $this->foliosReales = Folioreal::whereKey($this->folioIds)->with('folioRealAntecedente')->get();
 
             $this->dispatch('mostrarMensaje', ['success', "Los folios reales se generaron con éxito"]);
 
-            (new SubdivisionesController())->caratula($this->propiedad);
-
             $pdf = (new SubdivisionesController())->reimprimir($this->propiedad->movimientoRegistral->firmaElectronica);
+
+            $this->modalContraseña = false;
 
             return response()->streamDownload(
                 fn () => print($pdf->output()),
@@ -171,6 +243,14 @@ class Subdivisiones extends Component
             $this->dispatch('mostrarMensaje', ['error', "Hubo un error"]);
 
         }
+
+    }
+
+    public function mount(){
+
+        $this->actos = Constantes::ACTOS_SUBDIVISIONES;
+
+        $this->vientos = Constantes::VIENTOS;
 
     }
 

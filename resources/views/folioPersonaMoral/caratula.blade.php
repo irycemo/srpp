@@ -203,7 +203,7 @@
                             <p class="separador">Acta de asamblea ({{ $folioReal->folio }}-{{ $reforma->movimiento_folio }})</p>
 
                             <p class="parrafo">
-                                <strong>Tomo: </strong> {{ $reforma->tomo }}; <strong>Registro: </strong> {{ $reforma->registro }}; <strong>Notaria: </strong> {{ $reforma->autoridad_numero }}; <strong>Número de escritura: </strong> {{ $reforma->numero_documento }}; <strong>Fecha de constitución: </strong> {{ $reforma->fecha_constitucion }}; <strong>Fecha de inscripción: </strong> {{ $reforma->fecha_inscripcion }}
+                                <strong>Tomo: </strong> {{ $reforma->tomo }}; <strong>Registro: </strong> {{ $reforma->registro }}; <strong>Notaria: </strong> {{ $reforma->autoridad_numero }}; <strong>Número de escritura: </strong> {{ $reforma->numero_documento }}; <strong>Fecha de protocolización: </strong> {{ $reforma->fecha_constitucion }}; <strong>Fecha de inscripción: </strong> {{ $reforma->fecha_inscripcion }}
                             </p>
 
                             <p class="parrafo">

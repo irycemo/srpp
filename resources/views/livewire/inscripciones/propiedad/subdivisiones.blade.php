@@ -8,33 +8,75 @@
 
     @if($propiedad->movimientoRegistral->estado != 'elaborado')
 
-        <div class="mb-5 bg-white rounded-lg p-2 w-1/3 mx-auto space-y-2">
+        <div class="mb-5 bg-white rounded-lg p-2 space-y-2">
 
-            <div class="rounded-lg bg-gray-100 py-1 px-2">
+            <div class="flex gap-2 justify-center items-center w-full lg:w-1/4 mx-auto mb-2">
 
-                <strong>Folio real matriz</strong>
+                <div class="rounded-lg bg-gray-100 py-1 px-2">
 
-                <p>{{ $propiedad->movimientoRegistral->folioReal->folio }}</p>
+                    <strong>Superficie actual</strong>
 
-            </div>
+                    <p>{{ $propiedad->movimientoRegistral->folioReal->predio->superficie_terreno_formateada }} {{ $propiedad->movimientoRegistral->folioReal->predio->unidad_area }}</p>
 
-            <div class="rounded-lg bg-gray-100 py-1 px-2">
+                </div>
 
-                <strong>Superficie actual</strong>
+                <div class="rounded-lg bg-gray-100 py-1 px-2">
 
-                <p>{{ $propiedad->movimientoRegistral->folioReal->predio->superficie_terreno_formateada }} {{ $propiedad->movimientoRegistral->folioReal->predio->unidad_area }}</p>
+                    <strong>Subdivisiones</strong>
 
-            </div>
+                    <p>{{ $propiedad->numero_inmuebles }}</p>
 
-            <div class="rounded-lg bg-gray-100 py-1 px-2">
-
-                <strong>Subdivisiones</strong>
-
-                <p>{{ $propiedad->numero_inmuebles }}</p>
+                </div>
 
             </div>
 
-            <div class="flex justify-between pt-5">
+            <x-input-group for="propiedad.acto_contenido" label="Acto" :error="$errors->first('propiedad.acto_contenido')" class="w-full lg:w-1/4 mx-auto mb-2">
+
+                <x-input-select id="propiedad.acto_contenido" wire:model.live="propiedad.acto_contenido" class="">
+
+                    <option value="">Seleccione una opción</option>
+
+                    @foreach ($actos as $acto)
+
+                        <option value="{{ $acto }}">{{ $acto }}</option>
+
+                    @endforeach
+
+                </x-input-select>
+
+            </x-input-group>
+
+            <x-input-group for="propiedad.descripcion_acto" label="Descripción del acto" :error="$errors->first('propiedad.descripcion_acto')" class="w-full lg:w-1/4 mx-auto mb-2">
+
+                <textarea class="bg-white rounded text-xs w-full  " rows="4" wire:model="propiedad.descripcion_acto"></textarea>
+
+            </x-input-group>
+
+            @if($propiedad->acto_contenido == 'SUBDIVISIÓN CON RESTO')
+
+                <x-input-group for="propiedad.superficie_terreno" label="Superficie de terreno restante" :error="$errors->first('propiedad.superficie_terreno')" class="w-full lg:w-1/4 mx-auto mb-2">
+
+                    <x-input-text type="number" id="propiedad.superficie_terreno" wire:model="propiedad.superficie_terreno" />
+
+                </x-input-group>
+
+            @endif
+
+        </div>
+
+        @if($propiedad->acto_contenido == 'SUBDIVISIÓN CON RESTO')
+
+            <div class="p-4 bg-white shadow-xl rounded-xl mb-5">
+
+                @include('comun.inscripciones.colindancias')
+
+            </div>
+
+        @endif
+
+        <div class="bg-white rounded-lg p-3  justify-end shadow-lg flex">
+
+            <div class="flex justify-end gap-3">
 
                 @if(!$propiedad->movimientoRegistral->documentoEntrada())
 
@@ -59,16 +101,16 @@
 
                 @endif
 
-                <x-button-blue
-                    wire:click="subdividir"
+                <x-button-green
+                    wire:click="finalizar"
                     wire:loading.attr="disabled"
-                    wire:target="subdividir">
+                    wire:target="finalizar">
 
-                    <img wire:loading wire:target="subdividir" class="mx-auto h-4 mr-1" src="{{ asset('storage/img/loading3.svg') }}" alt="Loading">
+                    <img wire:loading wire:target="finalizar" class="mx-auto h-4 mr-1" src="{{ asset('storage/img/loading3.svg') }}" alt="Loading">
 
-                    Hacer subdivisión
+                    Finalizar inscripción
 
-                </x-button-blue>
+                </x-button-green>
 
             </div>
 
@@ -215,6 +257,52 @@
 
                     <span>Cerrar</span>
 
+                </x-button-red>
+
+            </div>
+
+        </x-slot>
+
+    </x-dialog-modal>
+
+    <x-dialog-modal wire:model="modalContraseña" maxWidth="sm">
+
+        <x-slot name="title">
+
+            Finalizar inscripción
+
+        </x-slot>
+
+        <x-slot name="content">
+
+            <x-input-group for="contraseña" label="Contraseña" :error="$errors->first('contraseña')" class="w-full">
+
+                <x-input-text type="password" id="contraseña" wire:model="contraseña" />
+
+            </x-input-group>
+
+        </x-slot>
+
+        <x-slot name="footer">
+
+            <div class="flex gap-3">
+
+                <x-button-blue
+                    wire:click="inscribir"
+                    wire:loading.attr="disabled"
+                    wire:target="inscribir">
+
+                    <img wire:loading wire:target="inscribir" class="mx-auto h-4 mr-1" src="{{ asset('storage/img/loading3.svg') }}" alt="Loading">
+
+                    <span>Ingresar contraseña</span>
+                </x-button-blue>
+
+                <x-button-red
+                    wire:click="resetear"
+                    wire:loading.attr="disabled"
+                    wire:target="resetear"
+                    type="button">
+                    Cerrar
                 </x-button-red>
 
             </div>

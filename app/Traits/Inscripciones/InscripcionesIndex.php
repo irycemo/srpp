@@ -223,7 +223,7 @@ trait InscripcionesIndex{
 
         if($movimientoRegistral->inscripcionPropiedad){
 
-            if(in_array($movimientoRegistral->inscripcionPropiedad->servicio, ['D121', 'D120', 'D123', 'D122', 'D119'])){
+            if(in_array($movimientoRegistral->inscripcionPropiedad->servicio, ['D121', 'D120', 'D123', 'D122', 'D119', 'D124'])){
 
                 return redirect()->route('propiedad.fraccionamiento', $movimientoRegistral->inscripcionPropiedad);
 

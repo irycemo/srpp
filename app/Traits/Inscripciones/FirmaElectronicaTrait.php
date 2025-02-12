@@ -679,6 +679,7 @@ trait FirmaElectronicaTrait{
         $object->id = $subdivision->id;
         $object->servicio = $subdivision->servicio;
         $object->acto_contenido = $subdivision->acto_contenido;
+        $object->descripcion_acto = $subdivision->descripcion_acto;
         $object->observaciones = $subdivision->observaciones;
         $object->fecha_inscripcion = Carbon::parse($subdivision->fecha_inscripcion)->format('d/m/Y');
         $object->movimiento_folio = $subdivision->movimientoRegistral->folio;

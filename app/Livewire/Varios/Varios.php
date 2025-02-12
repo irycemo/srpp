@@ -172,12 +172,16 @@ class Varios extends Component
 
             $this->actos = Constantes::ACTOS_INSCRIPCION_VARIOS;
 
-            unset($this->actos[0]);
-            unset($this->actos[1]);
-            unset($this->actos[9]);
-            unset($this->actos[10]);
-            unset($this->actos[11]);
-            unset($this->actos[12]);
+            $this->actos = array_flip($this->actos);
+
+            unset($this->actos['PRIMER AVISO PREVENTIVO']);
+            unset($this->actos['SEGUNDO AVISO PREVENTIVO']);
+            unset($this->actos['CONSOLIDACIÓN DEL USUFRUCTO']);
+            unset($this->actos['ACLARACIÓN ADMINISTRATIVA']);
+            unset($this->actos['DONACIÓN / VENTA DE USUFRUCTO']);
+            unset($this->actos['ESCRITURA ACLARATORIA']);
+
+            $this->actos = array_flip($this->actos);
 
         }
 

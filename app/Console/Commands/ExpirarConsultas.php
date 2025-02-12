@@ -22,7 +22,7 @@ class ExpirarConsultas extends Command
      *
      * @var string
      */
-    protected $description = 'Proceso de para expirar consultas con mas de 5 dias';
+    protected $description = 'Proceso de para expirar consultas con mas de 30 dias';
 
     /**
      * Execute the console command.
@@ -36,7 +36,7 @@ class ExpirarConsultas extends Command
                                                                 $q->whereIn('estado', ['nuevo', 'rechazado'])
                                                                     ->whereDate('fecha_pago', '<', $this->calcularDia());
                                                             })
-                                                            ->whereIn('servicio', ['DC93', 'DC90', 'DC91', 'DC92'])
+                                                            ->where('servicio', 'DC93')
                                                             ->get();
 
             foreach ($certificaciones as $certificado) {
@@ -45,7 +45,7 @@ class ExpirarConsultas extends Command
 
             }
 
-            info('Proceso de para expirar consultas con mas de 5 dias completado');
+            info('Proceso de para expirar consultas con mas de 30 dias completado');
 
         } catch (\Throwable $th) {
             Log::error("Error al concluir trámites de consulta en tarea programada. " . $th);
@@ -57,7 +57,7 @@ class ExpirarConsultas extends Command
 
         $actual = now();
 
-            for ($i = 0; $i < 5; $i++) {
+            for ($i = 0; $i < 30; $i++) {
 
                 $actual->subDay();
 

@@ -1,4 +1,4 @@
-<p class="separador">datos de la sociedad</p>
+<p class="separador">datos de la persona moral</p>
 
 <p class="parrafo">
 
@@ -8,11 +8,11 @@
 
 <p class="parrafo">
 
-    <strong>Fecha de inscripción:</strong> {{ $folioReal->fecha_inscripcion }}; <strong>Fecha de constitución:</strong> {{ $folioReal->fecha_constitucion }}; <strong>Capital:</strong> ${{ number_format($folioReal->capital, 2) }}; @if($folioReal->duracion) <strong>Duración:</strong> {{ $folioReal->duracion }} años; @endif <strong>Tipo:</strong> {{ str_replace('_', ' ', $folioReal->tipo) }} @if($folioReal->tomo); <strong>Tomo:</strong> {{ $folioReal->tomo }}; <strong>Registro:</strong> {{ $folioReal->registro }} @endif
+    <strong>Fecha de inscripción:</strong> {{ $folioReal->fecha_inscripcion }}; <strong>Fecha de protocolización:</strong> {{ $folioReal->fecha_constitucion }}; <strong>Capital:</strong> ${{ number_format($folioReal->capital, 2) }}; @if($folioReal->duracion) <strong>Duración:</strong> {{ $folioReal->duracion }} años; @endif <strong>Tipo:</strong> {{ str_replace('_', ' ', $folioReal->tipo) }} @if($folioReal->tomo); <strong>Tomo:</strong> {{ $folioReal->tomo }}; <strong>Registro:</strong> {{ $folioReal->registro }} @endif
 
 </p>
 
-<p class="separador">objeto de la sociedad</p>
+<p class="separador">objeto de la persona moral</p>
 
 <p class="parrafo">{{ $folioReal->objeto }}</p>
 

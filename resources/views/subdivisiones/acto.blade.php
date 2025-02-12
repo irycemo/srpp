@@ -195,9 +195,9 @@
                     <strong>, comparecio a realizar el acto de </strong> {{ $subdivision->acto_contenido }}.
                 </p>
 
-                {{-- <p class="separador">Descripción del acto</p>
+                <p class="separador">Descripción del acto</p>
 
-                <p>{{ $subdivision->descripcion_acto }}.</p> --}}
+                <p>{{ $subdivision->descripcion_acto }}.</p>
 
             </div>
 

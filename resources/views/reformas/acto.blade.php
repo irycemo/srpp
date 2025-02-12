@@ -185,6 +185,10 @@
 
                 @include('comun.caratulas.folio_persona_moral')
 
+                <p class="parrafo">
+                    A SOLICITUD DE: <strong>{{ $datos_control->solicitante }}</strong> se EXPiDe EL PRESENTE EN LA CIUDAD DE @if($datos_control->distrito == '02 Uruapan' ) uruapan @else MORELIA @endif, MICHOACÁN, A LAS {{ $datos_control->elaborado_en }}.
+                </p>
+
                 <div class="firma no-break">
 
                     <p class="atte">

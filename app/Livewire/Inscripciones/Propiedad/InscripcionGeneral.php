@@ -29,7 +29,6 @@ class InscripcionGeneral extends Component
     public $transmitentes = [];
 
     public $nuevoFolio;
-    public $reservaDominio;
     public $actos;
 
     protected function rules(){
@@ -597,7 +596,7 @@ class InscripcionGeneral extends Component
 
                 }
 
-                if($this->reservaDominio){
+                if($this->inscripcion->acto_contenido == 'COMPRAVENTA CON RESERVA DE DOMINIO'){
 
                     $this->generarGravamenReservaDominio();
 
