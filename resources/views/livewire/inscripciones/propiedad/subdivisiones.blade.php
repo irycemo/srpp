@@ -74,6 +74,25 @@
 
         @endif
 
+        @if(count($errors) > 0)
+
+            <div class="mb-5 bg-white rounded-lg p-2 shadow-lg flex gap-2 flex-wrap ">
+
+                <ul class="flex gap-2 felx flex-wrap list-disc ml-5">
+                    @foreach ($errors->all() as $error)
+
+                        <li class="text-red-500 text-xs md:text-sm ml-5">
+                            {{ $error }}
+                        </li>
+
+                    @endforeach
+
+                </ul>
+
+            </div>
+
+        @endif
+
         <div class="bg-white rounded-lg p-3  justify-end shadow-lg flex">
 
             <div class="flex justify-end gap-3">
@@ -298,9 +317,9 @@
                 </x-button-blue>
 
                 <x-button-red
-                    wire:click="resetear"
+                    wire:click="$toggle('modalContraseña')"
                     wire:loading.attr="disabled"
-                    wire:target="resetear"
+                    wire:target="$toggle('modalContraseña')"
                     type="button">
                     Cerrar
                 </x-button-red>
