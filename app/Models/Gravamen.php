@@ -17,6 +17,10 @@ class Gravamen extends Model implements Auditable
 
     protected $guarded = ['id', 'created_at', 'updated_at'];
 
+    protected $hidden = [
+        'laravel_through_key'
+    ];
+
     public function movimientoRegistral(){
         return $this->belongsTo(MovimientoRegistral::class);
     }

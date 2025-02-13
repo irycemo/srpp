@@ -4,13 +4,13 @@ namespace App\Livewire\Inscripciones\Propiedad;
 
 use App\Models\File;
 use Livewire\Component;
+use App\Models\Gravamen;
 use App\Models\FolioReal;
 use App\Models\Propiedad;
 use App\Constantes\Constantes;
 use Illuminate\Validation\Rule;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
-use App\Http\Services\AsignacionService;
 use Spatie\LivewireFilepond\WithFilePond;
 use App\Traits\Inscripciones\ColindanciasTrait;
 use App\Http\Controllers\Subdivisiones\SubdivisionesController;
@@ -33,6 +33,8 @@ class Subdivisiones extends Component
     public $foliosReales = [];
 
     public $actos;
+
+    public $gravamenes;
 
     protected function rules(){
         return [
@@ -123,11 +125,15 @@ class Subdivisiones extends Component
 
             DB::transaction(function (){
 
+                $this->gravamenes = Gravamen::with('actores')->whereHas('movimientoRegistral', function($q){ $q->where('folio_real', $this->propiedad->movimientoRegistral->folioReal->id); })->get();
+
                 if($this->propiedad->acto_contenido != 'SUBDIVISIÓN CON RESTO'){
 
                     $this->propiedad->movimientoRegistral->folioReal->predio->update(['superficie_terreno' => 0]);
 
                     $this->propiedad->movimientoRegistral->folioReal->update(['estado' => 'inactivo']);
+
+                    $cantidad = $this->propiedad->numero_inmuebles;
 
                 }else{
 
@@ -135,9 +141,11 @@ class Subdivisiones extends Component
 
                     $this->guardarColindancias($this->propiedad->movimientoRegistral->folioReal->predio);
 
+                    $cantidad = $this->propiedad->numero_inmuebles - 1;
+
                 }
 
-                for ($i=0; $i < $this->propiedad->numero_inmuebles; $i++) {
+                for ($i=0; $i < $cantidad; $i++) {
 
                     $folioReal = $this->propiedad->movimientoRegistral->folioReal->replicate();
                     $folioReal->matriz = false;
@@ -161,7 +169,7 @@ class Subdivisiones extends Component
                     $movimientoRegistral->folio = 1;
                     $movimientoRegistral->estado = 'nuevo';
                     $movimientoRegistral->folio_real = $folioReal->id;
-                    $movimientoRegistral->usuario_asignado = (new AsignacionService())->obtenerUsuarioPropiedad(null, $this->propiedad->movimientoRegistral->getRawOriginal('distrito'), null);
+                    $movimientoRegistral->usuario_asignado = auth()->id();
                     $movimientoRegistral->save();
 
                     Propiedad::create([
@@ -214,6 +222,8 @@ class Subdivisiones extends Component
 
                     }
 
+                    $this->generarGravamenes($folioReal);
+
                 }
 
                 $this->propiedad->movimientoRegistral->update(['estado' => 'elaborado', 'actualizado_por' => auth()->id()]);
@@ -241,6 +251,36 @@ class Subdivisiones extends Component
 
             Log::error("Error al procesar subdivisión por el usuario: (id: " . auth()->user()->id . ") " . auth()->user()->name . ". " . $th);
             $this->dispatch('mostrarMensaje', ['error', "Hubo un error"]);
+
+        }
+
+    }
+
+    public function generarGravamenes(FolioReal $folioReal){
+
+        foreach ($this->gravamenes as $gravamen) {
+
+            if($gravamen->estado == 'activo'){
+
+                $movimientoRegistral = $this->propiedad->movimientoRegistral->replicate();
+                $movimientoRegistral->folio = $folioReal->ultimoFolio() + 1;
+                $movimientoRegistral->estado = 'concluido';
+                $movimientoRegistral->folio_real = $folioReal->id;
+                $movimientoRegistral->save();
+
+                $gravamenCopia = $gravamen->replicate();
+                $gravamenCopia->movimiento_registral_id = $movimientoRegistral->id;
+                $gravamenCopia->save();
+
+                foreach($gravamen->actores as $actor){
+
+                    $actor->replicate();
+                    $actor->actorable_id = $gravamenCopia->id;
+                    $actor->save();
+
+                }
+
+            }
 
         }
 
