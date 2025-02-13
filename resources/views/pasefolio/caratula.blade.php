@@ -335,23 +335,83 @@
                                         <strong>Descripción: </strong> {{ $gravamen->observaciones }}
                                     </p>
 
-                                    <p class="parrafo">
-                                        <strong>deudores: </strong>
+                                    {{-- <p class="parrafo">
+                                        <strong>Actores: </strong>
                                         @foreach ($gravamen->deudores as $deudor)
 
                                         {{ $deudor->tipo_deudor }}: {{ $deudor->nombre }} {{ $deudor->ap_paterno }} {{ $deudor->ap_materno }} {{ $deudor->razon_social }}@if(!$loop->last), @endif
 
                                         @endforeach
-                                    </p>
+                                    </p> --}}
 
-                                    <p class="parrafo">
+                                    <p class="separador">Actores</p>
+
+                                    <table>
+
+                                        <thead>
+
+                                            <tr>
+                                                <th >Tipo de actor</th>
+                                                <th >Nombre / Razón social</th>
+                                            </tr>
+
+                                        </thead>
+
+                                        <tbody>
+
+                                            @foreach ($gravamen->deudores as $deudor)
+
+                                            <tr>
+                                                <td style="padding-right: 40px;">
+                                                    {{ $deudor->tipo_deudor }}
+                                                </td>
+                                                <td style="padding-right: 40px;">
+                                                    {{ $deudor->nombre }} {{ $deudor->ap_paterno }} {{ $deudor->ap_materno }} {{ $deudor->razon_social }}
+                                                </td>
+                                            </tr>
+
+                                            @endforeach
+
+                                        </tbody>
+
+                                    </table>
+
+                                    {{-- <p class="parrafo">
                                         <strong>acreedores: </strong>
                                         @foreach ($gravamen->acreedores as $acreedor)
 
                                             {{ $acreedor->nombre }} {{ $acreedor->ap_paterno }} {{ $acreedor->ap_materno }} {{ $acreedor->razon_social }}@if(!$loop->last), @endif
 
                                         @endforeach
-                                    </p>
+                                    </p> --}}
+
+                                    <p class="separador">acreedores</p>
+
+                                    <table>
+
+                                        <thead>
+
+                                            <tr>
+                                                <th >Nombre / Razón social</th>
+                                            </tr>
+
+                                        </thead>
+
+                                        <tbody>
+
+                                            @foreach ($gravamen->acreedores as $acreedor)
+
+                                                <tr>
+                                                    <td style="padding-right: 40px;">
+                                                        {{ $acreedor->nombre }} {{ $acreedor->ap_paterno }} {{ $acreedor->ap_materno }} {{ $acreedor->razon_social }}
+                                                    </td>
+                                                </tr>
+
+                                            @endforeach
+
+                                        </tbody>
+
+                                    </table>
 
                                 </p>
 

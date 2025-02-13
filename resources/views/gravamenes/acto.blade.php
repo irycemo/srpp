@@ -209,14 +209,14 @@
                     <strong>Tipo de gravamen:</strong> {{ $gravamen->tipo }}
                 </p>
 
-                <p class="separador">deudores</p>
+                <p class="separador">Actores</p>
 
                 <table>
 
                     <thead>
 
                         <tr>
-                            <th >Tipo de deudor</th>
+                            <th >Tipo de actor</th>
                             <th >Nombre / Razón social</th>
                         </tr>
 

@@ -15,6 +15,7 @@ use Illuminate\Validation\Rule;
 use Illuminate\Support\Facades\DB;
 use App\Models\MovimientoRegistral;
 use Illuminate\Support\Facades\Log;
+use App\Http\Controllers\Gravamen\GravamenController;
 
 
 trait PropiedadTrait{
@@ -1000,7 +1001,7 @@ trait PropiedadTrait{
 
         $movimiento = $this->inscripcion->movimientoRegistral->replicate();
         $movimiento->folio = $movimiento->folio + 1;
-        $movimiento->estado = 'nuevo';
+        $movimiento->estado = 'concluido';
         $movimiento->save();
 
         $url = $this->inscripcion->movimientoRegistral->archivos()->where('descripcion', 'documento_entrada')->first()->url;
@@ -1012,12 +1013,37 @@ trait PropiedadTrait{
             'url' => $url
         ]);
 
-        Gravamen::create([
+        $gravamen = Gravamen::create([
             'movimiento_registral_id' => $movimiento->id,
             'acto_contenido' => 'RESERVA DE DOMINIO',
             'servicio' => 'D150',
             'estado' => 'activo'
         ]);
+
+        foreach($this->inscripcion->transmitentes() as $transmitente){
+
+            Actor::create([
+                'actorable_type' => 'App\Models\Gravamen',
+                'actorable_id' => $gravamen->id,
+                'tipo_actor' => 'acreedor',
+                'persona_id' => $transmitente->persona_id
+            ]);
+
+        }
+
+        foreach($this->inscripcion->propietarios() as $propietario){
+
+            Actor::create([
+                'actorable_type' => 'App\Models\Gravamen',
+                'actorable_id' => $gravamen->id,
+                'tipo_actor' => 'deudor',
+                'tipo_deudor' => 'DEUDOR',
+                'persona_id' => $propietario->persona_id
+            ]);
+
+        }
+
+        (new GravamenController())->caratula($gravamen);
 
     }
 

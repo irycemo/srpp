@@ -444,6 +444,7 @@ class Constantes{
         'FIADOR',
         'DEMANDADO',
         'CONSENTIMIENTO CONYUGAL',
+        'OBLIGADO SOLIDARIO Y AVAL'
     ];
 
 }
