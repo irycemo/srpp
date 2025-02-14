@@ -78,14 +78,18 @@
 
                                                 <div>
 
-                                                    <x-button-blue
-                                                        @click="$wire.dispatch('mostrar', {{ $gravamen->id }})"
-                                                        wire:loading.attr="disabled"
-                                                        wire:target="editarGravamen({{ $gravamen->id }})">
+                                                    @if($movimientoRegistral->folioReal->antecedente && $gravamen->movimientoRegistral->estado != 'concluido')
 
-                                                        <img wire:loading wire:target="editarGravamen({{ $gravamen->id }})" class="mx-auto h-4 mr-1" src="{{ asset('storage/img/loading3.svg') }}" alt="Loading">
-                                                        Editar
-                                                    </x-button-blue>
+                                                        <x-button-blue
+                                                            @click="$wire.dispatch('mostrar', {{ $gravamen->id }})"
+                                                            wire:loading.attr="disabled"
+                                                            wire:target="editarGravamen({{ $gravamen->id }})">
+
+                                                            <img wire:loading wire:target="editarGravamen({{ $gravamen->id }})" class="mx-auto h-4 mr-1" src="{{ asset('storage/img/loading3.svg') }}" alt="Loading">
+                                                            Editar
+                                                        </x-button-blue>
+
+                                                    @endif
 
                                                 </div>
 
@@ -118,7 +122,9 @@
                                                     </x-button-blue>
 
                                                 @endif
+
                                             </div>
+
                                         </x-table.cell>
 
                                     </x-table.row>

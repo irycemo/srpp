@@ -191,7 +191,7 @@ class Elaboracion extends Component
             'registro_antecedente_bis' => $this->movimientoRegistral->registro_bis,
             'numero_propiedad_antecedente' => $this->movimientoRegistral->numero_propiedad,
             'distrito_antecedente' => $this->movimientoRegistral->getRawOriginal('distrito'),
-            'seccion_antecedente' => $this->movimientoRegistral->seccion,
+            'seccion_antecedente' => 'Propiedad',
             'tipo_documento' => $this->tipo_documento,
             'acto_contenido_antecedente' => $this->acto_contenido_antecedente,
             'observaciones_antecedente' => $this->observaciones_antecedente

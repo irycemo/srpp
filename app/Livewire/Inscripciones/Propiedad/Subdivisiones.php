@@ -5,6 +5,7 @@ namespace App\Livewire\Inscripciones\Propiedad;
 use App\Models\File;
 use Livewire\Component;
 use App\Models\Gravamen;
+use App\Models\Escritura;
 use App\Models\FolioReal;
 use App\Models\Propiedad;
 use App\Constantes\Constantes;
@@ -35,6 +36,7 @@ class Subdivisiones extends Component
     public $actos;
 
     public $gravamenes;
+    public $escritura;
 
     protected function rules(){
         return [
@@ -125,7 +127,7 @@ class Subdivisiones extends Component
 
             DB::transaction(function (){
 
-                $this->gravamenes = Gravamen::with('actores')->whereHas('movimientoRegistral', function($q){ $q->where('folio_real', $this->propiedad->movimientoRegistral->folioReal->id); })->get();
+                $this->gravamenes = Gravamen::with('actores', 'movimientoRegistral')->whereHas('movimientoRegistral', function($q){ $q->where('folio_real', $this->propiedad->movimientoRegistral->folioReal->id); })->get();
 
                 if($this->propiedad->acto_contenido != 'SUBDIVISIÓN CON RESTO'){
 
@@ -134,6 +136,8 @@ class Subdivisiones extends Component
                     $this->propiedad->movimientoRegistral->folioReal->update(['estado' => 'inactivo']);
 
                     $cantidad = $this->propiedad->numero_inmuebles;
+
+                    $this->propiedad->superficie_terreno = 0;
 
                 }else{
 
@@ -147,13 +151,43 @@ class Subdivisiones extends Component
 
                 for ($i=0; $i < $cantidad; $i++) {
 
-                    $folioReal = $this->propiedad->movimientoRegistral->folioReal->replicate();
-                    $folioReal->matriz = false;
-                    $folioReal->estado = 'captura';
-                    $folioReal->folio = (FolioReal::max('folio') ?? 0) + 1;
-                    $folioReal->antecedente = $this->propiedad->movimientoRegistral->folioReal->id;
-                    $folioReal->creado_por = auth()->id();
-                    $folioReal->save();
+                    if(in_array($this->propiedad->movimientoRegistral->tipo_documento, ['ESCRITURA PÚBLICA','ESCRITURA PRIVADA'])){
+
+                        $this->crearEscritura();
+
+                        $folioReal = FolioReal::Create([
+                            'matriz' => false,
+                            'estado' => 'captura',
+                            'distrito_antecedente' => $this->propiedad->movimientoRegistral->getOriginal('distrito'),
+                            'folio' => (FolioReal::max('folio') ?? 0) + 1,
+                            'antecedente' => $this->propiedad->movimientoRegistral->folioReal->id,
+                            'seccion_antecedente' => 'Propiedad',
+                            'tipo_documento' => $this->propiedad->movimientoRegistral->tipo_documento,
+                            'creado_por' => auth()->id(),
+                        ]);
+
+                    }else{
+
+                        $folioReal = FolioReal::Create([
+                            'matriz' => false,
+                            'estado' => 'captura',
+                            'folio' => (FolioReal::max('folio') ?? 0) + 1,
+                            'antecedente' => $this->propiedad->movimientoRegistral->folioReal->id,
+                            'seccion_antecedente' => 'Propiedad',
+                            'distrito_antecedente' => $this->propiedad->movimientoRegistral->getOriginal('distrito'),
+                            'tipo_documento' => $this->propiedad->movimientoRegistral->tipo_documento,
+                            'numero_documento' => $this->propiedad->movimientoRegistral->numero_documento,
+                            'autoridad_cargo' => $this->propiedad->movimientoRegistral->autoridad_cargo,
+                            'autoridad_nombre' => $this->propiedad->movimientoRegistral->autoridad_nombre,
+                            'autoridad_numero' => $this->propiedad->movimientoRegistral->autoridad_numero,
+                            'fecha_emision' => $this->propiedad->movimientoRegistral->fecha_emision,
+                            'fecha_inscripcion' => $this->propiedad->movimientoRegistral->fecha_inscripcion,
+                            'procedencia' => $this->propiedad->movimientoRegistral->procedencia,
+                            'creado_por' => auth()->id(),
+                        ]);
+
+                    }
+
 
                     array_push($this->folioIds, $folioReal->id);
 
@@ -193,6 +227,7 @@ class Subdivisiones extends Component
                     $predio->monto_transaccion = null;
                     $predio->folio_real = $folioReal->id;
                     $predio->creado_por = auth()->id();
+                    $predio->escritura_id = $this->escritura?->id;
                     $predio->save();
 
                     foreach ($this->propiedad->movimientoRegistral->folioReal->predio->colindancias as $colindancia) {
@@ -269,6 +304,7 @@ class Subdivisiones extends Component
                 $movimientoRegistral->save();
 
                 $gravamenCopia = $gravamen->replicate();
+                $gravamenCopia->observaciones = $gravamen->observaciones . ' GRAVAMEN GENERADO POR ANTECEDENTE DEL FOLIO REAL: ' . $this->propiedad->movimientoRegistral->folioReal->folio . '-' . $gravamen->movimientoRegistral->folio;
                 $gravamenCopia->movimiento_registral_id = $movimientoRegistral->id;
                 $gravamenCopia->save();
 
@@ -283,6 +319,18 @@ class Subdivisiones extends Component
             }
 
         }
+
+    }
+
+    public function crearEscritura(){
+
+        $this->escritura = Escritura::create([
+            'numero' => $this->propiedad->movimientoRegistral->numero_documento,
+            'fecha_inscripcion' => $this->propiedad->movimientoRegistral->fecha_inscripcion,
+            'fecha_escritura' => $this->propiedad->movimientoRegistral->fecha_emision,
+            'notaria' => $this->propiedad->movimientoRegistral->autoridad_numero,
+            'nombre_notario' => $this->propiedad->movimientoRegistral->autoridad_nombre,
+        ]);
 
     }
 

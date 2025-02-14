@@ -888,7 +888,7 @@ trait PropiedadTrait{
             'estado' => 'captura',
             'folio' => (FolioReal::max('folio') ?? 0) + 1,
             'distrito_antecedente' => $this->inscripcion->movimientoRegistral->getRawOriginal('distrito'),
-            'seccion_antecedente' => $this->inscripcion->movimientoRegistral->seccion,
+            'seccion_antecedente' => 'Propiedad',
             'tipo_documento' => $this->inscripcion->movimientoRegistral->tipo_documento,
             'numero_documento' => $this->inscripcion->movimientoRegistral->numero_documento,
             'autoridad_cargo' => $this->inscripcion->movimientoRegistral->autoridad_cargo,
