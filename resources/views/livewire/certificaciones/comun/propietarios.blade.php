@@ -22,16 +22,14 @@
 
             </x-input-group>
 
-            <div>
-
-                @error('propietarios'. $i .'ap_materno') <span class="error text-sm text-red-500">{{ $message }}</span> @enderror
-
-            </div>
-
         </div>
 
     @endfor
 
+    <div class="flex gap-3 justify-center items-center mt-4">
 
+        @error('propietarios') <span class="error text-sm text-red-500">{{ $message }}</span> @enderror
+
+    </div>
 
 </div>

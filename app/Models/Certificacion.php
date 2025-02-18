@@ -36,11 +36,11 @@ class Certificacion extends Model implements Auditable
 
     /*
         Certificados de propiedad
-        1 ->
+        1 -> Negativo con propiedad
         2 -> Propiedad
         3 -> Unico
         4 ->
-        5 ->
+        5 -> Negativo sin propiedad / Solo nombre
     */
 
 }

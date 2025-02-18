@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\Certificaciones;
 
+use Imagick;
 use Carbon\Carbon;
 use App\Models\File;
 use App\Models\User;
@@ -12,9 +13,9 @@ use App\Models\MovimientoRegistral;
 use App\Traits\NombreServicioTrait;
 use PhpCfdi\Credentials\Credential;
 use App\Http\Controllers\Controller;
-use App\Traits\Inscripciones\FirmaElectronicaTrait;
 use Illuminate\Support\Facades\Storage;
-use Imagick;
+use Luecano\NumeroALetras\NumeroALetras;
+use App\Traits\Inscripciones\FirmaElectronicaTrait;
 
 class CertificadoPropiedadController extends Controller
 {
@@ -25,6 +26,8 @@ class CertificadoPropiedadController extends Controller
     public function certificadoNegativoPropiedad(MovimientoRegistral $movimientoRegistral){
 
         /* $this->authorize('update', $movimientoRegistral); */
+
+        $formatter = new NumeroALetras();
 
         $director = User::where('status', 'activo', 'efirma')
                             ->whereHas('roles', function($q){
@@ -52,6 +55,8 @@ class CertificadoPropiedadController extends Controller
         $datos_control->movimiento_folio = $movimientoRegistral->folio;
         $datos_control->asigno_folio = $movimientoRegistral->folioReal->asignado_por;
         $datos_control->observaciones_certificado = $movimientoRegistral->certificacion->observaciones_certificado;
+        $datos_control->temporalidad = $movimientoRegistral->certificacion->temporalidad;
+        $datos_control->temporalidad_letra = $formatter->toWords($movimientoRegistral->certificacion->temporalidad);
 
         $personas = collect();
 
@@ -468,6 +473,8 @@ class CertificadoPropiedadController extends Controller
 
         /* $this->authorize('update', $movimientoRegistral); */
 
+        $formatter = new NumeroALetras();
+
         $director = User::where('status', 'activo', 'efirma')
                             ->whereHas('roles', function($q){
                                 $q->where('name', 'Director');
@@ -484,6 +491,8 @@ class CertificadoPropiedadController extends Controller
         $datos_control->tipo_servicio = $movimientoRegistral->tipo_servicio;
         $datos_control->movimiento_folio = $movimientoRegistral->folio;
         $datos_control->observaciones_certificado = $movimientoRegistral->certificacion->observaciones_certificado;
+        $datos_control->temporalidad = $movimientoRegistral->certificacion->temporalidad;
+        $datos_control->temporalidad_letra = $formatter->toWords($movimientoRegistral->certificacion->temporalidad);
 
         $personas = collect();
 

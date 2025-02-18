@@ -8,6 +8,8 @@ use App\Models\Persona;
 use Livewire\Component;
 use App\Models\Personaold;
 use App\Models\Propiedadold;
+use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Log;
 use App\Traits\Inscripciones\ColindanciasTrait;
 use App\Traits\Certificaciones\CertificadoPropiedadTrait;
 
@@ -30,6 +32,7 @@ class SoloNombre extends Component
             'nombre' => ['required', 'string'],
             'ap_paterno' => ['required', 'string'],
             'ap_materno' => ['required', 'string'],
+            'temporalidad' => ['nullable', 'numeric']
          ];
     }
 
@@ -72,6 +75,12 @@ class SoloNombre extends Component
 
                 $this->dispatch('mostrarMensaje', ['warning', "La persona es propietaria de al menos un predio."]);
 
+            }else{
+
+                $this->dispatch('mostrarMensaje', ['success', "No se encontraron resultados con la información ingresada."]);
+
+                $this->flagGenerar = true;
+
             }
 
         }else{
@@ -98,13 +107,49 @@ class SoloNombre extends Component
 
                 }
 
-            }else{
+            }
 
-                $this->dispatch('mostrarMensaje', ['warning', "No se encontraron resultados con la información ingresada."]);
+        }
 
-                $this->flagGenerar = true;
+    }
+
+    public function generarCertificadoNegativo(){
+
+        if($this->certificacion->movimientoRegistral->tipo_servicio == 'ordinario'){
+
+            if(!($this->calcularDiaElaboracion($this->certificacion) <= now())){
+
+                $this->dispatch('mostrarMensaje', ['error', "El trámite puede elaborarse apartir del " . $this->calcularDiaElaboracion($this->certificacion)->format('d-m-Y')]);
+
+                return;
 
             }
+
+        }
+
+        try{
+
+            DB::transaction(function (){
+
+                $this->certificacion->movimientoRegistral->estado = 'elaborado';
+                $this->certificacion->movimientoRegistral->save();
+
+                $this->certificacion->actualizado_por = auth()->user()->id;
+                $this->certificacion->tipo_certificado = 5;
+                $this->certificacion->temporalidad = $this->temporalidad;
+                $this->certificacion->observaciones_certificado = $this->observaciones;
+                $this->certificacion->save();
+
+                $this->procesarPersona($this->nombre, $this->ap_paterno, $this->ap_materno);
+
+            });
+
+            $this->dispatch('imprimir_negativo', ['certificacion' => $this->certificacion->movimientoRegistral->id]);
+
+        } catch (\Throwable $th) {
+
+            Log::error("Error al generar certificado negativo solo nombre por el usuario: (id: " . auth()->user()->id . ") " . auth()->user()->name . ". " . $th);
+            $this->dispatch('mostrarMensaje', ['error', "Ha ocurrido un error."]);
 
         }
 

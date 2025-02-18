@@ -1,18 +1,18 @@
-<div class="bg-white rounded-lg p-4 shadow-lg w-full  mx-auto mb-5">
+<div class="bg-white rounded-lg p-4 shadow-lg w-full  mx-auto">
 
-    <div class="lg:w-1/2 mx-auto mb-5">
-
-        @include('livewire.certificaciones.comun.propietario')
+    <div class="lg:w-1/2 mx-auto ">
 
         @if($certificacion->movimientoRegistral->folioReal)
 
-            <div class="text-center  my-3">
+            <div class="text-center ">
 
                 <span class="rounded-lg bg-red-400 text-white px-3 py-1">Se calificó con antecedente de propiedad</span>
 
             </div>
 
         @else
+
+            @include('livewire.certificaciones.comun.propietario')
 
             <button
                 wire:click="buscarPropietario"

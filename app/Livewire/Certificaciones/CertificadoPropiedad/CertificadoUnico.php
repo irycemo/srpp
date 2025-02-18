@@ -145,6 +145,7 @@ class CertificadoUnico extends Component
 
                 $this->certificacion->actualizado_por = auth()->user()->id;
                 $this->certificacion->tipo_certificado = 3;
+                $this->certificacion->temporalidad = $this->temporalidad;
                 $this->certificacion->observaciones_certificado = $this->observaciones;
                 $this->certificacion->save();
 

@@ -4,12 +4,6 @@
 
         <div class="lg:w-1/2 mx-auto mb-5">
 
-        {{-- <x-input-group for="temporalidad" label="Temporalidad" :error="$errors->first('temporalidad')" class="w-full">
-
-            <x-input-text type="number" id="temporalidad" wire:model.lazy="temporalidad" />
-
-        </x-input-group> --}}
-
         @include('livewire.certificaciones.comun.propietario')
 
         <button
@@ -33,11 +27,21 @@
 
     <div class="bg-white rounded-lg p-4 shadow-lg w-full  mx-auto mb-5">
 
-        <div class="lg:w-1/2 mx-auto mb-5">
+        <div class="lg:w-1/2 mx-auto mb-3">
 
             <x-input-group for="observaciones" label="Observaciones" :error="$errors->first('observaciones')" class="w-full">
 
                 <textarea rows="5" class="bg-white rounded text-sm w-full" wire:model="observaciones"></textarea>
+
+            </x-input-group>
+
+        </div>
+
+        <div class="w-min mx-auto">
+
+            <x-input-group for="temporalidad" label="Temporalidad" :error="$errors->first('temporalidad')" >
+
+                <x-input-text type="number" id="temporalidad" wire:model.lazy="temporalidad" />
 
             </x-input-group>
 

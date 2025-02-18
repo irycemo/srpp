@@ -4,9 +4,6 @@ namespace App\Traits\Certificaciones;
 
 use App\Models\Persona;
 use App\Models\CertificadoPersona;
-use Illuminate\Support\Facades\DB;
-use Illuminate\Support\Facades\Log;
-use App\Http\Services\SistemaTramitesService;
 
 trait CertificadoPropiedadTrait{
 
@@ -17,6 +14,8 @@ trait CertificadoPropiedadTrait{
     public $observaciones;
 
     public $modalRechazar = false;
+
+    public $temporalidad;
 
     public function procesarPersona($nombre, $ap_paterno, $ap_materno){
 
@@ -38,6 +37,53 @@ trait CertificadoPropiedadTrait{
         );
 
         CertificadoPersona::create(['certificacion_id' => $this->certificacion->id, 'persona_id' => $persona->id]);
+
+    }
+
+    public function procesarPersonas($personas){
+
+        $this->certificacion->personas()->delete();
+
+        foreach ($personas as $persona) {
+
+            $persona = Persona::firstOrCreate(
+                [
+                    'tipo' => 'FISICA',
+                    'nombre' => $persona['nombre'],
+                    'ap_paterno' => $persona['ap_paterno'],
+                    'ap_materno' => $persona['ap_materno'],
+                ],
+                [
+                    'tipo' => 'FISICA',
+                    'nombre' => $persona['nombre'],
+                    'ap_paterno' => $persona['ap_paterno'],
+                    'ap_materno' => $persona['ap_materno']
+                ]
+            );
+
+            CertificadoPersona::create(['certificacion_id' => $this->certificacion->id, 'persona_id' => $persona->id]);
+
+        }
+
+    }
+
+    public function calcularDiaElaboracion($modelo){
+
+        $diaElaboracion = $modelo->movimientoRegistral->fecha_pago;
+
+        for ($i=0; $i < 2; $i++) {
+
+            $diaElaboracion->addDays(1);
+
+            while($diaElaboracion->isWeekend()){
+
+                $diaElaboracion->addDay();
+
+            }
+
+        }
+
+        return $diaElaboracion;
 
     }
 
