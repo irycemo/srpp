@@ -190,6 +190,8 @@
 
                 @include('comun.caratulas.descripcion_inmueble')
 
+                @include('comun.caratulas.colindancias')
+
                 @if(isset($datos_control->observaciones_certificado))
 
                     <p class="parrafo">

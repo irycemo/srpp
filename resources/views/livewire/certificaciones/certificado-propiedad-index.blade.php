@@ -217,7 +217,7 @@
                                                 Elaborar
                                             </button>
 
-                                        @elseif(auth()->user()->hasRole(['Supervisor certificaciones', 'Jefe de departamento certificaciones', 'Supervisor uruapan']) && $certificado->estado == 'elaborado')
+                                        @elseif(auth()->user()->hasRole(['Supervisor certificaciones', 'Jefe de departamento certificaciones', 'Supervisor uruapan', 'Regional']) && $certificado->estado == 'elaborado')
 
                                             @if ($certificado->certificacion->reimpreso_en == null)
 
@@ -461,8 +461,6 @@
         });
 
         window.addEventListener('imprimir_certificado_colindancias', event => {
-
-            alert("")
 
             const documento = event.detail[0].certificacion;
 

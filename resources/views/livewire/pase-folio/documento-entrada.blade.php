@@ -40,7 +40,7 @@
 
                 <x-input-group for="seccion" label="Sección" class="w-full">
 
-                    <x-input-text id="seccion" value="{{ $movimientoRegistral->seccion }}" readonly/>
+                    <x-input-text id="seccion" value="Propiedad" readonly/>
 
                 </x-input-group>
 

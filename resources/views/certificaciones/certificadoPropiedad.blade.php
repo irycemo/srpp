@@ -187,6 +187,8 @@
 
                 @include('comun.caratulas.descripcion_inmueble')
 
+                @include('comun.caratulas.colindancias')
+
                 @include('comun.caratulas.propietarios')
 
                 @if(isset($datos_control->observaciones_certificado))

@@ -1,32 +1,80 @@
 <div class="">
 
-    @if($certificacion->servicio == 'DL10')
+    <x-header>Certificado de propiedad o negativo de propiedad</x-header>
 
-        <x-header>Certificado de propiedad o negativo de propiedad</x-header>
+    <div class="bg-white rounded-lg p-4 shadow-lg w-full  mx-auto mb-5">
 
-        <div class="bg-white rounded-lg p-4 shadow-lg w-full  mx-auto mb-5">
+        <div class="lg:w-1/2 mx-auto mb-5">
 
-            <div class="lg:w-1/2 mx-auto mb-5">
+            <p class="text-center"><strong>Solicitante</strong></p>
 
-                <p class="text-center"><strong>Solicitante</strong></p>
+            <div class="text-gray-500 text-sm leading-relaxed mx-auto mb-5">
 
-                <div class="text-gray-500 text-sm leading-relaxed mx-auto mb-5">
+                <p class="text-center">{{ $certificacion->movimientoRegistral->solicitante }}</p>
 
-                    <p class="text-center">{{ $certificacion->movimientoRegistral->solicitante }}</p>
+            </div>
 
-                </div>
+            <p class="text-center"><strong>Observaciones</strong></p>
 
-                <p class="text-center"><strong>Observaciones</strong></p>
+            <div class="text-gray-500 text-sm leading-relaxed mx-auto mb-5">
 
-                <div class="text-gray-500 text-sm leading-relaxed mx-auto mb-5">
-
-                    <p class="text-justify">{{ $certificacion->observaciones }}</p>
-
-                </div>
+                <p class="text-justify">{{ $certificacion->observaciones }}</p>
 
             </div>
 
         </div>
+
+    </div>
+
+    <div class="bg-white p-4 rounded-lg shadow-lg mb-5">
+
+        <ul class="grid w-full lg:w-1/2 mx-auto gap-6 md:grid-cols-2">
+
+            <li>
+
+                <input type="radio" id="certificado-propiedad" name="certificado" value="propiedad" class="hidden peer" wire:model.live="radio" required>
+
+                <label for="certificado-propiedad" class="inline-flex items-center justify-between w-full p-3 text-gray-500 bg-white border border-gray-200 rounded-lg cursor-pointer dark:hover:text-gray-300 dark:border-gray-700 dark:peer-checked:text-blue-500 peer-checked:border-blue-600 peer-checked:text-blue-600 hover:text-gray-600 hover:bg-gray-100 dark:text-gray-400 dark:bg-gray-800 dark:hover:bg-gray-700">
+
+                    <div class="block">
+
+                        <div class="w-full text-lg font-semibold">Certificado de propiedad</div>
+
+                    </div>
+
+                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-4 h-4">
+                        <path stroke-linecap="round" stroke-linejoin="round" d="M19.5 13.5 12 21m0 0-7.5-7.5M12 21V3" />
+                    </svg>
+
+                </label>
+
+            </li>
+
+            <li>
+
+                <input type="radio" id="certificado-negativo" name="certificado" value="negativo" class="hidden peer" wire:model.live="radio">
+
+                <label for="certificado-negativo" class="inline-flex items-center justify-between w-full p-3 text-gray-500 bg-white border border-gray-200 rounded-lg cursor-pointer dark:hover:text-gray-300 dark:border-gray-700 dark:peer-checked:text-blue-500 peer-checked:border-blue-600 peer-checked:text-blue-600 hover:text-gray-600 hover:bg-gray-100 dark:text-gray-400 dark:bg-gray-800 dark:hover:bg-gray-700">
+
+                    <div class="block">
+
+                        <div class="w-full text-lg font-semibold">Certificado negativo de propiedad</div>
+
+                    </div>
+
+                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-4 h-4">
+                        <path stroke-linecap="round" stroke-linejoin="round" d="M19.5 13.5 12 21m0 0-7.5-7.5M12 21V3" />
+                    </svg>
+
+                </label>
+
+            </li>
+
+        </ul>
+
+    </div>
+
+    @if($radio == 'propiedad')
 
         <div class="bg-white p-4 rounded-lg shadow-lg mb-5">
 
@@ -34,9 +82,29 @@
 
                 <li>
 
-                    <input type="radio" id="certificado-propiedad" name="certificado" value="propiedad" class="hidden peer" wire:model.live="radio" required>
+                    <input type="radio" id="certificado-unico" name="propiedad" value="unico" class="hidden peer" wire:model.live="propiedad_radio" required>
 
-                    <label for="certificado-propiedad" class="inline-flex items-center justify-between w-full p-3 text-gray-500 bg-white border border-gray-200 rounded-lg cursor-pointer dark:hover:text-gray-300 dark:border-gray-700 dark:peer-checked:text-blue-500 peer-checked:border-blue-600 peer-checked:text-blue-600 hover:text-gray-600 hover:bg-gray-100 dark:text-gray-400 dark:bg-gray-800 dark:hover:bg-gray-700">
+                    <label for="certificado-unico" class="inline-flex items-center justify-between w-full px-3 text-gray-500 bg-white border border-gray-200 rounded-lg cursor-pointer dark:hover:text-gray-300 dark:border-gray-700 dark:peer-checked:text-blue-500 peer-checked:border-blue-600 peer-checked:text-blue-600 hover:text-gray-600 hover:bg-gray-100 dark:text-gray-400 dark:bg-gray-800 dark:hover:bg-gray-700">
+
+                        <div class="block">
+
+                            <div class="w-full text-lg font-semibold">Certificado único de propiedad</div>
+
+                        </div>
+
+                        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-4 h-4">
+                            <path stroke-linecap="round" stroke-linejoin="round" d="M19.5 13.5 12 21m0 0-7.5-7.5M12 21V3" />
+                        </svg>
+
+                    </label>
+
+                </li>
+
+                <li>
+
+                    <input type="radio" id="certificado-normal" name="propiedad" value="propieda" class="hidden peer" wire:model.live="propiedad_radio">
+
+                    <label for="certificado-normal" class="inline-flex items-center justify-between w-full px-3 text-gray-500 bg-white border border-gray-200 rounded-lg cursor-pointer dark:hover:text-gray-300 dark:border-gray-700 dark:peer-checked:text-blue-500 peer-checked:border-blue-600 peer-checked:text-blue-600 hover:text-gray-600 hover:bg-gray-100 dark:text-gray-400 dark:bg-gray-800 dark:hover:bg-gray-700">
 
                         <div class="block">
 
@@ -52,15 +120,65 @@
 
                 </li>
 
+            </ul>
+
+        </div>
+
+    @elseif($radio == 'negativo')
+
+        <div class="bg-white p-4 rounded-lg shadow-lg mb-5">
+
+            <ul class="grid w-full lg:w-1/2 mx-auto gap-6 md:grid-cols-3">
+
                 <li>
 
-                    <input type="radio" id="certificado-negativo" name="certificado" value="negativo" class="hidden peer" wire:model.live="radio">
+                    <input type="radio" id="nombre" name="propiedad" value="nombre" class="hidden peer" wire:model.live="negativo_radio" required>
 
-                    <label for="certificado-negativo" class="inline-flex items-center justify-between w-full p-3 text-gray-500 bg-white border border-gray-200 rounded-lg cursor-pointer dark:hover:text-gray-300 dark:border-gray-700 dark:peer-checked:text-blue-500 peer-checked:border-blue-600 peer-checked:text-blue-600 hover:text-gray-600 hover:bg-gray-100 dark:text-gray-400 dark:bg-gray-800 dark:hover:bg-gray-700">
+                    <label for="nombre" class="inline-flex items-center justify-between w-full px-3 text-gray-500 bg-white border border-gray-200 rounded-lg cursor-pointer dark:hover:text-gray-300 dark:border-gray-700 dark:peer-checked:text-blue-500 peer-checked:border-blue-600 peer-checked:text-blue-600 hover:text-gray-600 hover:bg-gray-100 dark:text-gray-400 dark:bg-gray-800 dark:hover:bg-gray-700">
 
                         <div class="block">
 
-                            <div class="w-full text-lg font-semibold">Certificado negativo de propiedad</div>
+                            <div class="w-full text-lg font-semibold">Solo nombre</div>
+
+                        </div>
+
+                        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-4 h-4">
+                            <path stroke-linecap="round" stroke-linejoin="round" d="M19.5 13.5 12 21m0 0-7.5-7.5M12 21V3" />
+                        </svg>
+
+                    </label>
+
+                </li>
+
+                <li>
+
+                    <input type="radio" id="propiedad_registrada" name="propiedad_registrada" value="propiedad_registrada" class="hidden peer" wire:model.live="negativo_radio">
+
+                    <label for="propiedad_registrada" class="inline-flex items-center justify-between w-full px-3 text-gray-500 bg-white border border-gray-200 rounded-lg cursor-pointer dark:hover:text-gray-300 dark:border-gray-700 dark:peer-checked:text-blue-500 peer-checked:border-blue-600 peer-checked:text-blue-600 hover:text-gray-600 hover:bg-gray-100 dark:text-gray-400 dark:bg-gray-800 dark:hover:bg-gray-700">
+
+                        <div class="block">
+
+                            <div class="w-full text-lg font-semibold">Propiedad registrada</div>
+
+                        </div>
+
+                        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-4 h-4">
+                            <path stroke-linecap="round" stroke-linejoin="round" d="M19.5 13.5 12 21m0 0-7.5-7.5M12 21V3" />
+                        </svg>
+
+                    </label>
+
+                </li>
+
+                <li>
+
+                    <input type="radio" id="propiedad_sin_registro" name="propiedad_sin_registro" value="propiedad_sin_registro" class="hidden peer" wire:model.live="negativo_radio">
+
+                    <label for="propiedad_sin_registro" class="inline-flex items-center justify-between w-full px-3 text-gray-500 bg-white border border-gray-200 rounded-lg cursor-pointer dark:hover:text-gray-300 dark:border-gray-700 dark:peer-checked:text-blue-500 peer-checked:border-blue-600 peer-checked:text-blue-600 hover:text-gray-600 hover:bg-gray-100 dark:text-gray-400 dark:bg-gray-800 dark:hover:bg-gray-700">
+
+                        <div class="block">
+
+                            <div class="w-full text-lg font-semibold">Propiedad no registrada</div>
 
                         </div>
 
@@ -76,853 +194,56 @@
 
         </div>
 
-        @if($radio == 'propiedad')
+    @endif
 
-            <div class="bg-white p-4 rounded-lg shadow-lg mb-5">
+    @if($radio == 'propiedad' && $propiedad_radio == 'unico')
 
-                <ul class="grid w-full lg:w-1/2 mx-auto gap-6 md:grid-cols-2">
+        <livewire:certificaciones.certificado-propiedad.certificado-unico :certificacion="$certificacion"/>
 
-                    <li>
+    @endif
 
-                        <input type="radio" id="certificado-unico" name="propiedad" value="unico" class="hidden peer" wire:model.live="propiedad_radio" required>
+    @if($radio == 'propiedad' && $propiedad_radio == 'propieda')
 
-                        <label for="certificado-unico" class="inline-flex items-center justify-between w-full px-3 text-gray-500 bg-white border border-gray-200 rounded-lg cursor-pointer dark:hover:text-gray-300 dark:border-gray-700 dark:peer-checked:text-blue-500 peer-checked:border-blue-600 peer-checked:text-blue-600 hover:text-gray-600 hover:bg-gray-100 dark:text-gray-400 dark:bg-gray-800 dark:hover:bg-gray-700">
+        <livewire:certificaciones.certificado-propiedad.certificado-propiedad :certificacion="$certificacion" :vientos="$vientos"/>
 
-                            <div class="block">
+    @endif
 
-                                <div class="w-full text-lg font-semibold">Certificado único de propiedad</div>
-
-                            </div>
-
-                            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-4 h-4">
-                                <path stroke-linecap="round" stroke-linejoin="round" d="M19.5 13.5 12 21m0 0-7.5-7.5M12 21V3" />
-                            </svg>
-
-                        </label>
-
-                    </li>
-
-                    <li>
-
-                        <input type="radio" id="certificado-normal" name="propiedad" value="propieda" class="hidden peer" wire:model.live="propiedad_radio">
-
-                        <label for="certificado-normal" class="inline-flex items-center justify-between w-full px-3 text-gray-500 bg-white border border-gray-200 rounded-lg cursor-pointer dark:hover:text-gray-300 dark:border-gray-700 dark:peer-checked:text-blue-500 peer-checked:border-blue-600 peer-checked:text-blue-600 hover:text-gray-600 hover:bg-gray-100 dark:text-gray-400 dark:bg-gray-800 dark:hover:bg-gray-700">
-
-                            <div class="block">
-
-                                <div class="w-full text-lg font-semibold">Certificado de propiedad</div>
-
-                            </div>
-
-                            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-4 h-4">
-                                <path stroke-linecap="round" stroke-linejoin="round" d="M19.5 13.5 12 21m0 0-7.5-7.5M12 21V3" />
-                            </svg>
-
-                        </label>
-
-                    </li>
-
-                </ul>
-
-            </div>
-
-        @elseif($radio == 'negativo')
-
-            <div class="bg-white p-4 rounded-lg shadow-lg mb-5">
-
-                <ul class="grid w-full lg:w-1/2 mx-auto gap-6 md:grid-cols-3">
-
-                    <li>
-
-                        <input type="radio" id="nombre" name="propiedad" value="nombre" class="hidden peer" wire:model.live="negativo_radio" required>
-
-                        <label for="nombre" class="inline-flex items-center justify-between w-full px-3 text-gray-500 bg-white border border-gray-200 rounded-lg cursor-pointer dark:hover:text-gray-300 dark:border-gray-700 dark:peer-checked:text-blue-500 peer-checked:border-blue-600 peer-checked:text-blue-600 hover:text-gray-600 hover:bg-gray-100 dark:text-gray-400 dark:bg-gray-800 dark:hover:bg-gray-700">
-
-                            <div class="block">
-
-                                <div class="w-full text-lg font-semibold">Solo nombre</div>
-
-                            </div>
-
-                            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-4 h-4">
-                                <path stroke-linecap="round" stroke-linejoin="round" d="M19.5 13.5 12 21m0 0-7.5-7.5M12 21V3" />
-                            </svg>
-
-                        </label>
-
-                    </li>
-
-                    <li>
-
-                        <input type="radio" id="propiedad_registrada" name="propiedad_registrada" value="propiedad_registrada" class="hidden peer" wire:model.live="negativo_radio">
-
-                        <label for="propiedad_registrada" class="inline-flex items-center justify-between w-full px-3 text-gray-500 bg-white border border-gray-200 rounded-lg cursor-pointer dark:hover:text-gray-300 dark:border-gray-700 dark:peer-checked:text-blue-500 peer-checked:border-blue-600 peer-checked:text-blue-600 hover:text-gray-600 hover:bg-gray-100 dark:text-gray-400 dark:bg-gray-800 dark:hover:bg-gray-700">
-
-                            <div class="block">
-
-                                <div class="w-full text-lg font-semibold">Propiedad registrada</div>
-
-                            </div>
-
-                            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-4 h-4">
-                                <path stroke-linecap="round" stroke-linejoin="round" d="M19.5 13.5 12 21m0 0-7.5-7.5M12 21V3" />
-                            </svg>
-
-                        </label>
-
-                    </li>
-
-                    <li>
-
-                        <input type="radio" id="propiedad_sin_registro" name="propiedad_sin_registro" value="propiedad_sin_registro" class="hidden peer" wire:model.live="negativo_radio">
-
-                        <label for="propiedad_sin_registro" class="inline-flex items-center justify-between w-full px-3 text-gray-500 bg-white border border-gray-200 rounded-lg cursor-pointer dark:hover:text-gray-300 dark:border-gray-700 dark:peer-checked:text-blue-500 peer-checked:border-blue-600 peer-checked:text-blue-600 hover:text-gray-600 hover:bg-gray-100 dark:text-gray-400 dark:bg-gray-800 dark:hover:bg-gray-700">
-
-                            <div class="block">
-
-                                <div class="w-full text-lg font-semibold">Propiedad no registrada</div>
-
-                            </div>
-
-                            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-4 h-4">
-                                <path stroke-linecap="round" stroke-linejoin="round" d="M19.5 13.5 12 21m0 0-7.5-7.5M12 21V3" />
-                            </svg>
-
-                        </label>
-
-                    </li>
-
-                </ul>
-
-            </div>
-
-        @endif
-
-        @if($radio == 'propiedad' && $propiedad_radio == 'unico')
-
-            <div class="bg-white rounded-lg p-4 shadow-lg w-full  mx-auto mb-5">
-
-                <div class="lg:w-1/2 mx-auto mb-5">
-
-                @include('livewire.certificaciones.comun.propietario')
-
-                @if($certificacion->movimientoRegistral->folioReal)
-
-                    <div class="text-center  my-3">
-
-                        <span class="rounded-lg bg-red-400 text-white px-3 py-1">Se calificó con antecedente de propiedad</span>
-
-                    </div>
-
-                @else
-
-                    <button
-                        wire:click="buscarPropietarioUnico"
-                        wire:loading.attr="disabled"
-                        wire:target="buscarPropietarioUnico"
-                        type="button"
-                        class="mt-3 bg-blue-400 hover:shadow-lg text-white mx-auto font-bold px-4 py-2 rounded text-xs hover:bg-blue-700 focus:outline-none flex items-center justify-center focus:outline-blue-400 focus:outline-offset-2">
-
-                        <img wire:loading wire:target="buscarPropietarioUnico" class="mx-auto h-4 mr-1" src="{{ asset('storage/img/loading3.svg') }}" alt="Loading">
-
-                        Buscar
-
-                    </button>
-
-                @endif
-
-                </div>
-
-            </div>
-
-            <p class="text-center bg-white rounded-lg p-4 shadow-lg w-full  mx-auto mb-5"><strong>Propiedades encontradas en el distrito {{ $certificacion->movimientoRegistral->distrito }} ({{ count($predios) + count($prediosOld) }})</strong></p>
-
-            @include('livewire.certificaciones.comun.predios')
-
-            <div class="bg-white rounded-lg p-4 shadow-lg w-full  mx-auto mb-5">
-
-                <div class="lg:w-1/2 mx-auto mb-5">
-
-                    <x-input-group for="observaciones" label="Observaciones" :error="$errors->first('observaciones')" class="w-full">
-
-                        <textarea rows="5" class="bg-white rounded text-sm w-full" wire:model="observaciones"></textarea>
-
-                    </x-input-group>
-
-                </div>
-
-            </div>
-
-            <div class="bg-white rounded-lg p-3 flex justify-end shadow-lg gap-3">
-
-                <x-button-red
-                    wire:click="abrirModalRechazar"
-                    wire:loading.attr="disabled"
-                    wire:target="abrirModalRechazar">
-
-                    <img wire:loading wire:target="abrirModalRechazar" class="mx-auto h-4 mr-1" src="{{ asset('storage/img/loading3.svg') }}" alt="Loading">
-
-                    Rechazar
-
-                </x-button-red>
-
-                @if($flagUnico)
-
-                    <x-button-blue
-                        wire:click="generarCertificadoPropiedadUnico"
-                        wire:loading.attr="disabled"
-                        wire:target="generarCertificadoPropiedadUnico">
-
-                        <img wire:loading wire:target="generarCertificadoPropiedadUnico" class="mx-auto h-4 mr-1" src="{{ asset('storage/img/loading3.svg') }}" alt="Loading">
-
-                        Generar certificado único de propiedad
-
-                    </x-button-blue>
-
-                @endif
-
-            </div>
-
-        @endif
-
-        @if($radio == 'propiedad' && $propiedad_radio == 'propieda')
-
-            {{-- <p class="text-center bg-white rounded-lg p-4 shadow-lg w-full  mx-auto mb-5"><strong>Cantidad solicitada {{ $certificacion->numero_paginas }}</strong></p> --}}
-
-            @include('livewire.certificaciones.comun.propiedad')
-
-            <div class="bg-white rounded-lg p-4 shadow-lg w-full  mx-auto mb-5">
-
-                <div class="lg:w-1/2 mx-auto mb-5">
-
-                    <x-input-group for="observaciones" label="Observaciones" :error="$errors->first('observaciones')" class="w-full">
-
-                        <textarea rows="5" class="bg-white rounded text-sm w-full" wire:model="observaciones"></textarea>
-
-                    </x-input-group>
-
-                </div>
-
-            </div>
-
-            <div class="bg-white rounded-lg p-3 flex justify-end shadow-lg gap-3">
-
-                <x-button-red
-                    wire:click="abrirModalRechazar"
-                    wire:loading.attr="disabled"
-                    wire:target="abrirModalRechazar">
-
-                    <img wire:loading wire:target="abrirModalRechazar" class="mx-auto h-4 mr-1" src="{{ asset('storage/img/loading3.svg') }}" alt="Loading">
-
-                    Rechazar
-
-                </x-button-red>
-
-                <x-button-blue
-                    wire:click="generarCertificadoPropiedad"
-                    wire:loading.attr="disabled"
-                    wire:target="generarCertificadoPropiedad">
-
-                    <img wire:loading wire:target="generarCertificadoPropiedad" class="mx-auto h-4 mr-1" src="{{ asset('storage/img/loading3.svg') }}" alt="Loading">
-
-                    Generar certificado de propiedad
-
-                </x-button-blue>
-
-            </div>
-
-        @endif
-
-        @if($radio == 'negativo' && $negativo_radio == 'nombre')
-
-            <div class="bg-white rounded-lg p-4 shadow-lg w-full  mx-auto mb-5">
-
-                <div class="lg:w-1/2 mx-auto mb-5">
-
-                @include('livewire.certificaciones.comun.propietario')
-
-                <button
-                    wire:click="buscarPropietarioUnico"
-                    wire:loading.attr="disabled"
-                    wire:target="buscarPropietarioUnico"
-                    type="button"
-                    class="mt-3 bg-blue-400 hover:shadow-lg text-white mx-auto font-bold px-4 py-2 rounded text-xs hover:bg-blue-700 focus:outline-none flex items-center justify-center focus:outline-blue-400 focus:outline-offset-2">
-
-                    <img wire:loading wire:target="buscarPropietarioUnico" class="mx-auto h-4 mr-1" src="{{ asset('storage/img/loading3.svg') }}" alt="Loading">
-
-                    Buscar
-
-                </button>
-
-                </div>
-
-            </div>
-
-            @include('livewire.certificaciones.comun.predios')
-
-            <div class="bg-white rounded-lg p-4 shadow-lg w-full  mx-auto mb-5">
-
-                <div class="lg:w-1/2 mx-auto mb-5">
-
-                    <x-input-group for="observaciones" label="Observaciones" :error="$errors->first('observaciones')" class="w-full">
-
-                        <textarea rows="5" class="bg-white rounded text-sm w-full" wire:model="observaciones"></textarea>
-
-                    </x-input-group>
-
-                </div>
-
-            </div>
-
-            <div class="bg-white rounded-lg p-3 flex justify-end shadow-lg gap-3">
-
-                <x-button-red
-                    wire:click="abrirModalRechazar"
-                    wire:loading.attr="disabled"
-                    wire:target="abrirModalRechazar">
-
-                    <img wire:loading wire:target="abrirModalRechazar" class="mx-auto h-4 mr-1" src="{{ asset('storage/img/loading3.svg') }}" alt="Loading">
-
-                    Rechazar
-
-                </x-button-red>
-
-                @if($flagNegativo)
-
-                    <x-button-blue
-                        wire:click="generarCertificadoNegativo"
-                        wire:loading.attr="disabled"
-                        wire:target="generarCertificadoNegativo">
-
-                        <img wire:loading wire:target="generarCertificadoNegativo" class="mx-auto h-4 mr-1" src="{{ asset('storage/img/loading3.svg') }}" alt="Loading">
-
-                        Generar certificado negativo de propiedad
-
-                    </x-button-blue>
-
-                @endif
-
-            </div>
-
-        @endif
-
-        @if($radio == 'negativo' && $negativo_radio == 'propiedad_registrada')
-
-            <div class="bg-white rounded-lg p-4 shadow-lg w-full  mx-auto mb-5">
-
-                @if(!$certificacion->movimientoRegistral->folioReal)
-
-                    <div class="text-center  mb-3">
-
-                        <span class="rounded-lg bg-red-400 text-white px-3 py-1">No se calificó con antecedente de propiedad</span>
-
-                    </div>
-
-                @endif
-
-                <div class="lg:w-1/2 mx-auto mb-5">
-
-                @include('livewire.certificaciones.comun.propietarios')
-
-                @if($certificacion->movimientoRegistral->folioReal)
-
-                    <button
-                        wire:click="buscarProppietariosEnFolio"
-                        wire:loading.attr="disabled"
-                        wire:target="buscarProppietariosEnFolio"
-                        type="button"
-                        class="mt-3 bg-blue-400 hover:shadow-lg text-white mx-auto font-bold px-4 py-2 rounded text-xs hover:bg-blue-700 focus:outline-none flex items-center justify-center focus:outline-blue-400 focus:outline-offset-2">
-
-                        <img wire:loading wire:target="buscarProppietariosEnFolio" class="mx-auto h-4 mr-1" src="{{ asset('storage/img/loading3.svg') }}" alt="Loading">
-
-                        Buscar
-
-                    </button>
-
-                @endif
-
-                </div>
-
-            </div>
-
-            @include('livewire.certificaciones.comun.propiedad')
-
-            <div class="bg-white rounded-lg p-4 shadow-lg w-full  mx-auto mb-5">
-
-                <div class="lg:w-1/2 mx-auto mb-5">
-
-                    <x-input-group for="observaciones" label="Observaciones" :error="$errors->first('observaciones')" class="w-full">
-
-                        <textarea rows="5" class="bg-white rounded text-sm w-full" wire:model="observaciones"></textarea>
-
-                    </x-input-group>
-
-                </div>
-
-            </div>
-
-            <div class="bg-white rounded-lg p-3 flex justify-end shadow-lg gap-3">
-
-                <x-button-red
-                    wire:click="abrirModalRechazar"
-                    wire:loading.attr="disabled"
-                    wire:target="abrirModalRechazar">
-
-                    <img wire:loading wire:target="abrirModalRechazar" class="mx-auto h-4 mr-1" src="{{ asset('storage/img/loading3.svg') }}" alt="Loading">
-
-                    Rechazar
-
-                </x-button-red>
-
-                @if($flagNegativo)
-
-                    <x-button-blue
-                        wire:click="generarCertificadoNegativoPropiedad"
-                        wire:loading.attr="disabled"
-                        wire:target="generarCertificadoNegativoPropiedad">
-
-                        <img wire:loading wire:target="generarCertificadoNegativoPropiedad" class="mx-auto h-4 mr-1" src="{{ asset('storage/img/loading3.svg') }}" alt="Loading">
-
-                        Generar certificado negativo de propiedad
-
-                    </x-button-blue>
-
-                @endif
-
-            </div>
-
-        @endif
-
-        @if($radio == 'negativo' && $negativo_radio == 'propiedad_sin_registro')
-
-            <div class="bg-white rounded-lg p-4 shadow-lg w-full  mx-auto mb-5">
-
-                <div class="lg:w-1/2 mx-auto mb-5">
-
-                @include('livewire.certificaciones.comun.propietario')
-
-                <button
-                    wire:click="buscarPropietarioUnico"
-                    wire:loading.attr="disabled"
-                    wire:target="buscarPropietarioUnico"
-                    type="button"
-                    class="mt-3 bg-blue-400 hover:shadow-lg text-white mx-auto font-bold px-4 py-2 rounded text-xs hover:bg-blue-700 focus:outline-none flex items-center justify-center focus:outline-blue-400 focus:outline-offset-2">
-
-                    <img wire:loading wire:target="buscarPropietarioUnico" class="mx-auto h-4 mr-1" src="{{ asset('storage/img/loading3.svg') }}" alt="Loading">
-
-                    Buscar
-
-                </button>
-
-                </div>
-
-            </div>
-
-            <div class="bg-white rounded-lg p-4 shadow-lg w-full  mx-auto mb-5">
-
-                <div class="lg:w-1/2 mx-auto mb-5">
-
-                    <x-input-group for="observaciones" label="Observaciones" :error="$errors->first('observaciones')" class="w-full">
-
-                        <textarea rows="5" class="bg-white rounded text-sm w-full" wire:model="observaciones"></textarea>
-
-                    </x-input-group>
-
-                </div>
-
-            </div>
-
-            <div class="bg-white rounded-lg p-3 flex justify-end shadow-lg gap-3">
-
-                <x-button-red
-                    wire:click="abrirModalRechazar"
-                    wire:loading.attr="disabled"
-                    wire:target="abrirModalRechazar">
-
-                    <img wire:loading wire:target="abrirModalRechazar" class="mx-auto h-4 mr-1" src="{{ asset('storage/img/loading3.svg') }}" alt="Loading">
-
-                    Rechazar
-
-                </x-button-red>
-
-                @if($flagNegativo)
-
-                    <x-button-blue
-                        wire:click="generarCertificadoNegativo"
-                        wire:loading.attr="disabled"
-                        wire:target="generarCertificadoNegativo">
-
-                        <img wire:loading wire:target="generarCertificadoNegativo" class="mx-auto h-4 mr-1" src="{{ asset('storage/img/loading3.svg') }}" alt="Loading">
-
-                        Generar certificado negativo de propiedad
-
-                    </x-button-blue>
-
-                @endif
-
-            </div>
-
-        @endif
-
-    @elseif($certificacion->servicio == 'DL11')
-
-        <x-header>Certificado con medidas y linderos</x-header>
+    @if($radio == 'negativo' && $negativo_radio == 'nombre')
 
         <div class="bg-white rounded-lg p-4 shadow-lg w-full  mx-auto mb-5">
 
             <div class="lg:w-1/2 mx-auto mb-5">
 
-                <p class="text-center"><strong>Solicitante</strong></p>
+            @include('livewire.certificaciones.comun.propietario')
 
-                <div class="text-gray-500 text-sm leading-relaxed lg:w-1/2 mx-auto mb-5">
+            <button
+                wire:click="buscarPropietarioUnico"
+                wire:loading.attr="disabled"
+                wire:target="buscarPropietarioUnico"
+                type="button"
+                class="mt-3 bg-blue-400 hover:shadow-lg text-white mx-auto font-bold px-4 py-2 rounded text-xs hover:bg-blue-700 focus:outline-none flex items-center justify-center focus:outline-blue-400 focus:outline-offset-2">
 
-                    <p class="text-center">{{ $certificacion->movimientoRegistral->solicitante }}</p>
+                <img wire:loading wire:target="buscarPropietarioUnico" class="mx-auto h-4 mr-1" src="{{ asset('storage/img/loading3.svg') }}" alt="Loading">
 
-                    <p class="text-justify">Observaciones: {{ $certificacion->observaciones }}</p>
+                Buscar
 
-                </div>
+            </button>
 
             </div>
 
         </div>
+
+        @include('livewire.certificaciones.comun.predios')
 
         <div class="bg-white rounded-lg p-4 shadow-lg w-full  mx-auto mb-5">
 
-            <p class="text-center"><strong>Ubicación del inmueble</strong></p>
+            <div class="lg:w-1/2 mx-auto mb-5">
 
-            <div class="text-gray-500 text-sm leading-relaxed lg:w-1/2 mx-auto mb-5">
+                <x-input-group for="observaciones" label="Observaciones" :error="$errors->first('observaciones')" class="w-full">
 
-                <p class=" text-justify">
+                    <textarea rows="5" class="bg-white rounded text-sm w-full" wire:model="observaciones"></textarea>
 
-                    @if ($certificacion->movimientoRegistral->folioReal->predio->codigo_postal)
-                        <strong class="capitalize">Cóidigo postal:</strong> {{ $certificacion->movimientoRegistral->folioReal->predio->codigo_postal }};
-                    @endif
-
-                    @if ($certificacion->movimientoRegistral->folioReal->predio->tipo_asentamiento)
-                        <strong class="capitalize">Tipo de asentamiento:</strong> {{ $certificacion->movimientoRegistral->folioReal->predio->tipo_asentamiento }};
-                    @endif
-
-                    @if ($certificacion->movimientoRegistral->folioReal->predio->nombre_asentamiento)
-                        <strong class="capitalize">Nombre del asentamiento:</strong> {{ $certificacion->movimientoRegistral->folioReal->predio->nombre_asentamiento }};
-                    @endif
-
-                    @if ($certificacion->movimientoRegistral->folioReal->predio->municipio)
-                        <strong class="capitalize">Municipio:</strong> {{ $certificacion->movimientoRegistral->folioReal->predio->municipio }};
-                    @endif
-
-                    @if ($certificacion->movimientoRegistral->folioReal->predio->ciudad)
-                        <strong class="capitalize">Ciudad:</strong> {{ $certificacion->movimientoRegistral->folioReal->predio->ciudad }};
-                    @endif
-
-                    @if ($certificacion->movimientoRegistral->folioReal->predio->localidad)
-                        <strong class="capitalize">Localidad:</strong> {{ $certificacion->movimientoRegistral->folioReal->predio->localidad }};
-                    @endif
-
-                    @if ($certificacion->movimientoRegistral->folioReal->predio->tipo_vialidad)
-                        <strong class="capitalize">Tipo de vialidad:</strong> {{ $certificacion->movimientoRegistral->folioReal->predio->tipo_vialidad }};
-                    @endif
-
-                    @if ($certificacion->movimientoRegistral->folioReal->predio->nombre_vialidad)
-                        <strong class="capitalize">Nombre de la vialidad:</strong> {{ $certificacion->movimientoRegistral->folioReal->predio->nombre_vialidad }};
-                    @endif
-
-                    @if ($certificacion->movimientoRegistral->folioReal->predio->numero_exterior)
-                        <strong class="capitalize">Número exterior:</strong> {{ $certificacion->movimientoRegistral->folioReal->predio->numero_exterior ?? 'SN' }};
-                    @endif
-
-                    @if ($certificacion->movimientoRegistral->folioReal->predio->numero_interior)
-                        <strong class="capitalize">Número interior:</strong> {{ $certificacion->movimientoRegistral->folioReal->predio->numero_interior ?? 'SN' }};
-                    @endif
-
-                    @if ($certificacion->movimientoRegistral->folioReal->predio->nombre_edificio)
-                        <strong class="capitalize">Edificio:</strong> {{ $certificacion->movimientoRegistral->folioReal->predio->nombre_edificio }};
-                    @endif
-
-                    @if ($certificacion->movimientoRegistral->folioReal->predio->clave_edificio)
-                        <strong class="capitalize">clave del edificio:</strong> {{ $certificacion->movimientoRegistral->folioReal->predio->clave_edificio }};
-                    @endif
-
-                    @if ($certificacion->movimientoRegistral->folioReal->predio->departamento_edificio)
-                        <strong class="capitalize">Departamento:</strong> {{ $certificacion->movimientoRegistral->folioReal->predio->departamento_edificio }};
-                    @endif
-
-                    @if ($certificacion->movimientoRegistral->folioReal->predio->lote)
-                        <strong class="capitalize">Lote:</strong> {{ $certificacion->movimientoRegistral->folioReal->predio->lote }};
-                    @endif
-
-                    @if ($certificacion->movimientoRegistral->folioReal->predio->manzana)
-                        <strong class="capitalize">Manzana:</strong> {{ $certificacion->movimientoRegistral->folioReal->predio->manzana }};
-                    @endif
-
-                    @if ($certificacion->movimientoRegistral->folioReal->predio->ejido)
-                        <strong class="capitalize">ejido:</strong> {{ $certificacion->movimientoRegistral->folioReal->predio->ejido }};
-                    @endif
-
-                    @if ($certificacion->movimientoRegistral->folioReal->predio->parcela)
-                        <strong class="capitalize">parcela:</strong> {{ $certificacion->movimientoRegistral->folioReal->predio->parcela }};
-                    @endif
-
-                    @if ($certificacion->movimientoRegistral->folioReal->predio->solar)
-                        <strong class="capitalize">solar:</strong> {{ $certificacion->movimientoRegistral->folioReal->predio->solar }};
-                    @endif
-
-                    @if ($certificacion->movimientoRegistral->folioReal->predio->poblado)
-                        <strong class="capitalize">poblado:</strong> {{ $certificacion->movimientoRegistral->folioReal->predio->poblado }};
-                    @endif
-
-                    @if ($certificacion->movimientoRegistral->folioReal->predio->numero_exterior)
-                        <strong class="capitalize">número exterior:</strong> {{ $certificacion->movimientoRegistral->folioReal->predio->numero_exterior }};
-                    @endif
-
-                    @if ($certificacion->movimientoRegistral->folioReal->predio->numero_exterior_2)
-                        <strong class="capitalize">número exterior 2:</strong> {{ $certificacion->movimientoRegistral->folioReal->predio->numero_exterior_2 }};
-                    @endif
-
-                    @if ($certificacion->movimientoRegistral->folioReal->predio->numero_adicional)
-                        <strong class="capitalize">número adicional:</strong> {{ $certificacion->movimientoRegistral->folioReal->predio->numero_adicional }};
-                    @endif
-
-                    @if ($certificacion->movimientoRegistral->folioReal->predio->numero_adicional_2)
-                        <strong class="capitalize">número adicional 2:</strong> {{ $certificacion->movimientoRegistral->folioReal->predio->numero_adicional_2 }};
-                    @endif
-
-                    @if ($certificacion->movimientoRegistral->folioReal->predio->lote_fraccionador)
-                        <strong class="capitalize">lote del fraccionador:</strong> {{ $certificacion->movimientoRegistral->folioReal->predio->lote_fraccionador }};
-                    @endif
-
-                    @if ($certificacion->movimientoRegistral->folioReal->predio->manzana_fraccionador)
-                        <strong class="capitalize">manzana del fraccionador:</strong> {{ $certificacion->movimientoRegistral->folioReal->predio->manzana_fraccionador }};
-                    @endif
-
-                    @if ($certificacion->movimientoRegistral->folioReal->predio->etapa_fraccionador)
-                        <strong class="capitalize">etapa del fraccionador:</strong> {{ $certificacion->movimientoRegistral->folioReal->predio->etapa_fraccionador }};
-                    @endif
-
-                    @if ($certificacion->movimientoRegistral->folioReal->predio->observaciones)
-                        <strong class="capitalize">Observaciones:</strong> {{ $certificacion->movimientoRegistral->folioReal->predio->observaciones }}.
-                    @endif
-
-                </p>
-
-            </div>
-
-            <p class="text-center"><strong>Descripción del inmueble</strong></p>
-
-            <div class="text-gray-500 text-sm leading-relaxed lg:w-1/2 mx-auto mb-5">
-
-                <p class=" text-justify">
-
-                    <strong class="capitalize">Folio real:</strong> {{ $certificacion->movimientoRegistral->folioReal->folio }};
-
-                    @if($certificacion->movimientoRegistral->folioReal->predio->cp_localidad)
-                        <strong class="capitalize">Cuenta predial:</strong> {{ $certificacion->movimientoRegistral->folioReal->predio->cp_localidad }}-{{ $certificacion->movimientoRegistral->folioReal->predio->cp_oficina }}-{{ $certificacion->movimientoRegistral->folioReal->predio->cp_tipo_predio }}-{{ $certificacion->movimientoRegistral->folioReal->predio->cp_registro }};
-                    @endif
-
-                    @if($certificacion->movimientoRegistral->folioReal->predio->cc_region_catastral)
-                        <strong class="capitalize">Clave catastral:</strong> {{ $certificacion->movimientoRegistral->folioReal->predio->cc_estado }}-{{ $certificacion->movimientoRegistral->folioReal->predio->cc_region_catastral }}-{{ $certificacion->movimientoRegistral->folioReal->predio->cc_municipio }}-{{ $certificacion->movimientoRegistral->folioReal->predio->cc_zona_catastral }}-{{ $certificacion->movimientoRegistral->folioReal->predio->cc_sector }}-{{ $certificacion->movimientoRegistral->folioReal->predio->cc_manzana }}-{{ $certificacion->movimientoRegistral->folioReal->predio->cc_predio }}-{{ $certificacion->movimientoRegistral->folioReal->predio->cc_edificio }}-{{ $certificacion->movimientoRegistral->folioReal->predio->cc_departamento }};
-                    @endif
-
-                    <strong class="capitalize">Superficie de terreno:</strong> {{ $certificacion->movimientoRegistral->folioReal->predio->superficie_terreno }} {{ $certificacion->movimientoRegistral->folioReal->predio->unidad_area }} <strong class="capitalize">Superficie de construcción:</strong> {{ $certificacion->movimientoRegistral->folioReal->predio->superficie_construccion }} {{ $certificacion->movimientoRegistral->folioReal->predio->unidad_area }} <strong class="capitalize">monto de la transacción:</strong> {{ $certificacion->movimientoRegistral->folioReal->predio->monto_transaccion }} {{ $certificacion->movimientoRegistral->folioReal->predio->divisa }};
-
-                    @if ($certificacion->movimientoRegistral->folioReal->predio->curt)
-                        <strong class="capitalize">curt:</strong> {{ $certificacion->movimientoRegistral->folioReal->predio->curt }};
-                    @endif
-
-                    @if ($certificacion->movimientoRegistral->folioReal->predio->superficie_judicial)
-                        <strong class="capitalize">superficie judicial:</strong> {{ $certificacion->movimientoRegistral->folioReal->predio->superficie_judicial }} {{ $certificacion->movimientoRegistral->folioReal->predio->unidad_area }};
-                    @endif
-
-                    @if ($certificacion->movimientoRegistral->folioReal->predio->superficie_notarial)
-                        <strong class="capitalize">superficie notarial:</strong> {{ $certificacion->movimientoRegistral->folioReal->predio->superficie_notarial }} {{ $certificacion->movimientoRegistral->folioReal->predio->unidad_area }};
-                    @endif
-
-                    @if ($certificacion->movimientoRegistral->folioReal->predio->area_comun_terreno)
-                        <strong class="capitalize">área de terreno común:</strong> {{ $certificacion->movimientoRegistral->folioReal->predio->area_comun_terreno }} {{ $certificacion->movimientoRegistral->folioReal->predio->unidad_area }};
-                    @endif
-
-                    @if ($certificacion->movimientoRegistral->folioReal->predio->area_comun_construccion)
-                        <strong class="capitalize">área de construcción común:</strong> {{ $certificacion->movimientoRegistral->folioReal->predio->area_comun_construccion }} {{ $certificacion->movimientoRegistral->folioReal->predio->unidad_area }};
-                    @endif
-
-                    @if ($certificacion->movimientoRegistral->folioReal->predio->valor_terreno_comun)
-                        <strong class="capitalize">valor de terreno común:</strong> {{ $certificacion->movimientoRegistral->folioReal->predio->valor_terreno_comun }} {{ $certificacion->movimientoRegistral->folioReal->predio->divisa }};
-                    @endif
-
-                    @if ($certificacion->movimientoRegistral->folioReal->predio->valor_construccion_comun)
-                        <strong class="capitalize">valor de construcción común:</strong> {{ $certificacion->movimientoRegistral->folioReal->predio->valor_construccion_comun }} {{ $certificacion->movimientoRegistral->folioReal->predio->divisa }};
-                    @endif
-
-                    @if ($certificacion->movimientoRegistral->folioReal->predio->valor_catastral)
-                        <strong class="capitalize">valor de construcción común:</strong> {{ $certificacion->movimientoRegistral->folioReal->predio->valor_catastral }} {{ $certificacion->movimientoRegistral->folioReal->predio->divisa }};
-                    @endif
-
-                    <strong class="capitalize">Descripción:</strong> {{ $certificacion->movimientoRegistral->folioReal->predio->descripcion }}.
-
-                </p>
-
-            </div>
-
-            <p class="text-center"><strong>Propietarios</strong></p>
-
-            <div class="text-gray-500 text-sm leading-relaxed lg:w-1/2 mb-5 mx-auto">
-
-                <table class="mx-auto">
-
-                    <thead>
-
-                        <tr>
-                            <th style="padding-right: 10px;">Nombre / Razón social</th>
-                            <th style="padding-right: 10px;">% de propiedad</th>
-                            <th style="padding-right: 10px;">% de nuda</th>
-                            <th style="padding-right: 10px;">% de usufructo</th>
-                        </tr>
-
-                    </thead>
-
-                    <tbody>
-
-                        @foreach ($certificacion->movimientoRegistral->folioReal->predio->propietarios() as $propietario)
-
-                            <tr>
-                                <td style="padding-right: 40px;">
-                                    {{ $propietario->persona->nombre }} {{ $propietario->persona->ap_paterno }} {{ $propietario->persona->ap_materno }} {{ $propietario->persona->razon_social }}
-                                </td>
-                                <td style="padding-right: 40px;">
-                                    {{ $propietario->porcentaje_propiedad ?? '0.00' }} %
-                                </td>
-                                <td style="padding-right: 40px;">
-                                    {{ $propietario->porcentaje_nuda ?? '0.00' }} %
-                                </td>
-                                <td style="padding-right: 40px;">
-                                    {{ $propietario->porcentaje_usufructo ?? '0.00' }} %
-                                </td>
-                            </tr>
-
-                        @endforeach
-
-                    </tbody>
-
-                </table>
-
-            </div>
-
-        </div>
-
-        <div class="bg-white rounded-lg p-4 shadow-lg w-full mb-5 md:col-span-3 col-span-1 sm:col-span-2 ">
-
-            <p class="text-center"><strong>Colindancias</strong></p>
-
-            @foreach ($medidas as $index => $medida)
-
-                <div class="grid grid-cols-1 lg:grid-cols-12 gap-3 items-start mb-2">
-
-                    <div class="flex-auto lg:col-span-2">
-
-                        <div>
-
-                            <label class="text-sm" >Viento</label>
-
-                        </div>
-
-                        <div>
-
-                            <select class="bg-white rounded text-xs w-full" wire:model="medidas.{{ $index }}.viento">
-
-                                <option value="" selected>Seleccione una opción</option>
-
-                                @foreach ($vientos as $viento)
-
-                                    <option value="{{ $viento }}" selected>{{ $viento }}</option>
-
-                                @endforeach
-
-                            </select>
-
-                        </div>
-
-                        <div>
-
-                            @error('medidas.' . $index . '.viento') <span class="error text-sm text-red-500">{{ $message }}</span> @enderror
-
-                        </div>
-
-                    </div>
-
-                    <div class="flex-auto lg:col-span-2">
-
-                        <div>
-
-                            <label class="text-sm" >Longitud (metros)</label>
-
-                        </div>
-
-                        <div>
-
-                            <input type="number" min="0" class="bg-white rounded text-xs w-full" wire:model.defer="medidas.{{ $index }}.longitud">
-
-                        </div>
-
-                        <div>
-
-                            @error('medidas.' . $index . '.longitud') <span class="error text-sm text-red-500">{{ $message }}</span> @enderror
-
-                        </div>
-
-                    </div>
-
-                    <div class="flex-auto lg:col-span-7">
-
-                        <div>
-
-                            <label class="text-sm" >Descripción</label>
-
-                        </div>
-
-                        <div>
-
-                            <textarea rows="1" class="bg-white rounded text-xs w-full" wire:model.defer="medidas.{{ $index }}.descripcion"></textarea>
-
-                        </div>
-
-                        <div>
-
-                            @error('medidas.' . $index . '.descripcion') <span class="error text-sm text-red-500">{{ $message }}</span> @enderror
-
-                        </div>
-
-                    </div>
-
-                    <div class="flex-auto lg:col-span-1 my-auto">
-
-                        <x-button-red
-                            wire:click="borrarColindancia({{ $index }})"
-                            wire:loading.attr="disabled"
-                        >
-
-                            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-5 h-5">
-                                <path stroke-linecap="round" stroke-linejoin="round" d="M14.74 9l-.346 9m-4.788 0L9.26 9m9.968-3.21c.342.052.682.107 1.022.166m-1.022-.165L18.16 19.673a2.25 2.25 0 01-2.244 2.077H8.084a2.25 2.25 0 01-2.244-2.077L4.772 5.79m14.456 0a48.108 48.108 0 00-3.478-.397m-12 .562c.34-.059.68-.114 1.022-.165m0 0a48.11 48.11 0 013.478-.397m7.5 0v-.916c0-1.18-.91-2.164-2.09-2.201a51.964 51.964 0 00-3.32 0c-1.18.037-2.09 1.022-2.09 2.201v.916m7.5 0a48.667 48.667 0 00-7.5 0" />
-                            </svg>
-
-                        </x-button-red>
-
-                    </div>
-
-                </div>
-
-            @endforeach
-
-            <div class="flex justify-end lg:col-span-3">
-
-                <x-button-green
-                    wire:click="agregarColindancia"
-                    wire:loading.attr="disabled"
-                >
-
-                    <img wire:loading wire:target="agregarColindancia" class="mx-auto h-4 mr-1" src="{{ asset('storage/img/loading3.svg') }}" alt="Loading">
-
-                    Agregar colindancia
-
-                </x-button-green>
+                </x-input-group>
 
             </div>
 
@@ -941,20 +262,183 @@
 
             </x-button-red>
 
-            <x-button-blue
-                wire:click="generarCertificadoColindancias"
-                wire:loading.attr="disabled"
-                wire:target="generarCertificadoColindancias">
+            @if($flagNegativo)
 
-                <img wire:loading wire:target="generarCertificadoColindancias" class="mx-auto h-4 mr-1" src="{{ asset('storage/img/loading3.svg') }}" alt="Loading">
+                <x-button-blue
+                    wire:click="generarCertificadoNegativo"
+                    wire:loading.attr="disabled"
+                    wire:target="generarCertificadoNegativo">
 
-                Generar certificado
+                    <img wire:loading wire:target="generarCertificadoNegativo" class="mx-auto h-4 mr-1" src="{{ asset('storage/img/loading3.svg') }}" alt="Loading">
 
-            </x-button-blue>
+                    Generar certificado negativo de propiedad
+
+                </x-button-blue>
+
+            @endif
 
         </div>
 
     @endif
+
+    @if($radio == 'negativo' && $negativo_radio == 'propiedad_registrada')
+
+        <div class="bg-white rounded-lg p-4 shadow-lg w-full  mx-auto mb-5">
+
+            @if(!$certificacion->movimientoRegistral->folioReal)
+
+                <div class="text-center  mb-3">
+
+                    <span class="rounded-lg bg-red-400 text-white px-3 py-1">No se calificó con antecedente de propiedad</span>
+
+                </div>
+
+            @endif
+
+            <div class="lg:w-1/2 mx-auto mb-5">
+
+            @include('livewire.certificaciones.comun.propietarios')
+
+            @if($certificacion->movimientoRegistral->folioReal)
+
+                <button
+                    wire:click="buscarProppietariosEnFolio"
+                    wire:loading.attr="disabled"
+                    wire:target="buscarProppietariosEnFolio"
+                    type="button"
+                    class="mt-3 bg-blue-400 hover:shadow-lg text-white mx-auto font-bold px-4 py-2 rounded text-xs hover:bg-blue-700 focus:outline-none flex items-center justify-center focus:outline-blue-400 focus:outline-offset-2">
+
+                    <img wire:loading wire:target="buscarProppietariosEnFolio" class="mx-auto h-4 mr-1" src="{{ asset('storage/img/loading3.svg') }}" alt="Loading">
+
+                    Buscar
+
+                </button>
+
+            @endif
+
+            </div>
+
+        </div>
+
+        @include('livewire.certificaciones.comun.propiedad')
+
+        <div class="bg-white rounded-lg p-4 shadow-lg w-full  mx-auto mb-5">
+
+            <div class="lg:w-1/2 mx-auto mb-5">
+
+                <x-input-group for="observaciones" label="Observaciones" :error="$errors->first('observaciones')" class="w-full">
+
+                    <textarea rows="5" class="bg-white rounded text-sm w-full" wire:model="observaciones"></textarea>
+
+                </x-input-group>
+
+            </div>
+
+        </div>
+
+        <div class="bg-white rounded-lg p-3 flex justify-end shadow-lg gap-3">
+
+            <x-button-red
+                wire:click="abrirModalRechazar"
+                wire:loading.attr="disabled"
+                wire:target="abrirModalRechazar">
+
+                <img wire:loading wire:target="abrirModalRechazar" class="mx-auto h-4 mr-1" src="{{ asset('storage/img/loading3.svg') }}" alt="Loading">
+
+                Rechazar
+
+            </x-button-red>
+
+            @if($flagNegativo)
+
+                <x-button-blue
+                    wire:click="generarCertificadoNegativoPropiedad"
+                    wire:loading.attr="disabled"
+                    wire:target="generarCertificadoNegativoPropiedad">
+
+                    <img wire:loading wire:target="generarCertificadoNegativoPropiedad" class="mx-auto h-4 mr-1" src="{{ asset('storage/img/loading3.svg') }}" alt="Loading">
+
+                    Generar certificado negativo de propiedad
+
+                </x-button-blue>
+
+            @endif
+
+        </div>
+
+    @endif
+
+    @if($radio == 'negativo' && $negativo_radio == 'propiedad_sin_registro')
+
+        <div class="bg-white rounded-lg p-4 shadow-lg w-full  mx-auto mb-5">
+
+            <div class="lg:w-1/2 mx-auto mb-5">
+
+            @include('livewire.certificaciones.comun.propietario')
+
+            <button
+                wire:click="buscarPropietarioUnico"
+                wire:loading.attr="disabled"
+                wire:target="buscarPropietarioUnico"
+                type="button"
+                class="mt-3 bg-blue-400 hover:shadow-lg text-white mx-auto font-bold px-4 py-2 rounded text-xs hover:bg-blue-700 focus:outline-none flex items-center justify-center focus:outline-blue-400 focus:outline-offset-2">
+
+                <img wire:loading wire:target="buscarPropietarioUnico" class="mx-auto h-4 mr-1" src="{{ asset('storage/img/loading3.svg') }}" alt="Loading">
+
+                Buscar
+
+            </button>
+
+            </div>
+
+        </div>
+
+        <div class="bg-white rounded-lg p-4 shadow-lg w-full  mx-auto mb-5">
+
+            <div class="lg:w-1/2 mx-auto mb-5">
+
+                <x-input-group for="observaciones" label="Observaciones" :error="$errors->first('observaciones')" class="w-full">
+
+                    <textarea rows="5" class="bg-white rounded text-sm w-full" wire:model="observaciones"></textarea>
+
+                </x-input-group>
+
+            </div>
+
+        </div>
+
+        <div class="bg-white rounded-lg p-3 flex justify-end shadow-lg gap-3">
+
+            <x-button-red
+                wire:click="abrirModalRechazar"
+                wire:loading.attr="disabled"
+                wire:target="abrirModalRechazar">
+
+                <img wire:loading wire:target="abrirModalRechazar" class="mx-auto h-4 mr-1" src="{{ asset('storage/img/loading3.svg') }}" alt="Loading">
+
+                Rechazar
+
+            </x-button-red>
+
+            @if($flagNegativo)
+
+                <x-button-blue
+                    wire:click="generarCertificadoNegativo"
+                    wire:loading.attr="disabled"
+                    wire:target="generarCertificadoNegativo">
+
+                    <img wire:loading wire:target="generarCertificadoNegativo" class="mx-auto h-4 mr-1" src="{{ asset('storage/img/loading3.svg') }}" alt="Loading">
+
+                    Generar certificado negativo de propiedad
+
+                </x-button-blue>
+
+            @endif
+
+        </div>
+
+    @endif
+
 
     <x-dialog-modal wire:model="modalRechazar" maxWidth="sm">
 

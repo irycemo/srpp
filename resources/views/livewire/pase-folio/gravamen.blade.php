@@ -78,7 +78,7 @@
 
                                                 <div>
 
-                                                    @if($movimientoRegistral->folioReal->antecedente && $gravamen->movimientoRegistral->estado != 'concluido')
+                                                    @if(!($movimientoRegistral->folioReal->antecedente && $gravamen->movimientoRegistral->estado == 'concluido'))
 
                                                         <x-button-blue
                                                             @click="$wire.dispatch('mostrar', {{ $gravamen->id }})"
