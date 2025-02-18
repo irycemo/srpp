@@ -18,7 +18,7 @@
 
                     <div>
 
-                        <select class="bg-white rounded text-xs w-full" wire:model.defer="medidas.{{ $index }}.viento">
+                        <select class="bg-white rounded text-xs w-full" wire:model="medidas.{{ $index }}.viento">
 
                             <option value="" selected>Seleccione una opción</option>
 
@@ -50,7 +50,7 @@
 
                     <div>
 
-                        <input type="number" min="0" class="bg-white rounded text-xs w-full" wire:model.defer="medidas.{{ $index }}.longitud">
+                        <input type="number" min="0" class="bg-white rounded text-xs w-full" wire:model="medidas.{{ $index }}.longitud">
 
                     </div>
 
@@ -72,7 +72,7 @@
 
                     <div>
 
-                        <textarea rows="1" class="bg-white rounded text-xs w-full" wire:model.defer="medidas.{{ $index }}.descripcion"></textarea>
+                        <textarea rows="1" class="bg-white rounded text-xs w-full" wire:model="medidas.{{ $index }}.descripcion"></textarea>
 
                     </div>
 

@@ -11,7 +11,7 @@ trait ColindanciasTrait{
 
     public $medidas = [];
 
-    public $rulesColindancias = [
+    private $rulesColindancias = [
         'medidas.*' => 'nullable',
         'medidas.*.viento' => 'nullable|string',
         'medidas.*.longitud' => [

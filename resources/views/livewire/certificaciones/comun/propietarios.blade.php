@@ -1,21 +1,37 @@
-<div class="flex gap-3 justify-center items-center">
+<div>
 
-    <x-input-group for="nombre" label="Nombre" :error="$errors->first('nombre')" class="w-full">
+    @for ($i = 0; $i < $certificacion->numero_paginas; $i++)
 
-        <x-input-text id="nombre" wire:model.live.debounce="nombre" />
+        <div class="flex gap-3 justify-center items-center">
 
-    </x-input-group>
+            <x-input-group for="propietarios.{{ $i }}.nombre" label="Nombre" :error="$errors->first('propietarios.'. $i . '.nombre')" class="w-full">
 
-    <x-input-group for="ap_paterno" label="Apellido paterno" :error="$errors->first('ap_paterno')" class="w-full">
+                <x-input-text id="propietarios.{{ $i }}.nombre" wire:model.lazy="propietarios.{{ $i }}.nombre" />
 
-        <x-input-text id="ap_paterno" wire:model.live.debounce="ap_paterno" />
+            </x-input-group>
 
-    </x-input-group>
+            <x-input-group for="propietarios.{{ $i }}.ap_paterno" label="Apellido paterno" :error="$errors->first('propietarios.'. $i .'.ap_paterno')" class="w-full">
 
-    <x-input-group for="ap_materno" label="Apellido materno" :error="$errors->first('ap_materno')" class="w-full">
+                <x-input-text id="propietarios.{{ $i }}.ap_paterno" wire:model.lazy="propietarios.{{ $i }}.ap_paterno" />
 
-        <x-input-text id="ap_materno" wire:model.live.debounce="ap_materno" />
+            </x-input-group>
 
-    </x-input-group>
+            <x-input-group for="propietarios.{{ $i }}.ap_materno" label="Apellido materno" :error="$errors->first('propietarios.'. $i .'.ap_materno')" class="w-full">
+
+                <x-input-text id="propietarios.{{ $i }}.ap_materno" wire:model.lazy="propietarios.{{ $i }}.ap_materno" />
+
+            </x-input-group>
+
+            <div>
+
+                @error('propietarios'. $i .'ap_materno') <span class="error text-sm text-red-500">{{ $message }}</span> @enderror
+
+            </div>
+
+        </div>
+
+    @endfor
+
+
 
 </div>
