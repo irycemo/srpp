@@ -14,13 +14,6 @@ class CertificadoPropiedad extends Component
     use CertificadoPropiedadTrait;
     use ColindanciasTrait;
 
-    public $certificacion;
-
-    public $predios = [];
-    public $prediosOld = [];
-
-    public $flagGenerar = false;
-
     public function generarCertificado(){
 
         if($this->certificacion->movimientoRegistral->tipo_servicio == 'ordinario'){

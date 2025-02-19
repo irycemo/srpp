@@ -14,12 +14,6 @@ class PropiedadRegistrada extends Component
     use CertificadoPropiedadTrait;
     use ColindanciasTrait;
 
-    public $certificacion;
-
-    public $flagGenerar = false;
-
-    public $propietarios = [];
-
     protected function rules(){
         return [
             'propietarios' => ['required', 'array', 'min:' . $this->certificacion->numero_paginas],

@@ -18,13 +18,6 @@ class CertificadoUnico extends Component
 
     use CertificadoPropiedadTrait;
 
-    public $certificacion;
-
-    public $predios = [];
-    public $prediosOld = [];
-
-    public $flagGenerar = false;
-
     protected function rules(){
         return [
             'nombre' => ['required', 'string'],

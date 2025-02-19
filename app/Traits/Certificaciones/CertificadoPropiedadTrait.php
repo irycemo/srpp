@@ -7,6 +7,8 @@ use App\Models\CertificadoPersona;
 
 trait CertificadoPropiedadTrait{
 
+    public $certificacion;
+
     public $nombre;
     public $ap_paterno;
     public $ap_materno;
@@ -14,8 +16,12 @@ trait CertificadoPropiedadTrait{
     public $observaciones;
 
     public $modalRechazar = false;
+    public $flagGenerar = false;
 
     public $temporalidad;
+
+    public $predios = [];
+    public $prediosOld = [];
 
     public function procesarPersona($nombre, $ap_paterno, $ap_materno){
 

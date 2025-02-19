@@ -17,10 +17,6 @@ class PropiedadNoRegistrada extends Component
 
     use CertificadoPropiedadTrait;
 
-    public $flagGenerar = false;
-
-    public $certificacion;
-
     protected function rules(){
         return [
             'nombre' => ['required', 'string'],

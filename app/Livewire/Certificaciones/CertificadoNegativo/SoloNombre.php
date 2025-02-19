@@ -19,14 +19,6 @@ class SoloNombre extends Component
     use CertificadoPropiedadTrait;
     use ColindanciasTrait;
 
-    public $certificacion;
-
-    public $predios = [];
-    public $prediosOld = [];
-    public $temporalidad;
-
-    public $flagGenerar = false;
-
     protected function rules(){
         return [
             'nombre' => ['required', 'string'],
