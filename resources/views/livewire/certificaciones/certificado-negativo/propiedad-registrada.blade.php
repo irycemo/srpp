@@ -65,17 +65,6 @@
 
         <div class=" bg-white rounded-lg p-4 shadow-lg w-full  mx-auto mb-5 flex justify-end  gap-3">
 
-            <x-button-red
-                wire:click="abrirModalRechazar"
-                wire:loading.attr="disabled"
-                wire:target="abrirModalRechazar">
-
-                <img wire:loading wire:target="abrirModalRechazar" class="mx-auto h-4 mr-1" src="{{ asset('storage/img/loading3.svg') }}" alt="Loading">
-
-                Rechazar
-
-            </x-button-red>
-
             @if($flagGenerar)
 
                 <x-button-blue
