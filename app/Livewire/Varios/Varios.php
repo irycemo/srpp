@@ -179,7 +179,6 @@ class Varios extends Component
             unset($this->actos['CONSOLIDACIÓN DEL USUFRUCTO']);
             unset($this->actos['ACLARACIÓN ADMINISTRATIVA']);
             unset($this->actos['DONACIÓN / VENTA DE USUFRUCTO']);
-            unset($this->actos['ESCRITURA ACLARATORIA']);
 
             $this->actos = array_flip($this->actos);
 

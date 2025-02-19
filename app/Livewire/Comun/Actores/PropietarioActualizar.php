@@ -8,11 +8,14 @@ use Livewire\Component;
 use App\Traits\ActoresTrait;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
+use App\Exceptions\ActoresException;
 
-class AcreedorActualizar extends Component
+class PropietarioActualizar extends Component
 {
 
     use ActoresTrait;
+
+    public $predio;
 
     protected function rules(){
 
@@ -27,8 +30,74 @@ class AcreedorActualizar extends Component
                 'unique:personas,rfc,' . $this->actor->persona_id,
                 'regex:/^([A-ZÑ&]{3,4}) ?(?:- ?)?(\d{2}(?:0[1-9]|1[0-2])(?:0[1-9]|[12]\d|3[01])) ?(?:- ?)?([A-Z\d]{2})([A\d])$/'
             ],
-            'sub_tipo' => 'nullable'
+            'sub_tipo' => 'nullable',
+            'porcentaje_propiedad' => 'nullable|numeric|min:0|max:100',
+            'porcentaje_nuda' => 'nullable|numeric|min:0|max:100',
+            'porcentaje_usufructo' => 'nullable|numeric|min:0|max:100',
         ];
+
+    }
+
+    public function revisarProcentajes(){
+
+        $pp = 0;
+
+        $pn = 0;
+
+        $pu = 0;
+
+        foreach($this->predio->propietarios() as $propietario){
+
+            if($this->actor->id == $propietario->id)
+                continue;
+
+            $pn = $pn + $propietario->porcentaje_nuda;
+
+            $pu = $pu + $propietario->porcentaje_usufructo;
+
+            $pp = $pp + $propietario->porcentaje_propiedad;
+
+        }
+
+        $pp = $pp + (float)$this->porcentaje_propiedad;
+
+        $pn = $pn + (float)$this->porcentaje_nuda + $pp;
+
+        $pu = $pu + (float)$this->porcentaje_usufructo + $pp;
+
+        if((int)$pn > 100 || (int)$pu > 100) throw new ActoresException("La suma de los porcentajes no puede exceder el 100%.");
+
+    }
+
+    public function updated($property, $value){
+
+        if(in_array($property, ['porcentaje_nuda', 'porcentaje_usufructo', 'porcentaje_propiedad']) && $value == ''){
+
+            $this->$property = 0;
+
+        }
+
+        if(in_array($property, ['porcentaje_nuda', 'porcentaje_usufructo'])){
+
+            $this->reset('porcentaje_propiedad');
+
+        }elseif($property == 'porcentaje_propiedad'){
+
+            $this->reset(['porcentaje_nuda', 'porcentaje_usufructo']);
+
+        }
+
+    }
+
+    public function validaciones(){
+
+        if($this->porcentaje_propiedad === 0 && $this->porcentaje_nuda === 0 && $this->porcentaje_usufructo === 0){
+
+            throw new ActoresException("La suma de los porcentajes no puede ser 0.");
+
+        }
+
+        $this->revisarProcentajes();
 
     }
 
@@ -37,6 +106,8 @@ class AcreedorActualizar extends Component
         $this->validate();
 
         try {
+
+            $this->validaciones();
 
             DB::transaction(function (){
 
@@ -65,6 +136,9 @@ class AcreedorActualizar extends Component
                 ]);
 
                 $this->actor->update([
+                    'porcentaje_propiedad' => $this->porcentaje_propiedad,
+                    'porcentaje_nuda' => $this->porcentaje_nuda,
+                    'porcentaje_usufructo' => $this->porcentaje_usufructo,
                     'actualizado_por' => auth()->id()
                 ]);
 
@@ -76,6 +150,10 @@ class AcreedorActualizar extends Component
 
             $this->modal = false;
 
+
+        } catch (ActoresException $ex) {
+
+            $this->dispatch('mostrarMensaje', ['error', $ex->getMessage()]);
 
         } catch (\Throwable $th) {
 
@@ -113,6 +191,9 @@ class AcreedorActualizar extends Component
             $this->municipio = $this->actor->persona->municipio;
 
             $this->sub_tipo = $this->actor->tipo_deudor;
+            $this->porcentaje_propiedad = $this->actor->porcentaje_propiedad;
+            $this->porcentaje_nuda = $this->actor->porcentaje_nuda;
+            $this->porcentaje_usufructo = $this->actor->porcentaje_usufructo;
 
         }else{
 
@@ -126,6 +207,6 @@ class AcreedorActualizar extends Component
 
     public function render()
     {
-        return view('livewire.comun.actores.acreedor-actualizar');
+        return view('livewire.comun.actores.propietario-actualizar');
     }
 }

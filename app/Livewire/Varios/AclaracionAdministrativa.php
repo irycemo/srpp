@@ -4,64 +4,32 @@ namespace App\Livewire\Varios;
 
 use App\Models\Actor;
 use App\Models\Predio;
-use App\Models\Persona;
 use Livewire\Component;
 use App\Models\Colindancia;
-use Livewire\WithFileUploads;
 use App\Constantes\Constantes;
-use Illuminate\Validation\Rule;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Hash;
 use App\Traits\Inscripciones\Varios\VariosTrait;
 use App\Http\Controllers\Varios\VariosController;
+use App\Traits\Inscripciones\ColindanciasTrait;
 use Spatie\LivewireFilepond\WithFilePond;
 
 class AclaracionAdministrativa extends Component
 {
 
-    use WithFileUploads;
     use VariosTrait;
     use WithFilePond;
-
-    public $modalPropietario = false;
-    public $crear = false;
-    public $editar = false;
+    use ColindanciasTrait;
 
     public $areas;
     public $divisas;
-    public $vientos;
     public $tipos_vialidades;
     public $tipos_asentamientos;
 
-    public $medidas = [];
-
     public $predio;
 
-    public $actor;
-
-    public $tipo_propietario;
-    public $porcentaje_propiedad = 0.00;
-    public $porcentaje_nuda = 0.00;
-    public $porcentaje_usufructo = 0.00;
-    public $tipo_persona;
-    public $nombre;
-    public $ap_paterno;
-    public $ap_materno;
-    public $curp;
-    public $rfc;
-    public $razon_social;
-    public $fecha_nacimiento;
-    public $nacionalidad;
-    public $estado_civil;
-    public $calle;
-    public $numero_exterior_propietario;
-    public $numero_interior_propietario;
-    public $colonia;
-    public $cp;
-    public $entidad;
-    public $ciudad;
-    public $municipio_propietario;
+    protected $listeners = ['refresh'];
 
     protected function rules(){
         return [
@@ -134,32 +102,10 @@ class AclaracionAdministrativa extends Component
 
     }
 
-    public function resetear(){
+    public function refresh(){
 
-        $this->reset([
-            'tipo_propietario',
-            'porcentaje_propiedad',
-            'porcentaje_nuda',
-            'porcentaje_usufructo',
-            'tipo_persona',
-            'nombre',
-            'ap_paterno',
-            'ap_materno',
-            'curp',
-            'rfc',
-            'razon_social',
-            'fecha_nacimiento',
-            'nacionalidad',
-            'estado_civil',
-            'calle',
-            'numero_exterior_propietario',
-            'numero_interior_propietario',
-            'colonia',
-            'cp',
-            'entidad',
-            'municipio_propietario',
-            'modalPropietario'
-        ]);
+        $this->vario->predio->load('actores.persona');
+
     }
 
     public function cargarPredioInicial(){
@@ -240,11 +186,21 @@ class AclaracionAdministrativa extends Component
 
             }
 
+            $this->cargarColindancias($this->vario->predio);
+
+        }else{
+
+            $this->cargarColindancias($this->vario->predio);
+
+            $this->vario->predio->load('actores.persona');
+
         }
 
     }
 
     public function guardar(){
+
+        $this->validate();
 
         try {
 
@@ -256,29 +212,7 @@ class AclaracionAdministrativa extends Component
 
                 $this->vario->predio->save();
 
-                foreach ($this->medidas as $key =>$medida) {
-
-                    if($medida['id'] == null){
-
-                        $aux = $this->vario->predio->colindancias()->create([
-                            'viento' => $medida['viento'],
-                            'longitud' => $medida['longitud'],
-                            'descripcion' => $medida['descripcion'],
-                        ]);
-
-                        $this->medidas[$key]['id'] = $aux->id;
-
-                    }else{
-
-                        Colindancia::find($medida['id'])->update([
-                            'viento' => $medida['viento'],
-                            'longitud' => $medida['longitud'],
-                            'descripcion' => $medida['descripcion'],
-                        ]);
-
-                    }
-
-                }
+                $this->guardarColindancias($this->vario->predio);
 
             });
 
@@ -291,428 +225,6 @@ class AclaracionAdministrativa extends Component
 
     }
 
-    public function agregarColindancia(){
-
-        $this->medidas[] = ['viento' => null, 'longitud' => null, 'descripcion' => null, 'id' => null];
-
-    }
-
-    public function borrarColindancia($index){
-
-        $this->authorize('update',  $this->vario->movimientoRegistral);
-
-        try {
-
-            $this->vario->predio->colindancias()->where('id', $this->medidas[$index]['id'])->delete();
-
-        } catch (\Throwable $th) {
-            Log::error("Error al borrar colindancia en sentencia por el usuario: (id: " . auth()->user()->id . ") " . auth()->user()->name . ". " . $th);
-            $this->dispatch('mostrarMensaje', ['error', "Hubo un error."]);
-        }
-
-        unset($this->medidas[$index]);
-
-        $this->medidas = array_values($this->medidas);
-
-    }
-
-    public function agregarPropietario(){
-
-        $this->modalPropietario = true;
-        $this->crear = true;
-
-    }
-
-    public function guardarPropietario(){
-
-        $this->authorize('update', $this->vario->movimientoRegistral);
-
-        $this->validate([
-            'porcentaje_propiedad' => 'nullable|numeric|min:0|max:100',
-            'porcentaje_nuda' => 'nullable|numeric|min:0|max:100',
-            'porcentaje_usufructo' => 'nullable|numeric|min:0|max:100',
-            'tipo_persona' => 'required',
-            'nombre' => [
-                Rule::requiredIf($this->tipo_persona === 'FISICA')
-            ],
-            'ap_paterno' => Rule::requiredIf($this->tipo_persona === 'FISICA'),
-            'ap_materno' => Rule::requiredIf($this->tipo_persona === 'FISICA'),
-            'curp' => [
-                'nullable',
-                'regex:/^[A-Z]{1}[AEIOUX]{1}[A-Z]{2}[0-9]{2}(0[1-9]|1[0-2])(0[1-9]|1[0-9]|2[0-9]|3[0-1])[HM]{1}(AS|BC|BS|CC|CS|CH|CL|CM|DF|DG|GT|GR|HG|JC|MC|MN|MS|NT|NL|OC|PL|QT|QR|SP|SL|SR|TC|TS|TL|VZ|YN|ZS|NE)[B-DF-HJ-NP-TV-Z]{3}[0-9A-Z]{1}[0-9]{1}$/i'
-            ],
-            'rfc' => [
-                'nullable',
-                'regex:/^([A-ZÑ&]{3,4}) ?(?:- ?)?(\d{2}(?:0[1-9]|1[0-2])(?:0[1-9]|[12]\d|3[01])) ?(?:- ?)?([A-Z\d]{2})([A\d])$/'
-            ],
-            'razon_social' => [Rule::requiredIf($this->tipo_persona === 'MORAL')],
-            'fecha_nacimiento' => 'nullable',
-            'nacionalidad' => 'nullable',
-            'estado_civil' => 'nullable',
-            'calle' => 'nullable',
-            'numero_exterior_propietario' => 'nullable',
-            'numero_interior_propietario' => 'nullable',
-            'colonia' => 'nullable',
-            'cp' => 'nullable|numeric',
-            'ciudad' => 'nullable',
-            'entidad' => 'nullable',
-            'municipio_propietario' => 'nullable',
-        ]);
-
-        if($this->porcentaje_propiedad === 0 && $this->porcentaje_nuda === 0 && $this->porcentaje_usufructo === 0){
-
-            $this->dispatch('mostrarMensaje', ['error', "La suma de los porcentajes no puede ser 0."]);
-
-            return;
-
-        }
-
-        if($this->revisarProcentajes()){
-
-            $this->dispatch('mostrarMensaje', ['error', "La suma de los porcentajes no puede exceder el 100%."]);
-
-            return;
-
-        }
-
-        if($this->rfc){
-
-            $persona = Persona::where('rfc', $this->rfc)->first();
-
-        }elseif($this->curp){
-
-            $persona = Persona::where('curp', $this->curp)->first();
-
-        }else{
-
-            if($this->tipo_persona == 'FISICA'){
-
-                $persona = Persona::query()
-                            ->where('nombre', $this->nombre)
-                            ->where('ap_paterno', $this->ap_paterno)
-                            ->where('ap_materno', $this->ap_materno)
-                            ->first();
-
-            }else{
-
-                $persona = Persona::where('razon_social', $this->razon_social)->first();
-
-            }
-
-        }
-
-        if($persona){
-
-            foreach ($this->vario->predio->propietarios() as $propietario) {
-
-                if($persona->id == $propietario->persona_id){
-
-                    $this->dispatch('mostrarMensaje', ['error', "La persona ya es un propietario."]);
-
-                    return;
-
-                }
-
-            }
-
-        }
-
-        try {
-
-            DB::transaction(function () use ($persona){
-
-                if($persona != null){
-
-                    $persona->update([
-                        'estado_civil' => $this->estado_civil,
-                        'calle' => $this->calle,
-                        'numero_exterior' => $this->numero_exterior_propietario,
-                        'numero_interior' => $this->numero_interior_propietario,
-                        'colonia' => $this->colonia,
-                        'cp' => $this->cp,
-                        'entidad' => $this->entidad,
-                        'municipio' => $this->municipio_propietario,
-                        'actualizado_por' => auth()->id()
-                    ]);
-
-                }else{
-
-                    $persona = Persona::create([
-                        'tipo' => $this->tipo_persona,
-                        'nombre' => $this->nombre,
-                        'ap_paterno' => $this->ap_paterno,
-                        'ap_materno' => $this->ap_materno,
-                        'curp' => $this->curp,
-                        'rfc' => $this->rfc,
-                        'razon_social' => $this->razon_social,
-                        'fecha_nacimiento' => $this->fecha_nacimiento,
-                        'nacionalidad' => $this->nacionalidad,
-                        'estado_civil' => $this->estado_civil,
-                        'calle' => $this->calle,
-                        'numero_exterior' => $this->numero_exterior_propietario,
-                        'numero_interior' => $this->numero_interior_propietario,
-                        'colonia' => $this->colonia,
-                        'cp' => $this->cp,
-                        'entidad' => $this->entidad,
-                        'municipio' => $this->municipio_propietario,
-                        'creado_por' => auth()->id()
-                    ]);
-
-                }
-
-                $this->vario->predio->actores()->create([
-                    'persona_id' => $persona->id,
-                    'tipo_actor' => 'propietario',
-                    'porcentaje_propiedad' => $this->porcentaje_propiedad,
-                    'porcentaje_nuda' => $this->porcentaje_nuda,
-                    'porcentaje_usufructo' => $this->porcentaje_usufructo,
-                    'creado_por' => auth()->id()
-                ]);
-
-                $this->dispatch('mostrarMensaje', ['success', "El propietario se guardó con éxito."]);
-
-                $this->resetear();
-
-                $this->vario->predio->refresh();
-
-            });
-
-        } catch (\Throwable $th) {
-
-            Log::error("Error al guardar propietario en aclaración administrativa por el usuario: (id: " . auth()->user()->id . ") " . auth()->user()->name . ". " . $th);
-            $this->dispatch('mostrarMensaje', ['error', "Ha ocurrido un error."]);
-
-        }
-
-    }
-
-    public function revisarProcentajes($id = null){
-
-        $pp = 0;
-
-        $pn = 0;
-
-        $pu = 0;
-
-        foreach($this->vario->predio->propietarios() as $propietario){
-
-            if($id == $propietario->id)
-                continue;
-
-            $pn = $pn + $propietario->porcentaje_nuda;
-
-            $pu = $pu + $propietario->porcentaje_usufructo;
-
-            $pp = $pp + $propietario->porcentaje_propiedad;
-
-        }
-
-        $pp = $pp + (float)$this->porcentaje_propiedad;
-
-        $pn = $pn + (float)$this->porcentaje_nuda + $pp;
-
-        $pu = $pu + (float)$this->porcentaje_usufructo + $pp;
-
-        if($pn > 100 || $pu > 100)
-            return true;
-        else
-            return false;
-
-    }
-
-    public function revisarProcentajesFinal(){
-
-        $pn = 0;
-
-        $pu = 0;
-
-        $pp = 0;
-
-        foreach($this->vario->predio->propietarios() as $propietario){
-
-            $pn = $pn + $propietario->porcentaje_nuda;
-
-            $pu = $pu + $propietario->porcentaje_usufructo;
-
-            $pp = $pp + $propietario->porcentaje_propiedad;
-
-        }
-
-        if($pp == 0){
-
-            if($pn <= 99.99){
-
-                $this->dispatch('mostrarMensaje', ['error', "El porcentaje de nuda propiedad no es el 100%."]);
-
-                return true;
-
-            }
-
-            if($pu <= 99.99){
-
-                $this->dispatch('mostrarMensaje', ['error', "El porcentaje de usufructo no es el 100%."]);
-
-                return true;
-
-            }
-
-        }else{
-
-
-            if(($pn + $pp) <= 99.99){
-
-                $this->dispatch('mostrarMensaje', ['error', "El porcentaje de nuda propiedad no es el 100%."]);
-
-                return true;
-
-            }
-
-            if(($pu + $pp) <= 99.99){
-
-                $this->dispatch('mostrarMensaje', ['error', "El porcentaje de usufructo no es el 100%."]);
-
-                return true;
-
-            }
-
-        }
-
-    }
-
-    public function editarActor(Actor $actor){
-
-        $this->resetear();
-
-        $this->actor = $actor;
-
-        $this->tipo_propietario = $actor->tipo_actor;
-        $this->porcentaje_propiedad = $actor->porcentaje_propiedad;
-        $this->porcentaje_nuda = $actor->porcentaje_nuda;
-        $this->porcentaje_usufructo = $actor->porcentaje_usufructo;
-        $this->tipo_persona = $actor->persona->tipo;
-        $this->nombre = $actor->persona->nombre;
-        $this->ap_paterno = $actor->persona->ap_paterno;
-        $this->ap_materno = $actor->persona->ap_materno;
-        $this->curp = $actor->persona->curp;
-        $this->rfc = $actor->persona->rfc;
-        $this->razon_social = $actor->persona->razon_social;
-        $this->fecha_nacimiento = $actor->persona->fecha_nacimiento;
-        $this->nacionalidad = $actor->persona->nacionalidad;
-        $this->estado_civil = $actor->persona->estado_civil;
-        $this->calle = $actor->persona->calle;
-        $this->numero_exterior_propietario = $actor->persona->numero_exterior;
-        $this->numero_interior_propietario = $actor->persona->numero_interior;
-        $this->colonia = $actor->persona->colonia;
-        $this->cp = $actor->persona->cp;
-        $this->entidad = $actor->persona->entidad;
-        $this->municipio_propietario = $actor->persona->municipio;
-
-        $this->modalPropietario = true;
-
-        $this->crear = false;
-
-        $this->editar = true;
-
-    }
-
-    public function actualizarActor(){
-
-        $this->validate([
-            'porcentaje_propiedad' => 'nullable|numeric|min:0|max:100',
-            'porcentaje_nuda' => 'nullable|numeric|min:0|max:100',
-            'porcentaje_usufructo' => 'nullable|numeric|min:0|max:100',
-            'tipo_persona' => 'required',
-            'nombre' => [
-                Rule::requiredIf($this->tipo_persona === 'FISICA')
-            ],
-            'ap_paterno' => Rule::requiredIf($this->tipo_persona === 'FISICA'),
-            'ap_materno' => Rule::requiredIf($this->tipo_persona === 'FISICA'),
-            'curp' => [
-                'nullable',
-                'regex:/^[A-Z]{1}[AEIOUX]{1}[A-Z]{2}[0-9]{2}(0[1-9]|1[0-2])(0[1-9]|1[0-9]|2[0-9]|3[0-1])[HM]{1}(AS|BC|BS|CC|CS|CH|CL|CM|DF|DG|GT|GR|HG|JC|MC|MN|MS|NT|NL|OC|PL|QT|QR|SP|SL|SR|TC|TS|TL|VZ|YN|ZS|NE)[B-DF-HJ-NP-TV-Z]{3}[0-9A-Z]{1}[0-9]{1}$/i'
-            ],
-            'rfc' => [
-                'nullable',
-                'regex:/^([A-ZÑ&]{3,4}) ?(?:- ?)?(\d{2}(?:0[1-9]|1[0-2])(?:0[1-9]|[12]\d|3[01])) ?(?:- ?)?([A-Z\d]{2})([A\d])$/'
-            ],
-            'razon_social' => [Rule::requiredIf($this->tipo_persona === 'MORAL')],
-            'fecha_nacimiento' => 'nullable',
-            'nacionalidad' => 'nullable',
-            'estado_civil' => 'nullable',
-            'calle' => 'nullable',
-            'numero_exterior_propietario' => 'nullable',
-            'numero_interior_propietario' => 'nullable',
-            'colonia' => 'nullable',
-            'cp' => 'nullable|numeric',
-            'ciudad' => 'nullable',
-            'entidad' => 'nullable',
-            'municipio_propietario' => 'nullable',
-        ]);
-
-        if($this->porcentaje_propiedad == 0 && $this->porcentaje_nuda == 0 && $this->porcentaje_usufructo == 0){
-
-            $this->dispatch('mostrarMensaje', ['error', "La suma de los porcentajes no puede ser 0."]);
-
-            return;
-
-        }
-
-        if($this->revisarProcentajes($this->actor->id)){
-
-            $this->dispatch('mostrarMensaje', ['error', "La suma de los porcentajes no puede exceder el 100%."]);
-
-            return;
-
-        }
-
-        try {
-
-            DB::transaction(function () {
-
-                $this->actor->persona->update([
-                    'tipo' => $this->tipo_persona,
-                    'nombre' => $this->nombre,
-                    'ap_paterno' => $this->ap_paterno,
-                    'ap_materno' => $this->ap_materno,
-                    'curp' => $this->curp,
-                    'rfc' => $this->rfc,
-                    'razon_social' => $this->razon_social,
-                    'fecha_nacimiento' => $this->fecha_nacimiento,
-                    'nacionalidad' => $this->nacionalidad,
-                    'estado_civil' => $this->estado_civil,
-                    'calle' => $this->calle,
-                    'numero_exterior' => $this->numero_exterior_propietario,
-                    'numero_interior' => $this->numero_interior_propietario,
-                    'colonia' => $this->colonia,
-                    'cp' => $this->cp,
-                    'entidad' => $this->entidad,
-                    'municipio' => $this->municipio_propietario,
-                    'creado_por' => auth()->id()
-                ]);
-
-                $this->actor->update([
-                    'tipo_propietario' => $this->tipo_propietario,
-                    'porcentaje_propiedad' => $this->porcentaje_propiedad,
-                    'porcentaje_nuda' => $this->porcentaje_nuda,
-                    'porcentaje_usufructo' => $this->porcentaje_usufructo,
-                    'actualizado_por' => auth()->id()
-                ]);
-
-                $this->dispatch('mostrarMensaje', ['success', "La información se actualizó con éxito."]);
-
-                $this->resetear();
-
-            });
-
-        } catch (\Throwable $th) {
-
-            Log::error("Error al actualizar actor en pase a folio por el usuario: (id: " . auth()->user()->id . ") " . auth()->user()->name . ". " . $th);
-            $this->dispatch('mostrarMensaje', ['error', "Ha ocurrido un error."]);
-
-        }
-
-    }
-
     public function borrarActor(Actor $actor){
 
         $this->authorize('update', $this->vario->movimientoRegistral);
@@ -721,9 +233,9 @@ class AclaracionAdministrativa extends Component
 
             $actor->delete();
 
-            $this->dispatch('mostrarMensaje', ['success', "La información se eliminó con éxito."]);
+            $this->refresh();
 
-            $this->resetear();
+            $this->dispatch('mostrarMensaje', ['success', "La información se eliminó con éxito."]);
 
         } catch (\Throwable $th) {
 
@@ -734,7 +246,7 @@ class AclaracionAdministrativa extends Component
 
     }
 
-    public function propcesarPredio(){
+    public function procesarPredio(){
 
         $this->vario->movimientoRegistral->folioReal->predio->cp_localidad = $this->vario->predio->cp_localidad;
         $this->vario->movimientoRegistral->folioReal->predio->cp_oficina = $this->vario->predio->cp_oficina;
@@ -825,6 +337,8 @@ class AclaracionAdministrativa extends Component
 
             DB::transaction(function () {
 
+                $this->guardarColindancias($this->vario->predio);
+
                 $this->vario->estado = 'activo';
                 $this->vario->actualizado_por = auth()->id();
                 $this->vario->fecha_inscripcion = now()->toDateString();
@@ -833,7 +347,7 @@ class AclaracionAdministrativa extends Component
 
                 $this->vario->movimientoRegistral->update(['estado' => 'elaborado']);
 
-                $this->propcesarPredio();
+                $this->procesarPredio();
 
                 (new VariosController())->caratula($this->vario);
 
@@ -844,6 +358,65 @@ class AclaracionAdministrativa extends Component
         } catch (\Throwable $th) {
             Log::error("Error al finalizar inscripcion de varios por el usuario: (id: " . auth()->user()->id . ") " . auth()->user()->name . ". " . $th);
             $this->dispatch('mostrarMensaje', ['error', "Ha ocurrido un error."]);
+        }
+
+    }
+
+    public function revisarProcentajesFinal(){
+
+        $pn = 0;
+
+        $pu = 0;
+
+        $pp = 0;
+
+        foreach($this->vario->predio->propietarios() as $propietario){
+
+            $pn = $pn + $propietario->porcentaje_nuda;
+
+            $pu = $pu + $propietario->porcentaje_usufructo;
+
+            $pp = $pp + $propietario->porcentaje_propiedad;
+
+        }
+
+        if($pp == 0){
+
+            if($pn <= 99.99){
+
+                $this->dispatch('mostrarMensaje', ['error', "El porcentaje de nuda propiedad no es el 100%."]);
+
+                return true;
+
+            }
+
+            if($pu <= 99.99){
+
+                $this->dispatch('mostrarMensaje', ['error', "El porcentaje de usufructo no es el 100%."]);
+
+                return true;
+
+            }
+
+        }else{
+
+
+            if(($pn + $pp) <= 99.99){
+
+                $this->dispatch('mostrarMensaje', ['error', "El porcentaje de nuda propiedad no es el 100%."]);
+
+                return true;
+
+            }
+
+            if(($pu + $pp) <= 99.99){
+
+                $this->dispatch('mostrarMensaje', ['error', "El porcentaje de usufructo no es el 100%."]);
+
+                return true;
+
+            }
+
         }
 
     }
@@ -875,17 +448,6 @@ class AclaracionAdministrativa extends Component
         $this->vario->acto_contenido = $this->vario->acto_contenido ?? 'ACLARACIÓN ADMINISTRATIVA';
 
         $this->cargarPredioInicial();
-
-        foreach ($this->vario->predio->colindancias as $colindancia) {
-
-            $this->medidas[] = [
-                'id' => $colindancia->id,
-                'viento' => $colindancia->viento,
-                'longitud' => $colindancia->longitud,
-                'descripcion' => $colindancia->descripcion,
-            ];
-
-        }
 
         $this->areas = Constantes::UNIDADES;
 

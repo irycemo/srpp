@@ -2,7 +2,7 @@
 
 namespace App\Livewire\Comun\Actores;
 
-use Exception;
+use App\Exceptions\ActoresException;
 use App\Models\Actor;
 use App\Models\Persona;
 use Livewire\Component;
@@ -46,7 +46,7 @@ class AcreedorCrear extends Component
 
                 foreach($this->modelo->actores as $actor){
 
-                    if($actor->persona_id == $persona->id) throw new Exception('La persona ya es un actor.');
+                    if($actor->persona_id == $persona->id) throw new ActoresException('La persona ya es un actor.');
 
                 }
 
@@ -60,11 +60,11 @@ class AcreedorCrear extends Component
 
                 foreach($this->modelo->actores as $actor){
 
-                    if($actor->persona_id == $persona->id) throw new Exception('La persona ya es un actor.');
+                    if($actor->persona_id == $persona->id) throw new ActoresException('La persona ya es un actor.');
 
                 }
 
-                throw new Exception('Ya existe un persona registrada con la información ingresada.');
+                throw new ActoresException('Ya existe un persona registrada con la información ingresada.');
 
             }else{
 
@@ -109,7 +109,7 @@ class AcreedorCrear extends Component
             $this->dispatch('refresh');
 
 
-        } catch (Exception $ex) {
+        } catch (ActoresException $ex) {
 
             $this->dispatch('mostrarMensaje', ['error', $ex->getMessage()]);
 
@@ -134,7 +134,7 @@ class AcreedorCrear extends Component
 
             if($persona && ($persona->id != $this->persona->id)){
 
-                throw new Exception("Ya existe una persona con el RFC o CURP ingresada.");
+                throw new ActoresException("Ya existe una persona con el RFC o CURP ingresada.");
 
             }else{
 
@@ -161,7 +161,7 @@ class AcreedorCrear extends Component
             $this->dispatch('refresh');
 
 
-        } catch (Exception $ex) {
+        } catch (ActoresException $ex) {
 
             $this->dispatch('mostrarMensaje', ['error', $ex->getMessage()]);
 
