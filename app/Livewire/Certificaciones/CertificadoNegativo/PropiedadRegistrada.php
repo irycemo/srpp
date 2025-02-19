@@ -23,7 +23,7 @@ class PropiedadRegistrada extends Component
     protected function rules(){
         return [
             'propietarios' => ['required', 'array', 'min:' . $this->certificacion->numero_paginas],
-            'propietarios.*' => ['required', 'string'],
+            'propietarios.*' => ['required'],
             'propietarios.*.nombre' => ['required', 'string'],
             'propietarios.*.ap_paterno' => ['required', 'string'],
             'propietarios.*.ap_materno' => ['required', 'string'],
