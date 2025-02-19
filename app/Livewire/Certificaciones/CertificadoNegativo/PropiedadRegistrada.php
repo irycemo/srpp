@@ -109,7 +109,7 @@ class PropiedadRegistrada extends Component
                 $this->certificacion->observaciones_certificado = $this->observaciones;
                 $this->certificacion->save();
 
-                $this->procesarPersonas($this->personas);
+                $this->procesarPersonas($this->propietarios);
 
             });
 

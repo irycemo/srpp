@@ -69,11 +69,11 @@
             @if($flagGenerar)
 
                 <x-button-blue
-                    wire:click="generarCertificadoNegativoPropiedad"
+                    wire:click="generarCertificado"
                     wire:loading.attr="disabled"
-                    wire:target="generarCertificadoNegativoPropiedad">
+                    wire:target="generarCertificado">
 
-                    <img wire:loading wire:target="generarCertificadoNegativoPropiedad" class="mx-auto h-4 mr-1" src="{{ asset('storage/img/loading3.svg') }}" alt="Loading">
+                    <img wire:loading wire:target="generarCertificado" class="mx-auto h-4 mr-1" src="{{ asset('storage/img/loading3.svg') }}" alt="Loading">
 
                     Generar certificado negativo de propiedad
 
