@@ -22,6 +22,7 @@ trait CertificadoPropiedadTrait{
 
     public $predios = [];
     public $prediosOld = [];
+    public $propietarios = [];
 
     public function procesarPersona($nombre, $ap_paterno, $ap_materno){
 
