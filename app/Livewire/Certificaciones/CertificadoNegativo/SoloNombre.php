@@ -105,7 +105,7 @@ class SoloNombre extends Component
 
     }
 
-    public function generarCertificadoNegativo(){
+    public function generarCertificado(){
 
         if($this->certificacion->movimientoRegistral->tipo_servicio == 'ordinario'){
 
