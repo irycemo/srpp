@@ -30,7 +30,7 @@ class PropiedadNoRegistrada extends Component
          ];
     }
 
-    public function buscarPropietarios(){
+    public function buscarPropietario(){
 
         $this->validate();
 
