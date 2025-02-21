@@ -11,7 +11,7 @@ use Illuminate\Support\Facades\Log;
 use App\Exceptions\ActoresException;
 use App\Http\Services\PersonaService;
 
-class DeudorCrear extends Component
+class FideicomisoCrear extends Component
 {
 
     use ActoresTrait;
@@ -52,8 +52,7 @@ class DeudorCrear extends Component
 
                 $this->modelo->actores()->create([
                     'persona_id' => $persona->id,
-                    'tipo_actor' => 'deudor',
-                    'tipo_deudor' => $this->sub_tipo,
+                    'tipo_actor' => $this->tipo_actor,
                     'creado_por' => auth()->id()
                 ]);
 
@@ -95,8 +94,7 @@ class DeudorCrear extends Component
 
                     $this->modelo->actores()->create([
                         'persona_id' => $persona->id,
-                        'tipo_actor' => 'deudor',
-                        'tipo_deudor' => $this->sub_tipo,
+                        'tipo_actor' => $this->tipo_actor,
                         'creado_por' => auth()->id()
                     ]);
 
@@ -117,7 +115,7 @@ class DeudorCrear extends Component
 
         } catch (\Throwable $th) {
 
-            Log::error("Error al crear deudor por el usuario: (id: " . auth()->user()->id . ") " . auth()->user()->name . ". " . $th);
+            Log::error("Error al crear actor de fideicomiso por el usuario: (id: " . auth()->user()->id . ") " . auth()->user()->name . ". " . $th);
             $this->dispatch('mostrarMensaje', ['error', "Ha ocurrido un error."]);
 
         }
@@ -169,7 +167,7 @@ class DeudorCrear extends Component
 
         } catch (\Throwable $th) {
 
-            Log::error("Error al actualizar deudor por el usuario: (id: " . auth()->user()->id . ") " . auth()->user()->name . ". " . $th);
+            Log::error("Error al actualizar actor de fideicomiso por el usuario: (id: " . auth()->user()->id . ") " . auth()->user()->name . ". " . $th);
             $this->dispatch('mostrarMensaje', ['error', "Ha ocurrido un error."]);
 
         }
@@ -177,8 +175,6 @@ class DeudorCrear extends Component
     }
 
     public function mount(){
-
-        $this->tipo_actor = 'actor';
 
         $this->actor = Actor::make();
 
@@ -188,6 +184,6 @@ class DeudorCrear extends Component
 
     public function render()
     {
-        return view('livewire.comun.actores.deudor-crear');
+        return view('livewire.comun.actores.fideicomiso-crear');
     }
 }

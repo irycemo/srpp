@@ -18,6 +18,7 @@ class Fideicomiso extends Component
     use VariosTrait;
 
     public $actores;
+    public $actos;
 
     protected $listeners = ['refresh'];
 
@@ -31,7 +32,7 @@ class Fideicomiso extends Component
 
     public function refresh(){
 
-        $this->vario->predio->load('actores.persona');
+        $this->vario->load('actores.persona');
 
     }
 
@@ -57,6 +58,8 @@ class Fideicomiso extends Component
     }
 
     public function guardar(){
+
+        $this->validate();
 
         try {
 
@@ -116,6 +119,11 @@ class Fideicomiso extends Component
     }
 
     public function mount(){
+
+        $this->actos = [
+            'FIDEICOMISO TRASLATIVO',
+            'FIDEICOMISO REPRESENTATIVO',
+        ];
 
         $this->actores = Constantes::ACTORES_FIDEICOMISO;
 

@@ -2,7 +2,6 @@
 
 namespace App\Livewire\Comun\Actores;
 
-use Exception;
 use App\Models\Actor;
 use App\Models\Persona;
 use Livewire\Component;
@@ -78,10 +77,6 @@ class DeudorActualizar extends Component
 
             $this->modal = false;
 
-
-        } catch (Exception $ex) {
-
-            $this->dispatch('mostrarMensaje', ['error', $ex->getMessage()]);
 
         } catch (\Throwable $th) {
 

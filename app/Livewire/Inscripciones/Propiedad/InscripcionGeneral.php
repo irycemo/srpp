@@ -133,14 +133,38 @@ class InscripcionGeneral extends Component
 
         }
 
-        try {
+        if(!$this->nuevoFolio){
 
-            (new PredioService())->revisarPorcentajesFinal($this->inscripcion->propietarios());
+            if($this->inscripcion->propietarios()->count() == 0){
 
-        } catch (PredioException $ex) {
+                $this->dispatch('mostrarMensaje', ['error', "Debe tener almenos un propietario."]);
 
-            $this->dispatch('mostrarMensaje', ['error', $ex->getMessage()]);
-            return;
+                return true;
+
+            }
+
+            if($this->inscripcion->transmitentes()->count() == 0){
+
+                $this->dispatch('mostrarMensaje', ['error', "Debe tener almenos un transmitente."]);
+
+                return true;
+
+            }
+
+            if($this->inscripcion->movimientoRegistral->estado != 'correccion'){
+
+                try {
+
+                    (new PredioService())->revisarPorcentajesFinal($this->inscripcion->propietarios());
+
+                } catch (PredioException $ex) {
+
+                    $this->dispatch('mostrarMensaje', ['error', $ex->getMessage()]);
+                    return;
+
+                }
+
+            }
 
         }
 

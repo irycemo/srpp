@@ -2,9 +2,23 @@
 
     <div class="p-4 bg-white shadow-xl rounded-xl mb-5">
 
-        <div class="flex gap-3 items-center w-full lg:w-1/2 justify-center mx-auto">
+        <div class="flex gap-3 items-center w-full lg:w-1/2 justify-center mx-auto mb-4">
 
-            <span>Fideicomiso</span>
+            <x-input-group for="vario.acto_contenido" label="Acto contenido" :error="$errors->first('vario.acto_contenido')" class="w-full">
+
+                <x-input-select id="vario.acto_contenido" wire:model.live="vario.acto_contenido" class="w-full">
+
+                    <option value="">Seleccione una opción</option>
+
+                    @foreach ($actos as $acto)
+
+                        <option value="{{ $acto }}">{{ $acto }}</option>
+
+                    @endforeach
+
+                </x-input-select>
+
+            </x-input-group>
 
         </div>
 
@@ -21,6 +35,12 @@
     </div>
 
     <div class="p-4 bg-white shadow-xl rounded-xl mb-5">
+
+        <div class="flex justify-end mb-2">
+
+            @livewire('comun.actores.fideicomiso-crear', ['modelo' => $vario, 'sub_tipos' => $actores])
+
+        </div>
 
         <div class="grid grid-cols-1 md:grid-cols-3 gap-1 mb-2">
 
