@@ -559,7 +559,7 @@
 
                             <div class="flex justify-end mb-2">
 
-                                @livewire('comun.actores.propietario-crear', ['modelo' => $inscripcion])
+                                @livewire('comun.actores.propietario-crear', ['modelo' => $inscripcion, 'predio' => $inscripcion])
 
                             </div>
 

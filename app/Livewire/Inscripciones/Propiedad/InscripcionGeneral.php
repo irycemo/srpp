@@ -194,8 +194,6 @@ class InscripcionGeneral extends Component
 
             }
 
-            /* if($this->revisarProcentajes()) return true; */
-
             if($this->inscripcion->movimientoRegistral->estado != 'correccion'){
 
                 if($this->revisarProcentajesFinal()) return true;
@@ -300,99 +298,6 @@ class InscripcionGeneral extends Component
         } catch (\Throwable $th) {
             Log::error("Error al guardar inscripcion de propiedad por el usuario: (id: " . auth()->user()->id . ") " . auth()->user()->name . ". " . $th);
             $this->dispatch('mostrarMensaje', ['error', "Ha ocurrido un error."]);
-        }
-
-    }
-
-    public function revisarProcentajes($id = null){
-
-        $pp_transmitentes = 0;
-
-        $pp_adquirientes = 0;
-
-        $pn_transmitentes = 0;
-
-        $pn_adquirientes = 0;
-
-        $pu_transmitentes = 0;
-
-        $pu_adquirientes = 0;
-
-        foreach($this->inscripcion->transmitentes() as $transmitente){
-
-            $pn_transmitentes = $pn_transmitentes + $transmitente->porcentaje_nuda;
-
-            $pu_transmitentes = $pu_transmitentes + $transmitente->porcentaje_usufructo;
-
-            $pp_transmitentes = $pp_transmitentes + $transmitente->porcentaje_propiedad;
-
-        }
-
-        foreach($this->inscripcion->propietarios() as $propietario){
-
-            if($id == $propietario->id)
-                continue;
-
-            $pn_adquirientes = $pn_adquirientes + $propietario->porcentaje_nuda;
-
-            $pu_adquirientes = $pu_adquirientes + $propietario->porcentaje_usufructo;
-
-            $pp_adquirientes = $pp_adquirientes + $propietario->porcentaje_propiedad;
-
-        }
-
-        if($pp_transmitentes == 0){
-
-            if(($this->porcentaje_propiedad + $pp_adquirientes - 0.0001) > $pp_transmitentes){
-
-                $this->dispatch('mostrarMensaje', ['error', "La suma de los porcentajes de propiedad no puede exceder el " . $pp_transmitentes . '%.']);
-
-                return true;
-
-            }
-
-            if(($this->porcentaje_nuda + $pn_adquirientes - 0.0001) > $pn_transmitentes){
-
-                $this->dispatch('mostrarMensaje', ['error', "La suma de los porcentajes de nuda no puede exceder el " . $pn_transmitentes . '%.']);
-
-                return true;
-
-            }
-
-            if(($this->porcentaje_usufructo + $pu_adquirientes - 0.0001) > $pu_transmitentes){
-
-                $this->dispatch('mostrarMensaje', ['error', "La suma de los porcentajes de usufructo no puede exceder el " . $pu_transmitentes . '%.']);
-
-                return true;
-
-            }
-
-        }else{
-
-            if(($this->porcentaje_propiedad + $pp_adquirientes - 0.0001) > $pp_transmitentes){
-
-                $this->dispatch('mostrarMensaje', ['error', "La suma de los porcentajes de propiedad no puede exceder el " . $pp_transmitentes . '%.']);
-
-                return true;
-
-            }
-
-            if(($this->porcentaje_nuda + $pn_adquirientes + $pp_adquirientes - 0.0001) > $pp_transmitentes){
-
-                $this->dispatch('mostrarMensaje', ['error', "La suma de los porcentajes de nuda no puede exceder el " . $pn_transmitentes . '%.']);
-
-                return true;
-
-            }
-
-            if(($this->porcentaje_usufructo + $pu_adquirientes + $pp_adquirientes - 0.0001) > $pp_transmitentes){
-
-                $this->dispatch('mostrarMensaje', ['error', "La suma de los porcentajes de usufructo no puede exceder el " . $pu_transmitentes . '%.']);
-
-                return true;
-
-            }
-
         }
 
     }
@@ -680,10 +585,6 @@ class InscripcionGeneral extends Component
                     if($this->inscripcion->movimientoRegistral->estado != 'correccion'){
 
                         $this->procesarPropietarios();
-
-                    }else{
-
-                        $this->revisarProcentajes();
 
                     }
 
