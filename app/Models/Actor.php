@@ -24,12 +24,12 @@ class Actor extends Model implements Auditable
         return $this->belongsTo(Persona::class);
     }
 
-    public function representados(){
-        return $this->hasMany(Actor::class, 'representado_por');
+    public function representadoPor(){
+        return $this->belongsToMany(Actor::class, 'representados', 'representado_id', 'representante_id');
     }
 
-    public function representadoPor(){
-        return $this->belongsTo(Actor::class,'representado_por');
+    public function representados(){
+        return $this->belongsToMany(Actor::class, 'representados', 'representante_id', 'representado_id');
     }
 
     public function getPorcentajePropiedadFormateadaAttribute(){

@@ -3,21 +3,19 @@
 namespace App\Livewire\Inscripciones\Propiedad;
 
 use Exception;
-use App\Models\File;
-use App\Models\User;
+use App\Models\Actor;
 use Livewire\Component;
-use App\Models\Colindancia;
 use Livewire\WithFileUploads;
 use App\Constantes\Constantes;
 use Illuminate\Support\Facades\DB;
+use App\Exceptions\PredioException;
 use Illuminate\Support\Facades\Log;
+use App\Http\Services\PredioService;
 use Illuminate\Support\Facades\Hash;
-use Illuminate\Support\Facades\Http;
-use Illuminate\Support\Facades\Storage;
-use Illuminate\Http\Client\ConnectionException;
+use Spatie\LivewireFilepond\WithFilePond;
+use App\Traits\Inscripciones\ColindanciasTrait;
 use App\Traits\Inscripciones\Propiedad\PropiedadTrait;
 use App\Http\Controllers\InscripcionesPropiedad\PropiedadController;
-use Spatie\LivewireFilepond\WithFilePond;
 
 class InscripcionGeneral extends Component
 {
@@ -25,11 +23,14 @@ class InscripcionGeneral extends Component
     use PropiedadTrait;
     use WithFileUploads;
     use WithFilePond;
+    use ColindanciasTrait;
 
     public $transmitentes = [];
 
     public $nuevoFolio;
     public $actos;
+
+    protected $listeners = ['refresh'];
 
     protected function rules(){
         return [
@@ -46,7 +47,7 @@ class InscripcionGeneral extends Component
             'inscripcion.cc_edificio' => 'required',
             'inscripcion.cc_departamento' => 'required', */
             'inscripcion.acto_contenido' => 'required',
-            'inscripcion.descripcion_acto' => 'nullable',
+            'inscripcion.descripcion_acto' => 'required',
             'inscripcion.superficie_terreno' => 'nullable',
             'inscripcion.unidad_area' => 'required',
             'inscripcion.superficie_construccion' => 'nullable',
@@ -120,6 +121,35 @@ class InscripcionGeneral extends Component
 
     }
 
+    public function finalizar(){
+
+        $this->validate();
+
+        if(!$this->inscripcion->movimientoRegistral->documentoEntrada()){
+
+            $this->dispatch('mostrarMensaje', ['error', "Debe subir el documento de entrada."]);
+
+            return;
+
+        }
+
+        try {
+
+            (new PredioService())->revisarPorcentajesFinal($this->inscripcion->propietarios());
+
+        } catch (PredioException $ex) {
+
+            $this->dispatch('mostrarMensaje', ['error', $ex->getMessage()]);
+            return;
+
+        }
+
+        if($this->validaciones()) return;
+
+        $this->modalContraseña = true;
+
+    }
+
     public function validaciones(){
 
         if(!$this->nuevoFolio){
@@ -152,7 +182,78 @@ class InscripcionGeneral extends Component
 
     }
 
+    public function guardarTransmitente(){
+
+        $this->authorize('update', $this->inscripcion->movimientoRegistral);
+
+        $this->validate(['propietario' => 'required']);
+
+        $propietario = Actor::find($this->propietario);
+
+        foreach ($this->inscripcion->transmitentes() as $transmitente) {
+
+            if($propietario->persona_id == $transmitente->persona_id){
+
+                $this->dispatch('mostrarMensaje', ['error', "La persona ya es un transmitente."]);
+
+                return;
+
+            }
+
+        }
+
+        try {
+
+            DB::transaction(function () use($propietario){
+
+                $actor = $this->inscripcion->actores()->create([
+                    'persona_id' => $propietario->persona_id,
+                    'tipo_actor' => 'transmitente',
+                    'porcentaje_propiedad' => $propietario->porcentaje_propiedad,
+                    'porcentaje_nuda' => $propietario->porcentaje_nuda,
+                    'porcentaje_usufructo' => $propietario->porcentaje_usufructo,
+                    'creado_por' => auth()->id()
+                ]);
+
+                $this->transmitentes[] = [
+                    'id' => $actor['id'],
+                    'nombre' => $actor->persona->nombre,
+                    'ap_paterno' => $actor->persona->ap_paterno,
+                    'ap_materno' => $actor->persona->ap_materno,
+                    'razon_social' => $actor->persona->razon_social,
+                    'porcentaje_propiedad' => $actor->porcentaje_propiedad,
+                    'porcentaje_nuda' => $actor->porcentaje_nuda,
+                    'porcentaje_usufructo' => $actor->porcentaje_usufructo,
+                ];
+
+                $this->dispatch('mostrarMensaje', ['success', "El transmitente se guardó con éxito."]);
+
+                $this->dispatch('recargar', ['id' => $actor->id, 'description' => $actor->persona->nombre . ' ' . $actor->persona->ap_paterno . ' ' . $actor->persona->ap_materno . ' ' . $actor->persona->razon_social]);
+
+                $this->inscripcion->load('actores.persona');
+
+                $this->modalTransmitente = false;
+
+            });
+
+        } catch (\Throwable $th) {
+
+            Log::error("Error al guardar transmitente en inscripción de propiedad por el usuario: (id: " . auth()->user()->id . ") " . auth()->user()->name . ". " . $th);
+            $this->dispatch('mostrarMensaje', ['error', "Ha ocurrido un error."]);
+
+        }
+
+    }
+
+    public function refresh(){
+
+        $this->inscripcion->load('actores.persona');
+
+    }
+
     public function guardar(){
+
+        $this->validate();
 
         try {
 
@@ -166,29 +267,7 @@ class InscripcionGeneral extends Component
 
                 $this->inscripcion->save();
 
-                foreach ($this->medidas as $key =>$medida) {
-
-                    if($medida['id'] == null){
-
-                        $aux = $this->inscripcion->movimientoRegistral->folioReal->predio->colindancias()->create([
-                            'viento' => $medida['viento'],
-                            'longitud' => $medida['longitud'],
-                            'descripcion' => $medida['descripcion'],
-                        ]);
-
-                        $this->medidas[$key]['id'] = $aux->id;
-
-                    }else{
-
-                        Colindancia::find($medida['id'])->update([
-                            'viento' => $medida['viento'],
-                            'longitud' => $medida['longitud'],
-                            'descripcion' => $medida['descripcion'],
-                        ]);
-
-                    }
-
-                }
+                $this->guardarColindancias($this->inscripcion->movimientoRegistral->folioReal->predio);
 
             });
 
@@ -654,29 +733,8 @@ class InscripcionGeneral extends Component
                 $this->inscripcion->movimientoRegistral->folioReal->predio->actualizado_por = auth()->id();
                 $this->inscripcion->movimientoRegistral->folioReal->predio->save();
 
-                foreach ($this->medidas as $key =>$medida) {
 
-                    if($medida['id'] == null){
-
-                        $aux = $this->inscripcion->movimientoRegistral->folioReal->predio->colindancias()->create([
-                            'viento' => $medida['viento'],
-                            'longitud' => $medida['longitud'],
-                            'descripcion' => $medida['descripcion'],
-                        ]);
-
-                        $this->medidas[$key]['id'] = $aux->id;
-
-                    }else{
-
-                        Colindancia::find($medida['id'])->update([
-                            'viento' => $medida['viento'],
-                            'longitud' => $medida['longitud'],
-                            'descripcion' => $medida['descripcion'],
-                        ]);
-
-                    }
-
-                }
+                $this->guardarColindancias($this->inscripcion->movimientoRegistral->folioReal->predio);
 
                 $this->inscripcion->movimientoRegistral->update(['estado' => 'elaborado', 'actualizado_por' => auth()->id()]);
 
@@ -704,50 +762,7 @@ class InscripcionGeneral extends Component
 
     public function mount(){
 
-        $this->actos = Constantes::ACTOS_INSCRIPCION_PROPIEDAD;
-
-        if(!$this->inscripcion->movimientoRegistral->documentoEntrada()){
-
-            try {
-
-                $response = Http::withToken(env('SISTEMA_TRAMITES_TOKEN'))
-                                    ->accept('application/json')
-                                    ->asForm()
-                                    ->post(env('SISTEMA_TRAMITES_CONSULTAR_ARCHIVO'), [
-                                                                                        'año' => $this->inscripcion->movimientoRegistral->año,
-                                                                                        'tramite' => $this->inscripcion->movimientoRegistral->tramite,
-                                                                                        'usuario' => $this->inscripcion->movimientoRegistral->usuario,
-                                                                                        'estado' => 'nuevo'
-                                                                                    ]);
-
-                $data = collect(json_decode($response, true));
-
-                if($response->status() == 200){
-
-                    $contents = file_get_contents($data['url']);
-
-                    $filename = basename($data['url']);
-
-                    Storage::disk('documento_entrada')->put($filename, $contents);
-
-                    File::create([
-                        'fileable_id' => $this->inscripcion->movimientoRegistral->id,
-                        'fileable_type' => 'App\Models\MovimientoRegistral',
-                        'descripcion' => 'documento_entrada',
-                        'url' => $filename
-                    ]);
-
-                }
-
-            } catch (ConnectionException $th) {
-
-                Log::error("Error al cargar archivo en cancelación: (id: " . auth()->user()->id . ") " . auth()->user()->name . ". " . $th);
-
-                $this->dispatch('mostrarMensaje', ['error', "Ha ocurrido un error."]);
-
-            }
-
-        }
+        $this->consultarArchivo();
 
         foreach($this->inscripcion->getAttributes() as $attribute => $value){
 
@@ -759,28 +774,7 @@ class InscripcionGeneral extends Component
 
         }
 
-        foreach ($this->inscripcion->movimientoRegistral->folioReal->predio->colindancias as $colindancia) {
-
-            $this->medidas[] = [
-                'id' => $colindancia->id,
-                'viento' => $colindancia->viento,
-                'longitud' => $colindancia->longitud,
-                'descripcion' => $colindancia->descripcion,
-            ];
-
-        }
-
-        $director = User::where('status', 'activo')->whereHas('roles', function($q){
-            $q->where('name', 'Director');
-        })->first();
-
-        if(!$director) abort(500, message:"Es necesario registrar al director.");
-
-        $jefe_departamento = User::where('status', 'activo')->whereHas('roles', function($q){
-            $q->where('name', 'Jefe de departamento inscripciones');
-        })->first();
-
-        if(!$jefe_departamento) abort(500, message:"Es necesario registrar al jefe de Departamento de Registro de Inscripciones.");
+        $this->cargarColindancias($this->inscripcion->movimientoRegistral->folioReal->predio);
 
         foreach ($this->inscripcion->transmitentes() as $transmitente) {
 
@@ -795,6 +789,8 @@ class InscripcionGeneral extends Component
                 'porcentaje_usufructo' => $transmitente->porcentaje_usufructo,
             ];
         }
+
+        $this->actos = Constantes::ACTOS_INSCRIPCION_PROPIEDAD;
 
         $this->areas = Constantes::UNIDADES;
 

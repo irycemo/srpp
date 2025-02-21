@@ -1,7 +1,9 @@
 <?php
 
+use App\Models\Actor;
 use Illuminate\Support\Facades\DB;
 use App\Models\MovimientoRegistral;
+use App\Models\Representado;
 use Illuminate\Foundation\Inspiring;
 use Illuminate\Support\Facades\Artisan;
 
@@ -31,6 +33,23 @@ Artisan::command('usuario', function(){
 
         if($tramite)
             $movimientoRegistral->update(['usuario' =>  $tramite->usuario]);
+
+    }
+
+});
+
+Artisan::command('representates', function(){
+
+    $representados = Actor::whereNotNull('representado_por')->get();
+
+    $this->info('Incian ' . $representados->count());
+
+    foreach($representados as $representado){
+
+        Representado::create([
+            'representante_id' => $representado->representado_por,
+            'representado_id' => $representado->id,
+        ]);
 
     }
 

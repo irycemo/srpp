@@ -5,14 +5,19 @@ namespace App\Livewire\Comun\Actores;
 use App\Models\Actor;
 use App\Models\Persona;
 use Livewire\Component;
+use App\Models\Representado;
 use App\Traits\ActoresTrait;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
 
-class SocioActualizar extends Component
+class RepresentanteActualizar extends Component
 {
 
     use ActoresTrait;
+
+    public $representados = [];
+
+    public $predio;
 
     protected function rules(){
 
@@ -27,7 +32,7 @@ class SocioActualizar extends Component
                 'unique:personas,rfc,' . $this->actor->persona_id,
                 'regex:/^([A-ZÑ&]{3,4}) ?(?:- ?)?(\d{2}(?:0[1-9]|1[0-2])(?:0[1-9]|[12]\d|3[01])) ?(?:- ?)?([A-Z\d]{2})([A\d])$/'
             ],
-            'sub_tipo' => 'required'
+            'sub_tipo' => 'nullable'
         ];
 
     }
@@ -65,9 +70,19 @@ class SocioActualizar extends Component
                 ]);
 
                 $this->actor->update([
-                    'tipo_socio' => $this->sub_tipo,
                     'actualizado_por' => auth()->id()
                 ]);
+
+                $this->actor->representados()->detach();
+
+                foreach ($this->representados as $representado) {
+
+                    Representado::create(
+                        ['representante_id' => $this->actor->id, 'representado_id' => $representado],
+                        ['representante_id' => $this->actor->id, 'representado_id' => $representado]
+                    );
+
+                }
 
             });
 
@@ -78,9 +93,9 @@ class SocioActualizar extends Component
             $this->modal = false;
 
 
-        }  catch (\Throwable $th) {
+        } catch (\Throwable $th) {
 
-            Log::error("Error al actualizar socio por el usuario: (id: " . auth()->user()->id . ") " . auth()->user()->name . ". " . $th);
+            Log::error("Error al actualizar acreedor por el usuario: (id: " . auth()->user()->id . ") " . auth()->user()->name . ". " . $th);
             $this->dispatch('mostrarMensaje', ['error', "Ha ocurrido un error."]);
 
         }
@@ -113,7 +128,13 @@ class SocioActualizar extends Component
             $this->ciudad = $this->actor->persona->ciudad;
             $this->municipio = $this->actor->persona->municipio;
 
-            $this->sub_tipo = $this->actor->tipo_socio;
+            $this->sub_tipo = $this->actor->tipo_deudor;
+
+            foreach($this->actor->representados as $representado){
+
+                array_push($this->representados, $representado->id);
+
+            }
 
         }else{
 
@@ -127,6 +148,6 @@ class SocioActualizar extends Component
 
     public function render()
     {
-        return view('livewire.comun.actores.socio-actualizar');
+        return view('livewire.comun.actores.representante-actualizar');
     }
 }

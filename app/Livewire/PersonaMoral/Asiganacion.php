@@ -60,7 +60,7 @@ class Asiganacion extends Component
             'denominacion' => 'required',
             'fecha_constitucion' => 'required|date',
             'capital' => 'required|numeric|min:0',
-            'duracion' => 'required|numeric|min:0',
+            'duracion' => 'nullable|numeric|min:0',
             'notaria' => 'required|numeric|min:1',
             'nombre_notario' => 'required',
             'numero_escritura' => 'required|numeric|min:1',
@@ -69,7 +69,7 @@ class Asiganacion extends Component
             'numero_paginas' => 'required|numeric|min:1',
             'observaciones' => 'nullable',
             'escritura_fecha_escritura' => 'required|date|before:today',
-            'escritura_fecha_inscripcion' => 'required|date|before:today',
+            'escritura_fecha_inscripcion' => 'required|date|before:tomorrow',
             'tipo' => 'required',
             'observaciones_escritura' => 'nullable',
             'domicilio' => 'required',
@@ -306,7 +306,7 @@ class Asiganacion extends Component
 
     public function finalizar(){
 
-        if(!$this->movimientoRegistral?->folioRealPersona->documentoEntrada()){
+        if(!$this->movimientoRegistral?->folioRealPersona?->documentoEntrada()){
 
             $this->dispatch('mostrarMensaje', ['error', "Debe guardar el documento de entrada."]);
 

@@ -4,7 +4,7 @@
 
     <x-dialog-modal wire:model="modal">
 
-        <x-slot name="title">Actualizar acreedor</x-slot>
+        <x-slot name="title">Actualizar representante</x-slot>
 
         <x-slot name="content">
 

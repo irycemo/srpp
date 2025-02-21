@@ -26,6 +26,10 @@ class Vario extends Model implements Auditable
         return $this->morphMany(Actor::class, 'actorable');
     }
 
+    public function propietarios(){
+        return $this->actores()->with('persona')->where('tipo_Actor', 'propietario')->get();
+    }
+
     public function predio(){
         return $this->belongsTo(Predio::class, 'predio_id');
     }

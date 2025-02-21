@@ -239,7 +239,7 @@
 
                                             @foreach ($representante->representados as $representado)
 
-                                                <p>{{ $representado->persona->nombre }} {{ $representado->persona->ap_paterno }} {{ $representado->persona->ap_materno }} {{ $representante->persona->razon_social }}</p>
+                                                <p>{{ $representado->persona->nombre }} {{ $representado->persona->ap_paterno }} {{ $representado->persona->ap_materno }} {{ $representado->persona->razon_social }}</p>
 
                                             @endforeach
 

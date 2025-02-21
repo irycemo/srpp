@@ -183,6 +183,8 @@ trait ActoresTrait{
 
         $this->modal = true;
 
+        $this->dispatch('cargarSeleccion');
+
     }
 
     public function cargarModelo($object){

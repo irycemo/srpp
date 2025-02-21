@@ -2,16 +2,16 @@
 
 namespace App\Livewire\Comun\Actores;
 
-use App\Exceptions\ActoresException;
 use App\Models\Actor;
 use App\Models\Persona;
 use Livewire\Component;
 use App\Traits\ActoresTrait;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
+use App\Exceptions\ActoresException;
 use App\Http\Services\PersonaService;
 
-class PropietarioCrear extends Component
+class TransmitenteCrear extends Component
 {
 
     use ActoresTrait;
@@ -27,71 +27,8 @@ class PropietarioCrear extends Component
                 'nullable',
                 'regex:/^([A-ZÑ&]{3,4}) ?(?:- ?)?(\d{2}(?:0[1-9]|1[0-2])(?:0[1-9]|[12]\d|3[01])) ?(?:- ?)?([A-Z\d]{2})([A\d])$/'
             ],
-            'sub_tipo' => 'nullable',
-            'porcentaje_propiedad' => 'nullable|numeric|min:0|max:100',
-            'porcentaje_nuda' => 'nullable|numeric|min:0|max:100',
-            'porcentaje_usufructo' => 'nullable|numeric|min:0|max:100',
+            'sub_tipo' => 'nullable'
         ];
-
-    }
-
-    public function revisarProcentajes(){
-
-        $pp = 0;
-
-        $pn = 0;
-
-        $pu = 0;
-
-        foreach($this->modelo->propietarios() as $propietario){
-
-            $pn = $pn + $propietario->porcentaje_nuda;
-
-            $pu = $pu + $propietario->porcentaje_usufructo;
-
-            $pp = $pp + $propietario->porcentaje_propiedad;
-
-        }
-
-        $pp = $pp + (float)$this->porcentaje_propiedad;
-
-        $pn = $pn + (float)$this->porcentaje_nuda + $pp;
-
-        $pu = $pu + (float)$this->porcentaje_usufructo + $pp;
-
-        if((int)$pn > 100 || (int)$pu > 100) throw new ActoresException("La suma de los porcentajes no puede exceder el 100%.");
-
-    }
-
-    public function updated($property, $value){
-
-        if(in_array($property, ['porcentaje_nuda', 'porcentaje_usufructo', 'porcentaje_propiedad']) && $value == ''){
-
-            $this->$property = 0;
-
-        }
-
-        if(in_array($property, ['porcentaje_nuda', 'porcentaje_usufructo'])){
-
-            $this->reset('porcentaje_propiedad');
-
-        }elseif($property == 'porcentaje_propiedad'){
-
-            $this->reset(['porcentaje_nuda', 'porcentaje_usufructo']);
-
-        }
-
-    }
-
-    public function validaciones(){
-
-        if($this->porcentaje_propiedad === 0 && $this->porcentaje_nuda === 0 && $this->porcentaje_usufructo === 0){
-
-            throw new ActoresException("La suma de los porcentajes no puede ser 0.");
-
-        }
-
-        $this->revisarProcentajes();
 
     }
 
@@ -102,8 +39,6 @@ class PropietarioCrear extends Component
         $personaService = new PersonaService();
 
         try {
-
-            $this->validaciones();
 
             $persona = $personaService->buscarPersona($this->rfc, $this->curp, $this->tipo_persona, $this->nombre, $this->ap_materno, $this->ap_paterno, $this->razon_social);
 
@@ -117,10 +52,7 @@ class PropietarioCrear extends Component
 
                 $actor = $this->modelo->actores()->create([
                     'persona_id' => $persona->id,
-                    'tipo_actor' => 'propietario',
-                    'porcentaje_propiedad' => $this->porcentaje_propiedad,
-                    'porcentaje_nuda' => $this->porcentaje_nuda,
-                    'porcentaje_usufructo' => $this->porcentaje_usufructo,
+                    'tipo_actor' => 'transmitente',
                     'creado_por' => auth()->id()
                 ]);
 
@@ -162,10 +94,7 @@ class PropietarioCrear extends Component
 
                     $actor = $this->modelo->actores()->create([
                         'persona_id' => $persona->id,
-                        'tipo_actor' => 'propietario',
-                        'porcentaje_propiedad' => $this->porcentaje_propiedad,
-                        'porcentaje_nuda' => $this->porcentaje_nuda,
-                        'porcentaje_usufructo' => $this->porcentaje_usufructo,
+                        'tipo_actor' => 'transmitente',
                         'creado_por' => auth()->id()
                     ]);
 
@@ -175,7 +104,7 @@ class PropietarioCrear extends Component
 
             $this->resetearTodo();
 
-            $this->dispatch('mostrarMensaje', ['success', "El adquiriente se creó con éxito."]);
+            $this->dispatch('mostrarMensaje', ['success', "El transmitente se creó con éxito."]);
 
             $this->dispatch('refresh');
 
@@ -194,7 +123,7 @@ class PropietarioCrear extends Component
 
         } catch (\Throwable $th) {
 
-            Log::error("Error al crear propietario por el usuario: (id: " . auth()->user()->id . ") " . auth()->user()->name . ". " . $th);
+            Log::error("Error al crear transmitente por el usuario: (id: " . auth()->user()->id . ") " . auth()->user()->name . ". " . $th);
             $this->dispatch('mostrarMensaje', ['error', "Ha ocurrido un error."]);
 
         }
@@ -235,7 +164,7 @@ class PropietarioCrear extends Component
 
             }
 
-            $this->dispatch('mostrarMensaje', ['success', "El adquiriente se actualizó con éxito."]);
+            $this->dispatch('mostrarMensaje', ['success', "La persona se actualizó con éxito."]);
 
             $this->dispatch('refresh');
 
@@ -246,7 +175,7 @@ class PropietarioCrear extends Component
 
         } catch (\Throwable $th) {
 
-            Log::error("Error al actualizar propietario por el usuario: (id: " . auth()->user()->id . ") " . auth()->user()->name . ". " . $th);
+            Log::error("Error al actualizar transmitente por el usuario: (id: " . auth()->user()->id . ") " . auth()->user()->name . ". " . $th);
             $this->dispatch('mostrarMensaje', ['error', "Ha ocurrido un error."]);
 
         }
@@ -255,7 +184,7 @@ class PropietarioCrear extends Component
 
     public function mount(){
 
-        $this->tipo_actor = 'propietario';
+        $this->tipo_actor = 'transmitente';
 
         $this->actor = Actor::make();
 
@@ -265,6 +194,6 @@ class PropietarioCrear extends Component
 
     public function render()
     {
-        return view('livewire.comun.actores.propietario-crear');
+        return view('livewire.comun.actores.transmitente-crear');
     }
 }

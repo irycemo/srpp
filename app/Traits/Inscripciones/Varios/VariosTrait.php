@@ -7,6 +7,7 @@ use App\Models\Vario;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Http;
+use Illuminate\Support\Facades\Storage;
 use Illuminate\Http\Client\ConnectionException;
 
 trait VariosTrait{
@@ -28,35 +29,46 @@ trait VariosTrait{
 
     public function consultarArchivo(){
 
-        try {
+        if(!$this->vario->movimientoRegistral->documentoEntrada()){
 
-            $response = Http::withToken(env('SISTEMA_TRAMITES_TOKEN'))
-                                ->accept('application/json')
-                                ->asForm()
-                                ->post(env('SISTEMA_TRAMITES_CONSULTAR_ARCHIVO'), [
-                                                                                    'año' => $this->vario->movimientoRegistral->año,
-                                                                                    'tramite' => $this->vario->movimientoRegistral->tramite,
-                                                                                    'usuario' => $this->vario->movimientoRegistral->usuario,
-                                                                                    'estado' => 'nuevo'
-                                                                                ]);
+            try {
 
-            $data = collect(json_decode($response, true));
+                $response = Http::withToken(env('SISTEMA_TRAMITES_TOKEN'))
+                                    ->accept('application/json')
+                                    ->asForm()
+                                    ->post(env('SISTEMA_TRAMITES_CONSULTAR_ARCHIVO'), [
+                                                                                        'año' => $this->vario->movimientoRegistral->año,
+                                                                                        'tramite' => $this->vario->movimientoRegistral->tramite,
+                                                                                        'usuario' => $this->vario->movimientoRegistral->usuario,
+                                                                                        'estado' => 'nuevo'
+                                                                                    ]);
 
-            if($response->status() == 200){
+                $data = collect(json_decode($response, true));
 
-                $this->dispatch('ver_documento', ['url' => $data['url']]);
+                if($response->status() == 200){
 
-            }else{
+                    $contents = file_get_contents($data['url']);
 
-                $this->dispatch('mostrarMensaje', ['error', "No se encontro el documento."]);
+                    $filename = basename($data['url']);
+
+                    Storage::disk('documento_entrada')->put($filename, $contents);
+
+                    File::create([
+                        'fileable_id' => $this->vario->movimientoRegistral->id,
+                        'fileable_type' => 'App\Models\MovimientoRegistral',
+                        'descripcion' => 'documento_entrada',
+                        'url' => $filename
+                    ]);
+
+                }
+
+            } catch (ConnectionException $th) {
+
+                Log::error("Error al cargar archivo en varios: (id: " . auth()->user()->id . ") " . auth()->user()->name . ". " . $th);
+
+                $this->dispatch('mostrarMensaje', ['error', "Ha ocurrido un error."]);
 
             }
-
-        } catch (ConnectionException $th) {
-
-            Log::error("Error al cargar archivo en varios: (id: " . auth()->user()->id . ") " . auth()->user()->name . ". " . $th);
-
-            $this->dispatch('mostrarMensaje', ['error', "Ha ocurrido un error."]);
 
         }
 

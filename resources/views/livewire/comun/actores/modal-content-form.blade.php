@@ -178,6 +178,93 @@
 
         </x-input-group>
 
+    @elseif($tipo_actor === 'representante')
+
+        <span class="flex items-center justify-center text-lg text-gray-700 md:col-span-3 col-span-1 sm:col-span-2" >Representados</span>
+
+        <div class="md:col-span-3 col-span-1 sm:col-span-2">
+
+            <div class="flex space-x-4 items-center">
+
+                <Label>Seleccione los representados</Label>
+
+            </div>
+
+            <div
+                x-data = "{ model: @entangle('representados') }"
+                x-init =
+                "
+                    select2 = $($refs.select)
+                        .select2({
+                            placeholder: 'Propietarios y transmitentes',
+                            width: '100%',
+                        })
+
+                    select2.on('change', function(){
+                        $wire.set('representados', $(this).val())
+                    })
+
+                    select2.on('keyup', function(e) {
+                        if (e.keyCode === 13){
+                            $wire.set('representados', $('.select2').val())
+                        }
+                    });
+
+                    $watch('model', (value) => {
+                        select2.val(value).trigger('change');
+                    });
+
+                    Livewire.on('recargarActores', function(e) {
+
+                        var newOption = new Option(e[0].description, e[0].id, false, false);
+
+                        $($refs.select).append(newOption).trigger('change');
+
+                    });
+
+                    Livewire.on('cargarSeleccion', function(e) {
+
+                        $($refs.select).trigger('change');
+
+                    });
+
+                "
+                wire:ignore>
+
+                <select
+                    class="bg-white rounded text-sm w-full z-50"
+                    wire:model.live="representados"
+                    x-ref="select"
+                    multiple="multiple">
+
+                    @if($predio)
+
+                        @foreach ($predio->propietarios() as $propietario)
+
+                            <option value="{{ $propietario->id }}">{{ $propietario->persona->nombre }} {{ $propietario->persona->ap_paterno }} {{ $propietario->persona->ap_materno }} {{ $propietario->persona->razon_social }}</option>
+
+                        @endforeach
+
+                        @foreach ($predio->transmitentes() as $transmitente)
+
+                            <option value="{{ $transmitente->id }}">{{ $transmitente->persona->nombre }} {{ $transmitente->persona->ap_paterno }} {{ $transmitente->persona->ap_materno }} {{ $transmitente->persona->razon_social }}</option>
+
+                        @endforeach
+
+                    @endif
+
+                </select>
+
+            </div>
+
+            <div>
+
+                @error('representados') <span class="error text-sm text-red-500">{{ $message }}</span> @enderror
+
+            </div>
+
+        </div>
+
     @endif
 
 </div>

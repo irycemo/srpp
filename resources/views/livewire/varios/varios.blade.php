@@ -2,11 +2,7 @@
 
     <x-header>Varios  <span class="text-sm tracking-widest">Folio real: I - {{ $vario->movimientoRegistral->folioReal->folio }} - {{ $vario->movimientoRegistral->folio }}</span></x-header>
 
-    @if($vario->acto_contenido == 'PERSONAS MORALES')
-
-        @livewire('varios.personas-morales', ['vario' => $this->vario])
-
-    @elseif($vario->acto_contenido == 'DONACIÓN / VENTA DE USUFRUCTO')
+    @if($vario->acto_contenido == 'DONACIÓN / VENTA DE USUFRUCTO')
 
         @livewire('varios.donacion-usufructo', ['vario' => $this->vario])
 

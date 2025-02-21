@@ -5,15 +5,16 @@ namespace App\Livewire\Varios;
 use App\Models\Actor;
 use App\Models\Predio;
 use Livewire\Component;
-use App\Models\Colindancia;
 use App\Constantes\Constantes;
 use Illuminate\Support\Facades\DB;
+use App\Exceptions\PredioException;
 use Illuminate\Support\Facades\Log;
+use App\Http\Services\PredioService;
 use Illuminate\Support\Facades\Hash;
+use Spatie\LivewireFilepond\WithFilePond;
+use App\Traits\Inscripciones\ColindanciasTrait;
 use App\Traits\Inscripciones\Varios\VariosTrait;
 use App\Http\Controllers\Varios\VariosController;
-use App\Traits\Inscripciones\ColindanciasTrait;
-use Spatie\LivewireFilepond\WithFilePond;
 
 class AclaracionAdministrativa extends Component
 {
@@ -362,79 +363,25 @@ class AclaracionAdministrativa extends Component
 
     }
 
-    public function revisarProcentajesFinal(){
-
-        $pn = 0;
-
-        $pu = 0;
-
-        $pp = 0;
-
-        foreach($this->vario->predio->propietarios() as $propietario){
-
-            $pn = $pn + $propietario->porcentaje_nuda;
-
-            $pu = $pu + $propietario->porcentaje_usufructo;
-
-            $pp = $pp + $propietario->porcentaje_propiedad;
-
-        }
-
-        if($pp == 0){
-
-            if($pn <= 99.99){
-
-                $this->dispatch('mostrarMensaje', ['error', "El porcentaje de nuda propiedad no es el 100%."]);
-
-                return true;
-
-            }
-
-            if($pu <= 99.99){
-
-                $this->dispatch('mostrarMensaje', ['error', "El porcentaje de usufructo no es el 100%."]);
-
-                return true;
-
-            }
-
-        }else{
-
-
-            if(($pn + $pp) <= 99.99){
-
-                $this->dispatch('mostrarMensaje', ['error', "El porcentaje de nuda propiedad no es el 100%."]);
-
-                return true;
-
-            }
-
-            if(($pu + $pp) <= 99.99){
-
-                $this->dispatch('mostrarMensaje', ['error', "El porcentaje de usufructo no es el 100%."]);
-
-                return true;
-
-            }
-
-        }
-
-    }
-
     public function finalizar(){
 
         $this->validate();
-
-        if($this->revisarProcentajesFinal()){
-
-            return;
-
-        }
 
         if(!$this->vario->movimientoRegistral->documentoEntrada()){
 
             $this->dispatch('mostrarMensaje', ['error', "Debe subir el documento de entrada."]);
 
+            return;
+
+        }
+
+        try {
+
+            (new PredioService())->revisarPorcentajesFinal($this->vario->predio->propietarios());
+
+        } catch (PredioException $ex) {
+
+            $this->dispatch('mostrarMensaje', ['error', $ex->getMessage()]);
             return;
 
         }

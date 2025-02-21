@@ -12,6 +12,14 @@
             <span>Actualizar</span>
         </x-button-blue>
 
+        <x-button-red
+            wire:click="$toggle('modal')"
+            wire:loading.attr="disabled"
+            wire:target="$toggle('modal')"
+            type="button">
+            Cerrar
+        </x-button-red>
+
     @endif
 
     @if($flag_agregar)
@@ -36,14 +44,14 @@
             <span>Agregar</span>
         </x-button-green>
 
-    @endif
+        <x-button-red
+            wire:click="resetearTodo"
+            wire:loading.attr="disabled"
+            wire:target="resetearTodo"
+            type="button">
+            Cerrar
+        </x-button-red>
 
-    <x-button-red
-        wire:click="resetearTodo"
-        wire:loading.attr="disabled"
-        wire:target="resetearTodo"
-        type="button">
-        Cerrar
-    </x-button-red>
+    @endif
 
 </div>
