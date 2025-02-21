@@ -8,9 +8,7 @@ use Livewire\Component;
 use Livewire\WithFileUploads;
 use App\Constantes\Constantes;
 use Illuminate\Support\Facades\DB;
-use App\Exceptions\PredioException;
 use Illuminate\Support\Facades\Log;
-use App\Http\Services\PredioService;
 use Illuminate\Support\Facades\Hash;
 use Spatie\LivewireFilepond\WithFilePond;
 use App\Traits\Inscripciones\ColindanciasTrait;
@@ -124,49 +122,6 @@ class InscripcionGeneral extends Component
     public function finalizar(){
 
         $this->validate();
-
-        if(!$this->inscripcion->movimientoRegistral->documentoEntrada()){
-
-            $this->dispatch('mostrarMensaje', ['error', "Debe subir el documento de entrada."]);
-
-            return;
-
-        }
-
-        if(!$this->nuevoFolio){
-
-            if($this->inscripcion->propietarios()->count() == 0){
-
-                $this->dispatch('mostrarMensaje', ['error', "Debe tener almenos un propietario."]);
-
-                return true;
-
-            }
-
-            if($this->inscripcion->transmitentes()->count() == 0){
-
-                $this->dispatch('mostrarMensaje', ['error', "Debe tener almenos un transmitente."]);
-
-                return true;
-
-            }
-
-            if($this->inscripcion->movimientoRegistral->estado != 'correccion'){
-
-                try {
-
-                    (new PredioService())->revisarPorcentajesFinal($this->inscripcion->propietarios());
-
-                } catch (PredioException $ex) {
-
-                    $this->dispatch('mostrarMensaje', ['error', $ex->getMessage()]);
-                    return;
-
-                }
-
-            }
-
-        }
 
         if($this->validaciones()) return;
 
@@ -665,9 +620,9 @@ class InscripcionGeneral extends Component
 
                 $this->inscripcion->movimientoRegistral->audits()->latest()->first()->update(['tags' => 'Elaboró inscripción de propiedad']);
 
-            });
+                (new PropiedadController())->caratula($this->inscripcion);
 
-            (new PropiedadController())->caratula($this->inscripcion);
+            });
 
             return redirect()->route('propiedad');
 

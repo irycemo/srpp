@@ -171,7 +171,7 @@ class Rectificatoria extends Component
 
         try {
 
-            (new PredioService())->revisarPorcentajesFinal($this->sentenciaPredio);
+            (new PredioService())->revisarPorcentajesFinal($this->sentenciaPredio->propietarios());
 
         } catch (PredioException $ex) {
 

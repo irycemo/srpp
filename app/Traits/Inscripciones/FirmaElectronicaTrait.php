@@ -386,13 +386,18 @@ trait FirmaElectronicaTrait{
             $item->porcentaje_nuda = $propietario->porcentaje_nuda_formateada;
             $item->porcentaje_usufructo = $propietario->porcentaje_usufructo_formateada;
 
-            if($propietario->representadoPor){
+            $propietario->load('representadoPor.persona');
 
-                $item->representado_por = $propietario->representadoPor->persona->nombre . ' ' .
-                                            $propietario->representadoPor->persona->ap_paterno . ' ' .
-                                            $propietario->representadoPor->persona->ap_materno . ' ' .
-                                            $propietario->representadoPor->persona->multiple_nombre . ' ' .
-                                            $propietario->representadoPor->persona->razon_social ;
+            $item->representado_por = '';
+
+            foreach($propietario->representadoPor as $representante){
+
+                $item->representado_por = $item->representado_por . ' / ' .
+                                            $representante->persona->nombre . ' ' .
+                                            $representante->persona->ap_paterno . ' ' .
+                                            $representante->persona->ap_materno . ' ' .
+                                            $representante->persona->multiple_nombre . ' ' .
+                                            $representante->persona->razon_social ;
 
             }
 
@@ -415,13 +420,16 @@ trait FirmaElectronicaTrait{
             $item->porcentaje_nuda = $transmitente->porcentaje_nuda_formateada;
             $item->porcentaje_usufructo = $transmitente->porcentaje_usufructo_formateada;
 
-            if($transmitente->representadoPor){
+            $item->representado_por = '';
 
-                $item->representado_por = $transmitente->representadoPor->persona->nombre . ' ' .
-                                            $transmitente->representadoPor->persona->ap_paterno . ' ' .
-                                            $transmitente->representadoPor->persona->ap_materno . ' ' .
-                                            $transmitente->representadoPor->persona->multiple_nombre . ' ' .
-                                            $transmitente->representadoPor->persona->razon_social ;
+            foreach($propietario->representadoPor as $representante){
+
+                $item->representado_por = $item->representado_por . ' / ' .
+                                            $representante->persona->nombre . ' ' .
+                                            $representante->persona->ap_paterno . ' ' .
+                                            $representante->persona->ap_materno . ' ' .
+                                            $representante->persona->multiple_nombre . ' ' .
+                                            $representante->persona->razon_social ;
 
             }
 

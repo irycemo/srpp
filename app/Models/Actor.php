@@ -25,7 +25,7 @@ class Actor extends Model implements Auditable
     }
 
     public function representadoPor(){
-        return $this->belongsTo(Actor::class, 'representados', 'representado_id', 'representante_id');
+        return $this->belongsToMany(Actor::class, 'representados', 'representado_id', 'representante_id');
     }
 
     public function representados(){
