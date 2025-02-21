@@ -1391,9 +1391,9 @@
                 </x-button-blue>
 
                 <x-button-red
-                    wire:click="resetear"
+                    wire:click="$toggle('modalContraseña')"
                     wire:loading.attr="disabled"
-                    wire:target="resetear"
+                    wire:target="$toggle('modalContraseña')"
                     type="button">
                     Cerrar
                 </x-button-red>

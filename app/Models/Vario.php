@@ -34,4 +34,16 @@ class Vario extends Model implements Auditable
         return $this->belongsTo(Predio::class, 'predio_id');
     }
 
+    public function fiduciaria(){
+        return $this->actores()->with('persona')->where('tipo_Actor', 'FIDUCIARIA')->first();
+    }
+
+    public function fideicomitentes(){
+        return $this->actores()->with('persona')->where('tipo_Actor', 'FIDECOMITENTE')->get();
+    }
+
+    public function fideicomisarios(){
+        return $this->actores()->with('persona')->where('tipo_Actor', 'FIDEICOMISARIO')->get();
+    }
+
 }

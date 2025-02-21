@@ -38,7 +38,7 @@ Artisan::command('usuario', function(){
 
 });
 
-Artisan::command('representates', function(){
+Artisan::command('representanes', function(){
 
     $representados = Actor::whereNotNull('representado_por')->get();
 

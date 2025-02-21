@@ -447,4 +447,10 @@ class Constantes{
         'OBLIGADO SOLIDARIO Y AVAL'
     ];
 
+    const ACTORES_FIDEICOMISO = [
+        'FIDUCIARIA',
+        'FIDECOMITENTE',
+        'FIDEICOMISARIO',
+    ];
+
 }
