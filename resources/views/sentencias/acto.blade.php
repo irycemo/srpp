@@ -176,8 +176,13 @@
                 </div>
 
                 <p class="separador">Descripción del acto</p>
+
                 <p class="parrafo">
-                    {{ $sentencia->descripcion }}
+                    <strong>Tipo: </strong>{{ $sentencia->tipo }}
+                </p>
+
+                <p class="parrafo">
+                    <strong>Descripción: </strong>{{ $sentencia->descripcion }}
                 </p>
 
                 <p class="separador">Documento de entrada</p>

@@ -52,7 +52,7 @@ class FideicomisoCrear extends Component
 
                 $this->modelo->actores()->create([
                     'persona_id' => $persona->id,
-                    'tipo_actor' => $this->tipo_actor,
+                    'tipo_actor' => $this->sub_tipo,
                     'creado_por' => auth()->id()
                 ]);
 
@@ -94,7 +94,7 @@ class FideicomisoCrear extends Component
 
                     $this->modelo->actores()->create([
                         'persona_id' => $persona->id,
-                        'tipo_actor' => $this->tipo_actor,
+                        'tipo_actor' => $this->sub_tipo,
                         'creado_por' => auth()->id()
                     ]);
 

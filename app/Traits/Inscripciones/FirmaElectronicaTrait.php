@@ -563,6 +563,7 @@ trait FirmaElectronicaTrait{
         $object->fecha_inscripcion = Carbon::parse($sentencia->fecha_inscripcion)->format('d/m/Y');
         $object->fecha_prelacion = Carbon::parse($sentencia->movimientoRegistral->fecha_prelacion)->format('d/m/Y');
         $object->hojas = $sentencia->hojas;
+        $object->tipo = $sentencia->tipo;
         $object->expediente = $sentencia->expediente;
         $object->tomo = $sentencia->tomo;
         $object->registro = $sentencia->registro;
