@@ -3,10 +3,13 @@
 namespace App\Http\Services;
 
 use Illuminate\Support\Facades\Log;
-use App\Exceptions\CertificacionServiceException;
+use App\Exceptions\InscripcionesServiceException;
 use App\Models\Sentencia;
+use App\Traits\Inscripciones\RecuperarPropietariosTrait;
 
 class SentenciasService{
+
+    use RecuperarPropietariosTrait;
 
     public function store(array $request){
 
@@ -21,7 +24,23 @@ class SentenciasService{
 
             Log::error('Error al ingresar el trámite: ' . $request['año'] . '-' . $request['tramite'] . '-' . $request['usuario'] . ' desde Sistema Trámites. ' . $th);
 
-            throw new CertificacionServiceException('Error al ingresar cancelación de gravamen con trámite: ' . $request['año'] . '-' . $request['tramite'] . '-' . $request['usuario'] . ' desde Sistema Trámites.');
+            throw new InscripcionesServiceException('Error al ingresar cancelación de gravamen con trámite: ' . $request['año'] . '-' . $request['tramite'] . '-' . $request['usuario'] . ' desde Sistema Trámites.');
+
+        }
+
+    }
+
+    public function corregir(Sentencia $sentencia){
+
+        if($sentencia->acto_contenido == 'SENTENCIA RECTIFICACTORIA'){
+
+        }elseif($sentencia->acto_contenido == 'CANCELACIÓN DE SENTENCIA'){
+
+        }elseif(in_array($sentencia->acto_contenido, ['RESOLUCIÓN', 'DEMANDA', 'PROVIDENCIA PRECAUTORIA'])){
+
+        }else{
+
+            throw new InscripcionesServiceException('El acto contenido no esta registrado para corrección.');
 
         }
 

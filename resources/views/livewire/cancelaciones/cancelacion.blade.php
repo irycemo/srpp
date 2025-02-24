@@ -55,21 +55,41 @@
 
                     <div class="flex gap-3 items-center justify-center mx-auto mb-4">
 
-                        <input type="text" value="{{ $gravamenCancelarMovimiento->gravamen->acto_contenido }}" class="bg-white rounded text-sm w-full" readonly>
+                        <x-input-group for="gravamen-acto" label="Acto del gravamen" class="w-full col-span-2">
 
-                        <input type="text" value="{{ $gravamenCancelarMovimiento->gravamen->tipo }}" class="bg-white rounded text-sm w-full" readonly>
+                            <x-input-text id="gravamen-acto" value="{{ $gravamenCancelarMovimiento->gravamen->acto_contenido }}" readonly/>
+
+                        </x-input-group>
+
+                        <x-input-group for="gravamen-tipo" label="Tipo de gravamen" class="w-full col-span-2">
+
+                            <x-input-text id="gravamen-tipo" value="{{ $gravamenCancelarMovimiento->gravamen->tipo }}" readonly/>
+
+                        </x-input-group>
 
                     </div>
 
                     <div class="flex gap-3 items-center justify-center mx-auto mb-4">
 
-                        <input type="text" value="{{ $gravamenCancelarMovimiento->gravamen->valor_gravamen }}" class="bg-white rounded text-sm w-full" readonly>
+                        <x-input-group for="gravamen-valor" label="Valor de gravamen" class="w-full col-span-2">
 
-                        <input type="text" value="{{ $gravamenCancelarMovimiento->gravamen->fecha_inscripcion }}" class="bg-white rounded text-sm w-full" readonly>
+                            <x-input-text id="gravamen-valor" value="{{ $gravamenCancelarMovimiento->gravamen->valor_gravamen }}" readonly/>
+
+                        </x-input-group>
+
+                        <x-input-group for="gravamen-fecha" label="Fecha de inscripción" class="w-full col-span-2">
+
+                            <x-input-text id="gravamen-fecha" value="{{ $gravamenCancelarMovimiento->gravamen->fecha_inscripcion }}" readonly/>
+
+                        </x-input-group>
 
                     </div>
 
-                    <textarea class="bg-white rounded text-sm w-full" readonly>{{ $gravamenCancelarMovimiento->gravamen->observaciones }}</textarea>
+                    <x-input-group for="gravamen-observacion" label="Observaciones" class="w-full col-span-2">
+
+                        <textarea rows="5" class="bg-white rounded text-sm w-full" readonly>{{ $gravamenCancelarMovimiento->gravamen->observaciones }}</textarea>
+
+                    </x-input-group>
 
                 </div>
 

@@ -320,7 +320,7 @@
                                     </p>
 
                                     <p class="parrafo">
-                                        <strong>Tipo / Número de documento: </strong> {{ $gravamen->tipo_documento }}/{{ $gravamen->numero_documento }}
+                                        <strong>Tipo de documento / Número de documento: </strong> {{ $gravamen->tipo_documento }} / {{ $gravamen->numero_documento }}
                                     </p>
 
                                     <p class="parrafo">
@@ -328,7 +328,7 @@
                                     </p>
 
                                     <p class="parrafo">
-                                        <strong>Tipo: </strong> {{ $gravamen->tipo }}
+                                        <strong>Tipo de gravamen: </strong> {{ $gravamen->tipo }}
                                     </p>
 
                                     <p class="parrafo">

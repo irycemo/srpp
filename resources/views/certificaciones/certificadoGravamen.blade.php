@@ -215,9 +215,9 @@
                         <strong>Distrito: </strong>{{ $gravamen->distrito }};
                         CON <strong>FECHA DE INSCRIPCIÓN: </strong> {{ $gravamen->fecha_inscripcion }};
                         <strong>RELATIVO A: </strong> {{ $gravamen->acto_contenido }};
-                        <strong>Tipo / Número de documento: </strong>{{ $gravamen->tipo }}/{{ $gravamen->numero_documento }}
+                        <strong>Tipo de documento / Número de documento: </strong>{{ $gravamen->tipo_documento }} / {{ $gravamen->numero_documento }}
                         <strong>Procedencia: </strong>{{ $gravamen->procedencia }}
-                        <strong>Tipo: </strong>{{ $gravamen->tipo }};
+                        <strong>Tipo de gravamen: </strong>{{ $gravamen->tipo }};
                         <strong>CELEBRADO POR EL(LOS) ACREEDOR(ES): </strong>
                         @foreach ($gravamen->acreedores as $acreedor)
 

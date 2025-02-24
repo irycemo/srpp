@@ -560,39 +560,4 @@ trait InscripcionesIndex{
 
     }
 
-    public function corregir(MovimientoRegistral $modelo){
-
-        $movimiento = $modelo->folioreal->movimientosRegistrales()
-                                        ->where('folio', '>', $modelo->folio)
-                                        ->whereNotIn('estado', ['nuevo', 'precalificacion'])
-                                        ->first();
-
-        if($movimiento){
-
-            $this->dispatch('mostrarMensaje', ['warning', "Ya existe al menos un movimiento posterior elaborado no es posible enviar a corrección."]);
-
-            return;
-
-        }
-
-        try {
-
-            $modelo->update([
-                'estado' => 'corrección',
-                'actualizado_por' => auth()->id()
-            ]);
-
-            $modelo->audits()->latest()->first()->update(['tags' => 'Cambio estado a corrección']);
-
-            $this->dispatch('mostrarMensaje', ['success', "La información se actualizó con éxito."]);
-
-        } catch (\Throwable $th) {
-
-            $this->dispatch('mostrarMensaje', ['error', "Hubo un error."]);
-            Log::error("Error al enviar a corrección movimiento registral por el usuario: (id: " . auth()->user()->id . ") " . auth()->user()->name . ". " . $th);
-
-        }
-
-    }
-
 }

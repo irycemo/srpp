@@ -783,18 +783,7 @@
                                     <x-table.cell>{{ $propietario->porcentaje_usufructo }}%</x-table.cell>
                                     <x-table.cell>
                                         <div class="flex items-center gap-3">
-                                            <x-button-blue
-                                                wire:click="editarActor({{ $propietario->id }}, 'propietario')"
-                                                wire:traget="editarActor({{ $propietario->id }}, 'propietario')"
-                                                wire:loading.attr="disabled"
-                                            >
-                                                Editar
-                                            </x-button-blue>
-                                            {{-- <x-button-red
-                                                wire:click="borrarActor({{ $propietario->id }})"
-                                                wire:loading.attr="disabled">
-                                                Borrar
-                                            </x-button-red> --}}
+
                                         </div>
                                     </x-table.cell>
 
