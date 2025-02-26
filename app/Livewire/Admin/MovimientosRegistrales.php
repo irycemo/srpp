@@ -191,7 +191,7 @@ class MovimientosRegistrales extends Component
     public function correccion(){
 
         $movimiento = $this->modelo_editar->folioReal->movimientosRegistrales()
-                                                        ->whereIn('estado', ['finalizado', 'concluido'])
+                                                        ->whereIn('estado', ['finalizado', 'concluido', 'elaborado'])
                                                         ->where('folio', '>', $this->modelo_editar->folio)
                                                         ->first();
 
@@ -223,15 +223,11 @@ class MovimientosRegistrales extends Component
 
             DB::transaction(function () {
 
-                if(in_array($this->modelo_editar->inscripcionPropiedad?->servicio, ['D121', 'D120', 'D123', 'D122', 'D119', 'D124', 'D125', 'D126'])){
+                $folios = $this->modelo_editar->movimientosHijos()->pluck('folio_real') ;
 
-                    $folios = $this->modelo_editar->movimientosHijos()->pluck('folio_real') ;
+                foreach($folios as $folio){
 
-                    foreach($folios as $folio){
-
-                        (new FolioRealService())->borrarFolioReal($folio);
-
-                    }
+                    (new FolioRealService())->borrarFolioReal($folio);
 
                 }
 
@@ -239,7 +235,7 @@ class MovimientosRegistrales extends Component
                 $this->modelo_editar->actualizado_por = auth()->id();
                 $this->modelo_editar->save();
 
-                $this->revisarMovimientoCorreccion();
+                $this->revisarMovimientosDeCorreccion();
 
                 $this->modelo_editar->audits()->latest()->first()->update(['tags' => 'Cambio estado a corrección']);
 
@@ -302,7 +298,7 @@ class MovimientosRegistrales extends Component
 
     }
 
-    public function revisarMovimientoCorreccion(){
+    public function revisarMovimientosDeCorreccion(){
 
         if($this->modelo_editar->sentencia){
 
