@@ -44,7 +44,7 @@ class TransmitenteCrear extends Component
 
             if($this->persona->getKey() && $persona){
 
-                foreach($this->modelo->actores as $actor){
+                foreach($this->modelo->transmitentes() as $actor){
 
                     if($actor->persona_id == $persona->id) throw new ActoresException('La persona ya es un actor.');
 
@@ -58,7 +58,7 @@ class TransmitenteCrear extends Component
 
             }elseif($persona){
 
-                foreach($this->modelo->actores as $actor){
+                foreach($this->modelo->transmitentes() as $actor){
 
                     if($actor->persona_id == $persona->id) throw new ActoresException('La persona ya es un actor.');
 

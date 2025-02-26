@@ -113,6 +113,18 @@ class CertificadoGravamenController extends Controller
 
         }
 
+        $fideicomiso = $movimientoRegistral->folioReal->fideicomisoActivo();
+
+        if($fideicomiso){
+
+            $fideicomiso = $this->fideicomiso($fideicomiso);
+
+        }else{
+
+            $fideicomiso = null;
+
+        }
+
         $object = (object)[];
 
         $object->predio = $this->predio($movimientoRegistral->folioReal->predio);
@@ -122,6 +134,7 @@ class CertificadoGravamenController extends Controller
         $object->varios = $variosCollection;
         $object->sentencias = $sentenciasCollection;
         $object->gravamenes = $gravamenesCollection;
+        $object->fideicomiso = $fideicomiso;
 
         $fielDirector = Credential::openFiles(Storage::disk('efirmas')->path($director->efirma->cer),
                                                 Storage::disk('efirmas')->path($director->efirma->key),
@@ -148,6 +161,7 @@ class CertificadoGravamenController extends Controller
             'folioReal' => $object->folioReal,
             'varios' => $object->varios,
             'sentencias' => $object->sentencias,
+            'fideicomiso' => $object->fideicomiso,
             'datos_control' => $object->datos_control,
             'firma_electronica' => false,
             'qr'=> $qr
@@ -172,6 +186,7 @@ class CertificadoGravamenController extends Controller
             'folioReal' => $objeto->folioReal,
             'varios' => $object->varios,
             'sentencias' => $object->sentencias,
+            'fideicomiso' => $object->fideicomiso,
             'datos_control' => $objeto->datos_control,
             'firma_electronica' => base64_encode($firmaDirector),
             'qr'=> $qr
@@ -257,6 +272,7 @@ class CertificadoGravamenController extends Controller
             'folioReal' => $objeto->folioReal,
             'varios' => $objeto->varios,
             'sentencias' => $objeto->sentencias,
+            'fideicomiso' => $objeto->fideicomiso,
             'datos_control' => $objeto->datos_control,
             'firma_electronica' => base64_encode($firmaElectronica->cadena_encriptada),
             'qr'=> $qr

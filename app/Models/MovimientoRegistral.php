@@ -7,6 +7,7 @@ use App\Models\Gravamen;
 use App\Models\FolioReal;
 use App\Models\Propiedad;
 use App\Models\Cancelacion;
+use App\Models\Fideicomiso;
 use App\Models\ReformaMoral;
 use App\Traits\ModelosTrait;
 use App\Models\Certificacion;
@@ -61,6 +62,10 @@ class MovimientoRegistral extends Model implements Auditable
 
     public function inscripcionPropiedad(){
         return $this->hasOne(Propiedad::class);
+    }
+
+    public function fideicomiso(){
+        return $this->hasOne(Fideicomiso::class);
     }
 
     public function cancelacion(){

@@ -3,8 +3,6 @@
 namespace App\Http\Services;
 
 use App\Exceptions\PredioException;
-use App\Models\Predio;
-
 
 class PredioService{
 

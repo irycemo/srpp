@@ -45,7 +45,7 @@ trait ActoresTrait{
     public $crear = false;
     public $editar = false;
     public $flag_agregar = false;
-    public $visible = true;
+    public $size = 'lg';
 
     public function getListeners()
     {

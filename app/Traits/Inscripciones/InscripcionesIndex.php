@@ -10,6 +10,7 @@ use App\Http\Services\SistemaTramitesService;
 use App\Http\Controllers\Varios\VariosController;
 use App\Http\Controllers\Gravamen\GravamenController;
 use App\Http\Controllers\Cancelaciones\CancelacionController;
+use App\Http\Controllers\InscripcionesPropiedad\FideicomisoController;
 use App\Http\Controllers\InscripcionesPropiedad\PropiedadController;
 use App\Http\Controllers\Reformas\ReformaController;
 use App\Http\Controllers\Sentencias\SentenciasController;
@@ -239,6 +240,12 @@ trait InscripcionesIndex{
 
         }
 
+        if($movimientoRegistral->fideicomiso){
+
+            return redirect()->route('propiedad.fideicomiso', $movimientoRegistral->fideicomiso);
+
+        }
+
         if($movimientoRegistral->gravamen){
 
             return redirect()->route('gravamen.inscripcion', $movimientoRegistral->gravamen);
@@ -302,6 +309,12 @@ trait InscripcionesIndex{
                     $pdf = (new PropiedadController())->reimprimir($movimientoRegistral->firmaElectronica);
 
                 }
+
+            }
+
+            if($movimientoRegistral->fideicomiso){
+
+                $pdf = (new FideicomisoController())->reimprimir($movimientoRegistral->firmaElectronica);
 
             }
 

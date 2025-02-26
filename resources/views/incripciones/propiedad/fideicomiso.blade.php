@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
-    <title>Gravamen</title>
+    <title>Fideicomiso</title>
 </head>
 <style>
     header{
@@ -172,44 +172,20 @@
                 </div>
 
                 <div class="titulo">
-                    <p><strong>{{ $gravamen->acto_contenido }}</strong></p>
+                    <p><strong>{{ $fideicomiso->tipo }}</strong></p>
                 </div>
 
-                <p class="separador">Descripción del acto</p>
+                <p class="separador">Objeto del fideicomiso</p>
 
                 <p class="parrafo">
-                    {{ $gravamen->observaciones }}
-                </p>
-
-                <p class="separador">Documento de entrada</p>
-
-                <p class="parrafo">
-                    <strong>Tipo de documento: </strong> {{ $gravamen->tipo_documento }}; @if(isset($gravamen->numero_documento))<strong>Número de documento: </strong> {{ $gravamen->numero_documento }};@endif <strong>Cargo de la autoridad: </strong> {{ $gravamen->autoridad_cargo }}; <strong>Nombre de la autoridad: </strong> {{ $gravamen->autoridad_nombre }}; <strong>Número de la autoridad: </strong> {{ $gravamen->autoridad_numero }}; <strong>Fecha de emisión: </strong> {{ $gravamen->fecha_emision }}; @if(isset($gravamen->fecha_inscripcion))<strong>Fecha de inscripción: </strong> {{$gravamen->fecha_inscripcion }};@endif @if(isset($gravamen->procedencia))<strong>Dependencia: </strong>{{ $gravamen->procedencia }} @endif
-                </p>
-
-                @include('comun.caratulas.ubicacion_inmueble')
-
-                @if(count($predio->colindancias))
-
-                    @include('comun.caratulas.colindancias')
-
-                @endif
-
-                @include('comun.caratulas.descripcion_inmueble')
-
-                @include('comun.caratulas.propietarios')
-
-                <p class="separador">datos del gravamen</p>
-
-                <p class="parrafo">
-                    <strong>Fecha de inscripción:</strong> {{ $gravamen->fecha_inscripcion }}. <strong>Valor del gravamen:</strong> ${{ number_format($gravamen->valor_gravamen, 2) }} {{ $gravamen->divisa }}. @if(isset($gravamen->expediente)) <strong>Expediente:</strong> {{ $gravamen->expediente }} @endif
+                    {{ $fideicomiso->objeto }}
                 </p>
 
                 <p class="parrafo">
-                    <strong>Tipo de gravamen:</strong> {{ $gravamen->tipo }}
+                    <strong>Fecha de inscripción:</strong> {{ $fideicomiso->fecha_inscripcion }}. @if(isset($fideicomiso->fecha_vencimiento)) <strong>Fecha de vencimiento:</strong> {{ $fideicomiso->fecha_vencimiento }} @endif
                 </p>
 
-                <p class="separador">Actores</p>
+                <p class="separador">Actores del fideicomiso</p>
 
                 <table>
 
@@ -224,14 +200,14 @@
 
                     <tbody>
 
-                        @foreach ($gravamen->deudores as $deudor)
+                        @foreach ($fideicomiso->actores as $actor)
 
                         <tr>
                             <td style="padding-right: 40px;">
-                                {{ $deudor->tipo_deudor }}
+                                {{ $actor->tipo }}
                             </td>
                             <td style="padding-right: 40px;">
-                                {{ $deudor->nombre }} {{ $deudor->ap_paterno }} {{ $deudor->ap_materno }} {{ $deudor->razon_social }}
+                                {{ $actor->nombre }} {{ $actor->ap_paterno }} {{ $actor->ap_materno }} {{ $actor->razon_social }}
                             </td>
                         </tr>
 
@@ -241,33 +217,23 @@
 
                 </table>
 
-                <p class="separador">acreedores</p>
+                <p class="separador">Documento de entrada</p>
 
-                <table>
+                <p class="parrafo">
+                    <strong>Tipo de documento: </strong> {{ $fideicomiso->tipo_documento }}; @if(isset($fideicomiso->numero_documento))<strong>Número de documento: </strong> {{ $fideicomiso->numero_documento }};@endif <strong>Cargo de la autoridad: </strong> {{ $fideicomiso->autoridad_cargo }}; <strong>Nombre de la autoridad: </strong> {{ $fideicomiso->autoridad_nombre }}; <strong>Número de la autoridad: </strong> {{ $fideicomiso->autoridad_numero }}; <strong>Fecha de emisión: </strong> {{ $fideicomiso->fecha_emision }}; @if(isset($fideicomiso->fecha_inscripcion))<strong>Fecha de inscripción: </strong> {{$fideicomiso->fecha_inscripcion }};@endif @if(isset($fideicomiso->procedencia))<strong>Dependencia: </strong>{{ $fideicomiso->procedencia }} @endif
+                </p>
 
-                    <thead>
+                @include('comun.caratulas.ubicacion_inmueble')
 
-                        <tr>
-                            <th >Nombre / Razón social</th>
-                        </tr>
+                @if(count($predio->colindancias))
 
-                    </thead>
+                    @include('comun.caratulas.colindancias')
 
-                    <tbody>
+                @endif
 
-                        @foreach ($gravamen->acreedores as $acreedor)
+                @include('comun.caratulas.descripcion_inmueble')
 
-                            <tr>
-                                <td style="padding-right: 40px;">
-                                    {{ $acreedor->nombre }} {{ $acreedor->ap_paterno }} {{ $acreedor->ap_materno }} {{ $acreedor->razon_social }}
-                                </td>
-                            </tr>
-
-                        @endforeach
-
-                    </tbody>
-
-                </table>
+                @include('comun.caratulas.propietarios')
 
             </div>
 
@@ -284,7 +250,7 @@
                 @if(!$firma_electronica)
 
                     @if($datos_control->distrito== '02 Uruapan' )
-                    <p style="margin-top: 80px;"></p>
+                        <p style="margin-top: 80px;"></p>
                         <p class="borde">Lic. SANDRO MEDINA MORALES </p>
                         <p style="margin:0;">COORDINADOR REGIONAL 4 PURHÉPECHA (URUAPAN)</p>
                     @else
@@ -359,7 +325,7 @@
                                 <p style="margin: 0"><strong>Tipo de servicio: </strong>{{ $datos_control->tipo_servicio }}</p>
                                 <p style="margin: 0"><strong>Servicio: </strong>{{ $datos_control->servicio }}</p>
                                 <p style="margin: 0"><strong>Elaborado en: </strong>{{ $datos_control->elaborado_en }}</p>
-                                <p style="margin: 0"><strong>Fecha de prelación: </strong>{{ $gravamen->fecha_prelacion }}</p>
+                                <p style="margin: 0"><strong>Fecha de prelación: </strong>{{ $fideicomiso->fecha_prelacion }}</p>
                                 <p style="margin: 0"><strong>Registrado POR: </strong>{{  $datos_control->registrado_por }}</p>
                                 <p style="margin: 0"><strong>Folio real asignado por:</strong> {{ $datos_control->asigno_folio }}</p>
 

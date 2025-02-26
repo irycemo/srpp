@@ -27,7 +27,8 @@ class MovimientoRegistralService{
         public InscripcionesCancelacionService $inscripcionesCancelacionService,
         public VariosService $variosService,
         public SentenciasService $sentenciasService,
-        public ReformaMoralService $reformaMoralService
+        public ReformaMoralService $reformaMoralService,
+        public FideicomisoService $fideicomisoService
     ){}
 
     public function store(MovimientoRegistralRequest $request)
@@ -97,8 +98,15 @@ class MovimientoRegistralService{
 
         if(in_array($request['categoria_servicio'], ['Inscripciones - Propiedad', 'Subdivisiones'])){
 
+            if($request['servicio'] == 'D149'){
 
-            $this->inscripcionesPropiedadService->store($request + ['movimiento_registral' => $id]);
+                $this->fideicomisoService->store($request + ['movimiento_registral' => $id]);
+
+            }else{
+
+                $this->inscripcionesPropiedadService->store($request + ['movimiento_registral' => $id]);
+
+            }
 
         }
 
@@ -643,7 +651,7 @@ class MovimientoRegistralService{
 
         }
 
-        $inscripcionesPropiedad = ['D114', 'D118', 'D116', 'D115', 'D113', 'D157'];
+        $inscripcionesPropiedad = ['D114', 'D118', 'D116', 'D115', 'D113', 'D157', 'D149'];
 
         /* Inscripciones: Propiedad */
         if(in_array($servicio, $inscripcionesPropiedad) && $categoria_servicio == 'Inscripciones - Propiedad'){
@@ -667,7 +675,7 @@ class MovimientoRegistralService{
         }
 
         /* Inscripciones: Varios */
-        if(in_array($servicio, ['D128', 'D112', 'D110', 'D157', 'DL19', 'D149', 'DL16', 'DN83']) && $categoria_servicio == 'Varios, Arrendamientos, Avisos Preventivos'){
+        if(in_array($servicio, ['D128', 'D112', 'D110', 'D157', 'DL19', 'DL16', 'DN83']) && $categoria_servicio == 'Varios, Arrendamientos, Avisos Preventivos'){
 
             return $this->asignacionService->obtenerUsuarioVarios($folioReal, $distrito, $estado);
 

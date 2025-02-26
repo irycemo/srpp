@@ -478,7 +478,7 @@ class InscripcionGeneral extends Component
 
             }
 
-            $transmitente = $this->inscripcion->transmitentes()->find($propietario['id']);
+            /* $transmitente = $this->inscripcion->transmitentes()->find($propietario['id']);
 
             if($transmitente){
 
@@ -488,7 +488,7 @@ class InscripcionGeneral extends Component
                     'porcentaje_usufructo' => abs($transmitente->porcentaje_usufructo - $propietario['porcentaje_usufructo']),
                 ]);
 
-            }
+            } */
 
         }
 
@@ -537,17 +537,11 @@ class InscripcionGeneral extends Component
 
                 if(!$this->nuevoFolio){
 
-                    if($this->inscripcion->movimientoRegistral->estado != 'correccion'){
-
-                        $this->procesarPropietarios();
-
-                    }
+                    $this->procesarPropietarios();
 
                     $this->inscripcion->movimientoRegistral->folioReal->predio->monto_transaccion = $this->inscripcion->monto_transaccion;
 
-                }
-
-                if($this->nuevoFolio) {
+                }else{
 
                     $folio = $this->generarNuevoFolioReal();
 

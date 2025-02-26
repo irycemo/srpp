@@ -198,6 +198,8 @@ class Rectificatoria extends Component
 
             DB::transaction(function () {
 
+                $this->guardar();
+
                 $this->sentencia->estado = 'activo';
                 $this->sentencia->actualizado_por = auth()->id();
                 $this->sentencia->fecha_inscripcion = now()->toDateString();
@@ -241,31 +243,11 @@ class Rectificatoria extends Component
 
                 $this->sentencia->save();
 
-                foreach ($this->medidas as $key =>$medida) {
-
-                    if($medida['id'] == null){
-
-                        $aux = $this->sentenciaPredio->colindancias()->create([
-                            'viento' => $medida['viento'],
-                            'longitud' => $medida['longitud'],
-                            'descripcion' => $medida['descripcion'],
-                        ]);
-
-                        $this->medidas[$key]['id'] = $aux->id;
-
-                    }else{
-
-                        Colindancia::find($medida['id'])->update([
-                            'viento' => $medida['viento'],
-                            'longitud' => $medida['longitud'],
-                            'descripcion' => $medida['descripcion'],
-                        ]);
-
-                    }
-
-                }
+                $this->guardarColindancias($this->sentenciaPredio);
 
             });
+
+
 
             $this->dispatch('mostrarMensaje', ['success', "La información se guardó con éxito."]);
 
@@ -347,6 +329,7 @@ class Rectificatoria extends Component
                 'superficie_judicial' => $this->sentencia->movimientoRegistral->folioReal->predio->superficie_judicial,
                 'superficie_notarial' => $this->sentencia->movimientoRegistral->folioReal->predio->superficie_notarial,
                 'area_comun_terreno' => $this->sentencia->movimientoRegistral->folioReal->predio->area_comun_terreno,
+                'divisa' => $this->sentencia->movimientoRegistral->folioReal->predio->divisa,
                 'area_comun_construccion' => $this->sentencia->movimientoRegistral->folioReal->predio->area_comun_construccion,
                 'valor_terreno_comun' => $this->sentencia->movimientoRegistral->folioReal->predio->valor_terreno_comun,
                 'valor_construccion_comun' => $this->sentencia->movimientoRegistral->folioReal->predio->valor_construccion_comun,
@@ -384,7 +367,7 @@ class Rectificatoria extends Component
 
             $this->sentencia->update(['predio_id' => $predio->id]);
 
-            $this->cargarColindancias($this->sentencia->movimientoRegistral->folioReal->predio);
+            $this->copiarColindancias($this->sentencia->movimientoRegistral->folioReal->predio, $predio->id);
 
             foreach ($this->sentencia->movimientoRegistral->folioReal->predio->propietarios() as $actor) {
 
@@ -400,7 +383,7 @@ class Rectificatoria extends Component
 
         }else{
 
-            $this->cargarColindancias($this->sentencia->movimientoRegistral->folioReal->predio);
+            $this->cargarColindancias($this->sentencia->predio);
 
             $this->sentencia->predio->load('actores.persona');
 
@@ -419,6 +402,7 @@ class Rectificatoria extends Component
         $this->sentencia->movimientoRegistral->folioReal->predio->superficie_construccion = $this->sentenciaPredio->superficie_construccion;
         $this->sentencia->movimientoRegistral->folioReal->predio->monto_transaccion = $this->sentenciaPredio->monto_transaccion;
         $this->sentencia->movimientoRegistral->folioReal->predio->observaciones = $this->sentenciaPredio->observaciones;
+        $this->sentencia->movimientoRegistral->folioReal->predio->divisa = $this->sentenciaPredio->divisa;
         $this->sentencia->movimientoRegistral->folioReal->predio->superficie_judicial = $this->sentenciaPredio->superficie_judicial;
         $this->sentencia->movimientoRegistral->folioReal->predio->superficie_notarial = $this->sentenciaPredio->superficie_notarial;
         $this->sentencia->movimientoRegistral->folioReal->predio->area_comun_terreno = $this->sentenciaPredio->area_comun_terreno;
@@ -457,6 +441,8 @@ class Rectificatoria extends Component
         $this->sentencia->movimientoRegistral->folioReal->predio->clave_edificio = $this->sentenciaPredio->clave_edificio;
 
         $this->sentencia->movimientoRegistral->folioReal->predio->save();
+
+        $this->sentencia->movimientoRegistral->folioReal->predio->colindancias()->delete();
 
         $this->guardarColindancias($this->sentencia->movimientoRegistral->folioReal->predio);
 

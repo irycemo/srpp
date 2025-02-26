@@ -1,6 +1,6 @@
 <div>
 
-    <div class="mb-2 flex justify-end @if(!$visible) hidden @endif">
+    <div class="mb-2 flex justify-end">
 
         <x-button-blue wire:click="abrirModal">Agregar representante</x-button-blue>
 

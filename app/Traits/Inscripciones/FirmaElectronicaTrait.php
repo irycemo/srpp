@@ -11,8 +11,11 @@ use App\Models\FolioReal;
 use App\Models\Propiedad;
 use App\Models\Sentencia;
 use App\Models\Cancelacion;
+use App\Models\Fideicomiso;
+use App\Models\ReformaMoral;
 use App\Models\Certificacion;
 use App\Models\FirmaElectronica;
+use App\Models\FolioRealPersona;
 use App\Models\MovimientoRegistral;
 use Illuminate\Support\Facades\Storage;
 
@@ -166,6 +169,8 @@ trait FirmaElectronicaTrait{
     {
 
         $colindancias = collect();
+
+        $predio->load('colindancias');
 
         foreach ($predio->colindancias as $colindancia) {
 
@@ -388,7 +393,7 @@ trait FirmaElectronicaTrait{
 
             $propietario->load('representadoPor.persona');
 
-            $item->representado_por = '';
+            $item->representado_por = null;
 
             foreach($propietario->representadoPor as $representante){
 
@@ -420,7 +425,7 @@ trait FirmaElectronicaTrait{
             $item->porcentaje_nuda = $transmitente->porcentaje_nuda_formateada;
             $item->porcentaje_usufructo = $transmitente->porcentaje_usufructo_formateada;
 
-            $item->representado_por = '';
+            $item->representado_por = null;
 
             foreach($propietario->representadoPor as $representante){
 
@@ -706,37 +711,7 @@ trait FirmaElectronicaTrait{
 
     }
 
-    public function resetCaratula($id){
-
-        $movimiento = MovimientoRegistral::with('archivos')->find($id);
-
-        $firmas = FirmaElectronica::where('movimiento_registral_id', $id)->get();
-
-        foreach ($firmas as $firma) {
-
-            $firma->update(['estado' => 'cancelado']);
-
-        }
-
-        if($movimiento->archivos->where('descripcion', 'caratula')->count()){
-
-            foreach($movimiento->archivos as $archivo){
-
-                if($archivo->descripcion == 'caratula'){
-
-                    Storage::disk('caratulas')->delete($archivo->url);
-
-                }
-
-            }
-
-            $movimiento->archivos->where('descripcion', 'caratula')->first()->delete();
-
-        }
-
-    }
-
-    public function folioRealPersonaMoral($folioReal){
+    public function folioRealPersonaMoral(FolioRealPersona $folioReal){
 
         $folioReal->load('actores.persona', 'objetos', 'reformas');
 
@@ -825,7 +800,7 @@ trait FirmaElectronicaTrait{
 
     }
 
-    public function reforma($reforma){
+    public function reforma(ReformaMoral $reforma){
 
         $object = (object)[];
 
@@ -839,4 +814,76 @@ trait FirmaElectronicaTrait{
         return $object;
 
     }
+
+    public function fideicomiso(Fideicomiso $fideicomiso){
+
+        $fideicomiso->load('actores.persona');
+
+        $actores = collect();
+
+        foreach ($fideicomiso->actores as $actor) {
+
+            $item = (object)[];
+
+            $item->tipo = $actor->tipo_actor;
+            $item->nombre = $actor->persona->nombre;
+            $item->ap_paterno = $actor->persona->ap_paterno;
+            $item->ap_materno = $actor->persona->ap_materno;
+            $item->razon_social = $actor->persona->razon_social;
+
+            $actores->push($item);
+
+        }
+
+        $object = (object)[];
+
+        $object->id = $fideicomiso->id;
+        $object->tipo = $fideicomiso->tipo;
+        $object->objeto = $fideicomiso->objeto;
+        $object->fecha_vencimiento = Carbon::parse($fideicomiso->fecha_vencimiento)->format('d/m/Y');
+        $object->fecha_inscripcion = Carbon::parse($fideicomiso->fecha_inscripcion)->format('d/m/Y');
+        $object->numero_documento = $fideicomiso->movimientoRegistral->numero_documento;
+        $object->autoridad_cargo = $fideicomiso->movimientoRegistral->autoridad_cargo;
+        $object->tipo_documento = $fideicomiso->movimientoRegistral->tipo_documento;
+        $object->autoridad_nombre = $fideicomiso->movimientoRegistral->autoridad_nombre;
+        $object->autoridad_numero = $fideicomiso->movimientoRegistral->autoridad_numero;
+        $object->fecha_emision = Carbon::parse($fideicomiso->movimientoRegistral->fecha_emision)->format('d/m/Y');
+        $object->procedencia = $fideicomiso->movimientoRegistral->procedencia;
+        $object->fecha_prelacion = Carbon::parse($fideicomiso->movimientoRegistral->fecha_prelacion)->format('d/m/Y');
+        $object->actores = $actores;
+
+        return $object;
+
+    }
+
+    public function resetCaratula($id){
+
+        $movimiento = MovimientoRegistral::with('archivos')->find($id);
+
+        $firmas = FirmaElectronica::where('movimiento_registral_id', $id)->get();
+
+        foreach ($firmas as $firma) {
+
+            $firma->update(['estado' => 'cancelado']);
+
+        }
+
+        if($movimiento->archivos->where('descripcion', 'caratula')->count()){
+
+            foreach($movimiento->archivos as $archivo){
+
+                if($archivo->descripcion == 'caratula'){
+
+                    Storage::disk('caratulas')->delete($archivo->url);
+
+                }
+
+            }
+
+            $movimiento->archivos->where('descripcion', 'caratula')->first()->delete();
+
+        }
+
+    }
+
 }

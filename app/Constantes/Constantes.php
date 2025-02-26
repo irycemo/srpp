@@ -310,7 +310,6 @@ class Constantes{
         'HABILITACIÓN Ó AVÍO',
         'SESIÓN DE DERECHOS LITIGIOSOS',
         'REESTRUCTURA DE CREDITOS',
-
     ];
 
     const ACTOS_INSCRIPCION_VARIOS = [

@@ -21,11 +21,6 @@
 
         @livewire('varios.primer-aviso-preventivo', ['vario' => $this->vario])
 
-    {{-- Fideicomiso --}}
-    @elseif($vario->servicio == 'D149')
-
-        @livewire('varios.fideicomiso', ['vario' => $this->vario])
-
     @else
 
         <div class="p-4 bg-white shadow-xl rounded-xl mb-5">

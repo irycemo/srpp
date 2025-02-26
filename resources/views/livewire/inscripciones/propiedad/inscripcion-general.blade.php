@@ -484,7 +484,7 @@
 
     @if(!$nuevoFolio)
 
-        @if($inscripcion->movimientoRegistral->estado != 'correccion')
+        {{-- @if($inscripcion->movimientoRegistral->estado != 'correccion') --}}
 
             <div class="grid grid-cols-1 md:grid-cols-3 gap-1 mb-2">
 
@@ -753,7 +753,7 @@
 
             </div>
 
-        @else
+        {{-- @else
 
             <div class="p-4 bg-white shadow-xl rounded-xl mb-5">
 
@@ -801,7 +801,7 @@
 
             </div>
 
-        @endif
+        @endif --}}
 
     @endif
 

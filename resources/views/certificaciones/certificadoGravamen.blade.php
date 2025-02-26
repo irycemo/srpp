@@ -295,6 +295,54 @@
 
             @endif
 
+            @if(isset($fideicomiso))
+
+                <p><strong>REPORTA el siguiente {{ $fideicomiso->tipo }}:</strong></p>
+
+                <p class="separador">Objeto del fideicomiso</p>
+
+                <p class="parrafo">
+                    {{ $fideicomiso->objeto }}
+                </p>
+
+                <p class="parrafo">
+                    <strong>Fecha de inscripción:</strong> {{ $fideicomiso->fecha_inscripcion }}. @if(isset($fideicomiso->fecha_vencimiento)) <strong>Fecha de vencimiento:</strong> {{ $fideicomiso->fecha_vencimiento }} @endif
+                </p>
+
+                <p class="separador">Actores del fideicomiso</p>
+
+                <table>
+
+                    <thead>
+
+                        <tr>
+                            <th >Tipo de actor</th>
+                            <th >Nombre / Razón social</th>
+                        </tr>
+
+                    </thead>
+
+                    <tbody>
+
+                        @foreach ($fideicomiso->actores as $actor)
+
+                        <tr>
+                            <td style="padding-right: 40px;">
+                                {{ $actor->tipo }}
+                            </td>
+                            <td style="padding-right: 40px;">
+                                {{ $actor->nombre }} {{ $actor->ap_paterno }} {{ $actor->ap_materno }} {{ $actor->razon_social }}
+                            </td>
+                        </tr>
+
+                        @endforeach
+
+                    </tbody>
+
+                </table>
+
+            @endif
+
             <p class="parrafo">
                 A SOLICITUD DE: <strong>{{ $datos_control->solicitante }} </strong> se expide EL PRESENTE CERTIFICADO EN LA CIUDAD DE @if($folioReal->distrito== '02 Uruapan' ) URUAPAN, @else MORELIA, @endif MICHOACÁN, A LAS {{ $datos_control->elaborado_en }}.
             </p>

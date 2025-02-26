@@ -2,7 +2,7 @@
 
     <div class="mb-6">
 
-        <x-header>Inscripciones de propiedad</x-header>
+        <x-header>Fideicomisos</x-header>
 
         <div class="flex justify-between">
 
@@ -66,7 +66,7 @@
 
                             <span class="lg:hidden absolute top-0 left-0 bg-blue-300 px-2 py-1 text-xs text-white font-bold uppercase rounded-br-xl">Número de control</span>
 
-                            <span class="whitespace-nowrap">{{ $movimiento->año }}-{{ $movimiento->tramite }}-{{ $movimiento->usuario }}</span>
+                            {{ $movimiento->año }}-{{ $movimiento->tramite }}-{{ $movimiento->usuario }}
 
                         </x-table.cell>
 
@@ -180,14 +180,6 @@
                                                 class="w-full text-left block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 focus:outline-none focus:bg-gray-100"
                                                 role="menuitem">
                                                 Imprimir
-                                            </button>
-
-                                            <button
-                                                wire:click="corregir({{  $movimiento->id }})"
-                                                wire:loading.attr="disabled"
-                                                class="w-full text-left block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 focus:outline-none focus:bg-gray-100"
-                                                role="menuitem">
-                                                Corregir
                                             </button>
 
                                             <button

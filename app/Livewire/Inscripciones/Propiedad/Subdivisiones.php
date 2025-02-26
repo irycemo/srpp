@@ -158,7 +158,7 @@ class Subdivisiones extends Component
                         $folioReal = FolioReal::Create([
                             'matriz' => false,
                             'estado' => 'captura',
-                            'distrito_antecedente' => $this->propiedad->movimientoRegistral->getOriginal('distrito'),
+                            'distrito_antecedente' => $this->propiedad->movimientoRegistral->getRawOriginal('distrito'),
                             'folio' => (FolioReal::max('folio') ?? 0) + 1,
                             'antecedente' => $this->propiedad->movimientoRegistral->folioReal->id,
                             'seccion_antecedente' => 'Propiedad',
@@ -174,7 +174,7 @@ class Subdivisiones extends Component
                             'folio' => (FolioReal::max('folio') ?? 0) + 1,
                             'antecedente' => $this->propiedad->movimientoRegistral->folioReal->id,
                             'seccion_antecedente' => 'Propiedad',
-                            'distrito_antecedente' => $this->propiedad->movimientoRegistral->getOriginal('distrito'),
+                            'distrito_antecedente' => $this->propiedad->movimientoRegistral->getRawOriginal('distrito'),
                             'tipo_documento' => $this->propiedad->movimientoRegistral->tipo_documento,
                             'numero_documento' => $this->propiedad->movimientoRegistral->numero_documento,
                             'autoridad_cargo' => $this->propiedad->movimientoRegistral->autoridad_cargo,

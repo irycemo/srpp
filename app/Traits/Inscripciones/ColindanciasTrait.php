@@ -72,7 +72,9 @@ trait ColindanciasTrait{
             $colindanciasBorrar = $predio->colindancias()->whereNotIn('id', $ids)->get();
 
             foreach ($colindanciasBorrar as $colindancia) {
+
                 $colindancia->delete();
+
             }
 
         }
@@ -95,11 +97,24 @@ trait ColindanciasTrait{
                     'viento' => $medida['viento'],
                     'longitud' => $medida['longitud'],
                     'descripcion' => $medida['descripcion'],
+                    'predio_id' => $predio->id
                 ]);
 
             }
 
         }
+
+    }
+
+    public function copiarColindancias(Predio $predio, $id){
+
+        foreach ($predio->colindancias as $colindancia) {
+
+            $colindancia->update(['predio_id' => $id]);
+
+        }
+
+        $this->cargarColindancias($predio);
 
     }
 

@@ -12,6 +12,7 @@ use App\Models\Propiedad;
 use App\Models\Sentencia;
 use App\Models\Antecedente;
 use App\Models\Cancelacion;
+use App\Models\Fideicomiso;
 use App\Traits\ModelosTrait;
 use App\Models\Certificacion;
 use App\Constantes\Constantes;
@@ -67,6 +68,10 @@ class FolioReal extends Model implements Auditable
 
     public function propiedad(){
         return $this->hasManyThrough(Propiedad::class, MovimientoRegistral::class, 'folio_real', 'movimiento_registral_id', 'id', 'id');
+    }
+
+    public function fideicomisos(){
+        return $this->hasManyThrough(Fideicomiso::class, MovimientoRegistral::class, 'folio_real', 'movimiento_registral_id', 'id', 'id');
     }
 
     public function certificaciones(){
@@ -199,6 +204,12 @@ class FolioReal extends Model implements Auditable
                                         ->first();
 
         return $movimiento;
+
+    }
+
+    public function fideicomisoActivo(){
+
+        return $this->fideicomisos()->where('fideicomisos.estado', 'activo')->first();
 
     }
 

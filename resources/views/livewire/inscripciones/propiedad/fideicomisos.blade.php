@@ -4,9 +4,9 @@
 
         <div class="flex gap-3 items-center w-full lg:w-1/2 justify-center mx-auto mb-4">
 
-            <x-input-group for="vario.acto_contenido" label="Acto contenido" :error="$errors->first('vario.acto_contenido')" class="w-full">
+            <x-input-group for="fideicomiso.tipo" label="Tipo" :error="$errors->first('fideicomiso.tipo')" class="w-full">
 
-                <x-input-select id="vario.acto_contenido" wire:model.live="vario.acto_contenido" class="w-full">
+                <x-input-select id="fideicomiso.tipo" wire:model.live="fideicomiso.tipo" class="w-full">
 
                     <option value="">Seleccione una opción</option>
 
@@ -20,13 +20,23 @@
 
             </x-input-group>
 
+            <div class="flex gap-3 items-center w-full lg:w-1/2 justify-center mx-auto">
+
+                <x-input-group for="fideicomiso.fecha_vencimiento" label="Fecha de vencimiento" :error="$errors->first('fideicomiso.fecha_vencimiento')" class="w-full">
+
+                    <x-input-text type="date" id="fideicomiso.fecha_vencimiento" wire:model="fideicomiso.fecha_vencimiento" />
+
+                </x-input-group>
+
+            </div>
+
         </div>
 
         <div class="flex gap-3 items-center w-full lg:w-1/2 justify-center mx-auto">
 
-            <x-input-group for="vario.descripcion" label="Comentario del movimiento" :error="$errors->first('vario.descripcion')" class="w-full">
+            <x-input-group for="fideicomiso.objeto" label="Objeto" :error="$errors->first('fideicomiso.objeto')" class="w-full">
 
-                <textarea rows="3" class="w-full bg-white rounded" wire:model="vario.descripcion"></textarea>
+                <textarea rows="3" class="w-full bg-white rounded" wire:model="fideicomiso.objeto"></textarea>
 
             </x-input-group>
 
@@ -38,7 +48,7 @@
 
         <div class="flex justify-end mb-2">
 
-            @livewire('comun.actores.fideicomiso-crear', ['modelo' => $vario, 'sub_tipos' => $actores])
+            @livewire('comun.actores.fideicomiso-crear', ['modelo' => $fideicomiso, 'sub_tipos' => $actores])
 
         </div>
 
@@ -46,9 +56,9 @@
 
             <div class="mb-3 p-3">
 
-                <span class="flex items-center justify-center text-lg text-gray-700 mb-5">Fiduciarias ({{ $vario->fiduciarias()->count() }})</span>
+                <span class="flex items-center justify-center text-lg text-gray-700 mb-5">Fiduciarias ({{ $fideicomiso->fiduciarias()->count() }})</span>
 
-                @if($vario->fiduciarias())
+                @if($fideicomiso->fiduciarias())
 
                     <x-table>
 
@@ -59,7 +69,7 @@
 
                         <x-slot name="body">
 
-                            @foreach ($vario->fiduciarias() as $fiduciariaItem)
+                            @foreach ($fideicomiso->fiduciarias() as $fiduciariaItem)
 
                                 <x-table.row wire:loading.class.delaylongest="opacity-50" wire:key="row-{{ $fiduciariaItem->id }}">
 
@@ -74,14 +84,16 @@
                                         <div class="flex flex-row justify-center items-center gap-3">
                                             <div>
 
-                                                <livewire:comun.actores.fideicomiso-actualizar :sub_tipos="$actores" :actor="$fiduciariaItem" wire:key="button-fiduciaria-{{ $fiduciariaItem->id }}" />
+                                                <livewire:comun.actores.fideicomiso-actualizar :sub_tipos="$actores" :actor="$fiduciariaItem" wire:key="button-fiduciaria-{{ $fiduciariaItem->id }}" size="sm"/>
 
                                             </div>
 
                                             <x-button-red
                                                 wire:click="eliminarActor({{ $fiduciariaItem->id }})"
                                                 wire:loading.attr="disabled">
-                                                Borrar
+                                                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="h-4 w-4">
+                                                    <path stroke-linecap="round" stroke-linejoin="round" d="m14.74 9-.346 9m-4.788 0L9.26 9m9.968-3.21c.342.052.682.107 1.022.166m-1.022-.165L18.16 19.673a2.25 2.25 0 0 1-2.244 2.077H8.084a2.25 2.25 0 0 1-2.244-2.077L4.772 5.79m14.456 0a48.108 48.108 0 0 0-3.478-.397m-12 .562c.34-.059.68-.114 1.022-.165m0 0a48.11 48.11 0 0 1 3.478-.397m7.5 0v-.916c0-1.18-.91-2.164-2.09-2.201a51.964 51.964 0 0 0-3.32 0c-1.18.037-2.09 1.022-2.09 2.201v.916m7.5 0a48.667 48.667 0 0 0-7.5 0" />
+                                                </svg>
                                             </x-button-red>
                                         </div>
                                     </x-table.cell>
@@ -102,9 +114,9 @@
 
             <div class="mb-3 p-3">
 
-                <span class="flex items-center justify-center text-lg text-gray-700 mb-5">Fideicomitentes ({{ $vario->fideicomitentes()->count() }})</span>
+                <span class="flex items-center justify-center text-lg text-gray-700 mb-5">Fideicomitentes ({{ $fideicomiso->fideicomitentes()->count() }})</span>
 
-                @if($vario->fideicomitentes())
+                @if($fideicomiso->fideicomitentes())
 
                     <x-table>
 
@@ -115,7 +127,7 @@
 
                         <x-slot name="body">
 
-                            @foreach ($vario->fideicomitentes() as $fideicomitenteItem)
+                            @foreach ($fideicomiso->fideicomitentes() as $fideicomitenteItem)
 
                                 <x-table.row wire:loading.class.delaylongest="opacity-50" wire:key="row-{{ $fideicomitenteItem->id }}">
 
@@ -131,14 +143,16 @@
 
                                             <div>
 
-                                                <livewire:comun.actores.fideicomiso-actualizar :sub_tipos="$actores" :actor="$fideicomitenteItem" wire:key="button-fideicomitente-{{ $fideicomitenteItem->id }}" />
+                                                <livewire:comun.actores.fideicomiso-actualizar :sub_tipos="$actores" :actor="$fideicomitenteItem" wire:key="button-fideicomitente-{{ $fideicomitenteItem->id }}" size="sm"/>
 
                                             </div>
 
                                             <x-button-red
                                                 wire:click="eliminarActor({{ $fideicomitenteItem->id }})"
                                                 wire:loading.attr="disabled">
-                                                Borrar
+                                                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="h-4 w-4">
+                                                    <path stroke-linecap="round" stroke-linejoin="round" d="m14.74 9-.346 9m-4.788 0L9.26 9m9.968-3.21c.342.052.682.107 1.022.166m-1.022-.165L18.16 19.673a2.25 2.25 0 0 1-2.244 2.077H8.084a2.25 2.25 0 0 1-2.244-2.077L4.772 5.79m14.456 0a48.108 48.108 0 0 0-3.478-.397m-12 .562c.34-.059.68-.114 1.022-.165m0 0a48.11 48.11 0 0 1 3.478-.397m7.5 0v-.916c0-1.18-.91-2.164-2.09-2.201a51.964 51.964 0 0 0-3.32 0c-1.18.037-2.09 1.022-2.09 2.201v.916m7.5 0a48.667 48.667 0 0 0-7.5 0" />
+                                                </svg>
                                             </x-button-red>
 
                                         </div>
@@ -160,9 +174,9 @@
 
             <div class="mb-3 p-3">
 
-                <span class="flex items-center justify-center text-lg text-gray-700 mb-5">Fideicomisarios ({{ $vario->fideicomisarios()->count() }})</span>
+                <span class="flex items-center justify-center text-lg text-gray-700 mb-5">Fideicomisarios ({{ $fideicomiso->fideicomisarios()->count() }})</span>
 
-                @if($vario->fideicomisarios())
+                @if($fideicomiso->fideicomisarios())
 
                     <x-table>
 
@@ -173,7 +187,7 @@
 
                         <x-slot name="body">
 
-                            @foreach ($vario->fideicomisarios() as $fideicomisarioItem)
+                            @foreach ($fideicomiso->fideicomisarios() as $fideicomisarioItem)
 
                                 <x-table.row wire:loading.class.delaylongest="opacity-50" wire:key="row-{{ $fideicomisarioItem->id }}">
 
@@ -188,14 +202,16 @@
                                         <div class="flex flex-row justify-center items-center gap-3">
                                             <div>
 
-                                                <livewire:comun.actores.fideicomiso-actualizar :sub_tipos="$actores" :actor="$fideicomisarioItem" wire:key="button-fideicomisario-{{ $fideicomisarioItem->id }}" />
+                                                <livewire:comun.actores.fideicomiso-actualizar :sub_tipos="$actores" :actor="$fideicomisarioItem" wire:key="button-fideicomisario-{{ $fideicomisarioItem->id }}" size="sm"/>
 
                                             </div>
 
                                             <x-button-red
                                                 wire:click="eliminarActor({{ $fideicomisarioItem->id }})"
                                                 wire:loading.attr="disabled">
-                                                Borrar
+                                                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="h-4 w-4">
+                                                    <path stroke-linecap="round" stroke-linejoin="round" d="m14.74 9-.346 9m-4.788 0L9.26 9m9.968-3.21c.342.052.682.107 1.022.166m-1.022-.165L18.16 19.673a2.25 2.25 0 0 1-2.244 2.077H8.084a2.25 2.25 0 0 1-2.244-2.077L4.772 5.79m14.456 0a48.108 48.108 0 0 0-3.478-.397m-12 .562c.34-.059.68-.114 1.022-.165m0 0a48.11 48.11 0 0 1 3.478-.397m7.5 0v-.916c0-1.18-.91-2.164-2.09-2.201a51.964 51.964 0 0 0-3.32 0c-1.18.037-2.09 1.022-2.09 2.201v.916m7.5 0a48.667 48.667 0 0 0-7.5 0" />
+                                                </svg>
                                             </x-button-red>
                                         </div>
                                     </x-table.cell>
@@ -239,14 +255,14 @@
 
     <div class="bg-white rounded-lg p-3 flex justify-end shadow-lg gap-3">
 
-        @if(!$vario->movimientoRegistral->documentoEntrada())
+        @if(!$fideicomiso->movimientoRegistral->documentoEntrada())
 
             <x-button-blue
-                wire:click="abrirModalFinalizar"
+                wire:click="abrirModalDocumento"
                 wire:loading.attr="disabled"
-                wire:target="abrirModalFinalizar">
+                wire:target="abrirModalDocumento">
 
-                <img wire:loading wire:target="abrirModalFinalizar" class="mx-auto h-4 mr-1" src="{{ asset('storage/img/loading3.svg') }}" alt="Loading">
+                <img wire:loading wire:target="abrirModalDocumento" class="mx-auto h-4 mr-1" src="{{ asset('storage/img/loading3.svg') }}" alt="Loading">
 
                 Subir documento de entrada
 
@@ -256,7 +272,7 @@
 
             <div class="inline-block">
 
-                <x-link-blue target="_blank" href="{{ $vario->movimientoRegistral->documentoEntrada() }}">Documento de entrada</x-link-blue>
+                <x-link-blue target="_blank" href="{{ $fideicomiso->movimientoRegistral->documentoEntrada() }}">Documento de entrada</x-link-blue>
 
             </div>
 
@@ -382,5 +398,7 @@
         </x-slot>
 
     </x-dialog-modal>
+
+    @filepondScripts
 
 </div>

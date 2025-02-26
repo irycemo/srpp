@@ -2,30 +2,81 @@
 
 namespace App\Traits\Inscripciones;
 
+use App\Models\FirmaElectronica;
+use App\Models\FolioReal;
 use App\Models\Persona;
 use App\Models\MovimientoRegistral;
 
 trait RecuperarPropietariosTrait{
 
-    public function obtenerMovimiento(){
+    public function obtenerMovimientoConPropietarios(MovimientoRegistral $movimientoRegistral){
 
+        if($movimientoRegistral->folio == 1){
 
+            $propietarios = $this->recuperarPropietarios($movimientoRegistral->folioReal->firmaElectronica);
+
+            $this->restaurarPropietarios($movimientoRegistral->folioReal, $propietarios);
+
+        }else{
+
+            $folio = $movimientoRegistral->folio - 1;
+
+            $movimiento = $movimientoRegistral->folioReal->movimientosRegistrales()->where('folio', $folio)->first();
+
+            if($movimiento->firmaElectronica){
+
+                $propietarios = $this->recuperarPropietarios($movimiento->firmaElectronica);
+
+            }else{
+
+                $propietarios = null;
+            }
+
+            while($propietarios == null){
+
+                $folio = $folio - 1;
+
+                if($folio < 1){
+
+                    $propietarios = $this->recuperarPropietarios($movimientoRegistral->folioReal->firmaElectronica);
+
+                    $this->restaurarPropietarios($movimientoRegistral->folioReal, $propietarios);
+
+                    return;
+
+                }
+
+                $movimiento = $movimientoRegistral->folioReal->movimientosRegistrales()->where('folio', $folio)->first();
+
+                $propietarios = $this->recuperarPropietarios($movimiento->firmaElectronica);
+
+            }
+
+            $this->restaurarPropietarios($movimientoRegistral->folioReal, $propietarios);
+
+        }
 
     }
 
-    public function recuperarPropietarios(MovimientoRegistral $movimientoRegistral){
+    public function recuperarPropietarios(FirmaElectronica $firmaElectronica){
 
-        foreach($movimientoRegistral->folioReal->predio->propietarios() as $propietario) {
+        $objeto = json_decode($firmaElectronica->cadena_original);
+
+        return $objeto->predio->propietarios;
+
+    }
+
+    public function restaurarPropietarios(FolioReal $folioReal, $propietarios){
+
+        foreach($folioReal->predio->propietarios() as $propietario) {
+
             $propietario->delete();
+
         }
-
-        $objeto = json_decode($movimientoRegistral->firmaElectronica->cadena_original);
-
-        $propietarios = $objeto->predio->propietarios;
 
         foreach($propietarios as $propietario) {
 
-            $persona = Persona::fristOrCreate(
+            $persona = Persona::firstOrCreate(
                 [
                     'nombre' => $propietario->nombre,
                     'ap_paterno' => $propietario->ap_paterno,
@@ -40,7 +91,7 @@ trait RecuperarPropietariosTrait{
                 ]
             );
 
-            $movimientoRegistral->folioReal->predio->actor()->create([
+            $folioReal->predio->actores()->create([
                 'tipo_actor' => 'propietario',
                 'persona_id' => $persona->id,
                 'porcentaje_propiedad' => $propietario->porcentaje_propiedad,
