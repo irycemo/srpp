@@ -283,6 +283,8 @@ class PaseFolio extends Component
 
             $modelo->folioReal->update(['estado' => 'captura']);
 
+            $modelo->update(['estado' => 'nuevo']);
+
         } catch (\Throwable $th) {
 
             Log::error("Error al pasar a captura el folio real por el usuario: (id: " . auth()->user()->id . ") " . auth()->user()->name . ". " . $th);
@@ -314,6 +316,7 @@ class PaseFolio extends Component
 
     public function revisarInscripcionPropiedad(){
 
+        /* Inscripciones de propiedad sin antecedente para RAN */
         if(
             in_array($this->modelo_editar->inscripcionPropiedad->servicio, ['D114', 'D113', 'D116', 'D115']) &&
             $this->modelo_editar->tomo == null &&
@@ -321,17 +324,19 @@ class PaseFolio extends Component
             $this->modelo_editar->numero_propiedad == null
         ){
 
-            if(!$this->modelo_editar->folioReal->documentoEntrada()){
+            $this->modelo_editar->update(['estado' => 'concluido']);
 
-                throw new Exception('El documento de entrada es obligatorio');
+            (new SistemaTramitesService())->finaliarTramite($this->modelo_editar->año, $this->modelo_editar->tramite, $this->modelo_editar->usuario, 'concluido');
 
-            }
+        /* Fusion */
+        }elseif($this->modelo_editar->inscripcionPropiedad->servicio == 'D157'){
 
             $this->modelo_editar->update(['estado' => 'concluido']);
 
             (new SistemaTramitesService())->finaliarTramite($this->modelo_editar->año, $this->modelo_editar->tramite, $this->modelo_editar->usuario, 'concluido');
 
-        }elseif( $this->modelo_editar->inscripcionPropiedad->servicio == 'D157'){
+        /* Movimientos provenientes de una subdivisión */
+        }elseif($this->modelo_editar->inscripcionPropiedad->servicio == 'D127' && $this->modelo_editar->movimiento_padre){
 
             $this->modelo_editar->update(['estado' => 'concluido']);
 
@@ -339,7 +344,7 @@ class PaseFolio extends Component
 
         }
 
-        /* Inscripción de folio real */
+        /* Captura especial de folio real */
         if($this->modelo_editar->inscripcionPropiedad->servicio == 'D118' && $this->modelo_editar->monto <= 3){
 
             $this->modelo_editar->update(['estado' => 'concluido']);

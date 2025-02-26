@@ -155,7 +155,7 @@
 
                                     <div x-cloak x-show="open_drop_down" x-on:click="open_drop_down=false" x-on:click.away="open_drop_down=false" class="z-50 origin-top-right absolute right-0 mt-2 w-48 rounded-md shadow-lg py-1 bg-white ring-1 ring-black ring-opacity-5 focus:outline-none" role="menu" aria-orientation="vertical" aria-labelledby="user-menu">
 
-                                        @can('Envia a captura')
+                                        {{-- @can('Envia a captura')
 
                                             <button
                                                 wire:click="enviarCaptura({{ $folio->id }})"
@@ -165,9 +165,9 @@
                                                 Enviar a captura
                                             </button>
 
-                                        @endif
+                                        @endif --}}
 
-                                        @if(in_array($folio->estado, ['nuevo', 'captura']))
+                                       {{--  @if(in_array($folio->estado, ['nuevo', 'captura']))
 
                                             @can('Reasignar folio')
 
@@ -181,7 +181,7 @@
 
                                             @endif
 
-                                        @endif
+                                        @endif --}}
 
                                         @if(!$folio->matriz)
 
