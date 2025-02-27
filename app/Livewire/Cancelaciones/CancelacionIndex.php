@@ -3,11 +3,14 @@
 namespace App\Livewire\Cancelaciones;
 
 use Livewire\Component;
+use App\Models\Gravamen;
 use Livewire\WithPagination;
 use Livewire\WithFileUploads;
 use App\Constantes\Constantes;
 use App\Traits\ComponentesTrait;
+use Illuminate\Support\Facades\DB;
 use App\Models\MovimientoRegistral;
+use Illuminate\Support\Facades\Log;
 use App\Traits\Inscripciones\InscripcionesIndex;
 
 class CancelacionIndex extends Component
@@ -17,6 +20,65 @@ class CancelacionIndex extends Component
     use WithFileUploads;
     use ComponentesTrait;
     use InscripcionesIndex;
+
+    public function corregir(MovimientoRegistral $movimientoRegistral){
+
+        if($this->modelo_editar->isNot($movimientoRegistral))
+            $this->modelo_editar = $movimientoRegistral;
+
+        $movimiento = $movimientoRegistral->folioReal
+                                            ->movimientosRegistrales()
+                                            ->where('folio', ($movimientoRegistral->folio + 1))
+                                            ->where('estado', '!=', 'nuevo')
+                                            ->first();
+
+        if($movimiento){
+
+            $this->dispatch('mostrarMensaje', ['warning', "El folio real tiene movimientos registrales posteriores elaborados."]);
+
+            return true;
+
+        }
+
+        try {
+
+            DB::transaction(function () use ($movimientoRegistral){
+
+                $this->reactivarGravamen($movimientoRegistral->cancelacion->gravamenCancelado->gravamen);
+
+                $movimientoRegistral->update([
+                    'estado' => 'correccion',
+                    'actualizado_por' => auth()->id()
+                ]);
+
+                $movimientoRegistral->audits()->latest()->first()->update(['tags' => 'Cambio estado a corrección']);
+
+            });
+
+            $this->dispatch('mostrarMensaje', ['success', "La información se guardó con éxito."]);
+
+        } catch (\Throwable $th) {
+            Log::error("Error al enviar a corrección cancelación de propiedad por el usuario: (id: " . auth()->user()->id . ") " . auth()->user()->name . ". " . $th);
+            $this->dispatch('mostrarMensaje', ['error', "Ha ocurrido un error."]);
+        }
+
+    }
+
+    public function reactivarGravamen(Gravamen $gravamen){
+
+        $observaciones = str_replace('Cancelado parcialmente mediante movimiento registral: ' . $this->modelo_editar->folioReal->folio . '-' . $this->modelo_editar->folio, '', $gravamen->observaciones);
+
+        $observaciones = str_replace('Cancelado mediante movimiento registral: ' . $this->modelo_editar->folioReal->folio . '-' . $this->modelo_editar->folio, '', $observaciones);
+
+        $monto = json_decode($gravamen->movimientoRegistral->firmaElectronica->cadena_original)->gravamen->valor_gravamen;
+
+        $gravamen->update([
+            'observaciones' => $observaciones,
+            'valor_gravamen' => $monto,
+            'estado' => 'activo'
+        ]);
+
+    }
 
     public function mount(){
 

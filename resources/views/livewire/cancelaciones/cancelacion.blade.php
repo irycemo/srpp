@@ -163,17 +163,6 @@
 
         @endif
 
-        {{-- <x-button-red
-            wire:click="$toggle('modalRechazar')"
-            wire:loading.attr="disabled"
-            wire:target="$toggle('modalRechazar')">
-
-            <img wire:loading wire:target="$toggle('modalRechazar')" class="mx-auto h-4 mr-1" src="{{ asset('storage/img/loading3.svg') }}" alt="Loading">
-
-            Rechazar
-
-        </x-button-red> --}}
-
         <x-button-blue
             wire:click="guardar"
             wire:loading.attr="disabled"
@@ -234,52 +223,6 @@
                     wire:click="$toggle('modalContraseña')"
                     wire:loading.attr="disabled"
                     wire:target="$toggle('modalContraseña')"
-                    type="button">
-                    Cerrar
-                </x-button-red>
-
-            </div>
-
-        </x-slot>
-
-    </x-dialog-modal>
-
-    <x-dialog-modal wire:model="modalRechazar" maxWidth="sm">
-
-        <x-slot name="title">
-
-            Rechazar
-
-        </x-slot>
-
-        <x-slot name="content">
-
-            <x-input-group for="motivo_rechazo" label="Motivo del rechazo" :error="$errors->first('motivo_rechazo')" class="w-full">
-
-                <textarea rows="5" class="bg-white rounded text-sm w-full" wire:model="motivo_rechazo"></textarea>
-
-            </x-input-group>
-
-        </x-slot>
-
-        <x-slot name="footer">
-
-            <div class="flex gap-3">
-
-                <x-button-blue
-                    wire:click="rechazar"
-                    wire:loading.attr="disabled"
-                    wire:target="rechazar">
-
-                    <img wire:loading wire:target="rechazar" class="mx-auto h-4 mr-1" src="{{ asset('storage/img/loading3.svg') }}" alt="Loading">
-
-                    <span>Rechazar</span>
-                </x-button-blue>
-
-                <x-button-red
-                    wire:click="$toggle('modalRechazar')"
-                    wire:loading.attr="disabled"
-                    wire:target="$toggle('modalRechazar')"
                     type="button">
                     Cerrar
                 </x-button-red>
