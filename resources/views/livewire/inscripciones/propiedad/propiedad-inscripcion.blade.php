@@ -7,7 +7,15 @@
 
     <x-header>Inscripción de propiedad <span class="text-sm tracking-widest">Folio real: {{ $inscripcion->movimientoRegistral->folioReal->folio }} - {{ $inscripcion->movimientoRegistral->folio }}</span></x-header>
 
-    @livewire('inscripciones.propiedad.inscripcion-general', ['inscripcion' => $inscripcion])
+    @if($inscripcion->servicio == 'D149')
+
+        @livewire('inscripciones.propiedad.fideicomiso-cancelacion', ['inscripcion' => $inscripcion])
+
+    @else
+
+        @livewire('inscripciones.propiedad.inscripcion-general', ['inscripcion' => $inscripcion])
+
+    @endif
 
     @filepondScripts
 

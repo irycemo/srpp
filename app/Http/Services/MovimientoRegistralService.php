@@ -98,7 +98,7 @@ class MovimientoRegistralService{
 
         if(in_array($request['categoria_servicio'], ['Inscripciones - Propiedad', 'Subdivisiones'])){
 
-            if($request['servicio'] == 'D149' && $request['servicio_nombre'] == 'Incripción de fideicomiso'){
+            if($request['servicio'] == 'D149' && $request['servicio_nombre'] == 'Inscripción de fideicomiso'){
 
                 $this->fideicomisoService->store($request + ['movimiento_registral' => $id]);
 

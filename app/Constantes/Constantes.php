@@ -282,7 +282,6 @@ class Constantes{
         'PRESCRIPCIÓN POSITIVA',
         'SOCIEDADES',
         'PERMUTA',
-        'FIDEICOMISO',
         'EXPEDICIÓN DE TÍTULO DE PROPIEDAD',
         'SUBDIVISIÓN',
         'CONTRATO VERBAL DE COMPRAVENTA',
