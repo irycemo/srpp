@@ -53,7 +53,7 @@ class CopiasSimples extends Component
 
         if($modelo->movimientoRegistral->tipo_servicio == 'ordinario'){
 
-            if($this->calcularDiaElaboracion($modelo)) return;
+            if($this->calcularDiaElaboracion($modelo->movimientoRegistral)) return;
 
         }
 
@@ -159,7 +159,7 @@ class CopiasSimples extends Component
 
     public function finalizarSupervisor(Certificacion $modelo){
 
-        if($this->calcularDiaElaboracion($modelo)) return;
+        if($this->calcularDiaElaboracion($modelo->movimientoRegistral)) return;
 
         if($this->modelo_editar->isNot($modelo))
             $this->modelo_editar = $modelo;
@@ -168,18 +168,6 @@ class CopiasSimples extends Component
 
             $this->dispatch('mostrarMensaje', ['error', "EL campo folio de carpeta es obligatorio."]);
             return;
-
-        }
-
-        if($this->modelo_editar->movimientoRegistral->tipo_servicio == 'ordinario'){
-
-            if(!($this->calcularDiaElaboracion($this->modelo_editar) <= now())){
-
-                $this->dispatch('mostrarMensaje', ['error', "El trámite puede elaborarse apartir del " . $this->calcularDiaElaboracion($modelo)->format('d-m-Y')]);
-
-                return;
-
-            }
 
         }
 
@@ -225,7 +213,7 @@ class CopiasSimples extends Component
 
         $this->validate();
 
-        if($this->calcularDiaElaboracion($this->modelo_editar)) return;
+        if($this->calcularDiaElaboracion($this->modelo_editar->movimientoRegistral)) return;
 
         try{
 
@@ -297,7 +285,7 @@ class CopiasSimples extends Component
         if($this->modelo_editar->isNot($modelo))
             $this->modelo_editar = $modelo;
 
-        if($this->calcularDiaElaboracion($this->modelo_editar)) return;
+        if($this->calcularDiaElaboracion($this->modelo_editar->movimientoRegistral)) return;
 
         try {
 

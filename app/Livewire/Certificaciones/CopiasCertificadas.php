@@ -52,7 +52,7 @@ class CopiasCertificadas extends Component
 
         if(!auth()->user()->hasRole(['Certificador Juridico', 'Certificador Oficialia'])){
 
-            if($this->calcularDiaElaboracion($modelo)) return;
+            if($this->calcularDiaElaboracion($modelo->movimientoRegistral)) return;
 
         }
 
@@ -69,7 +69,7 @@ class CopiasCertificadas extends Component
 
         if(!auth()->user()->hasRole(['Certificador Juridico', 'Certificador Oficialia'])){
 
-            if($this->calcularDiaElaboracion($modelo)) return;
+            if($this->calcularDiaElaboracion($modelo->movimientoRegistral)) return;
 
         }
 
@@ -179,7 +179,7 @@ class CopiasCertificadas extends Component
 
         if(!auth()->user()->hasRole(['Certificador Juridico', 'Certificador Oficialia'])){
 
-            if($this->calcularDiaElaboracion($modelo)) return;
+            if($this->calcularDiaElaboracion($modelo->movimientoRegistral)) return;
 
         }
 
@@ -231,7 +231,7 @@ class CopiasCertificadas extends Component
 
         if(!auth()->user()->hasRole(['Certificador Juridico', 'Certificador Oficialia'])){
 
-            if($this->calcularDiaElaboracion($this->modelo_editar)) return;
+            if($this->calcularDiaElaboracion($this->modelo_editar->movimientoRegistral)) return;
 
         }
 
@@ -309,7 +309,7 @@ class CopiasCertificadas extends Component
 
         if(!auth()->user()->hasRole(['Certificador Juridico', 'Certificador Oficialia'])){
 
-            if($this->calcularDiaElaboracion($this->modelo_editar)) return;
+            if($this->calcularDiaElaboracion($this->modelo_editar->movimientoRegistral)) return;
 
         }
 
