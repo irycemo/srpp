@@ -82,15 +82,9 @@ class CertificadoGravamen extends Component
 
         $this->moviminetoRegistral = $modelo->movimientoRegistral;
 
-        if($this->moviminetoRegistral->tipo_servicio == 'ordinario' && $this->moviminetoRegistral->getRawOriginal('distrito') != 2){
+        if($this->moviminetoRegistral->getRawOriginal('distrito') != 2){
 
-            if(!($this->calcularDiaElaboracion($this->moviminetoRegistral) <= now())){
-
-                $this->dispatch('mostrarMensaje', ['error', "El trámite puede elaborarse apartir del " . $this->calcularDiaElaboracion($this->moviminetoRegistral)->format('d-m-Y')]);
-
-                return;
-
-            }
+            if($this->calcularDiaElaboracion($modelo)) return;
 
         }
 
@@ -162,9 +156,37 @@ class CertificadoGravamen extends Component
 
     public function calcularDiaElaboracion($modelo){
 
-        $diaElaboracion = $modelo->fecha_pago;
+        if($modelo->tipo_servicio == 'ordinario'){
 
-        for ($i=0; $i < 2; $i++) {
+            $diaElaboracion = $modelo->fecha_pago;
+
+            for ($i=0; $i < 3; $i++) {
+
+                $diaElaboracion->addDays(1);
+
+                while($diaElaboracion->isWeekend()){
+
+                    $diaElaboracion->addDay();
+
+                }
+
+            }
+
+            if($diaElaboracion <= now()){
+
+                return false;
+
+            }else{
+
+                $this->dispatch('mostrarMensaje', ['warning', "El trámite puede finalizarse apartir del " . $diaElaboracion->format('d-m-Y')]);
+
+                return true;
+
+            }
+
+        }elseif($modelo->tipo_servicio == 'urgente'){
+
+            $diaElaboracion = $modelo->fecha_pago;
 
             $diaElaboracion->addDays(1);
 
@@ -174,9 +196,23 @@ class CertificadoGravamen extends Component
 
             }
 
-        }
+            if($diaElaboracion <= now()){
 
-        return $diaElaboracion;
+                return false;
+
+            }else{
+
+                $this->dispatch('mostrarMensaje', ['warning', "El trámite puede finalizarse apartir del " . $diaElaboracion->format('d-m-Y')]);
+
+                return true;
+
+            }
+
+        }else{
+
+            return false;
+
+        }
 
     }
 

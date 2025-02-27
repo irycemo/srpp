@@ -148,8 +148,6 @@ trait InscripcionesIndex{
 
             }elseif($this->modelo_editar->vario?->acto_contenido == 'SEGUNDO AVISO PREVENTIVO'){
 
-
-
                 $this->ruta($this->modelo_editar);
 
                 return;
@@ -164,7 +162,19 @@ trait InscripcionesIndex{
 
         }
 
-        $movimientoAsignados = MovimientoRegistral::with('vario')
+        $this->actual = $movimientoRegistral;
+
+        if($this->estaBloqueado()){
+
+            return;
+
+        }else{
+
+            $this->ruta($this->modelo_editar);
+
+        }
+
+        /* $movimientoAsignados = MovimientoRegistral::with('vario')
                                                         ->whereIn('estado', ['nuevo', 'captura', 'correccion'])
                                                         ->where('usuario_Asignado', auth()->id())
                                                         ->withWhereHas('folioReal', function($q){
@@ -179,7 +189,7 @@ trait InscripcionesIndex{
 
             if($this->estaBloqueado()){
 
-                /* Esta bloqueado y es el que esta intentando hacer */
+                //Esta bloqueado y es el que esta intentando hacer
                 if($this->modelo_editar->id == $this->actual->id){
 
                     break;
@@ -192,14 +202,14 @@ trait InscripcionesIndex{
 
             }else{
 
-                /* Si solo hay un movimiento por realizar y no esta bloqueado */
+                //Si solo hay un movimiento por realizar y no esta bloqueado
                 if($movimientoAsignados->count() == 1 && $this->actual->id == $this->modelo_editar->id){
 
                     $this->ruta($this->modelo_editar);
 
                 }
 
-                /* Revisar si es el que debe hacer ($this->actual) */
+                //Revisar si es el que debe hacer ($this->actual)
                 if($this->modelo_editar->id != $this->actual->id){
 
                     $this->dispatch('mostrarMensaje', ['error', "Debe elaborar el movimiento registral " . $this->actual->folioReal->folio . '-' . $this->actual->folio . ' primero.']);
@@ -216,7 +226,7 @@ trait InscripcionesIndex{
 
             }
 
-        }
+        } */
 
     }
 
@@ -282,17 +292,7 @@ trait InscripcionesIndex{
 
         if($movimientoRegistral->getRawOriginal('distrito') != 2){
 
-            if($movimientoRegistral->tipo_servicio == 'ordinario'){
-
-                if(!($this->calcularDiaElaboracion($movimientoRegistral) <= now())){
-
-                    $this->dispatch('mostrarMensaje', ['warning', "El trámite puede finalizarse apartir del " . $this->calcularDiaElaboracion($movimientoRegistral)->format('d-m-Y')]);
-
-                    return;
-
-                }
-
-            }
+            if($this->calcularDiaElaboracion($movimientoRegistral)) return;
 
         }
 
@@ -555,9 +555,37 @@ trait InscripcionesIndex{
 
     public function calcularDiaElaboracion($modelo){
 
-        $diaElaboracion = $modelo->fecha_pago;
+        if($modelo->tipo_servicio == 'ordinario'){
 
-        for ($i=0; $i < 3; $i++) {
+            $diaElaboracion = $modelo->fecha_pago;
+
+            for ($i=0; $i < 3; $i++) {
+
+                $diaElaboracion->addDays(1);
+
+                while($diaElaboracion->isWeekend()){
+
+                    $diaElaboracion->addDay();
+
+                }
+
+            }
+
+            if($diaElaboracion <= now()){
+
+                return false;
+
+            }else{
+
+                $this->dispatch('mostrarMensaje', ['warning', "El trámite puede finalizarse apartir del " . $diaElaboracion->format('d-m-Y')]);
+
+                return true;
+
+            }
+
+        }elseif($modelo->tipo_servicio == 'urgente'){
+
+            $diaElaboracion = $modelo->fecha_pago;
 
             $diaElaboracion->addDays(1);
 
@@ -567,9 +595,23 @@ trait InscripcionesIndex{
 
             }
 
-        }
+            if($diaElaboracion <= now()){
 
-        return $diaElaboracion;
+                return false;
+
+            }else{
+
+                $this->dispatch('mostrarMensaje', ['warning', "El trámite puede finalizarse apartir del " . $diaElaboracion->format('d-m-Y')]);
+
+                return true;
+
+            }
+
+        }else{
+
+            return false;
+
+        }
 
     }
 

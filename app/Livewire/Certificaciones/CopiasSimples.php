@@ -53,13 +53,7 @@ class CopiasSimples extends Component
 
         if($modelo->movimientoRegistral->tipo_servicio == 'ordinario'){
 
-            if(!($this->calcularDiaElaboracion($modelo) <= now())){
-
-                $this->dispatch('mostrarMensaje', ['error', "El trámite puede elaborarse apartir del " . $this->calcularDiaElaboracion($modelo)->format('d-m-Y')]);
-
-                return;
-
-            }
+            if($this->calcularDiaElaboracion($modelo)) return;
 
         }
 
@@ -73,18 +67,6 @@ class CopiasSimples extends Component
     }
 
     public function abrirModalRechazar(Certificacion $modelo){
-
-        if($modelo->movimientoRegistral->tipo_servicio == 'ordinario'){
-
-            if(!($this->calcularDiaElaboracion($modelo) <= now())){
-
-                $this->dispatch('mostrarMensaje', ['error', "El trámite puede elaborarse apartir del " . $this->calcularDiaElaboracion($modelo)->format('d-m-Y')]);
-
-                return;
-
-            }
-
-        }
 
         $this->resetearTodo();
             $this->modalRechazar = true;
@@ -177,17 +159,7 @@ class CopiasSimples extends Component
 
     public function finalizarSupervisor(Certificacion $modelo){
 
-        if($modelo->movimientoRegistral->tipo_servicio == 'ordinario'){
-
-            if(!($this->calcularDiaElaboracion($modelo) <= now())){
-
-                $this->dispatch('mostrarMensaje', ['error', "El trámite puede elaborarse apartir del " . $this->calcularDiaElaboracion($modelo)->format('d-m-Y')]);
-
-                return;
-
-            }
-
-        }
+        if($this->calcularDiaElaboracion($modelo)) return;
 
         if($this->modelo_editar->isNot($modelo))
             $this->modelo_editar = $modelo;
@@ -253,17 +225,7 @@ class CopiasSimples extends Component
 
         $this->validate();
 
-        if($this->modelo_editar->movimientoRegistral->tipo_servicio == 'ordinario'){
-
-            if(!($this->calcularDiaElaboracion($this->modelo_editar) <= now())){
-
-                $this->dispatch('mostrarMensaje', ['error', "El trámite puede elaborarse apartir del " . $this->calcularDiaElaboracion($this->modelo_editar)->format('d-m-Y')]);
-
-                return;
-
-            }
-
-        }
+        if($this->calcularDiaElaboracion($this->modelo_editar)) return;
 
         try{
 
@@ -295,18 +257,6 @@ class CopiasSimples extends Component
     }
 
     public function rechazar(){
-
-        if($this->modelo_editar->movimientoRegistral->tipo_servicio == 'ordinario'){
-
-            if(!($this->calcularDiaElaboracion($this->modelo_editar) <= now())){
-
-                $this->dispatch('mostrarMensaje', ['error', "El trámite puede elaborarse apartir del " . $this->calcularDiaElaboracion($this->modelo_editar)->format('d-m-Y')]);
-
-                return;
-
-            }
-
-        }
 
         $this->validate([
             'observaciones' => 'required'
@@ -347,17 +297,7 @@ class CopiasSimples extends Component
         if($this->modelo_editar->isNot($modelo))
             $this->modelo_editar = $modelo;
 
-        if($this->modelo_editar->movimientoRegistral->tipo_servicio == 'ordinario'){
-
-            if(!($this->calcularDiaElaboracion($this->modelo_editar) <= now())){
-
-                $this->dispatch('mostrarMensaje', ['error', "El trámite puede elaborarse apartir del " . $this->calcularDiaElaboracion($modelo)->format('d-m-Y')]);
-
-                return;
-
-            }
-
-        }
+        if($this->calcularDiaElaboracion($this->modelo_editar)) return;
 
         try {
 
@@ -383,9 +323,37 @@ class CopiasSimples extends Component
 
     public function calcularDiaElaboracion($modelo){
 
-        $diaElaboracion = $modelo->movimientoRegistral->fecha_pago;
+        if($modelo->tipo_servicio == 'ordinario'){
 
-        for ($i=0; $i < 2; $i++) {
+            $diaElaboracion = $modelo->fecha_pago;
+
+            for ($i=0; $i < 3; $i++) {
+
+                $diaElaboracion->addDays(1);
+
+                while($diaElaboracion->isWeekend()){
+
+                    $diaElaboracion->addDay();
+
+                }
+
+            }
+
+            if($diaElaboracion <= now()){
+
+                return false;
+
+            }else{
+
+                $this->dispatch('mostrarMensaje', ['warning', "El trámite puede finalizarse apartir del " . $diaElaboracion->format('d-m-Y')]);
+
+                return true;
+
+            }
+
+        }elseif($modelo->tipo_servicio == 'urgente'){
+
+            $diaElaboracion = $modelo->fecha_pago;
 
             $diaElaboracion->addDays(1);
 
@@ -395,9 +363,23 @@ class CopiasSimples extends Component
 
             }
 
-        }
+            if($diaElaboracion <= now()){
 
-        return $diaElaboracion;
+                return false;
+
+            }else{
+
+                $this->dispatch('mostrarMensaje', ['warning', "El trámite puede finalizarse apartir del " . $diaElaboracion->format('d-m-Y')]);
+
+                return true;
+
+            }
+
+        }else{
+
+            return false;
+
+        }
 
     }
 

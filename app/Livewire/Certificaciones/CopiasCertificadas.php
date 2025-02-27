@@ -52,17 +52,7 @@ class CopiasCertificadas extends Component
 
         if(!auth()->user()->hasRole(['Certificador Juridico', 'Certificador Oficialia'])){
 
-            if($modelo->movimientoRegistral->tipo_servicio == 'ordinario'){
-
-                if(!($this->calcularDiaElaboracion($modelo) <= now())){
-
-                    $this->dispatch('mostrarMensaje', ['error', "El trámite puede elaborarse apartir del " . $this->calcularDiaElaboracion($modelo)->format('d-m-Y')]);
-
-                    return;
-
-                }
-
-            }
+            if($this->calcularDiaElaboracion($modelo)) return;
 
         }
 
@@ -79,17 +69,7 @@ class CopiasCertificadas extends Component
 
         if(!auth()->user()->hasRole(['Certificador Juridico', 'Certificador Oficialia'])){
 
-            if($modelo->movimientoRegistral->tipo_servicio == 'ordinario'){
-
-                if(!($this->calcularDiaElaboracion($modelo) <= now())){
-
-                    $this->dispatch('mostrarMensaje', ['error', "El trámite puede elaborarse apartir del " . $this->calcularDiaElaboracion($modelo)->format('d-m-Y')]);
-
-                    return;
-
-                }
-
-            }
+            if($this->calcularDiaElaboracion($modelo)) return;
 
         }
 
@@ -199,17 +179,7 @@ class CopiasCertificadas extends Component
 
         if(!auth()->user()->hasRole(['Certificador Juridico', 'Certificador Oficialia'])){
 
-            if($modelo->movimientoRegistral->tipo_servicio == 'ordinario'){
-
-                if(!($this->calcularDiaElaboracion($modelo) <= now())){
-
-                    $this->dispatch('mostrarMensaje', ['error', "El trámite puede elaborarse apartir del " . $this->calcularDiaElaboracion($modelo)->format('d-m-Y')]);
-
-                    return;
-
-                }
-
-            }
+            if($this->calcularDiaElaboracion($modelo)) return;
 
         }
 
@@ -261,17 +231,7 @@ class CopiasCertificadas extends Component
 
         if(!auth()->user()->hasRole(['Certificador Juridico', 'Certificador Oficialia'])){
 
-            if($this->modelo_editar->movimientoRegistral->tipo_servicio == 'ordinario'){
-
-                if(!($this->calcularDiaElaboracion($this->modelo_editar) <= now())){
-
-                    $this->dispatch('mostrarMensaje', ['error', "El trámite puede elaborarse apartir del " . $this->calcularDiaElaboracion($this->modelo_editar)->format('d-m-Y')]);
-
-                    return;
-
-                }
-
-            }
+            if($this->calcularDiaElaboracion($this->modelo_editar)) return;
 
         }
 
@@ -307,22 +267,6 @@ class CopiasCertificadas extends Component
     }
 
     public function rechazar(){
-
-        if(!auth()->user()->hasRole(['Certificador Juridico', 'Certificador Oficialia'])){
-
-            if($this->modelo_editar->movimientoRegistral->tipo_servicio == 'ordinario'){
-
-                if(!($this->calcularDiaElaboracion($this->modelo_editar) <= now())){
-
-                    $this->dispatch('mostrarMensaje', ['error', "El trámite puede elaborarse apartir del " . $this->calcularDiaElaboracion($this->modelo_editar)->format('d-m-Y')]);
-
-                    return;
-
-                }
-
-            }
-
-        }
 
         $this->validate([
             'observaciones' => 'required'
@@ -365,17 +309,7 @@ class CopiasCertificadas extends Component
 
         if(!auth()->user()->hasRole(['Certificador Juridico', 'Certificador Oficialia'])){
 
-            if($modelo->movimientoRegistral->tipo_servicio == 'ordinario'){
-
-                if(!($this->calcularDiaElaboracion($modelo) <= now())){
-
-                    $this->dispatch('mostrarMensaje', ['error', "El trámite puede elaborarse apartir del " . $this->calcularDiaElaboracion($modelo)->format('d-m-Y')]);
-
-                    return;
-
-                }
-
-            }
+            if($this->calcularDiaElaboracion($this->modelo_editar)) return;
 
         }
 
@@ -403,9 +337,37 @@ class CopiasCertificadas extends Component
 
     public function calcularDiaElaboracion($modelo){
 
-        $diaElaboracion = $modelo->movimientoRegistral->fecha_pago;
+        if($modelo->tipo_servicio == 'ordinario'){
 
-        for ($i=0; $i < 2; $i++) {
+            $diaElaboracion = $modelo->fecha_pago;
+
+            for ($i=0; $i < 3; $i++) {
+
+                $diaElaboracion->addDays(1);
+
+                while($diaElaboracion->isWeekend()){
+
+                    $diaElaboracion->addDay();
+
+                }
+
+            }
+
+            if($diaElaboracion <= now()){
+
+                return false;
+
+            }else{
+
+                $this->dispatch('mostrarMensaje', ['warning', "El trámite puede finalizarse apartir del " . $diaElaboracion->format('d-m-Y')]);
+
+                return true;
+
+            }
+
+        }elseif($modelo->tipo_servicio == 'urgente'){
+
+            $diaElaboracion = $modelo->fecha_pago;
 
             $diaElaboracion->addDays(1);
 
@@ -415,9 +377,23 @@ class CopiasCertificadas extends Component
 
             }
 
-        }
+            if($diaElaboracion <= now()){
 
-        return $diaElaboracion;
+                return false;
+
+            }else{
+
+                $this->dispatch('mostrarMensaje', ['warning', "El trámite puede finalizarse apartir del " . $diaElaboracion->format('d-m-Y')]);
+
+                return true;
+
+            }
+
+        }else{
+
+            return false;
+
+        }
 
     }
 
