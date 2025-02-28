@@ -134,6 +134,40 @@ class VariosIndex extends Component
                                                     ->orderBy($this->sort, $this->direction)
                                                     ->paginate($this->pagination);
 
+        }elseif(auth()->user()->hasRole(['Regional'])){
+
+            $movimientos = MovimientoRegistral::with('vario', 'actualizadoPor', 'folioReal', 'asignadoA')
+                                                    ->whereHas('folioReal', function($q){
+                                                        $q->whereIn('estado', ['activo', 'centinela']);
+                                                    })
+                                                    ->when(auth()->user()->ubicacion === 'Regional 1', function($q){
+                                                        $q->whereIn('distrito', [3, 9]);
+                                                    })
+                                                    ->when(auth()->user()->ubicacion === 'Regional 2', function($q){
+                                                        $q->whereIn('distrito', [12, 19]);
+                                                    })
+                                                    ->when(auth()->user()->ubicacion === 'Regional 3', function($q){
+                                                        $q->whereIn('distrito', [4, 17]);
+                                                    })
+                                                    ->when(auth()->user()->ubicacion === 'Regional 4', function($q){
+                                                        $q->whereIn('distrito', [2, 18]);
+                                                    })
+                                                    ->when(auth()->user()->ubicacion === 'Regional 5', function($q){
+                                                        $q->where('distrito', 13);
+                                                    })
+                                                    ->when(auth()->user()->ubicacion === 'Regional 6', function($q){
+                                                        $q->where('distrito', 15);
+                                                    })
+                                                    ->when(auth()->user()->ubicacion === 'Regional 7', function($q){
+                                                        $q->whereIn('distrito', [5, 14, 8]);
+                                                    })
+                                                    ->whereHas('vario', function($q){
+                                                        $q->whereIn('servicio', ['DN83', 'D128', 'D112', 'D110', 'D157', 'DL19', 'DL16']);
+                                                    })
+                                                    ->whereIn('estado', ['nuevo', 'captura', 'elaborado', 'finalizado', 'correccion'])
+                                                    ->orderBy($this->sort, $this->direction)
+                                                    ->paginate($this->pagination);
+
         }
 
         return view('livewire.varios.varios-index', compact('movimientos'))->extends('layouts.admin');
