@@ -2,20 +2,9 @@
 
 namespace App\Livewire\Certificaciones;
 
-use App\Models\Actor;
-use App\Models\Predio;
-use App\Models\Persona;
 use Livewire\Component;
-use App\Models\FolioReal;
-use App\Models\Personaold;
-use App\Models\Colindancia;
-use App\Models\Propiedadold;
 use App\Models\Certificacion;
 use App\Constantes\Constantes;
-use App\Models\CertificadoPersona;
-use Illuminate\Support\Facades\DB;
-use Illuminate\Support\Facades\Log;
-use App\Http\Services\SistemaTramitesService;
 
 class CertificadoPropiedad extends Component
 {

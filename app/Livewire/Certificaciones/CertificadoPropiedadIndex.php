@@ -11,12 +11,14 @@ use Illuminate\Support\Facades\DB;
 use App\Models\MovimientoRegistral;
 use Illuminate\Support\Facades\Log;
 use App\Http\Services\SistemaTramitesService;
+use App\Traits\CalcularDiaElaboracionTrait;
 
 class CertificadoPropiedadIndex extends Component
 {
 
     use WithPagination;
     use ComponentesTrait;
+    use CalcularDiaElaboracionTrait;
 
     public MovimientoRegistral $modelo_editar;
 
@@ -321,68 +323,6 @@ class CertificadoPropiedadIndex extends Component
 
             Log::error("Error al rechazar certificado de propiedad por el usuario: (id: " . auth()->user()->id . ") " . auth()->user()->name . ". " . $th);
             $this->dispatch('mostrarMensaje', ['error', "Ha ocurrido un error."]);
-
-        }
-
-    }
-
-    public function calcularDiaElaboracion($modelo){
-
-        if($modelo->tipo_servicio == 'ordinario'){
-
-            $diaElaboracion = $modelo->fecha_pago;
-
-            for ($i=0; $i < 3; $i++) {
-
-                $diaElaboracion->addDays(1);
-
-                while($diaElaboracion->isWeekend()){
-
-                    $diaElaboracion->addDay();
-
-                }
-
-            }
-
-            if($diaElaboracion <= now()){
-
-                return false;
-
-            }else{
-
-                $this->dispatch('mostrarMensaje', ['warning', "El trámite puede finalizarse apartir del " . $diaElaboracion->format('d-m-Y')]);
-
-                return true;
-
-            }
-
-        }elseif($modelo->tipo_servicio == 'urgente'){
-
-            $diaElaboracion = $modelo->fecha_pago;
-
-            $diaElaboracion->addDays(1);
-
-            while($diaElaboracion->isWeekend()){
-
-                $diaElaboracion->addDay();
-
-            }
-
-            if($diaElaboracion <= now()){
-
-                return false;
-
-            }else{
-
-                $this->dispatch('mostrarMensaje', ['warning', "El trámite puede finalizarse apartir del " . $diaElaboracion->format('d-m-Y')]);
-
-                return true;
-
-            }
-
-        }else{
-
-            return false;
 
         }
 

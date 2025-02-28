@@ -7,9 +7,12 @@ use App\Models\FolioReal;
 use App\Models\Propiedad;
 use App\Models\MovimientoRegistral;
 use Illuminate\Support\Facades\Log;
-use App\Exceptions\CertificacionServiceException;
+use App\Exceptions\InscripcionesServiceException;
+use App\Traits\Inscripciones\RecuperarPropietariosTrait;
 
 class InscripcionesPropiedadService{
+
+    use RecuperarPropietariosTrait;
 
     public function store(array $request)
     {
@@ -42,7 +45,7 @@ class InscripcionesPropiedadService{
 
             Log::error('Error al ingresar inscripción de propiedad con el trámite: ' . $request['año'] . '-' . $request['tramite'] . '-' . $request['usuario'] . ' desde Sistema Trámites. ' . $th);
 
-            throw new CertificacionServiceException('Error al ingresar inscripción de propiedad con el trámite: ' . $request['año'] . '-' . $request['tramite'] . '-' . $request['usuario'] . ' desde Sistema Trámites.');
+            throw new InscripcionesServiceException('Error al ingresar inscripción de propiedad con el trámite: ' . $request['año'] . '-' . $request['tramite'] . '-' . $request['usuario'] . ' desde Sistema Trámites.');
 
         }
 
@@ -119,6 +122,39 @@ class InscripcionesPropiedadService{
             ]);
 
         }
+
+    }
+
+    public function validaciones($movimientoRegistral){
+
+        $movimiento = $movimientoRegistral->folioReal
+                                            ->movimientosRegistrales()
+                                            ->where('folio', ($movimientoRegistral->folio + 1))
+                                            ->where('estado', '!=', 'nuevo')
+                                            ->first();
+
+        if($movimiento) throw new InscripcionesServiceException("El folio real tiene movimientos registrales posteriores elaborados.");
+
+        $movimiento = MovimientoRegistral::where('movimiento_padre', $movimientoRegistral->id)->first();
+
+        if($movimiento) throw new InscripcionesServiceException("Este movimiento generó un folio real nuevo.");
+
+    }
+
+    public function corregir(MovimientoRegistral $movimiento){
+
+        $this->validaciones($movimiento);
+
+        $this->obtenerMovimientoConPropietarios($movimiento);
+
+        $movimiento->update([
+            'estado' => 'correccion',
+            'actualizado_por' => auth()->id()
+        ]);
+
+        $movimiento->inscripcionPropiedad->actores()->delete();
+
+        $movimiento->audits()->latest()->first()->update(['tags' => 'Cambio estado a corrección']);
 
     }
 

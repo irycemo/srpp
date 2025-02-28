@@ -12,7 +12,8 @@ use Illuminate\Support\Facades\DB;
 use App\Models\MovimientoRegistral;
 use Illuminate\Support\Facades\Log;
 use App\Traits\Inscripciones\InscripcionesIndex;
-use App\Traits\Inscripciones\RecuperarPropietariosTrait;
+use App\Exceptions\InscripcionesServiceException;
+use App\Http\Services\InscripcionesPropiedadService;
 
 class PropiedadIndex extends Component
 {
@@ -20,58 +21,28 @@ class PropiedadIndex extends Component
     use WithFileUploads;
     use ComponentesTrait;
     use InscripcionesIndex;
-    use RecuperarPropietariosTrait;
-
-    public function validaciones($movimientoRegistral){
-
-        $movimiento = $movimientoRegistral->folioReal
-                                            ->movimientosRegistrales()
-                                            ->where('folio', ($movimientoRegistral->folio + 1))
-                                            ->where('estado', '!=', 'nuevo')
-                                            ->first();
-
-        if($movimiento){
-
-            $this->dispatch('mostrarMensaje', ['warning', "El folio real tiene movimientos registrales posteriores elaborados."]);
-
-            return true;
-
-        }
-
-        $movimiento = MovimientoRegistral::where('movimiento_padre', $movimientoRegistral->id)->first();
-
-        if($movimiento){
-
-            $this->dispatch('mostrarMensaje', ['warning', "Este movimiento generó un folio real nuevo."]);
-
-            return true;
-
-        }
-
-    }
 
     public function corregir(MovimientoRegistral $movimientoRegistral){
 
-        if($this->validaciones($movimientoRegistral)) return;
+        if(in_array($movimientoRegistral->inscripcionPropiedad->service, ['D149	'])){
+
+            return;
+
+        }
 
         try {
 
             DB::transaction(function () use ($movimientoRegistral){
 
-                $this->obtenerMovimientoConPropietarios($movimientoRegistral);
-
-                $movimientoRegistral->update([
-                    'estado' => 'correccion',
-                    'actualizado_por' => auth()->id()
-                ]);
-
-                $movimientoRegistral->inscripcionPropiedad->actores()->delete();
-
-                $movimientoRegistral->audits()->latest()->first()->update(['tags' => 'Cambio estado a corrección']);
+                (new InscripcionesPropiedadService())->corregir($movimientoRegistral);
 
             });
 
             $this->dispatch('mostrarMensaje', ['success', "La información se guardó con éxito."]);
+
+        } catch (InscripcionesServiceException $th) {
+
+            $this->dispatch('mostrarMensaje', ['error', $th->getMessage()]);
 
         } catch (\Throwable $th) {
             Log::error("Error al enviar a corrección inscripcion de propiedad por el usuario: (id: " . auth()->user()->id . ") " . auth()->user()->name . ". " . $th);
