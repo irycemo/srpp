@@ -127,6 +127,8 @@ class Subdivisiones extends Component
 
             DB::transaction(function (){
 
+                $this->propiedad->save();
+
                 $this->gravamenes = Gravamen::with('actores', 'movimientoRegistral')->whereHas('movimientoRegistral', function($q){ $q->where('folio_real', $this->propiedad->movimientoRegistral->folioReal->id); })->get();
 
                 if($this->propiedad->acto_contenido != 'SUBDIVISIÓN CON RESTO'){

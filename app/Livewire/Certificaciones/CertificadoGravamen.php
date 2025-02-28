@@ -53,17 +53,7 @@ class CertificadoGravamen extends Component
 
         if(!auth()->user()->hasRole(['Certificador Juridico', 'Certificador Oficialia'])){
 
-            if($modelo->movimientoRegistral->tipo_servicio == 'ordinario'){
-
-                if(!($this->calcularDiaElaboracion($modelo) <= now())){
-
-                    $this->dispatch('mostrarMensaje', ['error', "El trámite puede elaborarse apartir del " . $this->calcularDiaElaboracion($modelo)->format('d-m-Y')]);
-
-                    return;
-
-                }
-
-            }
+            if($this->calcularDiaElaboracion($modelo->moviminetoRegistral)) return;
 
         }
 
@@ -84,7 +74,7 @@ class CertificadoGravamen extends Component
 
         if($this->moviminetoRegistral->getRawOriginal('distrito') != 2){
 
-            if($this->calcularDiaElaboracion($modelo)) return;
+            if($this->calcularDiaElaboracion($this->moviminetoRegistral)) return;
 
         }
 
@@ -220,13 +210,7 @@ class CertificadoGravamen extends Component
 
         if($this->modelo_editar->movimientoRegistral->tipo_servicio == 'ordinario' && $this->modelo_editar->movimientoRegistral->distrito != '02 Uruapan'){
 
-            if(!($this->calcularDiaElaboracion($this->modelo_editar->movimientoRegistral) <= now())){
-
-                $this->dispatch('mostrarMensaje', ['error', "El trámite puede elaborarse apartir del " . $this->calcularDiaElaboracion($this->modelo_editar->movimientoRegistral)->format('d-m-Y')]);
-
-                return;
-
-            }
+            if($this->calcularDiaElaboracion($this->modelo_editar->movimientoRegistral)) return;
 
         }
 
