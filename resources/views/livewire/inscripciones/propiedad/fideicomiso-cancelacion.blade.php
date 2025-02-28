@@ -16,59 +16,90 @@
 
     </div>
 
-    <div class="bg-white rounded-lg p-4 shadow-lg mb-4">
+    @if($fideicomiso)
 
-        <div class="flex gap-3 items-center w-full lg:w-1/2 justify-center mx-auto mb-4 text-sm">
+        <div class="bg-white rounded-lg p-4 shadow-lg mb-4">
 
-            <span>{{ $fideicomiso->tipo }}</span>
+            <div class="flex gap-3 items-center w-full lg:w-1/2 justify-center mx-auto mb-4 text-sm">
+
+                <span>{{ $fideicomiso->tipo }}</span>
+
+            </div>
+
+            <x-input-group for="fideicomiso.objeto" label="Objeto del fideicomiso"  class="w-full lg:w-1/2 mx-auto mb-3">
+
+                <textarea class="bg-white rounded text-xs w-full" readonly>{{ $fideicomiso->objeto }}</textarea>
+
+            </x-input-group>
+
+            <div class="w-full lg:w-1/2 mx-auto">
+
+                <x-table>
+
+                    <x-slot name="head">
+                        <x-table.heading >Nombre / Razón social</x-table.heading>
+                        <x-table.heading >Tipo de actor</x-table.heading>
+                    </x-slot>
+
+                    <x-slot name="body">
+
+                        @foreach ($fideicomiso->actores as $actor)
+
+                            <x-table.row wire:loading.class.delaylongest="opacity-50" wire:key="row-{{ $actor->id }}">
+
+                                <x-table.cell>
+
+                                    <span class="lg:hidden absolute top-0 left-0 bg-blue-300 px-2 py-1 text-xs text-white font-bold uppercase rounded-br-xl">Nombre / Razón social</span>
+
+                                    <p class="pt-4">{{ $actor->persona->nombre }} {{ $actor->persona->ap_paterno }} {{ $actor->persona->ap_materno }} {{ $actor->persona->razon_social }}</p>
+
+                                </x-table.cell>
+                                <x-table.cell>
+                                    {{ $actor->tipo_actor }}
+                                </x-table.cell>
+
+                            </x-table.row>
+
+                        @endforeach
+
+                    </x-slot>
+
+                    <x-slot name="tfoot"></x-slot>
+
+                </x-table>
+
+            </div>
 
         </div>
 
-        <x-input-group for="fideicomiso.objeto" label="Objeto del fideicomiso"  class="w-full lg:w-1/2 mx-auto mb-3">
+    @else
 
-            <textarea class="bg-white rounded text-xs w-full" readonly>{{ $fideicomiso->objeto }}</textarea>
+        <div class="bg-white rounded-lg p-4 shadow-lg mb-4">
 
-        </x-input-group>
+            <div class="space-y-2 items-center w-full lg:w-1/2 text-center mx-auto mb-4">
 
-        <div class="w-full lg:w-1/2 mx-auto">
+                <x-input-group for="movimiento_folio" label="Folio del fideicomiso" :error="$errors->first('movimiento_folio')" class="inline-block">
 
-            <x-table>
+                    <x-input-text type="number" id="movimiento_folio" wire:model="movimiento_folio" />
 
-                <x-slot name="head">
-                    <x-table.heading >Nombre / Razón social</x-table.heading>
-                    <x-table.heading >Tipo de actor</x-table.heading>
-                </x-slot>
+                </x-input-group>
 
-                <x-slot name="body">
+                <x-button-blue
+                    wire:click="buscarFideicomiso"
+                    wire:loading.attr="disabled"
+                    wire:target="buscarFideicomiso" class="mx-auto">
 
-                    @foreach ($fideicomiso->actores as $actor)
+                    <img wire:loading wire:target="buscarFideicomiso" class="mx-auto h-4 mr-1" src="{{ asset('storage/img/loading3.svg') }}" alt="Loading">
 
-                        <x-table.row wire:loading.class.delaylongest="opacity-50" wire:key="row-{{ $actor->id }}">
+                    Buscar
 
-                            <x-table.cell>
+                </x-button-blue>
 
-                                <span class="lg:hidden absolute top-0 left-0 bg-blue-300 px-2 py-1 text-xs text-white font-bold uppercase rounded-br-xl">Nombre / Razón social</span>
-
-                                <p class="pt-4">{{ $actor->persona->nombre }} {{ $actor->persona->ap_paterno }} {{ $actor->persona->ap_materno }} {{ $actor->persona->razon_social }}</p>
-
-                            </x-table.cell>
-                            <x-table.cell>
-                                {{ $actor->tipo_actor }}
-                            </x-table.cell>
-
-                        </x-table.row>
-
-                    @endforeach
-
-                </x-slot>
-
-                <x-slot name="tfoot"></x-slot>
-
-            </x-table>
+            </div>
 
         </div>
 
-    </div>
+    @endif
 
     @if(count($errors) > 0)
 

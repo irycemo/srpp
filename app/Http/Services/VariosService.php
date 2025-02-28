@@ -42,13 +42,13 @@ class VariosService{
 
             if(in_array($vario->acto_contenido, ['SEGUNDO AVISO PREVENTIVO', 'PRIMER AVISO PREVENTIVO'])){
 
-                $vario->movimientoRegistral->update(['usuario_asignado' => $this->obtenerUsuarioRolAvisos()]);
+                $vario->movimientoRegistral->update(['usuario_asignado' => $this->obtenerUsuarioRolAvisos($vario->movimientoRegistral->getRawOriginal('distrito'))]);
 
             }
 
             if($vario->acto_contenido == 'ACLARACIÓN ADMINISTRATIVA'){
 
-                $vario->movimientoRegistral->update(['usuario_asignado' => $this->obtenerUsuarioRolAclaraciones()]);
+                $vario->movimientoRegistral->update(['usuario_asignado' => $this->obtenerUsuarioRolAclaraciones($vario->movimientoRegistral->getRawOriginal('distrito'))]);
 
             }
 
@@ -62,9 +62,15 @@ class VariosService{
 
     }
 
-    public function obtenerUsuarioRolAvisos(){
+    public function obtenerUsuarioRolAvisos($distrito){
 
         $usuario = User::where('status', 'activo')
+                            ->when($distrito == 2, function($q){
+                                $q->where('ubicacion', 'Regional 4');
+                            })
+                            ->when($distrito != 2, function($q){
+                                $q->where('ubicacion', '!=', 'Regional 4');
+                            })
                             ->whereHas('roles', function ($q){
                                 $q->where('name', 'Avisos preventivos');
                             })
@@ -76,9 +82,15 @@ class VariosService{
 
     }
 
-    public function obtenerUsuarioRolAclaraciones(){
+    public function obtenerUsuarioRolAclaraciones($distrito){
 
         $usuario = User::where('status', 'activo')
+                            ->when($distrito == 2, function($q){
+                                $q->where('ubicacion', 'Regional 4');
+                            })
+                            ->when($distrito != 2, function($q){
+                                $q->where('ubicacion', '!=', 'Regional 4');
+                            })
                             ->whereHas('roles', function ($q){
                                 $q->where('name', 'Aclaraciones administrativas');
                             })

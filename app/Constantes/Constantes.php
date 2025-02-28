@@ -447,7 +447,7 @@ class Constantes{
 
     const ACTORES_FIDEICOMISO = [
         'FIDUCIARIA',
-        'FIDECOMITENTE',
+        'FIDEICOMITENTE',
         'FIDEICOMISARIO',
     ];
 

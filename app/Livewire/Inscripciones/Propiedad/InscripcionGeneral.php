@@ -131,6 +131,14 @@ class InscripcionGeneral extends Component
 
     public function validaciones(){
 
+        if(!$this->inscripcion->movimientoRegistral->documentoEntrada()){
+
+            $this->dispatch('mostrarMensaje', ['error', "Debe subir el documento de entrada."]);
+
+            return;
+
+        }
+
         if(!$this->nuevoFolio){
 
             if($this->inscripcion->propietarios()->count() == 0){

@@ -26,7 +26,7 @@ class Fideicomiso extends Model implements Auditable
     }
 
     public function fideicomitentes(){
-        return $this->actores()->with('persona')->where('tipo_Actor', 'FIDECOMITENTE')->get();
+        return $this->actores()->with('persona')->where('tipo_Actor', 'FIDEICOMITENTE')->get();
     }
 
     public function fideicomisarios(){

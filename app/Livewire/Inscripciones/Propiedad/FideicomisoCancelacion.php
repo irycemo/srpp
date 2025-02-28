@@ -4,30 +4,49 @@ namespace App\Livewire\Inscripciones\Propiedad;
 
 use Exception;
 use Livewire\Component;
+use Illuminate\Validation\Rule;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Hash;
 use Spatie\LivewireFilepond\WithFilePond;
 use App\Traits\Inscripciones\Propiedad\PropiedadTrait;
 use App\Http\Controllers\InscripcionesPropiedad\PropiedadController;
+use App\Traits\Inscripciones\RecuperarPropietariosTrait;
 
 class FideicomisoCancelacion extends Component
 {
 
     use WithFilePond;
     use PropiedadTrait;
+    use RecuperarPropietariosTrait;
 
     public $inscripcion;
 
+    public $movimientoFideicomiso;
     public $fideicomiso;
+
+    public $movimiento_folio;
 
     protected function rules(){
         return [
             'inscripcion.descripcion_acto' => 'required',
+            'movimiento_folio' => [Rule::requiredIf($this->fideicomiso == null), 'numeric'],
         ];
     }
 
+    protected $validationAttributes  = [
+        'movimiento_folio' => 'folio del fideicomiso',
+    ];
+
     public function finalizar(){
+
+        if(!$this->inscripcion->movimientoRegistral->documentoEntrada()){
+
+            $this->dispatch('mostrarMensaje', ['error', "Debe subir el documento de entrada."]);
+
+            return;
+
+        }
 
         $this->validate();
 
@@ -76,17 +95,22 @@ class FideicomisoCancelacion extends Component
 
             DB::transaction(function () {
 
+                $this->fideicomiso->update(['estado' => 'inactivo']);
+
                 $this->inscripcion->actualizado_por = auth()->id();
                 $this->inscripcion->fecha_inscripcion = now()->toDateString();
                 $this->inscripcion->save();
 
                 $this->inscripcion->movimientoRegistral->update(['estado' => 'elaborado']);
 
+                if($this->fideicomiso->tipo == 'FIDEICOMISO TRASLATIVO')
+                    $this->obtenerMovimientoConPropietarios($this->movimientoFideicomiso);
+
                 (new PropiedadController())->caratula($this->inscripcion);
 
             });
 
-            return redirect()->route('propiedad.fideicomisos_index');
+            return redirect()->route('propiedad');
 
         } catch (Exception $ex) {
 
@@ -99,11 +123,36 @@ class FideicomisoCancelacion extends Component
 
     }
 
+    public function buscarFideicomiso(){
+
+        $this->validate();
+
+        try {
+
+            $this->movimientoFideicomiso = $this->inscripcion->movimientoRegistral->folioReal->movimientosRegistrales()
+                                                                                        ->whereHas('fideicomiso', function($q){
+                                                                                            $q->where('tipo', 'FIDEICOMISO TRASLATIVO');
+                                                                                        })
+                                                                                        ->where('folio', $this->movimiento_folio)
+                                                                                        ->firstOrFail();
+
+            $this->fideicomiso = $this->movimientoFideicomiso->fideicomiso->load('actores.persona');
+
+        } catch (\Throwable $th) {
+            $this->dispatch('mostrarMensaje', ['warning', "No se encontro fideicomiso con la información ingresada."]);
+        }
+
+    }
+
     public function mount(){
 
-        $this->fideicomiso = $this->inscripcion->movimientoRegistral->folioReal->fideicomisoActivo();
+        if($this->inscripcion->movimientoRegistral->folioReal->fideicomisoActivo()){
 
-        $this->fideicomiso->load('actores.persona');
+            $this->fideicomiso = $this->inscripcion->movimientoRegistral->folioReal->fideicomisoActivo();
+
+            $this->fideicomiso->load('actores.persona');
+
+        }
 
         $this->inscripcion->acto_contenido = 'REVERCIÓN O CANCELACIÓN DE FIDEICOMISO';
 
