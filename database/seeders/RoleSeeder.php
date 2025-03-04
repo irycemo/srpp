@@ -21,8 +21,12 @@ class RoleSeeder extends Seeder
         /* Certificaciones */
         $role2 = Role::create(['name' => 'Supervisor certificaciones']);
         $role3 = Role::create(['name' => 'Certificador']);
+        $role3 = Role::create(['name' => 'Certificador Gravamen']);
+        $role3 = Role::create(['name' => 'Certificador Propiedad']);
+
         $role5 = Role::create(['name' => 'Director']);
         $role6 = Role::create(['name' => 'Consulta']);
+
         $role3 = Role::create(['name' => 'Certificador Juridico']);
         $role3 = Role::create(['name' => 'Certificador Oficialia']);
         /* Inscripciones */
@@ -31,11 +35,7 @@ class RoleSeeder extends Seeder
         $role7 = Role::create(['name' => 'Cancelacación']);
         $role7 = Role::create(['name' => 'Sentencias']);
         $role7 = Role::create(['name' => 'Varios']);
-        $role8 = Role::create(['name' => 'Supervisor propiedad']);
-        $role8 = Role::create(['name' => 'Supervisor gravamen']);
-        $role8 = Role::create(['name' => 'Supervisor cancelaciones']);
-        $role8 = Role::create(['name' => 'Supervisor sentencias']);
-        $role8 = Role::create(['name' => 'Supervisor varios']);
+        $role8 = Role::create(['name' => 'Supervisor inscripciones']);
         /* Pase a folio */
         $role9 = Role::create(['name' => 'Pase a folio']);
         /* Registrador */
@@ -44,12 +44,18 @@ class RoleSeeder extends Seeder
         $role9 = Role::create(['name' => 'Registrador Cancelaciones']);
         $role9 = Role::create(['name' => 'Registrador Varios']);
         $role9 = Role::create(['name' => 'Registrador Sentencias']);
+        $role9 = Role::create(['name' => 'Registrador fraccionamientos']);
+
+        $role9 = Role::create(['name' => 'Folio real moral']);
+        $role9 = Role::create(['name' => 'Avisos preventivos']);
+        $role9 = Role::create(['name' => 'Aclaraciones administrativas']);
 
         $role10 = Role::create(['name' => 'Jefe de departamento certificaciones']);
         $role12 = Role::create(['name' => 'Jefe de departamento inscripciones']);
         $role13 = Role::create(['name' => 'Jefe de departamento jurídico']);
         $role14 = Role::create(['name' => 'Operador']);
         $role11 = Role::create(['name' => 'Sistemas']);
+        $role11 = Role::create(['name' => 'Regional']);
 
 
         Permission::create(['name' => 'Lista de roles', 'area' => 'Roles'])->syncRoles([$role1]);

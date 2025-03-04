@@ -24,7 +24,7 @@ class PropiedadIndex extends Component
 
     public function corregir(MovimientoRegistral $movimientoRegistral){
 
-        if(in_array($movimientoRegistral->inscripcionPropiedad->service, ['D149	'])){
+        if(in_array($movimientoRegistral->inscripcionPropiedad->servicio, ['D149	'])){
 
             return;
 

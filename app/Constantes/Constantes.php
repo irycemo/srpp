@@ -429,7 +429,9 @@ class Constantes{
         'ESCRUTADOR',
         'SOCIO',
         'REPRESENTANTE LEGAL',
-        'APODERADO JURÍDICO'
+        'APODERADO JURÍDICO',
+        'VOCAL DE CONSEJO DE VIGILANCIA',
+        'TESORERO DE CONSEJO DE VIGILANCIA'
     ];
 
     const ACTORES_GRAVAMEN = [

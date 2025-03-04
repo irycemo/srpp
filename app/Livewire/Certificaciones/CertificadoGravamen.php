@@ -55,7 +55,7 @@ class CertificadoGravamen extends Component
 
         if(!auth()->user()->hasRole(['Certificador Juridico', 'Certificador Oficialia'])){
 
-            if($this->calcularDiaElaboracion($modelo->moviminetoRegistral)) return;
+            if($this->calcularDiaElaboracion($modelo->movimientoRegistral)) return;
 
         }
 
