@@ -48,6 +48,14 @@ class FideicomisoCancelacion extends Component
 
         }
 
+        if(!$this->fideicomiso){
+
+            $this->dispatch('mostrarMensaje', ['error', "Debe buscar el fideicomiso."]);
+
+            return;
+
+        }
+
         $this->validate();
 
         $this->modalContraseña = true;

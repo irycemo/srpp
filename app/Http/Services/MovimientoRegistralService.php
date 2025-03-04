@@ -158,26 +158,55 @@ class MovimientoRegistralService{
 
                 $movimiento_registral = MovimientoRegistral::findOrFail($data['movimiento_registral']);
 
-                /* if($movimiento_registral->folio_real){
+                if(isset($data['folio_real'])){
 
-                    if(!isset($data['folio_real']) || isset($data['folio_real']) && ($movimiento_registral->folioReal->folio != $data['folio_real'])){
+                    if($data['folio_real'] != $movimiento_registral->folioReal->folio){
 
-                        $movimiento_registral->update([
-                            'folio_real' => null,
-                            'folio' => 1
-                        ]);
+                        $this->buscarNuevoFolioReal($data, $movimiento_registral);
+
+                    }else{
+
+                        $this->actualizarMovimientoRegistral($data, $movimiento_registral);
 
                     }
 
-                } */
+                }else{
 
-                $movimiento_registral->update($this->requestMovimientoActualizar($data, $movimiento_registral));
+                    if(
+                        $movimiento_registral->tomo != $data['tomo'] ||
+                        $movimiento_registral->registro != $data['registro'] ||
+                        $movimiento_registral->numero_propiedad != $data['numero_propiedad']
+                    ){
+
+                        $array = $this->revisarEncolamientoSinFolio($data, $movimiento_registral->id);
+
+                        $this->actualizarMovimientoRegistral($data + $array, $movimiento_registral);
+
+                    }else{
+
+                        $this->actualizarMovimientoRegistral($data, $movimiento_registral);
+
+                    }
+
+                }
+
+                if($movimiento_registral->certificacion && in_array($movimiento_registral->certificacion->servicio, ['DL14', 'DL13', 'DC93'])){
+
+                    $this->recalcularFechaEntrega($movimiento_registral);
+
+                }
 
             });
 
+        } catch (MovimientoRegistralServiceException $th) {
+
+            Log::error('Error al actualizar el trámite: ' . $request->año . '-' . $request->tramite . '-' . $request->usuario . ' desde Sistema Trámites. ' . $th->getMessage());
+
+            throw new MovimientoRegistralServiceException($th->getMessage());
+
         } catch (\Throwable $th) {
 
-            Log::error('Error al actualizar el trámite: ' . $request->año . '-' . $request->tramite . ' desde Sistema Trámites. ' . $th);
+            Log::error('Error al actualizar el trámite: ' . $request->año . '-' . $request->tramite . '-' . $request->usuario . ' desde Sistema Trámites. ' . $th);
 
             throw new MovimientoRegistralServiceException('Error al actualizar el trámite: ' . $request->año . '-' . $request->tramite . '-' . $request->usuario . ' en Sistema RPP.');
 
@@ -368,142 +397,6 @@ class MovimientoRegistralService{
             throw new MovimientoRegistralServiceException('Error al ingresar el trámite: ' . $request['año'] . '-' . $request['tramite'] . '-' . $request['usuario'] . ' desde Sistema Trámites.');
 
         }
-
-    }
-
-    public function requestMovimientoActualizar($request, $movimiento_registral):array
-    {
-
-        $array = [];
-
-        $fields = [
-            'tomo',
-            'tomo_bis',
-            'registro',
-            'registro_bis',
-            'distrito',
-            'tomo_gravamen',
-            'registro_gravamen',
-            'seccion',
-            'numero_oficio',
-            'numero_documento',
-            'tipo_documento',
-            'autoridad_cargo',
-            'autoridad_nombre',
-            'autoridad_numero',
-            'fecha_emision',
-            'procedencia',
-            'numero_propiedad',
-            'tomo',
-            'tomo_bis',
-            'registro',
-            'registro_bis',
-        ];
-
-        foreach($fields as $field){
-
-            if(array_key_exists($field, $request)){
-
-                $array[$field] = $request[$field];
-
-            }
-
-        }
-
-        $auxArray = [];
-
-        if(isset($request['tomo']) && isset($request['registro']) && isset($request['numero_propiedad'])){
-
-            if(
-                $movimiento_registral->tomo != isset($request['tomo']) ||
-                $movimiento_registral->registro != isset($request['registro']) ||
-                $movimiento_registral->numero_propiedad != isset($request['numero_propiedad'])
-            ){
-
-                /* Checar precalificación para encolar movimientos registrales */
-                if(isset($request['folio_real'])){
-
-                    $folioReal = FolioReal::where('folio', $request['folio_real'])->first();
-
-                    $folio = $folioReal->ultimoFolio() + 1;
-
-                }else{
-
-                    $folioReal = null;
-
-                    $folio = 1;
-
-                }
-
-                $mRegsitral = MovimientoRegistral::where('tomo', $request['tomo'])
-                                                    ->where('registro', $request['registro'])
-                                                    ->where('numero_propiedad', $request['numero_propiedad'])
-                                                    ->where('distrito', $request['distrito'])
-                                                    ->when($folioReal != null, function($q) use($folioReal){
-                                                        $q->where('folio_real', $folioReal->id)
-                                                            ->whereHas('folioReal', function($q){
-                                                                $q->whereIn('estado', ['nuevo', 'captura', 'elaborado']);
-                                                            });
-                                                    })
-                                                    ->when($folioReal == null, function($q) use($folioReal){
-                                                        $q->whereNull('folio_real');
-                                                    })
-                                                    ->where('folio', '>=', 1)
-                                                    ->first();
-
-                if($mRegsitral){
-
-                    $maxFolio = MovimientoRegistral::where('tomo', $request['tomo'])
-                                                    ->where('registro', $request['registro'])
-                                                    ->where('numero_propiedad', $request['numero_propiedad'])
-                                                    ->where('distrito', $request['distrito'])
-                                                    ->when($folioReal != null, function($q) use($folioReal){
-                                                        $q->where('folio_real', $folioReal->id)
-                                                            ->whereHas('folioReal', function($q){
-                                                                $q->whereIn('estado', ['nuevo', 'captura', 'elaborado']);
-                                                            });
-                                                    })
-                                                    ->when($folioReal == null, function($q) use($folioReal){
-                                                        $q->whereNull('folio_real');
-                                                    })
-                                                    ->where('folio', '>=', 1)
-                                                    ->max('folio');
-
-                    $auxArray = $array + [
-                        'folio_real' => $folioReal ? $folioReal->id : null,
-                        'folio' => $maxFolio + 1,
-                        'estado' => 'precalificacion'
-                    ];
-
-                }else{
-
-                    $auxArray = $array + [
-                        'folio_real' => $folioReal ? $folioReal->id : null,
-                        'folio' => $folio,
-                        'estado' => 'nuevo',
-                    ];
-
-                }
-
-            }else{
-
-                $auxArray['estado'] = 'nuevo';
-
-            }
-
-        }else{
-
-            $auxArray['estado'] = 'nuevo';
-
-        }
-
-        if($movimiento_registral->certificacion && in_array($movimiento_registral->certificacion->servicio, ['DL14', 'DL13', 'DC93'])){
-
-            $this->recalcularFechaEntrega($movimiento_registral);
-
-        }
-
-        return $array + $auxArray;
 
     }
 
@@ -795,7 +688,7 @@ class MovimientoRegistralService{
 
             $actual = now();
 
-            for ($i=0; $i < 5; $i++) {
+            for ($i=0; $i < 2; $i++) {
 
                 $actual->addDays(1);
 
@@ -828,6 +721,107 @@ class MovimientoRegistralService{
         }
 
         $movimientoRegistral->update(['fecha_entrega' => $fecha]);
+
+    }
+
+    public function buscarNuevoFolioReal($data, $movimiento_registral){
+
+        $folioReal = FolioReal::where('folio', $data['folio_real'])->first();
+
+        if(!$folioReal) throw new MovimientoRegistralServiceException('El folio real no existe.');
+
+        if($folioReal->estado != 'activo') throw new MovimientoRegistralServiceException('El folio real no esta activo.');
+
+        $data['folio_real'] = $folioReal->id;
+        $data['folio'] = $folioReal->ultimoFolio() + 1;
+        $data['estado'] = 'nuevo';
+
+        $this->actualizarMovimientoRegistral($data, $movimiento_registral);
+
+    }
+
+    public function actualizarMovimientoRegistral($data, MovimientoRegistral $movimiento_registral){
+
+        $array = [];
+
+        $fields = [
+            'tomo',
+            'tomo_bis',
+            'registro',
+            'registro_bis',
+            'distrito',
+            'tomo_gravamen',
+            'registro_gravamen',
+            'seccion',
+            'numero_oficio',
+            'numero_documento',
+            'tipo_documento',
+            'autoridad_cargo',
+            'autoridad_nombre',
+            'autoridad_numero',
+            'fecha_emision',
+            'procedencia',
+            'asiento_registral',
+            'numero_propiedad',
+            'tomo',
+            'tomo_bis',
+            'registro',
+            'registro_bis',
+            'folio_real',
+            'folio',
+            'estado'
+        ];
+
+        foreach($fields as $field){
+
+            if(array_key_exists($field, $data)){
+
+                $array[$field] = $data[$field];
+
+            }
+
+        }
+
+        $movimiento_registral->update($array);
+
+    }
+
+    public function revisarEncolamientoSinFolio($data){
+
+        $mRegsitral = MovimientoRegistral::where('tomo', $data['tomo'])
+                                                    ->where('registro', $data['registro'])
+                                                    ->where('numero_propiedad', $data['numero_propiedad'])
+                                                    ->where('distrito', $data['distrito'])
+                                                    ->whereNull('folio_real')
+                                                    ->where('folio', '>=', 1)
+                                                    ->first();
+
+        if($mRegsitral){
+
+            $maxFolio = MovimientoRegistral::where('tomo', $data['tomo'])
+                                            ->where('registro', $data['registro'])
+                                            ->where('numero_propiedad', $data['numero_propiedad'])
+                                            ->where('distrito', $data['distrito'])
+                                            ->whereNull('folio_real')
+                                            ->where('folio', '>=', 1)
+                                            ->max('folio');
+
+            return [
+                'folio' => $maxFolio + 1,
+                'estado' => 'precalificacion',
+                'folio_real' => null
+            ];
+
+        }else{
+
+            return [
+                'folio' => 1,
+                'estado' => 'nuevo',
+                'folio_real' => null
+            ];
+
+        }
+
 
     }
 
