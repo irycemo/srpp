@@ -30,6 +30,13 @@ class Fraccionamientos extends Component
 
     public $modalDocumento = false;
 
+    protected function rules(){
+        return [
+            'documento' => 'required',
+            'propiedad.descripcion_acto' => 'required',
+        ];
+    }
+
     public function abrirModalDocumento(){
 
         $this->reset('documento_entrada');
@@ -76,6 +83,8 @@ class Fraccionamientos extends Component
 
     public function procesar(){
 
+        $this->validate();
+
         if(!$this->propiedad->movimientoRegistral->documentoEntrada()){
 
             $this->dispatch('mostrarMensaje', ['warning', "Debe subir el documento de entrada primero."]);
@@ -83,10 +92,6 @@ class Fraccionamientos extends Component
             return;
 
         }
-
-        $this->validate([
-            'documento' => 'required'
-        ]);
 
         $import = new FolioRealImport($this->propiedad->movimientoRegistral);
 
@@ -99,6 +104,9 @@ class Fraccionamientos extends Component
             $this->dispatch('mostrarMensaje', ['success', "Los folios reales se generaron con éxito"]);
 
             $this->reset('documento');
+
+            $this->propiedad->acto_contenido = 'FRACCIONAMIENTO';
+            $this->propiedad->save();
 
             (new SubdivisionesController())->caratula($this->propiedad);
 

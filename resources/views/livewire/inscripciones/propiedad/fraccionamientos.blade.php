@@ -39,6 +39,12 @@
 
             <div class="md:w-1/2 lg:w-1/4 mx-auto items-center text-center">
 
+                <x-input-group for="propiedad.descripcion_acto" label="Descripción del acto" :error="$errors->first('propiedad.descripcion_acto')" class="mb-3">
+
+                    <textarea class="bg-white rounded text-xs w-full  @error('propiedad.descripcion_acto') border-1 border-red-500 @enderror" rows="4" wire:model="propiedad.descripcion_acto"></textarea>
+
+                </x-input-group>
+
                 <div class="mb-5">
 
                     <x-filepond::upload wire:model="documento" :accepted-file-types="['application/vnd.ms-excel', 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet', '.xlsx']"/>
