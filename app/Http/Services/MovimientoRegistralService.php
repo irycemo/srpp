@@ -178,7 +178,7 @@ class MovimientoRegistralService{
                         $movimiento_registral->numero_propiedad != $data['numero_propiedad']
                     ){
 
-                        $array = $this->revisarEncolamientoSinFolio($data, $movimiento_registral->id);
+                        $array = $this->revisarEncolamientoSinFolioInmobiliario($data, $movimiento_registral->id);
 
                         $this->actualizarMovimientoRegistral($data + $array, $movimiento_registral);
 
@@ -288,9 +288,23 @@ class MovimientoRegistralService{
 
                 $folioReal = FolioReal::where('folio', $request['folio_real'])->first();
 
+                $array['folio_real'] = $folioReal->id;
+                $array['folio'] = $this->calcularFolio($request);
+                $array['estado'] = 'nuevo';
+
             }else{
 
-                $folioReal = null;
+                if(isset($request['tomo']) && isset($request['registro']) && isset($request['numero_propiedad'])){
+
+                    $array = array_merge($array, $this->revisarEncolamientoSinFolioInmobiliario($request));
+
+                }else{
+
+                    $array['folio_real'] = null;
+                    $array['folio'] = 1;
+                    $array['estado'] = 'nuevo';
+
+                }
 
             }
 
@@ -298,9 +312,9 @@ class MovimientoRegistralService{
 
                 $folioRealPersonaMoral = FolioRealPersona::where('folio', $request['folio_real_persona_moral'])->first();
 
-            }else{
-
-                $folioRealPersonaMoral = null;
+                $array['folio_real_persona'] = $folioRealPersonaMoral->id;
+                $array['folio'] = $this->calcularFolioPersonaMoral($request);
+                $array['estado'] = 'nuevo';
 
             }
 
@@ -313,73 +327,8 @@ class MovimientoRegistralService{
                 'procedencia' => $request['procedencia'] ?? null,
             ];
 
-            $auxArray = [];
-
-            if(isset($request['tomo']) && isset($request['registro']) && isset($request['numero_propiedad'])){
-
-                $mRegsitral = MovimientoRegistral::where('tomo', $request['tomo'])
-                                                    ->where('registro', $request['registro'])
-                                                    ->where('numero_propiedad', $request['numero_propiedad'])
-                                                    ->where('distrito', $request['distrito'])
-                                                    ->when($folioReal != null, function($q) use($folioReal){
-                                                        $q->where('folio_real', $folioReal->id)
-                                                            ->whereHas('folioReal', function($q){
-                                                                $q->whereIn('estado', ['nuevo', 'captura', 'elaborado']);
-                                                            });
-                                                    })
-                                                    ->when($folioReal == null, function($q) use($folioReal){
-                                                        $q->whereNull('folio_real');
-                                                    })
-                                                    ->where('folio', '>=', 1)
-                                                    ->first();
-
-                if($mRegsitral){
-
-                    $maxFolio = MovimientoRegistral::where('tomo', $request['tomo'])
-                                                    ->where('registro', $request['registro'])
-                                                    ->where('numero_propiedad', $request['numero_propiedad'])
-                                                    ->where('distrito', $request['distrito'])
-                                                    ->when($folioReal != null, function($q) use($folioReal){
-                                                        $q->where('folio_real', $folioReal->id)
-                                                            ->whereHas('folioReal', function($q){
-                                                                $q->whereIn('estado', ['nuevo', 'captura', 'elaborado']);
-                                                            });
-                                                    })
-                                                    ->when($folioReal == null, function($q) use($folioReal){
-                                                        $q->whereNull('folio_real');
-                                                    })
-                                                    ->where('folio', '>=', 1)
-                                                    ->max('folio');
-
-                    $auxArray = $array + [
-                        'folio_real' => $folioReal ? $folioReal->id : null,
-                        'folio' => $maxFolio + 1,
-                        'estado' => 'precalificacion'
-                    ];
-
-                }else{
-
-                    $auxArray = $array + [
-                        'folio_real' => $folioReal ? $folioReal->id : null,
-                        'folio' => $this->calcularFolio($request),
-                        'estado' => 'nuevo',
-                    ];
-
-                }
-
-            }else{
-
-                $auxArray = $array + [
-                    'folio_real' => $folioReal ? $folioReal->id : null,
-                    'folio_real_persona' => $folioRealPersonaMoral ? $folioRealPersonaMoral->id : null,
-                    'folio' => $folioRealPersonaMoral ? $this->calcularFolioPersonaMoral($request) : $this->calcularFolio($request),
-                    'estado' => 'nuevo',
-                ];
-
-            }
-
-            return $auxArray + $array + [
-                'usuario_asignado' => $this->obtenerUsuarioAsignado($documento_entrada, $folioReal, $request['servicio'], $request['distrito'], $request['solicitante'], $request['tipo_servicio'],$request['categoria_servicio'], $auxArray['estado'], false),
+            return $array + [
+                'usuario_asignado' => $this->obtenerUsuarioAsignado($documento_entrada, isset($request['folio_real']), $request['servicio'], $request['distrito'], $request['solicitante'], $request['tipo_servicio'],$request['categoria_servicio'], $array['estado'], false),
                 'usuario_supervisor' => $this->obtenerSupervisor($request['servicio'], $request['distrito']),
                 'solicitante' => $request['nombre_solicitante']
             ];
@@ -786,7 +735,7 @@ class MovimientoRegistralService{
 
     }
 
-    public function revisarEncolamientoSinFolio($data){
+    public function revisarEncolamientoSinFolioInmobiliario($data){
 
         $mRegsitral = MovimientoRegistral::where('tomo', $data['tomo'])
                                                     ->where('registro', $data['registro'])

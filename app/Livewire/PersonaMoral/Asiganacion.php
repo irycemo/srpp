@@ -367,31 +367,35 @@ class Asiganacion extends Component
                                     ->where('registro', $this->registro)
                                     ->first();
 
-        foreach($asociacion->movimientos as $movimiento){
+        if($asociacion){
 
-            $movimientoRegistral = MovimientoRegistral::create([
-                'folio_real_persona' => $this->folioRealPersonaMoral->id,
-                'estado' => 'concluido',
-                'tomo' => $movimiento->tomoMov,
-                'registro' => $movimiento->registroMov,
-                'folio' => $this->folioRealPersonaMoral->ultimoFolio() + 1,
-                'seccion' => 'Folio real de persona moral',
-                'distrito' => $this->distrito,
-                'fecha_entrega' => now()->toDateString(),
-                'tipo_servicio' => 'extra_urgente',
-                'usuario_asignado' => auth()->id(),
-                'numero_documento' => $movimiento->nescrituraMov,
-                'autoridad_numero' => $movimiento->notarioMov,
-                'usuario_supervisor' => (new AsignacionService())->obtenerSupervisorInscripciones($this->distrito)
-            ]);
+            foreach($asociacion->movimientos as $movimiento){
 
-            ReformaMoral::create([
-                'movimiento_registral_id' => $movimientoRegistral->id,
-                'acto_contenido' => 'ACTA DE ASAMBLEA',
-                'fecha_inscripcion' => Carbon::parse($movimiento->finscripcionMov),
-                'fecha_protocolizacion' => Carbon::parse($movimiento->fechaFirmaMov),
-                'descripcion' => 'ESTE MOVIMIENTO SE INGRESO MEDIANTE LA ASIGNACIÓN DE FOLIO REAL DE PERONAS MORALES. ' . $movimiento->descripcionMov . 'Intervinientes: ' . $movimiento->intervinientesMov
-            ]);
+                $movimientoRegistral = MovimientoRegistral::create([
+                    'folio_real_persona' => $this->folioRealPersonaMoral->id,
+                    'estado' => 'concluido',
+                    'tomo' => $movimiento->tomoMov,
+                    'registro' => $movimiento->registroMov,
+                    'folio' => $this->folioRealPersonaMoral->ultimoFolio() + 1,
+                    'seccion' => 'Folio real de persona moral',
+                    'distrito' => $this->distrito,
+                    'fecha_entrega' => now()->toDateString(),
+                    'tipo_servicio' => 'extra_urgente',
+                    'usuario_asignado' => auth()->id(),
+                    'numero_documento' => $movimiento->nescrituraMov,
+                    'autoridad_numero' => $movimiento->notarioMov,
+                    'usuario_supervisor' => (new AsignacionService())->obtenerSupervisorInscripciones($this->distrito)
+                ]);
+
+                ReformaMoral::create([
+                    'movimiento_registral_id' => $movimientoRegistral->id,
+                    'acto_contenido' => 'ACTA DE ASAMBLEA',
+                    'fecha_inscripcion' => Carbon::parse($movimiento->finscripcionMov),
+                    'fecha_protocolizacion' => Carbon::parse($movimiento->fechaFirmaMov),
+                    'descripcion' => 'ESTE MOVIMIENTO SE INGRESO MEDIANTE LA ASIGNACIÓN DE FOLIO REAL DE PERONAS MORALES. ' . $movimiento->descripcionMov . 'Intervinientes: ' . $movimiento->intervinientesMov
+                ]);
+
+            }
 
         }
 
@@ -412,6 +416,16 @@ class Asiganacion extends Component
         try {
 
             DB::transaction(function () {
+
+                $this->movimientoRegistral->reformaMoral->update([
+                    'acto_contenido' => 'INSCRIPCIÓN DE FOLIO REAL DE PERSONA MORAL',
+                    'descripcion' => 'ESTE MOVIMIENTO REGISTRAL DA ORIGEN AL FOLIO REAL DE PERSONA MORAL'
+                ]);
+
+                $this->movimientoRegistral->update([
+                    'estado' => 'concluido',
+                    'actualizado_por' => auth()->id()
+                ]);
 
                 $this->movimientoRegistral->folioRealPersona->escritura->update([
                     'actualizado_por' => auth()->id()
