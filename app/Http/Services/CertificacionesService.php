@@ -38,7 +38,8 @@ class CertificacionesService{
             $movimientoRegistral->update([
                 'estado' => 'nuevo',
                 'monto' => $movimientoRegistral->monto + (float)$data['monto'],
-                'fecha_entrega' => $this->recalcularFechaEntrega($movimientoRegistral)
+                'fecha_entrega' => $this->recalcularFechaEntrega($data['tipo_servicio']),
+                'tipo_servicio' => $data['tipo_servicio'],
             ]);
 
             $movimientoRegistral->certificacion->update(['numero_paginas' => $movimientoRegistral->certificacion->numero_paginas + (int)$data['numero_paginas']]);
@@ -67,9 +68,9 @@ class CertificacionesService{
 
     }
 
-    public function recalcularFechaEntrega($movimientoRegistral){
+    public function recalcularFechaEntrega($tipo_servicio){
 
-        if($movimientoRegistral->tipo_servicio == 'ordinario'){
+        if($tipo_servicio == 'ordinario'){
 
             $actual = now();
 
@@ -87,7 +88,7 @@ class CertificacionesService{
 
             return $actual->toDateString();
 
-        }elseif($movimientoRegistral->tipo_servicio == 'urgente'){
+        }elseif($tipo_servicio == 'urgente'){
 
             $actual = now()->addDays(1);
 
