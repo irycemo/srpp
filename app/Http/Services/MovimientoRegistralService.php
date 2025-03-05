@@ -154,6 +154,8 @@ class MovimientoRegistralService{
 
             $data = $request->validated();
 
+            $data['estado'] = 'nuevo';
+
             DB::transaction(function () use($data){
 
                 $movimiento_registral = MovimientoRegistral::findOrFail($data['movimiento_registral']);
