@@ -173,19 +173,26 @@ class MovimientoRegistralService{
                 }else{
 
                     if(
-                        (
-                            isset($data['tomo']) &&
-                            isset($data['registro']) &&
-                            isset($data['numero_propiedad'])
-                        ) &&
-                        $movimiento_registral->tomo != $data['tomo'] ||
-                        $movimiento_registral->registro != $data['registro'] ||
-                        $movimiento_registral->numero_propiedad != $data['numero_propiedad']
+                        isset($data['tomo']) &&
+                        isset($data['registro']) &&
+                        isset($data['numero_propiedad'])
                     ){
 
-                        $array = $this->revisarEncolamientoSinFolioInmobiliario($data, $movimiento_registral->id);
+                        if(
+                            $movimiento_registral->tomo != $data['tomo'] ||
+                            $movimiento_registral->registro != $data['registro'] ||
+                            $movimiento_registral->numero_propiedad != $data['numero_propiedad']
+                        ){
 
-                        $this->actualizarMovimientoRegistral($data + $array, $movimiento_registral);
+                            $array = $this->revisarEncolamientoSinFolioInmobiliario($data, $movimiento_registral->id);
+
+                            $this->actualizarMovimientoRegistral($data + $array, $movimiento_registral);
+
+                        }else{
+
+                            $this->actualizarMovimientoRegistral($data, $movimiento_registral);
+
+                        }
 
                     }else{
 
