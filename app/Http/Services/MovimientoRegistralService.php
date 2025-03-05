@@ -173,6 +173,11 @@ class MovimientoRegistralService{
                 }else{
 
                     if(
+                        (
+                            isset($data['tomo']) &&
+                            isset($data['registro']) &&
+                            isset($data['numero_propiedad'])
+                        ) &&
                         $movimiento_registral->tomo != $data['tomo'] ||
                         $movimiento_registral->registro != $data['registro'] ||
                         $movimiento_registral->numero_propiedad != $data['numero_propiedad']
