@@ -26,6 +26,8 @@ class PropiedadIndex extends Component
 
         if(in_array($movimientoRegistral->inscripcionPropiedad->servicio, ['D149'])){
 
+            $this->dispatch('mostrarMensaje', ['warning', "No es posible enviar a corrección."]);
+
             return;
 
         }

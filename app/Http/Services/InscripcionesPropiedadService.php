@@ -152,7 +152,11 @@ class InscripcionesPropiedadService{
             'actualizado_por' => auth()->id()
         ]);
 
-        $movimiento->inscripcionPropiedad->actores()->delete();
+        foreach ($movimiento->inscripcionPropiedad->actores as $actor) {
+
+            $actor->delete();
+
+        }
 
         $movimiento->audits()->latest()->first()->update(['tags' => 'Cambio estado a corrección']);
 
