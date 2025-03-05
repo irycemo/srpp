@@ -240,8 +240,10 @@ class MovimientoRegistralService{
             $movimiento_registral->update([
                 'estado' => 'nuevo',
                 'tipo_servicio' => $data['tipo_servicio'],
-                'monto' => $movimiento_registral->monto + (float)$data['monto']
+                'monto' => $movimiento_registral->monto + (float)$data['monto'],
             ]);
+
+            $this->recalcularFechaEntrega($movimiento_registral);
 
         } catch (\Throwable $th) {
 
