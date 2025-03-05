@@ -116,7 +116,7 @@
 
                             <span class="lg:hidden absolute top-0 left-0 bg-blue-300 px-2 py-1 text-xs text-white font-bold uppercase rounded-br-xl">Fecha de entrega</span>
 
-                            {{ $movimiento->fecha_entrega->format('d-m-Y') }}
+                            {{ $movimiento->fecha_entrega?->format('d-m-Y') }}
 
                         </x-table.cell>
 
