@@ -52,7 +52,7 @@ class CopiasCertificadas extends Component
 
     public function abrirModalEditar(Certificacion $modelo){
 
-        if(!auth()->user()->hasRole(['Certificador Juridico', 'Certificador Oficialia'])){
+        if(!auth()->user()->hasRole(['Certificador Juridico', 'Certificador Oficialia','Jefe de departamento certificaciones'])){
 
             if($this->calcularDiaElaboracion($modelo->movimientoRegistral)) return;
 
@@ -68,12 +68,6 @@ class CopiasCertificadas extends Component
     }
 
     public function abrirModalRechazar(Certificacion $modelo){
-
-        if(!auth()->user()->hasRole(['Certificador Juridico', 'Certificador Oficialia'])){
-
-            if($this->calcularDiaElaboracion($modelo->movimientoRegistral)) return;
-
-        }
 
         $this->resetearTodo();
             $this->modalRechazar = true;
@@ -179,7 +173,7 @@ class CopiasCertificadas extends Component
         if($this->modelo_editar->isNot($modelo))
             $this->modelo_editar = $modelo;
 
-        if(!auth()->user()->hasRole(['Certificador Juridico', 'Certificador Oficialia'])){
+        if(!auth()->user()->hasRole(['Certificador Juridico', 'Certificador Oficialia', 'Jefe de departamento certificaciones'])){
 
             if($this->calcularDiaElaboracion($modelo->movimientoRegistral)) return;
 
@@ -231,7 +225,7 @@ class CopiasCertificadas extends Component
 
     public function finalizar(){
 
-        if(!auth()->user()->hasRole(['Certificador Juridico', 'Certificador Oficialia'])){
+        if(!auth()->user()->hasRole(['Certificador Juridico', 'Certificador Oficialia', 'Jefe de departamento certificaciones'])){
 
             if($this->calcularDiaElaboracion($this->modelo_editar->movimientoRegistral)) return;
 
@@ -309,7 +303,7 @@ class CopiasCertificadas extends Component
         if($this->modelo_editar->isNot($modelo))
             $this->modelo_editar = $modelo;
 
-        if(!auth()->user()->hasRole(['Certificador Juridico', 'Certificador Oficialia'])){
+        if(!auth()->user()->hasRole(['Certificador Juridico', 'Certificador Oficialia', 'Jefe de departamento certificaciones'])){
 
             if($this->calcularDiaElaboracion($this->modelo_editar->movimientoRegistral)) return;
 

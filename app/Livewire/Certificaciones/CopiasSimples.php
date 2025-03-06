@@ -53,7 +53,7 @@ class CopiasSimples extends Component
 
     public function abrirModalEditar(Certificacion $modelo){
 
-        if($modelo->movimientoRegistral->tipo_servicio == 'ordinario'){
+        if($modelo->movimientoRegistral->tipo_servicio == 'ordinario' && auth()->user()->hasRole(['Jefe de departamento certificaciones'])){
 
             if($this->calcularDiaElaboracion($modelo->movimientoRegistral)) return;
 
@@ -161,7 +161,7 @@ class CopiasSimples extends Component
 
     public function finalizarSupervisor(Certificacion $modelo){
 
-        if($this->calcularDiaElaboracion($modelo->movimientoRegistral)) return;
+        if($this->calcularDiaElaboracion($modelo->movimientoRegistral) && !auth()->user()->hasRole(['Jefe de departamento certificaciones'])) return;
 
         if($this->modelo_editar->isNot($modelo))
             $this->modelo_editar = $modelo;
@@ -215,7 +215,7 @@ class CopiasSimples extends Component
 
         $this->validate();
 
-        if($this->calcularDiaElaboracion($this->modelo_editar->movimientoRegistral)) return;
+        if($this->calcularDiaElaboracion($this->modelo_editar->movimientoRegistral) && !auth()->user()->hasRole(['Jefe de departamento certificaciones'])) return;
 
         try{
 
@@ -287,7 +287,7 @@ class CopiasSimples extends Component
         if($this->modelo_editar->isNot($modelo))
             $this->modelo_editar = $modelo;
 
-        if($this->calcularDiaElaboracion($this->modelo_editar->movimientoRegistral)) return;
+        if($this->calcularDiaElaboracion($this->modelo_editar->movimientoRegistral) && !auth()->user()->hasRole(['Jefe de departamento certificaciones'])) return;
 
         try {
 
