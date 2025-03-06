@@ -293,7 +293,7 @@ trait InscripcionesIndex{
 
     public function imprimir(MovimientoRegistral $movimientoRegistral){
 
-        if($movimientoRegistral->getRawOriginal('distrito') != 2){
+        if($movimientoRegistral->getRawOriginal('distrito') != 2 && !auth()->user()->hasRole(['Jefe de departamento inscripciones'])){
 
             if($this->calcularDiaElaboracion($movimientoRegistral)) return;
 
@@ -365,19 +365,9 @@ trait InscripcionesIndex{
 
     public function abrirModalFinalizar(MovimientoRegistral $modelo){
 
-        if($modelo->getRawOriginal('distrito') != 2){
+        if($modelo->getRawOriginal('distrito') != 2 && !auth()->user()->hasRole(['Jefe de departamento inscripciones'])){
 
-            if($modelo->tipo_servicio == 'ordinario'){
-
-                if(!($this->calcularDiaElaboracion($modelo) <= now())){
-
-                    $this->dispatch('mostrarMensaje', ['error', "El trámite puede finalizarse apartir del " . $this->calcularDiaElaboracion($modelo)->format('d-m-Y')]);
-
-                    return;
-
-                }
-
-            }
+            if($this->calcularDiaElaboracion($modelo)) return;
 
         }
 
