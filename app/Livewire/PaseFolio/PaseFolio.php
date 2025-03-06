@@ -14,6 +14,8 @@ use App\Models\MovimientoRegistral;
 use Illuminate\Support\Facades\Log;
 use App\Http\Services\AsignacionService;
 use App\Http\Services\SistemaTramitesService;
+use App\Models\Antecedente;
+use App\Models\FolioReal;
 use Livewire\WithPagination;
 
 class PaseFolio extends Component
@@ -27,9 +29,16 @@ class PaseFolio extends Component
     public $modal = false;
     public $modalFinalizar = false;
     public $modalRechazar = false;
+    public $modalNuevoFolio = false;
     public $motivos;
     public $motivo;
     public $supervisor = false;
+
+    public $distritos;
+    public $distrito;
+    public $tomo;
+    public $registro;
+    public $numero_propiedad;
 
     public MovimientoRegistral $modelo_editar;
 
@@ -83,6 +92,12 @@ class PaseFolio extends Component
 
     }
 
+    public function abrirModalNuevoFolio(){
+
+        $this->modalNuevoFolio = true;
+
+    }
+
     public function abrirModalRechazar(MovimientoRegistral $movimientoRegistral){
 
         $this->reset(['observaciones', 'motivo']);
@@ -100,6 +115,46 @@ class PaseFolio extends Component
             $this->modelo_editar = $modelo;
 
         $this->modalFinalizar = true;
+
+    }
+
+    public function buscarAntecedente(){
+
+        $this->validate([
+            'tomo' => 'required',
+            'registro' => 'required',
+            'distrito' => 'required',
+            'numero_propiedad' => 'required',
+        ]);
+
+        $folioReal = FolioReal::where('tomo_antecedente', $this->tomo)
+                                ->where('registro_antecedente', $this->registro)
+                                ->where('distrito_antecedente', $this->distrito)
+                                ->where('numero_propiedad_antecedente', $this->numero_propiedad)
+                                ->first();
+
+        if($folioReal){
+
+            $this->dispatch('mostrarMensaje', ['warning', "Ya existe un folio con ese antecedente."]);
+
+            return;
+
+        }
+
+        $antecedente = Antecedente::where('tomo_antecedente', $this->tomo)
+                                    ->where('registro_antecedente', $this->registro)
+                                    ->where('distrito_antecedente', $this->distrito)
+                                    ->where('numero_propiedad_antecedente', $this->numero_propiedad)
+                                    ->first();
+
+        if($antecedente){
+
+            $this->dispatch('mostrarMensaje', ['warning', "El antecedente ya esta ligado a un folio."]);
+
+            return;
+
+        }
+
 
     }
 
@@ -395,6 +450,8 @@ class PaseFolio extends Component
     public function mount(){
 
         $this->crearModeloVacio();
+
+        $this->distritos = Constantes::DISTRITOS;
 
         $this->motivos = Constantes::RECHAZO_MOTIVOS;
 

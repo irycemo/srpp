@@ -13,7 +13,6 @@ use App\Http\Controllers\Controller;
 use App\Http\Requests\FolioRealRequest;
 use App\Http\Resources\FolioRealResource;
 use App\Http\Resources\FolioRealPersonaMoral;
-use App\Models\Asociacion;
 
 class FolioRealController extends Controller
 {
@@ -92,21 +91,17 @@ class FolioRealController extends Controller
 
             if($folio_real){
 
-                if(in_array($folio_real->estado, ['bloqueado', 'centinela'])){
+                return (new FolioRealResource($folio_real))->response()->setStatusCode(200);
+
+                if(in_array($folio_real->estado, ['bloqueado', 'centinela',' inactivo'])){
 
                     return response()->json([
-                        'error' => 'El folio real esta bloqueado',
+                        'error' => 'El folio real esta bloqueado o en centinela',
                     ], 401);
-
-                }elseif($folio_real->estado == 'activo'){
-
-                    return (new FolioRealResource($folio_real))->response()->setStatusCode(200);
 
                 }else{
 
-                    return response()->json([
-                        'error' => 'El folio real no esta activo',
-                    ], 401);
+                    return (new FolioRealResource($folio_real))->response()->setStatusCode(200);
 
                 }
 

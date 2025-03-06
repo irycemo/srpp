@@ -21,6 +21,15 @@
 
             </div>
 
+            {{-- <button wire:click="abrirModalNuevoFolio" class="bg-gray-500 hover:shadow-lg hover:bg-gray-700 text-sm py-2 px-4 text-white rounded-full hidden md:block items-center justify-center focus:outline-gray-400 focus:outline-offset-2">
+
+                <img wire:loading wire:target="abrirModalNuevoFolio" class="mx-auto h-4 mr-1" src="{{ asset('storage/img/loading3.svg') }}" alt="Loading">
+                Agregar nuevo folio
+
+            </button>
+
+            <button wire:click="abrirModalNuevoFolio" class="bg-gray-500 hover:shadow-lg hover:bg-gray-700 float-right text-sm py-2 px-4 text-white rounded-full md:hidden focus:outline-gray-400 focus:outline-offset-2">+</button>
+ --}}
         </div>
 
     </div>
@@ -413,6 +422,87 @@
                     wire:loading.attr="disabled"
                     wire:target="$set('modalRechazar',false)">
                     Cerrar
+                </x-button-red>
+
+            </div>
+
+        </x-slot>
+
+    </x-dialog-modal>
+
+    <x-dialog-modal wire:model="modalNuevoFolio" maxWidth="sm">
+
+        <x-slot name="title">
+
+            Ingresar antecedente
+
+        </x-slot>
+
+        <x-slot name="content">
+
+            <div class="flex flex-col md:flex-row justify-between gap-3 mb-3">
+
+                <x-input-group for="tomo" label="Tomo" :error="$errors->first('tomo')" class="w-full">
+
+                    <x-input-text type="number" id="tomo" wire:model="tomo" />
+
+                </x-input-group>
+
+                <x-input-group for="registro" label="Regsitro" :error="$errors->first('registro')" class="w-full">
+
+                    <x-input-text type="number" id="registro" wire:model="registro" />
+
+                </x-input-group>
+
+            </div>
+
+            <div class="flex flex-col md:flex-row justify-between gap-3 mb-3">
+
+                <x-input-group for="numero_propiedad" label="Número de propiedad" :error="$errors->first('numero_propiedad')" class="w-full">
+
+                    <x-input-text type="number" id="numero_propiedad" wire:model="numero_propiedad" />
+
+                </x-input-group>
+
+                <x-input-group for="distrito" label="Distrito" :error="$errors->first('distrito')" class="w-full">
+
+                    <x-input-select id="distrito" wire:model="distrito" class="w-full">
+
+                        <option value="">Seleccione una opción</option>
+
+                        @foreach ($distritos as $key => $distrito)
+                            <option value="{{ $key }}">{{ $distrito }}</option>
+                        @endforeach
+
+                    </x-input-select>
+
+                </x-input-group>
+
+            </div>
+
+
+        </x-slot>
+
+        <x-slot name="footer">
+
+            <div class="flex items-center justify-end space-x-3">
+
+                <x-button-blue
+                    wire:click="buscarAntecedente"
+                    wire:loading.attr="disabled"
+                    wire:target="buscarAntecedente">
+
+                    <img wire:loading wire:target="buscarAntecedente" class="mx-auto h-4 mr-1" src="{{ asset('storage/img/loading3.svg') }}" alt="Loading">
+
+                    <span>Buscar</span>
+                </x-button-blue>
+
+                <x-button-red
+                    wire:click="$toggle('modalNuevoFolio')"
+                    wire:loading.attr="disabled"
+                    wire:target="$toggle('modalNuevoFolio')"
+                    type="button">
+                    <span>Cerrar</span>
                 </x-button-red>
 
             </div>
