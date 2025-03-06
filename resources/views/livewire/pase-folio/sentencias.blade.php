@@ -115,23 +115,6 @@
                         <x-input-text type="number" id="antecente_registro" wire:model="antecente_registro" />
 
                     </x-input-group>
-
-                    <x-input-group for="antecente_distrito" label="Distrito" :error="$errors->first('antecente_distrito')" class="w-full">
-
-                        <x-input-select id="antecente_distrito" wire:model="antecente_distrito" class="w-full">
-
-                            <option value="">Seleccione una opción</option>
-
-                            @foreach ($distritos as $key => $distrito)
-
-                                <option value="{{ $key }}">{{ $distrito }}</option>
-
-                            @endforeach
-
-                        </x-input-select>
-
-                    </x-input-group>
-
                     <div class="flex justify-end items-center w-full col-span-3">
 
                         <x-button-gray

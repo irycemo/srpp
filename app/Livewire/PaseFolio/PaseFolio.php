@@ -16,6 +16,7 @@ use App\Http\Services\AsignacionService;
 use App\Http\Services\SistemaTramitesService;
 use App\Models\Antecedente;
 use App\Models\FolioReal;
+use App\Models\Propiedad;
 use Livewire\WithPagination;
 
 class PaseFolio extends Component
@@ -155,6 +156,9 @@ class PaseFolio extends Component
 
         }
 
+        $movimiento = $this->crearNuevoMovimientoRegistral();
+
+        return redirect()->route('elaboracion_folio', $movimiento);
 
     }
 
@@ -164,31 +168,32 @@ class PaseFolio extends Component
 
             DB::transaction(function (){
 
+                /* Revisar si su antecedente es un folio matriz */
                 if($this->modelo_editar->folioReal?->folioRealAntecedente?->matriz){
 
                     $this->modelo_editar->update(['estado' => 'concluido']);
 
                 }
 
-                if($this->modelo_editar->inscripcionPropiedad)
-                    $this->revisarInscripcionPropiedad();
+                if($this->modelo_editar->inscripcionPropiedad) $this->revisarInscripcionPropiedad();
 
-                if($this->modelo_editar->cancelacion)
-                    $this->revisarCancelaciones();
+                if($this->modelo_editar->cancelacion) $this->revisarCancelaciones();
 
                 $this->revisarMovimientosPrecalificacion();
+
+                $this->reasignarUsuario();
+
+                $this->revisarFolioCero();
 
                 $this->modelo_editar->folioReal->update([
                     'estado' => 'activo'
                 ]);
 
-                $this->reasignarUsuario();
-
-                $this->dispatch('mostrarMensaje', ['success', "El folio se finalizó con éxito."]);
-
-                $this->modalFinalizar = false;
-
             });
+
+            $this->dispatch('mostrarMensaje', ['success', "El folio se finalizó con éxito."]);
+
+            $this->modalFinalizar = false;
 
         } catch (Exception $ex) {
 
@@ -447,11 +452,77 @@ class PaseFolio extends Component
                             ->get();
     }
 
+    public function crearNuevoMovimientoRegistral(){
+
+        try {
+
+            $supervisor = (new AsignacionService())->obtenerSupervisorInscripciones($this->distrito);
+
+            $movimiento = null;
+
+            DB::transaction(function () use ($supervisor, &$movimiento){
+
+                $movimiento = MovimientoRegistral::create([
+                    'estado' => 'nuevo',
+                    'usuario_asignado' => auth()->id(),
+                    'usuario_supervisor' => $supervisor,
+                    'monto' => 0,
+                    'tipo_servicio' => 'extra_urgente',
+                    'tomo' => $this->tomo,
+                    'registro' => $this->registro,
+                    'distrito' => $this->distrito,
+                    'numero_propiedad' => $this->numero_propiedad,
+                    'seccion' => 'Propiedad',
+                    'folio' => 1
+                ]);
+
+                Propiedad::create([
+                    'movimiento_registral_id' => $movimiento->id,
+                    'servicio' => 'D118',
+                    'acto_contenido' => 'CAPTURA ESPECIAL DE FOLIO REAL',
+                    'descripcion_acto' => 'ESTE MOVIMIENTO REGISTRAL CREA EL FOLIO REAL POR CAPTURA ESPECIAL.'
+                ]);
+
+            });
+
+            return $movimiento;
+
+        } catch (\Throwable $th) {
+
+            Log::error("Error al generar nuevo movimiento registral para asignacion de folio real inmobiliario por el usuario: (id: " . auth()->user()->id . ") " . auth()->user()->name . ". " . $th);
+            $this->dispatch('mostrarMensaje', ['error', "Ha ocurrido un error."]);
+
+        }
+
+    }
+
+    public function revisarFolioCero(){
+
+        if($this->modelo_editar->folioReal->movimientosRegistrales()->where('folio', 0)->first()){
+
+            $folio = $this->modelo_editar->folioReal->ultimoFolio() + 1;
+
+            $this->modelo_editar->update(['folio' => $folio]);
+
+        }
+
+    }
+
     public function mount(){
 
         $this->crearModeloVacio();
 
         $this->distritos = Constantes::DISTRITOS;
+
+        if(auth()->user()->ubicacion == 'Regional 4'){
+
+            $this->distritos = [2 => '02 Uruapan'];
+
+        }else{
+
+            unset($this->distritos[2]);
+
+        }
 
         $this->motivos = Constantes::RECHAZO_MOTIVOS;
 
@@ -466,7 +537,8 @@ class PaseFolio extends Component
 
             $movimientos = MovimientoRegistral::with('actualizadoPor', 'asignadoA', 'folioReal', 'supervisor')
                                                     ->doesnthave('reformaMoral')
-                                                    ->where('folio', 1)
+                                                    ->whereIn('folio', [0, 1])
+                                                    ->whereIn('estado', ['nuevo', 'correccion'])
                                                     ->where(function($q){
                                                         $q->whereNull('folio_real')
                                                             ->orWhereHas('folioReal', function($q){
@@ -492,7 +564,8 @@ class PaseFolio extends Component
 
             $movimientos = MovimientoRegistral::with('actualizadoPor', 'folioReal', 'asignadoA')
                                                     ->doesnthave('reformaMoral')
-                                                    ->where('folio', 1)
+                                                    ->whereIn('folio', [0, 1])
+                                                    ->whereIn('estado', ['nuevo', 'correccion'])
                                                     ->where(function($q){
                                                         $q->whereNull('folio_real')
                                                             ->orWhereHas('folioReal', function($q){
@@ -522,7 +595,8 @@ class PaseFolio extends Component
 
             $movimientos = MovimientoRegistral::with('actualizadoPor', 'folioReal', 'asignadoA')
                                                     ->doesnthave('reformaMoral')
-                                                    ->where('folio', 1)
+                                                    ->whereIn('folio', [0, 1])
+                                                    ->whereIn('estado', ['nuevo', 'correccion'])
                                                     ->where(function($q){
                                                         $q->whereNull('folio_real')
                                                             ->orWhereHas('folioReal', function($q){
@@ -550,7 +624,7 @@ class PaseFolio extends Component
 
             $movimientos = MovimientoRegistral::with('actualizadoPor', 'folioReal', 'asignadoA')
                                                     ->doesnthave('reformaMoral')
-                                                    ->where('folio', 1)
+                                                    ->whereIn('folio', [0, 1])
                                                     ->whereIn('estado', ['nuevo', 'correccion'])
                                                     ->where(function($q){
                                                         $q->whereNull('folio_real')

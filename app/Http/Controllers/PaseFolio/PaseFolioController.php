@@ -28,8 +28,6 @@ class PaseFolioController extends Controller
 
         $movimiento1 = $folioReal->movimientosRegistrales->where('folio', 1)->first();
 
-        $numero_control = $movimiento1->año . '-' . $movimiento1->tramite . '-'.  $movimiento1->usuario;
-
         $formatter = new NumeroALetras();
 
         $director = User::where('status', 'activo')
@@ -40,7 +38,14 @@ class PaseFolioController extends Controller
 
         $datos_control = (object)[];
 
-        $datos_control->numero_control = $numero_control;
+        if($movimiento1->año && $movimiento1->tramite &&  $movimiento1->usuario){
+
+            $numero_control = $movimiento1->año . '-' . $movimiento1->tramite . '-'.  $movimiento1->usuario;
+
+            $datos_control->numero_control = $numero_control;
+
+        }
+
         $datos_control->registrador = auth()->user()->name;
         $datos_control->fecha_asignacion = Carbon::now()->locale('es')->translatedFormat('H:i:s \d\e\l l d \d\e F \d\e\l Y');
 

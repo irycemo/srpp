@@ -142,8 +142,7 @@ class Varios extends Component
 
             $this->validate([
                 'antecente_tomo' => 'nullable',
-                'antecente_registro' => 'nullable',
-                'antecente_distrito' => 'required|same:distritoMovimineto'
+                'antecente_registro' => 'nullable'
             ]);
 
             $this->antecedente = false;
@@ -191,20 +190,21 @@ class Varios extends Component
                     $this->vario->movimientoRegistral->update([
                         'tomo' => $this->antecente_tomo,
                         'registro' => $this->antecente_registro,
-                        'distrito' => $this->antecente_distrito,
                         'folio_real' => $this->movimientoRegistral->folio_real,
                         'actualizado_por' => auth()->id()
                     ]);
 
                 }else{
 
+                    $this->cambiarFolioMovimientoInicial();
+
                     $movimiento_registral = MovimientoRegistral::create([
-                        'estado' => 'concluido',
+                        'estado' => 'pase_folio',
                         'folio' => $this->movimientoRegistral->folioReal->ultimoFolio() + 1,
                         'seccion' => 'Varios',
                         'tomo' => $this->antecente_tomo,
                         'registro' => $this->antecente_registro,
-                        'distrito' => $this->antecente_distrito,
+                        'distrito' => $this->movimientoRegistral->getRawOriginal('distrito'),
                         'folio_real' => $this->movimientoRegistral->folio_real,
                         'actualizado_por' => auth()->id()
                     ]);
@@ -329,6 +329,16 @@ class Varios extends Component
 
     }
 
+    public function cambiarFolioMovimientoInicial(){
+
+        if(!$this->movimientoRegistral->folioReal->movimientosRegistrales()->where('folio', 0)->first()){
+
+            $this->movimientoRegistral->update(['folio' => 0]);
+
+        }
+
+    }
+
     public function mount(){
 
         $this->distritoMovimineto = $this->movimientoRegistral->getRawOriginal('distrito');
@@ -348,7 +358,7 @@ class Varios extends Component
                                             $q->where('folio_real', $this->movimientoRegistral->folio_real);
                                         })
                                         ->where('movimiento_registral_id', '!=', $this->movimientoRegistral->id)
-                                        ->where('estado','!=', 'precalificacion')
+                                        ->where('estado', 'pase_folio')
                                         ->get();
 
         }

@@ -1,6 +1,6 @@
 <div>
 
-    @if($gravamen->movimientoRegistral?->estado == 'concluido')
+    @if($gravamen->movimientoRegistral?->estado == 'carga_parcial')
 
         <x-input-group for="comentario" label="Comentarios del gravamen" :error="$errors->first('comentario')" class="w-full">
 
@@ -192,7 +192,7 @@
 
             </x-input-group>
 
-            @if($gravamen->movimientoRegistral->estado == 'nuevo')
+            @if(in_array($gravamen->movimientoRegistral->estado, ['pase_folio']))
 
                 <x-input-group for="comentario" label="Comentario del gravámen" :error="$errors->first('comentario')" class="col-span-3">
 

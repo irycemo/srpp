@@ -556,7 +556,11 @@
 
                                 <p><strong>folio Asignado por:</strong> {{ $folioReal->asignado_por }}.</p>
                                 <p><strong>Fecha de asignación de folio:</strong> {{ $datos_control->fecha_asignacion }}.</p>
-                                <p><strong>número de control:</strong> {{ $datos_control->numero_control }}.</p>
+                                @if(isset($datos_control->numero_control))
+
+                                    <p><strong>número de control:</strong> {{ $datos_control->numero_control }}.</p>
+
+                                @endif
 
                             </td>
                         </tr>

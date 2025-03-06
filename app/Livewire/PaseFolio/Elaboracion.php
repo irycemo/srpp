@@ -420,7 +420,7 @@ class Elaboracion extends Component
             'folio_real' => $this->movimientoRegistral->folio_real,
             'folio' => $this->movimientoRegistral->folioReal->ultimoFolio() + 1,
             'distrito' => $this->movimientoRegistral->getRawOriginal('distrito'),
-            'estado' => 'concluido',
+            'estado' => 'carga_parcial',
             'usuario_asignado' => auth()->id(),
             'procedencia' => $sentencia->juzgado_emisor_sentencia,
             'numero_oficio' => $sentencia->oficio,
@@ -469,7 +469,7 @@ class Elaboracion extends Component
             'folio_real' => $this->movimientoRegistral->folio_real,
             'folio' => $this->movimientoRegistral->folioReal->ultimoFolio() + 1,
             'distrito' => $this->movimientoRegistral->getRawOriginal('distrito'),
-            'estado' => 'concluido',
+            'estado' => 'carga_parcial',
             'usuario_asignado' => auth()->id(),
         ]);
 
@@ -1046,7 +1046,7 @@ class Elaboracion extends Component
 
                 $gravamen->movimientoRegistral->update([
                     'usuario_supervisor' => (new AsignacionService())->obtenerSupervisorInscripciones($this->movimientoRegistral->getRawOriginal('distrito')),
-                    'estado' => 'concluido'
+                    'estado' => 'pase_folio'
                 ]);
 
                 if(!$gravamen->acreedores()->count()){
@@ -1067,7 +1067,7 @@ class Elaboracion extends Component
 
                 $sentencia->movimientoRegistral->update([
                     'usuario_supervisor' => (new AsignacionService())->obtenerSupervisorInscripciones($this->movimientoRegistral->getRawOriginal('distrito')),
-                    'estado' => 'concluido'
+                    'estado' => 'pase_folio'
                 ]);
 
                 if(!$sentencia->acto_contenido){
@@ -1088,7 +1088,7 @@ class Elaboracion extends Component
 
                 $vario->movimientoRegistral->update([
                     'usuario_supervisor' => (new AsignacionService())->obtenerSupervisorInscripciones($this->movimientoRegistral->getRawOriginal('distrito')),
-                    'estado' => 'concluido'
+                    'estado' => 'pase_folio'
                 ]);
 
                 if(!$vario->acto_contenido){

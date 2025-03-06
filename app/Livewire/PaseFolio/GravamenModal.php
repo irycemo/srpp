@@ -329,8 +329,10 @@ class GravamenModal extends Component
 
         }else{
 
+            $this->cambiarFolioMovimientoInicial();
+
             $movimiento_registral = MovimientoRegistral::create([
-                'estado' => 'nuevo',
+                'estado' => 'pase_folio',
                 'folio' => $this->folioReal->ultimoFolio() + 1,
                 'seccion' => 'Gravamen',
                 'tomo_gravamen' => $this->antecente_tomo,
@@ -416,6 +418,19 @@ class GravamenModal extends Component
         }
 
         $this->dispatch('cargarGravamenes');
+
+    }
+
+    public function cambiarFolioMovimientoInicial(){
+
+        if(!$this->folioReal->movimientosRegistrales()->where('folio', 0)->first()){
+
+            $this->folioReal->movimientosRegistrales()
+                                ->where('folio', 1)
+                                ->first()
+                                ->update(['folio' => 0]);
+
+        }
 
     }
 

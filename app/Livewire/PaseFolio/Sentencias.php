@@ -158,7 +158,6 @@ class Sentencias extends Component
             $this->validate([
                 'antecente_tomo' => 'required',
                 'antecente_registro' => 'required',
-                'antecente_distrito' => 'required|same:distritoMovimineto'
             ]);
 
             $this->antecedente = false;
@@ -206,7 +205,6 @@ class Sentencias extends Component
                 if($this->sentencia->getKey()){
 
                     $this->sentencia->movimientoRegistral->update([
-                        'distrito' => $this->antecente_distrito,
                         'folio_real' => $this->movimientoRegistral->folio_real,
                         'actualizado_por' => auth()->id()
                     ]);
@@ -218,11 +216,13 @@ class Sentencias extends Component
 
                 }else{
 
+                    $this->cambiarFolioMovimientoInicial();
+
                     $movimiento_registral = MovimientoRegistral::create([
-                        'estado' => 'concluido',
+                        'estado' => 'pase_folio',
                         'folio' => $this->movimientoRegistral->folioReal->ultimoFolio() + 1,
                         'seccion' => 'Sentencias',
-                        'distrito' => $this->antecente_distrito,
+                        'distrito' => $this->movimientoRegistral->getRawOriginal('distrito'),
                         'folio_real' => $this->movimientoRegistral->folio_real,
                         'actualizado_por' => auth()->id()
                     ]);
@@ -357,6 +357,16 @@ class Sentencias extends Component
 
     }
 
+    public function cambiarFolioMovimientoInicial(){
+
+        if(!$this->movimientoRegistral->folioReal->movimientosRegistrales()->where('folio', 0)->first()){
+
+            $this->movimientoRegistral->update(['folio' => 0]);
+
+        }
+
+    }
+
     public function mount(){
 
         $this->distritoMovimineto = $this->movimientoRegistral->getRawOriginal('distrito');
@@ -376,7 +386,7 @@ class Sentencias extends Component
                                             $q->where('folio_real', $this->movimientoRegistral->folio_real);
                                         })
                                         ->where('movimiento_registral_id', '!=', $this->movimientoRegistral->id)
-                                        ->where('estado','!=', 'precalificacion')
+                                        ->where('estado', 'pase_folio')
                                         ->get();
 
         }
