@@ -67,7 +67,7 @@ class CertificadoPropiedadIndex extends Component
 
     public function elaborar(MovimientoRegistral $movimientoRegistral){
 
-        if($movimientoRegistral->getRawOriginal('distrito') != 2){
+        if($movimientoRegistral->getRawOriginal('distrito') != 2 && !auth()->user()->hasRole(['Jefe de departamento certificaciones'])){
 
             if($this->calcularDiaElaboracion($movimientoRegistral)) return;
 
@@ -167,19 +167,9 @@ class CertificadoPropiedadIndex extends Component
 
     public function abrirModalRechazar(MovimientoRegistral $modelo){
 
-        if(!auth()->user()->hasRole(['Certificador Juridico', 'Certificador Oficialia'])){
+        if(!auth()->user()->hasRole(['Certificador Juridico', 'Certificador Oficialia', 'Jefe de departamento certificaciones'])){
 
-            if($modelo->tipo_servicio == 'ordinario'){
-
-                if(!($this->calcularDiaElaboracion($modelo) <= now())){
-
-                    $this->dispatch('mostrarMensaje', ['error', "El trámite puede elaborarse apartir del " . $this->calcularDiaElaboracion($modelo)->format('d-m-Y')]);
-
-                    return;
-
-                }
-
-            }
+            if($this->calcularDiaElaboracion($modelo)) return;
 
         }
 

@@ -53,12 +53,6 @@ class CertificadoGravamen extends Component
 
     public function abrirModalRechazar(Certificacion $modelo){
 
-        if(!auth()->user()->hasRole(['Certificador Juridico', 'Certificador Oficialia'])){
-
-            if($this->calcularDiaElaboracion($modelo->movimientoRegistral)) return;
-
-        }
-
         $this->resetearTodo();
             $this->modalRechazar = true;
             $this->editar = true;
@@ -70,15 +64,16 @@ class CertificadoGravamen extends Component
 
     public function visualizarGravamenes(Certificacion $modelo){
 
-        $this->modelo_editar = $modelo;
-
-        $this->moviminetoRegistral = $modelo->movimientoRegistral;
-
-        if($this->moviminetoRegistral->getRawOriginal('distrito') != 2){
+        if($this->moviminetoRegistral->getRawOriginal('distrito') != 2 && !auth()->user()->hasRole(['Jefe de departamento certificaciones'])){
 
             if($this->calcularDiaElaboracion($this->moviminetoRegistral)) return;
 
         }
+
+        $this->modelo_editar = $modelo;
+
+        $this->moviminetoRegistral = $modelo->movimientoRegistral;
+
 
         $movimientoAsignados = MovimientoRegistral::whereIn('estado', ['nuevo'])
                                                         ->where('usuario_Asignado', auth()->id())
@@ -148,7 +143,7 @@ class CertificadoGravamen extends Component
 
     public function generarCertificado(){
 
-        if($this->modelo_editar->movimientoRegistral->tipo_servicio == 'ordinario' && $this->modelo_editar->movimientoRegistral->distrito != '02 Uruapan'){
+        if(!auth()->user()->hasRole(['Jefe de departamento certificaciones']) && $this->modelo_editar->movimientoRegistral->distrito != '02 Uruapan'){
 
             if($this->calcularDiaElaboracion($this->modelo_editar->movimientoRegistral)) return;
 

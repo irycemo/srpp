@@ -53,7 +53,7 @@ class CopiasSimples extends Component
 
     public function abrirModalEditar(Certificacion $modelo){
 
-        if($modelo->movimientoRegistral->tipo_servicio == 'ordinario' && auth()->user()->hasRole(['Jefe de departamento certificaciones'])){
+        if($modelo->movimientoRegistral->tipo_servicio == 'ordinario' && !auth()->user()->hasRole(['Jefe de departamento certificaciones'])){
 
             if($this->calcularDiaElaboracion($modelo->movimientoRegistral)) return;
 
