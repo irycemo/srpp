@@ -64,16 +64,15 @@ class CertificadoGravamen extends Component
 
     public function visualizarGravamenes(Certificacion $modelo){
 
+        $this->modelo_editar = $modelo;
+
+        $this->moviminetoRegistral = $modelo->movimientoRegistral;
+
         if($this->moviminetoRegistral->getRawOriginal('distrito') != 2 && !auth()->user()->hasRole(['Jefe de departamento certificaciones'])){
 
             if($this->calcularDiaElaboracion($this->moviminetoRegistral)) return;
 
         }
-
-        $this->modelo_editar = $modelo;
-
-        $this->moviminetoRegistral = $modelo->movimientoRegistral;
-
 
         $movimientoAsignados = MovimientoRegistral::whereIn('estado', ['nuevo'])
                                                         ->where('usuario_Asignado', auth()->id())

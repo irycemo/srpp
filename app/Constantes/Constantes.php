@@ -24,7 +24,8 @@ class Constantes{
         'Movimientos Registrales',
         'Personas morales',
         'Efirmas',
-        'Centinela'
+        'Centinela',
+        'Personas'
     ];
 
     /* USUARIOS */

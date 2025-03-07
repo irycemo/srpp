@@ -10,6 +10,7 @@ use App\Livewire\Admin\Propiedades;
 use App\Livewire\Admin\FoliosReales;
 use Illuminate\Support\Facades\Route;
 use App\Livewire\Admin\MovimientosRegistrales;
+use App\Livewire\Admin\Personas;
 
 Route::group(['middleware' => ['auth', 'esta.activo']], function(){
 
@@ -28,6 +29,8 @@ Route::group(['middleware' => ['auth', 'esta.activo']], function(){
     Route::get('centinela', Centinela::class)->middleware('permission:Centinela')->name('centinela');
 
     Route::get('propiedades', Propiedades::class)->middleware('permission:Lista de propiedades')->name('propiedades');
+
+    Route::get('personas', Personas::class)->middleware('permission:Lista de personas')->name('personas');
 
     Route::get('auditoria', Auditoria::class)->middleware('permission:Auditoria')->name('auditoria');
 

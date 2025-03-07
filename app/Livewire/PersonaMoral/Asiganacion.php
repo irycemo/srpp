@@ -417,23 +417,9 @@ class Asiganacion extends Component
 
             DB::transaction(function () {
 
-                if(
-                    $this->movimientoRegistral->reformaMoral->descripcion == 'ESTE MOVIMIENTO REGISTRAL DA ORIGEN AL FOLIO REAL DE PERSONA MORAL' ||
-                    $this->movimientoRegistral->reformaMoral->acto_contenido == 'INSCRIPCIÓN DE FOLIO REAL DE PERSONA MORAL'
-                ){
-
-                    $this->movimientoRegistral->update([
-                        'estado' => 'concluido',
-                        'actualizado_por' => auth()->id()
-                    ]);
-
-                }else{
-
-                    $this->movimientoRegistral->update([
-                        'actualizado_por' => auth()->id()
-                    ]);
-
-                }
+                $this->movimientoRegistral->update([
+                    'actualizado_por' => auth()->id()
+                ]);
 
                 $this->movimientoRegistral->folioRealPersona->escritura->update([
                     'actualizado_por' => auth()->id()

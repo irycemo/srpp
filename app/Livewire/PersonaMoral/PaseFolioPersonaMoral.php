@@ -167,7 +167,7 @@ class PaseFolioPersonaMoral extends Component
             $movimientos = MovimientoRegistral::with('actualizadoPor', 'folioRealPersona')
                                                     ->has('reformaMoral')
                                                     ->where('folio', 1)
-                                                    ->whereIn('estado', ['nuevo', 'correccion'])
+                                                    ->whereIn('estado', ['nuevo', 'correccion', 'elaborado'])
                                                     ->where('usuario_asignado', auth()->user()->id)
                                                     ->where(function($q){
                                                         $q->whereNull('folio_real_persona')
