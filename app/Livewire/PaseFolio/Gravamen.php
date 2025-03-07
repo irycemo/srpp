@@ -78,7 +78,7 @@ class Gravamen extends Component
 
         $this->gravamenes = GravamenModelo::withWhereHas('movimientoRegistral', function($q){
                                                             $q->where('folio_real', $this->movimientoRegistral->folio_real)
-                                                                ->where('estado', 'pase_folio');
+                                                                ->whereIn('estado', ['pase_folio', 'carga_parcial']);
                                                         })
                                                         ->get();
 

@@ -179,11 +179,11 @@ class PaseFolio extends Component
 
                 if($this->modelo_editar->cancelacion) $this->revisarCancelaciones();
 
+                $this->revisarFolioCero();
+
                 $this->revisarMovimientosPrecalificacion();
 
                 $this->reasignarUsuario();
-
-                $this->revisarFolioCero();
 
                 $this->modelo_editar->folioReal->update([
                     'estado' => 'activo'
@@ -367,7 +367,8 @@ class PaseFolio extends Component
 
             $movimiento->update([
                 'estado' => 'nuevo',
-                'folio_real' => $this->modelo_editar->folio_real
+                'folio_real' => $this->modelo_editar->folio_real,
+                'folio' => $this->modelo_editar->folioReal->ultimoFolio() + 1
             ]);
 
         }

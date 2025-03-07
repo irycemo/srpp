@@ -52,9 +52,11 @@ class FoliosReales extends Component
 
         }
 
-        if($movimiento = $folioReal->movimientosRegistrales()->count() >= 2){
+        $movimientos = $folioReal->movimientosRegistrales()->where('estado', '!=', 'pase_folio')->get();
 
-            $this->dispatch('mostrarMensaje', ['error', "El folio tiene mas de 1 movimiento registral no es posible enviarlo a captura."]);
+        if(!in_array($movimientos->first()->estado, ['nuevo', 'correccion'])){
+
+            $this->dispatch('mostrarMensaje', ['warning', "El movimiento inicial debe estar nuevo o en corrección."]);
 
             return;
 
@@ -66,14 +68,6 @@ class FoliosReales extends Component
                 'estado' => 'captura',
                 'actualizado_por' => auth()->id()
             ]);
-
-            $movimiento = $folioReal->movimientosRegistrales()->where('folio', 1)->first();
-
-            if(in_array($movimiento->estado, ['elaborado', 'finalizado'])){
-
-                $movimiento->update(['estado' => 'correccion']);
-
-            }
 
             $folioReal->audits()->latest()->first()->update(['tags' => 'Envió folio a captura']);
 

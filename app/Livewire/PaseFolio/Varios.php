@@ -355,10 +355,10 @@ class Varios extends Component
         if($this->movimientoRegistral){
 
             $varios = Vario::withWhereHas('movimientoRegistral', function($q){
-                                            $q->where('folio_real', $this->movimientoRegistral->folio_real);
+                                            $q->where('folio_real', $this->movimientoRegistral->folio_real)
+                                                ->where('estado', 'pase_folio');
                                         })
                                         ->where('movimiento_registral_id', '!=', $this->movimientoRegistral->id)
-                                        ->where('estado', 'pase_folio')
                                         ->get();
 
         }
