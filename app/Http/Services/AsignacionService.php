@@ -433,12 +433,12 @@ class AsignacionService{
                             ->when($distrito != 2, function($q){
                                 $q->where('ubicacion', '!=', 'Regional 4');
                             })
-                            ->when(($folioReal != null) || ($folioReal === null && $estado == 'precalificacion'), function($q){
+                            ->when(($folioReal === true) || ($folioReal === false && $estado == 'precalificacion'), function($q){
                                 $q->whereHas('roles', function($q){
                                     $q->whereIn('name', ['Propiedad', 'Registrador Propiedad']);
                                 });
                             })
-                            ->when($folioReal === null && $estado != 'precalificacion', function($q) use($roles){
+                            ->when($folioReal === false && $estado != 'precalificacion', function($q) use($roles){
                                 $q->whereHas('roles', function($q) use($roles){
                                     $q->whereIn('name', $roles);
                                 });
@@ -552,12 +552,12 @@ class AsignacionService{
                             ->when($distrito != 2, function($q){
                                 $q->where('ubicacion', '!=', 'Regional 4');
                             })
-                            ->when(($folioReal != null) || ($folioReal === null && $estado == 'precalificacion'), function($q){
+                            ->when(($folioReal === true) || ($folioReal === false && $estado == 'precalificacion'), function($q){
                                 $q->whereHas('roles', function($q){
                                     $q->whereIn('name', ['Gravamen', 'Registrador Gravamen']);
                                 });
                             })
-                            ->when($folioReal === null && $estado != 'precalificacion', function($q) use($roles){
+                            ->when($folioReal === false && $estado != 'precalificacion', function($q) use($roles){
                                 $q->whereHas('roles', function($q) use($roles){
                                     $q->whereIn('name', $roles);
                                 });
@@ -613,12 +613,12 @@ class AsignacionService{
                             ->when($distrito != 2, function($q){
                                 $q->where('ubicacion', '!=', 'Regional 4');
                             })
-                            ->when(($folioReal != null) || ($folioReal === null && $estado == 'precalificacion'), function($q){
+                            ->when(($folioReal === true) || ($folioReal === false && $estado == 'precalificacion'), function($q){
                                 $q->whereHas('roles', function($q){
                                     $q->whereIn('name', ['Cancelación', 'Registrador Cancelación']);
                                 });
                             })
-                            ->when($folioReal === null && $estado != 'precalificacion', function($q){
+                            ->when($folioReal === false && $estado != 'precalificacion', function($q){
                                 $q->whereHas('roles', function($q){
                                     $q->whereIn('name', ['Registrador Cancelación']);
                                 });
@@ -678,12 +678,12 @@ class AsignacionService{
                             ->when($distrito != 2, function($q){
                                 $q->where('ubicacion', '!=', 'Regional 4');
                             })
-                            ->when(($folioReal != null) || ($folioReal === null && $estado == 'precalificacion'), function($q){
+                            ->when(($folioReal === true) || ($folioReal === false && $estado == 'precalificacion'), function($q){
                                 $q->whereHas('roles', function($q){
                                     $q->whereIn('name', ['Varios', 'Registrador Varios']);
                                 });
                             })
-                            ->when($folioReal === null && $estado != 'precalificacion', function($q) use($roles){
+                            ->when($folioReal === false && $estado != 'precalificacion', function($q) use($roles){
                                 $q->whereHas('roles', function($q) use($roles){
                                     $q->whereIn('name', $roles);
                                 });
@@ -744,12 +744,12 @@ class AsignacionService{
                             ->when($distrito != 2, function($q){
                                 $q->where('ubicacion', '!=', 'Regional 4');
                             })
-                            ->when(($folioReal != null) || ($folioReal === null && $estado == 'precalificacion'), function($q){
+                            ->when(($folioReal === true) || ($folioReal === false && $estado == 'precalificacion'), function($q){
                                 $q->whereHas('roles', function($q){
                                     $q->whereIn('name', ['Sentencias', 'Registrador Sentencias']);
                                 });
                             })
-                            ->when($folioReal === null && $estado != 'precalificacion', function($q) use($roles){
+                            ->when($folioReal === false && $estado != 'precalificacion', function($q) use($roles){
                                 $q->whereHas('roles', function($q) use($roles){
                                     $q->whereIn('name', $roles);
                                 });
