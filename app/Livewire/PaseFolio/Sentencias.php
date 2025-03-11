@@ -321,7 +321,11 @@ class Sentencias extends Component
 
                 $sentencia = Sentencia::find($this->selected_id);
 
-                $sentencia->movimientoRegistral->delete();
+                $movimiento = $sentencia->movimientoRegistral;
+
+                $sentencia->delete();
+
+                $movimiento->delete();
 
                 $this->reordenar($sentencia->movimientoRegistral->folio);
 

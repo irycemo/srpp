@@ -38,7 +38,7 @@ trait FirmaElectronicaTrait{
 
         foreach ($folioReal->gravamenes as $gravamen) {
 
-            if($gravamen->movimientoRegistral->folio == 1 || $gravamen->movimientoRegistral->estado == 'precalificacion') continue;
+            if(!in_array($gravamen->movimientoRegistral->estado, ['pase_folio'])) continue;
 
             $item = $this->gravamen($gravamen);
 
@@ -50,7 +50,7 @@ trait FirmaElectronicaTrait{
 
         foreach ($folioReal->cancelaciones as $cancelacion) {
 
-            if($cancelacion->movimientoRegistral->folio == 1 || $cancelacion->movimientoRegistral->estado == 'precalificacion') continue;
+            if(!in_array($cancelacion->movimientoRegistral->estado, ['pase_folio'])) continue;
 
             $item = $this->cancelacion($cancelacion);
 
@@ -64,7 +64,7 @@ trait FirmaElectronicaTrait{
 
             $sentencia->load('movimientoRegistral');
 
-            if($sentencia->movimientoRegistral->folio == 1 || $sentencia->movimientoRegistral->estado == 'precalificacion') continue;
+            if(!in_array($sentencia->movimientoRegistral->estado, ['pase_folio'])) continue;
 
             $item = $this->sentencia($sentencia);
 
@@ -78,7 +78,7 @@ trait FirmaElectronicaTrait{
 
             $vario->load('movimientoRegistral');
 
-            if($vario->movimientoRegistral->folio == 1 || $vario->movimientoRegistral->estado == 'precalificacion') continue;
+            if(!in_array($vario->movimientoRegistral->estado, ['pase_folio'])) continue;
 
             $item = $this->vario($vario);
 

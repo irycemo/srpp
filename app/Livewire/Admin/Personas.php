@@ -7,6 +7,7 @@ use Livewire\Component;
 use Livewire\WithPagination;
 use Illuminate\Validation\Rule;
 use App\Traits\ComponentesTrait;
+use Livewire\Attributes\Computed;
 use Illuminate\Support\Facades\Log;
 
 class Personas extends Component
@@ -23,7 +24,6 @@ class Personas extends Component
     public $rfc;
     public $curp;
     public $razon_social;
-
 
     protected function rules(){
         return [
@@ -88,7 +88,7 @@ class Personas extends Component
         $this->validate([
             'nombre' => Rule::requiredIf($this->ap_materno || $this->ap_paterno),
             'ap_materno' => Rule::requiredIf($this->nombre || $this->ap_paterno),
-            'ap_paterno' => Rule::requiredIf($this->ap_materno || $this->nombre),
+            'ap_paterno' => 'nullable',
             'curp' => [
                 'nullable',
                 'regex:/^[A-Z]{1}[AEIOUX]{1}[A-Z]{2}[0-9]{2}(0[1-9]|1[0-2])(0[1-9]|1[0-9]|2[0-9]|3[0-1])[HM]{1}(AS|BC|BS|CC|CS|CH|CL|CM|DF|DG|GT|GR|HG|JC|MC|MN|MS|NT|NL|OC|PL|QT|QR|SP|SL|SR|TC|TS|TL|VZ|YN|ZS|NE)[B-DF-HJ-NP-TV-Z]{3}[0-9A-Z]{1}[0-9]{1}$/i'
@@ -99,31 +99,38 @@ class Personas extends Component
             ],
         ]);
 
-        $this->personas = Persona::when($this->rfc && $this->rfc != '', function($q){
-                                            $q->where('rfc', $this->rfc);
-                                        })
-                                        ->when($this->curp && $this->curp != '', function($q){
-                                            $q->where('curp', $this->curp);
-                                        })
-                                        ->when($this->nombre && $this->nombre != '', function($q){
-                                            $q->where('nombre', $this->nombre);
-                                        })
-                                        ->when($this->ap_materno && $this->ap_materno != '', function($q){
-                                            $q->where('ap_materno', $this->ap_materno);
-                                        })
-                                        ->when($this->ap_paterno && $this->ap_paterno != '', function($q){
-                                            $q->where('ap_paterno', $this->ap_paterno);
-                                        })
-                                        ->when($this->razon_social && $this->razon_social != '', function($q){
-                                            $q->where('razon_social', $this->razon_social);
-                                        })
-                                        ->get();
-
     }
 
     public function mount(){
 
         $this->crearModeloVacio();
+
+    }
+
+    #[Computed]
+    public function personas(){
+
+        return Persona::with('creadoPor', 'actualizadoPor')
+                                    ->when($this->rfc && $this->rfc != '', function($q){
+                                        $q->where('rfc', $this->rfc);
+                                    })
+                                    ->when($this->curp && $this->curp != '', function($q){
+                                        $q->where('curp', $this->curp);
+                                    })
+                                    ->when($this->nombre && $this->nombre != '', function($q){
+                                        $q->where('nombre', $this->nombre);
+                                    })
+                                    ->when($this->ap_materno && $this->ap_materno != '', function($q){
+                                        $q->where('ap_materno', $this->ap_materno);
+                                    })
+                                    ->when($this->ap_paterno && $this->ap_paterno != '', function($q){
+                                        $q->where('ap_paterno', $this->ap_paterno);
+                                    })
+                                    ->when($this->razon_social && $this->razon_social != '', function($q){
+                                        $q->where('razon_social', $this->razon_social);
+                                    })
+                                    ->orderBy($this->sort, $this->direction)
+                                    ->paginate($this->pagination);
 
     }
 
