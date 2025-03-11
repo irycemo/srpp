@@ -206,121 +206,121 @@
 
                 @if($tipo_persona == 'FISICA')
 
-                    <x-input-group for="nombre" label="Nombre(s)" :error="$errors->first('nombre')" class="w-full">
+                    <x-input-group for="modelo_editar.nombre" label="Nombre(s)" :error="$errors->first('modelo_editar.nombre')" class="w-full">
 
-                        <x-input-text id="nombre" wire:model="nombre" :readonly="$editar && $persona->nombre" />
-
-                    </x-input-group>
-
-                    <x-input-group for="ap_paterno" label="Apellido paterno" :error="$errors->first('ap_paterno')" class="w-full">
-
-                        <x-input-text id="ap_paterno" wire:model="ap_paterno" :readonly="$editar && $persona->ap_paterno" />
+                        <x-input-text id="modelo_editar.nombre" wire:model="modelo_editar.nombre"  />
 
                     </x-input-group>
 
-                    <x-input-group for="ap_materno" label="Apellido materno" :error="$errors->first('ap_materno')" class="w-full">
+                    <x-input-group for="modelo_editar.ap_paterno" label="Apellido paterno" :error="$errors->first('modelo_editar.ap_paterno')" class="w-full">
 
-                        <x-input-text id="ap_materno" wire:model="ap_materno" :readonly="$editar && $persona->ap_materno" />
+                        <x-input-text id="modelo_editar.ap_paterno" wire:model="modelo_editar.ap_paterno"  />
+
+                    </x-input-group>
+
+                    <x-input-group for="modelo_editar.ap_materno" label="Apellido materno" :error="$errors->first('modelo_editar.ap_materno')" class="w-full">
+
+                        <x-input-text id="modelo_editar.ap_materno" wire:model="modelo_editar.ap_materno"  />
 
                     </x-input-group>
 
                     <div class=" col-span-3 rounded-lg">
 
-                        <x-input-group for="multiple_nombre" label="Nombre multiple (Opcional)" :error="$errors->first('multiple_nombre')" class="sm:col-span-2 lg:col-span-3">
+                        <x-input-group for="modelo_editar.multiple_nombre" label="Nombre multiple (Opcional)" :error="$errors->first('modelo_editar.multiple_nombre')" class="sm:col-span-2 lg:col-span-3">
 
-                            <textarea rows="3" class="w-full bg-white rounded text-sm" wire:model="multiple_nombre"></textarea>
+                            <textarea rows="3" class="w-full bg-white rounded text-sm" wire:model="modelo_editar.multiple_nombre"></textarea>
 
                         </x-input-group>
 
                     </div>
 
-                    <x-input-group for="curp" label="CURP" :error="$errors->first('curp')" class="w-full">
+                    <x-input-group for="modelo_editar.curp" label="CURP" :error="$errors->first('modelo_editar.curp')" class="w-full">
 
-                        <x-input-text id="curp" wire:model="curp" :readonly="$editar && $persona->curp" />
-
-                    </x-input-group>
-
-                    <x-input-group for="fecha_nacimiento" label="Fecha de nacimiento" :error="$errors->first('fecha_nacimiento')" class="w-full">
-
-                        <x-input-text type="date" id="fecha_nacimiento" wire:model="fecha_nacimiento" />
+                        <x-input-text id="modelo_editar.curp" wire:model="modelo_editar.curp"  />
 
                     </x-input-group>
 
-                    <x-input-group for="estado_civil" label="Estado civil" :error="$errors->first('estado_civil')" class="w-full">
+                    <x-input-group for="modelo_editar.fecha_nacimiento" label="Fecha de nacimiento" :error="$errors->first('modelo_editar.fecha_nacimiento')" class="w-full">
 
-                        <x-input-text id="estado_civil" wire:model="estado_civil" />
+                        <x-input-text type="date" id="modelo_editar.fecha_nacimiento" wire:model="modelo_editar.fecha_nacimiento" />
+
+                    </x-input-group>
+
+                    <x-input-group for="modelo_editar.estado_civil" label="Estado civil" :error="$errors->first('modelo_editar.estado_civil')" class="w-full">
+
+                        <x-input-text id="modelo_editar.estado_civil" wire:model="modelo_editar.estado_civil" />
 
                     </x-input-group>
 
                 @elseif($tipo_persona == 'MORAL')
 
-                    <x-input-group for="razon_social" label="Razon social" :error="$errors->first('razon_social')" class="w-full">
+                    <x-input-group for="modelo_editar.razon_social" label="Razon social" :error="$errors->first('modelo_editar.razon_social')" class="w-full">
 
-                        <x-input-text id="razon_social" wire:model="razon_social" :readonly="$editar && $persona->razon_social" />
+                        <x-input-text id="modelo_editar.razon_social" wire:model="modelo_editar.razon_social"  />
 
                     </x-input-group>
 
                 @endif
 
-                <x-input-group for="rfc" label="RFC" :error="$errors->first('rfc')" class="w-full">
+                <x-input-group for="modelo_editar.rfc" label="RFC" :error="$errors->first('modelo_editar.rfc')" class="w-full">
 
-                    <x-input-text id="rfc" wire:model="rfc" :readonly="$editar && $persona->rfc" />
+                    <x-input-text id="modelo_editar.rfc" wire:model="modelo_editar.rfc"  />
 
                 </x-input-group>
 
-                <x-input-group for="nacionalidad" label="Nacionalidad" :error="$errors->first('nacionalidad')" class="w-full">
+                <x-input-group for="modelo_editar.nacionalidad" label="Nacionalidad" :error="$errors->first('modelo_editar.nacionalidad')" class="w-full">
 
-                    <x-input-text id="nacionalidad" wire:model="nacionalidad" />
+                    <x-input-text id="modelo_editar.nacionalidad" wire:model="modelo_editar.nacionalidad" />
 
                 </x-input-group>
 
                 <span class="flex items-center justify-center text-lg text-gray-700 md:col-span-3 col-span-1 sm:col-span-2">Domicilio</span>
 
-                <x-input-group for="cp" label="Código postal" :error="$errors->first('cp')" class="w-full">
+                <x-input-group for="modelo_editar.cp" label="Código postal" :error="$errors->first('modelo_editar.cp')" class="w-full">
 
-                    <x-input-text type="number" id="cp" wire:model="cp" />
-
-                </x-input-group>
-
-                <x-input-group for="entidad" label="Estado" :error="$errors->first('entidad')" class="w-full">
-
-                    <x-input-text id="entidad" wire:model="entidad" />
+                    <x-input-text type="number" id="modelo_editar.cp" wire:model="modelo_editar.cp" />
 
                 </x-input-group>
 
-                <x-input-group for="municipio" label="Municipio" :error="$errors->first('municipio')" class="w-full">
+                <x-input-group for="modelo_editar.entidad" label="Estado" :error="$errors->first('modelo_editar.entidad')" class="w-full">
 
-                    <x-input-text id="municipio" wire:model="municipio" />
-
-                </x-input-group>
-
-                <x-input-group for="ciudad" label="Ciudad" :error="$errors->first('ciudad')" class="w-full">
-
-                    <x-input-text id="ciudad" wire:model="ciudad" />
+                    <x-input-text id="modelo_editar.entidad" wire:model="modelo_editar.entidad" />
 
                 </x-input-group>
 
-                <x-input-group for="colonia" label="Colonia" :error="$errors->first('colonia')" class="w-full">
+                <x-input-group for="modelo_editar.municipio" label="Municipio" :error="$errors->first('modelo_editar.municipio')" class="w-full">
 
-                    <x-input-text id="colonia" wire:model="colonia" />
-
-                </x-input-group>
-
-                <x-input-group for="calle" label="Calle" :error="$errors->first('calle')" class="w-full">
-
-                    <x-input-text id="calle" wire:model="calle" />
+                    <x-input-text id="modelo_editar.municipio" wire:model="modelo_editar.municipio" />
 
                 </x-input-group>
 
-                <x-input-group for="numero_exterior" label="Número exterior" :error="$errors->first('numero_exterior')" class="w-full">
+                <x-input-group for="modelo_editar.ciudad" label="Ciudad" :error="$errors->first('modelo_editar.ciudad')" class="w-full">
 
-                    <x-input-text id="numero_exterior" wire:model="numero_exterior" />
+                    <x-input-text id="modelo_editar.ciudad" wire:model="modelo_editar.ciudad" />
 
                 </x-input-group>
 
-                <x-input-group for="numero_interior" label="Número interior" :error="$errors->first('numero_interior')" class="w-full">
+                <x-input-group for="modelo_editar.colonia" label="Colonia" :error="$errors->first('modelo_editar.colonia')" class="w-full">
 
-                    <x-input-text id="numero_interior" wire:model="numero_interior" />
+                    <x-input-text id="modelo_editar.colonia" wire:model="modelo_editar.colonia" />
+
+                </x-input-group>
+
+                <x-input-group for="modelo_editar.calle" label="Calle" :error="$errors->first('modelo_editar.calle')" class="w-full">
+
+                    <x-input-text id="modelo_editar.calle" wire:model="modelo_editar.calle" />
+
+                </x-input-group>
+
+                <x-input-group for="modelo_editar.numero_exterior" label="Número exterior" :error="$errors->first('modelo_editar.numero_exterior')" class="w-full">
+
+                    <x-input-text id="modelo_editar.numero_exterior" wire:model="modelo_editar.numero_exterior" />
+
+                </x-input-group>
+
+                <x-input-group for="modelo_editar.numero_interior" label="Número interior" :error="$errors->first('modelo_editar.numero_interior')" class="w-full">
+
+                    <x-input-text id="modelo_editar.numero_interior" wire:model="modelo_editar.numero_interior" />
 
                 </x-input-group>
 
@@ -330,23 +330,27 @@
 
         <x-slot name="footer">
 
-            <x-button-blue
-                wire:click="actualizar"
-                wire:loading.attr="disabled"
-                wire:target="actualizar">
+            <div class="flex justify-end gap-4">
 
-                <img wire:loading wire:target="actualizar" class="mx-auto h-4 mr-1" src="{{ asset('storage/img/loading3.svg') }}" alt="Loading">
+                <x-button-blue
+                    wire:click="actualizar"
+                    wire:loading.attr="disabled"
+                    wire:target="actualizar">
 
-                <span>Actualizar</span>
-            </x-button-blue>
+                    <img wire:loading wire:target="actualizar" class="mx-auto h-4 mr-1" src="{{ asset('storage/img/loading3.svg') }}" alt="Loading">
 
-            <x-button-red
-                wire:click="$toggle('modal')"
-                wire:loading.attr="disabled"
-                wire:target="$toggle('modal')"
-                type="button">
-                Cerrar
-            </x-button-red>
+                    <span>Actualizar</span>
+                </x-button-blue>
+
+                <x-button-red
+                    wire:click="$toggle('modal')"
+                    wire:loading.attr="disabled"
+                    wire:target="$toggle('modal')"
+                    type="button">
+                    Cerrar
+                </x-button-red>
+
+            </div>
 
         </x-slot>
 
