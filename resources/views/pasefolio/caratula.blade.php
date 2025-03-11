@@ -305,8 +305,6 @@
 
                             @foreach ($folioReal->gravamenes as $gravamen)
 
-                                @if($gravamen->movimiento_folio == 1) @continue @endif
-
                                 <p class="parrafo">
 
                                     <p class="separador">gravamen ({{ $folioReal->folio }}-{{ $gravamen->movimiento_folio }})</p>
@@ -425,8 +423,6 @@
 
                             @foreach ($folioReal->sentencias as $sentencia)
 
-                                @if($sentencia->movimiento_folio == 1) @continue @endif
-
                                 <p class="parrafo">
 
                                     <p class="separador">Sentencia ({{ $folioReal->folio }}-{{ $sentencia->movimiento_folio }})</p>
@@ -455,8 +451,6 @@
 
                             @foreach ($folioReal->varios as $vario)
 
-                                @if($vario->movimiento_folio == 1) @continue @endif
-
                                 <p class="parrafo">
 
                                     <p class="separador">Varios ({{ $folioReal->folio }}-{{ $vario->movimiento_folio }})</p>
@@ -484,8 +478,6 @@
                             <p class="separador" style="text-align: center">Cancelaciones</p>
 
                             @foreach ($folioReal->cancelaciones as $cancelacion)
-
-                                @if($cancelacion->movimiento_folio == 1) @continue @endif
 
                                 <p class="parrafo">
 

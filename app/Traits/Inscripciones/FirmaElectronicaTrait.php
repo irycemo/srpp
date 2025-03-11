@@ -38,7 +38,7 @@ trait FirmaElectronicaTrait{
 
         foreach ($folioReal->gravamenes as $gravamen) {
 
-            if(!in_array($gravamen->movimientoRegistral->estado, ['pase_folio'])) continue;
+            if($gravamen->movimientoRegistral->estado != 'pase_folio') continue;
 
             $item = $this->gravamen($gravamen);
 
@@ -50,7 +50,7 @@ trait FirmaElectronicaTrait{
 
         foreach ($folioReal->cancelaciones as $cancelacion) {
 
-            if(!in_array($cancelacion->movimientoRegistral->estado, ['pase_folio'])) continue;
+            if($cancelacion->movimientoRegistral->estado != 'pase_folio') continue;
 
             $item = $this->cancelacion($cancelacion);
 
@@ -64,7 +64,7 @@ trait FirmaElectronicaTrait{
 
             $sentencia->load('movimientoRegistral');
 
-            if(!in_array($sentencia->movimientoRegistral->estado, ['pase_folio'])) continue;
+            if($sentencia->movimientoRegistral->estado != 'pase_folio') continue;
 
             $item = $this->sentencia($sentencia);
 
@@ -78,7 +78,7 @@ trait FirmaElectronicaTrait{
 
             $vario->load('movimientoRegistral');
 
-            if(!in_array($vario->movimientoRegistral->estado, ['pase_folio'])) continue;
+            if($vario->movimientoRegistral->estado != 'pase_folio') continue;
 
             $item = $this->vario($vario);
 
@@ -501,20 +501,6 @@ trait FirmaElectronicaTrait{
 
         }
 
-        $gravamenesHipoteca = collect();
-
-        if($gravamen->acto_contenido === 'DIVISIÓN DE HIPOTECA'){
-
-            $movimientos = MovimientoRegistral::where('movimiento_padre', $gravamen->movimientoRegistral->id)->get();
-
-            foreach ($movimientos as $movimiento) {
-
-                $gravamenesHipoteca->push($this->gravavmen($movimiento->gravamen));
-
-            }
-
-        }
-
         $object = (object)[];
 
         $object->id = $gravamen->id;
@@ -541,7 +527,6 @@ trait FirmaElectronicaTrait{
         $object->autoridad_numero = $gravamen->movimientoRegistral->autoridad_numero;
         $object->fecha_emision = Carbon::parse($gravamen->movimientoRegistral->fecha_emision)->format('d/m/Y');
         $object->procedencia = $gravamen->movimientoRegistral->procedencia;
-        $object->gravamenesHipoteca = $gravamenesHipoteca;
 
         return $object;
 
