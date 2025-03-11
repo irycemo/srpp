@@ -89,6 +89,8 @@ class Personas extends Component
             $this->modelo_editar->actualizado_por = auth()->user()->id;
             $this->modelo_editar->save();
 
+            $this->modelo_editar->audits()->latest()->first()->update(['tags' => 'Modifico identidad']);
+
             $this->resetearTodo();
 
             $this->dispatch('mostrarMensaje', ['success', "La persona se actualizó con éxito."]);

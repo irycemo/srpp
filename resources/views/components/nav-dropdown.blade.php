@@ -1,6 +1,6 @@
 <div x-data="{ open:true }">
 
-    <div class="flex items-center w-full justify-between hover:text-red-600 transition ease-in-out duration-500 hover:bg-gray-100 rounded-xl">
+    <div class="flex items-center w-full justify-between hover:text-red-600 transition ease-in-out duration-500 hover:bg-gray-100 rounded-xl mb-3">
 
 
         {{ $head }}

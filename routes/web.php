@@ -4,14 +4,19 @@ use App\Livewire\Consulta\Consulta;
 use App\Livewire\PaseFolio\PaseFolio;
 use Illuminate\Support\Facades\Route;
 use App\Livewire\PaseFolio\Elaboracion;
+use App\Livewire\PersonaMoral\Reformas;
+use App\Livewire\Consulta\IndicesVarios;
 use App\Http\Controllers\ManualController;
+use App\Livewire\Consulta\IndicesGravamen;
+use App\Livewire\PersonaMoral\Asiganacion;
+use App\Livewire\Consulta\IndicesPropiedad;
+use App\Livewire\Consulta\IndicesSentencia;
+use App\Livewire\PersonaMoral\ReformasIndex;
 use App\Http\Controllers\DashboardController;
+use App\Livewire\Consulta\IndicesCancelacion;
 use App\Http\Controllers\SetPasswordController;
 use App\Livewire\PersonaMoral\PaseFolioPersonaMoral;
 use App\Http\Controllers\PaseFolio\PaseFolioController;
-use App\Livewire\PersonaMoral\Asiganacion;
-use App\Livewire\PersonaMoral\Reformas;
-use App\Livewire\PersonaMoral\ReformasIndex;
 
 /*
 |--------------------------------------------------------------------------
@@ -46,6 +51,11 @@ Route::group(['middleware' => ['auth', 'esta.activo']], function(){
 
     /* Consultas */
     Route::get('consultas', Consulta::class)->middleware('permission:Consultas')->name('consultas');
+    Route::get('indices_propiedad', IndicesPropiedad::class)->middleware('permission:Consultas')->name('indices.propiedad');
+    Route::get('indices_gravamen', IndicesGravamen::class)->middleware('permission:Consultas')->name('indices.gravamen');
+    Route::get('indices_sentencia', IndicesSentencia::class)->middleware('permission:Consultas')->name('indices.sentencia');
+    Route::get('indices_cancelacion', IndicesCancelacion::class)->middleware('permission:Consultas')->name('indices.cancelacion');
+    Route::get('indices_varios', IndicesVarios::class)->middleware('permission:Consultas')->name('indices.varios');
 
     /* Manual */
     Route::get('manual', ManualController::class)->name('manual');
