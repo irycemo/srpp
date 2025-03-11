@@ -168,6 +168,8 @@ class MovimientoRegistralService{
 
                     }else{
 
+                        $data['folio_real'] = $movimiento_registral->folio_real;
+
                         $this->actualizarMovimientoRegistral($data, $movimiento_registral);
 
                     }

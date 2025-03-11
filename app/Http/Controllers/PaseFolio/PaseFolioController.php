@@ -26,7 +26,7 @@ class PaseFolioController extends Controller
 
         $this->cancelarFirmaElectronica($folioReal->id);
 
-        $movimiento1 = $folioReal->movimientosRegistrales->where('folio', 1)->first();
+        $movimiento1 = $folioReal->movimientosRegistrales()->where('estado', '!=', 'pase_folio')->first();
 
         $formatter = new NumeroALetras();
 
