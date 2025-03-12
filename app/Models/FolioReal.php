@@ -101,10 +101,10 @@ class FolioReal extends Model implements Auditable
     public function ultimoFolio():int
     {
 
-        $folio = MovimientoRegistral::where('folio_real', $this->id)->orderBy('folio', 'desc')->first()->folio;
+        $movimiento = MovimientoRegistral::where('folio_real', $this->id)->orderBy('folio', 'desc')->first();
 
-        if($folio)
-            return $folio;
+        if($movimiento)
+            return $movimiento->folio;
         else
             return 0;
 
