@@ -2,7 +2,7 @@
 
     <div class="mb-6">
 
-        <x-header>Consultas</x-header>
+        <x-header>Consultas FR-I</x-header>
 
         <div class="grid grid-cols-1 lg:grid-cols-6 md:grid-cols-3 sm:grid-cols-2 gap-3 mb-3 bg-white rounded-lg p-3 shadow-lg items-end">
 

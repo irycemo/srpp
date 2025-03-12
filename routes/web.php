@@ -1,8 +1,9 @@
 <?php
 
-use App\Livewire\Consulta\Consulta;
 use App\Livewire\PaseFolio\PaseFolio;
 use Illuminate\Support\Facades\Route;
+use App\Livewire\Consulta\ConsultaFRI;
+use App\Livewire\Consulta\ConsultaFRPM;
 use App\Livewire\PaseFolio\Elaboracion;
 use App\Livewire\PersonaMoral\Reformas;
 use App\Livewire\Consulta\IndicesVarios;
@@ -50,7 +51,8 @@ Route::group(['middleware' => ['auth', 'esta.activo']], function(){
     Route::get('reformas/{reformaMoral}', Reformas::class)->middleware('permission:Reformas inscripción')->name('reformas.inscripcion');
 
     /* Consultas */
-    Route::get('consultas', Consulta::class)->middleware('permission:Consultas')->name('consultas');
+    Route::get('consultas_fri', ConsultaFRI::class)->middleware('permission:Consultas')->name('consultas_fri');
+    Route::get('consultas_frpm', ConsultaFRPM::class)->middleware('permission:Consultas')->name('consultas_frpm');
     Route::get('indices_propiedad', IndicesPropiedad::class)->middleware('permission:Consultas')->name('indices.propiedad');
     Route::get('indices_gravamen', IndicesGravamen::class)->middleware('permission:Consultas')->name('indices.gravamen');
     Route::get('indices_sentencia', IndicesSentencia::class)->middleware('permission:Consultas')->name('indices.sentencia');

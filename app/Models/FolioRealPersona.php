@@ -68,6 +68,10 @@ class FolioRealPersona extends Model implements Auditable
         return $this->hasMany(ObjetoPersonaMOral::class, 'folio_real_persona');
     }
 
+    public function objetoActual(){
+        return $this->hasOne(ObjetoPersonaMOral::class, 'folio_real_persona')->where('estado', 'activo');
+    }
+
     public function getDistritoAttribute(){
         return Constantes::DISTRITOS[$this->attributes['distrito']];
     }

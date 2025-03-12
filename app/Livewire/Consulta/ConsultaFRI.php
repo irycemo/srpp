@@ -11,7 +11,7 @@ use App\Models\CodigoPostal;
 use App\Constantes\Constantes;
 use App\Models\Antecedente;
 
-class Consulta extends Component
+class ConsultaFRI extends Component
 {
 
     public $folio_real;
@@ -263,6 +263,6 @@ class Consulta extends Component
 
     public function render()
     {
-        return view('livewire.consulta.consulta')->extends('layouts.admin');
+        return view('livewire.consulta.consulta-f-r-i')->extends('layouts.admin');
     }
 }
