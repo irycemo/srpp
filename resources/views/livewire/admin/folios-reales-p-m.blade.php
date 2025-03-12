@@ -2,7 +2,7 @@
 
     <div class="mb-6">
 
-        <x-header>Folios reales I</x-header>
+        <x-header>Folios reales PM</x-header>
 
         <div class="flex justify-between">
 
@@ -50,7 +50,6 @@
                 <x-table.heading sortable wire:click="sortBy('estado')" :direction="$sort === 'estado' ? $direction : null" >estado</x-table.heading>
                 <x-table.heading sortable wire:click="sortBy('tomo_antecedente')" :direction="$sort === 'tomo_antecedente' ? $direction : null" >Tomo</x-table.heading>
                 <x-table.heading sortable wire:click="sortBy('registro_antecedente')" :direction="$sort === 'registro_antecedente' ? $direction : null" >Registro</x-table.heading>
-                <x-table.heading sortable wire:click="sortBy('numero_propiedad_antecedente')" :direction="$sort === 'numero_propiedad_antecedente' ? $direction : null" ># Propiedad</x-table.heading>
                 <x-table.heading sortable wire:click="sortBy('distrito_antecedente')" :direction="$sort === 'distrito_antecedente' ? $direction : null" >Distrito</x-table.heading>
                 <x-table.heading sortable wire:click="sortBy('created_at')" :direction="$sort === 'created_at' ? $direction : null">Registro</x-table.heading>
                 <x-table.heading sortable wire:click="sortBy('updated_at')" :direction="$sort === 'updated_at' ? $direction : null">Actualizado</x-table.heading>
@@ -100,17 +99,9 @@
 
                         <x-table.cell>
 
-                            <span class="lg:hidden absolute top-0 left-0 bg-blue-300 px-2 py-1 text-xs text-white font-bold uppercase rounded-br-xl"># Propiedad</span>
-
-                            {{ $folio->numero_propiedad_antecedente ?? 'N/A' }}
-
-                        </x-table.cell>
-
-                        <x-table.cell>
-
                             <span class="lg:hidden absolute top-0 left-0 bg-blue-300 px-2 py-1 text-xs text-white font-bold uppercase rounded-br-xl">Distrito</span>
 
-                            {{ App\Constantes\Constantes::DISTRITOS[$folio->distrito_antecedente] }}
+                            {{ App\Constantes\Constantes::DISTRITOS[$folio->getRawOriginal('distrito')] }}
 
                         </x-table.cell>
 
@@ -155,7 +146,7 @@
 
                                     <div x-cloak x-show="open_drop_down" x-on:click="open_drop_down=false" x-on:click.away="open_drop_down=false" class="z-50 origin-top-right absolute right-0 mt-2 w-48 rounded-md shadow-lg py-1 bg-white ring-1 ring-black ring-opacity-5 focus:outline-none" role="menu" aria-orientation="vertical" aria-labelledby="user-menu">
 
-                                        @if($folio->estado != 'captura')
+                                       {{--  @if($folio->estado != 'captura')
 
                                             @can('Envia a captura')
 
@@ -169,40 +160,7 @@
 
                                             @endif
 
-                                        @endif
-
-                                       {{--  @if(in_array($folio->estado, ['nuevo', 'captura']))
-
-                                            @can('Reasignar folio')
-
-                                                <button
-                                                    wire:click="abrirModalReasignar({{ $folio->id }})"
-                                                    wire:loading.attr="disabled"
-                                                    class="w-full text-left block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 focus:outline-none focus:bg-gray-100"
-                                                    role="menuitem">
-                                                    Reasignar
-                                                </button>
-
-                                            @endif
-
                                         @endif --}}
-
-                                        @if(!$folio->matriz)
-
-                                            @can('Convertir en matriz')
-
-                                                <button
-                                                    wire:click="cambiarAFolioMatriz({{ $folio->id }})"
-                                                    wire:confirm="¿Esta seguro que desea convertir el folio en folio matriz?"
-                                                    wire:loading.attr="disabled"
-                                                    class="w-full text-left block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 focus:outline-none focus:bg-gray-100"
-                                                    role="menuitem">
-                                                    Convertir en matriz
-                                                </button>
-
-                                            @endif
-
-                                        @endif
 
                                     </div>
 
@@ -251,65 +209,5 @@
         </x-table>
 
     </div>
-
-    <x-dialog-modal wire:model="modalReasignar" maxWidth="sm">
-
-        <x-slot name="title">
-
-            Reasignar folio
-
-        </x-slot>
-
-        <x-slot name="content">
-
-            <div class="flex flex-col md:flex-row justify-between gap-3 mb-3">
-
-                <x-input-group for="usuario_id" label="Usuario" :error="$errors->first('usuario_id')" class="w-full">
-
-                    <x-input-select id="usuario_id" wire:model="usuario_id" class="w-full">
-
-                        <option value="">Seleccione una opción</option>
-
-                        @foreach ($usuarios as $usuario)
-
-                            <option value="{{ $usuario->id }}">{{ $usuario->name }}</option>
-
-                        @endforeach
-
-                    </x-input-select>
-
-                </x-input-group>
-
-            </div>
-
-        </x-slot>
-
-        <x-slot name="footer">
-
-            <div class="flex gap-3">
-
-                <x-button-blue
-                    wire:click="reasignar"
-                    wire:loading.attr="disabled"
-                    wire:target="reasignar">
-
-                    <img wire:loading wire:target="reasignar" class="mx-auto h-4 mr-1" src="{{ asset('storage/img/loading3.svg') }}" alt="Loading">
-
-                    <span>Reasignar</span>
-                </x-button-blue>
-
-                <x-button-red
-                    wire:click="$toggle('modalReasignar')"
-                    wire:loading.attr="disabled"
-                    wire:target="$toggle('modalReasignar')"
-                    type="button">
-                    Cerrar
-                </x-button-red>
-
-            </div>
-
-        </x-slot>
-
-    </x-dialog-modal>
 
 </div>
