@@ -18,7 +18,7 @@ class GravamenController extends Controller
                                                             $q->where('folio', $data['folio']);
                                                         })
                                                         ->when(isset($data['tomo_gravamen']), function($q) use($data){
-                                                            $q->where($data['tomo_gravamen'], $data['tomo_gravamen']);
+                                                            $q->where('tomo_gravamen', $data['tomo_gravamen']);
                                                         })
                                                         ->when(isset($data['registro_gravamen']), function($q) use($data){
                                                             $q->where('registro_gravamen', $data['registro_gravamen']);
