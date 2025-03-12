@@ -423,11 +423,13 @@ trait InscripcionesIndex{
 
                 $this->modelo_editar->save();
 
-                $this->dispatch('mostrarMensaje', ['success', "El trámite se finalizó con éxito."]);
-
-                $this->modalFinalizar = false;
+                (new SistemaTramitesService())->finaliarTramite($this->modelo_editar->año, $this->modelo_editar->tramite, $this->modelo_editar->usuario, 'concluido');
 
             });
+
+            $this->dispatch('mostrarMensaje', ['success', "El trámite se finalizó con éxito."]);
+
+            $this->modalFinalizar = false;
 
         } catch (\Throwable $th) {
 

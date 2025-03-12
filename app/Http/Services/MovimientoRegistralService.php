@@ -308,7 +308,15 @@ class MovimientoRegistralService{
 
                 $array['folio_real'] = $folioReal->id;
                 $array['folio'] = $this->calcularFolio($request);
-                $array['estado'] = 'nuevo';
+
+                if($folioReal->estado == 'activo'){
+
+                    $array['estado'] = 'nuevo';
+
+                }else{
+
+                    $array['estado'] = 'precalificacion';
+                }
 
             }else{
 
