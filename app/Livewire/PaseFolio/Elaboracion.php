@@ -1042,7 +1042,7 @@ class Elaboracion extends Component
 
             foreach($this->movimientoRegistral->folioReal->gravamenes as $gravamen){
 
-                if($gravamen->movimientoRegistral->folio == 1) continue;
+                if($gravamen->movimientoRegistral->folio == 0) continue;
 
                 $gravamen->movimientoRegistral->update([
                     'usuario_supervisor' => (new AsignacionService())->obtenerSupervisorInscripciones($this->movimientoRegistral->getRawOriginal('distrito')),
@@ -1063,7 +1063,7 @@ class Elaboracion extends Component
 
             foreach($this->movimientoRegistral->folioReal->sentencias as $sentencia){
 
-                if($sentencia->movimientoRegistral->folio == 1) continue;
+                if($sentencia->movimientoRegistral->folio == 0) continue;
 
                 $sentencia->movimientoRegistral->update([
                     'usuario_supervisor' => (new AsignacionService())->obtenerSupervisorInscripciones($this->movimientoRegistral->getRawOriginal('distrito')),
