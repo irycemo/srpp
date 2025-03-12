@@ -11,6 +11,7 @@ use Illuminate\Support\Facades\DB;
 use App\Models\MovimientoRegistral;
 use Illuminate\Support\Facades\Log;
 use App\Http\Services\FolioRealService;
+use App\Http\Services\SistemaTramitesService;
 
 class MovimientosRegistrales extends Component
 {
@@ -28,8 +29,10 @@ class MovimientosRegistrales extends Component
     public $modalReasignarUsuario = false;
     public $modalReasignarSupervisor = false;
     public $modalCorreccion = false;
+    public $modalRechazar = false;
 
     public $mensaje;
+    public $observaciones;
 
     public $filters = [
         'año' => '',
@@ -136,6 +139,50 @@ class MovimientosRegistrales extends Component
 
             }
 
+        }
+
+    }
+
+    public function abrirModalRechazar(MovimientoRegistral $modelo){
+
+        $this->reset(['observaciones']);
+
+        if($this->modelo_editar->isNot($modelo))
+            $this->modelo_editar = $modelo;
+
+        $this->modalRechazar = true;
+
+    }
+
+    public function rechazar(){
+
+        $this->validate([
+            'observaciones' => 'required'
+        ]);
+
+        try {
+
+            DB::transaction(function (){
+
+                $observaciones = auth()->user()->name . ' rechaza el ' . now() . ', con motivo: ' . $this->observaciones . '<|>';
+
+                (new SistemaTramitesService())->rechazarTramite($this->modelo_editar->año, $this->modelo_editar->tramite, $this->modelo_editar->usuario, $observaciones);
+
+                $this->modelo_editar->update(['estado' => 'rechazado']);
+
+                $this->modelo_editar->actualizado_por = auth()->user()->id;
+
+                $this->modelo_editar->save();
+
+                $this->modelo_editar->audits()->latest()->first()->update(['tags' => 'Rechazó el trámite']);
+
+                $this->dispatch('mostrarMensaje', ['success', "El trámite se rechazó con éxito."]);
+
+            });
+
+        } catch (\Throwable $th) {
+            Log::error("Error al rechazar trámite por el usuario: (id: " . auth()->user()->id . ") " . auth()->user()->name . ". " . $th);
+            $this->dispatch('mostrarMensaje', ['error', "Ha ocurrido un error."]);
         }
 
     }

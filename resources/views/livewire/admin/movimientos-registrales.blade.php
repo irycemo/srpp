@@ -34,6 +34,7 @@
                     <option value="elaborado">Elaborado</option>
                     <option value="rechazado">Rechazado</option>
                     <option value="finalizado">Finalizado</option>
+                    <option value="precalificacion">Precalificación</option>
 
                 </select>
 
@@ -248,6 +249,18 @@
 
                                         @endif
 
+                                        @if($movimiento->estado == 'precalificacion')
+
+                                            <button
+                                                wire:click="abrirModalRechazar({{ $movimiento->id }})"
+                                                wire:loading.attr="disabled"
+                                                class="w-full text-left block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 focus:outline-none focus:bg-gray-100"
+                                                role="menuitem">
+                                                Rechazar
+                                            </button>
+
+                                        @endif
+
                                     </div>
 
                                 </div>
@@ -447,5 +460,69 @@
         </x-slot>
 
     </x-confirmation-modal>
+
+    <x-dialog-modal wire:model="modalRechazar" maxWidth="sm">
+
+        <x-slot name="title">
+
+            Rechazar
+
+        </x-slot>
+
+        <x-slot name="content">
+
+            <div class="flex flex-col md:flex-row justify-between md:space-x-3 mb-5">
+
+                <div class="flex-auto ">
+
+                    <div>
+
+                        <Label>Observaciones</Label>
+                    </div>
+
+                    <div>
+
+                        <textarea rows="5" class="bg-white rounded text-sm w-full" wire:model="observaciones"></textarea>
+
+                    </div>
+
+                    <div>
+
+                        @error('observaciones') <span class="error text-sm text-red-500">{{ $message }}</span> @enderror
+
+                    </div>
+
+                </div>
+
+            </div>
+
+        </x-slot>
+
+        <x-slot name="footer">
+
+            <div class="flex items-center justify-end space-x-3">
+
+                <x-button-blue
+                    wire:click="rechazar"
+                    wire:loading.attr="disabled"
+                    wire:target="rechazar">
+
+                    <img wire:loading wire:target="rechazar" class="mx-auto h-4 mr-1" src="{{ asset('storage/img/loading3.svg') }}" alt="Loading">
+
+                    Rechazar
+                </x-button-blue>
+
+                <x-button-red
+                    wire:click="resetearTodo"
+                    wire:loading.attr="disabled"
+                    wire:target="resetearTodo">
+                    Cerrar
+                </x-button-red>
+
+            </div>
+
+        </x-slot>
+
+    </x-dialog-modal>
 
 </div>
