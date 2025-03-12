@@ -1051,7 +1051,7 @@ class Elaboracion extends Component
 
                 if(!$gravamen->acreedores()->count()){
 
-                    throw new Exception("Debe finalizar los gravamenes.");
+                    throw new Exception("Debe finalizar el gravamen MR: " . $gravamen->movimientoRegistral->folio);
 
                 }
 
@@ -1072,7 +1072,7 @@ class Elaboracion extends Component
 
                 if(!$sentencia->acto_contenido){
 
-                    throw new Exception("Debe finalizar las sentencias.");
+                    throw new Exception("Debe finalizar la sentencia MR: " . $sentencia->movimientoRegistral->folio);
 
                 }
 

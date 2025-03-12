@@ -30,6 +30,7 @@
                     <x-table >
 
                         <x-slot name="head">
+                            <x-table.heading >M.R.</x-table.heading>
                             <x-table.heading >Estado</x-table.heading>
                             <x-table.heading >Acto contenido</x-table.heading>
                             <x-table.heading >Tomo</x-table.heading>
@@ -46,6 +47,7 @@
 
                                     <x-table.row >
 
+                                        <x-table.cell>{{ $gravamen->movimientoRegistral->folio }}</x-table.cell>
                                         <x-table.cell>
                                             @if($gravamen->estado == 'activo')
 

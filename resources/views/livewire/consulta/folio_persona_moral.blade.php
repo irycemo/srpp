@@ -176,7 +176,7 @@
 
         </div>
 
-        <div class="rounded-lg bg-gray-100 py-1 px-2 col-span-2">
+        <div class="rounded-lg bg-gray-100 py-1 px-2 col-span-3">
 
             <strong>Observaciones</strong>
 

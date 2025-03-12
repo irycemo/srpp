@@ -22,6 +22,7 @@
             <x-table>
 
                 <x-slot name="head">
+                    <x-table.heading >M.R.</x-table.heading>
                     <x-table.heading >Acto contenido</x-table.heading>
                     <x-table.heading >Comentario</x-table.heading>
                     <x-table.heading ></x-table.heading>
@@ -35,6 +36,7 @@
 
                             <x-table.row >
 
+                                <x-table.cell>{{ $sentencia->movimientoRegistral->folio }}</x-table.cell>
                                 <x-table.cell>{{ $sentencia->acto_contenido }}</x-table.cell>
                                 <x-table.cell>{{ $sentencia->descripcion }}</x-table.cell>
                                 <x-table.cell>
