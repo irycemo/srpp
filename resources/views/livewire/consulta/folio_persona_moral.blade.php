@@ -180,7 +180,7 @@
 
             <strong>Objeto</strong>
 
-            <p>{{ $folioReal->objetoActual->objeto  }}</p>
+            <p>{{ $folioReal->objetoActual?->objeto  }}</p>
 
         </div>
 
@@ -191,6 +191,40 @@
             <p>{{ $folioReal->observaciones ?? 'N/A' }}</p>
 
         </div>
+
+    </div>
+
+    <div class="bg-white rounded-lg p-4 shadow-xl text-sm mb-3">
+
+        <span class="flex items-center justify-center text-lg text-gray-700 md:col-span-3 col-span-1 sm:col-span-2 lg:col-span-6">Actores</span>
+
+        <x-table>
+
+            <x-slot name="head">
+                <x-table.heading >Nombre / Razón social</x-table.heading>
+                <x-table.heading >Tipo</x-table.heading>
+            </x-slot>
+
+            <x-slot name="body">
+
+                @forelse ($folioReal->actores as $actor)
+
+                    <x-table.row >
+
+                        <x-table.cell>{{ $actor->persona->nombre }} {{ $actor->persona->ap_paterno }} {{ $actor->persona->ap_materno }} {{ $actor->persona->razon_social }}</x-table.cell>
+                        <x-table.cell>{{ $actor->tipo_socio }}</x-table.cell>
+
+                    </x-table.row>
+
+                @empty
+
+                @endforelse
+
+            </x-slot>
+
+            <x-slot name="tfoot"></x-slot>
+
+        </x-table>
 
     </div>
 

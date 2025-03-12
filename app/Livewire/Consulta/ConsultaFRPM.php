@@ -27,11 +27,15 @@ class ConsultaFRPM extends Component
             'tomo',
             'registro',
             'denominacion',
+            'folioReal',
+            'folios_reales'
         ]);
 
     }
 
     public function buscar(){
+
+        $this->reset('folioReal');
 
         if(!$this->distrito && !$this->tomo && !$this->folio && !$this->registro && !$this->denominacion){
 
@@ -68,13 +72,11 @@ class ConsultaFRPM extends Component
 
     public function ver(FolioRealPersona $folio){
 
-        $this->folios_reales = null;
-
         $this->limpiar();
 
         $this->folioReal = $folio;
 
-        $this->folioReal->load('reformas.actores','reformas.movimientoRegistral', 'objetoActual');
+        $this->folioReal->load('reformas.actores.persona','reformas.movimientoRegistral', 'objetoActual', 'actores.persona');
 
     }
 
