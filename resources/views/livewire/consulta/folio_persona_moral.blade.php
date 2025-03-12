@@ -176,19 +176,11 @@
 
         </div>
 
-        <div class="rounded-lg bg-gray-100 py-1 px-2 col-span-3">
+        <div class="rounded-lg bg-gray-100 py-1 px-2 col-span-5">
 
             <strong>Objeto</strong>
 
             <p>{{ $folioReal->objetoActual?->objeto  }}</p>
-
-        </div>
-
-        <div class="rounded-lg bg-gray-100 py-1 px-2 col-span-3">
-
-            <strong>Observaciones</strong>
-
-            <p>{{ $folioReal->observaciones ?? 'N/A' }}</p>
 
         </div>
 
