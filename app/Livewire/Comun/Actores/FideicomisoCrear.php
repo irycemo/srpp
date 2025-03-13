@@ -44,11 +44,7 @@ class FideicomisoCrear extends Component
 
             if($this->persona->getKey() && $persona){
 
-                foreach($this->modelo->actores as $actor){
-
-                    if($actor->persona_id == $persona->id) throw new ActoresException('La persona ya es un actor.');
-
-                }
+                $this->revisarActorExistente($persona->id);
 
                 $this->modelo->actores()->create([
                     'persona_id' => $persona->id,
@@ -60,7 +56,7 @@ class FideicomisoCrear extends Component
 
                 foreach($this->modelo->actores as $actor){
 
-                    if($actor->persona_id == $persona->id) throw new ActoresException('La persona ya es un actor.');
+                    $this->revisarActorExistente($persona->id);
 
                 }
 
@@ -169,6 +165,30 @@ class FideicomisoCrear extends Component
 
             Log::error("Error al actualizar actor de fideicomiso por el usuario: (id: " . auth()->user()->id . ") " . auth()->user()->name . ". " . $th);
             $this->dispatch('mostrarMensaje', ['error', "Ha ocurrido un error."]);
+
+        }
+
+    }
+
+    public function revisarActorExistente($personaId){
+
+        if($this->sub_tipo == 'FIDUCIARIA'){
+
+            $actor = $this->modelo->actores()->where('persona_id', $personaId)->whereIn('tipo_actor', ['FIDUCIARIA', 'FIDEICOMITENTE'])->first();
+
+            if($actor) throw new ActoresException('La persona ya es un actor.');
+
+        }elseif($this->sub_tipo == 'FIDEICOMITENTE'){
+
+            $actor = $this->modelo->actores()->where('persona_id', $personaId)->where('tipo_actor', 'FIDEICOMITENTE')->first();
+
+            if($actor) throw new ActoresException('La persona ya es un fideicomitente.');
+
+        }elseif($this->sub_tipo == 'FIDEICOMISARIO'){
+
+            $actor = $this->modelo->actores()->where('persona_id', $personaId)->whereIn('tipo_actor', ['FIDUCIARIA', 'FIDEICOMITENTE'])->first();
+
+            if($actor) throw new ActoresException('La persona ya es un actor.');
 
         }
 
