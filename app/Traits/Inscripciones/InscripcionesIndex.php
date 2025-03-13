@@ -2,6 +2,7 @@
 
 namespace App\Traits\Inscripciones;
 
+use App\Exceptions\InscripcionesServiceException;
 use Barryvdh\DomPDF\Facade\Pdf;
 use Illuminate\Support\Facades\DB;
 use App\Models\MovimientoRegistral;
@@ -16,6 +17,7 @@ use App\Http\Controllers\Reformas\ReformaController;
 use App\Http\Controllers\Sentencias\SentenciasController;
 use App\Http\Controllers\Subdivisiones\SubdivisionesController;
 use App\Traits\CalcularDiaElaboracionTrait;
+
 
 trait InscripcionesIndex{
 
@@ -545,6 +547,18 @@ trait InscripcionesIndex{
     public function seleccionarMotivo($key){
 
         $this->motivo = $this->motivos[$key];
+
+    }
+
+    public function revisarMovimientosPosteriores(MovimientoRegistral $movimientoRegistral){
+
+        $movimiento = $movimientoRegistral->folioReal
+                ->movimientosRegistrales()
+                ->where('folio', ($movimientoRegistral->folio + 1))
+                ->where('estado', '!=', 'nuevo')
+                ->first();
+
+        if($movimiento) throw new InscripcionesServiceException("El folio real tiene movimientos registrales posteriores ya elaborados.");
 
     }
 

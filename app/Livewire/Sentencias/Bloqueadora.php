@@ -72,20 +72,6 @@ class Bloqueadora extends Component
 
         }
 
-        foreach ($this->sentencia->movimientoRegistral->folioReal->movimientosRegistrales as $movimiento) {
-
-            if($this->sentencia->movimientoRegistral->id == $movimiento->id) continue;
-
-            if($movimiento->estado != 'concluido'){
-
-                $this->dispatch('mostrarMensaje', ['error', "El movimiento registral: " . $this->sentencia->movimientoRegistral->folioReal->folio . '-' . $movimiento->folio . ' no esta concluido.']);
-
-                return;
-
-            }
-
-        }
-
         try {
 
             DB::transaction(function () {

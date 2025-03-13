@@ -162,6 +162,13 @@
 
                                         @endif --}}
 
+                                        <a
+                                            href="{{ route('auditoria') . "?modelo=FolioRealPersonaMoral&modelo_id=" . $folio->id }}"
+                                            class="w-full text-left block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 focus:outline-none focus:bg-gray-100"
+                                            role="menuitem">
+                                            Auditar
+                                        </a>
+
                                     </div>
 
                                 </div>

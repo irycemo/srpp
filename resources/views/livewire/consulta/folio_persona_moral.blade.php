@@ -228,4 +228,29 @@
 
     </div>
 
+    <div class="bg-white p-4 rounded-lg mb-3 flex gap-3 items-center justify-between shadow-lg">
+
+        <div>
+
+            @if($folioReal->documentoEntrada())
+
+                <x-link-blue target="_blank" href="{{ $folioReal->documentoEntrada() }}">Documento de entrada</x-link-blue>
+
+            @endif
+
+        </div>
+
+        <div>
+
+            @if($folioReal->caratula())
+
+                <x-link-blue target="_blank" href="{{ $folioReal->caratula() }}">Caratula</x-link-blue>
+
+            @endif
+
+        </div>
+
+    </div>
+
+
 </div>

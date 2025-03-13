@@ -8,9 +8,11 @@ use Livewire\WithPagination;
 use Livewire\WithFileUploads;
 use App\Constantes\Constantes;
 use App\Traits\ComponentesTrait;
+use Illuminate\Support\Facades\DB;
 use App\Models\MovimientoRegistral;
 use Illuminate\Support\Facades\Log;
 use App\Traits\Inscripciones\InscripcionesIndex;
+use App\Exceptions\InscripcionesServiceException;
 
 class SentenciasIndex extends Component
 {
@@ -20,39 +22,65 @@ class SentenciasIndex extends Component
     use ComponentesTrait;
     use InscripcionesIndex;
 
-    public function corregir(MovimientoRegistral $modelo){
-
-        $movimiento = $modelo->folioreal->movimientosRegistrales()
-                                        ->where('folio', '>', $modelo->folio)
-                                        ->whereNotIn('estado', ['nuevo', 'precalificacion'])
-                                        ->first();
-
-        if($movimiento){
-
-            $this->dispatch('mostrarMensaje', ['warning', "Ya existe al menos un movimiento posterior elaborado no es posible enviar a corrección."]);
-
-            return;
-
-        }
+    public function corregir(MovimientoRegistral $movimientoRegistral){
 
         try {
 
-            $modelo->update([
-                'estado' => 'correccion',
-                'actualizado_por' => auth()->id()
-            ]);
+            $this->revisarMovimientosPosteriores($movimientoRegistral);
 
-            $modelo->audits()->latest()->first()->update(['tags' => 'Cambio estado a corrección']);
+            if($movimientoRegistral->sentencia->acto_contenido == 'CANCELACIÓN DE SENTENCIA'){
 
-            $this->dispatch('mostrarMensaje', ['success', "La información se actualizó con éxito."]);
+                $this->revertirSentenciaCancelatoria($movimientoRegistral);
+
+            }elseif(in_array($movimientoRegistral->sentencia->acto_contenido, ['RESOLUCIÓN', 'DEMANDA', 'PROVIDENCIA PRECAUTORIA'])){
+
+                $this->revertirSentenciaBloqueadora($movimientoRegistral);
+
+            }
+
+            DB::transaction(function () use ($movimientoRegistral){
+
+                $movimientoRegistral->update([
+                    'estado' => 'correccion',
+                    'actualizado_por' => auth()->id()
+                ]);
+
+                $movimientoRegistral->audits()->latest()->first()->update(['tags' => 'Cambio estado a corrección']);
+
+            });
+
+            $this->dispatch('mostrarMensaje', ['success', "La información se guardó con éxito."]);
+
+        } catch (InscripcionesServiceException $ex) {
+
+            $this->dispatch('mostrarMensaje', ['warning', $ex->getMessage()]);
 
         } catch (\Throwable $th) {
-
-            $this->dispatch('mostrarMensaje', ['error', "Hubo un error."]);
-            Log::error("Error al enviar a corrección movimiento registral por el usuario: (id: " . auth()->user()->id . ") " . auth()->user()->name . ". " . $th);
-
+            Log::error("Error al enviar a corrección sentencia por el usuario: (id: " . auth()->user()->id . ") " . auth()->user()->name . ". " . $th);
+            $this->dispatch('mostrarMensaje', ['error', "Ha ocurrido un error."]);
         }
 
+    }
+
+    public function revertirSentenciaCancelatoria(MovimientoRegistral $movimientoRegistral){
+
+        $movimientoCancelado = MovimientoRegistral::where('movimiento_padre', $movimientoRegistral->id)->first();
+
+        $movimientoCancelado->update(['movimiento_padre' => null]);
+
+        $movimientoCancelado->sentencia->update(['estado' => 'activo']);
+
+    }
+
+    public function revertirSentenciaBloqueadora(MovimientoRegistral $movimientoRegistral){
+
+        $movimientoRegistral->folioReal->update(['estado' => 'activo']);
+
+        $movimientoRegistral->folioReal->bloqueos()->where('estado', 'activo')->first()->update([
+            'estado' => 'inactivo',
+            'observaciones_desbloqueo' => 'Se desbloquea folio por corrección en la sentencia con folio: ' . $movimientoRegistral->folio,
+            'actualizado_por' => auth()->id()
+        ]);
     }
 
     public function mount(){

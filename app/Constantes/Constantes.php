@@ -445,7 +445,8 @@ class Constantes{
         'FIADOR',
         'DEMANDADO',
         'CONSENTIMIENTO CONYUGAL',
-        'OBLIGADO SOLIDARIO Y AVAL'
+        'OBLIGADO SOLIDARIO Y AVAL',
+        'AVAL HIPOTECARIO'
     ];
 
     const ACTORES_FIDEICOMISO = [

@@ -8,8 +8,11 @@ use Livewire\WithPagination;
 use Livewire\WithFileUploads;
 use App\Constantes\Constantes;
 use App\Traits\ComponentesTrait;
+use Illuminate\Support\Facades\DB;
 use App\Models\MovimientoRegistral;
+use Illuminate\Support\Facades\Log;
 use App\Traits\Inscripciones\InscripcionesIndex;
+use App\Exceptions\InscripcionesServiceException;
 
 class GravamenIndex extends Component
 {
@@ -18,6 +21,36 @@ class GravamenIndex extends Component
     use WithFileUploads;
     use ComponentesTrait;
     use InscripcionesIndex;
+
+    public function corregir(MovimientoRegistral $movimientoRegistral){
+
+        try {
+
+            $this->revisarMovimientosPosteriores($movimientoRegistral);
+
+            DB::transaction(function () use ($movimientoRegistral){
+
+                $movimientoRegistral->update([
+                    'estado' => 'correccion',
+                    'actualizado_por' => auth()->id()
+                ]);
+
+                $movimientoRegistral->audits()->latest()->first()->update(['tags' => 'Cambio estado a corrección']);
+
+            });
+
+            $this->dispatch('mostrarMensaje', ['success', "La información se guardó con éxito."]);
+
+        } catch (InscripcionesServiceException $ex) {
+
+            $this->dispatch('mostrarMensaje', ['warning', $ex->getMessage()]);
+
+        }catch (\Throwable $th) {
+            Log::error("Error al enviar a corrección gravamen por el usuario: (id: " . auth()->user()->id . ") " . auth()->user()->name . ". " . $th);
+            $this->dispatch('mostrarMensaje', ['error', "Ha ocurrido un error."]);
+        }
+
+    }
 
     public function mount(){
 

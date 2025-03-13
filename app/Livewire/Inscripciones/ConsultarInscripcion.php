@@ -33,6 +33,8 @@ class ConsultarInscripcion extends Component
     public $motivo;
 
     public $movimientoRegistral;
+    public $modelo;
+    public $modeloId;
 
     public function abrirModalRechazar(MovimientoRegistral $modelo){
 
@@ -133,6 +135,40 @@ class ConsultarInscripcion extends Component
         if($this->movimientoRegistral->certificacion){
 
             $this->dispatch('mostrarMensaje', ['error', "El trámite no es una inscripción."]);
+
+        }
+
+        if($this->movimientoRegistral->inscripcionPropiedad){
+
+            $this->modelo = 'Propiedad';
+            $this->modeloId = $this->movimientoRegistral->inscripcionPropiedad->id;
+
+        }elseif($this->movimientoRegistral->fideicomiso){
+            $this->modelo = 'Fideicomiso';
+            $this->modeloId = $this->movimientoRegistral->fideicomiso->id;
+
+
+        }elseif($this->movimientoRegistral->cancelacion){
+            $this->modelo = 'Cancelacion';
+            $this->modeloId = $this->movimientoRegistral->cancelacion->id;
+
+
+        }elseif($this->movimientoRegistral->gravamen){
+            $this->modelo = 'Gravamen';
+            $this->modeloId = $this->movimientoRegistral->gravamen->id;
+
+
+        }elseif($this->movimientoRegistral->sentencia){
+            $this->modelo = 'Sentencia';
+            $this->modeloId = $this->movimientoRegistral->sentencia->id;
+
+        }elseif($this->movimientoRegistral->vario){
+            $this->modelo = 'Vario';
+            $this->modeloId = $this->movimientoRegistral->vario->id;
+
+        }elseif($this->movimientoRegistral->reformaMoral){
+            $this->modelo = 'Reforma';
+            $this->modeloId = $this->movimientoRegistral->reformaMoral->id;
 
         }
 

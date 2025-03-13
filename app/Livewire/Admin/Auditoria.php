@@ -26,18 +26,20 @@ class Auditoria extends Component
     public $oldValues;
     public $newValues;
     public $modelos = [
-        'App\Models\User',
-        'App\Models\MovimientoRegistral',
-        'App\Models\Certificacion',
-        'App\Models\Rol',
-        'App\Models\Permiso',
-        'App\Models\Propiedadold',
-        'App\Models\FolioReal',
-        'App\Models\Gravamen',
-        'App\Models\Propiedad',
-        'App\Models\Cancelacion',
-        'App\Models\Sentencia',
-        'App\Models\Vario',
+        'User' => 'App\Models\User',
+        'MovimientoRegistral' => 'App\Models\MovimientoRegistral',
+        'Certificacion' => 'App\Models\Certificacion',
+        'Rol' => 'App\Models\Rol',
+        'Permiso' => 'App\Models\Permiso',
+        'Propiedadold' => 'App\Models\Propiedadold',
+        'FolioReal' => 'App\Models\FolioReal',
+        'FolioRealPersonaMoral' => 'App\Models\FolioRealPersona',
+        'Gravamen' => 'App\Models\Gravamen',
+        'Propiedad' => 'App\Models\Propiedad',
+        'Cancelacion' => 'App\Models\Cancelacion',
+        'Sentencia' => 'App\Models\Sentencia',
+        'Vario' => 'App\Models\Vario',
+        'Reforma' => 'App\Models\ReformaMoral',
     ];
 
     public function ver(Audit $audit){
@@ -61,6 +63,10 @@ class Auditoria extends Component
     public function mount(){
 
         $this->usuarios = User::orderBy('name')->get();
+
+        if(request()->query('modelo')) $this->modelo = $this->modelos[request()->query('modelo')];
+
+        $this->modelo_id = request()->query('modelo_id');
 
     }
 

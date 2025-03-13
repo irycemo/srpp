@@ -23,6 +23,7 @@ trait RecuperarPropietariosTrait{
 
             $movimiento = $movimientoRegistral->folioReal->movimientosRegistrales()->where('folio', $folio)->first();
 
+
             if($movimiento->firmaElectronica){
 
                 $propietarios = $this->recuperarPropietarios($movimiento->firmaElectronica);

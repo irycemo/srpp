@@ -24,9 +24,9 @@
 
                     <option value="" selected>Seleccione un área</option>
 
-                    @foreach ($modelos as $item)
+                    @foreach ($modelos as $key => $item)
 
-                        <option value="{{ $item }}">{{ Str::substr($item, 11) }}</option>
+                        <option value="{{ $item }}">{{ $key }}</option>
 
                     @endforeach
 

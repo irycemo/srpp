@@ -8,8 +8,12 @@ use Livewire\WithPagination;
 use Livewire\WithFileUploads;
 use App\Constantes\Constantes;
 use App\Traits\ComponentesTrait;
+use Illuminate\Support\Facades\DB;
 use App\Models\MovimientoRegistral;
+use Illuminate\Support\Facades\Log;
 use App\Traits\Inscripciones\InscripcionesIndex;
+use App\Exceptions\InscripcionesServiceException;
+use App\Traits\Inscripciones\RecuperarPropietariosTrait;
 
 class VariosIndex extends Component
 {
@@ -18,6 +22,77 @@ class VariosIndex extends Component
     use WithFileUploads;
     use ComponentesTrait;
     use InscripcionesIndex;
+    use RecuperarPropietariosTrait;
+
+    public function corregir(MovimientoRegistral $movimientoRegistral){
+
+        try {
+
+            $this->revisarMovimientosPosteriores($movimientoRegistral);
+
+            if(in_array($movimientoRegistral->vario->acto_contenido, ['DONACIÓN / VENTA DE USUFRUCTO', 'CONSOLIDACIÓN DEL USUFRUCTO', 'ACLARACIÓN ADMINISTRATIVA', 'ESCRITURA ACLARATORIA'])){
+
+                $this->obtenerMovimientoConPropietarios($movimientoRegistral);
+
+            }elseif($movimientoRegistral->vario->acto_contenido == 'PRIMER AVISO PREVENTIVO'){
+
+                $this->revertirPrimerAvisoPreventivo($movimientoRegistral);
+
+            }
+
+            DB::transaction(function () use ($movimientoRegistral){
+
+                $movimientoRegistral->update([
+                    'estado' => 'correccion',
+                    'actualizado_por' => auth()->id()
+                ]);
+
+                $movimientoRegistral->audits()->latest()->first()->update(['tags' => 'Cambio estado a corrección']);
+
+            });
+
+            $this->dispatch('mostrarMensaje', ['success', "La información se guardó con éxito."]);
+
+        } catch (InscripcionesServiceException $ex) {
+
+            $this->dispatch('mostrarMensaje', ['warning', $ex->getMessage()]);
+
+        } catch (\Throwable $th) {
+            Log::error("Error al enviar a corrección varios por el usuario: (id: " . auth()->user()->id . ") " . auth()->user()->name . ". " . $th);
+            $this->dispatch('mostrarMensaje', ['error', "Ha ocurrido un error."]);
+        }
+
+    }
+
+    public function revertirPrimerAvisoPreventivo(MovimientoRegistral $movimientoRegistral){
+
+        $movimientoCertificadoGravamen = MovimientoRegistral::where('movimiento_padre', $movimientoRegistral->id)->first();
+
+        $this->revisarMovimientosPosteriores($movimientoCertificadoGravamen);
+
+        $movimientoCertificadoGravamen->certificacion->delete();
+
+        $movimientoCertificadoGravamen->firmasElectronicas?->each->delete();
+
+        foreach($movimientoCertificadoGravamen->archivos as $archivo){
+
+            if($archivo->descripcion == 'caratula'){
+
+                unlink('caratulas/' . $archivo->url);
+
+            }elseif($archivo->descripcion == 'documento_entrada'){
+
+                unlink('documento_entrada/' . $archivo->url);
+
+            }
+
+            $archivo->delete();
+
+        }
+
+        $movimientoCertificadoGravamen->delete();
+
+    }
 
     public function mount(){
 

@@ -152,6 +152,30 @@ class Cancelatoria extends Component
 
     }
 
+    public function finalizar(){
+
+        $this->validate();
+
+        if(!$this->sentencia->movimientoRegistral->documentoEntrada()){
+
+            $this->dispatch('mostrarMensaje', ['error', "Debe subir el documento de entrada."]);
+
+            return;
+
+        }
+
+        if(!$this->movimientoCancelar){
+
+            $this->dispatch('mostrarMensaje', ['error', "Debe ingresar el movimiento a cancelar."]);
+
+            return;
+
+        }
+
+        $this->modalContraseña = true;
+
+    }
+
     public function mount(){
 
         if(!$this->sentencia->movimientoRegistral->documentoEntrada()){

@@ -145,54 +145,6 @@ class GravamenInscripcion extends Component
                 $this->gravamen->actualizado_por = auth()->id();
                 $this->gravamen->save();
 
-                if($this->gravamen->acto_contenido === 'DIVISIÓN DE HIPOTECA'){
-
-                    foreach($this->folios_reales as $folio){
-
-                        $movimiento = $folio->movimientosRegistrales()->create([
-                            'estado' => 'concluido',
-                            'folio' => FolioReal::find($this->gravamen->movimientoRegistral->folio_real)->ultimoFolio() + 1,
-                            'folio_real' => $this->gravamen->movimientoRegistral->folio_real,
-                            'fecha_prelacion' => $this->gravamen->movimientoRegistral->fecha_prelacion,
-                            'fecha_entrega' => $this->gravamen->movimientoRegistral->fecha_entrega,
-                            'fecha_pago' => $this->gravamen->movimientoRegistral->fecha_pago,
-                            'tipo_servicio' => $this->gravamen->movimientoRegistral->tipo_servicio,
-                            'solicitante' => $this->gravamen->movimientoRegistral->solicitante,
-                            'seccion' => $this->gravamen->movimientoRegistral->seccion,
-                            'año' => $this->gravamen->movimientoRegistral->año,
-                            'tramite' => $this->gravamen->movimientoRegistral->tramite,
-                            'usuario' => $this->gravamen->movimientoRegistral->usuario,
-                            'distrito' => $this->gravamen->movimientoRegistral->getRawOriginal('distrito'),
-                            'tipo_documento' => $this->gravamen->movimientoRegistral->tipo_documento,
-                            'numero_documento' => $this->gravamen->movimientoRegistral->numero_documento,
-                            'numero_propiedad' => $this->gravamen->movimientoRegistral->numero_propiedad,
-                            'autoridad_cargo' => $this->gravamen->movimientoRegistral->autoridad_cargo,
-                            'autoridad_numero' => $this->gravamen->movimientoRegistral->autoridad_numero,
-                            'fecha_emision' => $this->gravamen->movimientoRegistral->fecha_emision,
-                            'fecha_inscripcion' => $this->gravamen->movimientoRegistral->fecha_inscripcion,
-                            'procedencia' => $this->gravamen->movimientoRegistral->procedencia,
-                            'numero_oficio' => $this->gravamen->movimientoRegistral->numero_oficio,
-                            'folio_real' => $this->gravamen->movimientoRegistral->folio_real,
-                            'monto' => $this->gravamen->movimientoRegistral->monto,
-                            'usuario_asignado' => (new AsignacionService())->obtenerUltimoUsuarioConAsignacion($this->obtenerUsuarios()),
-                            'usuario_supervisor' => $this->obtenerSupervisor(),
-                            'movimiento_padre' => $this->gravamen->movimientoRegistral->id
-                        ]);
-
-                        $movimiento->gravamen()->create([
-                            'servicio' => 'DL66',
-                            'fecha_inscripcion' => now(),
-                            'estado' => 'activo',
-                            'acto_contenido' => 'HIPOTECA',
-                            'valor_gravamen' => $this->gravamen->valor_gravamen / count($this->folios_reales),
-                            'divisa' => $this->gravamen->divisa,
-                            'observaciones' => 'Trámite generado por división de hipoteca ' . $this->gravamen->movimientoRegistral->año . '-' . $this->gravamen->movimientoRegistral->tramite . '-' . $this->gravamen->movimientoRegistral->usuario
-                        ]);
-
-                    }
-
-                }
-
                 $this->gravamen->movimientoRegistral->update(['estado' => 'elaborado', 'actualizado_por' => auth()->id()]);
 
                 $this->gravamen->movimientoRegistral->audits()->latest()->first()->update(['tags' => 'Elaboró inscripción de gravamen']);

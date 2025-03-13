@@ -59,9 +59,6 @@ class FolioRealController extends Controller
                                         ->when(isset($validated['distrito']), function($q) use($validated){
                                             $q->where('distrito_antecedente', $validated['distrito']);
                                         })
-                                        /* ->when(isset($validated['seccion']), function($q) use($validated){
-                                            $q->where('seccion_antecedente', $validated['seccion']);
-                                        }) */
                                         ->when(isset($validated['numero_propiedad']), function($q) use($validated){
                                             $q->where('numero_propiedad_antecedente', $validated['numero_propiedad']);
                                         })
@@ -90,8 +87,6 @@ class FolioRealController extends Controller
             }
 
             if($folio_real){
-
-                return (new FolioRealResource($folio_real))->response()->setStatusCode(200);
 
                 if(in_array($folio_real->estado, ['bloqueado', 'centinela',' inactivo'])){
 

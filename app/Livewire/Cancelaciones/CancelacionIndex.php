@@ -12,6 +12,7 @@ use Illuminate\Support\Facades\DB;
 use App\Models\MovimientoRegistral;
 use Illuminate\Support\Facades\Log;
 use App\Traits\Inscripciones\InscripcionesIndex;
+use App\Exceptions\InscripcionesServiceException;
 
 class CancelacionIndex extends Component
 {
@@ -26,21 +27,9 @@ class CancelacionIndex extends Component
         if($this->modelo_editar->isNot($movimientoRegistral))
             $this->modelo_editar = $movimientoRegistral;
 
-        $movimiento = $movimientoRegistral->folioReal
-                                            ->movimientosRegistrales()
-                                            ->where('folio', ($movimientoRegistral->folio + 1))
-                                            ->where('estado', '!=', 'nuevo')
-                                            ->first();
-
-        if($movimiento){
-
-            $this->dispatch('mostrarMensaje', ['warning', "El folio real tiene movimientos registrales posteriores elaborados."]);
-
-            return true;
-
-        }
-
         try {
+
+            $this->revisarMovimientosPosteriores($movimientoRegistral);
 
             DB::transaction(function () use ($movimientoRegistral){
 
@@ -57,9 +46,15 @@ class CancelacionIndex extends Component
 
             $this->dispatch('mostrarMensaje', ['success', "La información se guardó con éxito."]);
 
+        } catch (InscripcionesServiceException $ex) {
+
+            $this->dispatch('mostrarMensaje', ['warning', $ex->getMessage()]);
+
         } catch (\Throwable $th) {
-            Log::error("Error al enviar a corrección cancelación de propiedad por el usuario: (id: " . auth()->user()->id . ") " . auth()->user()->name . ". " . $th);
+
+            Log::error("Error al enviar a corrección cancelación por el usuario: (id: " . auth()->user()->id . ") " . auth()->user()->name . ". " . $th);
             $this->dispatch('mostrarMensaje', ['error', "Ha ocurrido un error."]);
+
         }
 
     }
@@ -70,7 +65,15 @@ class CancelacionIndex extends Component
 
         $observaciones = str_replace('Cancelado mediante movimiento registral: ' . $this->modelo_editar->folioReal->folio . '-' . $this->modelo_editar->folio, '', $observaciones);
 
-        $monto = json_decode($gravamen->movimientoRegistral->firmaElectronica->cadena_original)->gravamen->valor_gravamen;
+        if($gravamen->movimientoRegistral->estado == 'pase_folio'){
+
+            $monto = $gravamen->valor_gravamen;
+
+        }else{
+
+            $monto = json_decode($gravamen->movimientoRegistral->firmaElectronica->cadena_original)->gravamen->valor_gravamen;
+
+        }
 
         $gravamen->update([
             'observaciones' => $observaciones,

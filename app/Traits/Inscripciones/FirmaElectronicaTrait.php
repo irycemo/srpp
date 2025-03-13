@@ -853,7 +853,7 @@ trait FirmaElectronicaTrait{
 
         }
 
-        if($movimiento->archivos->where('descripcion', 'caratula')->count()){
+        if($movimiento->archivos()->where('descripcion', 'caratula')->count()){
 
             foreach($movimiento->archivos as $archivo){
 
@@ -865,7 +865,7 @@ trait FirmaElectronicaTrait{
 
             }
 
-            $movimiento->archivos->where('descripcion', 'caratula')->first()->delete();
+            $movimiento->archivos()->where('descripcion', 'caratula')->first()->delete();
 
         }
 
