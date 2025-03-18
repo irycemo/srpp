@@ -85,7 +85,7 @@ $pondLocalizations = __('livewire-filepond::filepond');
                   await @this.remove('{{ $wireModelAttribute }}', file.name);
                   load();
                   $dispatch('filepond-upload-file-removed', {'attribute' : '{{ $wireModelAttribute }}'});
-              },
+                },
           },
           required: @js($required),
           disabled: @js($disabled),

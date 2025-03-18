@@ -48,8 +48,8 @@
                 labelMaxFileSizeExceeded: 'El archivo es demasiado grande',
                 labelMaxTotalFileSizeExceeded: 'El archivo es demasiado grande',
                 labelMaxFileSize: 'Tamaño máximo {filesize}',
-                maxFileSize: '100MB',
-                maxTotalFileSize: '100MB'
+                maxFileSize: '150MB',
+                maxTotalFileSize: '150MB'
             });
 
             this.addEventListener('removeFiles', e => {

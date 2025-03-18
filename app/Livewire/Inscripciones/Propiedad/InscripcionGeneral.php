@@ -5,7 +5,6 @@ namespace App\Livewire\Inscripciones\Propiedad;
 use Exception;
 use App\Models\Actor;
 use Livewire\Component;
-use Livewire\WithFileUploads;
 use App\Constantes\Constantes;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
@@ -14,13 +13,14 @@ use Spatie\LivewireFilepond\WithFilePond;
 use App\Traits\Inscripciones\ColindanciasTrait;
 use App\Traits\Inscripciones\Propiedad\PropiedadTrait;
 use App\Http\Controllers\InscripcionesPropiedad\PropiedadController;
+use Livewire\WithFileUploads;
 
 class InscripcionGeneral extends Component
 {
 
     use PropiedadTrait;
     use WithFileUploads;
-    use WithFilePond;
+    /* use WithFilePond; */
     use ColindanciasTrait;
 
     public $transmitentes = [];
@@ -89,7 +89,7 @@ class InscripcionGeneral extends Component
             'inscripcion.manzana_fraccionador' => 'nullable',
             'inscripcion.etapa_fraccionador' => 'nullable',
             'inscripcion.clave_edificio' => 'nullable',
-            'documento' => 'nullable|mimes:pdf|max:100000'
+            'documento' => 'nullable|mimes:pdf|max:153600'
          ];
     }
 

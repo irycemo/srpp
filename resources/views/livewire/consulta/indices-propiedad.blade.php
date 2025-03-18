@@ -4,6 +4,44 @@
 
     <div class="bg-white p-4 rounded-lg mb-5 shadow-xl">
 
+        <div class="flex gap-3 justify-center items-center lg:w-1/2 mx-auto mb-4">
+
+            <x-input-group for="nombre" label="Nombre" :error="$errors->first('nombre')" class="w-full">
+
+                <x-input-text id="nombre" wire:model.live.debounce="nombre" />
+
+            </x-input-group>
+
+            <x-input-group for="ap_paterno" label="Apellido paterno" :error="$errors->first('ap_paterno')" class="w-full">
+
+                <x-input-text id="ap_paterno" wire:model.live.debounce="ap_paterno" />
+
+            </x-input-group>
+
+            <x-input-group for="ap_materno" label="Apellido materno" :error="$errors->first('ap_materno')" class="w-full">
+
+                <x-input-text id="ap_materno" wire:model.live.debounce="ap_materno" />
+
+            </x-input-group>
+
+        </div>
+
+        <div class="felx justify-center mb-5">
+
+            <x-button-blue
+                wire:click="buscarPorPropietario"
+                wire:target="buscarPorPropietario"
+                wire:loading.attr="disabled"
+                class="mx-auto">
+
+                <img wire:loading wire:target="buscarPorPropietario" class="h-4 mr-1" src="{{ asset('storage/img/loading3.svg') }}" alt="Loading">
+
+                Buscar por propietario
+            </x-button-blue>
+
+        </div>
+
+
         <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-3 mb-3 col-span-2 rounded-lg w-full lg:w-1/2 mx-auto">
 
             <x-input-group for="distrito" label="Distrito" :error="$errors->first('distrito')" class="w-full">
@@ -58,6 +96,8 @@
 
     </div>
 
+    {{ count($propiedades) }}
+
     <div class="overflow-x-auto rounded-lg shadow-xl border-t-2 border-t-gray-500">
 
         <x-table>
@@ -76,15 +116,15 @@
 
             <x-slot name="body">
 
-                @forelse ($propiedades as $propiedad)
+                @forelse ($propiedades as $item)
 
-                    <x-table.row wire:loading.class.delaylongest="opacity-50" wire:key="row-{{$propiedad->id }}">
+                    <x-table.row wire:loading.class.delaylongest="opacity-50" wire:key="row-{{$item->id }}">
 
                         <x-table.cell>
 
                             <span class="lg:hidden absolute top-0 left-0 bg-blue-300 px-2 py-1 text-xs text-white font-bold uppercase rounded-br-xl">Distrito</span>
 
-                            {{$propiedad->distrito }}
+                            {{$item->distrito }}
 
                         </x-table.cell>
 
@@ -92,7 +132,7 @@
 
                             <span class="lg:hidden absolute top-0 left-0 bg-blue-300 px-2 py-1 text-xs text-white font-bold uppercase rounded-br-xl">Tomo</span>
 
-                            {{$propiedad->tomo }}
+                            {{$item->tomo }}
 
                         </x-table.cell>
 
@@ -100,7 +140,7 @@
 
                             <span class="lg:hidden absolute top-0 left-0 bg-blue-300 px-2 py-1 text-xs text-white font-bold uppercase rounded-br-xl">Registro</span>
 
-                            {{$propiedad->registro }}
+                            {{$item->registro }}
 
                         </x-table.cell>
 
@@ -108,7 +148,7 @@
 
                             <span class="lg:hidden absolute top-0 left-0 bg-blue-300 px-2 py-1 text-xs text-white font-bold uppercase rounded-br-xl"># Propiedad</span>
 
-                            {{$propiedad->noprop }}
+                            {{$item->noprop }}
 
                         </x-table.cell>
 
@@ -116,7 +156,7 @@
 
                             <span class="lg:hidden absolute top-0 left-0 bg-blue-300 px-2 py-1 text-xs text-white font-bold uppercase rounded-br-xl">Propietarios</span>
 
-                            {{ Str::limit($propiedad->propietarios, 50) }}
+                            {{ Str::limit($item->propietarios, 50) }}
 
                         </x-table.cell>
 
@@ -124,7 +164,7 @@
 
                             <span class="lg:hidden absolute top-0 left-0 bg-blue-300 px-2 py-1 text-xs text-white font-bold uppercase rounded-br-xl">Ubicación</span>
 
-                            {{ Str::limit($propiedad->ubicacion, 70) }}
+                            {{ Str::limit($item->ubicacion, 70) }}
 
                         </x-table.cell>
 
@@ -135,8 +175,8 @@
                             <div class="flex justify-center lg:justify-start gap-2">
 
                                 <x-button-green
-                                    wire:click="abrirModalVer({{$propiedad->id }})"
-                                    wire:target="abrirModalVer({{$propiedad->id }})"
+                                    wire:click="abrirModalVer({{$item->id }})"
+                                    wire:target="abrirModalVer({{$item->id }})"
                                     wire:loading.attr="disabled"
                                 >
                                     <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-4 h-4 mr-2">
@@ -183,7 +223,7 @@
 
     <x-dialog-modal wire:model="modal" maxWidth="md">
 
-        <x-slot name="title">Propiedad</x-slot>
+        <x-slot name="title">Propiedad @if($folioReal) Folio Real I ({{ $folioReal->folio }}) @endif</x-slot>
 
         <x-slot name="content">
 
@@ -342,6 +382,18 @@
                         <strong>Vendedores</strong>
 
                         <p>{{ $propiedad->vendedores }}</p>
+
+                    </div>
+
+                </div>
+
+                <div class="flex gap-3">
+
+                    <div class="rounded-lg bg-gray-100 py-1 px-2">
+
+                        <strong>Comentarios</strong>
+
+                        <p>{{ $propiedad->comentarios }}</p>
 
                     </div>
 

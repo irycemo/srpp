@@ -181,7 +181,7 @@ trait PropiedadTrait{
 
     public function guardarDocumento(){
 
-        $this->validate(['documento' => 'required']);
+        $this->validate(['documento' => 'nullable|mimes:pdf|max:153600']);
 
         try {
 
