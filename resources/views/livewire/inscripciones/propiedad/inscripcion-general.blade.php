@@ -1407,7 +1407,7 @@
 
         <x-slot name="content">
 
-            {{-- <x-filepond::upload wire:model="documento" :accepted-file-types="['application/pdf']" maxFileSize="150MB"/> --}}
+            {{-- <x-filepond::upload wire:model="documento" :accepted-file-types="['application/pdf']"/> --}}
 
             <x-filepond wire:model.live="documento" accept="['application/pdf']"/>
 
