@@ -185,7 +185,7 @@
                     la siguiente propiedad.
                 </p>
 
-                <p style="text-align: center"><strong>FOLIO REAL:</strong> {{ $folioReal->folio }}</p>
+                <p style="text-align: center"><strong>FOLIO REAL - I:</strong> {{ $folioReal->folio }}</p>
 
                 <p style="text-align: center"><strong>SECCIÓN:</strong> {{ $folioReal->seccion }}; <strong>DISTRITO:</strong> {{ $folioReal->distrito}}; <strong>TOMO:</strong> {{ $folioReal->tomo }}, <strong>REGISTRO:</strong> {{ $folioReal->registro }}, <strong>NÚMERO DE PROPIEDAD:</strong> {{ $folioReal->numero_propiedad }}</p>
 

@@ -180,7 +180,7 @@
 
         <div class="informacion">
 
-            <p style="text-align: center; margin:0;"><strong>FOLIO REAL:</strong> {{ $folioReal->folio }}</p>
+            <p style="text-align: center; margin:0;"><strong>FOLIO REAL - I:</strong> {{ $folioReal->folio }}</p>
 
             <p class="separador">Antecedente(s)</p>
 
