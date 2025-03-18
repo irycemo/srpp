@@ -306,13 +306,13 @@ class Asiganacion extends Component
 
     public function finalizar(){
 
-        if(!$this->movimientoRegistral?->folioRealPersona?->documentoEntrada()){
+        /* if(!$this->movimientoRegistral?->folioRealPersona?->documentoEntrada()){
 
             $this->dispatch('mostrarMensaje', ['error', "Debe guardar el documento de entrada."]);
 
             return;
 
-        }
+        } */
 
         if(!$this->movimientoRegistral?->folioRealPersona){
 
