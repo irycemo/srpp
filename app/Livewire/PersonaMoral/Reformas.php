@@ -131,9 +131,9 @@ class Reformas extends Component
 
         }
 
-        $this->guardar();
-
         try {
+
+            $this->guardar();
 
             DB::transaction(function () {
 
@@ -141,7 +141,19 @@ class Reformas extends Component
 
                 $this->reformaMoral->movimientoRegistral->update(['estado' => 'elaborado', 'actualizado_por' => auth()->id()]);
 
-                $this->reformaMoral->movimientoRegistral->folioRealPersona->objetos()->where('estado', 'captura')->first()?->update(['estado' => 'activo']);
+                foreach ($this->reformaMoral->movimientoRegistral->folioRealPersona->objetos as $objeto) {
+
+                    if($objeto->estado == 'activo'){
+
+                        $objeto->update(['estado' => 'inactivo']);
+
+                    }elseif($objeto->estado == 'captura'){
+
+                        $objeto->update(['estado' => 'activo']);
+
+                    }
+
+                }
 
                 (new ReformaController())->caratula($this->reformaMoral);
 
