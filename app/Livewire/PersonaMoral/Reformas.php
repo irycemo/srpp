@@ -141,15 +141,19 @@ class Reformas extends Component
 
                 $this->reformaMoral->movimientoRegistral->update(['estado' => 'elaborado', 'actualizado_por' => auth()->id()]);
 
-                foreach ($this->reformaMoral->movimientoRegistral->folioRealPersona->objetos as $objeto) {
+                if($this->nuevo_objeto){
 
-                    if($objeto->estado == 'activo'){
+                    foreach ($this->reformaMoral->movimientoRegistral->folioRealPersona->objetos as $objeto) {
 
-                        $objeto->update(['estado' => 'inactivo']);
+                        if($objeto->estado == 'activo'){
 
-                    }elseif($objeto->estado == 'captura'){
+                            $objeto->update(['estado' => 'inactivo']);
 
-                        $objeto->update(['estado' => 'activo']);
+                        }elseif($objeto->estado == 'captura'){
+
+                            $objeto->update(['estado' => 'activo']);
+
+                        }
 
                     }
 

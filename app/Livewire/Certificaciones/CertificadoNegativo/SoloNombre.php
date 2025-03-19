@@ -2,12 +2,7 @@
 
 namespace App\Livewire\Certificaciones\CertificadoNegativo;
 
-use App\Models\Actor;
-use App\Models\Predio;
-use App\Models\Persona;
 use Livewire\Component;
-use App\Models\Personaold;
-use App\Models\Propiedadold;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
 use App\Traits\Inscripciones\ColindanciasTrait;
@@ -21,88 +16,27 @@ class SoloNombre extends Component
 
     protected function rules(){
         return [
-            'nombre' => ['required', 'string'],
-            'ap_paterno' => ['required', 'string'],
-            'ap_materno' => ['required', 'string'],
-            'temporalidad' => ['nullable', 'numeric']
+            'propietarios' => ['required', 'array', 'min:' . $this->certificacion->numero_paginas],
+            'propietarios.*' => ['required'],
+            'propietarios.*.nombre' => ['required', 'string'],
+            'propietarios.*.ap_paterno' => ['required', 'string'],
+            'propietarios.*.ap_materno' => ['required', 'string'],
+            'temporalidad' => ['nullable', 'numeric'],
          ];
     }
 
-    public function buscarPropietarios(){
+    protected $validationAttributes  = [
+        'propietarios.*.nombre' => 'nombre',
+        'propietarios.*.ap_paterno' => 'apellido paterno',
+        'propietarios.*.ap_materno' => 'apellido materno',
+    ];
 
-        $this->validate();
-
-        $this->reset(['predios', 'prediosOld', 'flagGenerar']);
-
-        $persona = Persona::where('tipo', 'FISICA')
-                            ->where('nombre', $this->nombre)
-                            ->where('ap_paterno', $this->ap_paterno)
-                            ->where('ap_materno', $this->ap_materno)
-                            ->first();
-
-        if(!$persona){
-
-            $propietariosOld = Personaold::where(function($q){
-                            $q->where('nombre2', 'LIKE', '%' . 'nombre' . '%')
-                                ->orWhere('nombre1', 'LIKE', '%' . 'nombre' . '%');
-                        })
-                        ->where('paterno', 'ap_paterno')
-                        ->where('materno', 'ap_materno')
-                        ->get();
-
-            foreach ($propietariosOld as $propietario) {
-
-                $predio = Propiedadold::where('distrito', $propietario->distrito)
-                                        ->where('tomo', $propietario->tomo)
-                                        ->where('registro', $propietario->registro)
-                                        ->where('noprop', $propietario->noprop)
-                                        ->where('status', '!=', 'V')
-                                        ->first();
-
-                array_push($this->prediosOld, $predio);
-
-            }
-
-            if(count($this->prediosOld) > 0){
-
-                $this->dispatch('mostrarMensaje', ['warning', "La persona es propietaria de al menos un predio."]);
-
-            }else{
-
-                $this->dispatch('mostrarMensaje', ['success', "No se encontraron resultados con la información ingresada."]);
-
-                $this->flagGenerar = true;
-
-            }
-
-        }else{
-
-            $propietarios = Actor::where('persona_id', $persona->id)->where('tipo_actor', 'propietario')->get();
-
-            if($propietarios->count()){
-
-                foreach ($propietarios as $propietario) {
-
-                    $predio = Predio::wherekey($propietario->actorable_id)
-                                        ->whereHas('folioReal', function($q){
-                                            $q->where('estado', 'activo');
-                                        })
-                                        ->first();
-
-                    if($predio) array_push($this->predios, $predio);
-
-                }
-
-                if(count($this->predios) > 0){
-
-                    $this->dispatch('mostrarMensaje', ['warning', "La persona es propietaria de al menos un predio."]);
-
-                }
-
-            }
-
-        }
-
+    public function messages(): array
+    {
+        return [
+            'propietarios.required' => 'Debe ingresar todos los campos',
+            'propietarios.min' => 'Debe ingresar todos los campos'
+        ];
     }
 
     public function generarCertificado(){
@@ -132,7 +66,7 @@ class SoloNombre extends Component
                 $this->certificacion->observaciones_certificado = $this->observaciones;
                 $this->certificacion->save();
 
-                $this->procesarPersona($this->nombre, $this->ap_paterno, $this->ap_materno);
+                $this->procesarPersonas($this->propietarios);
 
             });
 
