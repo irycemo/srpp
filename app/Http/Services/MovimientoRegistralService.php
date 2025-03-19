@@ -162,7 +162,7 @@ class MovimientoRegistralService{
 
                 if(isset($data['folio_real'])){
 
-                    if($data['folio_real'] != $movimiento_registral->folioReal->folio){
+                    if($data['folio_real'] != $movimiento_registral->folioReal?->folio){
 
                         $this->buscarNuevoFolioReal($data, $movimiento_registral);
 
