@@ -212,6 +212,18 @@ class MovimientoRegistralService{
 
                 }
 
+                if($movimiento_registral->cancelacion){
+
+                    $movimientoACancelar = $movimiento_registral->folioReal->movimientosRegistrales()->where('folio', $data['asiento_registral'])->first();
+
+                    if($movimientoACancelar->id != $movimiento_registral->cancelacion->gravamen){
+
+                        $movimiento_registral->cancelacion->update(['gravamen' => $movimientoACancelar->id]);
+
+                    }
+
+                }
+
             });
 
         } catch (MovimientoRegistralServiceException $th) {
@@ -736,7 +748,6 @@ class MovimientoRegistralService{
             'autoridad_numero',
             'fecha_emision',
             'procedencia',
-            'asiento_registral',
             'numero_propiedad',
             'tomo',
             'tomo_bis',
