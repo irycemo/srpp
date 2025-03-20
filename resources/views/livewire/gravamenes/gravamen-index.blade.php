@@ -185,13 +185,17 @@
                                                 Imprimir
                                             </button>
 
-                                            <button
-                                                wire:click="corregir({{  $movimiento->id }})"
-                                                wire:loading.attr="disabled"
-                                                class="w-full text-left block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 focus:outline-none focus:bg-gray-100"
-                                                role="menuitem">
-                                                Corregir
-                                            </button>
+                                            @if(!auth()->user()->hasRole(['Regional']))
+
+                                                <button
+                                                    wire:click="corregir({{  $movimiento->id }})"
+                                                    wire:loading.attr="disabled"
+                                                    class="w-full text-left block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 focus:outline-none focus:bg-gray-100"
+                                                    role="menuitem">
+                                                    Corregir
+                                                </button>
+
+                                            @endif
 
                                             <button
                                                 wire:click="abrirModalFinalizar({{ $movimiento->id }})"
@@ -201,7 +205,7 @@
                                                 Finalizar
                                             </button>
 
-                                        @elseif($movimiento->estado == 'finalizado' && auth()->user()->hasRole(['Jefe de departamento inscripciones', 'Supervisor inscripciones', 'Supervisor uruapan', 'Regional']))
+                                        @elseif($movimiento->estado == 'finalizado' && auth()->user()->hasRole(['Jefe de departamento inscripciones', 'Supervisor inscripciones', 'Supervisor uruapan']))
 
                                             <button
                                                 wire:click="imprimir({{ $movimiento->id }})"

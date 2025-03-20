@@ -96,8 +96,6 @@
 
     </div>
 
-    {{ count($propiedades) }}
-
     <div class="overflow-x-auto rounded-lg shadow-xl border-t-2 border-t-gray-500">
 
         <x-table>
