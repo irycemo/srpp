@@ -558,6 +558,9 @@ class PaseFolio extends Component
                                                                 $q->where('name', 'LIKE', '%' . $this->search . '%');
                                                             });
                                                     })
+                                                    ->whereDoesntHave('certificacion', function($q){
+                                                        $q->whereNotIn('servicio', ['DL07', 'DL10']);
+                                                    })
                                                     ->orderBy($this->sort, $this->direction)
                                                     ->paginate($this->pagination);
 
@@ -618,6 +621,9 @@ class PaseFolio extends Component
                                                     })
                                                     ->when(auth()->user()->ubicacion != 'Regional 4', function($q){
                                                         $q->where('distrito', '!=', 2);
+                                                    })
+                                                    ->whereDoesntHave('certificacion', function($q){
+                                                        $q->whereNotIn('servicio', ['DL07', 'DL10']);
                                                     })
                                                     ->orderBy($this->sort, $this->direction)
                                                     ->paginate($this->pagination);
