@@ -20,16 +20,40 @@ class ConsolidacionUsufructo extends Component
     use WithFileUploads;
     use WithFilePond;
 
-    public $porcentaje_propiedad;
-    public $porcentaje_nuda;
-    public $porcentaje_usufructo;
+    public $porcentaje_propiedad = 0;
+    public $porcentaje_nuda = 0;
+    public $porcentaje_usufructo = 0;
 
     protected function rules(){
         return [
             'vario.acto_contenido' => 'required',
             'vario.descripcion' => 'required',
-            'documento' => 'nullable|mimes:pdf|max:100000'
+            'documento' => 'nullable|mimes:pdf|max:100000',
+            'porcentaje_propiedad' => 'required|numeric|min:0',
+            'porcentaje_nuda' => 'required|numeric|min:0',
+            'porcentaje_usufructo' => 'required|numeric|min:0',
+
          ];
+    }
+
+    public function updated($property, $value){
+
+        if(in_array($property, ['porcentaje_nuda', 'porcentaje_usufructo', 'porcentaje_propiedad']) && $value == ''){
+
+            $this->$property = 0;
+
+        }
+
+        if(in_array($property, ['porcentaje_nuda', 'porcentaje_usufructo'])){
+
+            $this->reset('porcentaje_propiedad');
+
+        }elseif($property == 'porcentaje_propiedad'){
+
+            $this->reset(['porcentaje_nuda', 'porcentaje_usufructo']);
+
+        }
+
     }
 
     public function abrirModalEditarPropietario(Actor $actor){
@@ -45,6 +69,8 @@ class ConsolidacionUsufructo extends Component
     }
 
     public function actualizarPorcentajes(){
+
+        $this->validate();
 
         try {
 

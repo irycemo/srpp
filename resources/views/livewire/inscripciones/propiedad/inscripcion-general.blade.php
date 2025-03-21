@@ -757,56 +757,6 @@
 
             </div>
 
-        {{-- @else
-
-            <div class="p-4 bg-white shadow-xl rounded-xl mb-5">
-
-                <div class="mb-3 bg-white rounded-lg p-3">
-
-                    <span class="flex items-center justify-center text-lg text-gray-700 mb-5">Propietarios</span>
-
-                    <x-table>
-
-                        <x-slot name="head">
-                            <x-table.heading >Nombre / Razón social</x-table.heading>
-                            <x-table.heading >Porcentaje propiedad</x-table.heading>
-                            <x-table.heading >Porcentaje nuda</x-table.heading>
-                            <x-table.heading >Porcentaje usufructo</x-table.heading>
-                            <x-table.heading ></x-table.heading>
-                        </x-slot>
-
-                        <x-slot name="body">
-
-                            @foreach ($inscripcion->movimientoRegistral->folioReal->predio->propietarios() as $propietario)
-
-                                <x-table.row >
-
-                                    <x-table.cell>{{ $propietario->persona->nombre }} {{ $propietario->persona->ap_paterno }} {{ $propietario->persona->ap_materno }} {{ $propietario->persona->razon_social }}</x-table.cell>
-                                    <x-table.cell>{{ $propietario->porcentaje_propiedad }}%</x-table.cell>
-                                    <x-table.cell>{{ $propietario->porcentaje_nuda }}%</x-table.cell>
-                                    <x-table.cell>{{ $propietario->porcentaje_usufructo }}%</x-table.cell>
-                                    <x-table.cell>
-                                        <div class="flex items-center gap-3">
-
-                                        </div>
-                                    </x-table.cell>
-
-                                </x-table.row>
-
-                            @endforeach
-
-                        </x-slot>
-
-                        <x-slot name="tfoot"></x-slot>
-
-                    </x-table>
-
-                </div>
-
-            </div>
-
-        @endif --}}
-
     @endif
 
     @if(count($errors) > 0)

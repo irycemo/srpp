@@ -555,7 +555,7 @@ trait InscripcionesIndex{
         $movimiento = $movimientoRegistral->folioReal
                 ->movimientosRegistrales()
                 ->where('folio', ($movimientoRegistral->folio + 1))
-                ->where('estado', '!=', 'nuevo')
+                ->whereNotIn('estado', ['nuevo', 'correccion'])
                 ->first();
 
         if($movimiento) throw new InscripcionesServiceException("El folio real tiene movimientos registrales posteriores ya elaborados.");

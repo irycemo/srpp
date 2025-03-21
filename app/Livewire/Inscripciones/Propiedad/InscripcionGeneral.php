@@ -9,7 +9,6 @@ use App\Constantes\Constantes;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Hash;
-use Spatie\LivewireFilepond\WithFilePond;
 use App\Traits\Inscripciones\ColindanciasTrait;
 use App\Traits\Inscripciones\Propiedad\PropiedadTrait;
 use App\Http\Controllers\InscripcionesPropiedad\PropiedadController;
@@ -20,7 +19,6 @@ class InscripcionGeneral extends Component
 
     use PropiedadTrait;
     use WithFileUploads;
-    /* use WithFilePond; */
     use ColindanciasTrait;
 
     public $transmitentes = [];

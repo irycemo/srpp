@@ -161,19 +161,19 @@
 
                 <x-input-group for="porcentaje_propiedad" label="% Propiedad" :error="$errors->first('porcentaje_propiedad')" class="w-full">
 
-                    <x-input-text id="porcentaje_propiedad" wire:model="porcentaje_propiedad" />
+                    <x-input-text id="porcentaje_propiedad" wire:model.lazy="porcentaje_propiedad" />
 
                 </x-input-group>
 
                 <x-input-group for="porcentaje_nuda" label="% Nuda" :error="$errors->first('porcentaje_nuda')" class="w-full">
 
-                    <x-input-text id="porcentaje_nuda" wire:model="porcentaje_nuda" />
+                    <x-input-text id="porcentaje_nuda" wire:model.lazy="porcentaje_nuda" />
 
                 </x-input-group>
 
                 <x-input-group for="porcentaje_usufructo" label="% Usufructo" :error="$errors->first('porcentaje_usufructo')" class="w-full">
 
-                    <x-input-text id="porcentaje_usufructo" wire:model="porcentaje_usufructo" />
+                    <x-input-text id="porcentaje_usufructo" wire:model.lazy="porcentaje_usufructo" />
 
                 </x-input-group>
 

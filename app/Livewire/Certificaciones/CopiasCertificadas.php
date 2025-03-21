@@ -181,7 +181,7 @@ class CopiasCertificadas extends Component
 
         try {
 
-            DB::transaction(function () use ($modelo){
+            DB::transaction(function (){
 
                 $this->modelo_editar->finalizado_en = now();
 
@@ -200,6 +200,12 @@ class CopiasCertificadas extends Component
                     $this->dispatch('imprimir_documento_oficialia', ['documento' => $this->modelo_editar->id]);
 
                     (new SistemaTramitesService())->finaliarTramite($this->modelo_editar->movimientoRegistral->año, $this->modelo_editar->movimientoRegistral->tramite, $this->modelo_editar->movimientoRegistral->usuario, 'finalizado');
+
+                }elseif(auth()->user()->hasRole(['Jefe de departamento certificaciones'])){
+
+                    $this->dispatch('imprimir_documento_oficialia', ['documento' => $this->modelo_editar->id]);
+
+                    (new SistemaTramitesService())->finaliarTramite($this->modelo_editar->movimientoRegistral->año, $this->modelo_editar->movimientoRegistral->tramite, $this->modelo_editar->movimientoRegistral->usuario, 'concluido');
 
                 }else{
 

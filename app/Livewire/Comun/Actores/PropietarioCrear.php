@@ -179,7 +179,7 @@ class PropietarioCrear extends Component
 
             if($this->persona->getKey() && $persona){
 
-                foreach($this->modelo->actores as $actor){
+                foreach($this->modelo->porpietarios() as $actor){
 
                     if($actor->persona_id == $persona->id) throw new ActoresException('La persona ya es un actor.');
 
@@ -196,7 +196,7 @@ class PropietarioCrear extends Component
 
             }elseif($persona){
 
-                foreach($this->modelo->actores as $actor){
+                foreach($this->modelo->porpietarios() as $actor){
 
                     if($actor->persona_id == $persona->id) throw new ActoresException('La persona ya es un actor.');
 

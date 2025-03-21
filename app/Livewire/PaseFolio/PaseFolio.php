@@ -373,6 +373,19 @@ class PaseFolio extends Component
 
         }
 
+        $mRegsitrales = MovimientoRegistral::where('folio_real', $this->modelo_editar->folio_real)
+                                            ->where('estado', 'precalificacion')
+                                            ->get();
+
+        foreach ($mRegsitrales as $movimiento) {
+
+            $movimiento->update([
+                'estado' => 'nuevo',
+                'folio' => $this->modelo_editar->folioReal->ultimoFolio() + 1
+            ]);
+
+        }
+
     }
 
     public function revisarInscripcionPropiedad(){
