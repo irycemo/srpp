@@ -162,7 +162,7 @@ class CopiasCertificadas extends Component
 
     public function finalizarSupervisor(Certificacion $modelo){
 
-        if(!$modelo->folio_carpeta_copias && !auth()->user()->hasRole(['Certificador Oficialia', 'Certificador Juridico'])){
+        if(!$modelo->folio_carpeta_copias && !auth()->user()->hasRole(['Certificador Oficialia', 'Certificador Juridico','Jefe de departamento certificaciones'])){
 
             $this->dispatch('mostrarMensaje', ['warning', "El trámite no tiene folio de carpeta"]);
 

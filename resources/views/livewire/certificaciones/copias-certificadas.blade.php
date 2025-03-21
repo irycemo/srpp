@@ -271,7 +271,7 @@
 
                                             @if(!$copia->certificacion->folio_carpeta_copias)
 
-                                                @if(auth()->user()->hasRole(['Certificador Juridico']))
+                                                @if(auth()->user()->hasRole(['Certificador Juridico','Jefe de departamento certificaciones']))
 
                                                     <button
                                                         wire:click="finalizarSupervisor({{ $copia->certificacion->id }})"
