@@ -524,7 +524,7 @@ class CopiasCertificadas extends Component
                                                 ->whereHas('certificacion', function($q){
                                                     $q->where('servicio', 'DL13');
                                                 })
-                                                ->whereIn('estado', ['nuevo', 'elaborado'])
+                                                ->whereIn('estado', ['nuevo', 'elaborado','concluido'])
                                                 ->orderBy($this->sort, $this->direction)
                                                 ->paginate($this->pagination);
 
