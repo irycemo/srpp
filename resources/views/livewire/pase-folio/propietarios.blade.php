@@ -150,7 +150,7 @@
 
                         @foreach ($propiedad->representantes() as $representante)
 
-                            <x-table.row wire:key="row-{{ $representantes->id }}">
+                            <x-table.row wire:key="row-{{ $representante->id }}">
 
                                 <x-table.cell>{{ $representante->persona->nombre }} {{ $representante->persona->ap_paterno }} {{ $representante->persona->ap_materno }} {{ $representante->persona->razon_social }}</x-table.cell>
                                 <x-table.cell>
