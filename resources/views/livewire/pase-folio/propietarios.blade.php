@@ -32,7 +32,7 @@
 
                         @foreach ($propiedad->propietarios() as $propietario)
 
-                            <x-table.row >
+                            <x-table.row wire:key="row-{{ $propietario->id }}">
 
                                 <x-table.cell>{{ $propietario->persona->nombre }} {{ $propietario->persona->ap_paterno }} {{ $propietario->persona->ap_materno }} {{ $propietario->persona->razon_social }}</x-table.cell>
                                 <x-table.cell>{{ $propietario->porcentaje_propiedad }}%</x-table.cell>
@@ -94,7 +94,7 @@
 
                         @foreach ($propiedad->transmitentes() as $transmitente)
 
-                            <x-table.row >
+                            <x-table.row wire:key="row-{{ $transmitente->id }}">
 
                                 <x-table.cell>{{ $transmitente->persona->nombre }} {{ $transmitente->persona->ap_paterno }} {{ $transmitente->persona->ap_materno }} {{ $transmitente->persona->razon_social }}</x-table.cell>
                                 <x-table.cell>
@@ -150,7 +150,7 @@
 
                         @foreach ($propiedad->representantes() as $representante)
 
-                            <x-table.row >
+                            <x-table.row wire:key="row-{{ $representantes->id }}">
 
                                 <x-table.cell>{{ $representante->persona->nombre }} {{ $representante->persona->ap_paterno }} {{ $representante->persona->ap_materno }} {{ $representante->persona->razon_social }}</x-table.cell>
                                 <x-table.cell>
