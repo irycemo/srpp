@@ -212,7 +212,7 @@ class MovimientoRegistralService{
 
                 }
 
-                if($movimiento_registral->cancelacion){
+                if($movimiento_registral->cancelacion && $movimiento_registral->folio_real){
 
                     $movimientoACancelar = $movimiento_registral->folioReal->movimientosRegistrales()->where('folio', $data['asiento_registral'])->first();
 
