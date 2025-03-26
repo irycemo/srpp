@@ -3,6 +3,7 @@
 namespace App\Http\Services;
 
 use App\Models\FolioReal;
+use App\Models\MovimientoRegistral;
 
 class FolioRealService{
 
@@ -20,51 +21,7 @@ class FolioRealService{
 
         foreach ($folioReal->movimientosRegistrales as $movimiento) {
 
-            $movimiento->load('firmasElectronicas','certificacion','inscripcionPropiedad.actores', 'cancelacion', 'gravamen.actores', 'sentencia', 'vario.actores', 'reformaMoral.actores', 'archivos');
-
-            $movimiento->firmasElectronicas?->each->delete();
-
-            $movimiento->certificacion?->delete();
-
-            $movimiento->inscripcionPropiedad?->actores?->each->delete();
-
-            $movimiento->inscripcionPropiedad?->delete();
-
-            $movimiento->cancelacion?->delete();
-
-            $movimiento->gravamen?->actores?->each->delete();
-
-            $movimiento->gravamen?->delete();
-
-            $movimiento->sentencia?->actores?->each->delete();
-
-            $movimiento->sentencia?->delete();
-
-            $movimiento->vario?->actores?->each->delete();
-
-            $movimiento->vario?->delete();
-
-            $movimiento->reformaMoral?->actores?->each->delete();
-
-            $movimiento->reformaMoral?->delete();
-
-            foreach($movimiento->archivos as $archivo){
-
-                if($archivo->descripcion == 'caratula'){
-
-                    unlink('caratulas/' . $archivo->url);
-
-                }elseif($archivo->descripcion == 'documento_entrada'){
-
-                    unlink('documento_entrada/' . $archivo->url);
-
-                }
-
-                $archivo->delete();
-
-            }
-
-            $movimiento->delete();
+            $this->borrarMovimientoRegistral($movimiento);
 
         }
 
@@ -91,6 +48,56 @@ class FolioRealService{
         $folioReal->antecedentes?->each->delete();
 
         $folioReal->delete();
+
+    }
+
+    public function borrarMovimientoRegistral(MovimientoRegistral $movimiento){
+
+        $movimiento->load('firmasElectronicas','certificacion','inscripcionPropiedad.actores', 'cancelacion', 'gravamen.actores', 'sentencia', 'vario.actores', 'reformaMoral.actores', 'archivos');
+
+        $movimiento->firmasElectronicas?->each->delete();
+
+        $movimiento->certificacion?->delete();
+
+        $movimiento->inscripcionPropiedad?->actores?->each->delete();
+
+        $movimiento->inscripcionPropiedad?->delete();
+
+        $movimiento->cancelacion?->delete();
+
+        $movimiento->gravamen?->actores?->each->delete();
+
+        $movimiento->gravamen?->delete();
+
+        $movimiento->sentencia?->actores?->each->delete();
+
+        $movimiento->sentencia?->delete();
+
+        $movimiento->vario?->actores?->each->delete();
+
+        $movimiento->vario?->delete();
+
+        $movimiento->reformaMoral?->actores?->each->delete();
+
+        $movimiento->reformaMoral?->delete();
+
+        foreach($movimiento->archivos as $archivo){
+
+            if($archivo->descripcion == 'caratula'){
+
+                unlink('caratulas/' . $archivo->url);
+
+            }elseif($archivo->descripcion == 'documento_entrada'){
+
+                unlink('documento_entrada/' . $archivo->url);
+
+            }
+
+            $archivo->delete();
+
+        }
+
+        $movimiento->delete();
 
     }
 
