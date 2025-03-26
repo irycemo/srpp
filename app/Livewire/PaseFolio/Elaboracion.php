@@ -1118,6 +1118,32 @@ class Elaboracion extends Component
 
             }
 
+            $this->movimientoRegistral->folioReal->update([
+                'estado' => 'pendiente'
+            ]);
+
+        }elseif
+        (
+            (
+                /* Fusion */
+                $this->movimientoRegistral->inscripcionPropiedad->servicio == 'D157'
+            )
+            ||
+            (
+                /* Movimientos provenientes de una subdivisión */
+                $this->movimientoRegistral->inscripcionPropiedad->servicio == 'D127' && $this->movimientoRegistral->movimiento_padre
+            )
+            ||
+            (
+                /* Captura especial de folio real */
+                $this->movimientoRegistral->inscripcionPropiedad->servicio == 'D118' && $this->movimientoRegistral->monto <= 3
+            )
+        ){
+
+            $this->movimientoRegistral->folioReal->update([
+                'estado' => 'pendiente'
+            ]);
+
         }
 
     }

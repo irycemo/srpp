@@ -240,7 +240,7 @@
 
                                         @endif
 
-                                        @if(in_array($movimiento->estado, ['nuevo', 'captura', 'elaborado']) && auth()->user()->hasRole(['Jefe de departamento inscripciones', 'Supervisor inscripciones', 'Supervisor uruapan']))
+                                        @if(in_array($movimiento->estado, ['nuevo', 'captura', 'correccion']) && auth()->user()->hasRole(['Jefe de departamento inscripciones', 'Supervisor inscripciones', 'Supervisor uruapan']))
 
                                             <button
                                                 wire:click="abrirModalReasignar({{  $movimiento->id }})"
@@ -248,6 +248,16 @@
                                                 class="w-full text-left block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 focus:outline-none focus:bg-gray-100"
                                                 role="menuitem">
                                                 Reasignar
+                                            </button>
+
+                                            <button
+                                                wire:click="abrirModalRechazar({{  $movimiento->id }})"
+                                                wire:loading.attr="disabled"
+                                                class="w-full text-left block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 focus:outline-none focus:bg-gray-100"
+                                                role="menuitem">
+
+                                                Rechazar
+
                                             </button>
 
                                         @endif

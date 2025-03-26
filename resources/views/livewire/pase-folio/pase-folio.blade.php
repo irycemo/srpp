@@ -206,6 +206,14 @@
                                                     Finalizar
                                                 </button>
 
+                                                <button
+                                                    wire:click="imprimir({{ $movimiento->id }})"
+                                                    wire:loading.attr="disabled"
+                                                    class="w-full text-left block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 focus:outline-none focus:bg-gray-100"
+                                                    role="menuitem">
+                                                    Imprimir
+                                                </button>
+
                                             @elseif(!$supervisor)
 
                                                 <a class="w-full text-left block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 focus:outline-none focus:bg-gray-100" href="{{ route('elaboracion_folio', $movimiento->id) }}">Elaborar</a>
@@ -215,6 +223,14 @@
                                         @elseif(!$supervisor)
 
                                             <a class="w-full text-left block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 focus:outline-none focus:bg-gray-100" href="{{ route('elaboracion_folio', $movimiento->id) }}">Elaborar</a>
+
+                                            <button
+                                                wire:click="abrirModalRechazar({{ $movimiento->id }})"
+                                                wire:loading.attr="disabled"
+                                                class="w-full text-left block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 focus:outline-none focus:bg-gray-100"
+                                                role="menuitem">
+                                                Rechazar
+                                            </button>
 
                                         @endif
 
@@ -228,15 +244,41 @@
                                                 Reasignar
                                             </button>
 
-                                        @endif
+                                            @if($movimiento->folioReal)
 
-                                        <button
-                                            wire:click="abrirModalRechazar({{ $movimiento->id }})"
-                                            wire:loading.attr="disabled"
-                                            class="w-full text-left block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 focus:outline-none focus:bg-gray-100"
-                                            role="menuitem">
-                                            Rechazar
-                                        </button>
+                                                @if($movimiento->folioReal->estado == 'pendiente' )
+
+                                                    <button
+                                                        wire:click="imprimir({{ $movimiento->id }})"
+                                                        wire:loading.attr="disabled"
+                                                        class="w-full text-left block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 focus:outline-none focus:bg-gray-100"
+                                                        role="menuitem">
+                                                        Imprimir
+                                                    </button>
+
+                                                    <button
+                                                        wire:click="abrirModalFinalizar({{ $movimiento->id }})"
+                                                        wire:loading.attr="disabled"
+                                                        class="w-full text-left block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 focus:outline-none focus:bg-gray-100"
+                                                        role="menuitem">
+                                                        Finalizar
+                                                    </button>
+
+                                                @endif
+
+                                            @else
+
+                                                <button
+                                                    wire:click="abrirModalRechazar({{ $movimiento->id }})"
+                                                    wire:loading.attr="disabled"
+                                                    class="w-full text-left block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 focus:outline-none focus:bg-gray-100"
+                                                    role="menuitem">
+                                                    Rechazar
+                                                </button>
+
+                                            @endif
+
+                                        @endif
 
                                     </div>
 

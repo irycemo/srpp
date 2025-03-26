@@ -7,6 +7,7 @@ use App\Models\User;
 use Livewire\Component;
 use Livewire\WithFileUploads;
 use App\Constantes\Constantes;
+use App\Http\Controllers\PaseFolio\PaseFolioController;
 use Barryvdh\DomPDF\Facade\Pdf;
 use App\Traits\ComponentesTrait;
 use Illuminate\Support\Facades\DB;
@@ -175,6 +176,10 @@ class PaseFolio extends Component
 
                 }
 
+                $this->modelo_editar->folioReal->update([
+                    'estado' => 'activo'
+                ]);
+
                 if($this->modelo_editar->inscripcionPropiedad) $this->revisarInscripcionPropiedad();
 
                 if($this->modelo_editar->cancelacion) $this->revisarCancelaciones();
@@ -184,10 +189,6 @@ class PaseFolio extends Component
                 $this->revisarMovimientosPrecalificacion();
 
                 $this->reasignarUsuario();
-
-                $this->modelo_editar->folioReal->update([
-                    'estado' => 'activo'
-                ]);
 
             });
 
@@ -392,36 +393,32 @@ class PaseFolio extends Component
 
         /* Inscripciones de propiedad sin antecedente para RAN */
         if(
-            in_array($this->modelo_editar->inscripcionPropiedad->servicio, ['D114', 'D113', 'D116', 'D115']) &&
-            $this->modelo_editar->tomo == null &&
-            $this->modelo_editar->registro == null &&
-            $this->modelo_editar->numero_propiedad == null
+            (
+                in_array($this->modelo_editar->inscripcionPropiedad->servicio, ['D114', 'D113', 'D116', 'D115']) &&
+                $this->modelo_editar->tomo == null &&
+                $this->modelo_editar->registro == null &&
+                $this->modelo_editar->numero_propiedad == null
+            )
+            ||
+            (
+                 /* Fusion */
+                $this->modelo_editar->inscripcionPropiedad->servicio == 'D157'
+            )
+            ||
+            (
+                /* Movimientos provenientes de una subdivisión */
+                $this->modelo_editar->inscripcionPropiedad->servicio == 'D127' && $this->modelo_editar->movimiento_padre
+            )
+            ||
+            (
+                /* Captura especial de folio real */
+                $this->modelo_editar->inscripcionPropiedad->servicio == 'D118' && $this->modelo_editar->monto <= 3
+            )
         ){
 
             $this->modelo_editar->update(['estado' => 'concluido']);
 
             (new SistemaTramitesService())->finaliarTramite($this->modelo_editar->año, $this->modelo_editar->tramite, $this->modelo_editar->usuario, 'concluido');
-
-        /* Fusion */
-        }elseif($this->modelo_editar->inscripcionPropiedad->servicio == 'D157'){
-
-            $this->modelo_editar->update(['estado' => 'concluido']);
-
-            (new SistemaTramitesService())->finaliarTramite($this->modelo_editar->año, $this->modelo_editar->tramite, $this->modelo_editar->usuario, 'concluido');
-
-        /* Movimientos provenientes de una subdivisión */
-        }elseif($this->modelo_editar->inscripcionPropiedad->servicio == 'D127' && $this->modelo_editar->movimiento_padre){
-
-            $this->modelo_editar->update(['estado' => 'concluido']);
-
-            (new SistemaTramitesService())->finaliarTramite($this->modelo_editar->año, $this->modelo_editar->tramite, $this->modelo_editar->usuario, 'concluido');
-
-        }
-
-        /* Captura especial de folio real */
-        if($this->modelo_editar->inscripcionPropiedad->servicio == 'D118' && $this->modelo_editar->monto <= 3){
-
-            $this->modelo_editar->update(['estado' => 'concluido']);
 
         }
 
@@ -429,12 +426,11 @@ class PaseFolio extends Component
 
     public function revisarCancelaciones(){
 
-        $cancelacion = $this->modelo_editar->folioReal->movimientosRegistrales->where('tomo_gravamen', $this->modelo_editar->tomo_gravamen)
+        $movimientoGravamen = $this->modelo_editar->folioReal->movimientosRegistrales->where('tomo_gravamen', $this->modelo_editar->tomo_gravamen)
                                                                                         ->where('registro_gravamen', $this->modelo_editar->registro_gravamen)
-                                                                                        ->where('folio', '>', 1)
                                                                                         ->first();
 
-        if(!$cancelacion){
+        if(!$movimientoGravamen){
 
             (new SistemaTramitesService())->rechazarTramite($this->modelo_editar->año, $this->modelo_editar->tramite, $this->modelo_editar->usuario, 'Se rechaza en pase a folio debido a que el folio real no tiene gravamenes con la información ingresada.');
 
@@ -522,6 +518,24 @@ class PaseFolio extends Component
 
     }
 
+    public function imprimir(MovimientoRegistral $movimientoRegistral){
+
+        try {
+
+            $pdf = (new PaseFolioController())->reimprimir($movimientoRegistral->folioReal->firmaElectronica);
+
+            return response()->streamDownload(
+                fn () => print($pdf->output()),
+                'documento.pdf'
+            );
+
+        } catch (\Throwable $th) {
+            Log::error("Error al reimiprimir caratula de folio real por el usuario: (id: " . auth()->user()->id . ") " . auth()->user()->name . ". " . $th);
+            $this->dispatch('mostrarMensaje', ['error', "Ha ocurrido un error."]);
+        }
+
+    }
+
     public function mount(){
 
         $this->crearModeloVacio();
@@ -556,7 +570,7 @@ class PaseFolio extends Component
                                                     ->where(function($q){
                                                         $q->whereNull('folio_real')
                                                             ->orWhereHas('folioReal', function($q){
-                                                                $q->whereIn('estado', ['nuevo', 'captura', 'elaborado', 'rechazado']);
+                                                                $q->whereIn('estado', ['nuevo', 'captura', 'elaborado', 'rechazado', 'pendiente']);
                                                             });
                                                     })
                                                     ->where(function($q){
@@ -586,7 +600,7 @@ class PaseFolio extends Component
                                                     ->where(function($q){
                                                         $q->whereNull('folio_real')
                                                             ->orWhereHas('folioReal', function($q){
-                                                                $q->whereIn('estado', ['nuevo', 'captura', 'elaborado', 'rechazado']);
+                                                                $q->whereIn('estado', ['nuevo', 'captura', 'elaborado', 'rechazado', 'pendiente']);
                                                             });
                                                     })
                                                     ->where(function($q){
@@ -617,7 +631,7 @@ class PaseFolio extends Component
                                                     ->where(function($q){
                                                         $q->whereNull('folio_real')
                                                             ->orWhereHas('folioReal', function($q){
-                                                                $q->whereIn('estado', ['nuevo', 'captura', 'elaborado', 'rechazado']);
+                                                                $q->whereIn('estado', ['nuevo', 'captura', 'elaborado', 'rechazado', 'pendiente']);
                                                             });
                                                     })
                                                     ->where(function($q){
