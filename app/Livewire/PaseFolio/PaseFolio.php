@@ -369,7 +369,7 @@ class PaseFolio extends Component
             $movimiento->update([
                 'estado' => 'nuevo',
                 'folio_real' => $this->modelo_editar->folio_real,
-                'folio' => $this->modelo_editar->folioReal->ultimoFolio() + 1
+                'folio' => $this->modelo_editar->folioReal->ultimoFolio() == $movimiento->folio ? $movimiento->folio : $this->modelo_editar->folioReal->ultimoFolio() + 1
             ]);
 
         }
@@ -382,7 +382,7 @@ class PaseFolio extends Component
 
             $movimiento->update([
                 'estado' => 'nuevo',
-                'folio' => $this->modelo_editar->folioReal->ultimoFolio() + 1
+                'folio' => $this->modelo_editar->folioReal->ultimoFolio() == $movimiento->folio ? $movimiento->folio : $this->modelo_editar->folioReal->ultimoFolio() + 1
             ]);
 
         }
