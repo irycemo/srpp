@@ -1170,7 +1170,7 @@ class Elaboracion extends Component
 
         $this->actos_contenidos = Constantes::ACTOS_INSCRIPCION_PROPIEDAD;
 
-        $this->actos_contenidos[19] = 'FIDEICOMISO';
+        $this->actos_contenidos[] = 'FIDEICOMISO';
 
         $this->cargos_autoridad = Constantes::CARGO_AUTORIDAD;
 
