@@ -195,6 +195,12 @@ trait CertificadoPropiedadTrait{
 
             }
 
+        }else{
+
+            $this->dispatch('mostrarMensaje', ['success', "No se encontraron resultados con la información ingresada."]);
+
+                $this->flagGenerar = true;
+
         }
 
     }
