@@ -133,7 +133,7 @@ class InscripcionGeneral extends Component
 
             $this->dispatch('mostrarMensaje', ['error', "Debe subir el documento de entrada."]);
 
-            return;
+            return true;
 
         }
 
