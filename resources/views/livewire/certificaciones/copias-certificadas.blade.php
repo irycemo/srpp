@@ -6,79 +6,89 @@
 
         <div class="flex justify-between">
 
-            <div>
+            <div class="flex">
 
-                <input type="text" wire:model.live.debounce.500ms="search" placeholder="Buscar" class="bg-white rounded-full text-sm">
+                <select class="bg-white rounded-l text-sm border border-r-transparent  focus:ring-0 @error('año') border-red-500 @enderror " wire:model="año">
+                    @foreach ($años as $año)
 
-                <select class="bg-white rounded-full text-sm" wire:model.live="pagination">
+                        <option value="{{ $año }}">{{ $año }}</option>
 
-                    <option value="10">10</option>
-                    <option value="25">25</option>
-                    <option value="50">50</option>
-                    <option value="100">100</option>
-
+                    @endforeach
                 </select>
 
-            </div>
+                <input type="number" placeholder="# Control" min="1" class="bg-white w-24 text-sm focus:ring-0 @error('tramite') border-red-500 @enderror " wire:model="tramite">
 
-            @if(auth()->user()->hasRole(['Certificador', 'Certificador Oficialia', 'Certificador Juridico']))
+                <input type="number" placeholder="Usuario" min="1" class="bg-white text-sm w-20 focus:ring-0 border-l-0 @error('usuario') border-red-500 @enderror" wire:model="usuario">
 
-                <button wire:click="$set('modalCarga', '!modalCarga')" wire:loading.attr="disabled" class="bg-gray-500 hover:shadow-lg hover:bg-gray-700 text-sm py-2 px-4 text-white rounded-full hidden md:block items-center justify-center focus:outline-gray-400 focus:outline-offset-2">
+                <button
+                    wire:click="consultar"
+                    wire:loading.attr="disabled"
+                    wire:target="consultar"
+                    type="button"
+                    class="relative bg-blue-400 hover:shadow-lg text-white font-bold px-4 rounded-r text-sm hover:bg-blue-700 focus:outline-blue-400 focus:outline-offset-2">
 
-                    <img wire:loading wire:target="modalCarga" class="mx-auto h-4 mr-1" src="{{ asset('storage/img/loading3.svg') }}" alt="Loading">
-                    Imprimir carga de trabajo
+                    {{-- <img wire:loading wire:target="consultar" class="mx-auto h-5 mr-1" src="{{ asset('storage/img/loading3.svg') }}" alt="Loading"> --}}
+
+                    <div wire:loading.flex class="flex absolute top-2 right-2 items-center">
+                        <svg class="animate-spin h-5 w-5 text-white" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+                            <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
+                            <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+                        </svg>
+                    </div>
+
+                    <svg wire:loading.remove xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-5 h-5">
+                        <path stroke-linecap="round" stroke-linejoin="round" d="M21 21l-5.197-5.197m0 0A7.5 7.5 0 105.196 5.196a7.5 7.5 0 0010.607 10.607z" />
+                    </svg>
 
                 </button>
 
-                <button wire:click="$set('modalCarga', '!modalCarga')" class="bg-gray-500 hover:shadow-lg hover:bg-gray-700 float-right text-sm py-2 px-4 text-white rounded-full focus:outline-none md:hidden">+</button>
-
-           @endif
+            </div>
 
         </div>
 
     </div>
 
-    <div class="overflow-x-auto rounded-lg shadow-xl border-t-2 border-t-gray-500">
+    @if($copiaConsultada)
 
-        <x-table>
+        <div class="overflow-x-auto rounded-lg shadow-xl border-t-2 border-t-gray-500">
 
-            <x-slot name="head">
-                <x-table.heading># Control</x-table.heading>
-                <x-table.heading sortable wire:click="sortBy('estado')" :direction="$sort === 'estado' ? $direction : null" >Estado</x-table.heading>
-                <x-table.heading sortable wire:click="sortBy('tipo_servicio')" :direction="$sort === 'tipo_servicio' ? $direction : null" >Tipo de servicio</x-table.heading>
-                <x-table.heading sortable wire:click="sortBy('tomo')" :direction="$sort === 'tomo' ? $direction : null" >Tomo / Bis</x-table.heading>
-                <x-table.heading sortable wire:click="sortBy('registro')" :direction="$sort === 'registro' ? $direction : null" >Registro / Bis</x-table.heading>
-                <x-table.heading sortable wire:click="sortBy('distrito')" :direction="$sort === 'distrito' ? $direction : null" >Distrito</x-table.heading>
-                <x-table.heading sortable wire:click="sortBy('seccion')" :direction="$sort === 'seccion' ? $direction : null" >Sección</x-table.heading>
-                <x-table.heading>Solicitante</x-table.heading>
-                <x-table.heading >Número de páginas</x-table.heading>
-                @if (auth()->user()->hasRole(['Supervisor certificaciones', 'Administrador', 'Supervisor uruapan', 'Jefe de departamento certificaciones', 'Operador']))
-                    <x-table.heading >Folio de carpeta</x-table.heading>
-                    <x-table.heading sortable wire:click="sortBy('usuario_asignado')" :direction="$sort === 'usuario_asignado' ? $direction : null" >Asignado a</x-table.heading>
-                @endif
-                @if (auth()->user()->hasRole(['Administrador', 'Operador', 'Director', 'Jefe de departamento jurídico']))
-                    <x-table.heading >Reimpreso en</x-table.heading>
-                @endif
-                <x-table.heading sortable wire:click="sortBy('fecha_entrega')" :direction="$sort === 'fecha_entrega' ? $direction : null">Fecha de entrega</x-table.heading>
-                <x-table.heading sortable wire:click="sortBy('created_at')" :direction="$sort === 'created_at' ? $direction : null">Ingreso</x-table.heading>
-                <x-table.heading sortable wire:click="sortBy('updated_at')" :direction="$sort === 'updated_at' ? $direction : null">Actualizado</x-table.heading>
-                @if (!auth()->user()->hasRole(['Administrador', 'Operador', 'Director', 'Jefe de departamento jurídico']))
-                    <x-table.heading >Acciones</x-table.heading>
-                @endif
+            <x-table>
 
-            </x-slot>
+                <x-slot name="head">
+                    <x-table.heading># Control</x-table.heading>
+                    <x-table.heading>Estado</x-table.heading>
+                    <x-table.heading>Tipo de servicio</x-table.heading>
+                    <x-table.heading>Tomo / Bis</x-table.heading>
+                    <x-table.heading>Registro / Bis</x-table.heading>
+                    <x-table.heading>Distrito</x-table.heading>
+                    <x-table.heading>Sección</x-table.heading>
+                    <x-table.heading>Solicitante</x-table.heading>
+                    <x-table.heading>Número de páginas</x-table.heading>
+                    @if (auth()->user()->hasRole(['Supervisor certificaciones', 'Administrador', 'Supervisor uruapan', 'Jefe de departamento certificaciones', 'Operador']))
+                        <x-table.heading>Folio de carpeta</x-table.heading>
+                        <x-table.heading>Asignado a</x-table.heading>
+                    @endif
+                    @if (auth()->user()->hasRole(['Administrador', 'Operador', 'Director', 'Jefe de departamento jurídico']))
+                        <x-table.heading >Reimpreso en</x-table.heading>
+                    @endif
+                    <x-table.heading>Fecha de entrega</x-table.heading>
+                    <x-table.heading>Ingreso</x-table.heading>
+                    <x-table.heading>Actualizado</x-table.heading>
+                    @if (!auth()->user()->hasRole(['Administrador', 'Operador', 'Director', 'Jefe de departamento jurídico']))
+                        <x-table.heading>Acciones</x-table.heading>
+                    @endif
 
-            <x-slot name="body">
+                </x-slot>
 
-                @forelse ($copias as $copia)
+                <x-slot name="body">
 
-                    <x-table.row wire:loading.class.delaylongest="opacity-50" wire:key="row-{{ $copia->id }}">
+                    <x-table.row wire:loading.class.delaylongest="opacity-50" wire:key="row-{{ $copiaConsultada->id }}">
 
                         <x-table.cell>
 
                             <span class="lg:hidden absolute top-0 left-0 bg-blue-300 px-2 py-1 text-xs text-white font-bold uppercase rounded-br-xl"># Control</span>
 
-                            <span class="whitespace-nowrap">{{ $copia->año }}-{{ $copia->tramite }}-{{ $copia->usuario }}</span>
+                            <span class="whitespace-nowrap">{{ $copiaConsultada->año }}-{{ $copiaConsultada->tramite }}-{{ $copiaConsultada->usuario }}</span>
 
                         </x-table.cell>
 
@@ -86,14 +96,14 @@
 
                             <span class="lg:hidden absolute top-0 left-0 bg-blue-300 px-2 py-1 text-xs text-white font-bold uppercase rounded-br-xl">Estado</span>
 
-                            <span class="bg-{{ $copia->estado_color }} py-1 px-2 rounded-full text-white text-xs">{{ ucfirst($copia->estado) }}</span>
+                            <span class="bg-{{ $copiaConsultada->estado_color }} py-1 px-2 rounded-full text-white text-xs">{{ ucfirst($copiaConsultada->estado) }}</span>
 
                         </x-table.cell>
                         <x-table.cell>
 
                             <span class="lg:hidden absolute top-0 left-0 bg-blue-300 px-2 py-1 text-xs text-white font-bold uppercase rounded-br-xl">Tipo de servicio</span>
 
-                            {{ $copia->tipo_servicio }}
+                            {{ $copiaConsultada->tipo_servicio }}
 
                         </x-table.cell>
 
@@ -101,7 +111,7 @@
 
                             <span class="lg:hidden absolute top-0 left-0 bg-blue-300 px-2 py-1 text-xs text-white font-bold uppercase rounded-br-xl">Tomo / Bis</span>
 
-                            {{ $copia->tomo }}
+                            {{ $copiaConsultada->tomo }}
 
                         </x-table.cell>
 
@@ -109,7 +119,7 @@
 
                             <span class="lg:hidden absolute top-0 left-0 bg-blue-300 px-2 py-1 text-xs text-white font-bold uppercase rounded-br-xl">Registro / Bis</span>
 
-                            {{ $copia->registro }}
+                            {{ $copiaConsultada->registro }}
 
                         </x-table.cell>
 
@@ -117,7 +127,7 @@
 
                             <span class="lg:hidden absolute top-0 left-0 bg-blue-300 px-2 py-1 text-xs text-white font-bold uppercase rounded-br-xl">Distrito</span>
 
-                            {{ $copia->distrito }}
+                            {{ $copiaConsultada->distrito }}
 
                         </x-table.cell>
 
@@ -125,7 +135,7 @@
 
                             <span class="lg:hidden absolute top-0 left-0 bg-blue-300 px-2 py-1 text-xs text-white font-bold uppercase rounded-br-xl">Sección</span>
 
-                            {{ $copia->seccion }}
+                            {{ $copiaConsultada->seccion }}
 
                         </x-table.cell>
 
@@ -133,7 +143,7 @@
 
                             <span class="lg:hidden absolute top-0 left-0 bg-blue-300 px-2 py-1 text-xs text-white font-bold uppercase rounded-br-xl">Solicitante</span>
 
-                            {{ $copia->solicitante }}
+                            {{ $copiaConsultada->solicitante }}
 
                         </x-table.cell>
 
@@ -141,7 +151,7 @@
 
                             <span class="lg:hidden absolute top-0 left-0 bg-blue-300 px-2 py-1 text-xs text-white font-bold uppercase rounded-br-xl">Número de páginas</span>
 
-                            {{ $copia->certificacion->numero_paginas }}
+                            {{ $copiaConsultada->certificacion->numero_paginas }}
 
                         </x-table.cell>
 
@@ -151,7 +161,7 @@
 
                                 <span class="lg:hidden absolute top-0 left-0 bg-blue-300 px-2 py-1 text-xs text-white font-bold uppercase rounded-br-xl">Folio de carpeta</span>
 
-                                {{ $copia->certificacion->folio_carpeta_copias ?? 'N/A' }}
+                                {{ $copiaConsultada->certificacion->folio_carpeta_copias ?? 'N/A' }}
 
                             </x-table.cell>
 
@@ -159,7 +169,7 @@
 
                                 <span class="lg:hidden absolute top-0 left-0 bg-blue-300 px-2 py-1 text-xs text-white font-bold uppercase rounded-br-xl">Folio de carpeta</span>
 
-                                {{ $copia->asignadoA->name ?? 'N/A' }}
+                                {{ $copiaConsultada->asignadoA->name ?? 'N/A' }}
 
                             </x-table.cell>
 
@@ -171,7 +181,7 @@
 
                                 <span class="lg:hidden absolute top-0 left-0 bg-blue-300 px-2 py-1 text-xs text-white font-bold uppercase rounded-br-xl">Reimpreso en</span>
 
-                                {{ optional($copia->certificacion->reimpreso_en)->format('d-m-Y H:i:s') ?? 'N/A' }}
+                                {{ optional($copiaConsultada->certificacion->reimpreso_en)->format('d-m-Y H:i:s') ?? 'N/A' }}
 
                             </x-table.cell>
 
@@ -181,7 +191,7 @@
 
                             <span class="lg:hidden absolute top-0 left-0 bg-blue-300 px-2 py-1 text-xs text-white font-bold uppercase rounded-br-xl">Fecha de entrega</span>
 
-                            {{ optional($copia->fecha_entrega)->format('d-m-Y') ?? 'N/A' }}
+                            {{ optional($copiaConsultada->fecha_entrega)->format('d-m-Y') ?? 'N/A' }}
 
                         </x-table.cell>
 
@@ -189,15 +199,15 @@
 
                             <span class="lg:hidden absolute top-0 left-0 bg-blue-300 px-2 py-1 text-xs text-white font-bold uppercase rounded-br-xl">Ingreso</span>
 
-                            {{ $copia->created_at }}
+                            {{ $copiaConsultada->created_at }}
 
                         </x-table.cell>
 
                         <x-table.cell>
 
-                            <span class="font-semibold">@if($copia->actualizadoPor != null)Actualizado por: {{$copia->actualizadoPor->name}} @else Actualizado: @endif</span> <br>
+                            <span class="font-semibold">@if($copiaConsultada->actualizadoPor != null)Actualizado por: {{$copiaConsultada->actualizadoPor->name}} @else Actualizado: @endif</span> <br>
 
-                            {{ $copia->updated_at }}
+                            {{ $copiaConsultada->updated_at }}
 
                         </x-table.cell>
 
@@ -225,10 +235,10 @@
 
                                         @can('Reimprimir documento')
 
-                                            @if ($copia->certificacion->reimpreso_en == null && $copia->certificacion->folio_carpeta_copias != null)
+                                            @if ($copiaConsultada->certificacion->reimpreso_en == null && $copiaConsultada->certificacion->folio_carpeta_copias != null)
 
                                                 <button
-                                                    wire:click="reimprimir({{ $copia->certificacion->id }})"
+                                                    wire:click="reimprimir({{ $copiaConsultada->certificacion->id }})"
                                                     wire:loading.attr="disabled"
                                                     class="w-full text-left block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 focus:outline-none focus:bg-gray-100"
                                                     role="menuitem">
@@ -239,55 +249,27 @@
 
                                         @endcan
 
-                                        @can('Rechazar copias certificadas')
-
-                                            <button
-                                                wire:click="abrirModalRechazar({{ $copia->certificacion->id }})"
-                                                wire:loading.attr="disabled"
-                                                class="w-full text-left block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 focus:outline-none focus:bg-gray-100"
-                                                role="menuitem">
-
-                                                <span>Rechazar</span>
-
-                                            </button>
-
-                                        @endcan
-
-                                        @can('Reasignar copias')
-
-                                            <button
-                                                wire:click="abrirModalReasignar({{ $copia->certificacion->id }})"
-                                                wire:loading.attr="disabled"
-                                                class="w-full text-left block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 focus:outline-none focus:bg-gray-100"
-                                                role="menuitem">
-
-                                                <span>Reasignar</span>
-
-                                            </button>
-
-                                        @endcan
-
                                         @can('Finalizar copias certificadas')
 
-                                            @if(!$copia->certificacion->folio_carpeta_copias)
+                                            @if(!$copiaConsultada->certificacion->folio_carpeta_copias)
 
                                                 @if(auth()->user()->hasRole(['Certificador Juridico','Jefe de departamento certificaciones']))
 
                                                     <button
-                                                        wire:click="finalizarSupervisor({{ $copia->certificacion->id }})"
+                                                        wire:click="generarCertificacion({{ $copiaConsultada->certificacion->id }})"
                                                         wire:loading.attr="disabled"
                                                         class="w-full text-left block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 focus:outline-none focus:bg-gray-100"
                                                         role="menuitem">
 
-                                                        <span>Elaborar</span>
+                                                        <span>Generar certificación</span>
 
                                                     </button>
 
-                                                    @if($copia->certificacion->movimiento_registral)
+                                                    @if($copiaConsultada->certificacion->movimiento_registral)
 
                                                         @include('livewire.certificaciones.botones-movimiento')
 
-                                                    @elseif(!$copia->certificacion->movimiento_registral && $copia->certificacion->folio_real)
+                                                    @elseif(!$copiaConsultada->certificacion->movimiento_registral && $copiaConsultada->certificacion->folio_real)
 
                                                         @include('livewire.certificaciones.botones-folio-real')
 
@@ -296,22 +278,22 @@
                                                 @else
 
                                                     <button
-                                                        wire:click="abrirModalEditar({{ $copia->certificacion->id }})"
+                                                        wire:click="abrirModalFolio({{ $copiaConsultada->certificacion->id }})"
                                                         wire:loading.attr="disabled"
                                                         class="w-full text-left block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 focus:outline-none focus:bg-gray-100"
                                                         role="menuitem">
 
-                                                        <span>Elaborar</span>
+                                                        <span>Asignar folio de carpeta</span>
 
                                                     </button>
 
                                                 @endif
 
-                                            @elseif($copia->certificacion->movimiento_registral)
+                                            @elseif($copiaConsultada->certificacion->movimiento_registral)
 
-                                               @include('livewire.certificaciones.botones-movimiento')
+                                                @include('livewire.certificaciones.botones-movimiento')
 
-                                            @elseif(!$copia->certificacion->movimiento_registral && $copia->certificacion->folio_real)
+                                            @elseif(!$copiaConsultada->certificacion->movimiento_registral && $copiaConsultada->certificacion->folio_real)
 
                                                 @include('livewire.certificaciones.botones-folio-real')
 
@@ -320,7 +302,7 @@
                                             @if(auth()->user()->hasRole(['Supervisor certificaciones', 'Certificador Oficialia', 'Certificador Juridico', 'Jefe de departamento certificaciones']))
 
                                                 <button
-                                                    wire:click="finalizarSupervisor({{ $copia->certificacion->id }})"
+                                                    wire:click="generarCertificacion({{ $copiaConsultada->certificacion->id }})"
                                                     wire:loading.attr="disabled"
                                                     class="w-full text-left block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 focus:outline-none focus:bg-gray-100"
                                                     role="menuitem">
@@ -343,43 +325,25 @@
 
                     </x-table.row>
 
-                @empty
+                </x-slot>
+
+                <x-slot name="tfoot">
 
                     <x-table.row>
 
-                        <x-table.cell colspan="20">
-
-                            <div class="bg-white text-gray-500 text-center p-5 rounded-full text-lg">
-
-                                No hay resultados.
-
-                            </div>
+                        <x-table.cell colspan="20" class="bg-gray-50">
 
                         </x-table.cell>
 
                     </x-table.row>
 
-                @endforelse
+                </x-slot>
 
-            </x-slot>
+            </x-table>
 
-            <x-slot name="tfoot">
+        </div>
 
-                <x-table.row>
-
-                    <x-table.cell colspan="20" class="bg-gray-50">
-
-                        {{ $copias->links()}}
-
-                    </x-table.cell>
-
-                </x-table.row>
-
-            </x-slot>
-
-        </x-table>
-
-    </div>
+    @endif
 
     <x-dialog-modal wire:model="modal" maxWidth="sm">
 
@@ -423,19 +387,19 @@
             <div class="flex items-center justify-end space-x-3">
 
                 <x-button-blue
-                    wire:click="finalizar"
+                    wire:click="asignarFolio"
                     wire:loading.attr="disabled"
-                    wire:target="finalizar">
+                    wire:target="asignarFolio">
 
-                    <img wire:loading wire:target="finalizar" class="mx-auto h-4 mr-1" src="{{ asset('storage/img/loading3.svg') }}" alt="Loading">
+                    <img wire:loading wire:target="asignarFolio" class="mx-auto h-4 mr-1" src="{{ asset('storage/img/loading3.svg') }}" alt="Loading">
 
-                    <span>Finalizar</span>
+                    <span>Asignar folio</span>
                 </x-button-blue>
 
                 <x-button-red
-                    wire:click="resetearTodo"
+                    wire:click="toggle('modal')"
                     wire:loading.attr="disabled"
-                    wire:target="resetearTodo"
+                    wire:target="toggle('modal')"
                     type="button">
                     <span>Cerrar</span>
                 </x-button-red>
@@ -502,91 +466,6 @@
                     wire:loading.attr="disabled"
                     wire:target="resetearTodo"
                     type="button">
-                    <span>Cerrar</span>
-                </x-button-red>
-
-            </div>
-
-        </x-slot>
-
-    </x-dialog-modal>
-
-    <x-dialog-modal wire:model="modalCarga" maxWidth="sm">
-
-        <x-slot name="title">
-
-            Carga de trabajo
-
-        </x-slot>
-
-        <x-slot name="content">
-
-            <div class="flex flex-col md:flex-row justify-between md:space-x-3 mb-5">
-
-                <div class="flex-auto ">
-
-                    <div>
-
-                        <Label>Fecha inicial</Label>
-                    </div>
-
-                    <div>
-
-                        <input type="date" class="bg-white rounded text-sm w-full" wire:model="fecha_inicio">
-
-                    </div>
-
-                    <div>
-
-                        @error('fecha_inicio') <span class="error text-sm text-red-500">{{ $message }}</span> @enderror
-
-                    </div>
-
-                </div>
-
-                <div class="flex-auto ">
-
-                    <div>
-
-                        <Label>Fecha final</Label>
-                    </div>
-
-                    <div>
-
-                        <input type="date" class="bg-white rounded text-sm w-full" wire:model="fecha_final">
-
-                    </div>
-
-                    <div>
-
-                        @error('fecha_final') <span class="error text-sm text-red-500">{{ $message }}</span> @enderror
-
-                    </div>
-
-                </div>
-
-            </div>
-
-        </x-slot>
-
-        <x-slot name="footer">
-
-            <div class="flex items-center justify-end space-x-3">
-
-                <x-button-blue
-                    wire:click="imprimirCarga"
-                    wire:loading.attr="disabled"
-                    wire:target="imprimirCarga">
-
-                    <img wire:loading wire:target="imprimirCarga" class="mx-auto h-4 mr-1" src="{{ asset('storage/img/loading3.svg') }}" alt="Loading">
-
-                    <span>Imprimir</span>
-                </x-button-blue>
-
-                <x-button-red
-                    wire:click="resetearTodo"
-                    wire:loading.attr="disabled"
-                    wire:target="resetearTodo">
                     <span>Cerrar</span>
                 </x-button-red>
 

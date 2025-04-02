@@ -66,15 +66,17 @@ class MovimientoRegistralService{
 
             }
 
-            Log::error('Error al ingresar el trámite: ' . $request['año'] . '-' . $request['tramite'] . '-' . $request['usuario'] . ' desde Sistema Trámites. ' . $th->getMessage());
+            Log::error('Error al ingresar el trámite: ' . $request['año'] . '-' . $request['tramite'] . '-' . $request['usuario'] . ' desde Sistema Trámites. ' . $th);
 
         } catch (CertificacionServiceException $th) {
+
+            Log::error('Error al ingresar el trámite: ' . $request['año'] . '-' . $request['tramite'] . '-' . $request['usuario'] . ' desde Sistema Trámites. ' . $th);
 
             throw new MovimientoRegistralServiceException($th->getMessage());
 
         } catch (AsignacionServiceException $th) {
 
-            Log::error('Error al ingresar el trámite: ' . $request['año'] . '-' . $request['tramite'] . '-' . $request['usuario'] . ' desde Sistema Trámites. ' . $th->getMessage());
+            Log::error('Error al ingresar el trámite: ' . $request['año'] . '-' . $request['tramite'] . '-' . $request['usuario'] . ' desde Sistema Trámites. ' . $th);
 
             throw new MovimientoRegistralServiceException($th->getMessage());
 
@@ -393,7 +395,15 @@ class MovimientoRegistralService{
         /* Certificaciones: Copias simples, Copias certificadas */
         if($servicio == 'DL13' || $servicio == 'DL14'){
 
-            return $this->asignacionService->obtenerCertificador($distrito, $solicitante, $tipo_servicio, $random);
+            if($folioReal){
+
+                return $this->asignacionService->obtenerCertificador($distrito, $solicitante, $tipo_servicio, $random);
+
+            }else{
+
+                return $this->asignacionService->obtenerCopiador($distrito, $solicitante, $tipo_servicio, $random);
+
+            }
 
         }
 

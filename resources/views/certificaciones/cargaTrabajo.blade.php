@@ -21,7 +21,7 @@
             <div>
 
                 <p class="parrafo">
-                    Carga de trabajo. Copias @if($servicio == 'DL13') certificadas @else simples @endif. Fecha inicial: {{ $fecha_inicio }} - Fecha final: {{ $fecha_final }}
+                    Carga de trabajo, copias. Fecha inicial: {{ $fecha_inicio }} - Fecha final: {{ $fecha_final }}
                 </p>
                 <p>{{ auth()->user()->name }}</p>
 

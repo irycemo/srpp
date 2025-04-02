@@ -133,6 +133,65 @@ class AsignacionService{
 
     }
 
+    public function obtenerCopiador($distrito, $solicitante, $tipo_servicio, $random):int
+    {
+
+        if($distrito == 2){
+
+            $idActual = Asignacion::first()?->certificador_uruapan;
+
+        }else{
+
+            $idActual = Asignacion::first()?->certificador;
+
+        }
+
+        $copiadores = User::where('status', 'activo')
+                                ->when($distrito == 2, function($q){
+                                    $q->where('ubicacion', 'Regional 4');
+                                })
+                                ->when($distrito != 2, function($q){
+                                    $q->where('ubicacion', '!=', 'Regional 4');
+                                })
+                                ->whereHas('roles', function($q){
+                                    $q->where('name', 'Copiador');
+                                })
+                                ->pluck('id');
+
+        if(count($copiadores) == 0){
+
+            Log::error('No se encontraron usuario copiador para asignar la certificación.');
+
+            throw new AsignacionServiceException('No se encontraron copiadores para asignar al movimiento registral.');
+
+        }else if($random){
+
+            return array_rand($copiadores, 1);
+
+        }else if(count($copiadores) == 1){
+
+            return $copiadores[0];
+
+        }else{
+
+            $actual = $this->obtenerSiguienteUsuario($copiadores, $idActual);
+
+            if($distrito == 2){
+
+                Asignacion::first()->update(['copiador_uruapan' => $actual]);
+
+            }else{
+
+                Asignacion::first()->update(['copiador' => $actual]);
+
+            }
+
+            return $actual;
+
+        }
+
+    }
+
     public function obtenerCertificador($distrito, $solicitante, $tipo_servicio, $random):int
     {
 

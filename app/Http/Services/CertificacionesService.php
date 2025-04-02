@@ -57,6 +57,12 @@ class CertificacionesService{
     public function requestCrear(array $request):array
     {
 
+        if(in_array($request['servicio'], ['DL13', 'DL14']) && isset($request['folio_real'])){
+
+            MovimientoRegistral::find($request['movimiento_registral'])->update(['estado' => 'elaborado']);
+
+        }
+
         return [
             'servicio' => $request['servicio'],
             'numero_paginas' => $request['numero_paginas'],

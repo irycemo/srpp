@@ -11,9 +11,12 @@ use App\Livewire\Certificaciones\ConsultasCertificaciones;
 use App\Livewire\Certificaciones\CertificadoPropiedadIndex;
 use App\Http\Controllers\Certificaciones\CertificadoGravamenController;
 use App\Http\Controllers\Certificaciones\CertificadoPropiedadController;
-
+use App\Livewire\Certificaciones\Copiador;
 
 Route::group(['middleware' => ['auth', 'esta.activo']], function(){
+
+    /* Copiador */
+    Route::get('copiador', Copiador::class)->middleware('permission:Copiador')->name('copiador');
 
     /* Copias simples */
     Route::get('copias_simples', CopiasSimples::class)->middleware('permission:Copias Simples')->name('copias_simples');

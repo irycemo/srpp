@@ -69,6 +69,7 @@
                     <option value="acta de embargo">Acta de embargo</option>
                     <option value="convenio">Convenio</option>
                     <option value="fianza">Fianza</option>
+                    <option value="exhorto">Exhorto</option>
 
                 </x-input-select>
 
