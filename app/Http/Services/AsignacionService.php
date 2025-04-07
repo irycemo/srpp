@@ -138,11 +138,11 @@ class AsignacionService{
 
         if($distrito == 2){
 
-            $idActual = Asignacion::first()?->certificador_uruapan;
+            $idActual = Asignacion::first()?->copiador_uruapan;
 
         }else{
 
-            $idActual = Asignacion::first()?->certificador;
+            $idActual = Asignacion::first()?->copiador;
 
         }
 
