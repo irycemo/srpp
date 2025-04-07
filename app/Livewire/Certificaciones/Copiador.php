@@ -44,6 +44,17 @@ class Copiador extends Component
 
     }
 
+    public function abrirModalRechazar(Certificacion $modelo){
+
+        $this->resetearTodo();
+            $this->modalRechazar = true;
+            $this->editar = true;
+
+        if($this->modelo_editar->isNot($modelo))
+            $this->modelo_editar = $modelo;
+
+    }
+
     public function reasignar(){
 
         $cantidad = $this->modelo_editar->movimientoRegistral->audits()->where('tags', 'Reasignó usuario')->count();
