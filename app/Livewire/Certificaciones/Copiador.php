@@ -9,8 +9,10 @@ use App\Models\Certificacion;
 use Barryvdh\DomPDF\Facade\Pdf;
 use App\Traits\ComponentesTrait;
 use Livewire\Attributes\Computed;
+use Illuminate\Support\Facades\DB;
 use App\Models\MovimientoRegistral;
 use Illuminate\Support\Facades\Log;
+use App\Http\Services\SistemaTramitesService;
 
 class Copiador extends Component
 {
@@ -52,6 +54,42 @@ class Copiador extends Component
 
         if($this->modelo_editar->isNot($modelo))
             $this->modelo_editar = $modelo;
+
+    }
+
+    public function rechazar(){
+
+        $this->validate([
+            'observaciones' => 'required'
+        ]);
+
+        try {
+
+            DB::transaction(function (){
+
+                $observaciones = auth()->user()->name . ' rechaza el ' . now() . ', con motivo: ' . $this->observaciones . '<|>';
+
+                (new SistemaTramitesService())->rechazarTramite($this->modelo_editar->movimientoRegistral->año, $this->modelo_editar->movimientoRegistral->tramite, $this->modelo_editar->movimientoRegistral->usuario, $observaciones);
+
+                $this->modelo_editar->movimientoRegistral->update(['estado' => 'rechazado']);
+
+                $this->modelo_editar->actualizado_por = auth()->user()->id;
+
+                $this->modelo_editar->observaciones = $this->modelo_editar->observaciones . $observaciones;
+
+                $this->modelo_editar->save();
+
+                $this->dispatch('mostrarMensaje', ['success', "El trámite se rechazó con éxito."]);
+
+                $this->resetearTodo();
+
+            });
+
+        } catch (\Throwable $th) {
+            Log::error("Error al rechazar trámite de copias certificadas por el usuario: (id: " . auth()->user()->id . ") " . auth()->user()->name . ". " . $th);
+            $this->dispatch('mostrarMensaje', ['error', "Ha ocurrido un error."]);
+            $this->resetearTodo();
+        }
 
     }
 
