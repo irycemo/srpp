@@ -301,15 +301,19 @@
 
                                             @if(auth()->user()->hasRole(['Supervisor certificaciones', 'Certificador Oficialia', 'Certificador Juridico', 'Jefe de departamento certificaciones']))
 
-                                                <button
-                                                    wire:click="concluir({{ $copiaConsultada->certificacion->id }})"
-                                                    wire:loading.attr="disabled"
-                                                    class="w-full text-left block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 focus:outline-none focus:bg-gray-100"
-                                                    role="menuitem">
+                                                @if($copiaConsultada->certificacion->folio_carpeta_copias)
 
-                                                    <span>Concluir</span>
+                                                    <button
+                                                        wire:click="concluir({{ $copiaConsultada->certificacion->id }})"
+                                                        wire:loading.attr="disabled"
+                                                        class="w-full text-left block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 focus:outline-none focus:bg-gray-100"
+                                                        role="menuitem">
 
-                                                </button>
+                                                        <span>Concluir</span>
+
+                                                    </button>
+
+                                                @endif
 
                                             @else
 
