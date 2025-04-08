@@ -146,6 +146,48 @@ class CopiasSimples extends Component
 
     }
 
+    public function concluir(Certificacion $modelo){
+
+        if($this->calcularDiaElaboracion($modelo->movimientoRegistral) && !auth()->user()->hasRole(['Jefe de departamento certificaciones'])) return;
+
+        if($this->modelo_editar->isNot($modelo))
+            $this->modelo_editar = $modelo;
+
+       /*  if($this->modelo_editar->folio_carpeta_copias == null && !auth()->user()->hasRole(['Certificador Juridico'])){
+
+            $this->dispatch('mostrarMensaje', ['error', "EL campo folio de carpeta es obligatorio."]);
+            return;
+
+        } */
+
+        try {
+
+            $this->modelo_editar->finalizado_en = now();
+
+            $this->modelo_editar->actualizado_por = auth()->user()->id;
+
+            $this->modelo_editar->movimientoRegistral->estado = 'concluido';
+
+            $this->modelo_editar->movimientoRegistral->save();
+
+            $this->modelo_editar->save();
+
+            (new SistemaTramitesService())->finaliarTramite($this->modelo_editar->movimientoRegistral->año, $this->modelo_editar->movimientoRegistral->tramite, $this->modelo_editar->movimientoRegistral->usuario, 'concluido');
+
+            $this->dispatch('mostrarMensaje', ['success', "El trámite se concluyó con éxito."]);
+
+            $this->resetearTodo();
+
+        }catch (\Throwable $th) {
+
+            Log::error("Error al concluir trámite de copias simples por el usuario: (id: " . auth()->user()->id . ") " . auth()->user()->name . ". " . $th);
+            $this->dispatch('mostrarMensaje', ['error', "Ha ocurrido un error."]);
+            $this->resetearTodo();
+
+        }
+
+    }
+
     public function rechazar(){
 
         $this->validate([

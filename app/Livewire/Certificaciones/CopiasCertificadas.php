@@ -192,29 +192,73 @@ class CopiasCertificadas extends Component
 
                 $this->modelo_editar->actualizado_por = auth()->user()->id;
 
+                $this->modelo_editar->movimientoRegistral->save();
+
+                $this->modelo_editar->save();
+
+                $this->dispatch('imprimir_documento_oficialia', ['documento' => $this->modelo_editar->id]);
+
+                if(auth()->user()->hasRole(['Certificador Oficialia', 'Certificador Juridico'])){
+
+                    $this->modelo_editar->movimientoRegistral->update(['estado', 'concluido']);
+
+                    (new SistemaTramitesService())->finaliarTramite($this->modelo_editar->movimientoRegistral->año, $this->modelo_editar->movimientoRegistral->tramite, $this->modelo_editar->movimientoRegistral->usuario, 'finalizado');
+
+                }
+
+                $this->resetearTodo();
+
+                $this->dispatch('mostrarMensaje', ['success', "El trámite se finalizó con éxito."]);
+
+            });
+
+        } catch (\Throwable $th) {
+
+            Log::error("Error al finalizar trámite de copias certificadas por el usuario: (id: " . auth()->user()->id . ") " . auth()->user()->name . ". " . $th);
+            $this->dispatch('mostrarMensaje', ['error', "Ha ocurrido un error."]);
+            $this->resetearTodo();
+
+        }
+
+    }
+
+    public function concluir(Certificacion $modelo){
+
+        if(!$modelo->folio_carpeta_copias && !auth()->user()->hasRole(['Certificador Oficialia', 'Certificador Juridico','Jefe de departamento certificaciones'])){
+
+            $this->dispatch('mostrarMensaje', ['warning', "El trámite no tiene folio de carpeta"]);
+
+            return;
+
+        }
+
+        if($this->modelo_editar->isNot($modelo))
+            $this->modelo_editar = $modelo;
+
+        if(!auth()->user()->hasRole(['Certificador Juridico', 'Certificador Oficialia', 'Jefe de departamento certificaciones'])){
+
+            if($this->calcularDiaElaboracion($modelo->movimientoRegistral)) return;
+
+        }
+
+        try {
+
+            DB::transaction(function (){
+
+                $this->modelo_editar->finalizado_en = now();
+
+                $this->modelo_editar->firma = now();
+
+                $this->modelo_editar->actualizado_por = auth()->user()->id;
+
                 $this->modelo_editar->movimientoRegistral->estado = 'concluido';
 
                 $this->modelo_editar->movimientoRegistral->save();
 
                 $this->modelo_editar->save();
 
-                if(auth()->user()->hasRole(['Certificador Oficialia', 'Certificador Juridico'])){
 
-                    $this->dispatch('imprimir_documento_oficialia', ['documento' => $this->modelo_editar->id]);
-
-                    (new SistemaTramitesService())->finaliarTramite($this->modelo_editar->movimientoRegistral->año, $this->modelo_editar->movimientoRegistral->tramite, $this->modelo_editar->movimientoRegistral->usuario, 'finalizado');
-
-                }elseif(auth()->user()->hasRole(['Jefe de departamento certificaciones'])){
-
-                    $this->dispatch('imprimir_documento_oficialia', ['documento' => $this->modelo_editar->id]);
-
-                    (new SistemaTramitesService())->finaliarTramite($this->modelo_editar->movimientoRegistral->año, $this->modelo_editar->movimientoRegistral->tramite, $this->modelo_editar->movimientoRegistral->usuario, 'concluido');
-
-                }else{
-
-                    (new SistemaTramitesService())->finaliarTramite($this->modelo_editar->movimientoRegistral->año, $this->modelo_editar->movimientoRegistral->tramite, $this->modelo_editar->movimientoRegistral->usuario, 'concluido');
-
-                }
+                (new SistemaTramitesService())->finaliarTramite($this->modelo_editar->movimientoRegistral->año, $this->modelo_editar->movimientoRegistral->tramite, $this->modelo_editar->movimientoRegistral->usuario, 'concluido');
 
                 $this->resetearTodo();
 

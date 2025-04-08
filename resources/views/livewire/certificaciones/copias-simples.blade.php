@@ -236,7 +236,7 @@
 
                                         @can('Reimprimir documento')
 
-                                            @if (!$copiaConsultada->certificacion->reimpreso_en && $copiaConsultada->certificacion->folio_carpeta_copias)
+                                            @if (!$copiaConsultada->certificacion->reimpreso_en)
 
                                                 <button
                                                     wire:click="reimprimir({{ $copiaConsultada->certificacion->id }})"
@@ -254,15 +254,18 @@
 
                                         @can('Finalizar copias simples')
 
-                                            <button
-                                                wire:click="generarCertificacion({{ $copiaConsultada->certificacion->id }})"
-                                                wire:loading.attr="disabled"
-                                                class="w-full text-left block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 focus:outline-none focus:bg-gray-100"
-                                                role="menuitem">
+                                            @if(auth()->user()->hasRole(['Certificador']))
+                                                <button
+                                                    wire:click="generarCertificacion({{ $copiaConsultada->certificacion->id }})"
+                                                    wire:loading.attr="disabled"
+                                                    class="w-full text-left block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 focus:outline-none focus:bg-gray-100"
+                                                    role="menuitem">
 
-                                                <span>Generar certificación</span>
+                                                    <span>Generar certificación</span>
 
-                                            </button>
+                                                </button>
+
+                                            @endif
 
                                             @if($copiaConsultada->certificacion->movimiento_registral)
 
@@ -312,15 +315,31 @@
 
                                         @endcan
 
-                                        <button
-                                            wire:click="abrirModalRechazar({{ $copiaConsultada->certificacion->id }})"
-                                            wire:loading.attr="disabled"
-                                            class="w-full text-left block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 focus:outline-none focus:bg-gray-100"
-                                            role="menuitem">
+                                        @if(auth()->user()->hasRole(['Supervisor certificaciones', 'Certificador Oficialia', 'Certificador Juridico', 'Jefe de departamento certificaciones']))
 
-                                            <span>Rechazar</span>
+                                            <button
+                                                wire:click="concluir({{ $copiaConsultada->certificacion->id }})"
+                                                wire:loading.attr="disabled"
+                                                class="w-full text-left block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 focus:outline-none focus:bg-gray-100"
+                                                role="menuitem">
 
-                                        </button>
+                                                <span>Concluir</span>
+
+                                            </button>
+
+                                        @else
+
+                                            <button
+                                                wire:click="abrirModalRechazar({{ $copiaConsultada->certificacion->id }})"
+                                                wire:loading.attr="disabled"
+                                                class="w-full text-left block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 focus:outline-none focus:bg-gray-100"
+                                                role="menuitem">
+
+                                                <span>Rechazar</span>
+
+                                            </button>
+
+                                        @endif
 
                                     </div>
 
