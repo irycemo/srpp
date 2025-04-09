@@ -349,51 +349,27 @@ class AsignacionService{
     public function obtenerCertificadorPropiedad($distrito, $solicitante, $tipo_servicio, $random, $folioReal):int
     {
 
-        if(!$folioReal){
-
-            $roles = ['Certificador Propiedad'];
-
-        }else{
-
-            $roles = ['Certificador Propiedad'];
-        }
-
-        if($distrito != 2 && $solicitante == 'Oficialia de partes'){
+        if($distrito == 2){
 
             $idActual = Asignacion::first()?->certificado_propiedad_uruapan;
-
-            if($tipo_servicio == 'ordinario')
-
-                $certificadores = User::where('status', 'activo')
-                                        ->whereHas('roles', function($q){
-                                            $q->where('name', 'Certificador Oficialia');
-                                        })
-                                        ->pluck('id');
-            else
-
-                $certificadores = User::where('status', 'activo')
-                                        ->whereHas('roles', function($q){
-                                            $q->where('name', 'Certificador Juridico');
-                                        })
-                                        ->pluck('id');
 
         }else{
 
             $idActual = Asignacion::first()?->certificado_propiedad;
 
-            $certificadores = User::where('status', 'activo')
+        }
+
+        $certificadores = User::where('status', 'activo')
                                     ->when($distrito == 2, function($q){
                                         $q->where('ubicacion', 'Regional 4');
                                     })
                                     ->when($distrito != 2, function($q){
                                         $q->where('ubicacion', '!=', 'Regional 4');
                                     })
-                                    ->whereHas('roles', function($q) use($roles){
-                                        $q->whereIn('name', $roles);
+                                    ->whereHas('roles', function($q) {
+                                        $q->whereIn('name', 'Certificador Propiedad');
                                     })
                                     ->pluck('id');
-
-        }
 
         if(count($certificadores) == 0){
 
