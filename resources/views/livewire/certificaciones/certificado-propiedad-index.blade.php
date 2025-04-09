@@ -39,12 +39,6 @@
 
                 @forelse ($certificados as $certificado)
 
-                    @if($certificado->tomo && $certificado->registro && $certificado->numero_propiedad && !$certificado->folio_real)
-                        <div></div>
-                        @continue
-
-                    @endif
-
                     <x-table.row wire:loading.class.delaylongest="opacity-50" wire:key="row-{{ $certificado->id }}">
 
                         <x-table.cell>

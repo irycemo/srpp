@@ -356,6 +356,18 @@ class CertificadoPropiedadIndex extends Component
         if(auth()->user()->hasRole(['Certificador Propiedad', 'Certificador Oficialia', 'Certificador Juridico'])){
 
             $certificados = MovimientoRegistral::with('asignadoA', 'supervisor', 'actualizadoPor', 'certificacion.actualizadoPor', 'folioReal:id,folio')
+                                                ->where(function($q){
+                                                    $q->whereNotNull('tomo')
+                                                        ->whereNotNull('registro')
+                                                        ->whereNotNull('numero_propiedad')
+                                                        ->whereNotNull('folio_real')
+                                                        ->orWhere(function($q){
+                                                            $q->whereNull('tomo')
+                                                                ->whereNull('registro')
+                                                                ->whereNull('numero_propiedad')
+                                                                ->whereNull('folio_real');
+                                                        });
+                                                })
                                                 ->where('usuario_asignado', auth()->id())
                                                 ->whereIn('estado', ['nuevo', 'correccion'])
                                                 ->when(auth()->user()->ubicacion == 'Regional 4', function($q){
@@ -384,6 +396,18 @@ class CertificadoPropiedadIndex extends Component
         }elseif(auth()->user()->hasRole(['Supervisor certificaciones', 'Supervisor uruapan'])){
 
             $certificados = MovimientoRegistral::with('asignadoA', 'supervisor', 'actualizadoPor', 'certificacion.actualizadoPor', 'folioReal:id,folio')
+                                                ->where(function($q){
+                                                    $q->whereNotNull('tomo')
+                                                        ->whereNotNull('registro')
+                                                        ->whereNotNull('numero_propiedad')
+                                                        ->whereNotNull('folio_real')
+                                                        ->orWhere(function($q){
+                                                            $q->whereNull('tomo')
+                                                                ->whereNull('registro')
+                                                                ->whereNull('numero_propiedad')
+                                                                ->whereNull('folio_real');
+                                                        });
+                                                })
                                                 ->whereIn('estado', ['nuevo', 'elaborado', 'correccion'])
                                                 ->when(auth()->user()->ubicacion == 'Regional 4', function($q){
                                                     $q->where('distrito', 2);
@@ -412,6 +436,18 @@ class CertificadoPropiedadIndex extends Component
         }elseif(auth()->user()->hasRole(['Jefe de departamento certificaciones'])){
 
             $certificados = MovimientoRegistral::with('asignadoA', 'supervisor', 'actualizadoPor', 'certificacion.actualizadoPor', 'folioReal:id,folio')
+                                                ->where(function($q){
+                                                    $q->whereNotNull('tomo')
+                                                        ->whereNotNull('registro')
+                                                        ->whereNotNull('numero_propiedad')
+                                                        ->whereNotNull('folio_real')
+                                                        ->orWhere(function($q){
+                                                            $q->whereNull('tomo')
+                                                                ->whereNull('registro')
+                                                                ->whereNull('numero_propiedad')
+                                                                ->whereNull('folio_real');
+                                                        });
+                                                })
                                                 ->when(auth()->user()->ubicacion == 'Regional 4', function($q){
                                                     $q->where('distrito', 2);
                                                 })
@@ -438,6 +474,18 @@ class CertificadoPropiedadIndex extends Component
         }elseif(auth()->user()->hasRole(['Administrador', 'Operador', 'Director', 'Jefe de departamento jurídico'])){
 
             $certificados = MovimientoRegistral::with('asignadoA', 'supervisor', 'actualizadoPor', 'certificacion.actualizadoPor', 'folioReal:id,folio')
+                                                ->where(function($q){
+                                                    $q->whereNotNull('tomo')
+                                                        ->whereNotNull('registro')
+                                                        ->whereNotNull('numero_propiedad')
+                                                        ->whereNotNull('folio_real')
+                                                        ->orWhere(function($q){
+                                                            $q->whereNull('tomo')
+                                                                ->whereNull('registro')
+                                                                ->whereNull('numero_propiedad')
+                                                                ->whereNull('folio_real');
+                                                        });
+                                                })
                                                 ->whereHas('certificacion', function($q){
                                                     $q->whereIn('servicio', ['DL10', 'DL11']);
                                                 })
