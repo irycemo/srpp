@@ -47,9 +47,22 @@ class CertificadoGravamen extends Component
     public $motivos;
     public $motivo;
 
+    public $años;
+    public $año;
+    public $filters = [
+        'año' => '',
+        'tramite' => '',
+        'usuario' => '',
+        'folio_real' => '',
+        'folio' => '',
+        'estado' => ''
+    ];
+
     public function crearModeloVacio(){
         $this->modelo_editar = Certificacion::make();
     }
+
+    public function updatedFilters() { $this->resetPage(); }
 
     public function abrirModalRechazar(Certificacion $modelo){
 
@@ -332,6 +345,10 @@ class CertificadoGravamen extends Component
 
         $this->crearModeloVacio();
 
+        $this->años = Constantes::AÑOS;
+
+        $this->año = now()->format('Y');
+
         $this->director = User::where('status', 'activo')
                                 ->whereHas('roles', function($q){
                                     $q->where('name', 'Director');
@@ -353,21 +370,6 @@ class CertificadoGravamen extends Component
                                                 ->whereHas('folioReal', function($q){
                                                     $q->whereIn('estado', ['activo', 'centinela']);
                                                 })
-                                                ->where(function($q){
-                                                    $q->whereHas('asignadoA', function($q){
-                                                            $q->where('name', 'LIKE', '%' . $this->search . '%');
-                                                        })
-                                                        ->orWhereHas('supervisor', function($q){
-                                                            $q->where('name', 'LIKE', '%' . $this->search . '%');
-                                                        })
-                                                        ->orWhere('solicitante', 'LIKE', '%' . $this->search . '%')
-                                                        ->orWhere('tomo', 'LIKE', '%' . $this->search . '%')
-                                                        ->orWhere('registro', 'LIKE', '%' . $this->search . '%')
-                                                        ->orWhere('distrito', 'LIKE', '%' . $this->search . '%')
-                                                        ->orWhere('seccion', 'LIKE', '%' . $this->search . '%')
-                                                        ->orWhere('estado', 'LIKE', '%' . $this->search . '%')
-                                                        ->orWhere('tramite', 'LIKE', '%' . $this->search . '%');
-                                                })
                                                 ->whereIn('estado', ['nuevo', 'correccion'])
                                                 ->when(auth()->user()->ubicacion == 'Regional 4', function($q){
                                                     $q->where('distrito', 2);
@@ -379,6 +381,16 @@ class CertificadoGravamen extends Component
                                                     $q->where('servicio', 'DL07')
                                                         ->whereNull('finalizado_en');
                                                 })
+                                                ->when($this->filters['año'], fn($q, $año) => $q->where('año', $año))
+                                                ->when($this->filters['tramite'], fn($q, $tramite) => $q->where('tramite', $tramite))
+                                                ->when($this->filters['usuario'], fn($q, $usuario) => $q->where('usuario', $usuario))
+                                                ->when($this->filters['folio_real'], function($q){
+                                                    $q->whereHas('folioreal', function ($q){
+                                                        $q->where('folio', $this->filters['folio_real']);
+                                                    });
+                                                })
+                                                ->when($this->filters['folio'], fn($q, $folio) => $q->where('folio', $folio))
+                                                ->when($this->filters['estado'], fn($q, $estado) => $q->where('estado', $estado))
                                                 ->orderBy($this->sort, $this->direction)
                                                 ->paginate($this->pagination);
 
@@ -388,21 +400,6 @@ class CertificadoGravamen extends Component
                                                 ->whereHas('folioReal', function($q){
                                                     $q->whereIn('estado', ['activo', 'centinela']);
                                                 })
-                                                ->where(function($q){
-                                                    $q->whereHas('asignadoA', function($q){
-                                                            $q->where('name', 'LIKE', '%' . $this->search . '%');
-                                                        })
-                                                        ->orWhereHas('supervisor', function($q){
-                                                            $q->where('name', 'LIKE', '%' . $this->search . '%');
-                                                        })
-                                                        ->orWhere('solicitante', 'LIKE', '%' . $this->search . '%')
-                                                        ->orWhere('tomo', 'LIKE', '%' . $this->search . '%')
-                                                        ->orWhere('registro', 'LIKE', '%' . $this->search . '%')
-                                                        ->orWhere('distrito', 'LIKE', '%' . $this->search . '%')
-                                                        ->orWhere('seccion', 'LIKE', '%' . $this->search . '%')
-                                                        ->orWhere('estado', 'LIKE', '%' . $this->search . '%')
-                                                        ->orWhere('tramite', 'LIKE', '%' . $this->search . '%');
-                                                })
                                                 ->whereIn('estado', ['nuevo', 'elaborado', 'correccion'])
                                                 ->when(auth()->user()->ubicacion == 'Regional 4', function($q){
                                                     $q->where('distrito', 2);
@@ -413,7 +410,16 @@ class CertificadoGravamen extends Component
                                                 ->whereHas('certificacion', function($q){
                                                     $q->where('servicio', 'DL07');
                                                 })
-
+                                                ->when($this->filters['año'], fn($q, $año) => $q->where('año', $año))
+                                                ->when($this->filters['tramite'], fn($q, $tramite) => $q->where('tramite', $tramite))
+                                                ->when($this->filters['usuario'], fn($q, $usuario) => $q->where('usuario', $usuario))
+                                                ->when($this->filters['folio_real'], function($q){
+                                                    $q->whereHas('folioreal', function ($q){
+                                                        $q->where('folio', $this->filters['folio_real']);
+                                                    });
+                                                })
+                                                ->when($this->filters['folio'], fn($q, $folio) => $q->where('folio', $folio))
+                                                ->when($this->filters['estado'], fn($q, $estado) => $q->where('estado', $estado))
                                                 ->orderBy($this->sort, $this->direction)
                                                 ->paginate($this->pagination);
 
@@ -423,22 +429,6 @@ class CertificadoGravamen extends Component
                                                 ->whereHas('folioReal', function($q){
                                                     $q->whereIn('estado', ['activo', 'centinela']);
                                                 })
-                                                ->where(function($q){
-                                                    $q->whereHas('asignadoA', function($q){
-                                                            $q->where('name', 'LIKE', '%' . $this->search . '%');
-                                                        })
-                                                        ->orWhereHas('supervisor', function($q){
-                                                            $q->where('name', 'LIKE', '%' . $this->search . '%');
-                                                        })
-                                                        ->orWhere('solicitante', 'LIKE', '%' . $this->search . '%')
-                                                        ->orWhere('tomo', 'LIKE', '%' . $this->search . '%')
-                                                        ->orWhere('registro', 'LIKE', '%' . $this->search . '%')
-                                                        ->orWhere('distrito', 'LIKE', '%' . $this->search . '%')
-                                                        ->orWhere('seccion', 'LIKE', '%' . $this->search . '%')
-                                                        ->orWhere('tramite', 'LIKE', '%' . $this->search . '%')
-                                                        ->orWhere('estado', 'LIKE', '%' . $this->search . '%')
-                                                        ->orWhere('tramite', 'LIKE', '%' . $this->search . '%');
-                                                })
                                                 ->when(auth()->user()->ubicacion == 'Regional 4', function($q){
                                                     $q->where('distrito', 2);
                                                 })
@@ -449,6 +439,16 @@ class CertificadoGravamen extends Component
                                                     $q->where('servicio', 'DL07');
                                                 })
                                                 ->whereIn('estado', ['nuevo', 'elaborado', 'correccion'])
+                                                ->when($this->filters['año'], fn($q, $año) => $q->where('año', $año))
+                                                ->when($this->filters['tramite'], fn($q, $tramite) => $q->where('tramite', $tramite))
+                                                ->when($this->filters['usuario'], fn($q, $usuario) => $q->where('usuario', $usuario))
+                                                ->when($this->filters['folio_real'], function($q){
+                                                    $q->whereHas('folioreal', function ($q){
+                                                        $q->where('folio', $this->filters['folio_real']);
+                                                    });
+                                                })
+                                                ->when($this->filters['folio'], fn($q, $folio) => $q->where('folio', $folio))
+                                                ->when($this->filters['estado'], fn($q, $estado) => $q->where('estado', $estado))
                                                 ->orderBy($this->sort, $this->direction)
                                                 ->paginate($this->pagination);
 
@@ -458,25 +458,19 @@ class CertificadoGravamen extends Component
                                                 ->whereHas('folioReal', function($q){
                                                     $q->whereIn('estado', ['activo', 'centinela', 'bloqueado']);
                                                 })
-                                                ->where(function($q){
-                                                    $q->whereHas('asignadoA', function($q){
-                                                            $q->where('name', 'LIKE', '%' . $this->search . '%');
-                                                        })
-                                                        ->orWhereHas('supervisor', function($q){
-                                                            $q->where('name', 'LIKE', '%' . $this->search . '%');
-                                                        })
-                                                        ->orWhere('solicitante', 'LIKE', '%' . $this->search . '%')
-                                                        ->orWhere('tomo', 'LIKE', '%' . $this->search . '%')
-                                                        ->orWhere('registro', 'LIKE', '%' . $this->search . '%')
-                                                        ->orWhere('distrito', 'LIKE', '%' . $this->search . '%')
-                                                        ->orWhere('seccion', 'LIKE', '%' . $this->search . '%')
-                                                        ->orWhere('tramite', 'LIKE', '%' . $this->search . '%')
-                                                        ->orWhere('estado', 'LIKE', '%' . $this->search . '%')
-                                                        ->orWhere('tramite', 'LIKE', '%' . $this->search . '%');
-                                                })
                                                 ->whereHas('certificacion', function($q){
                                                     $q->where('servicio', 'DL07');
                                                 })
+                                                ->when($this->filters['año'], fn($q, $año) => $q->where('año', $año))
+                                                ->when($this->filters['tramite'], fn($q, $tramite) => $q->where('tramite', $tramite))
+                                                ->when($this->filters['usuario'], fn($q, $usuario) => $q->where('usuario', $usuario))
+                                                ->when($this->filters['folio_real'], function($q){
+                                                    $q->whereHas('folioreal', function ($q){
+                                                        $q->where('folio', $this->filters['folio_real']);
+                                                    });
+                                                })
+                                                ->when($this->filters['folio'], fn($q, $folio) => $q->where('folio', $folio))
+                                                ->when($this->filters['estado'], fn($q, $estado) => $q->where('estado', $estado))
                                                 ->orderBy($this->sort, $this->direction)
                                                 ->paginate($this->pagination);
 
@@ -486,22 +480,6 @@ class CertificadoGravamen extends Component
                                                 ->where('estado', 'elaborado')
                                                 ->whereHas('folioReal', function($q){
                                                     $q->whereIn('estado', ['activo', 'centinela', 'bloqueado']);
-                                                })
-                                                ->where(function($q){
-                                                    $q->whereHas('asignadoA', function($q){
-                                                            $q->where('name', 'LIKE', '%' . $this->search . '%');
-                                                        })
-                                                        ->orWhereHas('supervisor', function($q){
-                                                            $q->where('name', 'LIKE', '%' . $this->search . '%');
-                                                        })
-                                                        ->orWhere('solicitante', 'LIKE', '%' . $this->search . '%')
-                                                        ->orWhere('tomo', 'LIKE', '%' . $this->search . '%')
-                                                        ->orWhere('registro', 'LIKE', '%' . $this->search . '%')
-                                                        ->orWhere('distrito', 'LIKE', '%' . $this->search . '%')
-                                                        ->orWhere('seccion', 'LIKE', '%' . $this->search . '%')
-                                                        ->orWhere('tramite', 'LIKE', '%' . $this->search . '%')
-                                                        ->orWhere('estado', 'LIKE', '%' . $this->search . '%')
-                                                        ->orWhere('tramite', 'LIKE', '%' . $this->search . '%');
                                                 })
                                                 ->when(auth()->user()->ubicacion === 'Regional 1', function($q){
                                                     $q->whereIn('distrito', [3, 9]);
@@ -527,6 +505,16 @@ class CertificadoGravamen extends Component
                                                 ->whereHas('certificacion', function($q){
                                                     $q->where('servicio', 'DL07');
                                                 })
+                                                ->when($this->filters['año'], fn($q, $año) => $q->where('año', $año))
+                                                ->when($this->filters['tramite'], fn($q, $tramite) => $q->where('tramite', $tramite))
+                                                ->when($this->filters['usuario'], fn($q, $usuario) => $q->where('usuario', $usuario))
+                                                ->when($this->filters['folio_real'], function($q){
+                                                    $q->whereHas('folioreal', function ($q){
+                                                        $q->where('folio', $this->filters['folio_real']);
+                                                    });
+                                                })
+                                                ->when($this->filters['folio'], fn($q, $folio) => $q->where('folio', $folio))
+                                                ->when($this->filters['estado'], fn($q, $estado) => $q->where('estado', $estado))
                                                 ->orderBy($this->sort, $this->direction)
                                                 ->paginate($this->pagination);
 

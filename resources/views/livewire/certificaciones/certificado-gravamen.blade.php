@@ -6,20 +6,7 @@
 
         <div class="flex justify-between">
 
-            <div>
-
-                <input type="text" wire:model.live.debounce.500ms="search" placeholder="Buscar" class="bg-white rounded-full text-sm">
-
-                <select class="bg-white rounded-full text-sm" wire:model.live="pagination">
-
-                    <option value="10">10</option>
-                    <option value="25">25</option>
-                    <option value="50">50</option>
-                    <option value="100">100</option>
-
-                </select>
-
-            </div>
+            @include('livewire.comun.filtros-inscripciones')
 
             @if(auth()->user()->hasRole(['Certificador', 'Certificador Oficialia', 'Certificador Juridico']))
 
