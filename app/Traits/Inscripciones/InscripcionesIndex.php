@@ -33,6 +33,17 @@ trait InscripcionesIndex{
     public $motivo;
     public $usuarios;
 
+    public $años;
+    public $año;
+    public $filters = [
+        'año' => '',
+        'tramite' => '',
+        'usuario' => '',
+        'folio_real' => '',
+        'folio' => '',
+        'estado' => ''
+    ];
+
     public MovimientoRegistral $modelo_editar;
 
     public $actual;
@@ -40,6 +51,8 @@ trait InscripcionesIndex{
     public function crearModeloVacio(){
         $this->modelo_editar = MovimientoRegistral::make();
     }
+
+    public function updatedFilters() { $this->resetPage(); }
 
     public function estaBloqueado(){
 
@@ -481,7 +494,9 @@ trait InscripcionesIndex{
 
         try {
 
-            $this->modelo_editar->usuario_asignado = $this->usuarios->where('id', '!=', $this->modelo_editar->usuario_asignado)->random()->id;
+            $usuario = $this->usuarios->where('id', '!=', $this->modelo_editar->usuario_asignado)->random()->first();
+
+            $this->modelo_editar->usuario_asignado = $usuario->id;
 
             $this->modelo_editar->actualizado_por = auth()->user()->id;
 
@@ -489,7 +504,7 @@ trait InscripcionesIndex{
 
             $this->modelo_editar->audits()->latest()->first()->update(['tags' => 'Reasignó usuario']);
 
-            $this->dispatch('mostrarMensaje', ['success', "El trámite se reasignó con éxito."]);
+            $this->dispatch('mostrarMensaje', ['success', "El trámite se reasignó con éxito a: " . $usuario->name]);
 
             $this->modalReasignar = false;
 

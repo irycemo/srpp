@@ -57,6 +57,10 @@ class PropiedadIndex extends Component
 
         $this->crearModeloVacio();
 
+        $this->años = Constantes::AÑOS;
+
+        $this->año = now()->format('Y');
+
         $this->motivos = Constantes::RECHAZO_MOTIVOS;
 
         $this->usuarios = User::where('status', 'activo')
@@ -103,6 +107,17 @@ class PropiedadIndex extends Component
                                                         $q->whereIn('servicio', ['D158', 'D114', 'D113', 'D115', 'D116', 'D118', 'D149']);
                                                     })
                                                     ->whereIn('estado', ['nuevo', 'captura', 'elaborado', 'correccion'])
+                                                    ->whereIn('estado', ['nuevo', 'captura', 'elaborado', 'finalizado', 'correccion'])
+                                                    ->when($this->filters['año'], fn($q, $año) => $q->where('año', $año))
+                                                    ->when($this->filters['tramite'], fn($q, $tramite) => $q->where('tramite', $tramite))
+                                                    ->when($this->filters['usuario'], fn($q, $usuario) => $q->where('usuario', $usuario))
+                                                    ->when($this->filters['folio_real'], function($q){
+                                                        $q->whereHas('folioreal', function ($q){
+                                                            $q->where('folio', $this->filters['folio_real']);
+                                                        });
+                                                    })
+                                                    ->when($this->filters['folio'], fn($q, $folio) => $q->where('folio', $folio))
+                                                    ->when($this->filters['estado'], fn($q, $estado) => $q->where('estado', $estado))
                                                     ->orderBy($this->sort, $this->direction)
                                                     ->paginate($this->pagination);
 
@@ -137,6 +152,17 @@ class PropiedadIndex extends Component
                                                         $q->whereIn('servicio', ['D158', 'D114', 'D113', 'D115', 'D116', 'D118', 'D149']);
                                                     })
                                                     ->whereIn('estado', ['nuevo', 'captura', 'elaborado', 'finalizado', 'correccion'])
+                                                    ->whereIn('estado', ['nuevo', 'captura', 'elaborado', 'finalizado', 'correccion'])
+                                                    ->when($this->filters['año'], fn($q, $año) => $q->where('año', $año))
+                                                    ->when($this->filters['tramite'], fn($q, $tramite) => $q->where('tramite', $tramite))
+                                                    ->when($this->filters['usuario'], fn($q, $usuario) => $q->where('usuario', $usuario))
+                                                    ->when($this->filters['folio_real'], function($q){
+                                                        $q->whereHas('folioreal', function ($q){
+                                                            $q->where('folio', $this->filters['folio_real']);
+                                                        });
+                                                    })
+                                                    ->when($this->filters['folio'], fn($q, $folio) => $q->where('folio', $folio))
+                                                    ->when($this->filters['estado'], fn($q, $estado) => $q->where('estado', $estado))
                                                     ->orderBy($this->sort, $this->direction)
                                                     ->paginate($this->pagination);
 
@@ -173,6 +199,17 @@ class PropiedadIndex extends Component
                                                     ->whereHas('inscripcionPropiedad', function($q){
                                                         $q->whereIn('servicio', ['D158', 'D114', 'D113', 'D115', 'D116', 'D118', 'D149']);
                                                     })
+                                                    ->whereIn('estado', ['nuevo', 'captura', 'elaborado', 'finalizado', 'correccion'])
+                                                    ->when($this->filters['año'], fn($q, $año) => $q->where('año', $año))
+                                                    ->when($this->filters['tramite'], fn($q, $tramite) => $q->where('tramite', $tramite))
+                                                    ->when($this->filters['usuario'], fn($q, $usuario) => $q->where('usuario', $usuario))
+                                                    ->when($this->filters['folio_real'], function($q){
+                                                        $q->whereHas('folioreal', function ($q){
+                                                            $q->where('folio', $this->filters['folio_real']);
+                                                        });
+                                                    })
+                                                    ->when($this->filters['folio'], fn($q, $folio) => $q->where('folio', $folio))
+                                                    ->when($this->filters['estado'], fn($q, $estado) => $q->where('estado', $estado))
                                                     ->orderBy($this->sort, $this->direction)
                                                     ->paginate($this->pagination);
 
@@ -203,6 +240,17 @@ class PropiedadIndex extends Component
                                                     ->whereHas('inscripcionPropiedad', function($q){
                                                         $q->whereIn('servicio', ['D158', 'D114', 'D113', 'D115', 'D116', 'D118', 'D149']);
                                                     })
+                                                    ->whereIn('estado', ['nuevo', 'captura', 'elaborado', 'finalizado', 'correccion'])
+                                                    ->when($this->filters['año'], fn($q, $año) => $q->where('año', $año))
+                                                    ->when($this->filters['tramite'], fn($q, $tramite) => $q->where('tramite', $tramite))
+                                                    ->when($this->filters['usuario'], fn($q, $usuario) => $q->where('usuario', $usuario))
+                                                    ->when($this->filters['folio_real'], function($q){
+                                                        $q->whereHas('folioreal', function ($q){
+                                                            $q->where('folio', $this->filters['folio_real']);
+                                                        });
+                                                    })
+                                                    ->when($this->filters['folio'], fn($q, $folio) => $q->where('folio', $folio))
+                                                    ->when($this->filters['estado'], fn($q, $estado) => $q->where('estado', $estado))
                                                     ->orderBy($this->sort, $this->direction)
                                                     ->paginate($this->pagination);
 
@@ -252,6 +300,16 @@ class PropiedadIndex extends Component
                                                         $q->whereIn('servicio', ['D158', 'D114', 'D113', 'D115', 'D116', 'D118', 'D149']);
                                                     })
                                                     ->whereIn('estado', ['nuevo', 'captura', 'elaborado', 'finalizado', 'correccion'])
+                                                    ->when($this->filters['año'], fn($q, $año) => $q->where('año', $año))
+                                                    ->when($this->filters['tramite'], fn($q, $tramite) => $q->where('tramite', $tramite))
+                                                    ->when($this->filters['usuario'], fn($q, $usuario) => $q->where('usuario', $usuario))
+                                                    ->when($this->filters['folio_real'], function($q){
+                                                        $q->whereHas('folioreal', function ($q){
+                                                            $q->where('folio', $this->filters['folio_real']);
+                                                        });
+                                                    })
+                                                    ->when($this->filters['folio'], fn($q, $folio) => $q->where('folio', $folio))
+                                                    ->when($this->filters['estado'], fn($q, $estado) => $q->where('estado', $estado))
                                                     ->orderBy($this->sort, $this->direction)
                                                     ->paginate($this->pagination);
 

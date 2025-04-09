@@ -134,6 +134,10 @@ class ReformasIndex extends Component
 
         $this->crearModeloVacio();
 
+        $this->años = Constantes::AÑOS;
+
+        $this->año = now()->format('Y');
+
         $this->motivos = Constantes::RECHAZO_MOTIVOS;
 
         $this->usuarios = User::where('status', 'activo')
@@ -205,6 +209,16 @@ class ReformasIndex extends Component
                                                     ->when(auth()->user()->ubicacion != 'Regional 4', function($q){
                                                         $q->where('distrito', '!=', 2);
                                                     })
+                                                    ->when($this->filters['año'], fn($q, $año) => $q->where('año', $año))
+                                                    ->when($this->filters['tramite'], fn($q, $tramite) => $q->where('tramite', $tramite))
+                                                    ->when($this->filters['usuario'], fn($q, $usuario) => $q->where('usuario', $usuario))
+                                                    ->when($this->filters['folio_real'], function($q){
+                                                        $q->whereHas('folioreal', function ($q){
+                                                            $q->where('folio', $this->filters['folio_real']);
+                                                        });
+                                                    })
+                                                    ->when($this->filters['folio'], fn($q, $folio) => $q->where('folio', $folio))
+                                                    ->when($this->filters['estado'], fn($q, $estado) => $q->where('estado', $estado))
                                                     ->orderBy($this->sort, $this->direction)
                                                     ->paginate($this->pagination);
 
@@ -232,6 +246,16 @@ class ReformasIndex extends Component
                                                             ->orWhere('estado', 'LIKE', '%' . $this->search . '%');
                                                     })
                                                     ->whereIn('estado', ['nuevo', 'captura', 'elaborado', 'finalizado', 'correccion'])
+                                                    ->when($this->filters['año'], fn($q, $año) => $q->where('año', $año))
+                                                    ->when($this->filters['tramite'], fn($q, $tramite) => $q->where('tramite', $tramite))
+                                                    ->when($this->filters['usuario'], fn($q, $usuario) => $q->where('usuario', $usuario))
+                                                    ->when($this->filters['folio_real'], function($q){
+                                                        $q->whereHas('folioreal', function ($q){
+                                                            $q->where('folio', $this->filters['folio_real']);
+                                                        });
+                                                    })
+                                                    ->when($this->filters['folio'], fn($q, $folio) => $q->where('folio', $folio))
+                                                    ->when($this->filters['estado'], fn($q, $estado) => $q->where('estado', $estado))
                                                     ->orderBy($this->sort, $this->direction)
                                                     ->paginate($this->pagination);
 
@@ -261,6 +285,16 @@ class ReformasIndex extends Component
                                                     ->when(auth()->user()->ubicacion != 'Regional 4', function($q){
                                                         $q->where('distrito', '!=', 2);
                                                     })
+                                                    ->when($this->filters['año'], fn($q, $año) => $q->where('año', $año))
+                                                    ->when($this->filters['tramite'], fn($q, $tramite) => $q->where('tramite', $tramite))
+                                                    ->when($this->filters['usuario'], fn($q, $usuario) => $q->where('usuario', $usuario))
+                                                    ->when($this->filters['folio_real'], function($q){
+                                                        $q->whereHas('folioreal', function ($q){
+                                                            $q->where('folio', $this->filters['folio_real']);
+                                                        });
+                                                    })
+                                                    ->when($this->filters['folio'], fn($q, $folio) => $q->where('folio', $folio))
+                                                    ->when($this->filters['estado'], fn($q, $estado) => $q->where('estado', $estado))
                                                     ->orderBy($this->sort, $this->direction)
                                                     ->paginate($this->pagination);
 
@@ -284,6 +318,16 @@ class ReformasIndex extends Component
                                                             ->orWhere('distrito', 'LIKE', '%' . $this->search . '%')
                                                             ->orWhere('estado', 'LIKE', '%' . $this->search . '%');
                                                     }) */
+                                                    ->when($this->filters['año'], fn($q, $año) => $q->where('año', $año))
+                                                    ->when($this->filters['tramite'], fn($q, $tramite) => $q->where('tramite', $tramite))
+                                                    ->when($this->filters['usuario'], fn($q, $usuario) => $q->where('usuario', $usuario))
+                                                    ->when($this->filters['folio_real'], function($q){
+                                                        $q->whereHas('folioreal', function ($q){
+                                                            $q->where('folio', $this->filters['folio_real']);
+                                                        });
+                                                    })
+                                                    ->when($this->filters['folio'], fn($q, $folio) => $q->where('folio', $folio))
+                                                    ->when($this->filters['estado'], fn($q, $estado) => $q->where('estado', $estado))
                                                     ->orderBy($this->sort, $this->direction)
                                                     ->paginate($this->pagination);
 

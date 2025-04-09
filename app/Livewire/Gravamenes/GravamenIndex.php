@@ -56,6 +56,10 @@ class GravamenIndex extends Component
 
         $this->crearModeloVacio();
 
+        $this->años = Constantes::AÑOS;
+
+        $this->año = now()->format('Y');
+
         $this->motivos = Constantes::RECHAZO_MOTIVOS;
 
         $this->usuarios = User::where('status', 'activo')
@@ -97,6 +101,16 @@ class GravamenIndex extends Component
                                                     ->whereHas('gravamen', function($q){
                                                         $q->whereIn('servicio', ['D127', 'D153', 'D150', 'D155', 'DM68', 'D154']);
                                                     })
+                                                    ->when($this->filters['año'], fn($q, $año) => $q->where('año', $año))
+                                                    ->when($this->filters['tramite'], fn($q, $tramite) => $q->where('tramite', $tramite))
+                                                    ->when($this->filters['usuario'], fn($q, $usuario) => $q->where('usuario', $usuario))
+                                                    ->when($this->filters['folio_real'], function($q){
+                                                        $q->whereHas('folioreal', function ($q){
+                                                            $q->where('folio', $this->filters['folio_real']);
+                                                        });
+                                                    })
+                                                    ->when($this->filters['folio'], fn($q, $folio) => $q->where('folio', $folio))
+                                                    ->when($this->filters['estado'], fn($q, $estado) => $q->where('estado', $estado))
                                                     ->orderBy($this->sort, $this->direction)
                                                     ->paginate($this->pagination);
 
@@ -128,6 +142,16 @@ class GravamenIndex extends Component
                                                     ->whereHas('gravamen', function($q){
                                                         $q->whereIn('servicio', ['D127', 'D153', 'D150', 'D155', 'DM68', 'D154']);
                                                     })
+                                                    ->when($this->filters['año'], fn($q, $año) => $q->where('año', $año))
+                                                    ->when($this->filters['tramite'], fn($q, $tramite) => $q->where('tramite', $tramite))
+                                                    ->when($this->filters['usuario'], fn($q, $usuario) => $q->where('usuario', $usuario))
+                                                    ->when($this->filters['folio_real'], function($q){
+                                                        $q->whereHas('folioreal', function ($q){
+                                                            $q->where('folio', $this->filters['folio_real']);
+                                                        });
+                                                    })
+                                                    ->when($this->filters['folio'], fn($q, $folio) => $q->where('folio', $folio))
+                                                    ->when($this->filters['estado'], fn($q, $estado) => $q->where('estado', $estado))
                                                     ->orderBy($this->sort, $this->direction)
                                                     ->paginate($this->pagination);
 
@@ -161,6 +185,16 @@ class GravamenIndex extends Component
                                                     ->whereHas('gravamen', function($q){
                                                         $q->whereIn('servicio', ['D127', 'D153', 'D150', 'D155', 'DM68', 'D154']);
                                                     })
+                                                    ->when($this->filters['año'], fn($q, $año) => $q->where('año', $año))
+                                                    ->when($this->filters['tramite'], fn($q, $tramite) => $q->where('tramite', $tramite))
+                                                    ->when($this->filters['usuario'], fn($q, $usuario) => $q->where('usuario', $usuario))
+                                                    ->when($this->filters['folio_real'], function($q){
+                                                        $q->whereHas('folioreal', function ($q){
+                                                            $q->where('folio', $this->filters['folio_real']);
+                                                        });
+                                                    })
+                                                    ->when($this->filters['folio'], fn($q, $folio) => $q->where('folio', $folio))
+                                                    ->when($this->filters['estado'], fn($q, $estado) => $q->where('estado', $estado))
                                                     ->orderBy($this->sort, $this->direction)
                                                     ->paginate($this->pagination);
 
@@ -188,6 +222,16 @@ class GravamenIndex extends Component
                                                     ->whereHas('gravamen', function($q){
                                                         $q->whereIn('servicio', ['D127', 'D153', 'D150', 'D155', 'DM68', 'D154']);
                                                     })
+                                                    ->when($this->filters['año'], fn($q, $año) => $q->where('año', $año))
+                                                    ->when($this->filters['tramite'], fn($q, $tramite) => $q->where('tramite', $tramite))
+                                                    ->when($this->filters['usuario'], fn($q, $usuario) => $q->where('usuario', $usuario))
+                                                    ->when($this->filters['folio_real'], function($q){
+                                                        $q->whereHas('folioreal', function ($q){
+                                                            $q->where('folio', $this->filters['folio_real']);
+                                                        });
+                                                    })
+                                                    ->when($this->filters['folio'], fn($q, $folio) => $q->where('folio', $folio))
+                                                    ->when($this->filters['estado'], fn($q, $estado) => $q->where('estado', $estado))
                                                     ->orderBy($this->sort, $this->direction)
                                                     ->paginate($this->pagination);
 
@@ -234,6 +278,16 @@ class GravamenIndex extends Component
                                                     ->whereHas('gravamen', function($q){
                                                         $q->whereIn('servicio', ['D127', 'D153', 'D150', 'D155', 'DM68', 'D154']);
                                                     })
+                                                    ->when($this->filters['año'], fn($q, $año) => $q->where('año', $año))
+                                                    ->when($this->filters['tramite'], fn($q, $tramite) => $q->where('tramite', $tramite))
+                                                    ->when($this->filters['usuario'], fn($q, $usuario) => $q->where('usuario', $usuario))
+                                                    ->when($this->filters['folio_real'], function($q){
+                                                        $q->whereHas('folioreal', function ($q){
+                                                            $q->where('folio', $this->filters['folio_real']);
+                                                        });
+                                                    })
+                                                    ->when($this->filters['folio'], fn($q, $folio) => $q->where('folio', $folio))
+                                                    ->when($this->filters['estado'], fn($q, $estado) => $q->where('estado', $estado))
                                                     ->orderBy($this->sort, $this->direction)
                                                     ->paginate($this->pagination);
 
