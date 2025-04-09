@@ -181,20 +181,6 @@ class VariosIndex extends Component
                                                     ->whereHas('folioReal', function($q){
                                                         $q->whereIn('estado', ['activo', 'centinela']);
                                                     })
-                                                    ->where(function($q){
-                                                        $q->whereHas('asignadoA', function($q){
-                                                                $q->where('name', 'LIKE', '%' . $this->search . '%');
-                                                            })
-                                                            ->orWhereHas('folioReal', function($q){
-                                                                $q->where('folio', $this->search);
-                                                            })
-                                                            ->orWhere('solicitante', 'LIKE', '%' . $this->search . '%')
-                                                            ->orWhere('tomo', 'LIKE', '%' . $this->search . '%')
-                                                            ->orWhere('registro', 'LIKE', '%' . $this->search . '%')
-                                                            ->orWhere('distrito', 'LIKE', '%' . $this->search . '%')
-                                                            ->orWhere('estado', 'LIKE', '%' . $this->search . '%')
-                                                            ->orWhere('tramite', 'LIKE', '%' . $this->search . '%');
-                                                    })
                                                     ->when(auth()->user()->ubicacion == 'Regional 4', function($q){
                                                         $q->where('distrito', 2);
                                                     })
@@ -222,20 +208,6 @@ class VariosIndex extends Component
             $movimientos = MovimientoRegistral::with('vario', 'asignadoA', 'actualizadoPor', 'folioReal')
                                                     ->whereHas('folioReal', function($q){
                                                         $q->whereIn('estado', ['activo', 'centinela', 'bloqueado']);
-                                                    })
-                                                    ->where(function($q){
-                                                        $q->whereHas('asignadoA', function($q){
-                                                                $q->where('name', 'LIKE', '%' . $this->search . '%');
-                                                            })
-                                                            ->orWhereHas('folioReal', function($q){
-                                                                $q->where('folio', $this->search);
-                                                            })
-                                                            ->orWhere('solicitante', 'LIKE', '%' . $this->search . '%')
-                                                            ->orWhere('tomo', 'LIKE', '%' . $this->search . '%')
-                                                            ->orWhere('registro', 'LIKE', '%' . $this->search . '%')
-                                                            ->orWhere('distrito', 'LIKE', '%' . $this->search . '%')
-                                                            ->orWhere('estado', 'LIKE', '%' . $this->search . '%')
-                                                            ->orWhere('tramite', 'LIKE', '%' . $this->search . '%');
                                                     })
                                                     ->whereHas('vario', function($q){
                                                         $q->whereIn('servicio', ['DN83', 'D128', 'D112', 'D110', 'D157', 'DL19', 'DL16']);

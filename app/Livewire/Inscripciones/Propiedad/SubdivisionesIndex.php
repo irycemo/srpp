@@ -21,6 +21,10 @@ class SubdivisionesIndex extends Component
 
         $this->crearModeloVacio();
 
+        $this->años = Constantes::AÑOS;
+
+        $this->año = now()->format('Y');
+
         $this->motivos = Constantes::RECHAZO_MOTIVOS;
 
         $this->usuarios = User::where('status', 'activo')
@@ -42,21 +46,6 @@ class SubdivisionesIndex extends Component
                                                     ->whereHas('folioReal', function($q){
                                                         $q->whereIn('estado', ['activo', 'centinela']);
                                                     })
-                                                    ->where(function($q){
-                                                        $q->whereHas('asignadoA', function($q){
-                                                                $q->where('name', 'LIKE', '%' . $this->search . '%');
-                                                            })
-                                                            ->orWhere('solicitante', 'LIKE', '%' . $this->search . '%')
-                                                            ->orWhere('tomo', 'LIKE', '%' . $this->search . '%')
-                                                            ->orWhere('registro', 'LIKE', '%' . $this->search . '%')
-                                                            ->orWhere('distrito', 'LIKE', '%' . $this->search . '%')
-                                                            ->orWhere('seccion', 'LIKE', '%' . $this->search . '%')
-                                                            ->orWhere('tramite', 'LIKE', '%' . $this->search . '%')
-                                                            ->orWhere('folio', 'LIKE', '%' . $this->search . '%')
-                                                            ->orWhereHas('folioReal', function($q){
-                                                                $q->where('folio', 'LIKE', '%' . $this->search . '%');
-                                                            });
-                                                    })
                                                     ->when(auth()->user()->ubicacion == 'Regional 4', function($q){
                                                         $q->where('distrito', 2);
                                                     })
@@ -67,6 +56,16 @@ class SubdivisionesIndex extends Component
                                                         $q->where('servicio', 'D127');
                                                     })
                                                     ->whereIn('estado', ['nuevo', 'captura', 'elaborado', 'correccion'])
+                                                    ->when($this->filters['año'], fn($q, $año) => $q->where('año', $año))
+                                                    ->when($this->filters['tramite'], fn($q, $tramite) => $q->where('tramite', $tramite))
+                                                    ->when($this->filters['usuario'], fn($q, $usuario) => $q->where('usuario', $usuario))
+                                                    ->when($this->filters['folio_real'], function($q){
+                                                        $q->whereHas('folioreal', function ($q){
+                                                            $q->where('folio', $this->filters['folio_real']);
+                                                        });
+                                                    })
+                                                    ->when($this->filters['folio'], fn($q, $folio) => $q->where('folio', $folio))
+                                                    ->when($this->filters['estado'], fn($q, $estado) => $q->where('estado', $estado))
                                                     ->orderBy($this->sort, $this->direction)
                                                     ->paginate($this->pagination);
 
@@ -75,21 +74,6 @@ class SubdivisionesIndex extends Component
             $movimientos = MovimientoRegistral::with('inscripcionPropiedad', 'asignadoA', 'actualizadoPor', 'folioReal:id,folio')
                                                     ->whereHas('folioReal', function($q){
                                                         $q->whereIn('estado', ['activo', 'centinela']);
-                                                    })
-                                                    ->where(function($q){
-                                                        $q->whereHas('asignadoA', function($q){
-                                                                $q->where('name', 'LIKE', '%' . $this->search . '%');
-                                                            })
-                                                            ->orWhere('solicitante', 'LIKE', '%' . $this->search . '%')
-                                                            ->orWhere('tomo', 'LIKE', '%' . $this->search . '%')
-                                                            ->orWhere('registro', 'LIKE', '%' . $this->search . '%')
-                                                            ->orWhere('distrito', 'LIKE', '%' . $this->search . '%')
-                                                            ->orWhere('seccion', 'LIKE', '%' . $this->search . '%')
-                                                            ->orWhere('tramite', 'LIKE', '%' . $this->search . '%')
-                                                            ->orWhere('folio', 'LIKE', '%' . $this->search . '%')
-                                                            ->orWhereHas('folioReal', function($q){
-                                                                $q->where('folio', 'LIKE', '%' . $this->search . '%');
-                                                            });
                                                     })
                                                     ->when(auth()->user()->ubicacion == 'Regional 4', function($q){
                                                         $q->where('distrito', 2);
@@ -101,6 +85,16 @@ class SubdivisionesIndex extends Component
                                                         $q->where('servicio', 'D127');
                                                     })
                                                     ->whereIn('estado', ['nuevo', 'captura', 'elaborado', 'finalizado', 'correccion'])
+                                                    ->when($this->filters['año'], fn($q, $año) => $q->where('año', $año))
+                                                    ->when($this->filters['tramite'], fn($q, $tramite) => $q->where('tramite', $tramite))
+                                                    ->when($this->filters['usuario'], fn($q, $usuario) => $q->where('usuario', $usuario))
+                                                    ->when($this->filters['folio_real'], function($q){
+                                                        $q->whereHas('folioreal', function ($q){
+                                                            $q->where('folio', $this->filters['folio_real']);
+                                                        });
+                                                    })
+                                                    ->when($this->filters['folio'], fn($q, $folio) => $q->where('folio', $folio))
+                                                    ->when($this->filters['estado'], fn($q, $estado) => $q->where('estado', $estado))
                                                     ->orderBy($this->sort, $this->direction)
                                                     ->paginate($this->pagination);
 
@@ -109,24 +103,6 @@ class SubdivisionesIndex extends Component
             $movimientos = MovimientoRegistral::with('inscripcionPropiedad', 'asignadoA', 'actualizadoPor', 'folioReal:id,folio')
                                                     ->whereHas('folioReal', function($q){
                                                         $q->whereIn('estado', ['activo', 'centinela']);
-                                                    })
-                                                    ->where(function($q){
-                                                        $q->whereHas('asignadoA', function($q){
-                                                                $q->where('name', 'LIKE', '%' . $this->search . '%');
-                                                            })
-                                                            ->orWhereHas('folioReal', function($q){
-                                                                $q->where('folio', $this->search);
-                                                            })
-                                                            ->orWhere('solicitante', 'LIKE', '%' . $this->search . '%')
-                                                            ->orWhere('tomo', 'LIKE', '%' . $this->search . '%')
-                                                            ->orWhere('registro', 'LIKE', '%' . $this->search . '%')
-                                                            ->orWhere('distrito', 'LIKE', '%' . $this->search . '%')
-                                                            ->orWhere('estado', 'LIKE', '%' . $this->search . '%')
-                                                            ->orWhere('tramite', 'LIKE', '%' . $this->search . '%')
-                                                            ->orWhere('folio', 'LIKE', '%' . $this->search . '%')
-                                                            ->orWhereHas('folioReal', function($q){
-                                                                $q->where('folio', 'LIKE', '%' . $this->search . '%');
-                                                            });
                                                     })
                                                     ->when(auth()->user()->ubicacion == 'Regional 4', function($q){
                                                         $q->where('distrito', 2);
@@ -137,6 +113,16 @@ class SubdivisionesIndex extends Component
                                                     ->whereHas('inscripcionPropiedad', function($q){
                                                         $q->where('servicio', 'D127');
                                                     })
+                                                    ->when($this->filters['año'], fn($q, $año) => $q->where('año', $año))
+                                                    ->when($this->filters['tramite'], fn($q, $tramite) => $q->where('tramite', $tramite))
+                                                    ->when($this->filters['usuario'], fn($q, $usuario) => $q->where('usuario', $usuario))
+                                                    ->when($this->filters['folio_real'], function($q){
+                                                        $q->whereHas('folioreal', function ($q){
+                                                            $q->where('folio', $this->filters['folio_real']);
+                                                        });
+                                                    })
+                                                    ->when($this->filters['folio'], fn($q, $folio) => $q->where('folio', $folio))
+                                                    ->when($this->filters['estado'], fn($q, $estado) => $q->where('estado', $estado))
                                                     ->orderBy($this->sort, $this->direction)
                                                     ->paginate($this->pagination);
 
@@ -146,27 +132,19 @@ class SubdivisionesIndex extends Component
                                                     ->whereHas('folioReal', function($q){
                                                         $q->whereIn('estado', ['activo', 'centinela', 'bloqueado']);
                                                     })
-                                                    ->where(function($q){
-                                                        $q->whereHas('asignadoA', function($q){
-                                                                $q->where('name', 'LIKE', '%' . $this->search . '%');
-                                                            })
-                                                            ->orWhereHas('folioReal', function($q){
-                                                                $q->where('folio', $this->search);
-                                                            })
-                                                            ->orWhere('solicitante', 'LIKE', '%' . $this->search . '%')
-                                                            ->orWhere('tomo', 'LIKE', '%' . $this->search . '%')
-                                                            ->orWhere('registro', 'LIKE', '%' . $this->search . '%')
-                                                            ->orWhere('distrito', 'LIKE', '%' . $this->search . '%')
-                                                            ->orWhere('estado', 'LIKE', '%' . $this->search . '%')
-                                                            ->orWhere('tramite', 'LIKE', '%' . $this->search . '%')
-                                                            ->orWhere('folio', 'LIKE', '%' . $this->search . '%')
-                                                            ->orWhereHas('folioReal', function($q){
-                                                                $q->where('folio', 'LIKE', '%' . $this->search . '%');
-                                                            });
-                                                    })
                                                     ->whereHas('inscripcionPropiedad', function($q){
                                                         $q->where('servicio', 'D127');
                                                     })
+                                                    ->when($this->filters['año'], fn($q, $año) => $q->where('año', $año))
+                                                    ->when($this->filters['tramite'], fn($q, $tramite) => $q->where('tramite', $tramite))
+                                                    ->when($this->filters['usuario'], fn($q, $usuario) => $q->where('usuario', $usuario))
+                                                    ->when($this->filters['folio_real'], function($q){
+                                                        $q->whereHas('folioreal', function ($q){
+                                                            $q->where('folio', $this->filters['folio_real']);
+                                                        });
+                                                    })
+                                                    ->when($this->filters['folio'], fn($q, $folio) => $q->where('folio', $folio))
+                                                    ->when($this->filters['estado'], fn($q, $estado) => $q->where('estado', $estado))
                                                     ->orderBy($this->sort, $this->direction)
                                                     ->paginate($this->pagination);
 

@@ -105,18 +105,6 @@ class CancelacionIndex extends Component
                                                     ->whereHas('folioReal', function($q){
                                                         $q->whereIn('estado', ['activo', 'centinela']);
                                                     })
-                                                    ->where(function($q){
-                                                        $q->whereHas('asignadoA', function($q){
-                                                                $q->where('name', 'LIKE', '%' . $this->search . '%');
-                                                            })
-                                                            ->orWhere('solicitante', 'LIKE', '%' . $this->search . '%')
-                                                            ->orWhere('tomo', 'LIKE', '%' . $this->search . '%')
-                                                            ->orWhere('registro', 'LIKE', '%' . $this->search . '%')
-                                                            ->orWhere('distrito', 'LIKE', '%' . $this->search . '%')
-                                                            ->orWhere('seccion', 'LIKE', '%' . $this->search . '%')
-                                                            ->orWhere('estado', 'LIKE', '%' . $this->search . '%')
-                                                            ->orWhere('tramite', 'LIKE', '%' . $this->search . '%');
-                                                    })
                                                     ->when(auth()->user()->ubicacion == 'Regional 4', function($q){
                                                         $q->where('distrito', 2);
                                                     })
@@ -145,18 +133,6 @@ class CancelacionIndex extends Component
             $movimientos = MovimientoRegistral::with('cancelacion', 'asignadoA', 'actualizadoPor', 'folioReal:id,folio')
                                                     ->whereHas('folioReal', function($q){
                                                         $q->whereIn('estado', ['activo', 'centinela']);
-                                                    })
-                                                    ->where(function($q){
-                                                        $q->whereHas('asignadoA', function($q){
-                                                                $q->where('name', 'LIKE', '%' . $this->search . '%');
-                                                            })
-                                                            ->orWhere('solicitante', 'LIKE', '%' . $this->search . '%')
-                                                            ->orWhere('tomo', 'LIKE', '%' . $this->search . '%')
-                                                            ->orWhere('registro', 'LIKE', '%' . $this->search . '%')
-                                                            ->orWhere('distrito', 'LIKE', '%' . $this->search . '%')
-                                                            ->orWhere('seccion', 'LIKE', '%' . $this->search . '%')
-                                                            ->orWhere('estado', 'LIKE', '%' . $this->search . '%')
-                                                            ->orWhere('tramite', 'LIKE', '%' . $this->search . '%');
                                                     })
                                                     ->when(auth()->user()->ubicacion == 'Regional 4', function($q){
                                                         $q->where('distrito', 2);
@@ -187,21 +163,6 @@ class CancelacionIndex extends Component
                                                     ->whereHas('folioReal', function($q){
                                                         $q->whereIn('estado', ['activo', 'centinela']);
                                                     })
-                                                    ->where(function($q){
-                                                        $q->whereHas('asignadoA', function($q){
-                                                                $q->where('name', 'LIKE', '%' . $this->search . '%');
-                                                            })
-                                                            ->orWhereHas('folioReal', function($q){
-                                                                $q->where('folio', $this->search);
-                                                            })
-                                                            ->orWhere('solicitante', 'LIKE', '%' . $this->search . '%')
-                                                            ->orWhere('tomo', 'LIKE', '%' . $this->search . '%')
-                                                            ->orWhere('registro', 'LIKE', '%' . $this->search . '%')
-                                                            ->orWhere('distrito', 'LIKE', '%' . $this->search . '%')
-                                                            ->orWhere('seccion', 'LIKE', '%' . $this->search . '%')
-                                                            ->orWhere('estado', 'LIKE', '%' . $this->search . '%')
-                                                            ->orWhere('tramite', 'LIKE', '%' . $this->search . '%');
-                                                    })
                                                     ->when(auth()->user()->ubicacion == 'Regional 4', function($q){
                                                         $q->where('distrito', 2);
                                                     })
@@ -230,22 +191,6 @@ class CancelacionIndex extends Component
                                                     ->whereHas('folioReal', function($q){
                                                         $q->whereIn('estado', ['activo', 'centinela', 'bloqueado']);
                                                     })
-                                                    ->whereIn('estado', ['nuevo', 'captura', 'elaborado', 'finalizado', 'correccion'])
-                                                    ->where(function($q){
-                                                        $q->whereHas('asignadoA', function($q){
-                                                                $q->where('name', 'LIKE', '%' . $this->search . '%');
-                                                            })
-                                                            ->orWhereHas('folioReal', function($q){
-                                                                $q->where('folio', $this->search);
-                                                            })
-                                                            ->orWhere('solicitante', 'LIKE', '%' . $this->search . '%')
-                                                            ->orWhere('tomo', 'LIKE', '%' . $this->search . '%')
-                                                            ->orWhere('registro', 'LIKE', '%' . $this->search . '%')
-                                                            ->orWhere('distrito', 'LIKE', '%' . $this->search . '%')
-                                                            ->orWhere('seccion', 'LIKE', '%' . $this->search . '%')
-                                                            ->orWhere('estado', 'LIKE', '%' . $this->search . '%')
-                                                            ->orWhere('tramite', 'LIKE', '%' . $this->search . '%');
-                                                    })
                                                     ->whereHas('cancelacion', function($q){
                                                         $q->whereIn('servicio', ['D156']);
                                                     })
@@ -267,18 +212,6 @@ class CancelacionIndex extends Component
             $movimientos = MovimientoRegistral::with('cancelacion', 'asignadoA', 'actualizadoPor', 'folioReal:id,folio')
                                                     ->whereHas('folioReal', function($q){
                                                         $q->whereIn('estado', ['activo', 'centinela']);
-                                                    })
-                                                    ->where(function($q){
-                                                        $q->whereHas('asignadoA', function($q){
-                                                                $q->where('name', 'LIKE', '%' . $this->search . '%');
-                                                            })
-                                                            ->orWhere('solicitante', 'LIKE', '%' . $this->search . '%')
-                                                            ->orWhere('tomo', 'LIKE', '%' . $this->search . '%')
-                                                            ->orWhere('registro', 'LIKE', '%' . $this->search . '%')
-                                                            ->orWhere('distrito', 'LIKE', '%' . $this->search . '%')
-                                                            ->orWhere('seccion', 'LIKE', '%' . $this->search . '%')
-                                                            ->orWhere('estado', 'LIKE', '%' . $this->search . '%')
-                                                            ->orWhere('tramite', 'LIKE', '%' . $this->search . '%');
                                                     })
                                                     ->when(auth()->user()->ubicacion === 'Regional 1', function($q){
                                                         $q->whereIn('distrito', [3, 9]);
