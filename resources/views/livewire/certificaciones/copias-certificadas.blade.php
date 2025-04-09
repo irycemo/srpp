@@ -253,7 +253,7 @@
 
                                             @if(!$copiaConsultada->certificacion->folio_carpeta_copias)
 
-                                                @if(auth()->user()->hasRole(['Certificador Juridico']))
+                                                @if(auth()->user()->hasRole(['Certificador Juridico', 'Certificador Oficialia']))
 
                                                     <button
                                                         wire:click="generarCertificacion({{ $copiaConsultada->certificacion->id }})"
