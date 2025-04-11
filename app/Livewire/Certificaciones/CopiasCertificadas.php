@@ -200,7 +200,7 @@ class CopiasCertificadas extends Component
 
                 if(auth()->user()->hasRole(['Certificador Oficialia', 'Certificador Juridico'])){
 
-                    $this->modelo_editar->movimientoRegistral->update(['estado', 'concluido']);
+                    $this->modelo_editar->movimientoRegistral->update(['estado' => 'concluido']);
 
                     (new SistemaTramitesService())->finaliarTramite($this->modelo_editar->movimientoRegistral->año, $this->modelo_editar->movimientoRegistral->tramite, $this->modelo_editar->movimientoRegistral->usuario, 'finalizado');
 
