@@ -220,6 +220,14 @@
                                             @if(in_array($movimiento->sentencia->acto_contenido, ['RESOLUCIÓN', 'DEMANDA', 'PROVIDENCIA PRECAUTORIA']))
 
                                                 <button
+                                                    wire:click="imprimir({{  $movimiento->id }})"
+                                                    wire:loading.attr="disabled"
+                                                    class="w-full text-left block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 focus:outline-none focus:bg-gray-100"
+                                                    role="menuitem">
+                                                    Imprimir
+                                                </button>
+
+                                                <button
                                                     wire:click="corregir({{  $movimiento->id }})"
                                                     wire:loading.attr="disabled"
                                                     class="w-full text-left block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 focus:outline-none focus:bg-gray-100"
