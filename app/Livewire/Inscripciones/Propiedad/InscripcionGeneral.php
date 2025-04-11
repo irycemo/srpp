@@ -155,11 +155,7 @@ class InscripcionGeneral extends Component
 
             }
 
-            if($this->inscripcion->movimientoRegistral->estado != 'correccion'){
-
-                if($this->revisarProcentajesFinal()) return true;
-
-            }
+            if($this->revisarProcentajesFinal()) return true;
 
         }
 
@@ -313,13 +309,13 @@ class InscripcionGeneral extends Component
 
         }
 
-        $suma = $pp_adquirientes + $pp;
+        $sumaPP = $pp_adquirientes + $pp;
 
-        if($suma == 0){
+        if($sumaPP == 0){
 
-            $suma = $pn_adquirientes + $pn;
+            $sumaPN = $pn_adquirientes + $pn;
 
-            if(round($suma, 2) > round($pn_transmitentes + $pp_transmitentes,2)){
+            if(round($sumaPN, 2) > round($pn_transmitentes + $pp_transmitentes,2)){
 
                 $this->dispatch('mostrarMensaje', ['error', "La suma de los porcentajes de propiedad debe ser " . $pp_transmitentes . '%.']);
 
@@ -327,9 +323,9 @@ class InscripcionGeneral extends Component
 
             }
 
-            $suma = $pu_adquirientes + $pu;
+            $sumaPU = $pu_adquirientes + $pu;
 
-            if(round($suma, 2) != round($pu_transmitentes + $pp_transmitentes, 2)){
+            if(round($sumaPU, 2) != round($pu_transmitentes + $pp_transmitentes, 2)){
 
                 $this->dispatch('mostrarMensaje', ['error', "La suma de los porcentajes de usufructo debe ser " . $pu_transmitentes + $pp_transmitentes . '%.']);
 
@@ -339,21 +335,73 @@ class InscripcionGeneral extends Component
 
         }else{
 
-            /* if($suma != 100){ */
+            if($sumaPP == 100){
 
-                if(round($suma,2) != round($pp_transmitentes,2)){
+                if(($pn_adquirientes + $pn) != 0){
 
-                    $this->dispatch('mostrarMensaje', ['error', "La suma de los porcentajes de propiedad debe ser " . $pp_transmitentes . '%.']);
+                    $this->dispatch('mostrarMensaje', ['error', "La suma de los porcentajes de nuda debe ser 0."]);
 
                     return true;
 
                 }
 
-            /* } */
+                if(($pu_adquirientes + $pu) != 0){
 
-            $suma = $pn_adquirientes + $pn;
+                    $this->dispatch('mostrarMensaje', ['error', "La suma de los porcentajes de usufructo debe ser 0."]);
 
-            if(round($suma, 2) != round($pn_transmitentes,2)){
+                    return true;
+
+                }
+
+
+            }else{
+
+
+                if(($pn + $pp + $pn_adquirientes + $pp_adquirientes) < 99.999 || ($pn + $pp + $pn_adquirientes + $pp_adquirientes) > 100 ){
+
+                    $this->dispatch('mostrarMensaje', ['error', "La suma de los porcentajes de nuda no es correcta."]);
+
+                    return true;
+
+                }
+
+                if(($pu + $pp + $pu_adquirientes + $pp_adquirientes) < 99.999 || ($pu + $pp + $pu_adquirientes + $pp_adquirientes) > 100){
+
+                    $this->dispatch('mostrarMensaje', ['error', "La suma de los porcentajes de usufructo no es correcta."]);
+
+                    return true;
+
+                }
+
+                if(($pn + $pp + $pn_adquirientes + $pp_adquirientes) > $pn_transmitentes + .001){
+
+                    $this->dispatch('mostrarMensaje', ['error', "La suma de los porcentajes de nuda no puede ser mayor a" . $pn_transmitentes]);
+
+                    return true;
+
+                }
+
+                if(($pu + $pp + $pu_adquirientes + $pp_adquirientes)> $pu_transmitentes + .001){
+
+                    $this->dispatch('mostrarMensaje', ['error', "La suma de los porcentajes de usufructo no ser mayor a" . $pu_transmitentes]);
+
+                    return true;
+
+                }
+
+            }
+
+            /* if(round($sumaPP,2) != round($pp_transmitentes,2)){
+
+                $this->dispatch('mostrarMensaje', ['error', "La suma de los porcentajes de propiedad debe ser " . $pp_transmitentes . '%.']);
+
+                return true;
+
+            }
+
+            $sumaPP = $pn_adquirientes + $pn;
+
+            if(round($sumaPP, 2) != round($pn_transmitentes,2)){
 
                 $this->dispatch('mostrarMensaje', ['error', "La suma de los porcentajes de nuda debe ser " . $pn_transmitentes . '%.']);
 
@@ -361,15 +409,15 @@ class InscripcionGeneral extends Component
 
             }
 
-            $suma = $pu_adquirientes + $pu;
+            $sumaPP = $pu_adquirientes + $pu;
 
-            if(round($suma, 2) != round($pu_transmitentes, 2)){
+            if(round($sumaPP, 2) != round($pu_transmitentes, 2)){
 
                 $this->dispatch('mostrarMensaje', ['error', "La suma de los porcentajes de usufructo debe ser " . $pu_transmitentes . '%.']);
 
                 return true;
 
-            }
+            } */
 
         }
 
