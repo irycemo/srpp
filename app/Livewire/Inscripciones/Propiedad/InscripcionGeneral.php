@@ -339,13 +339,17 @@ class InscripcionGeneral extends Component
 
         }else{
 
-            if(round($suma,2) != round($pp_transmitentes,2)){
+            /* if($suma != 100){ */
 
-                $this->dispatch('mostrarMensaje', ['error', "La suma de los porcentajes de propiedad debe ser " . $pp_transmitentes . '%.']);
+                if(round($suma,2) != round($pp_transmitentes,2)){
 
-                return true;
+                    $this->dispatch('mostrarMensaje', ['error', "La suma de los porcentajes de propiedad debe ser " . $pp_transmitentes . '%.']);
 
-            }
+                    return true;
+
+                }
+
+            /* } */
 
             $suma = $pn_adquirientes + $pn;
 
@@ -483,18 +487,6 @@ class InscripcionGeneral extends Component
                 ]);
 
             }
-
-            /* $transmitente = $this->inscripcion->transmitentes()->find($propietario['id']);
-
-            if($transmitente){
-
-                $transmitente->update([
-                    'porcentaje_propiedad' => abs($transmitente->porcentaje_propiedad - $propietario['porcentaje_propiedad']),
-                    'porcentaje_nuda' => abs($transmitente->porcentaje_nuda - $propietario['porcentaje_nuda']),
-                    'porcentaje_usufructo' => abs($transmitente->porcentaje_usufructo - $propietario['porcentaje_usufructo']),
-                ]);
-
-            } */
 
         }
 

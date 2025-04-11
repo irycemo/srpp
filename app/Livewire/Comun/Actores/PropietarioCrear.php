@@ -101,8 +101,8 @@ class PropietarioCrear extends Component
 
         if($pp_transmitentes == 0){
 
-            if(($this->porcentaje_propiedad + $pp_adquirientes - 0.01) > $pp_transmitentes)
-                throw new ActoresException("La suma de los porcentajes de propiedad no puede exceder el " . $pp_transmitentes . '%.');
+            /* if(($this->porcentaje_propiedad + $pp_adquirientes - 0.01) > $pp_transmitentes)
+                throw new ActoresException("La suma de los porcentajes de propiedad no puede exceder el " . $pp_transmitentes . '%.'); */
 
             if(($this->porcentaje_nuda + $pn_adquirientes - 0.01) > $pn_transmitentes)
                 throw new ActoresException("La suma de los porcentajes de nuda no puede exceder el " . $pn_transmitentes . '%.');
