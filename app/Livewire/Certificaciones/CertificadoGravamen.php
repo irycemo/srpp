@@ -16,8 +16,11 @@ use App\Traits\ComponentesTrait;
 use Illuminate\Support\Facades\DB;
 use App\Models\MovimientoRegistral;
 use Illuminate\Support\Facades\Log;
-use App\Http\Services\SistemaTramitesService;
 use App\Traits\CalcularDiaElaboracionTrait;
+use App\Http\Services\SistemaTramitesService;
+use App\Exceptions\InscripcionesServiceException;
+use App\Traits\Inscripciones\InscripcionesIndex;
+use App\Traits\RevisarMovimientosPosterioresTrait;
 
 class CertificadoGravamen extends Component
 {
@@ -27,6 +30,7 @@ class CertificadoGravamen extends Component
     use ComponentesTrait;
     use QrTrait;
     use CalcularDiaElaboracionTrait;
+    use RevisarMovimientosPosterioresTrait;
 
     public Certificacion $modelo_editar;
 
@@ -337,6 +341,41 @@ class CertificadoGravamen extends Component
     public function seleccionarMotivo($key){
 
         $this->motivo = $this->motivos[$key];
+
+    }
+
+    public function corregir(Certificacion $movimientoRegistral){
+
+        if($this->modelo_editar->isNot($movimientoRegistral))
+            $this->modelo_editar = $movimientoRegistral;
+
+        try {
+
+            $this->revisarMovimientosPosteriores($this->modelo_editar->movimientoRegistral);
+
+            DB::transaction(function (){
+
+                $this->modelo_editar->movimientoRegistral->update([
+                    'estado' => 'correccion',
+                    'actualizado_por' => auth()->id()
+                ]);
+
+                $this->modelo_editar->movimientoRegistral->audits()->latest()->first()->update(['tags' => 'Cambio estado a corrección']);
+
+            });
+
+            $this->dispatch('mostrarMensaje', ['success', "La información se guardó con éxito."]);
+
+        } catch (InscripcionesServiceException $ex) {
+
+            $this->dispatch('mostrarMensaje', ['warning', $ex->getMessage()]);
+
+        } catch (\Throwable $th) {
+
+            Log::error("Error al enviar a corrección certificado de gravamen por el usuario: (id: " . auth()->user()->id . ") " . auth()->user()->name . ". " . $th);
+            $this->dispatch('mostrarMensaje', ['error', "Ha ocurrido un error."]);
+
+        }
 
     }
 

@@ -10,8 +10,10 @@ use App\Traits\ComponentesTrait;
 use Illuminate\Support\Facades\DB;
 use App\Models\MovimientoRegistral;
 use Illuminate\Support\Facades\Log;
-use App\Http\Services\SistemaTramitesService;
 use App\Traits\CalcularDiaElaboracionTrait;
+use App\Http\Services\SistemaTramitesService;
+use App\Exceptions\InscripcionesServiceException;
+use App\Traits\RevisarMovimientosPosterioresTrait;
 
 class CertificadoPropiedadIndex extends Component
 {
@@ -19,6 +21,7 @@ class CertificadoPropiedadIndex extends Component
     use WithPagination;
     use ComponentesTrait;
     use CalcularDiaElaboracionTrait;
+    use RevisarMovimientosPosterioresTrait;
 
     public MovimientoRegistral $modelo_editar;
 
@@ -334,6 +337,41 @@ class CertificadoPropiedadIndex extends Component
     public function seleccionarMotivo($key){
 
         $this->motivo = $this->motivos[$key];
+
+    }
+
+    public function corregir(MovimientoRegistral $movimientoRegistral){
+
+        if($this->modelo_editar->isNot($movimientoRegistral))
+            $this->modelo_editar = $movimientoRegistral;
+
+        try {
+
+            if($this->modelo_editar->folio_real) $this->revisarMovimientosPosteriores($this->modelo_editar);
+
+            DB::transaction(function (){
+
+                $this->modelo_editar->update([
+                    'estado' => 'correccion',
+                    'actualizado_por' => auth()->id()
+                ]);
+
+                $this->modelo_editar->audits()->latest()->first()->update(['tags' => 'Cambio estado a corrección']);
+
+            });
+
+            $this->dispatch('mostrarMensaje', ['success', "La información se guardó con éxito."]);
+
+        } catch (InscripcionesServiceException $ex) {
+
+            $this->dispatch('mostrarMensaje', ['warning', $ex->getMessage()]);
+
+        } catch (\Throwable $th) {
+
+            Log::error("Error al enviar a corrección certificado de gravamen por el usuario: (id: " . auth()->user()->id . ") " . auth()->user()->name . ". " . $th);
+            $this->dispatch('mostrarMensaje', ['error', "Ha ocurrido un error."]);
+
+        }
 
     }
 

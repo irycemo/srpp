@@ -17,11 +17,12 @@ use App\Http\Controllers\Reformas\ReformaController;
 use App\Http\Controllers\Sentencias\SentenciasController;
 use App\Http\Controllers\Subdivisiones\SubdivisionesController;
 use App\Traits\CalcularDiaElaboracionTrait;
-
+use App\Traits\RevisarMovimientosPosterioresTrait;
 
 trait InscripcionesIndex{
 
     use CalcularDiaElaboracionTrait;
+    use RevisarMovimientosPosterioresTrait;
 
     public $modalFinalizar = false;
     public $modalRechazar = false;
@@ -561,18 +562,6 @@ trait InscripcionesIndex{
     public function seleccionarMotivo($key){
 
         $this->motivo = $this->motivos[$key];
-
-    }
-
-    public function revisarMovimientosPosteriores(MovimientoRegistral $movimientoRegistral){
-
-        $movimiento = $movimientoRegistral->folioReal
-                ->movimientosRegistrales()
-                ->where('folio', ($movimientoRegistral->folio + 1))
-                ->whereNotIn('estado', ['nuevo', 'correccion', 'pase_folio'])
-                ->first();
-
-        if($movimiento) throw new InscripcionesServiceException("El folio real tiene movimientos registrales posteriores ya elaborados.");
 
     }
 
