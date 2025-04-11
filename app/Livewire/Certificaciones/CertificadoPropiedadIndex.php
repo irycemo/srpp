@@ -34,7 +34,6 @@ class CertificadoPropiedadIndex extends Component
     public $motivo;
 
     public $años;
-    public $año;
     public $filters = [
         'año' => '',
         'tramite' => '',
@@ -346,7 +345,7 @@ class CertificadoPropiedadIndex extends Component
 
         $this->años = Constantes::AÑOS;
 
-        $this->año = now()->format('Y');
+        $this->filters['año'] = now()->format('Y');
 
     }
 

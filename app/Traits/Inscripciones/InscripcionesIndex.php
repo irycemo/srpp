@@ -34,7 +34,6 @@ trait InscripcionesIndex{
     public $usuarios;
 
     public $años;
-    public $año;
     public $filters = [
         'año' => '',
         'tramite' => '',

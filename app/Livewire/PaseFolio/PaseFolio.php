@@ -42,7 +42,19 @@ class PaseFolio extends Component
     public $registro;
     public $numero_propiedad;
 
+    public $años;
+    public $filters = [
+        'año' => '',
+        'tramite' => '',
+        'usuario' => '',
+        'folio_real' => '',
+        'folio' => '',
+        'estado' => ''
+    ];
+
     public MovimientoRegistral $modelo_editar;
+
+    public function updatedFilters() { $this->resetPage(); }
 
     public function crearModeloVacio(){
         $this->modelo_editar = MovimientoRegistral::make();
@@ -553,6 +565,8 @@ class PaseFolio extends Component
 
         }
 
+        $this->años = Constantes::AÑOS;
+
         $this->motivos = Constantes::RECHAZO_MOTIVOS;
 
         $this->supervisor = in_array(auth()->user()->getRoleNames()->first(), ['Supervisor inscripciones', 'Supervisor certificaciones', 'Supervisor uruapan']);
@@ -574,18 +588,16 @@ class PaseFolio extends Component
                                                                 $q->whereIn('estado', ['nuevo', 'captura', 'elaborado', 'rechazado', 'pendiente']);
                                                             });
                                                     })
-                                                    ->where(function($q){
-                                                        $q->where('tramite', 'LIKE', '%' . $this->search . '%')
-                                                            ->orWhere('usuario', 'LIKE', '%' . $this->search . '%')
-                                                            ->orWhere('tomo', 'LIKE', '%' . $this->search . '%')
-                                                            ->orWhere('registro', 'LIKE', '%' . $this->search . '%')
-                                                            ->orWhereHas('asignadoA', function($q){
-                                                                $q->where('name', 'LIKE', '%' . $this->search . '%');
-                                                            })
-                                                            ->orWhereHas('supervisor', function($q){
-                                                                $q->where('name', 'LIKE', '%' . $this->search . '%');
-                                                            });
+                                                    ->when($this->filters['año'], fn($q, $año) => $q->where('año', $año))
+                                                    ->when($this->filters['tramite'], fn($q, $tramite) => $q->where('tramite', $tramite))
+                                                    ->when($this->filters['usuario'], fn($q, $usuario) => $q->where('usuario', $usuario))
+                                                    ->when($this->filters['folio_real'], function($q){
+                                                        $q->whereHas('folioreal', function ($q){
+                                                            $q->where('folio', $this->filters['folio_real']);
+                                                        });
                                                     })
+                                                    ->when($this->filters['folio'], fn($q, $folio) => $q->where('folio', $folio))
+                                                    ->when($this->filters['estado'], fn($q, $estado) => $q->where('estado', $estado))
                                                     ->whereDoesntHave('certificacion', function($q){
                                                         $q->whereNotIn('servicio', ['DL07', 'DL10']);
                                                     })
@@ -604,15 +616,16 @@ class PaseFolio extends Component
                                                                 $q->whereIn('estado', ['nuevo', 'captura', 'elaborado', 'rechazado', 'pendiente']);
                                                             });
                                                     })
-                                                    ->where(function($q){
-                                                        $q->where('tramite', 'LIKE', '%' . $this->search . '%')
-                                                            ->orWhere('usuario', 'LIKE', '%' . $this->search . '%')
-                                                            ->orWhere('tomo', 'LIKE', '%' . $this->search . '%')
-                                                            ->orWhere('registro', 'LIKE', '%' . $this->search . '%')
-                                                            ->orWhereHas('asignadoA', function($q){
-                                                                $q->where('name', 'LIKE', '%' . $this->search . '%');
-                                                            });
+                                                    ->when($this->filters['año'], fn($q, $año) => $q->where('año', $año))
+                                                    ->when($this->filters['tramite'], fn($q, $tramite) => $q->where('tramite', $tramite))
+                                                    ->when($this->filters['usuario'], fn($q, $usuario) => $q->where('usuario', $usuario))
+                                                    ->when($this->filters['folio_real'], function($q){
+                                                        $q->whereHas('folioreal', function ($q){
+                                                            $q->where('folio', $this->filters['folio_real']);
+                                                        });
                                                     })
+                                                    ->when($this->filters['folio'], fn($q, $folio) => $q->where('folio', $folio))
+                                                    ->when($this->filters['estado'], fn($q, $estado) => $q->where('estado', $estado))
                                                     ->when(auth()->user()->ubicacion == 'Regional 4', function($q){
                                                         $q->where('distrito', 2);
                                                     })
@@ -635,15 +648,16 @@ class PaseFolio extends Component
                                                                 $q->whereIn('estado', ['nuevo', 'captura', 'elaborado', 'rechazado', 'pendiente']);
                                                             });
                                                     })
-                                                    ->where(function($q){
-                                                        $q->where('tramite', 'LIKE', '%' . $this->search . '%')
-                                                            ->orWhere('usuario', 'LIKE', '%' . $this->search . '%')
-                                                            ->orWhere('tomo', 'LIKE', '%' . $this->search . '%')
-                                                            ->orWhere('registro', 'LIKE', '%' . $this->search . '%')
-                                                            ->orWhereHas('asignadoA', function($q){
-                                                                $q->where('name', 'LIKE', '%' . $this->search . '%');
-                                                            });
+                                                    ->when($this->filters['año'], fn($q, $año) => $q->where('año', $año))
+                                                    ->when($this->filters['tramite'], fn($q, $tramite) => $q->where('tramite', $tramite))
+                                                    ->when($this->filters['usuario'], fn($q, $usuario) => $q->where('usuario', $usuario))
+                                                    ->when($this->filters['folio_real'], function($q){
+                                                        $q->whereHas('folioreal', function ($q){
+                                                            $q->where('folio', $this->filters['folio_real']);
+                                                        });
                                                     })
+                                                    ->when($this->filters['folio'], fn($q, $folio) => $q->where('folio', $folio))
+                                                    ->when($this->filters['estado'], fn($q, $estado) => $q->where('estado', $estado))
                                                     ->when(auth()->user()->ubicacion == 'Regional 4', function($q){
                                                         $q->where('distrito', 2);
                                                     })
@@ -667,15 +681,16 @@ class PaseFolio extends Component
                                                                 $q->whereIn('estado', ['nuevo', 'captura', 'elaborado']);
                                                             });
                                                     })
-                                                    ->where(function($q){
-                                                        $q->where('tramite', 'LIKE', '%' . $this->search . '%')
-                                                            ->orWhere('usuario', 'LIKE', '%' . $this->search . '%')
-                                                            ->orWhere('tomo', 'LIKE', '%' . $this->search . '%')
-                                                            ->orWhere('registro', 'LIKE', '%' . $this->search . '%')
-                                                            ->orWhereHas('asignadoA', function($q){
-                                                                $q->where('name', 'LIKE', '%' . $this->search . '%');
-                                                            });
+                                                    ->when($this->filters['año'], fn($q, $año) => $q->where('año', $año))
+                                                    ->when($this->filters['tramite'], fn($q, $tramite) => $q->where('tramite', $tramite))
+                                                    ->when($this->filters['usuario'], fn($q, $usuario) => $q->where('usuario', $usuario))
+                                                    ->when($this->filters['folio_real'], function($q){
+                                                        $q->whereHas('folioreal', function ($q){
+                                                            $q->where('folio', $this->filters['folio_real']);
+                                                        });
                                                     })
+                                                    ->when($this->filters['folio'], fn($q, $folio) => $q->where('folio', $folio))
+                                                    ->when($this->filters['estado'], fn($q, $estado) => $q->where('estado', $estado))
                                                     ->when(auth()->user()->ubicacion == 'Regional 4', function($q){
                                                         $q->where('distrito', 2);
                                                     })

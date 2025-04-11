@@ -367,7 +367,7 @@ class AsignacionService{
                                         $q->where('ubicacion', '!=', 'Regional 4');
                                     })
                                     ->whereHas('roles', function($q) {
-                                        $q->whereIn('name', 'Certificador Propiedad');
+                                        $q->where('name', 'Certificador Propiedad');
                                     })
                                     ->pluck('id');
 

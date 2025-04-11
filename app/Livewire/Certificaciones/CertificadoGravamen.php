@@ -48,7 +48,6 @@ class CertificadoGravamen extends Component
     public $motivo;
 
     public $años;
-    public $año;
     public $filters = [
         'año' => '',
         'tramite' => '',
@@ -347,7 +346,7 @@ class CertificadoGravamen extends Component
 
         $this->años = Constantes::AÑOS;
 
-        $this->año = now()->format('Y');
+        $this->filters['año'] = now()->format('Y');
 
         $this->director = User::where('status', 'activo')
                                 ->whereHas('roles', function($q){

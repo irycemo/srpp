@@ -58,7 +58,7 @@ class GravamenIndex extends Component
 
         $this->años = Constantes::AÑOS;
 
-        $this->año = now()->format('Y');
+        $this->filters['año'] = now()->format('Y');
 
         $this->motivos = Constantes::RECHAZO_MOTIVOS;
 

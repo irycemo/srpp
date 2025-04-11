@@ -6,20 +6,7 @@
 
         <div class="flex justify-between">
 
-            <div class="flex gap-3">
-
-                <input type="text" wire:model.live.debounce.500ms="search" placeholder="Buscar" class="bg-white rounded-full text-sm">
-
-                <x-input-select class="bg-white rounded-full text-sm w-min" wire:model.live="pagination">
-
-                    <option value="10">10</option>
-                    <option value="25">25</option>
-                    <option value="50">50</option>
-                    <option value="100">100</option>
-
-                </x-input-select>
-
-            </div>
+            @include('livewire.comun.filtros-inscripciones')
 
             <button wire:click="abrirModalNuevoFolio" class="bg-gray-500 hover:shadow-lg hover:bg-gray-700 text-sm py-2 px-4 text-white rounded-full hidden md:block items-center justify-center focus:outline-gray-400 focus:outline-offset-2">
 
