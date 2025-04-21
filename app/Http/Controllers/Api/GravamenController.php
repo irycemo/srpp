@@ -29,6 +29,8 @@ class GravamenController extends Controller
                                                         })
                                                         ->first();
 
+                                                        info($data);
+
         if(!$movimientoRegistral){
 
             return response()->json([
