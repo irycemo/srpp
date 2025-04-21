@@ -29,7 +29,7 @@ class GravamenController extends Controller
                                                         })
                                                         ->first();
 
-                                                        info($data, $movimientoRegistral);
+                                                        info($data, $movimientoRegistral->toArray());
 
         if(!$movimientoRegistral){
 
