@@ -4,6 +4,7 @@ namespace App\Http\Services;
 
 use App\Models\User;
 use App\Models\Vario;
+use App\Models\MovimientoRegistral;
 use Illuminate\Support\Facades\Log;
 use App\Exceptions\CertificacionServiceException;
 
@@ -28,6 +29,12 @@ class VariosService{
             }elseif($request['servicio'] == 'DN83'){
 
                 $acto = 'PRIMER AVISO PREVENTIVO';
+
+            }elseif($request['servicio_nombre'] == 'Cancelación de primer aviso preventivo'){
+
+                $acto = 'CANCELACIÓN DE PRIMER AVISO PREVENTIVO';
+
+                $this->avisoAclaratotioCancelar($request);
 
             }else{
 
@@ -56,7 +63,7 @@ class VariosService{
 
             Log::error('Error al ingresar el trámite: ' . $request['año'] . '-' . $request['tramite'] . '-' . $request['usuario'] . ' desde Sistema Trámites. ' . $th);
 
-            throw new CertificacionServiceException('Error al ingresar inscripción de propiedad con el trámite: ' . $request['año'] . '-' . $request['tramite'] . '-' . $request['usuario'] . ' desde Sistema Trámites.');
+            throw new CertificacionServiceException('Error al ingresar inscripción de varios con el trámite: ' . $request['año'] . '-' . $request['tramite'] . '-' . $request['usuario'] . ' desde Sistema Trámites.');
 
         }
 
@@ -99,6 +106,16 @@ class VariosService{
         if(!$usuario) throw new CertificacionServiceException('No hay usuario con rol de Aclaraciones administrativas.');
 
         return $usuario->id;
+
+    }
+
+    public function avisoAclaratotioCancelar($request){
+
+        $movimiento = MovimientoRegistral::find($request['movimiento_registral']);
+
+        $movimientoAviso = $movimiento->folioReal->movimientosRegistrales()->where('folio', $request['asiento_registral'])->first();
+
+        $movimientoAviso->update(['movimiento_padre' => $request['movimiento_registral']]);
 
     }
 

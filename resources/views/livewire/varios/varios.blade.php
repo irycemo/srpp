@@ -21,6 +21,10 @@
 
         @livewire('varios.primer-aviso-preventivo', ['vario' => $this->vario])
 
+    @elseif($vario->acto_contenido == 'CANCELACIÓN DE PRIMER AVISO PREVENTIVO')
+
+        @livewire('varios.cancelacion-aviso-preventivo', ['vario' => $this->vario])
+
     @else
 
         <div class="p-4 bg-white shadow-xl rounded-xl mb-5">

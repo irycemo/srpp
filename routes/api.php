@@ -6,6 +6,7 @@ use App\Http\Controllers\Api\CertificacionController;
 use App\Http\Controllers\Api\FolioRealController;
 use App\Http\Controllers\Api\GravamenController;
 use App\Http\Controllers\Api\MovimientoRegistralController;
+use App\Http\Controllers\Api\VariosController;
 
 /*
 |--------------------------------------------------------------------------
@@ -37,6 +38,10 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::post('consultar_gravamen', [GravamenController::class, 'consultarGravamen']);
 
     Route::post('consultar_antecedentes', [AntecedentesController::class, 'consultarAntecedentes']);
+
+    Route::post('consultar_primer_aviso', [VariosController::class, 'consultarPrimerAvisoPreventivo']);
+
+    Route::post('consultar_segundo_aviso', [VariosController::class, 'consultarSegundoAvisoPreventivo']);
 
 });
 

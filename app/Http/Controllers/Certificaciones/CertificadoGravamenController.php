@@ -50,7 +50,15 @@ class CertificadoGravamenController extends Controller
 
                 $item = $this->gravamen($gravamen);
 
-                $item->valor_gravamen_letras = $formatter->toWords($item->valor_gravamen);
+                if($item->valor_gravamen < 999999999){
+
+                    $item->valor_gravamen_letras = $formatter->toWords($item->valor_gravamen);
+
+                }else{
+
+                    $item->valor_gravamen_letras = '';
+
+                }
 
                 $gravamenesCollection->push($item);
 
