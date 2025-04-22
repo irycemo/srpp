@@ -21,7 +21,7 @@
 
         @livewire('varios.primer-aviso-preventivo', ['vario' => $this->vario])
 
-    @elseif($vario->acto_contenido == 'CANCELACIÓN DE PRIMER AVISO PREVENTIVO')
+    @elseif(in_array($vario->acto_contenido, ['CANCELACIÓN DE PRIMER AVISO PREVENTIVO', 'CANCELACIÓN DE SEGUNDO AVISO PREVENTIVO']))
 
         @livewire('varios.cancelacion-aviso-preventivo', ['vario' => $this->vario])
 

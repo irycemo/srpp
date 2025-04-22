@@ -72,6 +72,14 @@ trait InscripcionesIndex{
 
                 }
 
+                if(in_array($this->actual->vario?->acto_contenido, ['CANCELACIÓN DE SEGUNDO AVISO PREVENTIVO', 'CANCELACIÓN DE PRIMER AVISO PREVENTIVO'])){
+
+                    $this->ruta($this->modelo_editar);
+
+                    return false;
+
+                }
+
                 $this->dispatch('mostrarMensaje', ['warning', "El folio real tiene un aviso preventivo vigente."]);
 
                 return true;

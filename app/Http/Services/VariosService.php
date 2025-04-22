@@ -36,6 +36,12 @@ class VariosService{
 
                 $this->avisoAclaratotioCancelar($request);
 
+            }elseif($request['servicio_nombre'] == 'Cancelación de segundo aviso preventivo'){
+
+                $acto = 'CANCELACIÓN DE SEGUNDO AVISO PREVENTIVO';
+
+                $this->avisoAclaratotioCancelar($request);
+
             }else{
 
                 $acto = null;

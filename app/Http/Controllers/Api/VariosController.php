@@ -70,7 +70,7 @@ class VariosController extends Controller
         if(!$movimientoRegistral){
 
             return response()->json([
-                'error' => "El movimiento registral no existe.",
+                'error' => "El aviso no existe.",
             ], 404);
 
         }

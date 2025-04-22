@@ -50,7 +50,7 @@ class CancelacionAvisoPreventivo extends Component
 
                 $this->avisoCancelar->update([
                     'estado' => 'inactivo',
-                    'descripcion' => $this->avisoCancelar->descripcion . 'AVISO CANCELADO MEDIANTE MOVIMIENTO REGISTRAL ' . $this->vario->movimientoRegistral->folio
+                    'descripcion' => $this->avisoCancelar->descripcion . ' AVISO CANCELADO MEDIANTE MOVIMIENTO REGISTRAL ' . $this->vario->movimientoRegistral->folio
                 ]);
 
                 $this->vario->movimientoRegistral->update(['estado' => 'elaborado', 'actualizado_por' => auth()->id()]);
