@@ -114,7 +114,7 @@ class CancelacionIndex extends Component
                                                     ->whereHas('cancelacion', function($q){
                                                         $q->whereIn('servicio', ['D156']);
                                                     })
-                                                    ->whereIn('estado', ['nuevo', 'captura', 'elaborado'])
+                                                    ->whereIn('estado', ['nuevo', 'captura', 'elaborado', 'correcion'])
                                                     ->when($this->filters['año'], fn($q, $año) => $q->where('año', $año))
                                                     ->when($this->filters['tramite'], fn($q, $tramite) => $q->where('tramite', $tramite))
                                                     ->when($this->filters['usuario'], fn($q, $usuario) => $q->where('usuario', $usuario))
@@ -143,7 +143,7 @@ class CancelacionIndex extends Component
                                                     ->whereHas('cancelacion', function($q){
                                                         $q->whereIn('servicio', ['D156']);
                                                     })
-                                                    ->whereIn('estado', ['nuevo', 'captura', 'elaborado', 'finalizado'])
+                                                    ->whereIn('estado', ['nuevo', 'captura', 'elaborado', 'finalizado', 'correcion'])
                                                     ->when($this->filters['año'], fn($q, $año) => $q->where('año', $año))
                                                     ->when($this->filters['tramite'], fn($q, $tramite) => $q->where('tramite', $tramite))
                                                     ->when($this->filters['usuario'], fn($q, $usuario) => $q->where('usuario', $usuario))
