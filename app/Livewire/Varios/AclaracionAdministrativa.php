@@ -394,6 +394,8 @@ class AclaracionAdministrativa extends Component
 
         $this->vario->acto_contenido = $this->vario->acto_contenido ?? 'ACLARACIÓN ADMINISTRATIVA';
 
+        $this->refresh();
+
         $this->cargarPredioInicial();
 
         $this->areas = Constantes::UNIDADES;
