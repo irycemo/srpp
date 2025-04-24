@@ -38,6 +38,10 @@ class VariosIndex extends Component
 
                 $this->revertirPrimerAvisoPreventivo($movimientoRegistral);
 
+            }elseif(in_array($movimientoRegistral->vario->acto_contenido, ['CANCELACIÓN DE PRIMER AVISO PREVENTIVO', 'CANCELACIÓN DE SEGUNDO AVISO PREVENTIVO'])){
+
+                $this->revertirCancelacionAvisoPreventivo($movimientoRegistral);
+
             }
 
             DB::transaction(function () use ($movimientoRegistral){
@@ -91,6 +95,16 @@ class VariosIndex extends Component
         }
 
         $movimientoCertificadoGravamen->delete();
+
+    }
+
+    public function revertirCancelacionAvisoPreventivo(MovimientoRegistral $movimientoRegistral){
+
+        $movimientoAvisoCancelado = MovimientoRegistral::where('movimiento_padre', $movimientoRegistral->id)->first();
+
+        $descripcion = str_replace(' AVISO CANCELADO MEDIANTE MOVIMIENTO REGISTRAL ' . $movimientoAvisoCancelado->folio, '', $movimientoAvisoCancelado->vario->descripcion);
+
+        $movimientoAvisoCancelado->vario->update(['estado' => 'activo', 'descripcion' => $descripcion]);
 
     }
 
