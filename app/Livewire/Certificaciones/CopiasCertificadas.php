@@ -43,7 +43,7 @@ class CopiasCertificadas extends Component
 
     protected function rules(){
         return [
-            'modelo_editar.folio_carpeta_copias' => 'required|numeric|min:1|unique:certificacions,folio_carpeta_copias,' . $this->modelo_editar->id,
+            'modelo_editar.folio_carpeta_copias' => 'required|string|min:1|unique:certificacions,folio_carpeta_copias,' . $this->modelo_editar->id,
          ];
     }
 
@@ -283,6 +283,8 @@ class CopiasCertificadas extends Component
             if($this->calcularDiaElaboracion($this->modelo_editar->movimientoRegistral)) return;
 
         }
+
+        $this->modelo_editar->folio_carpeta_copias = 'A-' . $this->modelo_editar->folio_carpeta_copias;
 
         $this->validate();
 
