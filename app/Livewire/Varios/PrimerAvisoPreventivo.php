@@ -181,12 +181,6 @@ class PrimerAvisoPreventivo extends Component
                             ->get();
     }
 
-    public function mount(){
-
-        $this->vario->acto_contenido = 'PRIMER AVISO PREVENTIVO';
-
-    }
-
     public function render()
     {
         return view('livewire.varios.primer-aviso-preventivo');
