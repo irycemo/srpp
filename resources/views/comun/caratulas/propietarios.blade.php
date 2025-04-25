@@ -25,6 +25,11 @@
                         @if($propietario->multiple_nombre)
                             <p style="margin:0">({{ $propietario->multiple_nombre }})</p>
                         @endif
+                        @if(isset($propietario->representado_por))
+
+                            <strong>representado(a) por: </strong>{{ $propietario->representado_por }}
+
+                        @endif
                     </td>
                     <td style="padding-right: 40px;">
                         <p style="margin:0">{{ $propietario->porcentaje_propiedad ?? '0.00' }} %</p>
