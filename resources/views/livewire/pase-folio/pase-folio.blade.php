@@ -8,14 +8,18 @@
 
             @include('livewire.comun.filtros-inscripciones')
 
-            <button wire:click="abrirModalNuevoFolio" class="bg-gray-500 hover:shadow-lg hover:bg-gray-700 text-sm py-2 px-4 text-white rounded-full hidden md:block items-center justify-center focus:outline-gray-400 focus:outline-offset-2">
+            @if(!auth()->user()->hasRole(['Administrador' , 'Operador']) && !$supervisor)
 
-                <img wire:loading wire:target="abrirModalNuevoFolio" class="mx-auto h-4 mr-1" src="{{ asset('storage/img/loading3.svg') }}" alt="Loading">
-                Agregar nuevo folio
+                <button wire:click="abrirModalNuevoFolio" class="bg-gray-500 hover:shadow-lg hover:bg-gray-700 text-sm py-2 px-4 text-white rounded-full hidden md:block items-center justify-center focus:outline-gray-400 focus:outline-offset-2">
 
-            </button>
+                    <img wire:loading wire:target="abrirModalNuevoFolio" class="mx-auto h-4 mr-1" src="{{ asset('storage/img/loading3.svg') }}" alt="Loading">
+                    Agregar nuevo folio
 
-            <button wire:click="abrirModalNuevoFolio" class="bg-gray-500 hover:shadow-lg hover:bg-gray-700 float-right text-sm py-2 px-4 text-white rounded-full md:hidden focus:outline-gray-400 focus:outline-offset-2">+</button>
+                </button>
+
+                <button wire:click="abrirModalNuevoFolio" class="bg-gray-500 hover:shadow-lg hover:bg-gray-700 float-right text-sm py-2 px-4 text-white rounded-full md:hidden focus:outline-gray-400 focus:outline-offset-2">+</button>
+
+            @endif
 
         </div>
 
@@ -234,6 +238,14 @@
                                             @if($movimiento->folioReal)
 
                                                 @if($movimiento->folioReal->estado == 'pendiente' )
+
+                                                    <button
+                                                        wire:click="pasarCaptura({{ $movimiento->id }})"
+                                                        wire:loading.attr="disabled"
+                                                        class="w-full text-left block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 focus:outline-none focus:bg-gray-100"
+                                                        role="menuitem">
+                                                        Corregir
+                                                    </button>
 
                                                     <button
                                                         wire:click="imprimir({{ $movimiento->id }})"

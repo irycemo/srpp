@@ -356,8 +356,7 @@ class InscripcionGeneral extends Component
 
             }else{
 
-
-                if(($pn + $pp + $pn_adquirientes + $pp_adquirientes) < 99.999 || ($pn + $pp + $pn_adquirientes + $pp_adquirientes) > 100 ){
+                if($pn + $pp + $pn_adquirientes + $pp_adquirientes > ($pn_transmitentes + $pp_transmitentes) ){
 
                     $this->dispatch('mostrarMensaje', ['error', "La suma de los porcentajes de nuda no es correcta."]);
 
@@ -365,7 +364,7 @@ class InscripcionGeneral extends Component
 
                 }
 
-                if(($pu + $pp + $pu_adquirientes + $pp_adquirientes) < 99.999 || ($pu + $pp + $pu_adquirientes + $pp_adquirientes) > 100){
+                if($pu + $pp + $pu_adquirientes + $pp_adquirientes > ($pu_transmitentes + $pp_transmitentes)){
 
                     $this->dispatch('mostrarMensaje', ['error', "La suma de los porcentajes de usufructo no es correcta."]);
 
@@ -373,7 +372,7 @@ class InscripcionGeneral extends Component
 
                 }
 
-                if(($pn + $pp + $pn_adquirientes + $pp_adquirientes) > $pn_transmitentes + .001){
+                /* if(($pn + $pp + $pn_adquirientes + $pp_adquirientes) > $pn_transmitentes + .001){
 
                     $this->dispatch('mostrarMensaje', ['error', "La suma de los porcentajes de nuda no puede ser mayor a" . $pn_transmitentes]);
 
@@ -387,7 +386,7 @@ class InscripcionGeneral extends Component
 
                     return true;
 
-                }
+                } */
 
             }
 
