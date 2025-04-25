@@ -632,7 +632,6 @@ class PaseFolio extends Component
                                                     ->when(auth()->user()->ubicacion != 'Regional 4', function($q){
                                                         $q->where('distrito', '!=', 2);
                                                     })
-                                                    ->where('usuario_supervisor', auth()->user()->id)
                                                     ->orderBy($this->sort, $this->direction)
                                                     ->paginate($this->pagination);
 

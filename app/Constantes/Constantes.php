@@ -254,7 +254,8 @@ class Constantes{
     const DIVISAS = [
         'MXN',
         'USD',
-        'EUR'
+        'EUR',
+        'UDI'
     ];
 
     const TIPO_DEUDOR = [
