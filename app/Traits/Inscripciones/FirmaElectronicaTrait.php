@@ -427,6 +427,8 @@ trait FirmaElectronicaTrait{
 
             $item->representado_por = null;
 
+            $transmitente->load('representadoPor.persona');
+
             foreach($transmitente->representadoPor as $representante){
 
                 $item->representado_por = $item->representado_por . ' / ' .
