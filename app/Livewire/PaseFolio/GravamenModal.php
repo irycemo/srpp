@@ -94,8 +94,6 @@ class GravamenModal extends Component
 
     public function agregarGravamen(){
 
-        dd("entra");
-
         if(!$this->editar){
 
             $this->reset([

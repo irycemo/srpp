@@ -427,7 +427,7 @@ trait FirmaElectronicaTrait{
 
             $item->representado_por = null;
 
-            foreach($propietario->representadoPor as $representante){
+            foreach($transmitente->representadoPor as $representante){
 
                 $item->representado_por = $item->representado_por . ' / ' .
                                             $representante->persona->nombre . ' ' .

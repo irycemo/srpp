@@ -560,7 +560,7 @@ class FolioRealImport implements ToCollection, WithHeadingRow, WithValidation, W
 
         $movimientoRegistralGravamen->folio_real = $folioRealId;
         $movimientoRegistralGravamen->folio = 2;
-        $movimientoRegistralGravamen->estado = 'concluido';
+        $movimientoRegistralGravamen->estado = 'pase_folio';
         $movimientoRegistralGravamen->save();
 
         $gravamen = Gravamen::create(['movimiento_registral_id' => $movimientoRegistralGravamen->id,] + $gravamen);

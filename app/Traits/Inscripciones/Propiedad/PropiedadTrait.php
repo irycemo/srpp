@@ -329,7 +329,7 @@ trait PropiedadTrait{
 
         $movimiento = $this->inscripcion->movimientoRegistral->replicate();
         $movimiento->folio = $movimiento->folio + 1;
-        $movimiento->estado = 'concluido';
+        $movimiento->estado = 'carga_parcial';
         $movimiento->save();
 
         $url = $this->inscripcion->movimientoRegistral->archivos()->where('descripcion', 'documento_entrada')->first()->url;
