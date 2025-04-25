@@ -1063,7 +1063,7 @@ class Elaboracion extends Component
 
             foreach($this->movimientoRegistral->folioReal->sentencias as $sentencia){
 
-                if(in_array($sentencias->movimientoRegistral->estado, ['precalificacion', 'nuevo'])) continue;
+                if(in_array($sentencia->movimientoRegistral->estado, ['precalificacion', 'nuevo'])) continue;
 
                 $sentencia->movimientoRegistral->update([
                     'usuario_supervisor' => (new AsignacionService())->obtenerSupervisorInscripciones($this->movimientoRegistral->getRawOriginal('distrito')),
