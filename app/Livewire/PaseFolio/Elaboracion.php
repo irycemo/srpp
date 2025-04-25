@@ -1042,7 +1042,7 @@ class Elaboracion extends Component
 
             foreach($this->movimientoRegistral->folioReal->gravamenes as $gravamen){
 
-                if($gravamen->movimientoRegistral->estado == 'precalificacion') continue;
+                if(in_array($gravamen->movimientoRegistral->estado, ['precalificacion', 'nuevo'])) continue;
 
                 $gravamen->movimientoRegistral->update([
                     'usuario_supervisor' => (new AsignacionService())->obtenerSupervisorInscripciones($this->movimientoRegistral->getRawOriginal('distrito')),
@@ -1063,7 +1063,7 @@ class Elaboracion extends Component
 
             foreach($this->movimientoRegistral->folioReal->sentencias as $sentencia){
 
-                if($sentencia->movimientoRegistral->estado == 'precalificacion') continue;
+                if(in_array($sentencias->movimientoRegistral->estado, ['precalificacion', 'nuevo'])) continue;
 
                 $sentencia->movimientoRegistral->update([
                     'usuario_supervisor' => (new AsignacionService())->obtenerSupervisorInscripciones($this->movimientoRegistral->getRawOriginal('distrito')),
@@ -1084,7 +1084,7 @@ class Elaboracion extends Component
 
             foreach($this->movimientoRegistral->folioReal->varios as $vario){
 
-                if($vario->movimientoRegistral->estado == 'precalificacion') continue;
+                if(in_array($vario->movimientoRegistral->estado, ['precalificacion', 'nuevo'])) continue;
 
                 $vario->movimientoRegistral->update([
                     'usuario_supervisor' => (new AsignacionService())->obtenerSupervisorInscripciones($this->movimientoRegistral->getRawOriginal('distrito')),
