@@ -27,6 +27,8 @@ class FraccionamientosIndex extends Component
 
         $this->motivos = Constantes::RECHAZO_MOTIVOS;
 
+        $this->usuarios_regionales = Constantes::USUARIOS_REGIONALES;
+
         $this->usuarios = User::where('status', 'activo')
                                         ->whereHas('roles', function($q){
                                             $q->where('name', 'Registrador fraccionamientos');

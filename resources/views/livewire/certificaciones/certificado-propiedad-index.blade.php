@@ -53,7 +53,7 @@
 
                             <span class="lg:hidden absolute top-0 left-0 bg-blue-300 px-2 py-1 text-xs text-white font-bold uppercase rounded-br-xl"># Control</span>
 
-                            <div class="text-center">
+                            <div class="text-center flex flex-col">
 
                                 <span class="whitespace-nowrap">{{ $certificado->año }}-{{ $certificado->tramite }}-{{ $certificado->usuario }}</span>
 

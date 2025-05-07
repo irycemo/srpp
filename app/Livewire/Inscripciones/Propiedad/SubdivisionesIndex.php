@@ -23,9 +23,11 @@ class SubdivisionesIndex extends Component
 
         $this->años = Constantes::AÑOS;
 
-        $this->año = now()->format('Y');
+        $this->filters['año'] = now()->format('Y');
 
         $this->motivos = Constantes::RECHAZO_MOTIVOS;
+
+        $this->usuarios_regionales = Constantes::USUARIOS_REGIONALES;
 
         $this->usuarios = User::where('status', 'activo')
                                         ->whereHas('roles', function($q){
