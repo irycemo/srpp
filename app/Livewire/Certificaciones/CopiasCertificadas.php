@@ -39,6 +39,8 @@ class CopiasCertificadas extends Component
     public $tramite;
     public $usuario;
 
+    public $usuarios_regionales;
+
     public $copiaConsultada;
 
     protected function rules(){
@@ -485,6 +487,8 @@ class CopiasCertificadas extends Component
                                         })
                                         ->orderBy('name')
                                         ->get();
+
+        $this->usuarios_regionales = Constantes::USUARIOS_REGIONALES;
 
     }
 

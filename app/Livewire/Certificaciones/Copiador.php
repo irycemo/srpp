@@ -6,6 +6,7 @@ use App\Models\User;
 use Livewire\Component;
 use Livewire\WithPagination;
 use App\Models\Certificacion;
+use App\Constantes\Constantes;
 use Barryvdh\DomPDF\Facade\Pdf;
 use App\Traits\ComponentesTrait;
 use Livewire\Attributes\Computed;
@@ -23,6 +24,7 @@ class Copiador extends Component
     public Certificacion $modelo_editar;
 
     public $usuarios;
+    public $usuarios_regionales;
 
     public $modalReasignar = false;
     public $modalCarga = false;
@@ -287,6 +289,8 @@ class Copiador extends Component
                                         })
                                         ->orderBy('name')
                                         ->get();
+
+        $this->usuarios_regionales = Constantes::USUARIOS_REGIONALES;
 
     }
 

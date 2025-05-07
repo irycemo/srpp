@@ -33,6 +33,7 @@ trait InscripcionesIndex{
     public $motivos;
     public $motivo;
     public $usuarios;
+    public $usuarios_regionales;
 
     public $años;
     public $filters = [
@@ -86,7 +87,7 @@ trait InscripcionesIndex{
 
             }elseif($this->actual->folio > $primerMovimiento->folio){
 
-                $this->dispatch('mostrarMensaje', ['warning', "El movimiento registral: (" . $this->actual->folioReal->folio . '-' . $primerMovimiento->folio . ') debe elaborarce primero.']);
+                $this->dispatch('mostrarMensaje', ['warning', "El movimiento registral: (" . $this->actual->folioReal->folio . '-' . $primerMovimiento->folio . ') debe elaborarse primero.']);
 
                 return true;
 

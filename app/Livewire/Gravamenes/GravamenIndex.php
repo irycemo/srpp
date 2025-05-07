@@ -69,6 +69,8 @@ class GravamenIndex extends Component
                                         ->orderBy('name')
                                         ->get();
 
+        $this->usuarios_regionales = Constantes::USUARIOS_REGIONALES;
+
     }
 
     public function render()

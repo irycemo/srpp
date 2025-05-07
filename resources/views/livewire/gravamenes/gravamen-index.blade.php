@@ -52,7 +52,17 @@
 
                             <span class="lg:hidden absolute top-0 left-0 bg-blue-300 px-2 py-1 text-xs text-white font-bold uppercase rounded-br-xl">Número de control</span>
 
-                            <span class="whitespace-nowrap">{{ $movimiento->año ?? 'N/A' }}-{{ $movimiento->tramite ?? 'N/A' }}-{{ $movimiento->usuario ?? 'N/A' }}</span>
+                            <div class="text-center">
+
+                                <span class="whitespace-nowrap">{{ $movimiento->año }}-{{ $movimiento->tramite }}-{{ $movimiento->usuario }}</span>
+
+                                @if(array_key_exists($movimiento->usuario, $usuarios_regionales))
+
+                                    <span class="text-xs rounded-full px-1 bg-rojo">Regional {{ $usuarios_regionales[$movimiento->usuario] }}</span>
+
+                                @endif
+
+                            </div>
 
                         </x-table.cell>
 

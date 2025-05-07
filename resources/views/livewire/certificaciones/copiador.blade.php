@@ -78,7 +78,17 @@
 
                             <span class="lg:hidden absolute top-0 left-0 bg-blue-300 px-2 py-1 text-xs text-white font-bold uppercase rounded-br-xl"># Control</span>
 
-                            <span class="whitespace-nowrap">{{ $copia->año }}-{{ $copia->tramite }}-{{ $copia->usuario }}</span>
+                            <div class="text-center">
+
+                                <span class="whitespace-nowrap">{{ $copia->año }}-{{ $copia->tramite }}-{{ $copia->usuario }}</span>
+
+                                @if(array_key_exists($copia->usuario, $usuarios_regionales))
+
+                                    <span class="text-xs rounded-full px-1 bg-rojo">Regional {{ $usuarios_regionales[$copia->usuario] }}</span>
+
+                                @endif
+
+                            </div>
 
                         </x-table.cell>
 

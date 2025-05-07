@@ -93,6 +93,8 @@ class CancelacionIndex extends Component
 
         $this->motivos = Constantes::RECHAZO_MOTIVOS;
 
+        $this->usuarios_regionales = Constantes::USUARIOS_REGIONALES;
+
     }
 
     public function render()

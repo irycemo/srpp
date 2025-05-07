@@ -36,6 +36,8 @@ class CertificadoPropiedadIndex extends Component
     public $motivos;
     public $motivo;
 
+    public $usuarios_regionales;
+
     public $años;
     public $filters = [
         'año' => '',
@@ -384,6 +386,8 @@ class CertificadoPropiedadIndex extends Component
         $this->años = Constantes::AÑOS;
 
         $this->filters['año'] = now()->format('Y');
+
+        $this->usuarios_regionales = Constantes::USUARIOS_REGIONALES;
 
     }
 

@@ -51,6 +51,8 @@ class CertificadoGravamen extends Component
     public $motivos;
     public $motivo;
 
+    public $usuarios_regionales;
+
     public $años;
     public $filters = [
         'año' => '',
@@ -395,6 +397,8 @@ class CertificadoGravamen extends Component
         if(!$this->director) abort(500, message:"Es necesario registrar al director.");
 
         $this->motivos = Constantes::RECHAZO_MOTIVOS;
+
+        $this->usuarios_regionales = Constantes::USUARIOS_REGIONALES;
 
     }
 

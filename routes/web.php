@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\Consultas\PreguntasController;
 use App\Livewire\PaseFolio\PaseFolio;
 use Illuminate\Support\Facades\Route;
 use App\Livewire\Consulta\ConsultaFRI;
@@ -18,6 +19,8 @@ use App\Livewire\Consulta\IndicesCancelacion;
 use App\Http\Controllers\SetPasswordController;
 use App\Livewire\PersonaMoral\PaseFolioPersonaMoral;
 use App\Http\Controllers\PaseFolio\PaseFolioController;
+use App\Livewire\Consulta\Pregunta;
+use App\Livewire\Consulta\Preguntas;
 
 /*
 |--------------------------------------------------------------------------
@@ -58,6 +61,11 @@ Route::group(['middleware' => ['auth', 'esta.activo']], function(){
     Route::get('indices_sentencia', IndicesSentencia::class)->middleware('permission:Consultas')->name('indices.sentencia');
     Route::get('indices_cancelacion', IndicesCancelacion::class)->middleware('permission:Consultas')->name('indices.cancelacion');
     Route::get('indices_varios', IndicesVarios::class)->middleware('permission:Consultas')->name('indices.varios');
+
+    /* Preguntas */
+    Route::get('preguntas_frecuentes', Preguntas::class)->middleware('permission:Consultas')->name('consultas.preguntas');
+    Route::get('pregunta_frecuente/{pregunta?}', Pregunta::class)->middleware('permission:Consultas')->name('consultas.pregunta');
+    Route::post('image-upload', [PreguntasController::class, 'storeImage'])->name('ckImage');
 
     /* Manual */
     Route::get('manual', ManualController::class)->name('manual');

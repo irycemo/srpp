@@ -5,6 +5,7 @@ namespace App\Models;
 // use Illuminate\Contracts\Auth\MustVerifyEmail;
 
 use App\Models\Efirma;
+use App\Models\Pregunta;
 use App\Traits\ModelosTrait;
 use Laravel\Sanctum\HasApiTokens;
 use Laravel\Jetstream\HasProfilePhoto;
@@ -90,6 +91,10 @@ class User extends Authenticatable implements Auditable
 
     public function efirma(){
         return $this->hasOne(Efirma::class);
+    }
+
+    public function preguntasLeidas(){
+        return $this->belongsToMany(Pregunta::class);
     }
 
 }

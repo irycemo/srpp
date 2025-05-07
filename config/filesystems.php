@@ -80,6 +80,14 @@ return [
             'throw' => false,
         ],
 
+        'preguntas' => [
+            'driver' => 'local',
+            'root' => storage_path('app/preguntas'),
+            'url' => env('APP_URL').'/preguntas',
+            'visibility' => 'public',
+            'throw' => false,
+        ],
+
     ],
 
     /*
@@ -98,6 +106,7 @@ return [
         public_path('caratulas') => storage_path('app/caratulas'),
         public_path('documento_entrada') => storage_path('app/documento_entrada'),
         public_path('efirmas') => storage_path('app/efirmas'),
+        public_path('preguntas') => storage_path('app/preguntas'),
     ],
 
 ];
