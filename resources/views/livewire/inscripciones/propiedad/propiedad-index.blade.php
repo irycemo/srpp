@@ -55,7 +55,7 @@
 
                                 @if(array_key_exists($movimiento->usuario, $usuarios_regionales))
 
-                                    <span class="text-xs rounded-full px-1 bg-rojo">Regional {{ $usuarios_regionales[$movimiento->usuario] }}</span>
+                                    <span class="text-xs">Regional {{ $usuarios_regionales[$movimiento->usuario] }}</span>
 
                                 @endif
 

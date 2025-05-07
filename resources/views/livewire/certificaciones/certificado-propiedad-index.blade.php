@@ -59,7 +59,7 @@
 
                                 @if(array_key_exists($certificado->usuario, $usuarios_regionales))
 
-                                    <span class="text-xs rounded-full px-1 bg-rojo">Regional {{ $usuarios_regionales[$certificado->usuario] }}</span>
+                                    <span class="text-xs">Regional {{ $usuarios_regionales[$certificado->usuario] }}</span>
 
                                 @endif
 
