@@ -8,7 +8,7 @@
 
             @include('livewire.comun.filtros-inscripciones')
 
-            @if(!auth()->user()->hasRole(['Administrador' , 'Operador']) && !$supervisor)
+            @if(!auth()->user()->hasRole(['Administrador' , 'Operador']))
 
                 <button wire:click="abrirModalNuevoFolio" class="bg-gray-500 hover:shadow-lg hover:bg-gray-700 text-sm py-2 px-4 text-white rounded-full hidden md:block items-center justify-center focus:outline-gray-400 focus:outline-offset-2">
 
