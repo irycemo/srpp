@@ -178,7 +178,7 @@ class PropietarioActualizar extends Component
 
         $this->porcentaje_propiedad = 0;
 
-        $this->porcentaje_propiedad = 100 / ($this->predio->propietarios()->count() == 0 ? 1 : $this->predio->propietarios()->count() + 1);
+        $this->porcentaje_propiedad = 100 / ($this->predio->propietarios()->count() == 0 ? 1 : $this->predio->propietarios()->count());
 
         DB::transaction(function (){
 
