@@ -173,7 +173,15 @@ class PropietarioCrear extends Component
 
         try {
 
-            $this->validaciones();
+            if($this->partes_iguales) {
+
+                $this->procesarPartesIguales();
+
+            }else{
+
+                $this->validaciones();
+
+            }
 
             $persona = $personaService->buscarPersona($this->rfc, $this->curp, $this->tipo_persona, $this->nombre, $this->ap_materno, $this->ap_paterno, $this->razon_social);
 
@@ -243,6 +251,8 @@ class PropietarioCrear extends Component
 
             }
 
+            $this->modelo->update(['partes_iguales' => $this->partes_iguales]);
+
             $this->resetearTodo();
 
             $this->dispatch('mostrarMensaje', ['success', "El adquiriente se creó con éxito."]);
@@ -303,6 +313,10 @@ class PropietarioCrear extends Component
                     'actualizado_por' => auth()->id()
                 ]);
 
+                dd($this->partes_iguales);
+
+                $this->modelo->update(['partes_iguales' => $this->partes_iguales]);
+
             }
 
             $this->dispatch('mostrarMensaje', ['success', "El adquiriente se actualizó con éxito."]);
@@ -320,6 +334,28 @@ class PropietarioCrear extends Component
             $this->dispatch('mostrarMensaje', ['error', "Ha ocurrido un error."]);
 
         }
+
+    }
+
+    public function procesarPartesIguales(){
+
+        $this->porcentaje_propiedad = 0;
+
+        $this->porcentaje_propiedad = 100 / ($this->modelo->propietarios()->count() == 0 ? 1 : $this->modelo->propietarios()->count() + 1);
+
+        DB::transaction(function (){
+
+            foreach($this->modelo->propietarios() as $propietario){
+
+                $propietario->update([
+                    'porcentaje_propiedad' => $this->porcentaje_propiedad,
+                    'porcentaje_nuda' => 0,
+                    'porcentaje_usufructo' => 0,
+                ]);
+
+            }
+
+        });
 
     }
 

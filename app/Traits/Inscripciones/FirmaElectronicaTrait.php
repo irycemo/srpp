@@ -269,6 +269,7 @@ trait FirmaElectronicaTrait{
         $object->cp_registro = $predio->cp_registro;
         $object->descripcion = $predio->descripcion;
         $object->observaciones = $predio->observaciones;
+        $object->partes_iguales = $predio->partes_iguales;
         $object->colindancias = $colindancias;
         $object->propietarios = $propietarios;
         $object->superficie_terreno = $predio->superficie_terreno_formateada;

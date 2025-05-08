@@ -10,7 +10,7 @@
 
                 <div class="flex justify-end mb-2">
 
-                    @livewire('comun.actores.propietario-crear', ['modelo' => $propiedad])
+                    @livewire('comun.actores.propietario-crear', ['modelo' => $propiedad, 'partes_iguales_flag'=> true])
 
                 </div>
 
@@ -35,14 +35,14 @@
                             <x-table.row wire:key="row-{{ $propietario->id }}">
 
                                 <x-table.cell>{{ $propietario->persona->nombre }} {{ $propietario->persona->ap_paterno }} {{ $propietario->persona->ap_materno }} {{ $propietario->persona->razon_social }}</x-table.cell>
-                                <x-table.cell>{{ $propietario->porcentaje_propiedad }}%</x-table.cell>
+                                <x-table.cell>@if($propiedad->partes_iguales) Partes iguales @else{{ $propietario->porcentaje_propiedad }}% @endif</x-table.cell>
                                 <x-table.cell>{{ $propietario->porcentaje_nuda }}%</x-table.cell>
                                 <x-table.cell>{{ $propietario->porcentaje_usufructo }}%</x-table.cell>
                                 <x-table.cell>
                                     <div class="flex items-center gap-3">
                                         <div>
 
-                                            <livewire:comun.actores.propietario-actualizar :actor="$propietario" :predio="$propiedad" wire:key="button-propietario-{{ $propietario->id }}" />
+                                            <livewire:comun.actores.propietario-actualizar :actor="$propietario" :predio="$propiedad" :partes_iguales_flag="true" wire:key="button-propietario-{{ $propietario->id }}" />
 
                                         </div>
                                         <x-button-red

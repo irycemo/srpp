@@ -160,23 +160,37 @@
 
         <span class="flex items-center justify-center text-lg text-gray-700 md:col-span-3 col-span-1 sm:col-span-2">Porcentajes</span>
 
-        <x-input-group for="porcentaje_propiedad" label="Porcentaje propiedad" :error="$errors->first('porcentaje_propiedad')" class="w-full">
+        @if ($partes_iguales_flag)
 
-            <x-input-text type="number" id="porcentaje_propiedad" wire:model.lazy="porcentaje_propiedad" />
+            <x-input-group for="partes_iguales" label="Partes iguales" :error="$errors->first('partes_iguales')" class="w-full md:col-span-3 col-span-1 sm:col-span-2">
 
-        </x-input-group>
+                <x-checkbox type="number" id="partes_iguales" wire:model.live="partes_iguales" />
 
-        <x-input-group for="porcentaje_nuda" label="Porcentaje nuda" :error="$errors->first('porcentaje_nuda')" class="w-full">
+            </x-input-group>
 
-            <x-input-text type="number" id="porcentaje_nuda" wire:model.lazy="porcentaje_nuda" />
+        @endif
 
-        </x-input-group>
+        @if(!$partes_iguales)
 
-        <x-input-group for="porcentaje_usufructo" label="Porcentaje usufructo" :error="$errors->first('porcentaje_usufructo')" class="w-full">
+            <x-input-group for="porcentaje_propiedad" label="Porcentaje propiedad" :error="$errors->first('porcentaje_propiedad')" class="w-full">
 
-            <x-input-text type="number" id="porcentaje_usufructo" wire:model.lazy="porcentaje_usufructo" />
+                <x-input-text type="number" id="porcentaje_propiedad" wire:model.lazy="porcentaje_propiedad" />
 
-        </x-input-group>
+            </x-input-group>
+
+            <x-input-group for="porcentaje_nuda" label="Porcentaje nuda" :error="$errors->first('porcentaje_nuda')" class="w-full">
+
+                <x-input-text type="number" id="porcentaje_nuda" wire:model.lazy="porcentaje_nuda" />
+
+            </x-input-group>
+
+            <x-input-group for="porcentaje_usufructo" label="Porcentaje usufructo" :error="$errors->first('porcentaje_usufructo')" class="w-full">
+
+                <x-input-text type="number" id="porcentaje_usufructo" wire:model.lazy="porcentaje_usufructo" />
+
+            </x-input-group>
+
+        @endif
 
     @elseif($tipo_actor === 'representante')
 

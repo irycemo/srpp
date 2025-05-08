@@ -107,7 +107,15 @@ class PropietarioActualizar extends Component
 
         try {
 
-            $this->validaciones();
+            if($this->partes_iguales) {
+
+                $this->procesarPartesIguales();
+
+            }else{
+
+                $this->validaciones();
+
+            }
 
             DB::transaction(function (){
 
@@ -142,6 +150,8 @@ class PropietarioActualizar extends Component
                     'actualizado_por' => auth()->id()
                 ]);
 
+                $this->predio->update(['partes_iguales' => $this->partes_iguales]);
+
             });
 
             $this->dispatch('mostrarMensaje', ['success', "La persona se actualizó con éxito."]);
@@ -161,6 +171,28 @@ class PropietarioActualizar extends Component
             $this->dispatch('mostrarMensaje', ['error', "Ha ocurrido un error."]);
 
         }
+
+    }
+
+    public function procesarPartesIguales(){
+
+        $this->porcentaje_propiedad = 0;
+
+        $this->porcentaje_propiedad = 100 / ($this->predio->propietarios()->count() == 0 ? 1 : $this->predio->propietarios()->count() + 1);
+
+        DB::transaction(function (){
+
+            foreach($this->predio->propietarios() as $propietario){
+
+                $propietario->update([
+                    'porcentaje_propiedad' => $this->porcentaje_propiedad,
+                    'porcentaje_nuda' => 0,
+                    'porcentaje_usufructo' => 0,
+                ]);
+
+            }
+
+        });
 
     }
 

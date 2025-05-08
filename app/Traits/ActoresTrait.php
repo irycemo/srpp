@@ -47,6 +47,9 @@ trait ActoresTrait{
     public $flag_agregar = false;
     public $size = 'lg';
 
+    public $partes_iguales_flag = false;
+    public $partes_iguales = false;
+
     public function getListeners()
     {
         return $this->listeners + [

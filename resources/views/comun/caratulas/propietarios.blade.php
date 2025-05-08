@@ -27,7 +27,7 @@
                         @endif
                     </td>
                     <td style="padding-right: 40px;">
-                        <p style="margin:0">{{ $propietario->porcentaje_propiedad ?? '0.00' }} %</p>
+                        <p style="margin:0">@if($predio->partes_iguales) Partes iguales @else{{ $propietario->porcentaje_propiedad ?? '0.00' }}% @endif</p>
                     </td>
                     <td style="padding-right: 40px;">
                         <p style="margin:0">{{ $propietario->porcentaje_nuda ?? '0.00' }} %</p>
