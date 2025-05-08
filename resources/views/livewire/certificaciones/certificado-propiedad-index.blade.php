@@ -210,18 +210,6 @@
 
                                         @elseif(auth()->user()->hasRole(['Supervisor certificaciones', 'Jefe de departamento certificaciones', 'Supervisor uruapan', 'Regional']) && $certificado->estado == 'elaborado')
 
-                                            @if ($certificado->certificacion->reimpreso_en == null)
-
-                                                <button
-                                                    wire:click="reimprimir({{  $certificado->id }})"
-                                                    wire:loading.attr="disabled"
-                                                    class="w-full text-left block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 focus:outline-none focus:bg-gray-100"
-                                                    role="menuitem">
-                                                    Reimprimir
-                                                </button>
-
-                                            @endif
-
                                             @if($certificado->estado == 'elaborado')
 
                                                 @if($certificado->folio_real)
@@ -263,6 +251,14 @@
                                                 </button>
 
                                             @endif
+
+                                            <button
+                                                wire:click="reimprimir({{  $certificado->id }})"
+                                                wire:loading.attr="disabled"
+                                                class="w-full text-left block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 focus:outline-none focus:bg-gray-100"
+                                                role="menuitem">
+                                                Reimprimir
+                                            </button>
 
                                         @endif
 
