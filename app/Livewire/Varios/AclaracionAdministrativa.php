@@ -295,6 +295,7 @@ class AclaracionAdministrativa extends Component
         $this->vario->movimientoRegistral->folioReal->predio->etapa_fraccionador = $this->vario->predio->etapa_fraccionador;
         $this->vario->movimientoRegistral->folioReal->predio->clave_edificio = $this->vario->predio->clave_edificio;
         $this->vario->movimientoRegistral->folioReal->predio->divisa = $this->vario->predio->divisa;
+        $this->vario->movimientoRegistral->folioReal->predio->partes_iguales = $this->vario->predio->partes_iguales;
 
         $this->vario->movimientoRegistral->folioReal->predio->save();
 

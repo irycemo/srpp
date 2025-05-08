@@ -439,6 +439,7 @@ class Rectificatoria extends Component
         $this->sentencia->movimientoRegistral->folioReal->predio->manzana_fraccionador = $this->sentenciaPredio->manzana_fraccionador;
         $this->sentencia->movimientoRegistral->folioReal->predio->etapa_fraccionador = $this->sentenciaPredio->etapa_fraccionador;
         $this->sentencia->movimientoRegistral->folioReal->predio->clave_edificio = $this->sentenciaPredio->clave_edificio;
+        $this->sentencia->movimientoRegistral->folioReal->predio->partes_iguales = $this->sentenciaPredio->partes_iguales;
 
         $this->sentencia->movimientoRegistral->folioReal->predio->save();
 

@@ -416,7 +416,7 @@
 
             <div class="flex justify-end mb-2">
 
-                @livewire('comun.actores.propietario-crear', ['modelo' => $vario->predio])
+                @livewire('comun.actores.propietario-crear', ['modelo' => $vario->predio, 'partes_iguales_flag'=> true])
 
             </div>
 
@@ -445,7 +445,7 @@
 
                                     <div>
 
-                                        <livewire:comun.actores.propietario-actualizar :actor="$propietario" :predio="$vario->predio" wire:key="button-propietario-{{ $propietario->id }}" />
+                                        <livewire:comun.actores.propietario-actualizar :actor="$propietario" :predio="$vario->predio" :partes_iguales_flag="true" wire:key="button-propietario-{{ $propietario->id }}" />
 
                                     </div>
 
