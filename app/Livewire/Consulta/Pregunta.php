@@ -88,6 +88,26 @@ class Pregunta extends Component
 
     }
 
+    public function actualizar(){
+
+        $this->validate();
+
+        try {
+
+            $this->pregunta->update(['titulo' => $this->titulo, 'contenido' => $this->contenido]);
+
+            return redirect()->route('consultas.preguntas');
+
+
+        } catch (\Throwable $th) {
+
+            Log::error("Error al crear pregunta por el usuario: (id: " . auth()->user()->id . ") " . auth()->user()->name . ". " . $th);
+            $this->dispatch('mostrarMensaje', ['error', "Ha ocurrido un error."]);
+
+        }
+
+    }
+
     public function mount(){
 
         if(isset($this->pregunta)){

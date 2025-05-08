@@ -88,10 +88,21 @@
 
         <div class="w-full lg:w-1/2 mx-auto flex justify-end">
 
-            <x-button-blue
-                wire:click="guardar">
-                Guardar
-            </x-button-blue>
+            @if ($pregunta)
+
+                <x-button-blue
+                    wire:click="actualizar">
+                    Actualizar
+                </x-button-blue>
+
+            @else
+
+                <x-button-blue
+                    wire:click="guardar">
+                    Guardar
+                </x-button-blue>
+
+            @endif
 
         </div>
 
