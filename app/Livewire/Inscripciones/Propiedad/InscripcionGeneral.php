@@ -519,11 +519,13 @@ class InscripcionGeneral extends Component
 
             }else{
 
-                 $aux = $this->inscripcion->movimientoRegistral->folioReal->predio->actores()->whereHas('persona', function($q) use($propietario){
-                                                                                    $q->where('nombre', $propietario['nombre'])
-                                                                                        ->where('ap_paterno', $propietario['ap_paterno'])
-                                                                                        ->where('ap_materno', $propietario['ap_materno'])
-                                                                                        ->where('razon_social', $propietario['razon_social']);
+                 $aux = $this->inscripcion->movimientoRegistral->folioReal->predio->actores()
+                                                                                    ->where('tipo_actor', 'propietario')
+                                                                                    ->whereHas('persona', function($q) use($propietario){
+                                                                                        $q->where('nombre', $propietario['nombre'])
+                                                                                            ->where('ap_paterno', $propietario['ap_paterno'])
+                                                                                            ->where('ap_materno', $propietario['ap_materno'])
+                                                                                            ->where('razon_social', $propietario['razon_social']);
                                                                                     })
                                                                                     ->first();
 
@@ -539,7 +541,9 @@ class InscripcionGeneral extends Component
 
         foreach($this->inscripcion->propietarios() as $adquiriente){
 
-            $actor = $this->inscripcion->movimientoRegistral->folioReal->predio->actores()->where('persona_id', $adquiriente->persona_id)->first();
+            $actor = $this->inscripcion->movimientoRegistral->folioReal->predio->actores()
+                                                                                ->where('tipo_actor', 'propietario')
+                                                                                ->where('persona_id', $adquiriente->persona_id)->first();
 
             if($actor){
 
