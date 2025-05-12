@@ -59,7 +59,8 @@ class PaseFolioController extends Controller
         $object->predio = $this->predio($folioReal->predio);
         $object->datos_control = $datos_control;
 
-        $fielDirector = Credential::openFiles(Storage::disk('efirmas')->path($director->efirma->cer),
+        $fielDirector = Credential::openFiles(
+                                                Storage::disk('efirmas')->path($director->efirma->cer),
                                                 Storage::disk('efirmas')->path($director->efirma->key),
                                                 $director->efirma->contraseña
                                             );
