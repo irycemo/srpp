@@ -71,6 +71,14 @@ class GravamenIndex extends Component
 
         $this->usuarios_regionales = Constantes::USUARIOS_REGIONALES;
 
+        if(auth()->user()->hasRole(['Regional'])){
+
+            $regional = auth()->user()->ubicacion[-1];
+
+            $this->usuarios_regionales_fliped = array_keys($this->usuarios_regionales, $regional);
+
+        }
+
     }
 
     public function render()
@@ -193,25 +201,32 @@ class GravamenIndex extends Component
                                                         $q->whereIn('estado', ['activo', 'centinela']);
                                                     })
                                                     ->when(auth()->user()->ubicacion === 'Regional 1', function($q){
-                                                        $q->whereIn('distrito', [3, 9]);
+                                                        $q->whereIn('distrito', [3, 9])
+                                                            ->orWhereIn('usuario', $this->usuarios_regionales_fliped);
                                                     })
                                                     ->when(auth()->user()->ubicacion === 'Regional 2', function($q){
-                                                        $q->whereIn('distrito', [12, 19]);
+                                                        $q->whereIn('distrito', [12, 19])
+                                                            ->orWhereIn('usuario', $this->usuarios_regionales_fliped);
                                                     })
                                                     ->when(auth()->user()->ubicacion === 'Regional 3', function($q){
-                                                        $q->whereIn('distrito', [4, 17]);
+                                                        $q->whereIn('distrito', [4, 17])
+                                                            ->orWhereIn('usuario', $this->usuarios_regionales_fliped);
                                                     })
                                                     ->when(auth()->user()->ubicacion === 'Regional 4', function($q){
-                                                        $q->whereIn('distrito', [2, 18]);
+                                                        $q->whereIn('distrito', [2, 18])
+                                                            ->orWhereIn('usuario', $this->usuarios_regionales_fliped);
                                                     })
                                                     ->when(auth()->user()->ubicacion === 'Regional 5', function($q){
-                                                        $q->where('distrito', 13);
+                                                        $q->where('distrito', 13)
+                                                            ->orWhereIn('usuario', $this->usuarios_regionales_fliped);
                                                     })
                                                     ->when(auth()->user()->ubicacion === 'Regional 6', function($q){
-                                                        $q->where('distrito', 15);
+                                                        $q->where('distrito', 15)
+                                                            ->orWhereIn('usuario', $this->usuarios_regionales_fliped);
                                                     })
                                                     ->when(auth()->user()->ubicacion === 'Regional 7', function($q){
-                                                        $q->whereIn('distrito', [5, 14, 8]);
+                                                        $q->whereIn('distrito', [5, 14, 8])
+                                                            ->orWhereIn('usuario', $this->usuarios_regionales_fliped);
                                                     })
                                                     ->whereIn('estado', ['nuevo', 'captura', 'elaborado', 'finalizado', 'correccion'])
                                                     ->whereHas('gravamen', function($q){

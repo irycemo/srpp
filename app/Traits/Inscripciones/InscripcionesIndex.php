@@ -34,6 +34,7 @@ trait InscripcionesIndex{
     public $motivo;
     public $usuarios;
     public $usuarios_regionales;
+    public $usuarios_regionales_fliped;
 
     public $años;
     public $filters = [

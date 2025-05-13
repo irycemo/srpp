@@ -142,6 +142,14 @@ class ReformasIndex extends Component
 
         $this->usuarios_regionales = Constantes::USUARIOS_REGIONALES;
 
+        if(auth()->user()->hasRole(['Regional'])){
+
+            $regional = auth()->user()->ubicacion[-1];
+
+            $this->usuarios_regionales_fliped = array_keys($this->usuarios_regionales, $regional);
+
+        }
+
         $this->usuarios = User::where('status', 'activo')
                                         ->whereHas('roles', function($q){
                                             $q->whereIn('name', ['Folio real moral']);
