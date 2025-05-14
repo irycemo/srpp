@@ -755,6 +755,20 @@
 
                 </table>
 
+                <div class="flex justify-center">
+
+                    @if($partes_iguales_flag)
+
+                        <x-input-group for="partes_iguales" label="Partes iguales" :error="$errors->first('partes_iguales')" class="flex gap-3 items-center">
+
+                            <x-checkbox wire:model="partes_iguales"/>
+
+                        </x-input-group>
+
+                    @endif
+
+                </div>
+
             </div>
 
     @endif

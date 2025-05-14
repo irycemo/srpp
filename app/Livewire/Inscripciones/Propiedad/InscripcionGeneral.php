@@ -26,6 +26,9 @@ class InscripcionGeneral extends Component
     public $nuevoFolio;
     public $actos;
 
+    public $partes_iguales;
+    public $partes_iguales_flag = true;
+
     protected $listeners = ['refresh'];
 
     protected function rules(){
@@ -227,6 +230,26 @@ class InscripcionGeneral extends Component
     public function refresh(){
 
         $this->inscripcion->load('actores.persona');
+
+        $actor = $this->inscripcion->actores()
+                                            ->where('tipo_Actor', 'propietario')
+                                            ->where(function($q){
+                                                $q->where('porcentaje_usufructo', '>', 0)
+                                                ->orWhere('porcentaje_nuda', '>', 0);
+                                            })
+                                            ->first();
+
+        if($actor){
+
+            $this->partes_iguales_flag = false;
+
+            $this->partes_iguales = false;
+
+        }else{
+
+            $this->partes_iguales_flag = true;
+
+        }
 
     }
 
@@ -568,6 +591,20 @@ class InscripcionGeneral extends Component
 
         }
 
+        if($this->partes_iguales){
+
+            $propietarios = $this->inscripcion->movimientoRegistral->folioReal->predio->propietarios()->count();
+
+            foreach($this->inscripcion->movimientoRegistral->folioReal->predio->propietarios() as $propietario){
+
+                $propietario->update(['porcentaje_propiedad' => 100 / $propietarios]);
+
+            }
+
+            $this->inscripcion->movimientoRegistral->folioReal->predio->update(['partes_iguales' => true]);
+
+        }
+
     }
 
     public function inscribir(){
@@ -712,6 +749,8 @@ class InscripcionGeneral extends Component
                 'porcentaje_usufructo' => $transmitente->porcentaje_usufructo,
             ];
         }
+
+        $this->refresh();
 
         $this->actos = Constantes::ACTOS_INSCRIPCION_PROPIEDAD;
 
