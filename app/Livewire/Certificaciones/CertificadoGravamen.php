@@ -527,9 +527,11 @@ class CertificadoGravamen extends Component
         }elseif(auth()->user()->hasRole(['Regional'])){
 
             $certificados = MovimientoRegistral::with('asignadoA', 'supervisor', 'actualizadoPor', 'certificacion.actualizadoPor', 'folioReal:id,folio')
-                                                ->where('estado', 'elaborado')
                                                 ->whereHas('folioReal', function($q){
                                                     $q->whereIn('estado', ['activo', 'centinela', 'bloqueado']);
+                                                })
+                                                ->whereHas('certificacion', function($q){
+                                                    $q->where('servicio', 'DL07');
                                                 })
                                                 ->when(auth()->user()->ubicacion === 'Regional 1', function($q){
                                                     $q->whereIn('distrito', [3, 9])
@@ -559,9 +561,6 @@ class CertificadoGravamen extends Component
                                                     $q->whereIn('distrito', [5, 14, 8])
                                                         ->orWhereIn('usuario', $this->usuarios_regionales_fliped);
                                                 })
-                                                ->whereHas('certificacion', function($q){
-                                                    $q->where('servicio', 'DL07');
-                                                })
                                                 ->when($this->filters['año'], fn($q, $año) => $q->where('año', $año))
                                                 ->when($this->filters['tramite'], fn($q, $tramite) => $q->where('tramite', $tramite))
                                                 ->when($this->filters['usuario'], fn($q, $usuario) => $q->where('usuario', $usuario))
@@ -572,6 +571,8 @@ class CertificadoGravamen extends Component
                                                 })
                                                 ->when($this->filters['folio'], fn($q, $folio) => $q->where('folio', $folio))
                                                 ->when($this->filters['estado'], fn($q, $estado) => $q->where('estado', $estado))
+                                                ->whereNotNull('folio_real')
+                                                ->whereNotIn('estado', ['nuevo', 'correccion'])
                                                 ->orderBy($this->sort, $this->direction)
                                                 ->paginate($this->pagination);
 
