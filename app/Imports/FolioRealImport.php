@@ -82,6 +82,7 @@ class FolioRealImport implements ToCollection, WithHeadingRow, WithValidation, W
             'solar' => 'nullable|string',
             'zona_ubicacion' => 'nullable|string',
             'propietarios' => 'required',
+            'descripcion' => 'nullable',
             'acto_contenido_gravamen' => ['nullable', Rule::in(Constantes::ACTOS_INSCRIPCION_GRAVAMEN)],
             'tipo_gravamen' => ['required_unless:acto_contenido_gravamen,null', 'nullable', 'string'],
             'valor_gravamen' => [ 'numeric', 'required_unless:acto_contenido_gravamen,null', 'nullable'],
@@ -401,6 +402,7 @@ class FolioRealImport implements ToCollection, WithHeadingRow, WithValidation, W
             'ejido' => $linea['ejido'],
             'parcela' => $linea['parcela'],
             'solar' => $linea['solar'],
+            'descripcion' => $linea['descripcion'],
             'zona_ubicacion' => $linea['zona_ubicacion'],
         ]);
 

@@ -488,7 +488,6 @@ class CertificadoGravamen extends Component
                                                 ->whereHas('certificacion', function($q){
                                                     $q->where('servicio', 'DL07');
                                                 })
-                                                ->whereIn('estado', ['nuevo', 'elaborado', 'correccion'])
                                                 ->when($this->filters['año'], fn($q, $año) => $q->where('año', $año))
                                                 ->when($this->filters['tramite'], fn($q, $tramite) => $q->where('tramite', $tramite))
                                                 ->when($this->filters['usuario'], fn($q, $usuario) => $q->where('usuario', $usuario))

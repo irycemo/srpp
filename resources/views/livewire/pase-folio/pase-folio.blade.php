@@ -491,7 +491,7 @@
 
                 </x-input-group>
 
-                <x-input-group for="registro" label="Regsitro" :error="$errors->first('registro')" class="w-full">
+                <x-input-group for="registro" label="Registro" :error="$errors->first('registro')" class="w-full">
 
                     <x-input-text type="number" id="registro" wire:model="registro" />
 
