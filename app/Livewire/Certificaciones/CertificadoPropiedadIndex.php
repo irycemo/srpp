@@ -536,9 +536,6 @@ class CertificadoPropiedadIndex extends Component
                                                                 ->whereNull('folio_real');
                                                         });
                                                 })
-                                                ->whereHas('certificacion', function($q){
-                                                    $q->whereIn('servicio', ['DL10', 'DL11']);
-                                                })
                                                 ->when($this->filters['año'], fn($q, $año) => $q->where('año', $año))
                                                 ->when($this->filters['tramite'], fn($q, $tramite) => $q->where('tramite', $tramite))
                                                 ->when($this->filters['usuario'], fn($q, $usuario) => $q->where('usuario', $usuario))
@@ -549,6 +546,9 @@ class CertificadoPropiedadIndex extends Component
                                                 })
                                                 ->when($this->filters['folio'], fn($q, $folio) => $q->where('folio', $folio))
                                                 ->when($this->filters['estado'], fn($q, $estado) => $q->where('estado', $estado))
+                                                ->whereHas('certificacion', function($q){
+                                                    $q->whereIn('servicio', ['DL10', 'DL11']);
+                                                })
                                                 ->orderBy($this->sort, $this->direction)
                                                 ->paginate($this->pagination);
 
