@@ -290,6 +290,7 @@ class MovimientoRegistralService{
                 'seccion',
                 'año',
                 'tramite',
+                'servicio_nombre',
                 'usuario',
                 'tipo_servicio',
                 'monto',

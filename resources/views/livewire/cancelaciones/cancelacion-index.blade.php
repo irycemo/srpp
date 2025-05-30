@@ -19,6 +19,7 @@
                 <x-table.heading sortable wire:click="sortBy('estado')" :direction="$sort === 'estado' ? $direction : null">Estado</x-table.heading>
                 <x-table.heading sortable wire:click="sortBy('tipo_servicio')" :direction="$sort === 'tipo_servicio' ? $direction : null" >Tipo de servicio</x-table.heading>
                 <x-table.heading sortable wire:click="sortBy('distrito')" :direction="$sort === 'distrito' ? $direction : null" >Distrito</x-table.heading>
+                <x-table.heading sortable wire:click="sortBy('servicio_nombre')" :direction="$sort === 'servicio_nombre' ? $direction : null" >Servicio</x-table.heading>
                 <x-table.heading sortable wire:click="sortBy('tomo_gravamen')" :direction="$sort === 'tomo_gravamen' ? $direction : null" >Tomo gravamen</x-table.heading>
                 <x-table.heading sortable wire:click="sortBy('registro_gravamen')" :direction="$sort === 'registro_gravamen' ? $direction : null" >Registro gravamen</x-table.heading>
                 <x-table.heading sortable wire:click="sortBy('fecha_entrega')" :direction="$sort === 'fecha_entrega' ? $direction : null" >Fecha de entrega</x-table.heading>
@@ -86,6 +87,14 @@
                             <span class="lg:hidden absolute top-0 left-0 bg-blue-300 px-2 py-1 text-xs text-white font-bold uppercase rounded-br-xl">Distrito</span>
 
                             {{ $movimiento->distrito }}
+
+                        </x-table.cell>
+
+                        <x-table.cell>
+
+                            <span class="lg:hidden absolute top-0 left-0 bg-blue-300 px-2 py-1 text-xs text-white font-bold uppercase rounded-br-xl">Servicio</span>
+
+                            {{ $movimiento->servicio_nombre ?? 'N/A' }}
 
                         </x-table.cell>
 
