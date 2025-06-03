@@ -51,6 +51,7 @@ class PropiedadController extends Controller
         $datos_control->monto = $propiedad->movimientoRegistral->monto;
         $datos_control->tipo_servicio = $propiedad->movimientoRegistral->tipo_servicio;
         $datos_control->asigno_folio = $propiedad->movimientoRegistral->folioReal->asignado_por;
+        $datos_control->fecha_prelacion = $propiedad->fecha_prelacion;
 
         $object = (object)[];
 

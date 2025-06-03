@@ -211,6 +211,29 @@ class MovimientosRegistrales extends Component
 
     }
 
+    public function reasignarUsuarioAleatoriamente(){
+
+        try {
+
+            $this->modelo_editar->usuario_asignado = $this->usuarios->random()->id;
+            $this->modelo_editar->actualizado_por = auth()->id();
+            $this->modelo_editar->save();
+
+            $this->modelo_editar->audits()->latest()->first()->update(['tags' => 'Reasignó usuario']);
+
+            $this->dispatch('mostrarMensaje', ['success', "El usuario se reasignó con éxito."]);
+
+            $this->modalReasignarUsuario = false;
+
+        } catch (\Throwable $th) {
+
+            $this->dispatch('mostrarMensaje', ['error', "Hubo un error."]);
+            Log::error("Error al reasignar usuario a movimiento registral por el usuario: (id: " . auth()->user()->id . ") " . auth()->user()->name . ". " . $th);
+
+        }
+
+    }
+
     public function abrirModalReasignarSupervisor(MovimientoRegistral $modelo){
 
         if($this->modelo_editar->isNot($modelo))

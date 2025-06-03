@@ -362,6 +362,16 @@
                     <span>Reasignar</span>
                 </x-button-blue>
 
+                <x-button-blue
+                    wire:click="reasignarUsuarioAleatoriamente"
+                    wire:loading.attr="disabled"
+                    wire:target="reasignarUsuarioAleatoriamente">
+
+                    <img wire:loading wire:target="reasignarUsuarioAleatoriamente" class="mx-auto h-4 mr-1" src="{{ asset('storage/img/loading3.svg') }}" alt="Loading">
+
+                    <span>Aleatorio</span>
+                </x-button-blue>
+
                 <x-button-red
                     wire:click="$toggle('modalReasignarUsuario')"
                     wire:loading.attr="disabled"
@@ -420,6 +430,16 @@
                     <img wire:loading wire:target="reasignarSupervisor" class="mx-auto h-4 mr-1" src="{{ asset('storage/img/loading3.svg') }}" alt="Loading">
 
                     <span>Reasignar</span>
+                </x-button-blue>
+
+                <x-button-blue
+                    wire:click="reasignarSupervisor()"
+                    wire:loading.attr="disabled"
+                    wire:target="reasignarSupervisor()">
+
+                    <img wire:loading wire:target="reasignarSupervisor()" class="mx-auto h-4 mr-1" src="{{ asset('storage/img/loading3.svg') }}" alt="Loading">
+
+                    <span>Reasignar aleatoriamente</span>
                 </x-button-blue>
 
                 <x-button-red
