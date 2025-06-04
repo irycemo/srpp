@@ -34,9 +34,9 @@ class ConsultasCertificaciones extends Component
 
         $this->validate(['paginas' => 'required']);
 
-        if($this->certificacion->estado != 'nuevo'){
+        if(in_array($this->certificacion->estado, ['nuevo', 'elaborado'])){
 
-            $this->dispatch('mostrarMensaje', ['error', "El trámite esta concluido."]);
+            $this->dispatch('mostrarMensaje', ['warning', "El trámite debe estar en estado nuevo o elaborado."]);
 
             $this->modal = false;
 
@@ -48,7 +48,7 @@ class ConsultasCertificaciones extends Component
 
         if($this->paginas >= $this->certificacion->certificacion->numero_paginas){
 
-            $this->dispatch('mostrarMensaje', ['error', "El número de paginas no puede ser mayor o igual al registrado."]);
+            $this->dispatch('mostrarMensaje', ['warning', "El número de paginas no puede ser mayor o igual al registrado."]);
 
             $this->modal = false;
 
