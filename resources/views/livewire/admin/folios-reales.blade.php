@@ -16,6 +16,7 @@
                     <option value="elaborado">Elaborado</option>
                     <option value="rechazado">Rechazado</option>
                     <option value="bloqueado">Bloqueado</option>
+                    <option value="pendiente">Pendiente</option>
 
                 </select>
 

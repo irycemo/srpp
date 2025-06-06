@@ -100,7 +100,9 @@
 
                             <span class="lg:hidden absolute top-0 left-0 bg-blue-300 px-2 py-1 text-xs text-white font-bold uppercase rounded-br-xl">Folio real</span>
 
-                            {{ $movimiento->folioReal->folio ?? 'N/A' }}
+                            <span>
+                                {{ $movimiento->folioReal->folio ?? 'N/A' }}
+                            </span>
 
                         </x-table.cell>
 

@@ -400,7 +400,7 @@ class MovimientosRegistrales extends Component
     public function render()
     {
 
-        $movimientos = MovimientoRegistral::with('actualizadoPor', 'folioReal:id,folio', 'asignadoA:id,name', 'supervisor:id,name')
+        $movimientos = MovimientoRegistral::with('actualizadoPor', 'folioReal:id,folio,estado', 'asignadoA:id,name', 'supervisor:id,name')
                             ->when($this->filters['año'], fn($q, $año) => $q->where('año', $año))
                             ->when($this->filters['tramite'], fn($q, $tramite) => $q->where('tramite', $tramite))
                             ->when($this->filters['usuario'], fn($q, $usuario) => $q->where('usuario', $usuario))

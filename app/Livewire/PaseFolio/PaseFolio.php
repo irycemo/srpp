@@ -578,7 +578,7 @@ class PaseFolio extends Component
 
         if(auth()->user()->hasRole('Administrador')){
 
-            $movimientos = MovimientoRegistral::with('actualizadoPor', 'asignadoA', 'folioReal', 'supervisor')
+            $movimientos = MovimientoRegistral::with('actualizadoPor', 'asignadoA', 'folioReal:id,folio,estado', 'supervisor')
                                                     ->doesnthave('reformaMoral')
                                                     ->whereIn('folio', [0, 1])
                                                     ->whereIn('estado', ['nuevo', 'correccion'])
@@ -606,7 +606,7 @@ class PaseFolio extends Component
 
         }elseif(auth()->user()->hasRole(['Supervisor inscripciones', 'Supervisor certificaciones', 'Supervisor uruapan'])){
 
-            $movimientos = MovimientoRegistral::with('actualizadoPor', 'folioReal', 'asignadoA')
+            $movimientos = MovimientoRegistral::with('actualizadoPor', 'folioReal:id,folio,estado', 'asignadoA')
                                                     ->doesnthave('reformaMoral')
                                                     ->whereIn('folio', [0, 1])
                                                     ->whereIn('estado', ['nuevo', 'correccion'])
@@ -637,7 +637,7 @@ class PaseFolio extends Component
 
         }elseif(auth()->user()->hasRole(['Jefe de departamento certificaciones', 'Jefe de departamento inscripciones'])){
 
-            $movimientos = MovimientoRegistral::with('actualizadoPor', 'folioReal', 'asignadoA')
+            $movimientos = MovimientoRegistral::with('actualizadoPor', 'folioReal:id,folio,estado', 'asignadoA')
                                                     ->doesnthave('reformaMoral')
                                                     ->whereIn('folio', [0, 1])
                                                     ->whereIn('estado', ['nuevo', 'correccion'])
@@ -670,7 +670,7 @@ class PaseFolio extends Component
                                                     ->paginate($this->pagination);
         }else{
 
-            $movimientos = MovimientoRegistral::with('actualizadoPor', 'folioReal', 'asignadoA')
+            $movimientos = MovimientoRegistral::with('actualizadoPor', 'folioReal:id,folio,estado', 'asignadoA')
                                                     ->doesnthave('reformaMoral')
                                                     ->whereIn('folio', [0, 1])
                                                     ->whereIn('estado', ['nuevo', 'correccion'])

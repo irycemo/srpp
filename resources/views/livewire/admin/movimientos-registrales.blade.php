@@ -123,7 +123,14 @@
 
                             <span class="lg:hidden absolute top-0 left-0 bg-blue-300 px-2 py-1 text-xs text-white font-bold uppercase rounded-br-xl">Tomo</span>
 
-                            <span class="whitespace-nowrap">{{ $movimiento->folioReal?->folio }}-{{ $movimiento->folio }}</span>
+                            <span class="whitespace-nowrap">
+                                @if($movimiento->folioReal?->estado == 'pendiente')
+
+                                    <span class="bg-pink-400 px-1 rounded-full text-white text-xs">P</span>
+
+                                @endif
+
+                                {{ $movimiento->folioReal?->folio }}-{{ $movimiento->folio }}</span>
 
                         </x-table.cell>
 
