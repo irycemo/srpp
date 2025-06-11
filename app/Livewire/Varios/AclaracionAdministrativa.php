@@ -34,6 +34,10 @@ class AclaracionAdministrativa extends Component
 
     protected function rules(){
         return [
+            'vario.predio.cp_localidad' => 'nullable',
+            'vario.predio.cp_oficina' => 'nullable',
+            'vario.predio.cp_tipo_predio' => 'nullable',
+            'vario.predio.cp_registro' => 'nullable',
             'vario.acto_contenido' => 'required',
             'vario.descripcion' => 'required',
             'vario.predio.superficie_terreno' => 'required',

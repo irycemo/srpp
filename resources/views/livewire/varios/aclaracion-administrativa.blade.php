@@ -20,6 +20,24 @@
 
     </div>
 
+    <div class="bg-white rounded-lg p-4 shadow-lg mb-4">
+
+        <div class="space-y-1 sm:col-span-2 lg:col-span-3 mx-auto text-center mb-2">
+
+            <span class="flex items-center justify-center text-gray-700">Cuenta predial</span>
+
+            <input title="Localidad" placeholder="Localidad" type="number" class="bg-white rounded text-xs w-20 @error('vario.predio.cp_localidad') border-1 border-red-500 @enderror" wire:model.lazy="vario.predio.cp_localidad">
+
+            <input title="Oficina" placeholder="Oficina" type="number" class="bg-white rounded text-xs w-20 @error('vario.predio.cp_oficina') border-1 border-red-500 @enderror" wire:model.defer="vario.predio.cp_oficina">
+
+            <input title="Tipo de predio" placeholder="Tipo" type="number" class="bg-white rounded text-xs w-20 @error('vario.predio.cp_tipo_predio') border-1 border-red-500 @enderror" wire:model.defer="vario.predio.cp_tipo_predio">
+
+            <input title="Número de registro" placeholder="Registro" type="number" class="bg-white rounded text-xs w-20 @error('vario.predio.cp_registro') border-1 border-red-500 @enderror" wire:model.lazy="vario.predio.cp_registro">
+
+        </div>
+
+    </div>
+
     <div class="p-4 bg-white shadow-xl rounded-xl mb-5">
 
         <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3 mb-3 bg-white rounded-lg p-3">
