@@ -2,6 +2,7 @@
 
 namespace App\Livewire\Cancelaciones;
 
+use App\Models\User;
 use Livewire\Component;
 use App\Models\Gravamen;
 use Livewire\WithPagination;
@@ -92,6 +93,13 @@ class CancelacionIndex extends Component
         $this->filters['año'] = now()->format('Y');
 
         $this->motivos = Constantes::RECHAZO_MOTIVOS;
+
+        $this->usuarios = User::where('status', 'activo')
+                                        ->whereHas('roles', function($q){
+                                            $q->whereIn('name', ['Cancelación', 'Registrador cancelación']);
+                                        })
+                                        ->orderBy('name')
+                                        ->get();
 
         $this->usuarios_regionales = Constantes::USUARIOS_REGIONALES;
 

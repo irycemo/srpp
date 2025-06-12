@@ -32,6 +32,7 @@ class PaseFolio extends Component
     public $modalFinalizar = false;
     public $modalRechazar = false;
     public $modalNuevoFolio = false;
+    public $modalReasignarUsuario = false;
     public $motivos;
     public $motivo;
     public $supervisor = false;
@@ -41,6 +42,7 @@ class PaseFolio extends Component
     public $tomo;
     public $registro;
     public $numero_propiedad;
+    public $usuarios = [];
 
     public $años;
     public $filters = [
@@ -51,6 +53,12 @@ class PaseFolio extends Component
         'folio' => '',
         'estado' => ''
     ];
+
+    protected function rules(){
+        return [
+            'modelo_editar.usuario_asignado' => 'required',
+         ];
+    }
 
     public MovimientoRegistral $modelo_editar;
 
@@ -129,6 +137,22 @@ class PaseFolio extends Component
             $this->modelo_editar = $modelo;
 
         $this->modalFinalizar = true;
+
+    }
+
+    public function cargarUsuarios($roles){
+
+        $this->usuarios = User::whereHas('roles', function($q) use($roles){
+                                    $q->whereIn('name', $roles);
+                                })
+                                ->when(auth()->user()->ubicacion == 'Regional 4', function($q){
+                                    $q->where('ubicacion', 'Regional 4');
+                                })
+                                ->when(auth()->user()->ubicacion != 'Regional 4', function($q){
+                                    $q->where('ubicacion', '!=', 'Regional 4');
+                                })
+                                ->orderBy('name')
+                                ->get();
 
     }
 
@@ -223,130 +247,109 @@ class PaseFolio extends Component
 
     }
 
-    public function reasignarUsuario(){
+    public function abrirModalReasignarUsuario(MovimientoRegistral $modelo){
 
-        $role = null;
+        if($this->modelo_editar->isNot($modelo))
+            $this->modelo_editar = $modelo;
 
-        if($this->modelo_editar->asignadoA->hasRole(['Pase a folio'])){
-
-            if($this->modelo_editar->inscripcionPropiedad){
-
-                $id = (new AsignacionService())->obtenerUsuarioPropiedad(true, $this->modelo_editar->getRawOriginal('distrito'), '');
-
-            }elseif($this->modelo_editar->gravamen){
-
-                $id = (new AsignacionService())->obtenerUsuarioGravamen(true, $this->modelo_editar->getRawOriginal('distrito'), '');
-
-            }elseif($this->modelo_editar->cancelacion){
-
-                $id = (new AsignacionService())->obtenerUsuarioCancelacion(true, $this->modelo_editar->getRawOriginal('distrito'), '');
-
-            }elseif($this->modelo_editar->sentencia){
-
-                $id = (new AsignacionService())->obtenerUsuarioSentencias(true, $this->modelo_editar->getRawOriginal('distrito'), '');
-
-            }elseif($this->modelo_editar->certificacion){
-
-                if($this->modelo_editar->certificacion->servicio == 'DL07'){
-
-                    $id = (new AsignacionService())->obtenerCertificadorGravamen($this->modelo_editar->getRawOriginal('distrito'), '', $this->modelo_editar->tipo_servicio, false, true);
-
-                }elseif(in_array($this->modelo_editar->certificacion->servicio, ['DL11', 'DL10'])){
-
-                    $id = (new AsignacionService())->obtenerCertificadorPropiedad($this->modelo_editar->getRawOriginal('distrito'), '', $this->modelo_editar->tipo_servicio, false, true);
-
-                }
-
-            }elseif($this->modelo_editar->vario){
-
-                $id = (new AsignacionService())->obtenerUsuarioVarios(true, $this->modelo_editar->getRawOriginal('distrito'), '');
-
-            }
-
-            $this->modelo_editar->update(['usuario_asignado' => $id]);
-
-        }
-    }
-
-    public function reasignarAleatoriamente(MovimientoRegistral $modelo){
-
-        $this->modelo_editar = $modelo;
-
-        $cantidad = $this->modelo_editar->audits()->where('tags', 'Reasignó usuario')->count();
-
-        if($cantidad >= 2){
-
-            $this->dispatch('mostrarMensaje', ['warning', "Ya se ha reasignado multiples veces."]);
-
-            return;
-
-        }
-
-        $role = null;
+        $this->modalReasignarUsuario = true;
 
         if($this->modelo_editar->inscripcionPropiedad){
 
-            $role = ['Propiedad', 'Registrador Propiedad'];
+            $this->cargarUsuarios(['Propiedad', 'Registrador Propiedad', 'Pase a folio']);
 
-        }elseif($this->modelo_editar->gravamen){
+        }
 
-            $role = ['Gravamen', 'Registrador Gravamen'];
+        if($this->modelo_editar->gravamen){
 
-        }elseif($this->modelo_editar->cancelacion){
+            $this->cargarUsuarios(['Gravamen', 'Registrador Gravamen', 'Pase a folio']);
 
-            $role = ['Cancelación', 'Registrador Cancelación'];
+        }
 
-        }elseif($this->modelo_editar->sentencia){
+        if($this->modelo_editar->vario){
 
-            $role = ['Sentencias', 'Registrador Sentencias'];
+            $this->cargarUsuarios(['Varios', 'Registrador Varios', 'Pase a folio', 'Aclaraciones administrativas', 'Avisos preventivos']);
 
-        }elseif($this->modelo_editar->certificacion){
+        }
+
+        if($this->modelo_editar->cancelacion){
+
+            $this->cargarUsuarios(['Cancelación', 'Registrador cancelación', 'Pase a folio']);
+
+        }
+
+        if($this->modelo_editar->sentencia){
+
+            $this->cargarUsuarios(['Sentencias', 'Registrador sentencias', 'Pase a folio']);
+
+        }
+
+        if($this->modelo_editar->reformaMoral){
+
+            $this->cargarUsuarios(['Folio real moral']);
+
+        }
+
+        if($this->modelo_editar->certificacion){
 
             if($this->modelo_editar->certificacion->servicio == 'DL07'){
 
-                $role = ['Certificador Gravamen'];
+                $this->cargarUsuarios(['Certificador Gravamen', 'Pase a folio']);
 
             }elseif(in_array($this->modelo_editar->certificacion->servicio, ['DL11', 'DL10'])){
 
-                $role = ['Certificador Propiedad'];
+                $this->cargarUsuarios(['Certificador Propiedad', 'Pase a folio']);
 
             }
 
-        }elseif($this->modelo_editar->vario){
-
-            $role = ['Varios', 'Registrador Varios'];
-
         }
+
+    }
+
+    public function reasignarUsuario(){
+
+        $this->validate();
 
         try {
 
-            $usuarios = $this->obtenerUsuarios($role);
-
-            if($usuarios->count() === 0){
-
-                $this->dispatch('mostrarMensaje', ['error', "No hay usuarios con rol de " . $role[0] . " disponibles."]);
-
-                throw new Exception("No hay usuarios con rol de " . $role[0] . " disponibles.");
-
-            }
-
-            $id = $usuarios->random()->id;
-
-            while($this->modelo_editar->usuario_asignado == $id){
-
-                $id = $usuarios->random()->id;
-
-            }
-
-            $this->modelo_editar->update(['usuario_asignado' => $id]);
+            $this->modelo_editar->actualizado_por = auth()->id();
+            $this->modelo_editar->save();
 
             $this->modelo_editar->audits()->latest()->first()->update(['tags' => 'Reasignó usuario']);
 
+            $this->dispatch('mostrarMensaje', ['success', "El usuario se reasignó con éxito."]);
+
+            $this->modalReasignarUsuario = false;
+
         } catch (\Throwable $th) {
-            Log::error("Error al reasignar aleatoriamente folio real por el usuario: (id: " . auth()->user()->id . ") " . auth()->user()->name . ". " . $th);
-            $this->dispatch('mostrarMensaje', ['error', "Ha ocurrido un error."]);
+
+            $this->dispatch('mostrarMensaje', ['error', "Hubo un error."]);
+            Log::error("Error al reasignar usuario a movimiento registral por el usuario: (id: " . auth()->user()->id . ") " . auth()->user()->name . ". " . $th);
+
         }
 
+    }
+
+    public function reasignarUsuarioAleatoriamente(){
+
+        try {
+
+            $this->modelo_editar->usuario_asignado = $this->usuarios->random()->id;
+            $this->modelo_editar->actualizado_por = auth()->id();
+            $this->modelo_editar->save();
+
+            $this->modelo_editar->audits()->latest()->first()->update(['tags' => 'Reasignó usuario']);
+
+            $this->dispatch('mostrarMensaje', ['success', "El usuario se reasignó con éxito."]);
+
+            $this->modalReasignarUsuario = false;
+
+        } catch (\Throwable $th) {
+
+            $this->dispatch('mostrarMensaje', ['error', "Hubo un error."]);
+            Log::error("Error al reasignar usuario a movimiento registral por el usuario: (id: " . auth()->user()->id . ") " . auth()->user()->name . ". " . $th);
+
+        }
 
     }
 

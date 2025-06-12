@@ -2,6 +2,7 @@
 
 namespace App\Livewire\Certificaciones;
 
+use App\Models\User;
 use Livewire\Component;
 use Livewire\WithPagination;
 use App\Constantes\Constantes;
@@ -28,6 +29,7 @@ class CertificadoPropiedadIndex extends Component
     public $modalFinalizar = false;
 
     public $modalRechazar = false;
+    public $modalReasignarUsuario = false;
 
     public $actual;
 
@@ -36,8 +38,10 @@ class CertificadoPropiedadIndex extends Component
     public $motivos;
     public $motivo;
 
+    public $usuarios;
     public $usuarios_regionales;
     public $usuarios_regionales_fliped;
+    public $usuario_asignado;
 
     public $años;
     public $filters = [
@@ -48,6 +52,13 @@ class CertificadoPropiedadIndex extends Component
         'folio' => '',
         'estado' => ''
     ];
+
+    protected function rules()
+    {
+
+        return ['usuario_asignado' => 'required'];
+
+    }
 
     public function crearModeloVacio(){
         $this->modelo_editar = MovimientoRegistral::make();
@@ -198,6 +209,71 @@ class CertificadoPropiedadIndex extends Component
 
         if($this->modelo_editar->isNot($modelo))
             $this->modelo_editar = $modelo;
+
+    }
+
+    public function abrirModalReasignar(MovimientoRegistral $modelo){
+
+        if($this->modelo_editar->isNot($modelo))
+            $this->modelo_editar = $modelo;
+
+        $this->modalReasignarUsuario = true;
+
+    }
+
+    public function reasignarUsuario(){
+
+        $this->validate();
+
+        try {
+
+            $this->modelo_editar->update(['usuario_asignado' => $this->usuario_asignado]);
+
+            $this->modelo_editar->audits()->latest()->first()->update(['tags' => 'Reasignó usuario']);
+
+            $this->dispatch('mostrarMensaje', ['success', "El trámite se reasignó con éxito."]);
+
+            $this->modalReasignarUsuario = false;
+
+        } catch (\Throwable $th) {
+
+            Log::error("Error al reasignar movimiento registral por el usuario: (id: " . auth()->user()->id . ") " . auth()->user()->name . ". " . $th);
+            $this->dispatch('mostrarMensaje', ['error', "Ha ocurrido un error."]);
+
+        }
+
+    }
+
+    public function reasignarUsuarioAleatoriamente(){
+
+        $cantidad = $this->modelo_editar->audits()->where('tags', 'Reasignó usuario')->count();
+
+        if($cantidad >= 2){
+
+            $this->dispatch('mostrarMensaje', ['warning', "Ya se ha reasignado multiples veces."]);
+
+            return;
+
+        }
+
+        try {
+
+            $this->modelo_editar->usuario_asignado = $this->usuarios->random()->id;
+            $this->modelo_editar->actualizado_por = auth()->id();
+            $this->modelo_editar->save();
+
+            $this->modelo_editar->audits()->latest()->first()->update(['tags' => 'Reasignó usuario']);
+
+            $this->dispatch('mostrarMensaje', ['success', "El usuario se reasignó con éxito."]);
+
+            $this->modalReasignarUsuario = false;
+
+        } catch (\Throwable $th) {
+
+            $this->dispatch('mostrarMensaje', ['error', "Hubo un error."]);
+            Log::error("Error al reasignar usuario a movimiento registral por el usuario: (id: " . auth()->user()->id . ") " . auth()->user()->name . ". " . $th);
+
+        }
 
     }
 
@@ -389,6 +465,19 @@ class CertificadoPropiedadIndex extends Component
         $this->filters['año'] = now()->format('Y');
 
         $this->usuarios_regionales = Constantes::USUARIOS_REGIONALES;
+
+        $this->usuarios = User::where('status', 'activo')
+                                ->whereHas('roles', function($q){
+                                    $q->whereIn('name', ['Certificador Propiedad']);
+                                })
+                                ->when(auth()->user()->ubicacion == 'Regional 4', function($q){
+                                    $q->where('ubicacion', 'Regional 4');
+                                })
+                                ->when(auth()->user()->ubicacion != 'Regional 4', function($q){
+                                    $q->where('ubicacion', '!=', 'Regional 4');
+                                })
+                                ->orderBy('name')
+                                ->get();
 
         if(auth()->user()->hasRole(['Regional'])){
 

@@ -2,22 +2,22 @@
 
 namespace App\Traits\Inscripciones;
 
-use App\Exceptions\InscripcionesServiceException;
+use App\Models\User;
 use Barryvdh\DomPDF\Facade\Pdf;
 use Illuminate\Support\Facades\DB;
 use App\Models\MovimientoRegistral;
 use Illuminate\Support\Facades\Log;
+use App\Traits\CalcularDiaElaboracionTrait;
 use App\Http\Services\SistemaTramitesService;
 use App\Http\Controllers\Varios\VariosController;
-use App\Http\Controllers\Gravamen\GravamenController;
-use App\Http\Controllers\Cancelaciones\CancelacionController;
-use App\Http\Controllers\InscripcionesPropiedad\FideicomisoController;
-use App\Http\Controllers\InscripcionesPropiedad\PropiedadController;
-use App\Http\Controllers\Reformas\ReformaController;
-use App\Http\Controllers\Sentencias\SentenciasController;
-use App\Http\Controllers\Subdivisiones\SubdivisionesController;
-use App\Traits\CalcularDiaElaboracionTrait;
 use App\Traits\RevisarMovimientosPosterioresTrait;
+use App\Http\Controllers\Reformas\ReformaController;
+use App\Http\Controllers\Gravamen\GravamenController;
+use App\Http\Controllers\Sentencias\SentenciasController;
+use App\Http\Controllers\Cancelaciones\CancelacionController;
+use App\Http\Controllers\Subdivisiones\SubdivisionesController;
+use App\Http\Controllers\InscripcionesPropiedad\PropiedadController;
+use App\Http\Controllers\InscripcionesPropiedad\FideicomisoController;
 
 trait InscripcionesIndex{
 
@@ -27,7 +27,7 @@ trait InscripcionesIndex{
     public $modalFinalizar = false;
     public $modalRechazar = false;
     public $modalConcluir = false;
-    public $modalReasignar = false;
+    public $modalReasignarUsuario = false;
     public $documento;
     public $observaciones;
     public $motivos;
@@ -49,6 +49,13 @@ trait InscripcionesIndex{
     public MovimientoRegistral $modelo_editar;
 
     public $actual;
+
+    protected function rules()
+    {
+
+        return ['modelo_editar.usuario_asignado' => 'required'];
+
+    }
 
     public function crearModeloVacio(){
         $this->modelo_editar = MovimientoRegistral::make();
@@ -432,7 +439,59 @@ trait InscripcionesIndex{
         if($this->modelo_editar->isNot($modelo))
             $this->modelo_editar = $modelo;
 
-        $this->modalReasignar = true;
+        $this->modalReasignarUsuario = true;
+
+        if($this->modelo_editar->inscripcionPropiedad){
+
+            $this->cargarUsuarios(['Propiedad', 'Registrador Propiedad']);
+
+        }
+
+        if($this->modelo_editar->gravamen){
+
+            $this->cargarUsuarios(['Gravamen', 'Registrador Gravamen']);
+
+        }
+
+        if($this->modelo_editar->vario){
+
+            $this->cargarUsuarios(['Varios', 'Registrador Varios', 'Aclaraciones administrativas', 'Avisos preventivos']);
+
+        }
+
+        if($this->modelo_editar->cancelacion){
+
+            $this->cargarUsuarios(['Cancelación', 'Registrador cancelación']);
+
+        }
+
+        if($this->modelo_editar->sentencia){
+
+            $this->cargarUsuarios(['Sentencias', 'Registrador sentencias']);
+
+        }
+
+        if($this->modelo_editar->reformaMoral){
+
+            $this->cargarUsuarios(['Folio real moral']);
+
+        }
+
+    }
+
+    public function cargarUsuarios($roles){
+
+        $this->usuarios = User::whereHas('roles', function($q) use($roles){
+                                    $q->whereIn('name', $roles);
+                                })
+                                ->when(auth()->user()->ubicacion == 'Regional 4', function($q){
+                                    $q->where('ubicacion', 'Regional 4');
+                                })
+                                ->when(auth()->user()->ubicacion != 'Regional 4', function($q){
+                                    $q->where('ubicacion', '!=', 'Regional 4');
+                                })
+                                ->orderBy('name')
+                                ->get();
 
     }
 
@@ -490,7 +549,30 @@ trait InscripcionesIndex{
 
     }
 
-    public function reasignar(){
+    public function reasignarUsuario(){
+
+        try {
+
+            $this->modelo_editar->actualizado_por = auth()->user()->id;
+
+            $this->modelo_editar->save();
+
+            $this->modelo_editar->audits()->latest()->first()->update(['tags' => 'Reasignó usuario']);
+
+            $this->dispatch('mostrarMensaje', ['success', "El trámite se reasignó con éxito."]);
+
+            $this->modalReasignarUsuario = false;
+
+        } catch (\Throwable $th) {
+
+            Log::error("Error al reasignar movimiento registral por el usuario: (id: " . auth()->user()->id . ") " . auth()->user()->name . ". " . $th);
+            $this->dispatch('mostrarMensaje', ['error', "Ha ocurrido un error."]);
+
+        }
+
+    }
+
+    public function reasignarUsuarioAleatoriamente(){
 
         $cantidad = $this->modelo_editar->audits()->where('tags', 'Reasignó usuario')->count();
 
@@ -504,24 +586,20 @@ trait InscripcionesIndex{
 
         try {
 
-            $usuario = $this->usuarios->where('id', '!=', $this->modelo_editar->usuario_asignado)->random()->first();
-
-            $this->modelo_editar->usuario_asignado = $usuario->id;
-
-            $this->modelo_editar->actualizado_por = auth()->user()->id;
-
+            $this->modelo_editar->usuario_asignado = $this->usuarios->random()->id;
+            $this->modelo_editar->actualizado_por = auth()->id();
             $this->modelo_editar->save();
 
             $this->modelo_editar->audits()->latest()->first()->update(['tags' => 'Reasignó usuario']);
 
-            $this->dispatch('mostrarMensaje', ['success', "El trámite se reasignó con éxito a: " . $usuario->name]);
+            $this->dispatch('mostrarMensaje', ['success', "El usuario se reasignó con éxito."]);
 
-            $this->modalReasignar = false;
+            $this->modalReasignarUsuario = false;
 
         } catch (\Throwable $th) {
 
-            Log::error("Error al reasignar movimiento registral por el usuario: (id: " . auth()->user()->id . ") " . auth()->user()->name . ". " . $th);
-            $this->dispatch('mostrarMensaje', ['error', "Ha ocurrido un error."]);
+            $this->dispatch('mostrarMensaje', ['error', "Hubo un error."]);
+            Log::error("Error al reasignar usuario a movimiento registral por el usuario: (id: " . auth()->user()->id . ") " . auth()->user()->name . ". " . $th);
 
         }
 

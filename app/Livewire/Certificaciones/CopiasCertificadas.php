@@ -8,7 +8,6 @@ use Livewire\WithPagination;
 use App\Models\Certificacion;
 use App\Constantes\Constantes;
 use App\Traits\ComponentesTrait;
-use Livewire\Attributes\Computed;
 use Illuminate\Support\Facades\DB;
 use App\Models\MovimientoRegistral;
 use Illuminate\Support\Facades\Log;
@@ -32,7 +31,7 @@ class CopiasCertificadas extends Component
     public $observaciones;
     public $modalRechazar;
     public $usuarios;
-    public $modalReasignar = false;
+    public $modalReasignarUsuario = false;
 
     public $años;
     public $año;
@@ -126,11 +125,34 @@ class CopiasCertificadas extends Component
         if($this->modelo_editar->isNot($modelo))
             $this->modelo_editar = $modelo;
 
-        $this->modalReasignar = true;
+        $this->modalReasignarUsuario = true;
 
     }
 
-    public function reasignar(){
+    public function reasignarUsuario(){
+
+        try {
+
+            $this->modelo_editar->movimientoRegistral->usuario_asignado = $this->usuario_asignado;
+
+            $this->modelo_editar->movimientoRegistral->save();
+
+            $this->modelo_editar->movimientoRegistral->audits()->latest()->first()->update(['tags' => 'Reasignó usuario']);
+
+            $this->dispatch('mostrarMensaje', ['success', "El trámite se reasignó con éxito."]);
+
+            $this->modalReasignarUsuario = false;
+
+        } catch (\Throwable $th) {
+
+            Log::error("Error al reasignar movimiento registral por el usuario: (id: " . auth()->user()->id . ") " . auth()->user()->name . ". " . $th);
+            $this->dispatch('mostrarMensaje', ['error', "Ha ocurrido un error."]);
+
+        }
+
+    }
+
+    public function reasignarUsuarioAleatoriamente(){
 
         $cantidad = $this->modelo_editar->movimientoRegistral->audits()->where('tags', 'Reasignó usuario')->count();
 
@@ -144,22 +166,20 @@ class CopiasCertificadas extends Component
 
         try {
 
-            $this->modelo_editar->movimientoRegistral->usuario_asignado = $this->usuarios->where('id', '!=', $this->modelo_editar->movimientoRegistral->usuario_asignado)->random()->id;
-
-            $this->modelo_editar->movimientoRegistral->actualizado_por = auth()->user()->id;
-
+            $this->modelo_editar->movimientoRegistral->usuario_asignado = $this->usuarios->random()->id;
+            $this->modelo_editar->movimientoRegistral->actualizado_por = auth()->id();
             $this->modelo_editar->movimientoRegistral->save();
 
-            $this->modelo_editar->movimientoRegistral->audits()->latest()->first()->update(['tags' => 'Reasignó usuario']);
+            $this->modelo_editar->audits()->latest()->first()->update(['tags' => 'Reasignó usuario']);
 
-            $this->dispatch('mostrarMensaje', ['success', "El trámite se reasignó con éxito."]);
+            $this->dispatch('mostrarMensaje', ['success', "El usuario se reasignó con éxito."]);
 
-            $this->modalReasignar = false;
+            $this->modalReasignarUsuario = false;
 
         } catch (\Throwable $th) {
 
-            Log::error("Error al reasignar movimiento registral por el usuario: (id: " . auth()->user()->id . ") " . auth()->user()->name . ". " . $th);
-            $this->dispatch('mostrarMensaje', ['error', "Ha ocurrido un error."]);
+            $this->dispatch('mostrarMensaje', ['error', "Hubo un error."]);
+            Log::error("Error al reasignar usuario a movimiento registral por el usuario: (id: " . auth()->user()->id . ") " . auth()->user()->name . ". " . $th);
 
         }
 
@@ -484,6 +504,12 @@ class CopiasCertificadas extends Component
         $this->usuarios = User::where('status', 'activo')
                                         ->whereHas('roles', function($q){
                                             $q->whereIn('name', ['Certificador']);
+                                        })
+                                        ->when(auth()->user()->ubicacion == 'Regional 4', function($q){
+                                            $q->where('ubicacion', 'Regional 4');
+                                        })
+                                        ->when(auth()->user()->ubicacion != 'Regional 4', function($q){
+                                            $q->where('ubicacion', '!=', 'Regional 4');
                                         })
                                         ->orderBy('name')
                                         ->get();
