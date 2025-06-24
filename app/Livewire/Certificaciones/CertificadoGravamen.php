@@ -135,7 +135,7 @@ class CertificadoGravamen extends Component
 
         try {
 
-            $this->modelo_editar->movimientoRegistral->usuario_asignado = $this->usuarios->random()->id;
+            $this->modelo_editar->movimientoRegistral->usuario_asignado = $this->usuarios->where('ubicacion', 'Regional 1')->random()->id;
             $this->modelo_editar->movimientoRegistral->actualizado_por = auth()->id();
             $this->modelo_editar->movimientoRegistral->save();
 
