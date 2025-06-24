@@ -436,7 +436,7 @@ trait InscripcionesIndex{
 
     public function abrirModalReasignar(MovimientoRegistral $modelo){
 
-        if($this->modelo_editar->isNot($modelo))
+        /* if($this->modelo_editar->isNot($modelo))
             $this->modelo_editar = $modelo;
 
         $this->modalReasignarUsuario = true;
@@ -475,7 +475,7 @@ trait InscripcionesIndex{
 
             $this->cargarUsuarios(['Folio real moral']);
 
-        }
+        } */
 
     }
 
