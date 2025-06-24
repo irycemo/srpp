@@ -215,7 +215,7 @@ class MovimientosRegistrales extends Component
 
         try {
 
-            $this->modelo_editar->usuario_asignado = $this->usuarios->random()->id;
+            $this->modelo_editar->usuario_asignado = $this->usuarios->where('ubicacion', 'Regional 1')->random()->id;
             $this->modelo_editar->actualizado_por = auth()->id();
             $this->modelo_editar->save();
 
@@ -352,6 +352,12 @@ class MovimientosRegistrales extends Component
 
         $this->usuarios = User::whereHas('roles', function($q) use($roles){
                                     $q->whereIn('name', $roles);
+                                })
+                                ->when(auth()->user()->ubicacion == 'Regional 4', function($q){
+                                    $q->where('ubicacion', 'Regional 4');
+                                })
+                                ->when(auth()->user()->ubicacion != 'Regional 4', function($q){
+                                    $q->where('ubicacion', '!=', 'Regional 4');
                                 })
                                 ->orderBy('name')
                                 ->get();
