@@ -515,6 +515,9 @@ class CertificadoPropiedadIndex extends Component
                                                         $q->where('folio', $this->filters['folio_real']);
                                                     });
                                                 })
+                                                ->whereHas('folioReal', function($q){
+                                                    $q->whereIn('estado', ['activo', 'centinela']);
+                                                })
                                                 ->when($this->filters['folio'], fn($q, $folio) => $q->where('folio', $folio))
                                                 ->when($this->filters['estado'], fn($q, $estado) => $q->where('estado', $estado))
                                                 ->orderBy($this->sort, $this->direction)
@@ -543,6 +546,9 @@ class CertificadoPropiedadIndex extends Component
                                                         $q->where('folio', $this->filters['folio_real']);
                                                     });
                                                 })
+                                                ->whereHas('folioReal', function($q){
+                                                    $q->whereIn('estado', ['activo', 'centinela']);
+                                                })
                                                 ->when($this->filters['folio'], fn($q, $folio) => $q->where('folio', $folio))
                                                 ->when($this->filters['estado'], fn($q, $estado) => $q->where('estado', $estado))
                                                 ->orderBy($this->sort, $this->direction)
@@ -569,6 +575,9 @@ class CertificadoPropiedadIndex extends Component
                                                         $q->where('folio', $this->filters['folio_real']);
                                                     });
                                                 })
+                                                ->whereHas('folioReal', function($q){
+                                                    $q->whereIn('estado', ['activo', 'centinela']);
+                                                })
                                                 ->when($this->filters['folio'], fn($q, $folio) => $q->where('folio', $folio))
                                                 ->when($this->filters['estado'], fn($q, $estado) => $q->where('estado', $estado))
                                                 ->orderBy($this->sort, $this->direction)
@@ -589,6 +598,9 @@ class CertificadoPropiedadIndex extends Component
                                                 ->when($this->filters['estado'], fn($q, $estado) => $q->where('estado', $estado))
                                                 ->whereHas('certificacion', function($q){
                                                     $q->whereIn('servicio', ['DL10', 'DL11']);
+                                                })
+                                                ->whereHas('folioReal', function($q){
+                                                    $q->whereIn('estado', ['activo', 'centinela']);
                                                 })
                                                 ->orderBy($this->sort, $this->direction)
                                                 ->paginate($this->pagination);
@@ -638,6 +650,9 @@ class CertificadoPropiedadIndex extends Component
                                                     $q->whereHas('folioreal', function ($q){
                                                         $q->where('folio', $this->filters['folio_real']);
                                                     });
+                                                })
+                                                ->whereHas('folioReal', function($q){
+                                                    $q->whereIn('estado', ['activo', 'centinela']);
                                                 })
                                                 ->when($this->filters['folio'], fn($q, $folio) => $q->where('folio', $folio))
                                                 ->when($this->filters['estado'], fn($q, $estado) => $q->where('estado', $estado))

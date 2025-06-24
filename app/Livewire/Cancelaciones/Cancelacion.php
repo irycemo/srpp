@@ -316,7 +316,7 @@ class Cancelacion extends Component
                                                                         ->where('tomo_gravamen', $this->cancelacion->movimientoRegistral->tomo_gravamen)
                                                                         ->where('registro_gravamen', $this->cancelacion->movimientoRegistral->registro_gravamen)
                                                                         ->whereHas('gravamen', function($q){
-                                                                            $q->where('estado', 'activo');
+                                                                            $q->whereIn('estado', ['activo', 'inactivo']);
                                                                         })
                                                                         ->first();
 
