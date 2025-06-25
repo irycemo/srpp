@@ -1,6 +1,6 @@
 <div>
 
-    <x-header>Indices Gravamen</x-header>
+    <x-header>Indices Sentencia</x-header>
 
     <div class="bg-white p-4 rounded-lg mb-5 shadow-xl">
 

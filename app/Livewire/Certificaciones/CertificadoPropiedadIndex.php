@@ -504,8 +504,7 @@ class CertificadoPropiedadIndex extends Component
                                                     $q->where('distrito', '!=', 2);
                                                 })
                                                 ->whereHas('certificacion', function($q){
-                                                    $q->whereIn('servicio', ['DL10', 'DL11'])
-                                                        ->whereNull('finalizado_en');
+                                                    $q->whereIn('servicio', ['DL10', 'DL11']);
                                                 })
                                                 ->when($this->filters['año'], fn($q, $año) => $q->where('año', $año))
                                                 ->when($this->filters['tramite'], fn($q, $tramite) => $q->where('tramite', $tramite))
@@ -534,9 +533,7 @@ class CertificadoPropiedadIndex extends Component
                                                     $q->where('distrito', '!=', 2);
                                                 })
                                                 ->whereHas('certificacion', function($q){
-                                                    $q->whereIn('servicio', ['DL10', 'DL11'])
-                                                        ->whereNull('finalizado_en')
-                                                        ->whereNull('folio_carpeta_copias');
+                                                    $q->whereIn('servicio', ['DL10', 'DL11']);
                                                 })
                                                 ->when($this->filters['año'], fn($q, $año) => $q->where('año', $año))
                                                 ->when($this->filters['tramite'], fn($q, $tramite) => $q->where('tramite', $tramite))
@@ -566,7 +563,6 @@ class CertificadoPropiedadIndex extends Component
                                                 ->whereHas('certificacion', function($q){
                                                     $q->whereIn('servicio', ['DL10', 'DL11']);
                                                 })
-                                                ->whereIn('estado', ['nuevo', 'elaborado', 'correccion'])
                                                 ->when($this->filters['año'], fn($q, $año) => $q->where('año', $año))
                                                 ->when($this->filters['tramite'], fn($q, $tramite) => $q->where('tramite', $tramite))
                                                 ->when($this->filters['usuario'], fn($q, $usuario) => $q->where('usuario', $usuario))
