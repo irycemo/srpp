@@ -452,7 +452,7 @@
 
                     @foreach ($vario->predio->actores as $propietario)
 
-                        <x-table.row >
+                        <x-table.row wire:key="row-propietario-{{ $propietario->id }}">
 
                             <x-table.cell>{{ $propietario->persona->nombre }} {{ $propietario->persona->ap_paterno }} {{ $propietario->persona->ap_materno }} {{ $propietario->persona->razon_social }}</x-table.cell>
                             <x-table.cell>{{ $propietario->porcentaje_propiedad }}%</x-table.cell>
