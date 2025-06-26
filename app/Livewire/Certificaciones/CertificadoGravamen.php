@@ -613,39 +613,53 @@ class CertificadoGravamen extends Component
         }elseif(auth()->user()->hasRole(['Regional'])){
 
             $certificados = MovimientoRegistral::with('asignadoA', 'supervisor', 'actualizadoPor', 'certificacion.actualizadoPor', 'folioReal:id,folio')
+                                                ->when(auth()->user()->ubicacion === 'Regional 1', function($q){
+                                                    $q->where(function($q){
+                                                        $q->whereIn('distrito', [3, 9])
+                                                         ->orWhereIn('usuario', $this->usuarios_regionales_fliped);
+                                                    });
+                                                })
+                                                ->when(auth()->user()->ubicacion === 'Regional 2', function($q){
+                                                    $q->where(function($q){
+                                                        $q->whereIn('distrito', [12, 19])
+                                                         ->orWhereIn('usuario', $this->usuarios_regionales_fliped);
+                                                    });
+                                                })
+                                                ->when(auth()->user()->ubicacion === 'Regional 3', function($q){
+                                                    $q->where(function($q){
+                                                        $q->whereIn('distrito', [4, 17])
+                                                         ->orWhereIn('usuario', $this->usuarios_regionales_fliped);
+                                                    });
+                                                })
+                                                ->when(auth()->user()->ubicacion === 'Regional 4', function($q){
+                                                    $q->where(function($q){
+                                                        $q->whereIn('distrito', [2, 18])
+                                                         ->orWhereIn('usuario', $this->usuarios_regionales_fliped);
+                                                    });
+                                                })
+                                                ->when(auth()->user()->ubicacion === 'Regional 5', function($q){
+                                                    $q->where(function($q){
+                                                        $q->where('distrito', 13)
+                                                         ->orWhereIn('usuario', $this->usuarios_regionales_fliped);
+                                                    });
+                                                })
+                                                ->when(auth()->user()->ubicacion === 'Regional 6', function($q){
+                                                    $q->where(function($q){
+                                                        $q->where('distrito', 15)
+                                                         ->orWhereIn('usuario', $this->usuarios_regionales_fliped);
+                                                    });
+                                                })
+                                                ->when(auth()->user()->ubicacion === 'Regional 7', function($q){
+                                                    $q->where(function($q){
+                                                       $q->whereIn('distrito', [5, 14, 8])
+                                                        ->orWhereIn('usuario', $this->usuarios_regionales_fliped);
+                                                    });
+                                                })
                                                 ->whereHas('folioReal', function($q){
                                                     $q->whereIn('estado', ['activo', 'centinela', 'bloqueado']);
                                                 })
                                                 ->whereHas('certificacion', function($q){
                                                     $q->where('servicio', 'DL07');
-                                                })
-                                                ->when(auth()->user()->ubicacion === 'Regional 1', function($q){
-                                                    $q->whereIn('distrito', [3, 9])
-                                                        ->orWhereIn('usuario', $this->usuarios_regionales_fliped);
-                                                })
-                                                ->when(auth()->user()->ubicacion === 'Regional 2', function($q){
-                                                    $q->whereIn('distrito', [12, 19])
-                                                        ->orWhereIn('usuario', $this->usuarios_regionales_fliped);
-                                                })
-                                                ->when(auth()->user()->ubicacion === 'Regional 3', function($q){
-                                                    $q->whereIn('distrito', [4, 17])
-                                                        ->orWhereIn('usuario', $this->usuarios_regionales_fliped);
-                                                })
-                                                ->when(auth()->user()->ubicacion === 'Regional 4', function($q){
-                                                    $q->whereIn('distrito', [2, 18])
-                                                        ->orWhereIn('usuario', $this->usuarios_regionales_fliped);
-                                                })
-                                                ->when(auth()->user()->ubicacion === 'Regional 5', function($q){
-                                                    $q->where('distrito', 13)
-                                                        ->orWhereIn('usuario', $this->usuarios_regionales_fliped);
-                                                })
-                                                ->when(auth()->user()->ubicacion === 'Regional 6', function($q){
-                                                    $q->where('distrito', 15)
-                                                        ->orWhereIn('usuario', $this->usuarios_regionales_fliped);
-                                                })
-                                                ->when(auth()->user()->ubicacion === 'Regional 7', function($q){
-                                                    $q->whereIn('distrito', [5, 14, 8])
-                                                        ->orWhereIn('usuario', $this->usuarios_regionales_fliped);
                                                 })
                                                 ->when($this->filters['año'], fn($q, $año) => $q->where('año', $año))
                                                 ->when($this->filters['tramite'], fn($q, $tramite) => $q->where('tramite', $tramite))
@@ -661,6 +675,8 @@ class CertificadoGravamen extends Component
                                                 ->whereNotIn('estado', ['nuevo', 'correccion'])
                                                 ->orderBy($this->sort, $this->direction)
                                                 ->paginate($this->pagination);
+
+
 
         }
 
