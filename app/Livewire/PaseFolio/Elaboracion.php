@@ -462,6 +462,12 @@ class Elaboracion extends Component
 
     public function creargravamen($gravamen){
 
+        foreach($this->movimientoRegistral->folioReal->movimientosRegistrales as $movimiento){
+
+            if($movimiento->tomo_gravamen == $gravamen->tomog && $movimiento->registro_gravamen == $gravamen->registrog) return;
+
+        }
+
         $movimientoRegistralGravamenNuevo = MovimientoRegistral::create([
             'registro_gravamen' => $gravamen->registrog ? ltrim($gravamen->registrog, '0') : null,
             'tomo_gravamen' => $gravamen->tomog ? ltrim($gravamen->tomog, '0') : null,
