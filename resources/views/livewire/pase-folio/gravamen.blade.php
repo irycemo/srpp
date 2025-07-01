@@ -115,15 +115,16 @@
                                                         Cancelar
                                                     </x-button-red>
 
-                                                    <x-button-blue
-                                                        wire:click="abrirModalInactivar({{ $gravamen->id }})"
-                                                        wire:loading.attr="disabled"
-                                                        class="whitespace-nowrap"
-                                                    >
-                                                        Sin afectación
-                                                    </x-button-blue>
 
                                                 @endif
+
+                                                <x-button-blue
+                                                    wire:click="abrirModalInactivar({{ $gravamen->id }})"
+                                                    wire:loading.attr="disabled"
+                                                    class="whitespace-nowrap"
+                                                >
+                                                    Sin afectación
+                                                </x-button-blue>
 
                                             </div>
 

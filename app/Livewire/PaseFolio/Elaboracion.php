@@ -1055,7 +1055,7 @@ class Elaboracion extends Component
                     'estado' => 'pase_folio'
                 ]);
 
-                if(!$gravamen->acreedores()->count()){
+                if($gravamen->estado != 'inactivo' &&!$gravamen->acreedores()->count()){
 
                     throw new Exception("Debe finalizar el gravamen MR: " . $gravamen->movimientoRegistral->folio);
 
