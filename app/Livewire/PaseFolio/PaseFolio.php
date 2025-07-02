@@ -193,6 +193,20 @@ class PaseFolio extends Component
 
         }
 
+        $movimientoRegistral = MovimientoRegistral::where('tomo', $this->tomo)
+                                    ->where('registro', $this->registro)
+                                    ->where('distrito', $this->distrito)
+                                    ->where('numero_propiedad', $this->numero_propiedad)
+                                    ->first();
+
+        if($movimientoRegistral){
+
+            $this->dispatch('mostrarMensaje', ['warning', "Ya existe un movimiento con la información ingresada."]);
+
+            return;
+
+        }
+
         $movimiento = $this->crearNuevoMovimientoRegistral();
 
         return redirect()->route('elaboracion_folio', $movimiento);
