@@ -536,7 +536,7 @@ class Elaboracion extends Component
 
         if($pp == 0){
 
-            if($pn < 99.999){
+            if($pn < 99.9){
 
                 $this->dispatch('mostrarMensaje', ['error', "El porcentaje de nuda propiedad no es el 100%."]);
 
@@ -544,7 +544,7 @@ class Elaboracion extends Component
 
             }
 
-            if($pu < 99.999){
+            if($pu < 99.9){
 
                 $this->dispatch('mostrarMensaje', ['error', "El porcentaje de usufructo no es el 100%."]);
 
@@ -554,7 +554,7 @@ class Elaboracion extends Component
 
         }else{
 
-            if(($pn + $pp) < 99.999){
+            if(($pn + $pp) < 99.9){
 
                 $this->dispatch('mostrarMensaje', ['error', "El porcentaje de nuda propiedad no es el 100%."]);
 
@@ -562,7 +562,7 @@ class Elaboracion extends Component
 
             }
 
-            if(($pu + $pp) < 99.999){
+            if(($pu + $pp) < 99.9){
 
                 $this->dispatch('mostrarMensaje', ['error', "El porcentaje de usufructo no es el 100%."]);
 
