@@ -5,9 +5,13 @@ namespace App\Livewire\PaseFolio;
 use Exception;
 use App\Models\User;
 use Livewire\Component;
+use App\Models\FolioReal;
+use App\Models\Propiedad;
+use App\Models\Antecedente;
+use App\Models\Propiedadold;
+use Livewire\WithPagination;
 use Livewire\WithFileUploads;
 use App\Constantes\Constantes;
-use App\Http\Controllers\PaseFolio\PaseFolioController;
 use Barryvdh\DomPDF\Facade\Pdf;
 use App\Traits\ComponentesTrait;
 use Illuminate\Support\Facades\DB;
@@ -15,10 +19,7 @@ use App\Models\MovimientoRegistral;
 use Illuminate\Support\Facades\Log;
 use App\Http\Services\AsignacionService;
 use App\Http\Services\SistemaTramitesService;
-use App\Models\Antecedente;
-use App\Models\FolioReal;
-use App\Models\Propiedad;
-use Livewire\WithPagination;
+use App\Http\Controllers\PaseFolio\PaseFolioController;
 
 class PaseFolio extends Component
 {
@@ -202,6 +203,20 @@ class PaseFolio extends Component
         if($movimientoRegistral){
 
             $this->dispatch('mostrarMensaje', ['warning', "Ya existe un movimiento con la información ingresada."]);
+
+            return;
+
+        }
+
+        $propiedad = Propiedadold::where('distrito', $this->distrito)
+                                    ->where('tomo', $this->tomo)
+                                    ->where('registro', $this->registro)
+                                    ->where('noprop', $this->numero_propiedad)
+                                    ->first();
+
+        if($propiedad->status == 'V'){
+
+            $this->dispatch('mostrarMensaje', ['warning', "La propiedad ya esta vendida."]);
 
             return;
 
