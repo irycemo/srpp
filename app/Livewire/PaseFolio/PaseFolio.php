@@ -214,7 +214,7 @@ class PaseFolio extends Component
                                     ->where('noprop', $this->numero_propiedad)
                                     ->first();
 
-        if($propiedad->status == 'V'){
+        if($propiedad?->status == 'V'){
 
             $this->dispatch('mostrarMensaje', ['warning', "La propiedad ya esta vendida."]);
 
