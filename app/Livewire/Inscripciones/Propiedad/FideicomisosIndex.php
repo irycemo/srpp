@@ -53,7 +53,7 @@ class FideicomisosIndex extends Component
                                                     ->when(auth()->user()->ubicacion != 'Regional 4', function($q){
                                                         $q->where('distrito', '!=', 2);
                                                     })
-                                                    ->whereIn('estado', ['nuevo', 'captura', 'elaborado', 'correccion'])
+                                                    ->whereIn('estado', ['nuevo', 'captura', 'elaborado', 'correccion', 'no recibido'])
                                                     ->when($this->filters['año'], fn($q, $año) => $q->where('año', $año))
                                                     ->when($this->filters['tramite'], fn($q, $tramite) => $q->where('tramite', $tramite))
                                                     ->when($this->filters['usuario'], fn($q, $usuario) => $q->where('usuario', $usuario))
@@ -80,7 +80,7 @@ class FideicomisosIndex extends Component
                                                     ->when(auth()->user()->ubicacion != 'Regional 4', function($q){
                                                         $q->where('distrito', '!=', 2);
                                                     })
-                                                    ->whereIn('estado', ['nuevo', 'captura', 'elaborado', 'finalizado', 'correccion'])
+                                                    ->whereIn('estado', ['nuevo', 'captura', 'elaborado', 'finalizado', 'correccion', 'no recibido'])
                                                     ->when($this->filters['año'], fn($q, $año) => $q->where('año', $año))
                                                     ->when($this->filters['tramite'], fn($q, $tramite) => $q->where('tramite', $tramite))
                                                     ->when($this->filters['usuario'], fn($q, $usuario) => $q->where('usuario', $usuario))

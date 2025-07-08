@@ -57,7 +57,7 @@ class FraccionamientosIndex extends Component
                                                     ->whereHas('inscripcionPropiedad', function($q){
                                                         $q->whereIn('servicio', ['D121', 'D120', 'D123', 'D122', 'D119', 'D124', 'D125', 'D126']);
                                                     })
-                                                    ->whereIn('estado', ['nuevo', 'captura', 'elaborado', 'correccion'])
+                                                    ->whereIn('estado', ['nuevo', 'captura', 'elaborado', 'correccion', 'no recibido'])
                                                     ->when($this->filters['año'], fn($q, $año) => $q->where('año', $año))
                                                     ->when($this->filters['tramite'], fn($q, $tramite) => $q->where('tramite', $tramite))
                                                     ->when($this->filters['usuario'], fn($q, $usuario) => $q->where('usuario', $usuario))
@@ -86,7 +86,7 @@ class FraccionamientosIndex extends Component
                                                     ->whereHas('inscripcionPropiedad', function($q){
                                                         $q->whereIn('servicio', ['D121', 'D120', 'D123', 'D122', 'D119', 'D124', 'D125', 'D126']);
                                                     })
-                                                    ->whereIn('estado', ['nuevo', 'captura', 'elaborado', 'finalizado', 'correccion'])
+                                                    ->whereIn('estado', ['nuevo', 'captura', 'elaborado', 'finalizado', 'correccion', 'no recibido'])
                                                     ->when($this->filters['año'], fn($q, $año) => $q->where('año', $año))
                                                     ->when($this->filters['tramite'], fn($q, $tramite) => $q->where('tramite', $tramite))
                                                     ->when($this->filters['usuario'], fn($q, $usuario) => $q->where('usuario', $usuario))

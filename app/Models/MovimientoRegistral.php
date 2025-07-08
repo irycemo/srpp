@@ -44,7 +44,8 @@ class MovimientoRegistral extends Model implements Auditable
             'elaborado' => 'green-400',
             'captura' => 'yellow-400',
             'finalizado' => 'gray-400',
-            'correccion' => 'indigo-400'
+            'correccion' => 'indigo-400',
+            'no recibido' => 'gray-400',
         ][$this->estado] ?? 'gray-400';
     }
 

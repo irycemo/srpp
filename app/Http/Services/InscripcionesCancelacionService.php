@@ -15,7 +15,12 @@ class InscripcionesCancelacionService{
 
             if(isset($request['asiento_registral'])){
 
-                $gravamen = FolioReal::where('folio', $request['folio_real'])->first()->movimientosRegistrales()->where('folio', $request['asiento_registral'])->first()->id;
+                $gravamen = FolioReal::where('folio', $request['folio_real'])
+                                        ->first()
+                                        ->movimientosRegistrales()
+                                        ->where('folio', $request['asiento_registral'])
+                                        ->first()
+                                        ->id;
 
             }else{
 

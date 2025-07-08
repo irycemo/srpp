@@ -68,7 +68,7 @@
 
                             <span class="lg:hidden absolute top-0 left-0 bg-blue-300 px-2 py-1 text-xs text-white font-bold uppercase rounded-br-xl">Estado</span>
 
-                            <span class="bg-{{ $movimiento->estado_color }} py-1 px-2 rounded-full text-white text-xs">{{ ucfirst($movimiento->estado) }}</span>
+                            <span class="bg-{{ $movimiento->estado_color }} py-1 px-2 rounded-full text-white text-xs whitespace-nowrap">{{ ucfirst($movimiento->estado) }}</span>
 
                         </x-table.cell>
 
@@ -154,6 +154,18 @@
 
                                     <div x-cloak x-show="open_drop_down" x-on:click="open_drop_down=false" x-on:click.away="open_drop_down=false" class="z-50 origin-top-right absolute right-0 mt-2 w-48 rounded-md shadow-lg py-1 bg-white ring-1 ring-black ring-opacity-5 focus:outline-none" role="menu" aria-orientation="vertical" aria-labelledby="user-menu">
 
+                                        @if($movimiento->estado === 'no recibido' && !auth()->user()->hasRole(['Supervisor inscripciones', 'Supervisor uruapan']))
+
+                                            <button
+                                                wire:click="abrirModalRecibirDocumentacion({{  $movimiento->id }})"
+                                                wire:loading.attr="disabled"
+                                                class="w-full text-left block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 focus:outline-none focus:bg-gray-100"
+                                                role="menuitem">
+                                                Recibir documentación
+                                            </button>
+
+                                        @endif
+
                                         @if(in_array($movimiento->estado, ['nuevo', 'captura', 'correccion']) && !auth()->user()->hasRole(['Supervisor inscripciones', 'Supervisor uruapan']))
 
                                             <button
@@ -204,7 +216,7 @@
 
                                         @endif
 
-                                        @if(in_array($movimiento->estado, ['nuevo', 'captura', 'elaborado']) && auth()->user()->hasRole(['Jefe de departamento inscripciones', 'Supervisor inscripciones', 'Supervisor uruapan']))
+                                        @if(in_array($movimiento->estado, ['nuevo', 'captura', 'elaborado', 'no recibido']) && auth()->user()->hasRole(['Jefe de departamento inscripciones', 'Supervisor uruapan']))
 
                                             <button
                                                 wire:click="abrirModalReasignar({{  $movimiento->id }})"
@@ -535,18 +547,42 @@
 
     </x-confirmation-modal>
 
+    <x-dialog-modal  wire:model="modalRecibirDocumentacion" maxWidth="sm">
+
+        <x-slot name="title">
+            Recibir documentación
+        </x-slot>
+
+        <x-slot name="content">
+
+            <x-input-group for="contraseña" label="Contraseña" :error="$errors->first('contraseña')" class="w-full">
+
+                <x-input-text type="password" id="contraseña" wire:model="contraseña" />
+
+            </x-input-group>
+
+        </x-slot>
+
+        <x-slot name="footer">
+
+            <x-button-red
+                wire:click="$toggle('modalRecibirDocumentacion')"
+                wire:loading.attr="disabled"
+            >
+                No
+            </x-button-red>
+
+            <x-button-blue
+                class="ml-2"
+                wire:click="recibirDocumentacion"
+                wire:loading.attr="disabled"
+                wire:target="recibirDocumentacion"
+            >
+                Recibir
+            </x-button-blue>
+
+        </x-slot>
+
+    </x-dialog-modal >
+
 </div>
-
-<script>
-
-    window.addEventListener('imprimir_documento', event => {
-
-        const documento = event.detail[0].caratula;
-
-        var url = "{{ route('sentencias.inscripcion.acto', '')}}" + "/" + documento;
-
-        window.open(url, '_blank');
-
-    });
-
-</script>

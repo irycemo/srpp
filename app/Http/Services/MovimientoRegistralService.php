@@ -96,6 +96,16 @@ class MovimientoRegistralService{
 
             $this->certificacionesService->store($request + ['movimiento_registral' => $id]);
 
+            return;
+
+        }
+
+        $movimientoRegistral = MovimientoRegistral::find($id);
+
+        if($movimientoRegistral->folioReal->estado == 'activo'){
+
+            $movimientoRegistral->update(['estado' => 'no recibido']);
+
         }
 
         if(in_array($request['categoria_servicio'], ['Inscripciones - Propiedad', 'Subdivisiones'])){
@@ -104,9 +114,13 @@ class MovimientoRegistralService{
 
                 $this->fideicomisoService->store($request + ['movimiento_registral' => $id]);
 
+                return;
+
             }else{
 
                 $this->inscripcionesPropiedadService->store($request + ['movimiento_registral' => $id]);
+
+                return;
 
             }
 
@@ -117,12 +131,16 @@ class MovimientoRegistralService{
 
             $this->inscripcionesGravamenService->store($request + ['movimiento_registral' => $id]);
 
+            return;
+
         }
 
         if($request['categoria_servicio'] == 'Cancelación - Gravamenes'){
 
 
             $this->inscripcionesCancelacionService->store($request + ['movimiento_registral' => $id]);
+
+            return;
 
         }
 
@@ -131,6 +149,8 @@ class MovimientoRegistralService{
 
             $this->variosService->store($request + ['movimiento_registral' => $id]);
 
+            return;
+
         }
 
         if($request['categoria_servicio'] == 'Sentencias'){
@@ -138,12 +158,16 @@ class MovimientoRegistralService{
 
             $this->sentenciasService->store($request + ['movimiento_registral' => $id]);
 
+            return;
+
         }
 
         if($request['categoria_servicio'] == 'Folio real de persona moral'){
 
 
             $this->reformaMoralService->store($request + ['movimiento_registral' => $id]);
+
+            return;
 
         }
 
@@ -230,15 +254,15 @@ class MovimientoRegistralService{
 
         } catch (MovimientoRegistralServiceException $th) {
 
-            Log::error('Error al actualizar el trámite: ' . $request->año . '-' . $request->tramite . '-' . $request->usuario . ' desde Sistema Trámites. ' . $th->getMessage());
+            Log::error('Error al actualizar el trámite: ' . $request['año'] . '-' . $request['tramite'] . '-' . $request['usuario'] . ' desde Sistema Trámites. ' . $th->getMessage());
 
             throw new MovimientoRegistralServiceException($th->getMessage());
 
         } catch (\Throwable $th) {
 
-            Log::error('Error al actualizar el trámite: ' . $request->año . '-' . $request->tramite . '-' . $request->usuario . ' desde Sistema Trámites. ' . $th);
+            Log::error('Error al actualizar el trámite: ' . $request['año'] . '-' . $request['tramite'] . '-' . $request['usuario'] . ' desde Sistema Trámites. ' . $th);
 
-            throw new MovimientoRegistralServiceException('Error al actualizar el trámite: ' . $request->año . '-' . $request->tramite . '-' . $request->usuario . ' en Sistema RPP.');
+            throw new MovimientoRegistralServiceException('Error al actualizar el trámite: ' . $request['año'] . '-' . $request['tramite'] . '-' . $request['usuario'] . ' en Sistema RPP.');
 
         }
 
@@ -263,9 +287,9 @@ class MovimientoRegistralService{
 
         } catch (\Throwable $th) {
 
-            Log::error('Error al actualizar el trámite: ' . $request->año . '-' . $request->tramite . ' desde Sistema Trámites. ' . $th);
+            Log::error('Error al actualizar el trámite: ' . $request['año'] . '-' . $request['tramite'] . '-' . $request['usuario'] . ' desde Sistema Trámites. ' . $th);
 
-            throw new MovimientoRegistralServiceException('Error al actualizar el trámite: ' . $request->año . '-' . $request->tramite . '-' . $request->usuario . ' en Sistema RPP.');
+            throw new MovimientoRegistralServiceException('Error al actualizar el trámite: ' . $request['año'] . '-' . $request['tramite'] . '-' . $request['usuario'] . ' en Sistema RPP.');
 
         }
 
