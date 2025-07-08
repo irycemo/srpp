@@ -102,7 +102,7 @@ class MovimientoRegistralService{
 
         $movimientoRegistral = MovimientoRegistral::find($id);
 
-        if($movimientoRegistral->folioReal->estado == 'activo'){
+        if($movimientoRegistral->folioReal?->estado == 'activo'){
 
             $movimientoRegistral->update(['estado' => 'no recibido']);
 
