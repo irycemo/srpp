@@ -17,6 +17,7 @@ use App\Traits\ComponentesTrait;
 use Illuminate\Support\Facades\DB;
 use App\Models\MovimientoRegistral;
 use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Facades\Hash;
 use App\Http\Services\AsignacionService;
 use App\Http\Services\SistemaTramitesService;
 use App\Http\Controllers\PaseFolio\PaseFolioController;
@@ -34,9 +35,11 @@ class PaseFolio extends Component
     public $modalRechazar = false;
     public $modalNuevoFolio = false;
     public $modalReasignarUsuario = false;
+    public $modalRecibirDocumentacion = false;
     public $motivos;
     public $motivo;
     public $supervisor = false;
+    public $contraseña;
 
     public $distritos;
     public $distrito;
@@ -138,6 +141,58 @@ class PaseFolio extends Component
             $this->modelo_editar = $modelo;
 
         $this->modalFinalizar = true;
+
+    }
+
+    public function abrirModalRecibirDocumentacion(MovimientoRegistral $modelo){
+
+        if($this->modelo_editar->isNot($modelo))
+            $this->modelo_editar = $modelo;
+
+        $this->modalRecibirDocumentacion = true;
+
+    }
+
+    public function recibirDocumentacion(){
+
+        if(!Hash::check($this->contraseña, auth()->user()->password)){
+
+            $this->dispatch('mostrarMensaje', ['error', "Contraseña incorrecta."]);
+
+            return;
+
+        }
+
+        try {
+
+            DB::transaction(function () {
+
+                if(auth()->user()->hasRole('Jefe de departamento inscripciones')){
+
+                    $this->modelo_editar->usuario_asignado = auth()->id();
+
+                }
+
+                $this->modelo_editar->estado = 'nuevo';
+
+                $this->modelo_editar->actualizado_por = auth()->id();
+
+                $this->modelo_editar->save();
+
+                $this->modelo_editar->audits()->latest()->first()->update(['tags' => 'Recibió documentación']);
+
+            });
+
+            $this->modalRecibirDocumentacion = false;
+
+            $this->dispatch('mostrarMensaje', ['success', "La información se actualizó con éxito."]);
+
+        } catch (\Throwable $th) {
+
+            Log::error("Error al recibir documentación de inscripción por el usuario: (id: " . auth()->user()->id . ") " . auth()->user()->name . ". " . $th);
+            $this->dispatch('mostrarMensaje', ['error', "Ha ocurrido un error."]);
+
+        }
 
     }
 
@@ -613,7 +668,7 @@ class PaseFolio extends Component
             $movimientos = MovimientoRegistral::with('actualizadoPor', 'asignadoA', 'folioReal:id,folio,estado', 'supervisor')
                                                     ->doesnthave('reformaMoral')
                                                     ->whereIn('folio', [0, 1])
-                                                    ->whereIn('estado', ['nuevo', 'correccion'])
+                                                    ->whereIn('estado', ['nuevo', 'correccion', 'no recibido'])
                                                     ->where(function($q){
                                                         $q->whereNull('folio_real')
                                                             ->orWhereHas('folioReal', function($q){
@@ -641,7 +696,7 @@ class PaseFolio extends Component
             $movimientos = MovimientoRegistral::with('actualizadoPor', 'folioReal:id,folio,estado', 'asignadoA')
                                                     ->doesnthave('reformaMoral')
                                                     ->whereIn('folio', [0, 1])
-                                                    ->whereIn('estado', ['nuevo', 'correccion'])
+                                                    ->whereIn('estado', ['nuevo', 'correccion', 'no recibido'])
                                                     ->where(function($q){
                                                         $q->whereNull('folio_real')
                                                             ->orWhereHas('folioReal', function($q){
@@ -672,7 +727,7 @@ class PaseFolio extends Component
             $movimientos = MovimientoRegistral::with('actualizadoPor', 'folioReal:id,folio,estado', 'asignadoA')
                                                     ->doesnthave('reformaMoral')
                                                     ->whereIn('folio', [0, 1])
-                                                    ->whereIn('estado', ['nuevo', 'correccion'])
+                                                    ->whereIn('estado', ['nuevo', 'correccion', 'no recibido'])
                                                     ->where(function($q){
                                                         $q->whereNull('folio_real')
                                                             ->orWhereHas('folioReal', function($q){
@@ -705,7 +760,7 @@ class PaseFolio extends Component
             $movimientos = MovimientoRegistral::with('actualizadoPor', 'folioReal:id,folio,estado', 'asignadoA')
                                                     ->doesnthave('reformaMoral')
                                                     ->whereIn('folio', [0, 1])
-                                                    ->whereIn('estado', ['nuevo', 'correccion'])
+                                                    ->whereIn('estado', ['nuevo', 'correccion', 'no recibido'])
                                                     ->where(function($q){
                                                         $q->whereNull('folio_real')
                                                             ->orWhereHas('folioReal', function($q){

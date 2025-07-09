@@ -505,10 +505,17 @@ trait InscripcionesIndex{
 
             DB::transaction(function () {
 
-                $this->modelo_editar->update([
-                    'estado' => 'nuevo',
-                    'actualizado_por' => auth()->id()
-                ]);
+                if(auth()->user()->hasRole('Jefe de departamento inscripciones')){
+
+                    $this->modelo_editar->usuario_asignado = auth()->id();
+
+                }
+
+                $this->modelo_editar->estado = 'nuevo';
+
+                $this->modelo_editar->actualizado_por = auth()->id();
+
+                $this->modelo_editar->save();
 
                 $this->modelo_editar->audits()->latest()->first()->update(['tags' => 'Recibió documentación']);
 

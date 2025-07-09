@@ -100,14 +100,6 @@ class MovimientoRegistralService{
 
         }
 
-        $movimientoRegistral = MovimientoRegistral::find($id);
-
-        if($movimientoRegistral->folioReal?->estado == 'activo'){
-
-            $movimientoRegistral->update(['estado' => 'no recibido']);
-
-        }
-
         if(in_array($request['categoria_servicio'], ['Inscripciones - Propiedad', 'Subdivisiones'])){
 
             if($request['servicio'] == 'D149' && $request['servicio_nombre'] == 'Inscripción de fideicomiso'){
@@ -350,7 +342,15 @@ class MovimientoRegistralService{
 
                 if($folioReal->estado == 'activo'){
 
-                    $array['estado'] = 'nuevo';
+                    if($request['categoria_servicio'] == 'Certificaciones'){
+
+                        $array['estado'] = 'nuevo';
+
+                    }else{
+
+                        $array['estado'] = 'no recibido';
+
+                    }
 
                 }else{
 
@@ -367,7 +367,16 @@ class MovimientoRegistralService{
 
                     $array['folio_real'] = null;
                     $array['folio'] = 1;
-                    $array['estado'] = 'nuevo';
+
+                    if($request['categoria_servicio'] == 'Certificaciones'){
+
+                        $array['estado'] = 'nuevo';
+
+                    }else{
+
+                        $array['estado'] = 'no recibido';
+
+                    }
 
                 }
 
@@ -379,7 +388,7 @@ class MovimientoRegistralService{
 
                 $array['folio_real_persona'] = $folioRealPersonaMoral->id;
                 $array['folio'] = $this->calcularFolioPersonaMoral($request);
-                $array['estado'] = 'nuevo';
+                $array['estado'] = 'no recibido';
 
             }
 
@@ -835,11 +844,23 @@ class MovimientoRegistralService{
 
         }else{
 
-            return [
-                'folio' => 1,
-                'estado' => 'nuevo',
-                'folio_real' => null
-            ];
+            if($data['categoria_servicio'] == 'Certificaciones'){
+
+                return [
+                    'folio' => 1,
+                    'estado' => 'nuevo',
+                    'folio_real' => null
+                ];
+
+            }else{
+
+                return [
+                    'folio' => 1,
+                    'estado' => 'no recibido',
+                    'folio_real' => null
+                ];
+
+            }
 
         }
 
