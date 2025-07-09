@@ -34,7 +34,7 @@ class ConsultasCertificaciones extends Component
 
         $this->validate(['paginas' => 'required']);
 
-        if(in_array($this->certificacion->estado, ['nuevo', 'elaborado'])){
+        if(!in_array($this->certificacion->estado, ['nuevo', 'elaborado'])){
 
             $this->dispatch('mostrarMensaje', ['warning', "El trámite debe estar en estado nuevo o elaborado."]);
 
