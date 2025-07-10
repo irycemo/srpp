@@ -223,7 +223,37 @@
 
                                             @endif
 
-                                        @elseif(auth()->user()->hasRole(['Supervisor certificaciones', 'Jefe de departamento certificaciones', 'Supervisor uruapan', 'Regional']))
+                                            @if(in_array($certificado->estado, ['elaborado','finalizado', 'concluido']))
+
+                                                <button
+                                                    wire:click="corregir({{  $certificado->id }})"
+                                                    wire:loading.attr="disabled"
+                                                    class="w-full text-left block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 focus:outline-none focus:bg-gray-100"
+                                                    role="menuitem">
+                                                    Corregir
+                                                </button>
+
+                                                <button
+                                                    wire:click="reimprimir({{  $certificado->id }})"
+                                                    wire:loading.attr="disabled"
+                                                    class="w-full text-left block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 focus:outline-none focus:bg-gray-100"
+                                                    role="menuitem">
+                                                    Reimprimir
+                                                </button>
+
+                                                <button
+                                                    wire:click="abrirModalFinalizar({{ $certificado->id }})"
+                                                    wire:loading.attr="disabled"
+                                                    class="w-full text-left block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 focus:outline-none focus:bg-gray-100"
+                                                    role="menuitem">
+
+                                                    <span>Finalizar</span>
+
+                                                </button>
+
+                                            @endif
+
+                                        @elseif(auth()->user()->hasRole(['Supervisor certificaciones', 'Supervisor uruapan', 'Regional']))
 
                                             @if($certificado->estado == 'elaborado')
 
@@ -253,29 +283,29 @@
 
                                             @endif
 
-                                        @endif
+                                            @if(in_array($certificado->estado, ['elaborado','finalizado', 'concluido']))
 
-                                        @if(in_array($certificado->estado, ['elaborado','finalizado', 'concluido']))
+                                                @if(!auth()->user()->hasRole(['Regional']))
 
-                                            @if(!auth()->user()->hasRole(['Regional']))
+                                                    <button
+                                                        wire:click="corregir({{  $certificado->id }})"
+                                                        wire:loading.attr="disabled"
+                                                        class="w-full text-left block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 focus:outline-none focus:bg-gray-100"
+                                                        role="menuitem">
+                                                        Corregir
+                                                    </button>
+
+                                                @endif
 
                                                 <button
-                                                    wire:click="corregir({{  $certificado->id }})"
+                                                    wire:click="reimprimir({{  $certificado->id }})"
                                                     wire:loading.attr="disabled"
                                                     class="w-full text-left block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 focus:outline-none focus:bg-gray-100"
                                                     role="menuitem">
-                                                    Corregir
+                                                    Reimprimir
                                                 </button>
 
                                             @endif
-
-                                            <button
-                                                wire:click="reimprimir({{  $certificado->id }})"
-                                                wire:loading.attr="disabled"
-                                                class="w-full text-left block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 focus:outline-none focus:bg-gray-100"
-                                                role="menuitem">
-                                                Reimprimir
-                                            </button>
 
                                         @endif
 
