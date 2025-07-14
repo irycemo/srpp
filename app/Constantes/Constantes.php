@@ -255,7 +255,8 @@ class Constantes{
         'MXN',
         'USD',
         'EUR',
-        'UDI'
+        'UDI',
+        'SM'
     ];
 
     const TIPO_DEUDOR = [
@@ -294,7 +295,8 @@ class Constantes{
         'FUSIÓN',
         'CESIÓN DE DERECHOS',
         'PROTOCOLIZACIÓN Y ELEVACIÓN A ESCRITURA PÚBLICA DE LA AUTORIZACIÓN DEFINITIVA DEL FRACCIONAMIENTO',
-        'JUICIO SUMARIO CIVIL'
+        'JUICIO SUMARIO CIVIL',
+        'CANCELACIÓN DE RESERVA DE DOMINIO'
     ];
 
     const ACTOS_INSCRIPCION_GRAVAMEN = [
