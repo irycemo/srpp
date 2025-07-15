@@ -127,6 +127,7 @@ trait CertificadoPropiedadTrait{
                                         })
                                         ->where('paterno', $propietario['ap_paterno'])
                                         ->where('materno', $propietario['ap_materno'])
+                                        ->where('distrito', $this->certificacion->movimientoRegistral->getRawOriginal('distrito'))
                                         ->first();
 
                 if($persona) array_push($this->propiedadOldIds, $persona->idPropiedad);
@@ -145,7 +146,8 @@ trait CertificadoPropiedadTrait{
 
                     $predio = Predio::wherekey($propietario->actorable_id)
                                         ->whereHas('folioReal', function($q){
-                                            $q->where('estado', 'activo');
+                                            $q->where('estado', 'activo')
+                                                ->where('distrito_antecedente', $this->certificacion->movimientoRegistral->getRawOriginal('distrito'));
                                         })
                                         ->first();
 
