@@ -295,6 +295,14 @@
                                                 Reasignar
                                             </button>
 
+                                            <button
+                                                wire:click="abrirModalRechazar({{ $movimiento->id }})"
+                                                wire:loading.attr="disabled"
+                                                class="w-full text-left block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 focus:outline-none focus:bg-gray-100"
+                                                role="menuitem">
+                                                Rechazar
+                                            </button>
+
                                             @if($movimiento->folioReal)
 
                                                 @if($movimiento->folioReal->estado == 'pendiente' )
