@@ -12,6 +12,38 @@
 
             </x-input-group>
 
+            <x-input-group for="categoria" label="Categoría" :error="$errors->first('categoria')" class="mb-5">
+
+                <x-input-select id="categoria" wire:model="categoria" class="">
+
+                    <option value="">Seleccione una opción</option>
+
+                    @foreach ($categorias as $category)
+
+                        <option value="{{ $category }}">{{ $category }}</option>
+
+                    @endforeach
+
+                </x-input-select>
+
+            </x-input-group>
+
+            <x-input-group for="area" label="Área" :error="$errors->first('area')" class="mb-5">
+
+                <x-input-select id="area" wire:model="area" class="">
+
+                    <option value="">Seleccione una opción</option>
+
+                    @foreach ($areas as $item)
+
+                        <option value="{{ $item }}">{{ $item }}</option>
+
+                    @endforeach
+
+                </x-input-select>
+
+            </x-input-group>
+
             <x-ck-editor property="contenido" id="content" class="w-full"></x-ck-editor>
 
             {{-- <div wire:ignore>
@@ -86,9 +118,14 @@
 
         </div>
 
-        <div class="w-full lg:w-1/2 mx-auto flex justify-end">
+        <div class="w-full lg:w-1/2 mx-auto flex justify-end gap-4">
 
             @if ($pregunta)
+
+                <x-button-green
+                    wire:click="publicar">
+                    Publicar
+                </x-button-green>
 
                 <x-button-blue
                     wire:click="actualizar">

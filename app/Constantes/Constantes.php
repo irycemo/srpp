@@ -513,4 +513,13 @@ class Constantes{
         72 => 7,
     ];
 
+    const CATEGORIAS_PREGUNTAS = [
+        'GRAVAMEN',
+        'PROPIEDAD',
+        'SENTENCIAS',
+        'VARIOS',
+        'CANCELACIONES',
+        'CERTIFICACIONES'
+    ];
+
 }

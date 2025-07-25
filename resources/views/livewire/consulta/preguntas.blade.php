@@ -28,11 +28,31 @@
 
         <div class="w-1/2 mx-auto ">
 
+            <div class="flex items-center justify-center gap-9 mb-5">
+
+                <div class="flex items-center">
+
+                    <div class="w-4 h-4 bg-red-400 rounded-full mr-3"></div>
+
+                    <span>Lectura obligatoria</span>
+
+                </div>
+
+                <div class="flex items-center">
+
+                    <div class="w-4 h-4 bg-yellow-300 rounded-full mr-3"></div>
+
+                    <span>Lectura sugerida</span>
+
+                </div>
+
+            </div>
+
             <ul class="w-full space-y-3">
 
                 @forelse ($this->preguntas as $item)
 
-                    <li class="cursor-pointer hover:bg-gray-100 rounded-lg text-gray-700 border border-gray-300 flex justify-between" wire:key="pregunta-{{ $item->id }}">
+                    <li class="@if(auth()->user()->area == $item->area) border-l-red-400 @else border-l-yellow-300 @endif border-l-8 cursor-pointer hover:bg-gray-100 rounded-lg text-gray-700 border border-gray-300 flex justify-between" wire:key="pregunta-{{ $item->id }}">
 
                         <div class="w-full h-full p-3 flex justify-between items-center" wire:click="verPregunta({{ $item->id }})">
 

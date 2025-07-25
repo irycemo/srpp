@@ -85,10 +85,15 @@ class Preguntas extends Component
     #[Computed]
     public function preguntas(){
 
-        return ModelPregunta::where('titulo', 'LIKE',  '%' . $this->search . '%')
-                        ->orWhere('contenido', 'LIKE',  '%' . $this->search . '%')
-                        ->orderBy('id', 'desc')
-                        ->simplePaginate(10);
+        return ModelPregunta::when(!auth()->user()->hasRole('Administrador'),function($q){
+                                    $q->where('estado', 'publicado');
+                                })
+                                ->where(function($q){
+                                    $q->where('titulo', 'LIKE',  '%' . $this->search . '%')
+                                        ->orWhere('contenido', 'LIKE',  '%' . $this->search . '%');
+                                })
+                                ->orderBy('id', 'desc')
+                                ->simplePaginate(20);
 
     }
 
