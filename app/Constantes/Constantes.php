@@ -460,7 +460,9 @@ class Constantes{
         'MANDATORIO',
         'ACREDITADO',
         'DEUDOR / GARANTE HIPOTECARIO',
-        'DEUDOR PARTE ALICUOTA'
+        'DEUDOR PARTE ALICUOTA',
+        'MUTUANTE',
+        'MUTUARIO'
     ];
 
     const ACTORES_FIDEICOMISO = [
