@@ -7,6 +7,12 @@ use App\Models\FolioReal;
 use App\Models\Personaold;
 use App\Models\Propiedadold;
 use App\Constantes\Constantes;
+use App\Models\Old\AntecedenteOld;
+use App\Models\Old\AntecedenteSentencia;
+use App\Models\Old\AntecedenteVario;
+use App\Models\Old\GravamenOld;
+use App\Models\Old\SentenciaOld;
+use App\Models\Old\VariosOld;
 
 class IndicesPropiedad extends Component
 {
@@ -22,8 +28,11 @@ class IndicesPropiedad extends Component
     public $ap_materno;
 
     public $propiedades = [];
-
-    public $modal = false;
+    public $ventas;
+    public $antecedentes;
+    public $gravamenes;
+    public $sentencias;
+    public $varios;
 
     public Propiedadold $propiedad;
 
@@ -34,6 +43,8 @@ class IndicesPropiedad extends Component
         $this->validate([
             'nombre' => 'required',
         ]);
+
+        $this->propiedad = Propiedadold::make();
 
         $ids = Personaold::select('idPropiedad')
                             ->distinct()
@@ -62,6 +73,8 @@ class IndicesPropiedad extends Component
             'registro' => 'required',
         ]);
 
+        $this->propiedad = Propiedadold::make();
+
         $this->propiedades = Propiedadold::where('distrito', $this->distrito)
                                             ->where('tomo', $this->tomo)
                                             ->where('registro', $this->registro)
@@ -82,7 +95,65 @@ class IndicesPropiedad extends Component
 
         $this->propiedad = $propiedadold;
 
-        $this->modal = true;
+        $this->antecedentes = AntecedenteOld::where('idPropiedad', $this->propiedad->id)->get();
+
+        if($this->antecedentes->count()){
+
+            foreach ($this->antecedentes as $antecedente) {
+
+                $propiedad = Propiedadold::find($antecedente->idAntecedente);
+
+                if($propiedad){
+
+                    $antecedente->propiedad = $propiedad;
+
+                }else{
+
+                    $antecedente->propiedad = Propiedadold::make();
+
+                }
+
+            }
+
+        }
+
+        $this->ventas = AntecedenteOld::where('idAntecedente', $this->propiedad->id)->get();
+
+        if($this->ventas->count()){
+
+            foreach ($this->ventas as $venta) {
+
+                $propiedad = Propiedadold::find($venta->idAntecedente);
+
+                if($propiedad){
+
+                    $venta->propiedad = $propiedad;
+
+                }else{
+
+                    $venta->propiedad = Propiedadold::make();
+
+                }
+
+            }
+
+        }
+
+        $this->gravamenes = GravamenOld::where('idPropiedad', $this->propiedad->id)->get();
+
+        $antesedentes_sentencias = AntecedenteSentencia::where('distrito', $this->propiedad->distrito)
+                                            ->where('tomo', $this->propiedad->tomo)
+                                            ->where('registro', $this->propiedad->registro)
+                                            ->get();
+
+        $this->sentencias = SentenciaOld::find($antesedentes_sentencias->pluck('idSentencia'));
+
+        $antesedentes_varios = AntecedenteVario::where('distrito', $this->propiedad->distrito)
+                                            ->where('tomo', $this->propiedad->tomo)
+                                            ->where('registro', $this->propiedad->registro)
+                                            ->get();
+
+        $this->varios = VariosOld::find($antesedentes_varios->pluck('idVarios'));
 
     }
 

@@ -96,327 +96,229 @@
 
     </div>
 
-    <div class="overflow-x-auto rounded-lg shadow-xl border-t-2 border-t-gray-500">
+    @if(!$propiedad->getKey())
 
-        <x-table>
+        <div class="overflow-x-auto rounded-lg shadow-xl border-t-2 border-t-gray-500">
 
-            <x-slot name="head">
+            <x-table>
 
-                <x-table.heading >Distrito</x-table.heading>
-                <x-table.heading >Tomo</x-table.heading>
-                <x-table.heading >Registro</x-table.heading>
-                <x-table.heading ># Propiead</x-table.heading>
-                <x-table.heading >Propietarios</x-table.heading>
-                <x-table.heading >Ubicación</x-table.heading>
-                <x-table.heading >Acciones</x-table.heading>
+                <x-slot name="head">
 
-            </x-slot>
+                    <x-table.heading >Distrito</x-table.heading>
+                    <x-table.heading >Tomo</x-table.heading>
+                    <x-table.heading >Registro</x-table.heading>
+                    <x-table.heading ># Propiead</x-table.heading>
+                    <x-table.heading >Propietarios</x-table.heading>
+                    <x-table.heading >Ubicación</x-table.heading>
+                    <x-table.heading >Acciones</x-table.heading>
 
-            <x-slot name="body">
+                </x-slot>
 
-                @forelse ($propiedades as $item)
+                <x-slot name="body">
 
-                    <x-table.row wire:loading.class.delaylongest="opacity-50" wire:key="row-{{$item->id }}">
+                    @forelse ($propiedades as $item)
 
-                        <x-table.cell>
+                        <x-table.row wire:loading.class.delaylongest="opacity-50" wire:key="row-{{$item->id }}">
 
-                            <span class="lg:hidden absolute top-0 left-0 bg-blue-300 px-2 py-1 text-xs text-white font-bold uppercase rounded-br-xl">Distrito</span>
+                            <x-table.cell>
 
-                            {{$item->distrito }}
+                                <span class="lg:hidden absolute top-0 left-0 bg-blue-300 px-2 py-1 text-xs text-white font-bold uppercase rounded-br-xl">Distrito</span>
 
-                        </x-table.cell>
+                                {{$item->distrito }}
 
-                        <x-table.cell>
+                            </x-table.cell>
 
-                            <span class="lg:hidden absolute top-0 left-0 bg-blue-300 px-2 py-1 text-xs text-white font-bold uppercase rounded-br-xl">Tomo</span>
+                            <x-table.cell>
 
-                            {{$item->tomo }}
+                                <span class="lg:hidden absolute top-0 left-0 bg-blue-300 px-2 py-1 text-xs text-white font-bold uppercase rounded-br-xl">Tomo</span>
 
-                        </x-table.cell>
+                                {{$item->tomo }}
 
-                        <x-table.cell>
+                            </x-table.cell>
 
-                            <span class="lg:hidden absolute top-0 left-0 bg-blue-300 px-2 py-1 text-xs text-white font-bold uppercase rounded-br-xl">Registro</span>
+                            <x-table.cell>
 
-                            {{$item->registro }}
+                                <span class="lg:hidden absolute top-0 left-0 bg-blue-300 px-2 py-1 text-xs text-white font-bold uppercase rounded-br-xl">Registro</span>
 
-                        </x-table.cell>
+                                {{$item->registro }}
 
-                        <x-table.cell>
+                            </x-table.cell>
 
-                            <span class="lg:hidden absolute top-0 left-0 bg-blue-300 px-2 py-1 text-xs text-white font-bold uppercase rounded-br-xl"># Propiedad</span>
+                            <x-table.cell>
 
-                            {{$item->noprop }}
+                                <span class="lg:hidden absolute top-0 left-0 bg-blue-300 px-2 py-1 text-xs text-white font-bold uppercase rounded-br-xl"># Propiedad</span>
 
-                        </x-table.cell>
+                                {{$item->noprop }}
 
-                        <x-table.cell>
+                            </x-table.cell>
 
-                            <span class="lg:hidden absolute top-0 left-0 bg-blue-300 px-2 py-1 text-xs text-white font-bold uppercase rounded-br-xl">Propietarios</span>
+                            <x-table.cell>
 
-                            {{ Str::limit($item->propietarios, 50) }}
+                                <span class="lg:hidden absolute top-0 left-0 bg-blue-300 px-2 py-1 text-xs text-white font-bold uppercase rounded-br-xl">Propietarios</span>
 
-                        </x-table.cell>
+                                {{ Str::limit($item->propietarios, 50) }}
 
-                        <x-table.cell>
+                            </x-table.cell>
 
-                            <span class="lg:hidden absolute top-0 left-0 bg-blue-300 px-2 py-1 text-xs text-white font-bold uppercase rounded-br-xl">Ubicación</span>
+                            <x-table.cell>
 
-                            {{ Str::limit($item->ubicacion, 70) }}
+                                <span class="lg:hidden absolute top-0 left-0 bg-blue-300 px-2 py-1 text-xs text-white font-bold uppercase rounded-br-xl">Ubicación</span>
 
-                        </x-table.cell>
+                                {{ Str::limit($item->ubicacion, 70) }}
 
-                        <x-table.cell>
+                            </x-table.cell>
 
-                            <span class="lg:hidden absolute top-0 left-0 bg-blue-300 px-2 py-1 text-xs text-white font-bold uppercase rounded-br-xl">Acciones</span>
+                            <x-table.cell>
 
-                            <div class="flex justify-center lg:justify-start gap-2">
+                                <span class="lg:hidden absolute top-0 left-0 bg-blue-300 px-2 py-1 text-xs text-white font-bold uppercase rounded-br-xl">Acciones</span>
 
-                                <x-button-green
-                                    wire:click="abrirModalVer({{$item->id }})"
-                                    wire:target="abrirModalVer({{$item->id }})"
-                                    wire:loading.attr="disabled"
-                                >
-                                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-4 h-4 mr-2">
-                                        <path stroke-linecap="round" stroke-linejoin="round" d="M2.036 12.322a1.012 1.012 0 0 1 0-.639C3.423 7.51 7.36 4.5 12 4.5c4.638 0 8.573 3.007 9.963 7.178.07.207.07.431 0 .639C20.577 16.49 16.64 19.5 12 19.5c-4.638 0-8.573-3.007-9.963-7.178Z" />
-                                        <path stroke-linecap="round" stroke-linejoin="round" d="M15 12a3 3 0 1 1-6 0 3 3 0 0 1 6 0Z" />
-                                    </svg>
+                                <div class="flex justify-center lg:justify-start gap-2">
 
-                                    <span>Ver</span>
+                                    <x-button-green
+                                        wire:click="abrirModalVer({{$item->id }})"
+                                        wire:target="abrirModalVer({{$item->id }})"
+                                        wire:loading.attr="disabled"
+                                    >
+                                        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-4 h-4 mr-2">
+                                            <path stroke-linecap="round" stroke-linejoin="round" d="M2.036 12.322a1.012 1.012 0 0 1 0-.639C3.423 7.51 7.36 4.5 12 4.5c4.638 0 8.573 3.007 9.963 7.178.07.207.07.431 0 .639C20.577 16.49 16.64 19.5 12 19.5c-4.638 0-8.573-3.007-9.963-7.178Z" />
+                                            <path stroke-linecap="round" stroke-linejoin="round" d="M15 12a3 3 0 1 1-6 0 3 3 0 0 1 6 0Z" />
+                                        </svg>
 
-                                </x-button-green>
+                                        <span>Ver</span>
 
-                            </div>
+                                    </x-button-green>
 
-                        </x-table.cell>
+                                </div>
 
-                    </x-table.row>
+                            </x-table.cell>
 
-                @empty
+                        </x-table.row>
 
-                    <x-table.row>
+                    @empty
 
-                        <x-table.cell colspan="9">
+                        <x-table.row>
 
-                            <div class="bg-white text-gray-500 text-center p-5 rounded-full text-lg">
+                            <x-table.cell colspan="9">
 
-                                No hay resultados.
+                                <div class="bg-white text-gray-500 text-center p-5 rounded-full text-lg">
 
-                            </div>
+                                    No hay resultados.
 
-                        </x-table.cell>
+                                </div>
 
-                    </x-table.row>
+                            </x-table.cell>
 
-                @endforelse
+                        </x-table.row>
 
-            </x-slot>
+                    @endforelse
 
-            <x-slot name="tfoot">
-            </x-slot>
+                </x-slot>
 
-        </x-table>
+                <x-slot name="tfoot">
+                </x-slot>
 
-    </div>
+            </x-table>
 
-    <x-dialog-modal wire:model="modal" maxWidth="md">
+        </div>
 
-        <x-slot name="title">Propiedad @if($folioReal) Folio Real I ({{ $folioReal->folio }}) @endif</x-slot>
+    @else
 
-        <x-slot name="content">
+        <div x-data="{ activeTab: 0 }">
 
-            <div class="space-y-3">
+            <div class="flex px-4 gap-4 justify-center items-center mb-5">
 
-                <div class="flex gap-3">
+                <x-button-pill @click="activeTab = 0" x-bind:class="{ 'bg-gray-300 bg-opacity-5 text-black ': activeTab === 0 }">Propiedad</x-button-pill>
 
-                    <div class="rounded-lg bg-gray-100 py-1 px-2">
+                <x-button-pill @click="activeTab = 1" x-bind:class="{ 'bg-gray-300 bg-opacity-5 text-black ': activeTab === 1 }">Antecedente ({{ $antecedentes->count() }})</x-button-pill>
 
-                        <strong>Distrito</strong>
+                <x-button-pill @click="activeTab = 2" x-bind:class="{ 'bg-gray-300 bg-opacity-5 text-black ': activeTab === 2 }">Ventas ({{ $ventas->count() }})</x-button-pill>
 
-                        <p>{{ $propiedad->distrito }}</p>
+                <x-button-pill @click="activeTab = 3" x-bind:class="{ 'bg-gray-300 bg-opacity-5 text-black ': activeTab === 3 }">Gravamenes ({{ $gravamenes->count() }})</x-button-pill>
 
-                    </div>
+                <x-button-pill @click="activeTab = 4" x-bind:class="{ 'bg-gray-300 bg-opacity-5 text-black ': activeTab === 4 }">Sentencias ({{ $sentencias->count() }})</x-button-pill>
 
-                    <div class="rounded-lg bg-gray-100 py-1 px-2">
-
-                        <strong>Tomo</strong>
-
-                        <p>{{ $propiedad->tomo }}</p>
-
-                    </div>
-
-                    <div class="rounded-lg bg-gray-100 py-1 px-2">
-
-                        <strong>Regsitro</strong>
-
-                        <p>{{ $propiedad->registro }}</p>
-
-                    </div>
-
-                    <div class="rounded-lg bg-gray-100 py-1 px-2">
-
-                        <strong># Propiedad</strong>
-
-                        <p>{{ $propiedad->noprop }}</p>
-
-                    </div>
-
-                    <div class="rounded-lg bg-gray-100 py-1 px-2">
-
-                        <strong>Status</strong>
-
-                        <p>{{ $propiedad->status }}</p>
-
-                    </div>
-
-                </div>
-
-                <div class="space-y-1">
-
-                    <div class="rounded-lg bg-gray-100 py-1 px-2">
-
-                        <p><strong>Superficie: </strong>{{ $propiedad->superficie }}</p>
-
-                    </div>
-
-                    <div class="rounded-lg bg-gray-100 py-1 px-2">
-
-                        <p><strong>Monto: </strong>{{ $propiedad->monto }}</p>
-
-                    </div>
-
-                    <div class="rounded-lg bg-gray-100 py-1 px-2">
-
-                        <p><strong>Fecha de inscripción: </strong>{{ $propiedad->fechainscripcion }}</p>
-
-                    </div>
-
-                    <div class="rounded-lg bg-gray-100 py-1 px-2">
-
-                        <p><strong>Hora de inscripción: </strong>{{ $propiedad->horainscripcion }}</p>
-
-                    </div>
-
-
-
-                    <div class="rounded-lg bg-gray-100 py-1 px-2">
-
-                        <p><strong>Notaria: </strong>{{ $propiedad->notaria }}</p>
-
-                    </div>
-
-                    <div class="rounded-lg bg-gray-100 py-1 px-2">
-
-                        <p><strong>Escritura: </strong>{{ $propiedad->escritura }}</p>
-
-                    </div>
-
-                    <div class="rounded-lg bg-gray-100 py-1 px-2">
-
-                        <p><strong>Clave catastral: </strong>{{ $propiedad->clave_catastral }}</p>
-
-                    </div>
-
-                    <div class="rounded-lg bg-gray-100 py-1 px-2">
-
-                        <p><strong>Cuenta predia: </strong>{{ $propiedad->cuenta_predial }}</p>
-
-                    </div>
-
-                    <div class="rounded-lg bg-gray-100 py-1 px-2">
-
-                        <p><strong>Localidad: </strong>{{ $propiedad->localidad }}</p>
-
-                    </div>
-
-                    <div class="rounded-lg bg-gray-100 py-1 px-2">
-
-                        <p><strong>Municipio: </strong>{{ $propiedad->municipio }}</p>
-
-                    </div>
-
-                </div>
-
-                <div class="flex gap-3">
-
-                    <div class="rounded-lg bg-gray-100 py-1 px-2">
-
-                        <strong>Linderos</strong>
-
-                        <p>{{ $propiedad->Linderos }}</p>
-
-                    </div>
-
-                </div>
-
-                <div class="flex gap-3">
-
-                    <div class="rounded-lg bg-gray-100 py-1 px-2">
-
-                        <strong>Ubicación</strong>
-
-                        <p>{{ $propiedad->ubicacion }}</p>
-
-                    </div>
-
-                </div>
-
-                <div class="flex gap-3">
-
-                    <div class="rounded-lg bg-gray-100 py-1 px-2">
-
-                        <strong>Propietarios</strong>
-
-                        <p>{{ $propiedad->propietarios }}</p>
-
-                    </div>
-
-                </div>
-
-                <div class="flex gap-3">
-
-                    <div class="rounded-lg bg-gray-100 py-1 px-2">
-
-                        <strong>Vendedores</strong>
-
-                        <p>{{ $propiedad->vendedores }}</p>
-
-                    </div>
-
-                </div>
-
-                <div class="flex gap-3">
-
-                    <div class="rounded-lg bg-gray-100 py-1 px-2">
-
-                        <strong>Comentarios</strong>
-
-                        <p>{{ $propiedad->comentarios }}</p>
-
-                    </div>
-
-                </div>
+                <x-button-pill @click="activeTab = 5" x-bind:class="{ 'bg-gray-300 bg-opacity-5 text-black ': activeTab === 5 }">Varios ({{ $varios->count() }})</x-button-pill>
 
             </div>
 
-        </x-slot>
+            <div class="tab-panel" :class="{ 'active': activeTab === 0 }" x-show.transition.in.opacity.duration.800="activeTab === 0" x-cloak>
 
-        <x-slot name="footer">
-
-            <div class="flex justify-end gap-4">
-
-                <x-button-red
-                    wire:click="$toggle('modal')"
-                    wire:loading.attr="disabled"
-                    wire:target="$toggle('modal')"
-                    type="button">
-                    Cerrar
-                </x-button-red>
+                @include('livewire.consulta.indices-propiedad-datos', ['propiedad' => $propiedad])
 
             </div>
 
-        </x-slot>
+            <div class="tab-panel" :class="{ 'active': activeTab === 1 }" x-show.transition.in.opacity.duration.800="activeTab === 1" x-cloak>
 
-    </x-dialog-modal>
+                @foreach ($antecedentes as $antecedente_item)
+
+                    <div id="antecedente-{{ $loop->index }}" class="mb-5">
+
+                        @include('livewire.consulta.indices-antecedentes-datos', ['antecedente' => $antecedente_item])
+
+                    </div>
+
+                @endforeach
+
+            </div>
+
+            <div class="tab-panel" :class="{ 'active': activeTab === 2 }" x-show.transition.in.opacity.duration.800="activeTab === 2" x-cloak>
+
+                @foreach ($ventas as $venta_item)
+
+                    <div id="venta-{{ $loop->index }}" class="mb-5">
+
+                        @include('livewire.consulta.indices-antecedentes-datos', ['antecedente' => $venta_item])
+
+                    </div>
+
+                @endforeach
+
+            </div>
+
+            <div class="tab-panel" :class="{ 'active': activeTab === 3 }" x-show.transition.in.opacity.duration.800="activeTab === 3" x-cloak>
+
+                @foreach ($gravamenes as $gravamen_item)
+
+                    <div id="gravamen-{{ $loop->index }}" class="mb-5">
+
+                        @include('livewire.consulta.indices-gravamen-datos', ['gravamen' => $gravamen_item])
+
+                    </div>
+
+                @endforeach
+
+            </div>
+
+            <div class="tab-panel" :class="{ 'active': activeTab === 4 }" x-show.transition.in.opacity.duration.800="activeTab === 4" x-cloak>
+
+                @foreach ($sentencias as $sentencia_item)
+
+                    <div id="sentencia-{{ $loop->index }}" class="mb-5">
+
+                        @include('livewire.consulta.indices-sentencia-datos', ['sentencia' => $sentencia_item])
+
+                    </div>
+
+                @endforeach
+
+            </div>
+
+            <div class="tab-panel" :class="{ 'active': activeTab === 5 }" x-show.transition.in.opacity.duration.800="activeTab === 5" x-cloak>
+
+                @foreach ($varios as $varios_item)
+
+                    <div id="vario-{{ $loop->index }}" class="mb-5">
+
+                        @include('livewire.consulta.indices-varios-datos', ['vario' => $varios_item])
+
+                    </div>
+
+                @endforeach
+
+            </div>
+
+        </div>
+
+    @endif
 
 </div>
