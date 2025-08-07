@@ -15,12 +15,14 @@ use PhpCfdi\Credentials\Credential;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Storage;
 use App\Traits\Inscripciones\FirmaElectronicaTrait;
+use App\Traits\Inscripciones\RevisarUsuarioRegionalTrait;
 
 class GravamenController extends Controller
 {
 
     use NombreServicioTrait;
     use FirmaElectronicaTrait;
+    use RevisarUsuarioRegionalTrait;
 
     public function caratula(Gravamen $gravamen)
     {
@@ -51,6 +53,16 @@ class GravamenController extends Controller
         $datos_control->monto = $gravamen->movimientoRegistral->monto;
         $datos_control->tipo_servicio = $gravamen->movimientoRegistral->tipo_servicio;
         $datos_control->asigno_folio = $gravamen->movimientoRegistral->folioReal->asignado_por;
+
+        $regional = $this->revisarUsuarioRegional($gravamen->movimientoRegistral->usuario);
+
+        if($regional){
+
+            $datos_control->nombre_regional = $regional->nombre;
+            $datos_control->titular_regional = $regional->titular;
+            $datos_control->ciudad_regional = $regional->ciudad;
+
+        }
 
         $object = (object)[];
 

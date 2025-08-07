@@ -25,7 +25,8 @@ class Constantes{
         'Personas morales',
         'Efirmas',
         'Centinela',
-        'Personas'
+        'Personas',
+        'Regionales'
     ];
 
     /* USUARIOS */

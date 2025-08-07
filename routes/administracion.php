@@ -3,15 +3,16 @@
 use App\Livewire\Admin\Roles;
 use App\Livewire\Admin\Efirmas;
 use App\Livewire\Admin\Permisos;
+use App\Livewire\Admin\Personas;
 use App\Livewire\Admin\Usuarios;
 use App\Livewire\Admin\Auditoria;
 use App\Livewire\Admin\Centinela;
+use App\Livewire\Admin\Regionales;
 use App\Livewire\Admin\Propiedades;
 use App\Livewire\Admin\FoliosReales;
-use App\Livewire\Admin\FoliosRealesPM;
 use Illuminate\Support\Facades\Route;
+use App\Livewire\Admin\FoliosRealesPM;
 use App\Livewire\Admin\MovimientosRegistrales;
-use App\Livewire\Admin\Personas;
 
 Route::group(['middleware' => ['auth', 'esta.activo']], function(){
 
@@ -34,6 +35,8 @@ Route::group(['middleware' => ['auth', 'esta.activo']], function(){
     Route::get('propiedades', Propiedades::class)->middleware('permission:Lista de propiedades')->name('propiedades');
 
     Route::get('personas', Personas::class)->middleware('permission:Lista de personas')->name('personas');
+
+    Route::get('regionales', Regionales::class)->middleware('permission:Lista de regionales')->name('regionales');
 
     Route::get('auditoria', Auditoria::class)->middleware('permission:Auditoria')->name('auditoria');
 

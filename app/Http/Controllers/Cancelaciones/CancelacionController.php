@@ -15,12 +15,14 @@ use PhpCfdi\Credentials\Credential;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Storage;
 use App\Traits\Inscripciones\FirmaElectronicaTrait;
+use App\Traits\Inscripciones\RevisarUsuarioRegionalTrait;
 
 class CancelacionController extends Controller
 {
 
     use NombreServicioTrait;
     use FirmaElectronicaTrait;
+    use RevisarUsuarioRegionalTrait;
 
     public function caratula(Cancelacion $cancelacion)
     {
@@ -51,6 +53,16 @@ class CancelacionController extends Controller
         $datos_control->monto = $cancelacion->movimientoRegistral->monto;
         $datos_control->tipo_servicio = $cancelacion->movimientoRegistral->tipo_servicio;
         $datos_control->asigno_folio = $cancelacion->movimientoRegistral->folioReal->asignado_por;
+
+        $regional = $this->revisarUsuarioRegional($cancelacion->movimientoRegistral->usuario);
+
+        if($regional){
+
+            $datos_control->nombre_regional = $regional->nombre;
+            $datos_control->titular_regional = $regional->titular;
+            $datos_control->ciudad_regional = $regional->ciudad;
+
+        }
 
         $object = (object)[];
 

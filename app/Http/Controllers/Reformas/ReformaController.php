@@ -15,12 +15,14 @@ use PhpCfdi\Credentials\Credential;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Storage;
 use App\Traits\Inscripciones\FirmaElectronicaTrait;
+use App\Traits\Inscripciones\RevisarUsuarioRegionalTrait;
 
 class ReformaController extends Controller
 {
 
     use NombreServicioTrait;
     use FirmaElectronicaTrait;
+    use RevisarUsuarioRegionalTrait;
 
     public function caratula(ReformaMoral $reforma)
     {
@@ -50,6 +52,16 @@ class ReformaController extends Controller
         $datos_control->monto = $reforma->movimientoRegistral->monto;
         $datos_control->tipo_servicio = $reforma->movimientoRegistral->tipo_servicio;
         $datos_control->asigno_folio = $reforma->movimientoRegistral->folioRealPersona->asignado_por;
+
+        $regional = $this->revisarUsuarioRegional($reforma->movimientoRegistral->usuario);
+
+        if($regional){
+
+            $datos_control->nombre_regional = $regional->nombre;
+            $datos_control->titular_regional = $regional->titular;
+            $datos_control->ciudad_regional = $regional->ciudad;
+
+        }
 
         $object = (object)[];
 

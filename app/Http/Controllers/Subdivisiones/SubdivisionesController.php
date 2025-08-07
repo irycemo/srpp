@@ -15,12 +15,14 @@ use PhpCfdi\Credentials\Credential;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Storage;
 use App\Traits\Inscripciones\FirmaElectronicaTrait;
+use App\Traits\Inscripciones\RevisarUsuarioRegionalTrait;
 
 class SubdivisionesController extends Controller
 {
 
     use NombreServicioTrait;
     use FirmaElectronicaTrait;
+    use RevisarUsuarioRegionalTrait;
 
     public function caratula(Propiedad $subdivision)
     {
@@ -51,6 +53,16 @@ class SubdivisionesController extends Controller
         $datos_control->monto = $subdivision->movimientoRegistral->monto;
         $datos_control->tipo_servicio = $subdivision->movimientoRegistral->tipo_servicio;
         $datos_control->asigno_folio = $subdivision->movimientoRegistral->folioReal->asignado_por;
+
+        $regional = $this->revisarUsuarioRegional($subdivision->movimientoRegistral->usuario);
+
+        if($regional){
+
+            $datos_control->nombre_regional = $regional->nombre;
+            $datos_control->titular_regional = $regional->titular;
+            $datos_control->ciudad_regional = $regional->ciudad;
+
+        }
 
         $object = (object)[];
 

@@ -14,6 +14,7 @@ use PhpCfdi\Credentials\Credential;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Storage;
 use App\Traits\Inscripciones\FirmaElectronicaTrait;
+use App\Traits\Inscripciones\RevisarUsuarioRegionalTrait;
 use Imagick;
 
 class PropiedadController extends Controller
@@ -21,6 +22,7 @@ class PropiedadController extends Controller
 
     use NombreServicioTrait;
     use FirmaElectronicaTrait;
+    use RevisarUsuarioRegionalTrait;
 
     public function caratula(Propiedad $propiedad)
     {
@@ -52,6 +54,16 @@ class PropiedadController extends Controller
         $datos_control->tipo_servicio = $propiedad->movimientoRegistral->tipo_servicio;
         $datos_control->asigno_folio = $propiedad->movimientoRegistral->folioReal->asignado_por;
         $datos_control->fecha_prelacion = $propiedad->movimientoRegistral->fecha_prelacion;
+
+        $regional = $this->revisarUsuarioRegional($propiedad->movimientoRegistral->usuario);
+
+        if($regional){
+
+            $datos_control->nombre_regional = $regional->nombre;
+            $datos_control->titular_regional = $regional->titular;
+            $datos_control->ciudad_regional = $regional->ciudad;
+
+        }
 
         $object = (object)[];
 

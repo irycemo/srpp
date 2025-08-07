@@ -185,38 +185,9 @@
 
                 @include('comun.caratulas.folio_persona_moral')
 
-                <p class="parrafo">
-                    A SOLICITUD DE: <strong>{{ $datos_control->solicitante }}</strong> se EXPiDe EL PRESENTE EN LA CIUDAD DE @if($datos_control->distrito == '02 Uruapan' ) uruapan @else MORELIA @endif, MICHOACÁN, A LAS {{ $datos_control->elaborado_en }}.
-                </p>
+                @include('comun.caratulas.solicitante')
 
-                <div class="firma no-break">
-
-                    <p class="atte">
-                        <strong>A T E N T A M E N T E</strong>
-                    </p>
-
-                    @if(!$firma_electronica)
-
-                        @if($datos_control->distrito == '02 Uruapan' )
-                            <p style="margin-top: 80px;"></p>
-                            <p class="borde">Lic. SANDRO MEDINA MORALES </p>
-                            <p style="margin:0;">COORDINADOR REGIONAL 4 PURHÉPECHA (URUAPAN)</p>
-                        @else
-                            <p style="margin-top: 80px;"></p>
-                            <p class="borde" style="margin:0;">{{ $datos_control->director }}</p>
-                            <p style="margin:0;">Director del registro público de la propiedad</p>
-                        @endif
-
-                    @else
-
-                        <p style="margin:0;">{{ $datos_control->director }}</p>
-                        <p style="margin:0;">Director del registro público de la propiedad</p>
-                        <p style="text-align: center">Firma Electrónica:</p>
-                        <p class="parrafo" style="overflow-wrap: break-word;">{{ $firma_electronica }}</p>
-
-                    @endif
-
-                </div>
+                @include('comun.caratulas.firma')
 
                 <p class="separador">datos de control</p>
 
