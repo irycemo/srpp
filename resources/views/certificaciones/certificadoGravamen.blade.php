@@ -343,40 +343,11 @@
 
             @endif
 
-            <p class="parrafo">
-                A SOLICITUD DE: <strong>{{ $datos_control->solicitante }} </strong> se expide EL PRESENTE CERTIFICADO EN LA CIUDAD DE @if($folioReal->distrito== '02 Uruapan' ) URUAPAN, @else MORELIA, @endif MICHOACÁN, A LAS {{ $datos_control->elaborado_en }}.
-            </p>
-
         </div>
 
-        <div class="firma no-break">
+        @include('comun.caratulas.solicitante-certificaciones')
 
-            <p class="atte">
-                <strong>A T E N T A M E N T E</strong>
-            </p>
-
-            @if(!$firma_electronica)
-
-                @if($folioReal->distrito== '02 Uruapan' )
-                    <p style="margin-top: 80px;"></p>
-                    <p class="borde">Lic. SANDRO MEDINA MORALES </p>
-                    <p style="margin:0;">COORDINADOR REGIONAL 4 PURHÉPECHA (URUAPAN)</p>
-                @else
-                    <p style="margin-top: 80px;"></p>
-                    <p class="borde" style="margin:0;">{{ $director }}</p>
-                    <p style="margin:0;">Director del registro público de la propiedad</p>
-                @endif
-
-            @else
-
-                <p style="margin:0;">{{ $director }}</p>
-                <p style="margin:0;">Director del registro público de la propiedad</p>
-                <p style="text-align: center">Firma Electrónica:</p>
-                <p class="parrafo" style="overflow-wrap: break-word;">{{ $firma_electronica }}</p>
-
-            @endif
-
-        </div>
+        @include('comun.caratulas.firma-certificaciones')
 
         <div class="informacion no-break">
 

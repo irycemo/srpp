@@ -192,7 +192,7 @@
                 @endif
 
                 <p class="parrafo">
-                    A SOLICITUD DE: <strong>{{ $datos_control->solicitante }}</strong> se expide EL PRESENTE CERTIFICADO EN LA CIUDAD DE @if($distrito == '02 Uruapan' ) URUAPAN, @else MORELIA, @endif MICHOACÁN, A LAS {{ $datos_control->elaborado_en }}.
+                    A SOLICITUD DE: <strong>{{ $datos_control->solicitante }}</strong> se expide EL PRESENTE CERTIFICADO EN LA CIUDAD DE @if($distrito == '02 Uruapan' ) URUAPAN, @elseif (isset($datos_control->nombre_regional)) {{ $datos_control->ciudad_regional }} @else MORELIA, @endif MICHOACÁN, A LAS {{ $datos_control->elaborado_en }}.
                 </p>
 
                 <div class="firma no-break">
@@ -207,6 +207,10 @@
                             <p style="margin-top: 80px;"></p>
                             <p class="borde">Lic. SANDRO MEDINA MORALES </p>
                             <p style="margin:0;">COORDINADOR REGIONAL 4 PURHÉPECHA (URUAPAN)</p>
+                        @elseif (isset($datos_control->nombre_regional))
+
+                            <p class="borde" style="margin:0;">{{ $datos_control->titular_regional }}</p>
+                            <p style="margin:0;">{{ $datos_control->nombre_regional }}</p>
                         @else
                             <p style="margin-top: 80px;"></p>
                             <p class="borde" style="margin:0;">{{ $director }}</p>

@@ -26,7 +26,7 @@ class Centinela extends Component
 
         if(!$this->folioReal){
 
-            $this->dispatch('mostrarMensaje', ['error', "El folio real no existe."]);
+            $this->dispatch('mostrarMensaje', ['warning', "El folio real no existe."]);
 
         }
 

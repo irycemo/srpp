@@ -93,6 +93,14 @@ class IndicesPropiedad extends Component
                                         ->where('numero_propiedad_antecedente' , $propiedadold->noprop)
                                         ->first();
 
+        if($this->folioReal){
+
+            $this->dispatch('mostrarMensaje', ['warning', "La propiedad se encuentra en el folio real: " . $this->folioReal->folio . '.']);
+
+            return;
+
+        }
+
         $this->propiedad = $propiedadold;
 
         $this->antecedentes = AntecedenteOld::where('idPropiedad', $this->propiedad->id)->get();

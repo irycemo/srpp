@@ -16,12 +16,14 @@ use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Storage;
 use Luecano\NumeroALetras\NumeroALetras;
 use App\Traits\Inscripciones\FirmaElectronicaTrait;
+use App\Traits\Inscripciones\RevisarUsuarioRegionalTrait;
 
 class CertificadoPropiedadController extends Controller
 {
 
     use NombreServicioTrait;
     use FirmaElectronicaTrait;
+    use RevisarUsuarioRegionalTrait;
 
     public function certificadoNegativoPropiedad(MovimientoRegistral $movimientoRegistral){
 
@@ -57,6 +59,16 @@ class CertificadoPropiedadController extends Controller
         $datos_control->observaciones_certificado = $movimientoRegistral->certificacion->observaciones_certificado;
         $datos_control->temporalidad = $movimientoRegistral->certificacion->temporalidad;
         $datos_control->temporalidad_letra = $formatter->toWords($movimientoRegistral->certificacion->temporalidad);
+
+        $regional = $this->revisarUsuarioRegional($movimientoRegistral->usuario);
+
+        if($regional){
+
+            $datos_control->nombre_regional = $regional->nombre;
+            $datos_control->titular_regional = $regional->titular;
+            $datos_control->ciudad_regional = $regional->ciudad;
+
+        }
 
         $personas = collect();
 
@@ -173,6 +185,16 @@ class CertificadoPropiedadController extends Controller
         $datos_control->movimiento_folio = $movimientoRegistral->folio;
         $datos_control->asigno_folio = $movimientoRegistral->folioReal->asignado_por;
         $datos_control->observaciones_certificado = $movimientoRegistral->certificacion->observaciones_certificado;
+
+        $regional = $this->revisarUsuarioRegional($movimientoRegistral->usuario);
+
+        if($regional){
+
+            $datos_control->nombre_regional = $regional->nombre;
+            $datos_control->titular_regional = $regional->titular;
+            $datos_control->ciudad_regional = $regional->ciudad;
+
+        }
 
         $personas = collect();
 
@@ -291,6 +313,16 @@ class CertificadoPropiedadController extends Controller
         $datos_control->asigno_folio = $movimientoRegistral->folioReal->asignado_por;
         $datos_control->observaciones_certificado = $movimientoRegistral->certificacion->observaciones_certificado;
 
+        $regional = $this->revisarUsuarioRegional($movimientoRegistral->usuario);
+
+        if($regional){
+
+            $datos_control->nombre_regional = $regional->nombre;
+            $datos_control->titular_regional = $regional->titular;
+            $datos_control->ciudad_regional = $regional->ciudad;
+
+        }
+
         $personas = collect();
 
         $movimientoRegistral->certificacion->load('personas.persona');
@@ -407,6 +439,16 @@ class CertificadoPropiedadController extends Controller
         $datos_control->asigno_folio = $movimientoRegistral->folioReal->asignado_por;
         $datos_control->observaciones_certificado = $movimientoRegistral->certificacion->observaciones_certificado;
 
+        $regional = $this->revisarUsuarioRegional($movimientoRegistral->usuario);
+
+        if($regional){
+
+            $datos_control->nombre_regional = $regional->nombre;
+            $datos_control->titular_regional = $regional->titular;
+            $datos_control->ciudad_regional = $regional->ciudad;
+
+        }
+
         $object = (object)[];
 
         $object->predio = $this->predio($movimientoRegistral->folioReal->predio);
@@ -493,6 +535,16 @@ class CertificadoPropiedadController extends Controller
         $datos_control->observaciones_certificado = $movimientoRegistral->certificacion->observaciones_certificado;
         $datos_control->temporalidad = $movimientoRegistral->certificacion->temporalidad;
         $datos_control->temporalidad_letra = $formatter->toWords($movimientoRegistral->certificacion->temporalidad);
+
+        $regional = $this->revisarUsuarioRegional($movimientoRegistral->usuario);
+
+        if($regional){
+
+            $datos_control->nombre_regional = $regional->nombre;
+            $datos_control->titular_regional = $regional->titular;
+            $datos_control->ciudad_regional = $regional->ciudad;
+
+        }
 
         $personas = collect();
 

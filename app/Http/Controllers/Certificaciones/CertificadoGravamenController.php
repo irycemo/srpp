@@ -16,6 +16,7 @@ use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Storage;
 use Luecano\NumeroALetras\NumeroALetras;
 use App\Traits\Inscripciones\FirmaElectronicaTrait;
+use App\Traits\Inscripciones\RevisarUsuarioRegionalTrait;
 use Imagick;
 
 class CertificadoGravamenController extends Controller
@@ -23,6 +24,7 @@ class CertificadoGravamenController extends Controller
 
     use NombreServicioTrait;
     use FirmaElectronicaTrait;
+    use RevisarUsuarioRegionalTrait;
 
     public function certificadoGravamen(MovimientoRegistral $movimientoRegistral){
 
@@ -86,6 +88,16 @@ class CertificadoGravamenController extends Controller
         $datos_control->tipo_servicio = $movimientoRegistral->tipo_servicio;
         $datos_control->movimiento_folio  = $movimientoRegistral->folio;
         $datos_control->asigno_folio = $movimientoRegistral->folioReal->asignado_por;
+
+        $regional = $this->revisarUsuarioRegional($movimientoRegistral->usuario);
+
+        if($regional){
+
+            $datos_control->nombre_regional = $regional->nombre;
+            $datos_control->titular_regional = $regional->titular;
+            $datos_control->ciudad_regional = $regional->ciudad;
+
+        }
 
         $variosCollection = collect();
 
