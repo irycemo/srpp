@@ -133,6 +133,10 @@
 
                                     <span class="bg-yellow-400 px-1 rounded-full text-white text-xs">C</span>
 
+                                @elseif($movimiento->folioReal?->estado == 'elaborado')
+
+                                    <span class="bg-green-400 px-1 rounded-full text-white text-xs">E</span>
+
                                 @endif
 
                                 {{ $movimiento->folioReal?->folio }}-{{ $movimiento->folio }}
