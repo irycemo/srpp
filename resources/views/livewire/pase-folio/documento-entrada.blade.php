@@ -234,7 +234,7 @@
 
             <div class="w-full bg-white rounded-lg p-3 shadow-lg mb-3">
 
-                <span class="flex items-center justify-center text-gray-700">Antecedentes a fusionar</span>
+                <span class="flex items-center justify-center text-gray-700">Antecedentes a fusionar ó vincular</span>
 
                 <div class="">
 
