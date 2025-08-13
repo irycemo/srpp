@@ -332,7 +332,7 @@
 
                         <img wire:loading wire:target="inactivar" class="mx-auto h-4 mr-1" src="{{ asset('storage/img/loading3.svg') }}" alt="Loading">
 
-                        <span>Ingresar contraseña react</span>
+                        <span>Ingresar contraseña</span>
                     </x-button-blue>
 
                 @endif
