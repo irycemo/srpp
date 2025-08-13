@@ -23,6 +23,7 @@ class Gravamen extends Component
     public $modalBorrar = false;
     public $modalCancelacion = false;
     public $modalInactivar = false;
+    public $activar = false;
     public $mostrarLista = true;
     public $contraseña;
 
@@ -102,9 +103,11 @@ class Gravamen extends Component
 
     }
 
-    public function abrirModalInactivar(GravamenModelo $gravamen){
+    public function abrirModalInactivar(GravamenModelo $gravamen, $tipo){
 
         $this->modalInactivar = true;
+
+        $this->activar = $tipo === 'activar' ? true : false;
 
         $this->gravamen_seleccionado = $gravamen;
 
@@ -233,6 +236,39 @@ class Gravamen extends Component
                                     ' registro: ' .$this->gravamen_seleccionado->movimientoRegistral->registro_gravamen .
                                     ' del libro de gravamen correspondiente al distrito registral: ' . $this->gravamen_seleccionado->movimientoRegistral->distrito .
                                     ' mismo que no afecta esta propiedad directamente.'
+                ]);
+
+            });
+
+            $this->reset(['modalInactivar', 'contraseña']);
+
+            $this->cargarGravamenes();
+
+            $this->dispatch('mostrarMensaje', ['success', "El gravamen se inactivo con éxito."]);
+
+        } catch (\Throwable $th) {
+            Log::error("Error al inactivar gravamen en pase a folio por el usuario: (id: " . auth()->user()->id . ") " . auth()->user()->name . ". " . $th);
+            $this->dispatch('mostrarMensaje', ['error', "Ha ocurrido un error."]);
+        }
+
+    }
+
+    public function reactivar(){
+
+        try {
+
+            DB::transaction(function () {
+
+                $texto = ' Reporta gravamen por antecedente en el tomo: ' . $this->gravamen_seleccionado->movimientoRegistral->tomo_gravamen .
+                        ' registro: ' .$this->gravamen_seleccionado->movimientoRegistral->registro_gravamen .
+                        ' del libro de gravamen correspondiente al distrito registral: ' . $this->gravamen_seleccionado->movimientoRegistral->distrito .
+                        ' mismo que no afecta esta propiedad directamente.';
+
+                $this->gravamen_seleccionado->update([
+                    'estado' => 'activo',
+                    'actualizado_por' => auth()->id(),
+                    'observaciones' => str_replace($texto, '', $this->gravamen_seleccionado->observaciones)
+
                 ]);
 
             });

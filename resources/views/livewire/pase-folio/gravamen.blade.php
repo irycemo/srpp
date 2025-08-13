@@ -118,13 +118,27 @@
 
                                                 @endif
 
-                                                <x-button-blue
-                                                    wire:click="abrirModalInactivar({{ $gravamen->id }})"
-                                                    wire:loading.attr="disabled"
-                                                    class="whitespace-nowrap"
-                                                >
-                                                    Sin afectación
-                                                </x-button-blue>
+                                                @if($gravamen->estado == 'inactivo')
+
+                                                    <x-button-blue
+                                                        wire:click="abrirModalInactivar({{ $gravamen->id }}, 'activar')"
+                                                        wire:loading.attr="disabled"
+                                                        class="whitespace-nowrap"
+                                                    >
+                                                        Reactivar
+                                                    </x-button-blue>
+
+                                                @else
+
+                                                    <x-button-blue
+                                                        wire:click="abrirModalInactivar({{ $gravamen->id }}, 'inactivar')"
+                                                        wire:loading.attr="disabled"
+                                                        class="whitespace-nowrap"
+                                                    >
+                                                        Sin afectación
+                                                    </x-button-blue>
+
+                                                @endif
 
                                             </div>
 
@@ -297,15 +311,31 @@
 
             <div class="flex gap-3">
 
-                <x-button-blue
-                    wire:click="inactivar"
-                    wire:loading.attr="disabled"
-                    wire:target="inactivar">
+                @if($activar)
 
-                    <img wire:loading wire:target="inactivar" class="mx-auto h-4 mr-1" src="{{ asset('storage/img/loading3.svg') }}" alt="Loading">
+                    <x-button-blue
+                        wire:click="reactivar"
+                        wire:loading.attr="disabled"
+                        wire:target="reactivar">
 
-                    <span>Ingresar contraseña</span>
-                </x-button-blue>
+                        <img wire:loading wire:target="reactivar" class="mx-auto h-4 mr-1" src="{{ asset('storage/img/loading3.svg') }}" alt="Loading">
+
+                        <span>Ingresar contraseña</span>
+                    </x-button-blue>
+
+                @else
+
+                    <x-button-blue
+                        wire:click="inactivar"
+                        wire:loading.attr="disabled"
+                        wire:target="inactivar">
+
+                        <img wire:loading wire:target="inactivar" class="mx-auto h-4 mr-1" src="{{ asset('storage/img/loading3.svg') }}" alt="Loading">
+
+                        <span>Ingresar contraseña react</span>
+                    </x-button-blue>
+
+                @endif
 
                 <x-button-red
                     wire:click="$toggle('modalInactivar')"
