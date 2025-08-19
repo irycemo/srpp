@@ -34,6 +34,7 @@ class MovimientoRegistralUpdateRequest extends FormRequest
 
            /* Tramite */
            'tipo_servicio' => 'nullable',
+           'categoria_servicio' => 'nullable',
 
            /* Solicitante */
            'solicitante' => 'nullable',
