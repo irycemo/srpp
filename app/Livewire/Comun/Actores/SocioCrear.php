@@ -113,7 +113,7 @@ class SocioCrear extends Component
 
         } catch (Exception $ex) {
 
-            $this->dispatch('mostrarMensaje', ['error', $ex->getMessage()]);
+            $this->dispatch('mostrarMensaje', ['warning', $ex->getMessage()]);
 
         } catch (\Throwable $th) {
 

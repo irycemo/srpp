@@ -22,7 +22,7 @@ class MovimientosRegistrales extends Component
     public MovimientoRegistral $modelo_editar;
 
     public $distritos;
-    public $usuarios = [];
+    public $usuarios;
     public $supervisores = [];
     public $años;
 
@@ -72,8 +72,6 @@ class MovimientosRegistrales extends Component
 
         if($this->modelo_editar->isNot($modelo))
             $this->modelo_editar = $modelo;
-
-        $this->modalReasignarUsuario = true;
 
         if($this->modelo_editar->inscripcionPropiedad){
 
@@ -140,6 +138,14 @@ class MovimientosRegistrales extends Component
             }
 
         }
+
+        if(!$this->usuarios->count()){
+
+            $this->dispatch('mostrarMensaje', ['warning', "No hay usuarios activos para reasignar el movimiento registral."]);
+
+        }
+
+        $this->modalReasignarUsuario = true;
 
     }
 
@@ -215,7 +221,7 @@ class MovimientosRegistrales extends Component
 
         try {
 
-            $this->modelo_editar->usuario_asignado = $this->usuarios->where('ubicacion', 'Regional 1')->random()->id;
+            $this->modelo_editar->usuario_asignado = $this->usuarios->random()->id;
             $this->modelo_editar->actualizado_por = auth()->id();
             $this->modelo_editar->save();
 
@@ -353,6 +359,7 @@ class MovimientosRegistrales extends Component
         $this->usuarios = User::whereHas('roles', function($q) use($roles){
                                     $q->whereIn('name', $roles);
                                 })
+                                ->where('status', 'activo')
                                 ->orderBy('name')
                                 ->get();
 
@@ -363,6 +370,7 @@ class MovimientosRegistrales extends Component
         $this->supervisores = User::whereHas('roles', function($q)use($roles){
                                     $q->whereIn('name', $roles);
                                 })
+                                ->where('status', 'activo')
                                 ->orderBy('name')
                                 ->get();
 

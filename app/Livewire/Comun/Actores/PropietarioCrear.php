@@ -270,7 +270,7 @@ class PropietarioCrear extends Component
 
         } catch (ActoresException $ex) {
 
-            $this->dispatch('mostrarMensaje', ['error', $ex->getMessage()]);
+            $this->dispatch('mostrarMensaje', ['warning', $ex->getMessage()]);
 
         } catch (\Throwable $th) {
 
