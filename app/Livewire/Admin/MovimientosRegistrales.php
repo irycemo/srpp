@@ -22,7 +22,7 @@ class MovimientosRegistrales extends Component
     public MovimientoRegistral $modelo_editar;
 
     public $distritos;
-    public $usuarios;
+    public $usuarios = [];
     public $supervisores = [];
     public $años;
 
