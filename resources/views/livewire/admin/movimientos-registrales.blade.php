@@ -127,19 +127,19 @@
 
                                 @if($movimiento->folioReal?->estado == 'pendiente')
 
-                                    <span class="bg-pink-400 px-1 rounded-full text-white text-xs">P</span>
+                                    <span class="bg-pink-400 px-1 rounded-full text-white text-xs mr-2">P</span>
 
                                 @elseif($movimiento->folioReal?->estado == 'captura')
 
-                                    <span class="bg-yellow-400 px-1 rounded-full text-white text-xs">C</span>
+                                    <span class="bg-yellow-400 px-1 rounded-full text-white text-xs mr-2">C</span>
 
                                 @elseif($movimiento->folioReal?->estado == 'elaborado')
 
-                                    <span class="bg-green-400 px-1 rounded-full text-white text-xs">E</span>
+                                    <span class="bg-green-400 px-1 rounded-full text-white text-xs mr-2">E</span>
 
                                 @endif
 
-                                {{ $movimiento->folioReal?->folio }}-{{ $movimiento->folio }}
+                                @if($movimiento->folioReal?->matriz) <span class="bg-pink-400 px-1 rounded-full text-white text-xs mr-2">M</span> @endif{{ $movimiento->folioReal?->folio }}-{{ $movimiento->folio }}
 
                             </span>
 

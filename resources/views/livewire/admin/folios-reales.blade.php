@@ -47,6 +47,7 @@
 
             <x-slot name="head">
 
+                <x-table.heading sortable wire:click="sortBy('matriz')" :direction="$sort === 'matriz' ? $direction : null" >Matriz</x-table.heading>
                 <x-table.heading sortable wire:click="sortBy('folio')" :direction="$sort === 'folio' ? $direction : null" >Folio</x-table.heading>
                 <x-table.heading sortable wire:click="sortBy('estado')" :direction="$sort === 'estado' ? $direction : null" >estado</x-table.heading>
                 <x-table.heading sortable wire:click="sortBy('tomo_antecedente')" :direction="$sort === 'tomo_antecedente' ? $direction : null" >Tomo</x-table.heading>
@@ -66,6 +67,22 @@
                 @forelse ($folios as $folio)
 
                     <x-table.row wire:loading.class.delaylongest="opacity-50" wire:key="row-{{ $folio->id }}">
+
+                        <x-table.cell>
+
+                            <span class="lg:hidden absolute top-0 left-0 bg-blue-300 px-2 py-1 text-xs text-white font-bold uppercase rounded-br-xl">Matriz</span>
+
+                            @if($folio->matriz)
+
+                                <span class="bg-green-400 p-1 rounded-full text-white text-xs mr-2">SI</span>
+
+                            @else
+
+                                <span class="bg-red-400 p-1 rounded-full text-white text-xs mr-2">No</span>
+
+                            @endif
+
+                        </x-table.cell>
 
                         <x-table.cell>
 
