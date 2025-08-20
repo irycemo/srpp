@@ -30,6 +30,7 @@
 
                 <select class="bg-white rounded-full text-sm w-min" wire:model.live="filters.estado">
 
+                    <option value="" selected>Estado</option>
                     <option value="nuevo">Nuevo</option>
                     <option value="elaborado">Elaborado</option>
                     <option value="rechazado">Rechazado</option>
@@ -40,7 +41,7 @@
 
                 <select class="bg-white rounded-full text-sm w-min" wire:model.live="filters.usuario_asignado">
 
-                    <option value="nuevo">Nuevo</option>
+                    <option value="">Asignado a</option>
                     @foreach ($usuarios as $usuario)
 
                         <option value="{{ $usuario->id }}">{{ $usuario->name }}</option>
