@@ -62,7 +62,8 @@ class CertificadoGravamen extends Component
         'usuario' => '',
         'folio_real' => '',
         'folio' => '',
-        'estado' => ''
+        'estado' => '',
+        'usuario_asignado' => ''
     ];
 
     protected function rules()
@@ -521,6 +522,7 @@ class CertificadoGravamen extends Component
                                                 ->when($this->filters['año'], fn($q, $año) => $q->where('año', $año))
                                                 ->when($this->filters['tramite'], fn($q, $tramite) => $q->where('tramite', $tramite))
                                                 ->when($this->filters['usuario'], fn($q, $usuario) => $q->where('usuario', $usuario))
+                                                ->when($this->filters['usuario_asignado'], fn($q, $usuario_asignado) => $q->where('usuario_asignado', $usuario_asignado))
                                                 ->when($this->filters['folio_real'], function($q){
                                                     $q->whereHas('folioreal', function ($q){
                                                         $q->where('folio', $this->filters['folio_real']);
@@ -550,6 +552,7 @@ class CertificadoGravamen extends Component
                                                 ->when($this->filters['año'], fn($q, $año) => $q->where('año', $año))
                                                 ->when($this->filters['tramite'], fn($q, $tramite) => $q->where('tramite', $tramite))
                                                 ->when($this->filters['usuario'], fn($q, $usuario) => $q->where('usuario', $usuario))
+                                                ->when($this->filters['usuario_asignado'], fn($q, $usuario_asignado) => $q->where('usuario_asignado', $usuario_asignado))
                                                 ->when($this->filters['folio_real'], function($q){
                                                     $q->whereHas('folioreal', function ($q){
                                                         $q->where('folio', $this->filters['folio_real']);
@@ -578,6 +581,7 @@ class CertificadoGravamen extends Component
                                                 ->when($this->filters['año'], fn($q, $año) => $q->where('año', $año))
                                                 ->when($this->filters['tramite'], fn($q, $tramite) => $q->where('tramite', $tramite))
                                                 ->when($this->filters['usuario'], fn($q, $usuario) => $q->where('usuario', $usuario))
+                                                ->when($this->filters['usuario_asignado'], fn($q, $usuario_asignado) => $q->where('usuario_asignado', $usuario_asignado))
                                                 ->when($this->filters['folio_real'], function($q){
                                                     $q->whereHas('folioreal', function ($q){
                                                         $q->where('folio', $this->filters['folio_real']);
@@ -600,6 +604,7 @@ class CertificadoGravamen extends Component
                                                 ->when($this->filters['año'], fn($q, $año) => $q->where('año', $año))
                                                 ->when($this->filters['tramite'], fn($q, $tramite) => $q->where('tramite', $tramite))
                                                 ->when($this->filters['usuario'], fn($q, $usuario) => $q->where('usuario', $usuario))
+                                                ->when($this->filters['usuario_asignado'], fn($q, $usuario_asignado) => $q->where('usuario_asignado', $usuario_asignado))
                                                 ->when($this->filters['folio_real'], function($q){
                                                     $q->whereHas('folioreal', function ($q){
                                                         $q->where('folio', $this->filters['folio_real']);
@@ -664,6 +669,7 @@ class CertificadoGravamen extends Component
                                                 ->when($this->filters['año'], fn($q, $año) => $q->where('año', $año))
                                                 ->when($this->filters['tramite'], fn($q, $tramite) => $q->where('tramite', $tramite))
                                                 ->when($this->filters['usuario'], fn($q, $usuario) => $q->where('usuario', $usuario))
+                                                ->when($this->filters['usuario_asignado'], fn($q, $usuario_asignado) => $q->where('usuario_asignado', $usuario_asignado))
                                                 ->when($this->filters['folio_real'], function($q){
                                                     $q->whereHas('folioreal', function ($q){
                                                         $q->where('folio', $this->filters['folio_real']);
