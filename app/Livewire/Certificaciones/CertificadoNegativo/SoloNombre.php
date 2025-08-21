@@ -2,6 +2,7 @@
 
 namespace App\Livewire\Certificaciones\CertificadoNegativo;
 
+use App\Traits\CalcularDiaElaboracionTrait;
 use Livewire\Component;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
@@ -13,6 +14,7 @@ class SoloNombre extends Component
 
     use CertificadoPropiedadTrait;
     use ColindanciasTrait;
+    use CalcularDiaElaboracionTrait;
 
     protected function rules(){
         return [

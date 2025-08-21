@@ -81,26 +81,6 @@ trait CertificadoPropiedadTrait{
 
     }
 
-    public function calcularDiaElaboracion($modelo){
-
-        $diaElaboracion = $modelo->movimientoRegistral->fecha_pago;
-
-        for ($i=0; $i < 2; $i++) {
-
-            $diaElaboracion->addDays(1);
-
-            while($diaElaboracion->isWeekend()){
-
-                $diaElaboracion->addDay();
-
-            }
-
-        }
-
-        return $diaElaboracion;
-
-    }
-
     public function buscarPropietarios(){
 
         $this->reset(['flagGenerar','personasIds', 'prediosOld', 'predios', 'propiedadOldIds']);

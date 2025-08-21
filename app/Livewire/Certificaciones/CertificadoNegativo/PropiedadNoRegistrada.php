@@ -2,6 +2,7 @@
 
 namespace App\Livewire\Certificaciones\CertificadoNegativo;
 
+use App\Traits\CalcularDiaElaboracionTrait;
 use Livewire\Component;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
@@ -11,6 +12,7 @@ class PropiedadNoRegistrada extends Component
 {
 
     use CertificadoPropiedadTrait;
+    use  CalcularDiaElaboracionTrait;
 
     protected function rules(){
         return [
@@ -31,15 +33,9 @@ class PropiedadNoRegistrada extends Component
 
     public function generarCertificado(){
 
-        if($this->certificacion->movimientoRegistral->tipo_servicio == 'ordinario'){
+        if(!auth()->user()->hasRole(['Jefe de departamento certificaciones']) && $this->certificacion->movimientoRegistral->distrito != '02 Uruapan'){
 
-            if(!($this->calcularDiaElaboracion($this->certificacion) <= now())){
-
-                $this->dispatch('mostrarMensaje', ['error', "El trámite puede elaborarse apartir del " . $this->calcularDiaElaboracion($this->certificacion)->format('d-m-Y')]);
-
-                return;
-
-            }
+            if($this->calcularDiaElaboracion($this->certificacion->movimientoRegistral)) return;
 
         }
 

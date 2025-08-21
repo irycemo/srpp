@@ -9,6 +9,7 @@ use Livewire\Component;
 use App\Models\FolioReal;
 use App\Models\Personaold;
 use App\Models\Propiedadold;
+use App\Traits\CalcularDiaElaboracionTrait;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
 use App\Traits\Certificaciones\CertificadoPropiedadTrait;
@@ -17,6 +18,7 @@ class CertificadoUnico extends Component
 {
 
     use CertificadoPropiedadTrait;
+    use CalcularDiaElaboracionTrait;
 
     protected function rules(){
         return [
@@ -112,6 +114,7 @@ class CertificadoUnico extends Component
     public function generarCertificado(){
 
         $this->validate();
+
         if(!auth()->user()->hasRole(['Jefe de departamento certificaciones']) && $this->certificacion->movimientoRegistral->distrito != '02 Uruapan'){
 
             if($this->calcularDiaElaboracion($this->certificacion->movimientoRegistral)) return;
