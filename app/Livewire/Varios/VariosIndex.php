@@ -14,6 +14,7 @@ use Illuminate\Support\Facades\Log;
 use App\Traits\Inscripciones\InscripcionesIndex;
 use App\Exceptions\InscripcionesServiceException;
 use App\Traits\Inscripciones\RecuperarPropietariosTrait;
+use App\Traits\RevisarMovimientosPosterioresTrait;
 
 class VariosIndex extends Component
 {
@@ -23,6 +24,7 @@ class VariosIndex extends Component
     use ComponentesTrait;
     use InscripcionesIndex;
     use RecuperarPropietariosTrait;
+    use RevisarMovimientosPosterioresTrait;
 
     public function corregir(MovimientoRegistral $movimientoRegistral){
 

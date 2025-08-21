@@ -12,6 +12,7 @@ use App\Models\MovimientoRegistral;
 use Illuminate\Support\Facades\Log;
 use App\Traits\Inscripciones\InscripcionesIndex;
 use App\Exceptions\InscripcionesServiceException;
+use App\Traits\RevisarMovimientosPosterioresTrait;
 
 class ReformasIndex extends Component
 {
@@ -19,6 +20,7 @@ class ReformasIndex extends Component
     use WithPagination;
     use ComponentesTrait;
     use InscripcionesIndex;
+    use RevisarMovimientosPosterioresTrait;
 
     public function estaBloqueado(){
 
@@ -156,18 +158,6 @@ class ReformasIndex extends Component
                                         })
                                         ->orderBy('name')
                                         ->get();
-
-    }
-
-    public function revisarMovimientosPosteriores(MovimientoRegistral $movimientoRegistral){
-
-        $movimiento = $movimientoRegistral->folioRealPersona
-                ->movimientosRegistrales()
-                ->where('folio', ($movimientoRegistral->folio + 1))
-                ->where('estado', '!=', 'nuevo')
-                ->first();
-
-        if($movimiento) throw new InscripcionesServiceException("El folio real tiene movimientos registrales posteriores ya elaborados.");
 
     }
 

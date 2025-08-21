@@ -14,6 +14,7 @@ use App\Models\MovimientoRegistral;
 use Illuminate\Support\Facades\Log;
 use App\Traits\Inscripciones\InscripcionesIndex;
 use App\Exceptions\InscripcionesServiceException;
+use App\Traits\RevisarMovimientosPosterioresTrait;
 
 class CancelacionIndex extends Component
 {
@@ -22,6 +23,7 @@ class CancelacionIndex extends Component
     use WithFileUploads;
     use ComponentesTrait;
     use InscripcionesIndex;
+    use RevisarMovimientosPosterioresTrait;
 
     public function corregir(MovimientoRegistral $movimientoRegistral){
 
