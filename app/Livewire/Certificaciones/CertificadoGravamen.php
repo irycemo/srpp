@@ -261,6 +261,12 @@ class CertificadoGravamen extends Component
 
                 $this->modelo_editar->save();
 
+                if($this->modelo_editar->movimientoRegistral->fecha_entrega > now()){
+
+                    $this->modelo_editar->audits()->latest()->first()->update(['tags' => 'Generó certificado anticipadamente.']);
+
+                }
+
                 $this->dispatch('imprimir_documento', ['gravamen' => $this->moviminetoRegistral->id]);
 
                 $this->modal = false;

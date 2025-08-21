@@ -112,16 +112,9 @@ class CertificadoUnico extends Component
     public function generarCertificado(){
 
         $this->validate();
+        if(!auth()->user()->hasRole(['Jefe de departamento certificaciones']) && $this->certificacion->movimientoRegistral->distrito != '02 Uruapan'){
 
-        if($this->certificacion->movimientoRegistral->tipo_servicio == 'ordinario'){
-
-            if(!($this->calcularDiaElaboracion($this->certificacion) <= now()) && !auth()->user()->hasRole(['Jefe de departamento certificaciones'])){
-
-                $this->dispatch('mostrarMensaje', ['warning', "El trámite puede elaborarse apartir del " . $this->calcularDiaElaboracion($this->certificacion)->format('d-m-Y')]);
-
-                return;
-
-            }
+            if($this->calcularDiaElaboracion($this->certificacion->movimientoRegistral)) return;
 
         }
 
@@ -141,6 +134,12 @@ class CertificadoUnico extends Component
                 $this->certificacion->temporalidad = $this->temporalidad;
                 $this->certificacion->observaciones_certificado = $this->observaciones;
                 $this->certificacion->save();
+
+                if($this->certificacion->movimientoRegistral->fecha_entrega > now()){
+
+                    $this->certificacion->audits()->latest()->first()->update(['tags' => 'Generó certificado anticipadamente.']);
+
+                }
 
                 $this->procesarPersona($this->nombre, $this->ap_paterno, $this->ap_materno);
 
