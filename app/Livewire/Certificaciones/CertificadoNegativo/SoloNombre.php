@@ -43,15 +43,9 @@ class SoloNombre extends Component
 
     public function generarCertificado(){
 
-        if($this->certificacion->movimientoRegistral->tipo_servicio == 'ordinario'){
+        if(!auth()->user()->hasRole(['Jefe de departamento certificaciones']) && $this->certificacion->movimientoRegistral->distrito != '02 Uruapan'){
 
-            if(!($this->calcularDiaElaboracion($this->certificacion) <= now())){
-
-                $this->dispatch('mostrarMensaje', ['error', "El trámite puede elaborarse apartir del " . $this->calcularDiaElaboracion($this->certificacion)->format('d-m-Y')]);
-
-                return;
-
-            }
+            if($this->calcularDiaElaboracion($this->certificacion->movimientoRegistral)) return;
 
         }
 
