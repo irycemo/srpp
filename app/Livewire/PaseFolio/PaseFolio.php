@@ -210,7 +210,7 @@ class PaseFolio extends Component
                                 ->orderBy('name')
                                 ->get();
 
-        if(!$this->usaurios->count()){
+        if(!$this->usuarios->count()){
 
             throw new Exception("No hay usuarios activos para el rol " . $roles[0]);
 
@@ -349,31 +349,71 @@ class PaseFolio extends Component
 
         if($this->modelo_editar->inscripcionPropiedad){
 
-            $this->cargarUsuarios(['Propiedad', 'Registrador Propiedad', 'Pase a folio']);
+            if($no_pase_a_folio){
+
+                $this->cargarUsuarios(['Propiedad', 'Registrador Propiedad']);
+
+            }else{
+
+                $this->cargarUsuarios(['Propiedad', 'Registrador Propiedad', 'Pase a folio']);
+
+            }
 
         }
 
         if($this->modelo_editar->gravamen){
 
-            $this->cargarUsuarios(['Gravamen', 'Registrador Gravamen', 'Pase a folio']);
+            if($no_pase_a_folio){
+
+                $this->cargarUsuarios(['Gravamen', 'Registrador Gravamen']);
+
+            }else{
+
+                $this->cargarUsuarios(['Gravamen', 'Registrador Gravamen', 'Pase a folio']);
+
+            }
 
         }
 
         if($this->modelo_editar->vario){
 
-            $this->cargarUsuarios(['Varios', 'Registrador Varios', 'Pase a folio', 'Aclaraciones administrativas', 'Avisos preventivos']);
+            if($no_pase_a_folio){
+
+                $this->cargarUsuarios(['Varios', 'Registrador Varios', 'Aclaraciones administrativas', 'Avisos preventivos']);
+
+            }else{
+
+                $this->cargarUsuarios(['Varios', 'Registrador Varios', 'Pase a folio', 'Aclaraciones administrativas', 'Avisos preventivos']);
+
+            }
 
         }
 
         if($this->modelo_editar->cancelacion){
 
-            $this->cargarUsuarios(['Cancelación', 'Registrador cancelación', 'Pase a folio']);
+            if($no_pase_a_folio){
+
+                $this->cargarUsuarios(['Cancelación', 'Registrador cancelación']);
+
+            }else{
+
+                $this->cargarUsuarios(['Cancelación', 'Registrador cancelación', 'Pase a folio']);
+
+            }
 
         }
 
         if($this->modelo_editar->sentencia){
 
-            $this->cargarUsuarios(['Sentencias', 'Registrador sentencias', 'Pase a folio']);
+            if($no_pase_a_folio){
+
+                $this->cargarUsuarios(['Sentencias', 'Registrador sentencias']);
+
+            }else{
+
+                $this->cargarUsuarios(['Sentencias', 'Registrador sentencias', 'Pase a folio']);
+
+            }
 
         }
 
@@ -389,11 +429,11 @@ class PaseFolio extends Component
 
                 if($no_pase_a_folio){
 
-                    $this->cargarUsuarios(['Certificador Gravamen', 'Pase a folio']);
+                    $this->cargarUsuarios(['Certificador Gravamen']);
 
                 }else{
 
-                    $this->cargarUsuarios(['Certificador Gravamen']);
+                    $this->cargarUsuarios(['Certificador Gravamen', 'Pase a folio']);
 
                 }
 
