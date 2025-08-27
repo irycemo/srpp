@@ -379,11 +379,11 @@ class InscripcionGeneral extends Component
 
             }else{
 
-                $suma_parcial_nuda_1 = number_format(($pn + $pp + $pn_adquirientes + $pp_adquirientes), 4);
+                $suma_parcial_nuda_1 = (float)number_format(($pn + $pp + $pn_adquirientes + $pp_adquirientes), 4);
 
-                $suma_parcial_nuda_2 = number_format(($pn_transmitentes + $pp_transmitentes), 2);
+                $suma_parcial_nuda_2 = (float)number_format(($pn_transmitentes + $pp_transmitentes), 4);
 
-                if($suma_parcial_nuda_1 > $suma_parcial_nuda_2 ){
+                if($suma_parcial_nuda_1 > $suma_parcial_nuda_2){
 
                     $this->dispatch('mostrarMensaje', ['error', "La suma de los porcentajes de nuda no es correcta."]);
 
@@ -391,9 +391,9 @@ class InscripcionGeneral extends Component
 
                 }
 
-                $suma_parcial_usufructo_1 = number_format(($pu + $pp + $pu_adquirientes + $pp_adquirientes), 2);
+                $suma_parcial_usufructo_1 = (float)number_format(($pu + $pp + $pu_adquirientes + $pp_adquirientes), 4);
 
-                $suma_parcial_usufructo_2 = number_format(($pu_transmitentes + $pp_transmitentes), 2);
+                $suma_parcial_usufructo_2 = (float)number_format(($pu_transmitentes + $pp_transmitentes), 4);
 
                 if($suma_parcial_usufructo_1 > $suma_parcial_usufructo_2){
 
