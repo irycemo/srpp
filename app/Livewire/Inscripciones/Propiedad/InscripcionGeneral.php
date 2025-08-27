@@ -33,10 +33,10 @@ class InscripcionGeneral extends Component
 
     protected function rules(){
         return [
-            'inscripcion.cp_localidad' => 'required',
-            'inscripcion.cp_oficina' => 'required',
-            'inscripcion.cp_tipo_predio' => 'required',
-            'inscripcion.cp_registro' => 'required',
+            'inscripcion.cp_localidad' => 'required_if:nuevoFolio,false',
+            'inscripcion.cp_oficina' => 'required_if:nuevoFolio,false',
+            'inscripcion.cp_tipo_predio' => 'required_if:nuevoFolio,false',
+            'inscripcion.cp_registro' => 'required_if:nuevoFolio,false',
             /* 'inscripcion.cc_region_catastral' => 'required',
             'inscripcion.cc_municipio' => 'required',
             'inscripcion.cc_zona_catastral' => 'required',
