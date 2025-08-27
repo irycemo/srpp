@@ -210,6 +210,12 @@ class PaseFolio extends Component
                                 ->orderBy('name')
                                 ->get();
 
+        if(!$this->usaurios->count()){
+
+            throw new Exception("No hay usuarios activos para el rol " . $roles[0]);
+
+        }
+
     }
 
     public function buscarAntecedente(){
@@ -289,6 +295,16 @@ class PaseFolio extends Component
 
             DB::transaction(function (){
 
+                if(auth()->user()->hasRole('Pase a folio')){
+
+                    $this->seleccionarRoleUsuarios(true);
+
+                    $this->modelo_editar->update([
+                        'usuario_asignado' => $this->usuarios->random()->id
+                    ]);
+
+                }
+
                 /* Revisar si su antecedente es un folio matriz */
                 if($this->modelo_editar->folioReal?->folioRealAntecedente?->matriz){
 
@@ -297,7 +313,7 @@ class PaseFolio extends Component
                 }
 
                 $this->modelo_editar->folioReal->update([
-                    'estado' => 'activo'
+                    'estado' => 'activo',
                 ]);
 
                 if($this->modelo_editar->inscripcionPropiedad) $this->revisarInscripcionPropiedad();
@@ -307,8 +323,6 @@ class PaseFolio extends Component
                 $this->revisarFolioCero();
 
                 $this->revisarMovimientosPrecalificacion();
-
-                $this->reasignarUsuario();
 
             });
 
@@ -320,7 +334,7 @@ class PaseFolio extends Component
 
             Log::error("Error al finalizar folio real por el usuario: (id: " . auth()->user()->id . ") " . auth()->user()->name . ". " . $ex);
 
-            $this->dispatch('mostrarMensaje', ['error', $ex->getMessage()]);
+            $this->dispatch('mostrarMensaje', ['warning', $ex->getMessage()]);
 
         }catch (\Throwable $th) {
 
@@ -331,12 +345,7 @@ class PaseFolio extends Component
 
     }
 
-    public function abrirModalReasignarUsuario(MovimientoRegistral $modelo){
-
-        if($this->modelo_editar->isNot($modelo))
-            $this->modelo_editar = $modelo;
-
-        $this->modalReasignarUsuario = true;
+    public function seleccionarRoleUsuarios($no_pase_a_folio = false){
 
         if($this->modelo_editar->inscripcionPropiedad){
 
@@ -378,15 +387,42 @@ class PaseFolio extends Component
 
             if($this->modelo_editar->certificacion->servicio == 'DL07'){
 
-                $this->cargarUsuarios(['Certificador Gravamen', 'Pase a folio']);
+                if($no_pase_a_folio){
+
+                    $this->cargarUsuarios(['Certificador Gravamen', 'Pase a folio']);
+
+                }else{
+
+                    $this->cargarUsuarios(['Certificador Gravamen']);
+
+                }
 
             }elseif(in_array($this->modelo_editar->certificacion->servicio, ['DL11', 'DL10'])){
 
-                $this->cargarUsuarios(['Certificador Propiedad', 'Pase a folio']);
+                if($no_pase_a_folio){
+
+                    $this->cargarUsuarios(['Certificador Propiedad']);
+
+                }else{
+
+                    $this->cargarUsuarios(['Certificador Propiedad']);
+
+                }
 
             }
 
         }
+
+    }
+
+    public function abrirModalReasignarUsuario(MovimientoRegistral $modelo){
+
+        if($this->modelo_editar->isNot($modelo))
+            $this->modelo_editar = $modelo;
+
+        $this->seleccionarRoleUsuarios();
+
+        $this->modalReasignarUsuario = true;
 
     }
 
