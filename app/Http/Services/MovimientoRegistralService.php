@@ -766,6 +766,9 @@ class MovimientoRegistralService{
         $data['folio_real'] = $folioReal->id;
         $data['folio'] = $folioReal->ultimoFolio() + 1;
         $data['estado'] = 'nuevo';
+        $data['tomo'] = null;
+        $data['registro'] = null;
+        $data['numero_propiedad'] = null;
 
         $this->actualizarMovimientoRegistral($data, $movimiento_registral);
 

@@ -12,6 +12,7 @@ use App\Traits\CalcularDiaElaboracionTrait;
 use App\Http\Services\SistemaTramitesService;
 use App\Http\Controllers\Varios\VariosController;
 use App\Traits\RevisarMovimientosPosterioresTrait;
+use App\Exceptions\SistemaTramitesServiceException;
 use App\Http\Controllers\Reformas\ReformaController;
 use App\Http\Controllers\Gravamen\GravamenController;
 use App\Http\Controllers\Sentencias\SentenciasController;
