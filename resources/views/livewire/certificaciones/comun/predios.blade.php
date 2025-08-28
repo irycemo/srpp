@@ -184,6 +184,10 @@
                     <strong class="capitalize">Distrito:</strong> {{ $predioOld->distrito }};
                 @endif
 
+                @if ($predioOld->tomo)
+                    <strong class="capitalize">Tomo:</strong> {{ $predioOld->tomo }};
+                @endif
+
                 @if ($predioOld->registro)
                     <strong class="capitalize">Registro:</strong> {{ $predioOld->registro }};
                 @endif
