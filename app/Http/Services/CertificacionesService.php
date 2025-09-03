@@ -16,6 +16,16 @@ class CertificacionesService{
 
             Certificacion::create($this->requestCrear($request));
 
+            if($request['servicio_nombre'] == 'Certificado negativo de vivienda bienestar'){
+
+                $movimientoRegistral = MovimientoRegistral::find($request['movimiento_registral']);
+
+                $movimientoRegistral->update([
+                    'tipo_servicio' => 'urgente',
+                ]);
+
+            }
+
         } catch (\Throwable $th) {
 
             Log::error('Error al ingresar el trámite: ' . $request['año'] . '-' . $request['tramite'] . ' desde Sistema Trámites. ' . $th);
