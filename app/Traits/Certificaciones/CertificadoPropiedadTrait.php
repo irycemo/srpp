@@ -101,13 +101,23 @@ trait CertificadoPropiedadTrait{
 
             }else{
 
+                $buscar_con_distrito = true;
+
+                if($this->certificacion->movimientoRegistral->servicio_nombre == 'Certificado negativo de vivienda bienestar'){
+
+                    $buscar_con_distrito = false;
+
+                }
+
                 $persona = Personaold::where(function($q) use ($propietario){
                                             $q->where('nombre2', $propietario['nombre'])
                                                 ->orWhere('nombre1', $propietario['nombre']);
                                         })
                                         ->where('paterno', $propietario['ap_paterno'])
                                         ->where('materno', $propietario['ap_materno'])
-                                        ->where('distrito', $this->certificacion->movimientoRegistral->getRawOriginal('distrito'))
+                                        ->when($buscar_con_distrito, function($q){
+                                            $q->where('distrito', $this->certificacion->movimientoRegistral->getRawOriginal('distrito'));
+                                        })
                                         ->first();
 
                 if($persona) array_push($this->propiedadOldIds, $persona->idPropiedad);

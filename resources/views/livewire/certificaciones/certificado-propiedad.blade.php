@@ -88,7 +88,7 @@
 
                         <div class="block">
 
-                            <div class="w-full text-lg font-semibold">Certificado único de propiedad</div>
+                            <div class="w-full text-lg font-semibold">Certificado de única propiedad</div>
 
                         </div>
 

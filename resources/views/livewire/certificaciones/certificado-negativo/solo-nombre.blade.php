@@ -47,16 +47,6 @@
 
             </div>
 
-            <div class="w-min mx-auto">
-
-                <x-input-group for="temporalidad" label="Temporalidad" :error="$errors->first('temporalidad')" >
-
-                    <x-input-text type="number" id="temporalidad" wire:model.lazy="temporalidad" />
-
-                </x-input-group>
-
-            </div>
-
         </div>
 
         <div class="bg-white rounded-lg p-3 flex justify-end shadow-lg gap-3">

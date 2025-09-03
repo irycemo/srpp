@@ -8,6 +8,8 @@ use Livewire\WithPagination;
 use Illuminate\Validation\Rule;
 use App\Traits\ComponentesTrait;
 use Illuminate\Support\Facades\Log;
+use App\Exceptions\GeneralException;
+use App\Http\Services\PersonaService;
 
 class Personas extends Component
 {
@@ -86,6 +88,8 @@ class Personas extends Component
 
         try{
 
+            $this->buscarPersona();
+
             $this->modelo_editar->actualizado_por = auth()->user()->id;
             $this->modelo_editar->save();
 
@@ -95,11 +99,29 @@ class Personas extends Component
 
             $this->dispatch('mostrarMensaje', ['success', "La persona se actualizó con éxito."]);
 
+        } catch (GeneralException $ex) {
+
+            $this->dispatch('mostrarMensaje', ['warning', $ex->getMessage()]);
+
         } catch (\Throwable $th) {
 
             Log::error("Error al actualizar persona por el usuario: (id: " . auth()->user()->id . ") " . auth()->user()->name . ". " . $th);
             $this->dispatch('mostrarMensaje', ['error', "Ha ocurrido un error."]);
             $this->resetearTodo();
+
+        }
+
+    }
+
+    public function buscarPersona(){
+
+        $personaService = new PersonaService();
+
+        $persona = $personaService->buscarPersona($this->rfc, $this->curp, $this->tipo_persona, $this->nombre, $this->ap_materno, $this->ap_paterno, $this->razon_social);
+
+        if($persona){
+
+            throw new GeneralException('Ya existe registro de una persona con la información ingresada.');
 
         }
 

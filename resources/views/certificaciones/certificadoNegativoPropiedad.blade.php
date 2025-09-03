@@ -178,7 +178,17 @@
                 </p>
 
                 <p class="parrafo">
-                    EL DIRECTOR DEL REGISTRO PÚBLICO DE LA PROPIEDAD @if($folioReal->distrito == '02 Uruapan' ) <strong>L.A. SANDRO MEDINA MORALES</strong> @else <strong>{{ $director }}</strong>, @endif certifica que habiendose examinado el acervo registral correspondiente al distrito de {{ $folioReal->distrito}}, en el periodo de @if(isset($datos_control->temporalidad)) {{ $datos_control->temporalidad }}, {{ $datos_control->temporalidad_letra }} @else 1977 un mil novecientos setenta y siete @endif a la fecha, no se encontro constancia de que se registre a nombre de:
+                    EL DIRECTOR DEL REGISTRO PÚBLICO DE LA PROPIEDAD
+                    @if($folioReal->distrito == '02 Uruapan' )
+                        <strong>L.A. SANDRO MEDINA MORALES</strong>
+                    @else
+                        <strong>{{ $director }}</strong>,
+                    @endif
+                    certifica que habiendose examinado el acervo registral
+                    @if($datos_control->servicio == 'Certificado negativo de vivienda bienestar')
+                        correspondiente al distrito de {{ $folioReal->distrito}}, en el periodo de @if(isset($datos_control->temporalidad)) {{ $datos_control->temporalidad }}, {{ $datos_control->temporalidad_letra }} @else 1977 un mil novecientos setenta y siete @endif a la fecha,
+                    @else
+                    no se encontro constancia de que se registre a nombre de:
                     @foreach ($personas as $persona)
                         <strong> {{ $persona->nombre }} {{ $persona->ap_paterno }} {{ $persona->ap_materno }}</strong>@if(!$loop->last),@endif
                     @endforeach

@@ -177,11 +177,24 @@
                 </p>
 
                 <p class="parrafo">
-                    EL DIRECTOR DEL REGISTRO PÚBLICO DE LA PROPIEDAD @if($distrito == '02 Uruapan' ) <strong>L.A. SANDRO MEDINA MORALES</strong> @else <strong>{{ $director }}</strong>, @endif certifica que habiendose examinado el acervo registral correspondiente al distrito  {{ $distrito}}, en el periodo de @if(isset($datos_control->temporalidad)) {{ $datos_control->temporalidad }}, {{ $datos_control->temporalidad_letra }} @else 1977 un mil novecientos setenta y siete @endif a la fecha, no se encontro registro a nombre de:
+                    EL DIRECTOR DEL REGISTRO PÚBLICO DE LA PROPIEDAD @if($distrito == '02 Uruapan' ) <strong>L.A. SANDRO MEDINA MORALES</strong> @else <strong>{{ $director }}</strong>, @endif certifica que habiendose examinado el acervo registral
+                    @if($datos_control->servicio !== 'Certificado negativo de vivienda bienestar')
+                        correspondiente al distrito  {{ $distrito}},
+                    @endif
+                    no se encontro registro a nombre de:
+                </p>
+
+                <p style="text-align: center; font-size: 10px;">
                     @foreach ($personas as $persona)
                         <strong> {{ $persona->nombre }} {{ $persona->ap_paterno }} {{ $persona->ap_materno }}</strong>@if(!$loop->last),@endif
                     @endforeach
                 </p>
+
+                @if($datos_control->servicio == 'Certificado negativo de vivienda bienestar')
+
+                    <p>El presente certificado se expide para efectos del programa Vivienda para el Bienestar.</p>
+
+                @endif
 
                 @if(isset($datos_control->observaciones_certificado))
 
