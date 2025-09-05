@@ -120,6 +120,20 @@ trait CertificadoPropiedadTrait{
                                         })
                                         ->first();
 
+                if(!$persona){
+
+                    $nombre = $propietario['nombre'] . ' ' . $propietario['ap_paterno'] . ' ' . $propietario['ap_materno'];
+
+                    $propiedad = Propiedadold::where('propietarios', 'like', '%' . $nombre . '%')
+                                                ->when($buscar_con_distrito, function($q){
+                                                    $q->where('distrito', $this->certificacion->movimientoRegistral->getRawOriginal('distrito'));
+                                                })
+                                                ->first();
+
+                    if($propiedad) array_push($this->propiedadOldIds, $propiedad->id);
+
+                }
+
                 if($persona) array_push($this->propiedadOldIds, $persona->idPropiedad);
 
             }
