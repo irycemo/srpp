@@ -593,7 +593,17 @@ class CertificadoPropiedadController extends Controller
 
         $qr = $this->generadorQr($firmaElectronica->uuid);
 
-        $pdf = Pdf::loadView('certificaciones.certificadoNegativo', [
+        if($movimientoRegistral->servicio_nombre == 'Certificado negativo de vivienda bienestar'){
+
+            $caratula = 'certificaciones.certificadoNegativoBienestar';
+
+        }else{
+
+            $caratula = 'certificaciones.certificadoNegativo';
+
+        }
+
+        $pdf = Pdf::loadView($caratula, [
             'distrito' => $object->distrito,
             'director' => $object->director,
             'personas' => $object->personas,

@@ -87,6 +87,14 @@ trait CertificadoPropiedadTrait{
 
         $this->validate();
 
+        $buscar_con_distrito = true;
+
+        if($this->certificacion->movimientoRegistral->servicio_nombre == 'Certificado negativo de vivienda bienestar'){
+
+            $buscar_con_distrito = false;
+
+        }
+
         foreach ($this->propietarios as $propietario) {
 
             $persona = Persona::where('tipo', 'FISICA')
@@ -100,14 +108,6 @@ trait CertificadoPropiedadTrait{
                 array_push($this->personasIds, $persona->id);
 
             }else{
-
-                $buscar_con_distrito = true;
-
-                if($this->certificacion->movimientoRegistral->servicio_nombre == 'Certificado negativo de vivienda bienestar'){
-
-                    $buscar_con_distrito = false;
-
-                }
 
                 $persona = Personaold::where(function($q) use ($propietario){
                                             $q->where('nombre2', $propietario['nombre'])
@@ -135,9 +135,11 @@ trait CertificadoPropiedadTrait{
                 foreach ($propietarios as $propietario) {
 
                     $predio = Predio::wherekey($propietario->actorable_id)
-                                        ->whereHas('folioReal', function($q){
+                                        ->whereHas('folioReal', function($q) use($buscar_con_distrito){
                                             $q->where('estado', 'activo')
-                                                ->where('distrito_antecedente', $this->certificacion->movimientoRegistral->getRawOriginal('distrito'));
+                                                ->when($buscar_con_distrito, function($q){
+                                                    $q->where('distrito_antecedente', $this->certificacion->movimientoRegistral->getRawOriginal('distrito'));
+                                                });
                                         })
                                         ->first();
 
@@ -147,23 +149,13 @@ trait CertificadoPropiedadTrait{
 
                 if(count($this->predios) > 0){
 
-                    $this->dispatch('mostrarMensaje', ['warning', "Se encontraron propietarios."]);
+                    $this->dispatch('mostrarMensaje', ['warning', "Se encontraron propiedades."]);
 
                     $this->flagGenerar = false;
 
-                }else{
-
-                    $this->dispatch('mostrarMensaje', ['success', "No se encontraron resultados con la información ingresada."]);
-
-                    $this->flagGenerar = true;
+                    return;
 
                 }
-
-            }else{
-
-                $this->dispatch('mostrarMensaje', ['success', "No se encontraron resultados con la información ingresada."]);
-
-                $this->flagGenerar = true;
 
             }
 
@@ -175,25 +167,19 @@ trait CertificadoPropiedadTrait{
 
             if(count($this->prediosOld) > 0){
 
-                $this->dispatch('mostrarMensaje', ['warning', "Se encontraron propietarios."]);
+                $this->dispatch('mostrarMensaje', ['warning', "Se encontraron propiedades."]);
 
                 $this->flagGenerar = false;
 
-            }else{
-
-                $this->dispatch('mostrarMensaje', ['success', "No se encontraron resultados con la información ingresada."]);
-
-                $this->flagGenerar = true;
+                return;
 
             }
 
-        }else{
-
-            $this->dispatch('mostrarMensaje', ['success', "No se encontraron resultados con la información ingresada."]);
-
-                $this->flagGenerar = true;
-
         }
+
+        $this->dispatch('mostrarMensaje', ['success', "No se encontraron resultados con la información ingresada."]);
+
+        $this->flagGenerar = true;
 
     }
 

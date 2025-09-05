@@ -16,7 +16,7 @@ class CertificacionesService{
 
             Certificacion::create($this->requestCrear($request));
 
-            if($request['servicio_nombre'] == 'Certificado negativo de vivienda bienestar'){
+            if($request['servicio_nombre'] == 'Certificado negativo de vivienda bienestar' && $request['solicitante'] == 'Vivienda Bienestar'){
 
                 $movimientoRegistral = MovimientoRegistral::find($request['movimiento_registral']);
 
