@@ -61,6 +61,12 @@ class IndicesPropiedad extends Component
                             ->get()
                             ->toArray();
 
+        $nombre = $this->nombre . ' ' . $this->ap_paterno . ' ' . $this->ap_materno;
+
+        $propiedad = Propiedadold::where('propietarios', 'like', '%' . $nombre . '%')->first();
+
+        if($propiedad) array_push($ids, $propiedad->id);
+
         $this->propiedades = Propiedadold::whereKey($ids)->get();
 
     }
