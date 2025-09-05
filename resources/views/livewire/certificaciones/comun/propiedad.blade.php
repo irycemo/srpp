@@ -2,7 +2,7 @@
 
     <div class="bg-white rounded-lg p-4 shadow-lg w-full  mx-auto mb-5">
 
-        <p class="text-center"><strong>Ubicación del inmueble</strong></p>
+        <p class="text-center"><strong>Ubicación del inmueble Folio Real ({{ $certificacion->movimientoRegistral->folioReal->folio }})</strong></p>
 
         <div class="text-gray-500 text-sm leading-relaxed lg:w-1/2 mx-auto mb-5">
 

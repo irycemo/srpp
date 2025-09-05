@@ -21,7 +21,7 @@ class CertificacionesService{
                 $movimientoRegistral = MovimientoRegistral::find($request['movimiento_registral']);
 
                 $movimientoRegistral->update([
-                    'tipo_servicio' => 'urgente',
+                    'tipo_servicio' => 'extra_urgente',
                 ]);
 
             }
