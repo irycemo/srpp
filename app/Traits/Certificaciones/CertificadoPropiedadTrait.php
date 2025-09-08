@@ -109,7 +109,7 @@ trait CertificadoPropiedadTrait{
 
             }else{
 
-                $persona = Personaold::where(function($q) use ($propietario){
+                $personas = Personaold::where(function($q) use ($propietario){
                                             $q->where('nombre2', $propietario['nombre'])
                                                 ->orWhere('nombre1', $propietario['nombre']);
                                         })
@@ -118,23 +118,40 @@ trait CertificadoPropiedadTrait{
                                         ->when($buscar_con_distrito, function($q){
                                             $q->where('distrito', $this->certificacion->movimientoRegistral->getRawOriginal('distrito'));
                                         })
-                                        ->first();
+                                        ->get();
 
-                if(!$persona){
+                if(!$personas->count()){
 
                     $nombre = $propietario['nombre'] . ' ' . $propietario['ap_paterno'] . ' ' . $propietario['ap_materno'];
 
-                    $propiedad = Propiedadold::where('propietarios', 'like', '%' . $nombre . '%')
+                    $propiedades = Propiedadold::where('propietarios', 'like', '%' . $nombre . '%')
+                                                ->where('status', '!=', 'V')
                                                 ->when($buscar_con_distrito, function($q){
                                                     $q->where('distrito', $this->certificacion->movimientoRegistral->getRawOriginal('distrito'));
                                                 })
-                                                ->first();
+                                                ->get();
 
-                    if($propiedad) array_push($this->propiedadOldIds, $propiedad->id);
+                    if($propiedades){
+
+                        foreach ($propiedades as $propiedad) {
+
+                            array_push($this->propiedadOldIds, $propiedad->id);
+
+                        }
+
+                    }
 
                 }
 
-                if($persona) array_push($this->propiedadOldIds, $persona->idPropiedad);
+                if($personas->count()){
+
+                    foreach ($personas as $persona) {
+
+                        array_push($this->propiedadOldIds, $persona->idPropiedad);
+
+                    }
+
+                }
 
             }
 
