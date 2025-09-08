@@ -159,7 +159,7 @@ trait CertificadoPropiedadTrait{
 
         if(count($this->personasIds) > 0){
 
-            $propietarios = Actor::whereIn('persona_id', $this->personasIds)->where('tipo_actor', 'propietario')->get();
+            $propietarios = Actor::whereIn('persona_id', $this->personasIds)->where('tipo_actor', 'propietario')->where('actorable_type', 'App\Models\Predio')->get();
 
             if($propietarios->count()){
 
