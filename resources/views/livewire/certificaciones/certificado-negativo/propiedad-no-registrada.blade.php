@@ -80,4 +80,6 @@
 
     @endif
 
+    @include('livewire.certificaciones.comun.eliminar-propiedad-modal')
+
 </div>

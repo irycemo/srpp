@@ -199,7 +199,7 @@
                 @if(isset($datos_control->observaciones_certificado))
 
                     <p class="parrafo">
-                        <strong>Observaciones del certificado:</strong> {{ $datos_control->observaciones_certificado }}
+                        <strong>Observaciones del certificado:</strong> {!! $datos_control->observaciones_certificado !!}
                     </p>
 
                 @endif

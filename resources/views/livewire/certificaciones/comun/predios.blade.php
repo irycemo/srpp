@@ -1,6 +1,27 @@
-@forelse ($predios as $predio)
+@forelse ($predios as $key => $predio)
 
     <div class="bg-white rounded-lg p-4 shadow-lg w-full  mx-auto mb-5">
+
+        <div class="text-center">
+
+            <button
+                wire:click="abrirModalObservaciones({{ $key }})"
+                wire:target="abrirModalObservaciones({{ $key }})"
+                wire:loading.attr="disabled"
+                class="hover:cursor-pointer"
+                title="Eliminar propiedad">
+
+                <span class="text-red-500">
+
+                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="h-7 w-7">
+                        <path stroke-linecap="round" stroke-linejoin="round" d="m9.75 9.75 4.5 4.5m0-4.5-4.5 4.5M21 12a9 9 0 1 1-18 0 9 9 0 0 1 18 0Z" />
+                    </svg>
+
+                </span>
+
+            </button>
+
+        </div>
 
         <p class="text-center"><strong>Ubicación del inmueble Folio Real ({{ $predio->folioReal->folio }})</strong></p>
 
@@ -170,9 +191,30 @@
 
 @endforelse
 
-@forelse($prediosOld as $predioOld)
+@forelse($prediosOld as $key => $predioOld)
 
     <div class="bg-white rounded-lg p-4 shadow-lg w-full  mx-auto mb-5">
+
+        <div class="text-center">
+
+            <button
+                wire:click="abrirModalObservaciones({{ $key }})"
+                wire:target="abrirModalObservaciones({{ $key }})"
+                wire:loading.attr="disabled"
+                class="hover:cursor-pointer"
+                title="Eliminar propiedad">
+
+                <span class="text-red-500">
+
+                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="h-7 w-7">
+                        <path stroke-linecap="round" stroke-linejoin="round" d="m9.75 9.75 4.5 4.5m0-4.5-4.5 4.5M21 12a9 9 0 1 1-18 0 9 9 0 0 1 18 0Z" />
+                    </svg>
+
+                </span>
+
+            </button>
+
+        </div>
 
         <p class="text-center"><strong>Descripción del inmueble</strong></p>
 

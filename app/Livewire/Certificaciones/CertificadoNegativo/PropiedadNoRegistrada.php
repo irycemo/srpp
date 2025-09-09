@@ -50,6 +50,13 @@ class PropiedadNoRegistrada extends Component
                 $this->certificacion->tipo_certificado = 5;
                 $this->certificacion->temporalidad = $this->temporalidad;
                 $this->certificacion->observaciones_certificado = $this->observaciones;
+
+                if(count($this->prediosEliminados)){
+
+                    $this->certificacion->observaciones_certificado = $this->observaciones . $this->procesarPrediosEliminados();
+
+                }
+
                 $this->certificacion->save();
 
                 $this->procesarPersonas($this->propietarios);

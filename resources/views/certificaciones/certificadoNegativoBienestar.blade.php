@@ -172,7 +172,7 @@
                 </p>
 
                 <p class="titulo">
-                    para efectos del programa vivienda para el bienestar
+                    para efectos del programa de vivienda para el bienestar
                 </p>
 
                 <br>
@@ -191,7 +191,7 @@
                 @if(isset($datos_control->observaciones_certificado))
 
                     <p class="parrafo">
-                        <strong>Observaciones del certificado:</strong> {{ $datos_control->observaciones_certificado }}
+                        <strong>Observaciones del certificado:</strong> {!! $datos_control->observaciones_certificado !!}
                     </p>
 
                 @endif
@@ -252,7 +252,6 @@
 
                                         <p style="margin: 0"><strong>NÚMERO DE CONTROL: </strong>{{ $datos_control->numero_control }}</p>
                                         <p style="margin: 0"><strong>DERECHOS: </strong>${{ number_format($datos_control->monto, 2) }}</p>
-                                        <p style="margin: 0"><strong>Tipo de servicio: </strong>{{ $datos_control->tipo_servicio }}</p>
                                         <p style="margin: 0"><strong>Servicio: </strong>{{ $datos_control->servicio }}</p>
                                         <p style="margin: 0"><strong>Elaborado en: </strong>{{ $datos_control->elaborado_en }}</p>
                                         <p style="margin: 0"><strong>Verificado POR: </strong>{{  $datos_control->verificado_por }}</p>
