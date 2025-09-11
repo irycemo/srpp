@@ -7,6 +7,7 @@ use App\Models\Predio;
 use App\Models\Persona;
 use App\Models\Personaold;
 use App\Models\Propiedadold;
+use App\Constantes\Constantes;
 use App\Models\CertificadoPersona;
 
 trait CertificadoPropiedadTrait{
@@ -266,7 +267,7 @@ trait CertificadoPropiedadTrait{
 
     public function procesarPrediosEliminados(){
 
-        $texto = 'De acuerdo a la búsqueda, se encontrarón homonimias en los siguientes registros, sin embargo, no corresponde a la persona solicitante.';
+        $texto = 'De acuerdo a la búsqueda, se encontraron homonimias en los siguientes registros, sin embargo, no corresponde a la persona solicitante.';
 
         foreach ($this->prediosEliminados as $predio) {
 
@@ -276,7 +277,7 @@ trait CertificadoPropiedadTrait{
 
             }else{
 
-                $texto = $texto . '<p>Tomo: '. $predio['tomo'] . ' registro: ' . $predio['registro'] . ' distrito: ' . $predio['distrito'] . ' número de propiedad: ' .  $predio['noprop'] . '</p>';
+                $texto = $texto . '<p>Tomo: '. $predio['tomo'] . ' registro: ' . $predio['registro'] . ' distrito: ' . Constantes::DISTRITOS[$predio['distrito']] . ' número de propiedad: ' .  $predio['noprop'] . '</p>';
 
             }
 
