@@ -28,7 +28,7 @@ class CertificadoUnico extends Component
          ];
     }
 
-    public function buscarPropietarios(){
+    public function buscarPropietario(){
 
         $this->reset(['flagGenerar','personasIds', 'prediosOld', 'predios', 'propiedadOldIds']);
 
