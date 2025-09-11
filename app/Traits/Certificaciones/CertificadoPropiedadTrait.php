@@ -272,11 +272,11 @@ trait CertificadoPropiedadTrait{
 
             if(isset($predio['folio_real'])){
 
-                $texto = $texto . '<p>Folio Real: '. $predio['folio_real'] . ' con motivo: ' . '</p>';
+                $texto = $texto . '<p>Folio Real: '. $predio['folio_real'] .  '</p>';
 
             }else{
 
-                $texto = $texto . '<p>Tomo: '. $predio['tomo'] . ' registro: ' . $predio['registro'] . ' distrito: ' . $predio['distrito'] . ' número de propiedad: ' .  $predio['noprop'] . ' con motivo: ' . '</p>';
+                $texto = $texto . '<p>Tomo: '. $predio['tomo'] . ' registro: ' . $predio['registro'] . ' distrito: ' . $predio['distrito'] . ' número de propiedad: ' .  $predio['noprop'] . '</p>';
 
             }
 
