@@ -164,7 +164,15 @@ class CertificadoUnico extends Component
 
         }
 
-        if(count($this->predios) + count($this->prediosOld) == 1) $this->flagGenerar = true;
+        if(count($this->predios) + count($this->prediosOld) == 1) {
+
+            $this->flagGenerar = true;
+
+        }else{
+
+            $this->flagGenerar = false;
+
+        }
 
         $this->reset(['motivo', 'modalObservaciones']);
 
