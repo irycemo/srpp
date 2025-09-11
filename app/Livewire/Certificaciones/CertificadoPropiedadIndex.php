@@ -103,7 +103,7 @@ class CertificadoPropiedadIndex extends Component
 
         }
 
-        $movimientoAsignados = MovimientoRegistral::whereIn('estado', ['nuevo'])
+        /* $movimientoAsignados = MovimientoRegistral::whereIn('estado', ['nuevo'])
                                                         ->where('usuario_Asignado', auth()->id())
                                                         ->withWhereHas('folioReal', function($q){
                                                             $q->where('estado', 'activo');
@@ -154,7 +154,7 @@ class CertificadoPropiedadIndex extends Component
 
             }
 
-        }
+        } */
 
         return redirect()->route('certificado_propiedad', $movimientoRegistral->certificacion);
 

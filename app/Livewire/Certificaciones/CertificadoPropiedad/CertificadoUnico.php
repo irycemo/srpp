@@ -28,54 +28,71 @@ class CertificadoUnico extends Component
          ];
     }
 
-    public function buscarPropietario(){
+    public function buscarPropietarios(){
+
+        $this->reset(['flagGenerar','personasIds', 'prediosOld', 'predios', 'propiedadOldIds']);
 
         $this->validate();
 
-        $this->reset(['predios', 'prediosOld', 'flagGenerar']);
+        foreach ($this->propietarios as $propietario) {
 
-        $persona = Persona::where('tipo', 'FISICA')
-                            ->where('nombre', $this->nombre)
-                            ->where('ap_paterno', $this->ap_paterno)
-                            ->where('ap_materno', $this->ap_materno)
+            $persona = Persona::where('tipo', 'FISICA')
+                            ->where('nombre', $propietario['nombre'])
+                            ->where('ap_paterno', $propietario['ap_paterno'])
+                            ->where('ap_materno', $propietario['ap_materno'])
                             ->first();
 
-        if(!$persona){
+            if($persona){
 
-            $propietariosOld = Personaold::where(function($q){
-                            $q->where('nombre2', 'LIKE', '%' . 'nombre' . '%')
-                                ->orWhere('nombre1', 'LIKE', '%' . 'nombre' . '%');
-                        })
-                        ->where('paterno', 'ap_paterno')
-                        ->where('materno', 'ap_materno')
-                        ->get();
-
-            foreach ($propietariosOld as $propietario) {
-
-                $predio = Propiedadold::where('distrito', $propietario->distrito)
-                                        ->where('tomo', $propietario->tomo)
-                                        ->where('registro', $propietario->registro)
-                                        ->where('noprop', $propietario->noprop)
-                                        ->where('status', '!=', 'V')
-                                        ->first();
-
-                array_push($this->prediosOld, $predio);
+                array_push($this->personasIds, $persona->id);
 
             }
 
-            if(count($this->prediosOld) == 0){
+            $personas = Personaold::where(function($q) use ($propietario){
+                                        $q->where('nombre2', $propietario['nombre'])
+                                            ->orWhere('nombre1', $propietario['nombre']);
+                                    })
+                                    ->where('paterno', $propietario['ap_paterno'])
+                                    ->where('materno', $propietario['ap_materno'])
+                                    ->where('distrito', $this->certificacion->movimientoRegistral->getRawOriginal('distrito'))
+                                    ->get();
 
-                $this->dispatch('mostrarMensaje', ['warning', "No se encontraron resultados con la información ingresada."]);
+            if(!$personas->count()){
 
-            }elseif(count($this->prediosOld) == 1){
+                $nombre = $propietario['nombre'] . ' ' . $propietario['ap_paterno'] . ' ' . $propietario['ap_materno'];
 
-                $this->flagGenerar = true;
+                $propiedades = Propiedadold::where('propietarios', 'like', '%' . $nombre . '%')
+                                            ->where('status', '!=', 'V')
+                                            ->where('distrito', $this->certificacion->movimientoRegistral->getRawOriginal('distrito'))
+                                            ->get();
+
+                if($propiedades){
+
+                    foreach ($propiedades as $propiedad) {
+
+                        array_push($this->propiedadOldIds, $propiedad->id);
+
+                    }
+
+                }
 
             }
 
-        }else{
+            if($personas->count()){
 
-            $propietarios = Actor::where('persona_id', $persona->id)->where('tipo_actor', 'propietario')->get();
+                foreach ($personas as $persona) {
+
+                    array_push($this->propiedadOldIds, $persona->idPropiedad);
+
+                }
+
+            }
+
+        }
+
+        if(count($this->personasIds) > 0){
+
+            $propietarios = Actor::whereIn('persona_id', $this->personasIds)->where('tipo_actor', 'propietario')->where('actorable_type', 'App\Models\Predio')->get();
 
             if($propietarios->count()){
 
@@ -83,7 +100,8 @@ class CertificadoUnico extends Component
 
                     $predio = Predio::wherekey($propietario->actorable_id)
                                         ->whereHas('folioReal', function($q){
-                                            $q->where('estado', 'activo');
+                                            $q->where('estado', 'activo')
+                                                ->where('distrito', $this->certificacion->movimientoRegistral->getRawOriginal('distrito'));
                                         })
                                         ->first();
 
@@ -91,23 +109,39 @@ class CertificadoUnico extends Component
 
                 }
 
-                if(count($this->predios) == 0){
+                if(count($this->predios) > 1){
 
-                    $this->dispatch('mostrarMensaje', ['warning', "No se encontraron resultados con la información ingresada."]);
+                    $this->dispatch('mostrarMensaje', ['warning', "Se encontraron propiedades."]);
 
-                }elseif(count($this->predios) == 1){
+                    $this->flagGenerar = false;
 
-                    $this->flagGenerar = true;
+                    return;
 
                 }
-
-            }else{
-
-                $this->dispatch('mostrarMensaje', ['warning', "No se encontraron resultados con la información ingresada."]);
 
             }
 
         }
+
+        if(count($this->propiedadOldIds) > 0){
+
+            $this->prediosOld = Propiedadold::whereKey($this->propiedadOldIds)->where('status', '!=', 'V')->get();
+
+            if(count($this->prediosOld) > 1){
+
+                $this->dispatch('mostrarMensaje', ['warning', "Se encontraron propiedades."]);
+
+                $this->flagGenerar = false;
+
+                return;
+
+            }
+
+        }
+
+        $this->dispatch('mostrarMensaje', ['success', "No se encontraron resultados con la información ingresada."]);
+
+        $this->flagGenerar = true;
 
     }
 
