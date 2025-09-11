@@ -34,57 +34,53 @@ class CertificadoUnico extends Component
 
         $this->validate();
 
-        foreach ($this->propietarios as $propietario) {
+        $persona = Persona::where('tipo', 'FISICA')
+                        ->where('nombre', $this->nombre)
+                        ->where('ap_paterno', $this->ap_paterno)
+                        ->where('ap_materno', $this->ap_materno)
+                        ->first();
 
-            $persona = Persona::where('tipo', 'FISICA')
-                            ->where('nombre', $propietario['nombre'])
-                            ->where('ap_paterno', $propietario['ap_paterno'])
-                            ->where('ap_materno', $propietario['ap_materno'])
-                            ->first();
+        if($persona){
 
-            if($persona){
+            array_push($this->personasIds, $persona->id);
 
-                array_push($this->personasIds, $persona->id);
+        }
 
-            }
+        $personas = Personaold::where(function($q){
+                                    $q->where('nombre2', $this->nombre)
+                                        ->orWhere('nombre1', $this->nombre);
+                                })
+                                ->where('paterno', $this->ap_paterno)
+                                ->where('materno', $this->ap_materno)
+                                ->where('distrito', $this->certificacion->movimientoRegistral->getRawOriginal('distrito'))
+                                ->get();
 
-            $personas = Personaold::where(function($q) use ($propietario){
-                                        $q->where('nombre2', $propietario['nombre'])
-                                            ->orWhere('nombre1', $propietario['nombre']);
-                                    })
-                                    ->where('paterno', $propietario['ap_paterno'])
-                                    ->where('materno', $propietario['ap_materno'])
-                                    ->where('distrito', $this->certificacion->movimientoRegistral->getRawOriginal('distrito'))
-                                    ->get();
+        if(!$personas->count()){
 
-            if(!$personas->count()){
+            $nombre = $this->nombre . ' ' . $this->ap_paterno . ' ' . $this->ap_materno;
 
-                $nombre = $propietario['nombre'] . ' ' . $propietario['ap_paterno'] . ' ' . $propietario['ap_materno'];
+            $propiedades = Propiedadold::where('propietarios', 'like', '%' . $nombre . '%')
+                                        ->where('status', '!=', 'V')
+                                        ->where('distrito', $this->certificacion->movimientoRegistral->getRawOriginal('distrito'))
+                                        ->get();
 
-                $propiedades = Propiedadold::where('propietarios', 'like', '%' . $nombre . '%')
-                                            ->where('status', '!=', 'V')
-                                            ->where('distrito', $this->certificacion->movimientoRegistral->getRawOriginal('distrito'))
-                                            ->get();
+            if($propiedades){
 
-                if($propiedades){
+                foreach ($propiedades as $propiedad) {
 
-                    foreach ($propiedades as $propiedad) {
-
-                        array_push($this->propiedadOldIds, $propiedad->id);
-
-                    }
+                    array_push($this->propiedadOldIds, $propiedad->id);
 
                 }
 
             }
 
-            if($personas->count()){
+        }
 
-                foreach ($personas as $persona) {
+        if($personas->count()){
 
-                    array_push($this->propiedadOldIds, $persona->idPropiedad);
+            foreach ($personas as $persona) {
 
-                }
+                array_push($this->propiedadOldIds, $persona->idPropiedad);
 
             }
 
@@ -101,7 +97,7 @@ class CertificadoUnico extends Component
                     $predio = Predio::wherekey($propietario->actorable_id)
                                         ->whereHas('folioReal', function($q){
                                             $q->where('estado', 'activo')
-                                                ->where('distrito', $this->certificacion->movimientoRegistral->getRawOriginal('distrito'));
+                                                ->where('distrito_antecedente', $this->certificacion->movimientoRegistral->getRawOriginal('distrito'));
                                         })
                                         ->first();
 
@@ -109,7 +105,7 @@ class CertificadoUnico extends Component
 
                 }
 
-                if(count($this->predios) > 1){
+                if(count($this->predios) != 1){
 
                     $this->dispatch('mostrarMensaje', ['warning', "Se encontraron propiedades."]);
 
@@ -123,7 +119,7 @@ class CertificadoUnico extends Component
 
         }
 
-        if(count($this->propiedadOldIds) > 0){
+        if(count($this->propiedadOldIds) != 0){
 
             $this->prediosOld = Propiedadold::whereKey($this->propiedadOldIds)->where('status', '!=', 'V')->get();
 
@@ -139,9 +135,7 @@ class CertificadoUnico extends Component
 
         }
 
-        $this->dispatch('mostrarMensaje', ['success', "No se encontraron resultados con la información ingresada."]);
-
-        $this->flagGenerar = true;
+        if(count($this->predios) + count($this->prediosOld) == 1) $this->flagGenerar = true;
 
     }
 
