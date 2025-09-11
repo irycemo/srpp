@@ -105,13 +105,11 @@ class CertificadoUnico extends Component
 
                 }
 
-                if(count($this->predios) != 1){
+                if(count($this->predios) > 1){
 
                     $this->dispatch('mostrarMensaje', ['warning', "Se encontraron propiedades."]);
 
                     $this->flagGenerar = false;
-
-                    return;
 
                 }
 
@@ -129,13 +127,46 @@ class CertificadoUnico extends Component
 
                 $this->flagGenerar = false;
 
-                return;
-
             }
 
         }
 
         if(count($this->predios) + count($this->prediosOld) == 1) $this->flagGenerar = true;
+
+    }
+
+    public function quitarPropiedad(){
+
+        if(isset($this->predios[$this->predio_seleccionado])){
+
+            $predio = $this->predios[$this->predio_seleccionado];
+
+            $this->prediosEliminados [] = [
+                'folio_real' => $predio->folioReal->folio,
+                'motivo' => $this->motivo
+            ];
+
+            unset($this->predios[$this->predio_seleccionado]);
+
+        }else{
+
+            $predio = $this->prediosOld[$this->predio_seleccionado];
+
+            $this->prediosEliminados [] = [
+                'tomo' => $predio->tomo,
+                'registro' => $predio->registro,
+                'noprop' => $predio->noprop,
+                'distrito' => $predio->distrito,
+                'motivo' => $this->motivo
+            ];
+
+            unset($this->prediosOld[$this->predio_seleccionado]);
+
+        }
+
+        if(count($this->predios) + count($this->prediosOld) == 1) $this->flagGenerar = true;
+
+        $this->reset(['motivo', 'modalObservaciones']);
 
     }
 
