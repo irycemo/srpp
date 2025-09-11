@@ -233,7 +233,7 @@ trait CertificadoPropiedadTrait{
 
             $this->prediosEliminados [] = [
                 'folio_real' => $predio->folioReal->folio,
-                'motivo' => $this->motivo
+
             ];
 
             unset($this->predios[$this->predio_seleccionado]);
@@ -247,7 +247,7 @@ trait CertificadoPropiedadTrait{
                 'registro' => $predio->registro,
                 'noprop' => $predio->noprop,
                 'distrito' => $predio->distrito,
-                'motivo' => $this->motivo
+
             ];
 
             unset($this->prediosOld[$this->predio_seleccionado]);
@@ -266,7 +266,7 @@ trait CertificadoPropiedadTrait{
 
     public function procesarPrediosEliminados(){
 
-        $texto = '';
+        $texto = 'De acuerdo a la búsqueda, se encontrarón homonimias en los siguientes registros, sin embargo, no corresponde a la persona solicitante.';
 
         foreach ($this->prediosEliminados as $predio) {
 

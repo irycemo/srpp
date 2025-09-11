@@ -230,4 +230,5 @@ class CertificadoUnico extends Component
     {
         return view('livewire.certificaciones.certificado-propiedad.certificado-unico');
     }
+
 }
