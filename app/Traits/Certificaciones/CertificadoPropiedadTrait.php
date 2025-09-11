@@ -272,11 +272,11 @@ trait CertificadoPropiedadTrait{
 
             if(isset($predio['folio_real'])){
 
-                $texto = $texto . '<p>El verificador eliminó la propiedad con Folio Real: '. $predio['folio_real'] . ' con motivo: ' . $predio['motivo'] . '</p>';
+                $texto = $texto . '<p>El verificador eliminó la propiedad con Folio Real: '. $predio['folio_real'] . ' con motivo: ' . '</p>';
 
             }else{
 
-                $texto = $texto . '<p>El verificador eliminó la propiedad con Tomo: '. $predio['tomo'] . ' registro: ' . $predio['registro'] . ' distrito: ' . $predio['distrito'] . ' número de propiedad: ' .  $predio['noprop'] . ' con motivo: ' . $predio['motivo'] . '</p>';
+                $texto = $texto . '<p>El verificador eliminó la propiedad con Tomo: '. $predio['tomo'] . ' registro: ' . $predio['registro'] . ' distrito: ' . $predio['distrito'] . ' número de propiedad: ' .  $predio['noprop'] . ' con motivo: ' . '</p>';
 
             }
 
