@@ -129,7 +129,11 @@ class Subdivisiones extends Component
 
                 $this->propiedad->save();
 
-                $this->gravamenes = Gravamen::with('actores', 'movimientoRegistral')->whereHas('movimientoRegistral', function($q){ $q->where('folio_real', $this->propiedad->movimientoRegistral->folioReal->id); })->get();
+                $this->gravamenes = Gravamen::with('actores', 'movimientoRegistral')
+                                                ->whereHas('movimientoRegistral', function($q){
+                                                    $q->where('folio_real', $this->propiedad->movimientoRegistral->folioReal->id);
+                                                })
+                                                ->get();
 
                 if($this->propiedad->acto_contenido != 'SUBDIVISIÓN CON RESTO'){
 
@@ -312,9 +316,9 @@ class Subdivisiones extends Component
 
                 foreach($gravamen->actores as $actor){
 
-                    $actor->replicate();
-                    $actor->actorable_id = $gravamenCopia->id;
-                    $actor->save();
+                    $nuevo_actor = $actor->replicate();
+                    $nuevo_actor->actorable_id = $gravamenCopia->id;
+                    $nuevo_actor->save();
 
                 }
 
