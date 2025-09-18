@@ -104,6 +104,7 @@ class FolioRealController extends Controller
 
                 return response()->json([
                     'folio_real' => null,
+                    'error' => "El folio real no existe",
                 ], 404);
 
             }elseif(!$folio_real){
@@ -118,6 +119,7 @@ class FolioRealController extends Controller
 
                 return response()->json([
                     'folio_real' => null,
+                    'error' => "El folio real no existe",
                 ], 204);
 
             }
@@ -127,7 +129,7 @@ class FolioRealController extends Controller
             Log::error("Error al consultar folio real mediante api: " . $th);
 
             return response()->json([
-                'error' => $th->getMessage(),
+                'error' => "Error al consultar folio real",
             ], 500);
 
         }
