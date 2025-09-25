@@ -163,7 +163,6 @@ class FolioReal extends Model implements Auditable
 
             if($movimiento->vario->acto_contenido == "SEGUNDO AVISO PREVENTIVO"){
 
-
                 if(now() > Carbon::parse($movimiento->vario->fecha_inscripcion)->addDays(60)){
 
                     return null;

@@ -12,7 +12,6 @@ use App\Traits\CalcularDiaElaboracionTrait;
 use App\Http\Services\SistemaTramitesService;
 use App\Http\Controllers\Varios\VariosController;
 use App\Traits\RevisarMovimientosPosterioresTrait;
-use App\Exceptions\SistemaTramitesServiceException;
 use App\Http\Controllers\Reformas\ReformaController;
 use App\Http\Controllers\Gravamen\GravamenController;
 use App\Http\Controllers\Sentencias\SentenciasController;
@@ -77,6 +76,24 @@ trait InscripcionesIndex{
 
             if($this->actual->folioReal->avisoPreventivo()){
 
+                $aviso = $this->actual->folioReal->avisoPreventivo();
+
+                if($this->actual->inscripcionPropiedad &&
+                    $aviso->movimientoRegistral->tipo_documento == $this->actual->tipo_documento &&
+                    $aviso->movimientoRegistral->numero_documento == $this->actual->numero_documento &&
+                    $aviso->movimientoRegistral->autoridad_cargo == $this->actual->autoridad_cargo &&
+                    $aviso->movimientoRegistral->autoridad_nombre == $this->actual->autoridad_nombre &&
+                    $aviso->movimientoRegistral->autoridad_numero == $this->actual->autoridad_numero &&
+                    $aviso->movimientoRegistral->fecha_emision == $this->actual->fecha_emision &&
+                    $aviso->movimientoRegistral->procedencia == $this->actual->procedencia
+                ){
+
+                    $this->ruta($this->actual);
+
+                    return;
+
+                }
+
                 if($this->actual->vario?->acto_contenido == 'SEGUNDO AVISO PREVENTIVO'){
 
                     $this->ruta($this->modelo_editar);
@@ -119,7 +136,9 @@ trait InscripcionesIndex{
 
     public function elaborar(MovimientoRegistral $movimientoRegistral){
 
-        if($movimientoRegistral->folioReal->estado == 'centinela'){
+        $this->modelo_editar = $movimientoRegistral;
+
+        if($this->modelo_editar->folioReal->estado == 'centinela'){
 
             $this->dispatch('mostrarMensaje', ['warning', "El folio real esta en centinela."]);
 
@@ -129,7 +148,7 @@ trait InscripcionesIndex{
 
         if(auth()->user()->hasRole('Jefe de departamento inscripciones')){
 
-            $this->actual = $movimientoRegistral;
+            $this->actual = $this->modelo_editar;
 
             if($this->estaBloqueado()){
 
@@ -137,20 +156,18 @@ trait InscripcionesIndex{
 
             }else{
 
-                $this->ruta($movimientoRegistral);
+                $this->ruta($this->modelo_editar);
 
                 return;
             }
 
         }
 
-        $this->modelo_editar = $movimientoRegistral;
-
         $aclaracion = $this->modelo_editar->folioReal->aclaracionAdministrativa();
 
         if($aclaracion){
 
-            if($aclaracion->id == $movimientoRegistral->id){
+            if($aclaracion->id == $this->modelo_editar->id){
 
                 $this->ruta($this->modelo_editar);
 
@@ -166,42 +183,7 @@ trait InscripcionesIndex{
 
         }
 
-
-        if($this->modelo_editar->folioReal->avisoPreventivo()){
-
-            $aviso = $this->modelo_editar->folioReal->avisoPreventivo();
-
-            if($this->modelo_editar->inscripcionPropiedad &&
-                $aviso->movimientoRegistral->tipo_documento == $this->modelo_editar->tipo_documento &&
-                $aviso->movimientoRegistral->numero_documento == $this->modelo_editar->numero_documento &&
-                $aviso->movimientoRegistral->autoridad_cargo == $this->modelo_editar->autoridad_cargo &&
-                $aviso->movimientoRegistral->autoridad_nombre == $this->modelo_editar->autoridad_nombre &&
-                $aviso->movimientoRegistral->autoridad_numero == $this->modelo_editar->autoridad_numero &&
-                $aviso->movimientoRegistral->fecha_emision == $this->modelo_editar->fecha_emision &&
-                $aviso->movimientoRegistral->procedencia == $this->modelo_editar->procedencia
-            ){
-
-                $this->ruta($this->modelo_editar);
-
-                return;
-
-            }elseif($this->modelo_editar->vario?->acto_contenido == 'SEGUNDO AVISO PREVENTIVO'){
-
-                $this->ruta($this->modelo_editar);
-
-                return;
-
-            }else{
-
-                $this->dispatch('mostrarMensaje', ['warning', "El folio real tiene un aviso preventivo vigente."]);
-
-                return;
-
-            }
-
-        }
-
-        $this->actual = $movimientoRegistral;
+        $this->actual = $this->modelo_editar;
 
         if($this->estaBloqueado()){
 
