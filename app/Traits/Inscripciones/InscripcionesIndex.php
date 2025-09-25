@@ -78,7 +78,7 @@ trait InscripcionesIndex{
 
                 $aviso = $this->actual->folioReal->avisoPreventivo();
 
-                if($this->actual->inscripcionPropiedad &&
+                if(($this->actual->inscripcionPropiedad || $this->actual->gravamen) &&
                     $aviso->movimientoRegistral->tipo_documento == $this->actual->tipo_documento &&
                     $aviso->movimientoRegistral->numero_documento == $this->actual->numero_documento &&
                     $aviso->movimientoRegistral->autoridad_cargo == $this->actual->autoridad_cargo &&

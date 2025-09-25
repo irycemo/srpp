@@ -45,10 +45,6 @@ trait ModelosTrait{
 
                     }
 
-                }else{
-
-                    $model->{$key} = $value;
-
                 }
 
             }
@@ -72,10 +68,6 @@ trait ModelosTrait{
                         $model->{$key} = trim($value);
 
                     }
-
-                }else{
-
-                    $model->{$key} = $value;
 
                 }
 

@@ -709,6 +709,8 @@ class InscripcionGeneral extends Component
 
                 $this->inscripcion->movimientoRegistral->audits()->latest()->first()->update(['tags' => 'Elaboró inscripción de propiedad']);
 
+                $this->revisarAvisosPreventivos();
+
                 (new PropiedadController())->caratula($this->inscripcion);
 
             });
@@ -724,6 +726,30 @@ class InscripcionGeneral extends Component
 
             Log::error("Error al finalizar inscripcion de propiedad por el usuario: (id: " . auth()->user()->id . ") " . auth()->user()->name . ". " . $th);
             $this->dispatch('mostrarMensaje', ['error', "Ha ocurrido un error."]);
+
+        }
+
+    }
+
+    public function revisarAvisosPreventivos(){
+
+        if($this->inscripcion->movimientoRegistral->folioReal->avisoPreventivo()){
+
+            $aviso = $this->inscripcion->folioReal->avisoPreventivo();
+
+            if(
+                $aviso->movimientoRegistral->tipo_documento == $this->inscripcion->tipo_documento &&
+                $aviso->movimientoRegistral->numero_documento == $this->inscripcion->numero_documento &&
+                $aviso->movimientoRegistral->autoridad_cargo == $this->inscripcion->autoridad_cargo &&
+                $aviso->movimientoRegistral->autoridad_nombre == $this->inscripcion->autoridad_nombre &&
+                $aviso->movimientoRegistral->autoridad_numero == $this->inscripcion->autoridad_numero &&
+                $aviso->movimientoRegistral->fecha_emision == $this->inscripcion->fecha_emision &&
+                $aviso->movimientoRegistral->procedencia == $this->inscripcion->procedencia
+            ){
+
+                $aviso->update(['estado' => 'inactivo']);
+
+            }
 
         }
 
