@@ -574,7 +574,8 @@ class InscripcionGeneral extends Component
 
             $actor = $this->inscripcion->movimientoRegistral->folioReal->predio->actores()
                                                                                 ->where('tipo_actor', 'propietario')
-                                                                                ->where('persona_id', $adquiriente->persona_id)->first();
+                                                                                ->where('persona_id', $adquiriente->persona_id)
+                                                                                ->first();
 
             if($actor){
 

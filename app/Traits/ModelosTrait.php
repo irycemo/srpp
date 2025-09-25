@@ -31,9 +31,26 @@ trait ModelosTrait{
 
             foreach ($model->attributes as $key => $value) {
 
-                $model->{$key} = trim($value);
+                if(is_null($value)) continue;
 
-                $model->{$key} = $value === '' ? null : $value;
+                if(is_string($value)){
+
+                    if($value === ''){
+
+                        $model->{$key} = null;
+
+                    }else{
+
+                        $model->{$key} = trim($value);
+
+                    }
+
+                }else{
+
+                    $model->{$key} = $value;
+
+                }
+
             }
 
         });
@@ -42,9 +59,26 @@ trait ModelosTrait{
 
             foreach ($model->attributes as $key => $value) {
 
-                $model->{$key} = trim($value);
+                if(is_null($value)) continue;
 
-                $model->{$key} = $value === '' ? null : $value;
+                if(is_string($value)){
+
+                    if($value === ''){
+
+                        $model->{$key} = null;
+
+                    }else{
+
+                        $model->{$key} = trim($value);
+
+                    }
+
+                }else{
+
+                    $model->{$key} = $value;
+
+                }
+
             }
 
         });

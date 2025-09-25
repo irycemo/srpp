@@ -32,6 +32,24 @@ class FideicomisoCrear extends Component
 
     }
 
+    public function updated($property, $value){
+
+        if(is_string($value)){
+
+            if($value === ''){
+
+                $this->{$property} = null;
+
+            }else{
+
+                $this->{$property} = trim($value);
+
+            }
+
+        }
+
+    }
+
     public function guardar(){
 
         $this->validate();
