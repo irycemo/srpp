@@ -743,6 +743,9 @@ class InscripcionGeneral extends Component
 
         }
 
+        $this->inscripcion->movimientoRegistral->folioReal->predio->partes_iguales = false;
+        $this->inscripcion->partes_iguales = false;
+
         $this->cargarColindancias($this->inscripcion->movimientoRegistral->folioReal->predio);
 
         foreach ($this->inscripcion->transmitentes() as $transmitente) {
