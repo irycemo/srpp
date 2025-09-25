@@ -37,24 +37,6 @@ class PropietarioCrear extends Component
 
     }
 
-    public function updated($property, $value){
-
-        if(is_string($value)){
-
-            if($value === ''){
-
-                $this->{$property} = null;
-
-            }else{
-
-                $this->{$property} = trim($value);
-
-            }
-
-        }
-
-    }
-
     public function revisarProcentajesSinTransmitentes(){
 
         $pp = 0;
@@ -158,6 +140,20 @@ class PropietarioCrear extends Component
         }elseif($property == 'porcentaje_propiedad'){
 
             $this->reset(['porcentaje_nuda', 'porcentaje_usufructo']);
+
+        }
+
+        if(is_string($value)){
+
+            if($value === ''){
+
+                $this->{$property} = null;
+
+            }else{
+
+                $this->{$property} = trim($value);
+
+            }
 
         }
 
