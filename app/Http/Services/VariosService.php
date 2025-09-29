@@ -34,13 +34,13 @@ class VariosService{
 
                 $acto = 'CANCELACIÓN DE PRIMER AVISO PREVENTIVO';
 
-                $this->avisoAclaratotioCancelar($request);
+                $this->avisoAclaratorioCancelar($request);
 
             }elseif($request['servicio_nombre'] == 'Cancelación de segundo aviso preventivo'){
 
                 $acto = 'CANCELACIÓN DE SEGUNDO AVISO PREVENTIVO';
 
-                $this->avisoAclaratotioCancelar($request);
+                $this->avisoAclaratorioCancelar($request);
 
             }else{
 
@@ -56,6 +56,14 @@ class VariosService{
             if(in_array($vario->acto_contenido, ['SEGUNDO AVISO PREVENTIVO', 'PRIMER AVISO PREVENTIVO'])){
 
                 $vario->movimientoRegistral->update(['usuario_asignado' => $this->obtenerUsuarioRolAvisos($vario->movimientoRegistral->getRawOriginal('distrito'))]);
+
+                if($vario->movimientoRegistral->folioReal->avisoPreventivo()){
+
+                    $aviso = $vario->movimientoRegistral->folioReal->avisoPreventivo();
+
+                    $aviso->update(['estado' => 'inactivo']);
+
+                }
 
             }
 
@@ -115,7 +123,7 @@ class VariosService{
 
     }
 
-    public function avisoAclaratotioCancelar($request){
+    public function avisoAclaratorioCancelar($request){
 
         $movimiento = MovimientoRegistral::find($request['movimiento_registral']);
 

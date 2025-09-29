@@ -169,7 +169,7 @@ class PaseFolioPersonaMoral extends Component
             $movimientos = MovimientoRegistral::with('actualizadoPor', 'folioRealPersona')
                                                     ->has('reformaMoral')
                                                     ->where('folio', 1)
-                                                    ->whereIn('estado', ['nuevo', 'correccion', 'elaborado'])
+                                                    ->whereIn('estado', ['nuevo', 'correccion', 'elaborado', 'no recibido'])
                                                     ->where('usuario_asignado', auth()->user()->id)
                                                     ->where(function($q){
                                                         $q->whereNull('folio_real_persona')
@@ -195,7 +195,7 @@ class PaseFolioPersonaMoral extends Component
                                                     ->where(function($q){
                                                         $q->whereNull('folio_real_persona')
                                                             ->orWhereHas('folioRealPersona', function($q){
-                                                                $q->whereIn('estado', ['nuevo', 'captura', 'elaborado']);
+                                                                $q->whereIn('estado', ['nuevo', 'captura', 'elaborado', 'no recibido']);
                                                             });
                                                     })
                                                     ->when(auth()->user()->ubicacion == 'Regional 4', function($q){
@@ -215,7 +215,7 @@ class PaseFolioPersonaMoral extends Component
                                                 ->where(function($q){
                                                     $q->whereNull('folio_real_persona')
                                                         ->orWhereHas('folioRealPersona', function($q){
-                                                            $q->whereIn('estado', ['nuevo', 'captura', 'elaborado']);
+                                                            $q->whereIn('estado', ['nuevo', 'captura', 'elaborado', 'no recibido']);
                                                         });
                                                 })
                                                 ->when(auth()->user()->ubicacion == 'Regional 4', function($q){
