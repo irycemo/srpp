@@ -103,7 +103,7 @@ class Elaboracion extends Component
             'escritura_observaciones' => 'nullable',
             'acto_contenido_antecedente' => 'required',
             'observaciones_antecedente' => 'nullable',
-            'documento' => 'nullable|mimes:pdf|max:100000'
+            'documento' => 'nullable|mimes:pdf|max:1000000'
         ];
     }
 
