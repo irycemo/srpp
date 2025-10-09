@@ -351,7 +351,7 @@
 
         <div class="informacion no-break">
 
-            <div class="control no-break">
+            <div class="control">
 
                 <p class="separador">DATOS DE CONTROL</p>
 
