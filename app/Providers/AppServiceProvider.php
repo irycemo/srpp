@@ -26,7 +26,7 @@ class AppServiceProvider extends ServiceProvider
 
         Model::shouldBeStrict();
 
-        if(env('LOCAL') === "0"){
+        if(app()->isProduction()){
 
             URL::forceScheme('https');
 
@@ -38,7 +38,7 @@ class AppServiceProvider extends ServiceProvider
                 return Route::post('/srpp/public/livewire/update', $handle);
             });
 
-        }elseif(env('LOCAL') === "1"){
+        }elseif(app()->environment('staging')){
 
             Livewire::setScriptRoute(function ($handle) {
                 return Route::get('/srpp/public/vendor/livewire/livewire.js', $handle);

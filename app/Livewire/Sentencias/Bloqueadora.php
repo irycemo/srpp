@@ -93,7 +93,7 @@ class Bloqueadora extends Component
                                                                                        'creado_por' => auth()->id()
                                                                                     ]);
 
-                $this->sentencia->movimientoRegistral->update(['estado' => 'elaborado', 'actualizado_por' => auth()->id()]);
+                $this->sentencia->movimientoRegistral->update(['estado' => 'finalizado', 'actualizado_por' => auth()->id()]);
 
                 $this->sentencia->movimientoRegistral->audits()->latest()->first()->update(['tags' => 'Elaboró inscripción de sentencia']);
 
@@ -102,6 +102,8 @@ class Bloqueadora extends Component
             });
 
             $this->dispatch('imprimir_documento', ['caratula' => $this->sentencia->id]);
+
+            sleep(2);
 
             return redirect()->route('sentencias');
 

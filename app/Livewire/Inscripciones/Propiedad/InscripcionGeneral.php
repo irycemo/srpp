@@ -90,6 +90,7 @@ class InscripcionGeneral extends Component
             'inscripcion.manzana_fraccionador' => 'nullable',
             'inscripcion.etapa_fraccionador' => 'nullable',
             'inscripcion.clave_edificio' => 'nullable',
+            'inscripcion.partes_iguales' => 'required',
             'documento' => 'nullable|mimes:pdf|max:153600'
          ];
     }
@@ -762,6 +763,8 @@ class InscripcionGeneral extends Component
         foreach($this->inscripcion->getAttributes() as $attribute => $value){
 
             if(!$value && isset($this->inscripcion->movimientoRegistral->folioReal->predio->{ $attribute })){
+
+                if($attribute == 'monto_transaccion') continue;
 
                 $this->inscripcion->{$attribute} = $this->inscripcion->movimientoRegistral->folioReal->predio->{ $attribute};
 
