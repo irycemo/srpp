@@ -816,23 +816,35 @@ trait FirmaElectronicaTrait{
 
         foreach ($firmas as $firma) {
 
-            $firma->update(['estado' => 'cancelado']);
+            if($firma->estado == 'activo'){
 
-        }
+                $firma->update(['estado' => 'cancelado']);
 
-        if($movimiento->archivos()->where('descripcion', 'caratula')->count()){
+                if($movimiento->archivos()->where('descripcion', 'caratula')->count()){
 
-            foreach($movimiento->archivos as $archivo){
+                    foreach($movimiento->archivos as $imagen){
 
-                if($archivo->descripcion == 'caratula'){
+                        if($imagen->descripcion == 'caratula'){
 
-                    Storage::disk('caratulas')->delete($archivo->url);
+                            if(app()->isProduction()){
+
+                                Storage::disk('s3')->delete(config('services.ses.ruta_caratulas') . $imagen->url);
+
+                            }else{
+
+                                Storage::disk('caratulas')->delete($imagen->url);
+
+                            }
+
+                            $imagen->delete();
+
+                        }
+
+                    }
 
                 }
 
             }
-
-            $movimiento->archivos()->where('descripcion', 'caratula')->first()->delete();
 
         }
 

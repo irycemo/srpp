@@ -2,10 +2,11 @@
 
 namespace App\Livewire\Cancelaciones;
 
-use App\Constantes\Constantes;
 use App\Models\File;
 use Livewire\Component;
+use Illuminate\Support\Str;
 use Livewire\WithFileUploads;
+use App\Constantes\Constantes;
 use Illuminate\Validation\Rule;
 use Illuminate\Support\Facades\DB;
 use App\Models\MovimientoRegistral;
@@ -13,10 +14,10 @@ use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Facades\Storage;
+use Spatie\LivewireFilepond\WithFilePond;
 use App\Models\Cancelacion as ModelCancelacion;
 use Illuminate\Http\Client\ConnectionException;
 use App\Http\Controllers\Cancelaciones\CancelacionController;
-use Spatie\LivewireFilepond\WithFilePond;
 
 class Cancelacion extends Component
 {
@@ -242,7 +243,17 @@ class Cancelacion extends Component
 
             DB::transaction(function (){
 
-                $pdf = $this->documento->store('/', 'documento_entrada');
+                if(app()->isProduction()){
+
+                    $pdf = Str::random(40) . '.pdf';
+
+                    $this->documento->store(config('services.ses.ruta_documento_entrada'), $pdf, 's3');
+
+                }else{
+
+                    $pdf = $this->documento->store('/', 'documento_entrada');
+
+                }
 
                 File::create([
                     'fileable_id' => $this->cancelacion->movimientoRegistral->id,

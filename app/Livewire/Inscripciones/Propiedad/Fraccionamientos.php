@@ -6,13 +6,14 @@ use Exception;
 use App\Models\File;
 use Livewire\Component;
 use App\Models\Propiedad;
+use Illuminate\Support\Str;
 use App\Constantes\Constantes;
-use App\Http\Controllers\Subdivisiones\SubdivisionesController;
 use App\Imports\FolioRealImport;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
 use Maatwebsite\Excel\Facades\Excel;
 use Spatie\LivewireFilepond\WithFilePond;
+use App\Http\Controllers\Subdivisiones\SubdivisionesController;
 
 class Fraccionamientos extends Component
 {
@@ -53,7 +54,17 @@ class Fraccionamientos extends Component
 
             DB::transaction(function (){
 
-                $pdf = $this->documento_entrada->store('/', 'documento_entrada');
+                if(app()->isProduction()){
+
+                    $pdf = Str::random(40) . '.pdf';
+
+                    $this->documento->store(config('services.ses.ruta_documento_entrada'), $pdf, 's3');
+
+                }else{
+
+                    $pdf = $this->documento->store('/', 'documento_entrada');
+
+                }
 
                 File::create([
                     'fileable_id' => $this->propiedad->movimientoRegistral->id,

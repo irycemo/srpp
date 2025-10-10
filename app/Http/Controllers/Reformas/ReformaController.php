@@ -138,7 +138,15 @@ class ReformaController extends Controller
         $combined = $all->appendImages(true);
         $combined->setImageFormat("jpg");
 
-        file_put_contents("caratulas/" . $nombre, $combined);
+        if(app()->isProduction()){
+
+            Storage::disk('s3')->put(config('services.ses.ruta_caratulas') . $nombre . '.jpg', $combined);
+
+        }else{
+
+            file_put_contents("caratulas/" . $nombre, $combined);
+
+        }
 
         File::create([
             'fileable_id' => $reforma->movimientoRegistral->id,

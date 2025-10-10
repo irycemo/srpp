@@ -9,6 +9,7 @@ use App\Models\Predio;
 use App\Models\Gravamen;
 use App\Models\FolioReal;
 use App\Models\Propiedad;
+use Illuminate\Support\Str;
 use Illuminate\Support\Facades\DB;
 use App\Models\MovimientoRegistral;
 use Illuminate\Support\Facades\Log;
@@ -187,7 +188,17 @@ trait PropiedadTrait{
 
             DB::transaction(function (){
 
-                $pdf = $this->documento->store('/', 'documento_entrada');
+                if(app()->isProduction()){
+
+                    $pdf = Str::random(40) . '.pdf';
+
+                    $this->documento->store(config('services.ses.ruta_documento_entrada'), $pdf, 's3');
+
+                }else{
+
+                    $pdf = $this->documento->store('/', 'documento_entrada');
+
+                }
 
                 File::create([
                     'fileable_id' => $this->inscripcion->movimientoRegistral->id,

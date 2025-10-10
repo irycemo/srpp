@@ -12,6 +12,7 @@ use App\Models\Escritura;
 use App\Models\FolioReal;
 use App\Models\Sentencia;
 use App\Models\Antecedente;
+use Illuminate\Support\Str;
 use Livewire\Attributes\On;
 use App\Models\Propiedadold;
 use Livewire\WithFileUploads;
@@ -21,6 +22,7 @@ use Illuminate\Support\Facades\DB;
 use App\Models\MovimientoRegistral;
 use Illuminate\Support\Facades\Log;
 use App\Livewire\PaseFolio\PaseFolio;
+use Illuminate\Support\Facades\Storage;
 use App\Http\Services\AsignacionService;
 use Spatie\LivewireFilepond\WithFilePond;
 
@@ -768,7 +770,17 @@ class Elaboracion extends Component
 
             DB::transaction(function (){
 
-                $pdf = $this->documento->store('/', 'documento_entrada');
+                if(app()->isProduction()){
+
+                    $pdf = Str::random(40) . '.pdf';
+
+                    $this->documento->store(config('services.ses.ruta_documento_entrada'), $pdf, 's3');
+
+                }else{
+
+                    $pdf = $this->documento->store('/', 'documento_entrada');
+
+                }
 
                 File::create([
                     'fileable_id' => $this->movimientoRegistral->folioReal->id,

@@ -8,6 +8,7 @@ use App\Models\Gravamen;
 use App\Models\Escritura;
 use App\Models\FolioReal;
 use App\Models\Propiedad;
+use Illuminate\Support\Str;
 use App\Constantes\Constantes;
 use Illuminate\Validation\Rule;
 use Illuminate\Support\Facades\DB;
@@ -83,7 +84,17 @@ class Subdivisiones extends Component
 
             DB::transaction(function (){
 
-                $pdf = $this->documento_entrada->store('/', 'documento_entrada');
+                if(app()->isProduction()){
+
+                    $pdf = Str::random(40) . '.pdf';
+
+                    $this->documento->store(config('services.ses.ruta_documento_entrada'), $pdf, 's3');
+
+                }else{
+
+                    $pdf = $this->documento->store('/', 'documento_entrada');
+
+                }
 
                 File::create([
                     'fileable_id' => $this->propiedad->movimientoRegistral->id,

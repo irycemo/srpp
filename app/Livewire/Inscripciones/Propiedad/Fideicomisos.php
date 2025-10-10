@@ -7,12 +7,13 @@ use App\Models\File;
 use App\Models\Actor;
 use Livewire\Component;
 use App\Models\Fideicomiso;
+use Illuminate\Support\Str;
 use App\Constantes\Constantes;
-use App\Http\Controllers\InscripcionesPropiedad\FideicomisoController;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Hash;
 use Spatie\LivewireFilepond\WithFilePond;
+use App\Http\Controllers\InscripcionesPropiedad\FideicomisoController;
 
 class Fideicomisos extends Component
 {
@@ -158,7 +159,17 @@ class Fideicomisos extends Component
 
             DB::transaction(function (){
 
-                $pdf = $this->documento->store('/', 'documento_entrada');
+                if(app()->isProduction()){
+
+                    $pdf = Str::random(40) . '.pdf';
+
+                    $this->documento->store(config('services.ses.ruta_documento_entrada'), $pdf, 's3');
+
+                }else{
+
+                    $pdf = $this->documento->store('/', 'documento_entrada');
+
+                }
 
                 File::create([
                     'fileable_id' => $this->fideicomiso->movimientoRegistral->id,

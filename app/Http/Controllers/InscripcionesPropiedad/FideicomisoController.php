@@ -149,7 +149,15 @@ class FideicomisoController extends Controller
             'url' => $nombre
         ]);
 
-        unlink('caratulas/' . $nombreFinal);
+        if(app()->isProduction()){
+
+            Storage::disk('s3')->put(config('services.ses.ruta_caratulas') . $nombre . '.jpg', $combined);
+
+        }else{
+
+            file_put_contents("caratulas/" . $nombre, $combined);
+
+        }
 
     }
 
