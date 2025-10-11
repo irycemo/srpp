@@ -21,6 +21,8 @@ class VerificacionController extends Controller
 
         if(app()->isProduction()){
 
+            info($firma_electronica->movimientoRegistral->caratula());
+
             return redirect($firma_electronica->movimientoRegistral->caratula());
 
 
