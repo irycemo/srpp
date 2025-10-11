@@ -121,9 +121,21 @@ class MovimientoRegistral extends Model implements Auditable
     }
 
     public function documentoEntrada(){
-        return $this->archivos()->where('descripcion', 'documento_entrada')->latest()->first()
-                ? Storage::disk('documento_entrada')->url($this->archivos()->where('descripcion', 'documento_entrada')->first()->url)
-                : null;
+
+        if(app()->isProduction()){
+
+            return $this->archivos()->where('descripcion', 'documento_entrada')->latest()->first()
+                    ? Storage::disk('s3')->temporaryUrl(config('services.ses.ruta_documento_entrada') . $this->archivos()->where('descripcion', 'documento_entrada')->first()->url, now()->addMinutes(10))
+                    : null;
+
+        }else{
+
+            return $this->archivos()->where('descripcion', 'documento_entrada')->latest()->first()
+                    ? Storage::disk('documento_entrada')->url($this->archivos()->where('descripcion', 'documento_entrada')->first()->url)
+                    : null;
+
+        }
+
     }
 
     public function getDistritoAttribute(){
