@@ -12,10 +12,10 @@ use Endroid\QrCode\Label\LabelAlignment;
 
 trait QrTrait{
 
-    public function generadorQr($certificacion)
+    public function generadorQr($firma_electronica)
     {
 
-        $rute = 'https://irycem.michoacan.gob.mx/';
+        $rute = route('verificacion', $firma_electronica);
 
         $result = Builder::create()
                             ->writer(new PngWriter())

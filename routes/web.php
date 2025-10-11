@@ -1,6 +1,7 @@
 <?php
 
-use App\Http\Controllers\Consultas\PreguntasController;
+use App\Livewire\Consulta\Pregunta;
+use App\Livewire\Consulta\Preguntas;
 use App\Livewire\PaseFolio\PaseFolio;
 use Illuminate\Support\Facades\Route;
 use App\Livewire\Consulta\ConsultaFRI;
@@ -17,10 +18,10 @@ use App\Livewire\PersonaMoral\ReformasIndex;
 use App\Http\Controllers\DashboardController;
 use App\Livewire\Consulta\IndicesCancelacion;
 use App\Http\Controllers\SetPasswordController;
+use App\Http\Controllers\VerificacionController;
 use App\Livewire\PersonaMoral\PaseFolioPersonaMoral;
+use App\Http\Controllers\Consultas\PreguntasController;
 use App\Http\Controllers\PaseFolio\PaseFolioController;
-use App\Livewire\Consulta\Pregunta;
-use App\Livewire\Consulta\Preguntas;
 
 /*
 |--------------------------------------------------------------------------
@@ -71,6 +72,8 @@ Route::group(['middleware' => ['auth', 'esta.activo']], function(){
     Route::get('manual', ManualController::class)->name('manual');
 
 });
+
+Route::get('verificacion/{firma_electronica:uuid}', VerificacionController::class)->name('verificacion');
 
 /* Actualización de contraseña */
 Route::get('setpassword/{email}', [SetPasswordController::class, 'create'])->name('setpassword');
