@@ -118,7 +118,7 @@ class MovimientoRegistral extends Model implements Auditable
         if(app()->isProduction()){
 
             return $this->archivos()->where('descripcion', 'caratula')->latest()->first()
-                    ? Storage::disk('s3')->temporaryUrl($this->archivos()->where('descripcion', 'caratula')->first()->url, now()->addMinutes(10))
+                    ? Storage::disk('s3')->temporaryUrl(config('services.ses.ruta_caratulas') . $this->archivos()->where('descripcion', 'caratula')->first()->url, now()->addMinutes(10))
                     : null;
 
         }else{
