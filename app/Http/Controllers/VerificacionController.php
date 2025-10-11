@@ -21,7 +21,7 @@ class VerificacionController extends Controller
 
         if(app()->isProduction()){
 
-            return redirect(Storage::disk('s3')->temporaryUrl(config('services.ses.ruta_caratulas') . $firma_electronica->movimientoRegistral->caratula(), now()->addMinutes(10)));
+            return redirect($firma_electronica->movimientoRegistral->caratula());
 
 
         }else{
