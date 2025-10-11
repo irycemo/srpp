@@ -56,9 +56,7 @@ class Fraccionamientos extends Component
 
                 if(app()->isProduction()){
 
-                    $pdf = Str::random(40) . '.pdf';
-
-                    $this->documento->store(config('services.ses.ruta_documento_entrada'), $pdf, 's3');
+                    $pdf = $this->documento->store(config('services.ses.ruta_documento_entrada'), 's3');
 
                 }else{
 

@@ -114,15 +114,15 @@ class FolioPersonaMoralController extends Controller
 
         for ($i=1; $i <= $pdfImagen->pageCount(); $i++) {
 
-            $nombre = $nombre . '_' . $i . '.jpg';
+            $nombre_img = $nombre . '_' . $i . '.jpg';
 
-            $pdfImagen->selectPage($i)->save('caratulas/'. $nombre);
+            $pdfImagen->selectPage($i)->save('caratulas/'. $nombre_img);
 
-            $im = new Imagick(Storage::disk('caratulas')->path($nombre));
+            $im = new Imagick(Storage::disk('caratulas')->path($nombre_img));
 
             $all->addImage($im);
 
-            unlink('caratulas/' . $nombre);
+            unlink('caratulas/' . $nombre_img);
 
         }
 
@@ -136,7 +136,7 @@ class FolioPersonaMoralController extends Controller
 
         }else{
 
-            file_put_contents("caratulas/" . $nombre, $combined);
+            file_put_contents("caratulas/" . $nombre . '.jpg', $combined);
 
         }
 
@@ -144,7 +144,7 @@ class FolioPersonaMoralController extends Controller
             'fileable_id' => $reforma->movimientoRegistral->folio_real_persona,
             'fileable_type' => 'App\Models\FolioRealPersona',
             'descripcion' => 'caratula',
-            'url' => $nombre
+            'url' => $nombre . '.jpg'
         ]);
 
         unlink('caratulas/' . $nombreFinal);
