@@ -147,7 +147,7 @@ class PropiedadController extends Controller
 
         }else{
 
-            file_put_contents("caratulas/" . $nombre, $combined);
+            file_put_contents("caratulas/" . $nombre . '.jpg', $combined);
 
         }
 
@@ -155,7 +155,7 @@ class PropiedadController extends Controller
             'fileable_id' => $propiedad->movimientoRegistral->id,
             'fileable_type' => 'App\Models\MovimientoRegistral',
             'descripcion' => 'caratula',
-            'url' => $nombre
+            'url' => $nombre . '.jpg'
         ]);
 
         unlink('caratulas/' . $nombreFinal);
