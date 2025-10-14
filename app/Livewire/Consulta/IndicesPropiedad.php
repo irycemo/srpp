@@ -44,8 +44,6 @@ class IndicesPropiedad extends Component
             'nombre' => 'required',
         ]);
 
-        set_time_limit(120);
-
         $this->propiedad = Propiedadold::make();
 
         $ids = Personaold::select('idPropiedad')
