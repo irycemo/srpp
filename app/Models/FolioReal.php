@@ -125,15 +125,38 @@ class FolioReal extends Model implements Auditable
 
     public function caratula(){
 
-        return $this->archivos()->where('descripcion', 'caratula')->first()
-                ? Storage::disk('caratulas')->url($this->archivos()->where('descripcion', 'caratula')->first()->url)
-                : null;
+        if(app()->isProduction()){
+
+            return $this->archivos()->where('descripcion', 'caratula')->latest()->first()
+                    ? Storage::disk('s3')->temporaryUrl(config('services.ses.ruta_caratulas') . $this->archivos()->where('descripcion', 'caratula')->first()->url, now()->addMinutes(10))
+                    : null;
+
+        }else{
+
+            return $this->archivos()->where('descripcion', 'caratula')->first()
+                    ? Storage::disk('caratulas')->url($this->archivos()->where('descripcion', 'caratula')->first()->url)
+                    : null;
+
+        }
+
     }
 
     public function documentoEntrada(){
-        return $this->archivos()->where('descripcion', 'documento_entrada')->latest()->first()
-                ? Storage::disk('documento_entrada')->url($this->archivos()->where('descripcion', 'documento_entrada')->latest()->first()->url)
-                : null;
+
+        if(app()->isProduction()){
+
+            return $this->archivos()->where('descripcion', 'documento_entrada')->latest()->first()
+                    ? Storage::disk('s3')->temporaryUrl($this->archivos()->where('descripcion', 'documento_entrada')->first()->url, now()->addMinutes(10))
+                    : null;
+
+        }else{
+
+            return $this->archivos()->where('descripcion', 'documento_entrada')->latest()->first()
+                    ? Storage::disk('documento_entrada')->url($this->archivos()->where('descripcion', 'documento_entrada')->first()->url)
+                    : null;
+
+        }
+
     }
 
     public function variosActivos(){
