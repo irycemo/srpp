@@ -86,11 +86,11 @@ class Subdivisiones extends Component
 
                 if(app()->isProduction()){
 
-                    $pdf = $this->documento->store(config('services.ses.ruta_documento_entrada'), 's3');
+                    $pdf = $this->documento_entrada->store(config('services.ses.ruta_documento_entrada'), 's3');
 
                 }else{
 
-                    $pdf = $this->documento->store('/', 'documento_entrada');
+                    $pdf = $this->documento_entrada->store('/', 'documento_entrada');
 
                 }
 
