@@ -8,6 +8,7 @@ use App\Models\FolioReal;
 use App\Models\Propiedad;
 use App\Models\Cancelacion;
 use App\Models\Fideicomiso;
+use Illuminate\Support\Str;
 use App\Models\ReformaMoral;
 use App\Traits\ModelosTrait;
 use App\Models\Certificacion;
@@ -135,9 +136,25 @@ class MovimientoRegistral extends Model implements Auditable
 
         if(app()->isProduction()){
 
-            return $this->archivos()->where('descripcion', 'documento_entrada')->latest()->first()
-                    ? Storage::disk('s3')->temporaryUrl($this->archivos()->where('descripcion', 'documento_entrada')->first()->url, now()->addMinutes(10))
-                    : null;
+            if($this->archivos()->where('descripcion', 'documento_entrada')->latest()->first()){
+
+                $url = $this->archivos()->where('descripcion', 'documento_entrada')->latest()->first()->url;
+
+                if(Str::contains($url, config('services.ses.ruta_caratulas'))){
+
+                    return Storage::disk('s3')->temporaryUrl($url, now()->addMinutes(10));
+
+                }else{
+
+                    return Storage::disk('s3')->temporaryUrl(config('services.ses.ruta_documento_entrada') . '/' . $url, now()->addMinutes(10));
+
+                }
+
+            }else{
+
+                return null;
+
+            }
 
         }else{
 
