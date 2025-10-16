@@ -134,11 +134,11 @@ class FolioReal extends Model implements Auditable
 
                 if(Str::contains($this->url, config('services.ses.ruta_documento_entrada'))){
 
-                    return Storage::disk('s3')->temporaryUrl($this->url, now()->addMinutes(10));
+                    return Storage::disk('s3')->temporaryUrl($url, now()->addMinutes(10));
 
                 }else{
 
-                    return Storage::disk('s3')->temporaryUrl(config('services.ses.ruta_documento_entrada') . '/' . $this->url, now()->addMinutes(10));
+                    return Storage::disk('s3')->temporaryUrl(config('services.ses.ruta_documento_entrada') . '/' . $url, now()->addMinutes(10));
 
                 }
 
