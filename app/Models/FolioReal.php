@@ -128,21 +128,9 @@ class FolioReal extends Model implements Auditable
 
         if(app()->isProduction()){
 
-            if($this->archivos()->where('descripcion', 'caratula')->latest()->first()){
-
-                $url = $this->archivos()->where('descripcion', 'caratula')->latest()->first()->url;
-
-                if(Str::contains($this->url, config('services.ses.ruta_documento_entrada'))){
-
-                    return Storage::disk('s3')->temporaryUrl($url, now()->addMinutes(10));
-
-                }else{
-
-                    return Storage::disk('s3')->temporaryUrl(config('services.ses.ruta_documento_entrada') . '/' . $url, now()->addMinutes(10));
-
-                }
-
-            }
+            return $this->archivos()->where('descripcion', 'caratula')->latest()->first()
+                    ? Storage::disk('s3')->temporaryUrl(config('services.ses.ruta_caratulas') . $this->archivos()->where('descripcion', 'caratula')->first()->url, now()->addMinutes(10))
+                    : null;
 
         }else{
 
