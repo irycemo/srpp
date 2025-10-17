@@ -208,7 +208,7 @@
 
                                         @endif
 
-                                        @if(in_array($movimiento->estado, ['nuevo', 'captura', 'correccion', 'no recibido']) && auth()->user()->hasRole(['Jefe de departamento inscripciones', 'Supervisor uruapan']))
+                                        @if(in_array($movimiento->estado, ['nuevo', 'captura', 'correccion', 'no recibido']) && auth()->user()->hasRole(['Jefe de departamento inscripciones', 'Supervisor uruapan', 'Supervisor inscripciones']))
 
                                             <button
                                                 wire:click="abrirModalReasignar({{  $movimiento->id }})"

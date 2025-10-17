@@ -185,7 +185,7 @@
                                                 Finalizar
                                             </button>
 
-                                        @elseif($movimiento->estado == 'finalizado' && auth()->user()->hasRole(['Jefe de departamento inscripciones', 'Supervisor inscripciones', 'Supervisor uruapan']))
+                                        @elseif($movimiento->estado == 'finalizado' && auth()->user()->hasRole(['Jefe de departamento inscripciones', 'Supervisor inscripciones', 'Supervisor uruapan', 'Supervisor inscripciones']))
 
                                             <button
                                                 wire:click="imprimir({{  $movimiento->id }})"
