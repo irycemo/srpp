@@ -146,10 +146,6 @@ class FolioReal extends Model implements Auditable
 
         if(app()->isProduction()){
 
-            info("entra");
-
-            info($this->archivos()->where('descripcion', 'documento_entrada')->latest()->first());
-
             if($this->archivos()->where('descripcion', 'documento_entrada')->latest()->first()){
 
                 $url = $this->archivos()->where('descripcion', 'documento_entrada')->latest()->first()->url;

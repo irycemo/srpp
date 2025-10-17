@@ -56,6 +56,8 @@ class MovimientoRegistralService{
 
             $errorCode = $th->errorInfo[1];
 
+            Log::error('Error al ingresar el trámite: ' . $request['año'] . '-' . $request['tramite'] . '-' . $request['usuario'] . ' desde Sistema Trámites. ' . $th);
+
             if($errorCode == 1062){
 
                 throw new MovimientoRegistralServiceException('El trámite: ' . $request['año'] . '-' . $request['tramite'] . '-' . $request['usuario'] . ' ya se encuentra registrado en Sistema RPP.');
