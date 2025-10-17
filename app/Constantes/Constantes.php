@@ -291,6 +291,7 @@ class Constantes{
         'DONACIÓN',
         'EXPEDICIÓN DE TÍTULO DE PROPIEDAD',
         'EXPROPIACIÓN',
+        'FIDEICOMISO',
         'FUSIÓN',
         'JUICIO ORDINARIO CIVIL',
         'JUICIO SUCESORIO TESTAMENTARIO',
