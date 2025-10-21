@@ -6,6 +6,7 @@ use Livewire\Component;
 use App\Models\PreguntaLeida;
 use Livewire\WithFileUploads;
 use App\Constantes\Constantes;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Storage;
 use App\Models\Pregunta as ModelPregunta;
@@ -30,7 +31,6 @@ class Pregunta extends Component
             'titulo' => 'required',
             'contenido' => 'required',
             'categoria' => 'required',
-            'area' => 'required'
          ];
     }
 
@@ -78,10 +78,10 @@ class Pregunta extends Component
 
         try {
 
-            ModelPregunta::create([
+            $this->pregunta = ModelPregunta::create([
                 'titulo' => $this->titulo,
                 'contenido' => $this->contenido,
-                'area' => $this->area,
+                'area' => $this->categoria,
                 'categoria' => $this->categoria,
                 'estado' => 'nuevo',
                 'creado_por' => auth()->id()
@@ -105,16 +105,20 @@ class Pregunta extends Component
 
         try {
 
-            PreguntaLeida::where('pregunta_id', $this->pregunta->id)->get()->each->delete();
+            DB::transaction(function () {
 
-            $this->pregunta->update([
-                'titulo' => $this->titulo,
-                'contenido' => $this->contenido,
-                'estado' => 'nuevo',
-                'area' => $this->area,
-                'categoria' => $this->categoria,
-                'actualizado_por' => auth()->id()
-            ]);
+                PreguntaLeida::where('pregunta_id', $this->pregunta->id)->get()->each->delete();
+
+                $this->pregunta->update([
+                    'titulo' => $this->titulo,
+                    'contenido' => $this->contenido,
+                    'estado' => 'nuevo',
+                    'area' => $this->categoria,
+                    'categoria' => $this->categoria,
+                    'actualizado_por' => auth()->id()
+                ]);
+
+            });
 
             $this->dispatch('mostrarMensaje', ['success', "La información se actualizó con éxito. Todas los registros de lectura han sido eliminados."]);
 

@@ -28,7 +28,7 @@
 
             </x-input-group>
 
-            <x-input-group for="area" label="Área" :error="$errors->first('area')" class="mb-5">
+            {{-- <x-input-group for="area" label="Área" :error="$errors->first('area')" class="mb-5">
 
                 <x-input-select id="area" wire:model="area" class="">
 
@@ -42,7 +42,7 @@
 
                 </x-input-select>
 
-            </x-input-group>
+            </x-input-group> --}}
 
             <x-ck-editor property="contenido" id="content" class="w-full"></x-ck-editor>
 

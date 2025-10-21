@@ -145,7 +145,7 @@ class IndicesPropiedad extends Component
 
             foreach ($this->ventas as $venta) {
 
-                $propiedad = Propiedadold::find($venta->idAntecedente);
+                $propiedad = Propiedadold::find($venta->idPropiedad);
 
                 if($propiedad){
 

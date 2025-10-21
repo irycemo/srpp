@@ -522,12 +522,10 @@ class Constantes{
     ];
 
     const CATEGORIAS_PREGUNTAS = [
-        'GRAVAMEN',
-        'PROPIEDAD',
-        'SENTENCIAS',
-        'VARIOS',
-        'CANCELACIONES',
-        'CERTIFICACIONES'
+        'Inscripciones',
+        'Certificaciones',
+        'Todos',
+        'Recepción'
     ];
 
 }

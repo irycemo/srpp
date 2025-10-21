@@ -6,7 +6,7 @@
 
             <strong>Distrito</strong>
 
-            <p>{{ $antecedente->distrito }}</p>
+            <p>{{ $antecedente->propiedad->distrito }}</p>
 
         </div>
 
@@ -14,7 +14,7 @@
 
             <strong>Tomo</strong>
 
-            <p>{{ $antecedente->tomoa }}</p>
+            <p>{{ $antecedente->propiedad->tomo }}</p>
 
         </div>
 
@@ -22,7 +22,7 @@
 
             <strong>Regsitro</strong>
 
-            <p>{{ $antecedente->registroa }}</p>
+            <p>{{ $antecedente->propiedad->registro }}</p>
 
         </div>
 
@@ -30,7 +30,7 @@
 
             <strong># Propiedad</strong>
 
-            <p>{{ $antecedente->nopropa }}</p>
+            <p>{{ $antecedente->propiedad->noprop }}</p>
 
         </div>
 
@@ -38,7 +38,7 @@
 
             <strong>Status</strong>
 
-            <p>{{ $antecedente->stventaa }}</p>
+            <p>{{ $antecedente->propiedad->status }}</p>
 
         </div>
 

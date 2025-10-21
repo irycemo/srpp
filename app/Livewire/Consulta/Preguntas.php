@@ -25,6 +25,11 @@ class Preguntas extends Component
 
     public $usuarios = [];
 
+    public $certificaciones;
+    public $inscripciones;
+    public $consultas;
+    public $recepcion;
+
     public function crearModeloVacio(){
         $this->modelo_editar =  ModelPregunta::make();
     }
@@ -94,6 +99,46 @@ class Preguntas extends Component
                                 })
                                 ->orderBy('id', 'desc')
                                 ->simplePaginate(20);
+
+    }
+
+    public function mount(){
+
+        $this->certificaciones = [
+            'Copiador',
+            'Regional',
+            'Jefe de departamento certificaciones',
+            'Certificador Oficialia',
+            'Certificador Juridico',
+            'Certificador',
+            'Supervisor certificaciones',
+            'Jefe de departamento jurídico',
+            'Supervisor uruapan'
+        ];
+
+        $this->inscripciones = [
+            'Registrador fraccionamientos',
+            'Regional',
+            'Folio real moral',
+            'Supervisor inscripciones',
+            'Jefe de departamento jurídico',
+            'Aclaraciones administrativas',
+            'Avisos preventivos',
+            'Jefe de departamento inscripciones',
+            'Cancelación',
+            'Varios',
+            'Registrador Propiedad',
+            'Registrador Gravamen',
+            'Registrador Varios',
+            'Registrador Sentencias',
+            'Gravamen',
+            'Registrador Cancelación',
+            'Supervisor uruapan',
+            'Pase a folio',
+            'Propiedad'
+        ];
+
+        $this->recepcion = ['Consulta'];
 
     }
 

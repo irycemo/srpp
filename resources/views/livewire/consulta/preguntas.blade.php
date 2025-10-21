@@ -52,7 +52,20 @@
 
                 @forelse ($this->preguntas as $item)
 
-                    <li class="@if(auth()->user()->area == $item->area) border-l-red-400 @else border-l-yellow-300 @endif border-l-8 cursor-pointer hover:bg-gray-100 rounded-lg text-gray-700 border border-gray-300 flex justify-between" wire:key="pregunta-{{ $item->id }}">
+                    <li class="
+                        @if($item->categoria == 'Todos')
+                            border-l-red-400
+                        @elseif($item->categoria == 'Inscripciones' && array_intersect($inscripciones, auth()->user()->getRoleNames()->toArray()))
+                            border-l-red-400
+                        @elseif($item->categoria == 'Certificaciones' && array_intersect($certificaciones, auth()->user()->getRoleNames()->toArray()))
+                            border-l-red-400
+                        @elseif($item->categoria == 'Recepción' && array_intersect($recepcion, auth()->user()->getRoleNames()->toArray()))
+                            border-l-red-400
+                        @else
+                            border-l-yellow-300
+                        @endif
+                        border-l-8 cursor-pointer hover:bg-gray-100 rounded-lg text-gray-700 border border-gray-300 flex justify-between"
+                        wire:key="pregunta-{{ $item->id }}">
 
                         <div class="w-full h-full p-3 flex justify-between items-center" wire:click="verPregunta({{ $item->id }})">
 
