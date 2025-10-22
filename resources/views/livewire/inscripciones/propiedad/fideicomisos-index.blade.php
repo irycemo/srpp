@@ -185,7 +185,7 @@
                                                 Finalizar
                                             </button>
 
-                                        @elseif($movimiento->estado == 'finalizado' && auth()->user()->hasRole(['Jefe de departamento inscripciones', 'Supervisor inscripciones', 'Supervisor uruapan', 'Supervisor inscripciones']))
+                                        @elseif($movimiento->estado == 'finalizado' && auth()->user()->hasRole(['Jefe de departamento inscripciones', 'Supervisor inscripciones', 'Supervisor uruapan']))
 
                                             <button
                                                 wire:click="imprimir({{  $movimiento->id }})"
@@ -205,7 +205,7 @@
 
                                         @endif
 
-                                        @if(in_array($movimiento->estado, ['nuevo', 'captura', 'elaborado', 'no recibido']) && auth()->user()->hasRole(['Jefe de departamento inscripciones', 'Supervisor uruapan']))
+                                        @if(in_array($movimiento->estado, ['nuevo', 'captura', 'elaborado', 'no recibido']) && auth()->user()->hasRole(['Jefe de departamento inscripciones', 'Supervisor uruapan', 'Supervisor inscripciones']))
 
                                             <button
                                                 wire:click="abrirModalReasignar({{  $movimiento->id }})"
@@ -213,6 +213,16 @@
                                                 class="w-full text-left block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 focus:outline-none focus:bg-gray-100"
                                                 role="menuitem">
                                                 Reasignar
+                                            </button>
+
+                                            <button
+                                                wire:click="abrirModalRechazar({{  $movimiento->id }})"
+                                                wire:loading.attr="disabled"
+                                                class="w-full text-left block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 focus:outline-none focus:bg-gray-100"
+                                                role="menuitem">
+
+                                                Rechazar
+
                                             </button>
 
                                         @endif
