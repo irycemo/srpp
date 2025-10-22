@@ -39,6 +39,7 @@ class MovimientoRegistralRequest extends FormRequest
             'usuario' => 'required',
             'tipo_servicio' => 'required',
             'monto' => 'required',
+            'usuario_tramites_linea_id' => 'nullable',
 
             /* Solicitante */
             'solicitante' => 'required',

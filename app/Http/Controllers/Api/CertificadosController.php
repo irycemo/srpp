@@ -3,7 +3,6 @@
 namespace App\Http\Controllers\Api;
 
 use Illuminate\Http\Request;
-use App\Models\Certificacion;
 use App\Models\MovimientoRegistral;
 use Illuminate\Support\Facades\Log;
 use App\Http\Controllers\Controller;
@@ -25,7 +24,7 @@ class CertificadosController extends Controller
         }
 
         $certificaciones = MovimientoRegistral::with('folioReal')
-                                ->where('usuario', 67)
+                                ->where('usuario_tramites_linea_id', $validated['entidad'])
                                 ->when(isset($validated['folio_real']), function($q) use ($validated){
                                     $q->WhereHas('folioReal', function($q) use ($validated){
                                         $q->where('folio', $validated['folio_real']);
