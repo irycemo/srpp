@@ -1,11 +1,12 @@
 <?php
 
 use App\Models\Actor;
+use App\Models\Representado;
 use Illuminate\Support\Facades\DB;
 use App\Models\MovimientoRegistral;
-use App\Models\Representado;
 use Illuminate\Foundation\Inspiring;
 use Illuminate\Support\Facades\Artisan;
+use App\Http\Controllers\Certificaciones\CertificadoPropiedadController;
 
 /*
 |--------------------------------------------------------------------------
@@ -52,5 +53,19 @@ Artisan::command('representanes', function(){
         ]);
 
     }
+
+});
+
+Artisan::command('bienestar', function(){
+
+    $cert_bienestar = MovimientoRegistral::with('firmaElectronica')->where(
+        "servicio_nombre",
+        "Certificado negativo de vivienda bienestar"
+      )
+        ->where("updated_at", "<", now()->startOfDay())
+        ->get();
+
+        foreach($cert_bienestar as $cert)
+            (new CertificadoPropiedadController())->test($cert);
 
 });
