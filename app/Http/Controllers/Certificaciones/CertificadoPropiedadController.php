@@ -27,7 +27,7 @@ class CertificadoPropiedadController extends Controller
 
     public function certificadoNegativoPropiedad(MovimientoRegistral $movimientoRegistral){
 
-        /* $this->authorize('update', $movimientoRegistral); */
+        $this->resetCaratula($movimientoRegistral->id);
 
         $formatter = new NumeroALetras();
 
@@ -106,8 +106,6 @@ class CertificadoPropiedadController extends Controller
 
         $firmaDirector = $fielDirector->sign(json_encode($object));
 
-        FirmaElectronica::where('movimiento_registral_id', $movimientoRegistral->id)->first()?->delete();
-
         $firmaElectronica = FirmaElectronica::create([
             'movimiento_registral_id' => $movimientoRegistral->id,
             'cadena_original' => json_encode($object),
@@ -149,7 +147,7 @@ class CertificadoPropiedadController extends Controller
             'qr' => $qr,
         ]);
 
-        $this->pdfFirmado($pdfFirmado, $movimientoRegistral->id, $movimientoRegistral->folioReal->folio . '-' .$movimientoRegistral->folio);
+        $this->pdfFirmado($pdfFirmado, $movimientoRegistral->id, 'MR-' .$movimientoRegistral->folio);
 
         return $pdf->stream('documento.pdf');
 
@@ -157,7 +155,7 @@ class CertificadoPropiedadController extends Controller
 
     public function certificadoPropiedad(MovimientoRegistral $movimientoRegistral){
 
-        /* $this->authorize('update', $movimientoRegistral); */
+        $this->resetCaratula($movimientoRegistral->id);
 
         $director = User::where('status', 'activo', 'efirma')
                             ->whereHas('roles', function($q){
@@ -231,8 +229,6 @@ class CertificadoPropiedadController extends Controller
                                             );
 
         $firmaDirector = $fielDirector->sign(json_encode($object));
-
-        FirmaElectronica::where('movimiento_registral_id', $movimientoRegistral->id)->first()?->delete();
 
         $firmaElectronica = FirmaElectronica::create([
             'movimiento_registral_id' => $movimientoRegistral->id,
@@ -358,8 +354,6 @@ class CertificadoPropiedadController extends Controller
                                             );
 
         $firmaDirector = $fielDirector->sign(json_encode($object));
-
-        FirmaElectronica::where('movimiento_registral_id', $movimientoRegistral->id)->first()?->delete();
 
         $firmaElectronica = FirmaElectronica::create([
             'movimiento_registral_id' => $movimientoRegistral->id,
@@ -513,7 +507,7 @@ class CertificadoPropiedadController extends Controller
 
     public function certificadoNegativo(MovimientoRegistral $movimientoRegistral){
 
-        /* $this->authorize('update', $movimientoRegistral); */
+        $this->resetCaratula($movimientoRegistral->id);
 
         $formatter = new NumeroALetras();
 
@@ -582,8 +576,6 @@ class CertificadoPropiedadController extends Controller
 
         $firmaDirector = $fielDirector->sign(json_encode($object));
 
-        FirmaElectronica::where('movimiento_registral_id', $movimientoRegistral->id)->first()?->delete();
-
         $firmaElectronica = FirmaElectronica::create([
             'movimiento_registral_id' => $movimientoRegistral->id,
             'cadena_original' => json_encode($object),
@@ -621,13 +613,23 @@ class CertificadoPropiedadController extends Controller
 
         $canvas->page_text(480, 745, "Página: {PAGE_NUM} de {PAGE_COUNT}", null, 9, array(1, 1, 1));
 
+        $pdfFirmado = Pdf::loadView($caratula, [
+            'distrito' => $object->distrito,
+            'director' => $object->director,
+            'personas' => $object->personas,
+            'datos_control' => $object->datos_control,
+            'observaciones_certificado' => $object->observaciones_certificado,
+            'firma_electronica' => base64_encode($firmaDirector),
+            'qr'=> $qr
+        ]);
+
+        $this->pdfFirmado($pdfFirmado, $movimientoRegistral->id, 'MR-' .$movimientoRegistral->folio);
+
         return $pdf->stream('documento.pdf');
 
     }
 
     public function pdfFirmado($pdf, $id, $folio){
-
-        $this->resetCaratula($id);
 
         $pdf->render();
 

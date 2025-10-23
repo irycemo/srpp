@@ -51,7 +51,7 @@
 
                         <strong>Folio real</strong>
 
-                        <p class="text-gray-500 text-sm leading-relaxed">{{ $firma_electronica->movimientoRegistral->folioReal->folio }}</p>
+                        <p class="text-gray-500 text-sm leading-relaxed">{{ $firma_electronica->movimientoRegistral->folioReal->folio ?? 'Sin folio real' }}</p>
 
                     </div>
 

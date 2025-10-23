@@ -3,7 +3,6 @@
 namespace App\Http\Controllers;
 
 use App\Models\FirmaElectronica;
-use Illuminate\Support\Facades\Storage;
 
 class VerificacionController extends Controller
 {
@@ -18,16 +17,7 @@ class VerificacionController extends Controller
 
         }
 
-        if(app()->isProduction()){
-
-            return redirect($firma_electronica->movimientoRegistral->caratula());
-
-
-        }else{
-
-            return redirect(Storage::disk('caratulas')->url($firma_electronica->movimientoRegistral->caratula()));
-
-        }
+        return redirect($firma_electronica->movimientoRegistral->caratula());
 
     }
 
