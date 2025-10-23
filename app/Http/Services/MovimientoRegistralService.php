@@ -799,7 +799,7 @@ class MovimientoRegistralService{
             'fecha_emision',
             'procedencia',
             'numero_propiedad',
-            'nombre_solicitante',
+            'solicitante',
             'tomo',
             'tomo_bis',
             'registro',
@@ -818,6 +818,8 @@ class MovimientoRegistralService{
             }
 
         }
+
+        $array['solicitante'] = $data['nombre_solicitante'];
 
         $movimiento_registral->update($array);
 
