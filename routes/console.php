@@ -68,4 +68,7 @@ Artisan::command('bienestar', function(){
         foreach($cert_bienestar as $cert)
             (new CertificadoPropiedadController())->test($cert);
 
+
+    info("Proceso de genrar imagen de caratulas finalizado.");
+
 });

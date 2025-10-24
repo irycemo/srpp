@@ -15,6 +15,7 @@ use App\Traits\CalcularDiaElaboracionTrait;
 use App\Http\Services\SistemaTramitesService;
 use App\Exceptions\InscripcionesServiceException;
 use App\Traits\RevisarMovimientosPosterioresTrait;
+use App\Http\Controllers\Certificaciones\CertificadoPropiedadController;
 
 class CertificadoPropiedadIndex extends Component
 {
@@ -162,25 +163,57 @@ class CertificadoPropiedadIndex extends Component
 
     public function reimprimir(MovimientoRegistral $movimientoRegistral){
 
-        if($movimientoRegistral->certificacion->tipo_certificado == 1){
+        try {
 
-            $this->dispatch('imprimir_negativo_propiedad', ['certificacion' => $movimientoRegistral->id]);
+            if($movimientoRegistral->certificacion->tipo_certificado == 1){
 
-        }elseif($movimientoRegistral->certificacion->tipo_certificado == 2){
+                /* $this->dispatch('imprimir_negativo_propiedad', ['certificacion' => $movimientoRegistral->id]); */
 
-            $this->dispatch('imprimir_propiedad', ['certificacion' => $movimientoRegistral->id]);
+                $pdf = (new CertificadoPropiedadController())->reimprimircertificadoNegativoPropiedad($movimientoRegistral->firmaElectronica);
 
-        }if($movimientoRegistral->certificacion->tipo_certificado == 3){
+            }elseif($movimientoRegistral->certificacion->tipo_certificado == 2){
 
-            $this->dispatch('imprimir_unico_propiedad', ['certificacion' => $movimientoRegistral->id]);
+                /* $this->dispatch('imprimir_propiedad', ['certificacion' => $movimientoRegistral->id]); */
 
-        }if($movimientoRegistral->certificacion->tipo_certificado == 5){
+                $pdf = (new CertificadoPropiedadController())->reimprimircertificadoPropiedad($movimientoRegistral->firmaElectronica);
 
-            $this->dispatch('imprimir_negativo', ['certificacion' => $movimientoRegistral->id]);
+            }if($movimientoRegistral->certificacion->tipo_certificado == 3){
 
-        }if($movimientoRegistral->certificacion->tipo_certificado == 4){
+                /* $this->dispatch('imprimir_unico_propiedad', ['certificacion' => $movimientoRegistral->id]); */
 
-            $this->dispatch('imprimir_certificado_colindancias', ['certificacion' => $movimientoRegistral->id]);
+                $pdf = (new CertificadoPropiedadController())->reimprimircertificadoUnicoPropiedad($movimientoRegistral->firmaElectronica);
+
+            }if($movimientoRegistral->certificacion->tipo_certificado == 5){
+
+                /* $this->dispatch('imprimir_negativo', ['certificacion' => $movimientoRegistral->id]); */
+
+                if($movimientoRegistral->servicio_nombre == 'Certificado negativo de vivienda bienestar'){
+
+                    $bienestar = true;
+
+                }else{
+
+                    $bienestar = false;
+
+                }
+
+                $pdf = (new CertificadoPropiedadController())->reimprimircertificadoNegativo($movimientoRegistral->firmaElectronica, $bienestar);
+
+            }if($movimientoRegistral->certificacion->tipo_certificado == 4){
+
+                $this->dispatch('imprimir_certificado_colindancias', ['certificacion' => $movimientoRegistral->id]);
+
+            }
+
+            return response()->streamDownload(
+                fn () => print($pdf->output()),
+                'documento.pdf'
+            );
+
+        } catch (\Throwable $th) {
+
+            Log::error("Error al reimiprimir caratula de inscripción por el usuario: (id: " . auth()->user()->id . ") " . auth()->user()->name . ". " . $th);
+            $this->dispatch('mostrarMensaje', ['error', "Ha ocurrido un error."]);
 
         }
 

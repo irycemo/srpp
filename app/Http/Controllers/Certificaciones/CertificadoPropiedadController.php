@@ -153,6 +153,36 @@ class CertificadoPropiedadController extends Controller
 
     }
 
+    public function reimprimircertificadoNegativoPropiedad(FirmaElectronica $firmaElectronica){
+
+        $object = json_decode($firmaElectronica->cadena_original);
+
+        $qr = $this->generadorQr($firmaElectronica->uuid);
+
+        $pdf = Pdf::loadView('certificaciones.certificadoNegativoPropiedad', [
+            'folioReal' => $object->folioReal,
+            'predio' => $object->predio,
+            'director' => $object->director,
+            'personas' => $object->personas,
+            'datos_control' => $object->datos_control,
+            'firma_electronica' => false,
+            'qr' => $qr,
+        ]);
+
+        $pdf->render();
+
+        $dom_pdf = $pdf->getDomPDF();
+
+        $canvas = $dom_pdf->get_canvas();
+
+        $canvas->page_text(480, 745, "Página: {PAGE_NUM} de {PAGE_COUNT}", null, 9, array(1,1,1));
+
+        $canvas->page_text(35, 745, 'I-' . $firmaElectronica->movimientoRegistral->folioReal->folio . '-' .$firmaElectronica->movimientoRegistral->folio, null, 9, array(1, 1, 1));
+
+        return $pdf;
+
+    }
+
     public function certificadoPropiedad(MovimientoRegistral $movimientoRegistral){
 
         $this->resetCaratula($movimientoRegistral->id);
@@ -278,6 +308,36 @@ class CertificadoPropiedadController extends Controller
 
     }
 
+    public function reimprimircertificadoPropiedad(FirmaElectronica $firmaElectronica){
+
+        $object = json_decode($firmaElectronica->cadena_original);
+
+        $qr = $this->generadorQr($firmaElectronica->uuid);
+
+        $pdf = Pdf::loadView('certificaciones.certificadoPropiedad', [
+            'folioReal' => $object->folioReal,
+            'predio' => $object->predio,
+            'director' => $object->director,
+            'personas' => $object->personas,
+            'datos_control' => $object->datos_control,
+            'firma_electronica' => false,
+            'qr' => $qr,
+        ]);
+
+        $pdf->render();
+
+        $dom_pdf = $pdf->getDomPDF();
+
+        $canvas = $dom_pdf->get_canvas();
+
+        $canvas->page_text(480, 745, "Página: {PAGE_NUM} de {PAGE_COUNT}", null, 9, array(1,1,1));
+
+        $canvas->page_text(35, 745, 'I-' . $firmaElectronica->movimientoRegistral->folioReal->folio . '-' .$firmaElectronica->movimientoRegistral->folio, null, 9, array(1, 1, 1));
+
+        return $pdf;
+
+    }
+
     public function certificadoUnicoPropiedad(MovimientoRegistral $movimientoRegistral){
 
         /* $this->authorize('update', $movimientoRegistral); */
@@ -399,6 +459,36 @@ class CertificadoPropiedadController extends Controller
         $this->pdfFirmado($pdfFirmado, $movimientoRegistral->id, $movimientoRegistral->folioReal->folio . '-' .$movimientoRegistral->folio);
 
         return $pdf->stream('documento.pdf');
+
+    }
+
+    public function reimprimircertificadoUnicoPropiedad(FirmaElectronica $firmaElectronica){
+
+        $object = json_decode($firmaElectronica->cadena_original);
+
+        $qr = $this->generadorQr($firmaElectronica->uuid);
+
+        $pdf = Pdf::loadView('certificaciones.certificadoUnicoPropiedad', [
+            'folioReal' => $object->folioReal,
+            'predio' => $object->predio,
+            'director' => $object->director,
+            'personas' => $object->personas,
+            'datos_control' => $object->datos_control,
+            'firma_electronica' => false,
+            'qr' => $qr,
+        ]);
+
+        $pdf->render();
+
+        $dom_pdf = $pdf->getDomPDF();
+
+        $canvas = $dom_pdf->get_canvas();
+
+        $canvas->page_text(480, 745, "Página: {PAGE_NUM} de {PAGE_COUNT}", null, 9, array(1,1,1));
+
+        $canvas->page_text(35, 745, 'I-' . $firmaElectronica->movimientoRegistral->folioReal->folio . '-' .$firmaElectronica->movimientoRegistral->folio, null, 9, array(1, 1, 1));
+
+        return $pdf;
 
     }
 
@@ -626,6 +716,46 @@ class CertificadoPropiedadController extends Controller
         $this->pdfFirmado($pdfFirmado, $movimientoRegistral->id, 'MR-' .$movimientoRegistral->folio);
 
         return $pdf->stream('documento.pdf');
+
+    }
+
+    public function reimprimircertificadoNegativo(FirmaElectronica $firmaElectronica, $bienestar = false){
+
+        $object = json_decode($firmaElectronica->cadena_original);
+
+        $qr = $this->generadorQr($firmaElectronica->uuid);
+
+        if($bienestar){
+
+            $caratula = 'certificaciones.certificadoNegativoBienestar';
+
+        }else{
+
+            $caratula = 'certificaciones.certificadoNegativo';
+
+        }
+
+        $pdf = Pdf::loadView($caratula, [
+            'distrito' => $object->distrito,
+            'director' => $object->director,
+            'personas' => $object->personas,
+            'datos_control' => $object->datos_control,
+            'observaciones_certificado' => $object->observaciones_certificado,
+            'firma_electronica' => false,
+            'qr' => $qr,
+        ]);
+
+        $pdf->render();
+
+        $dom_pdf = $pdf->getDomPDF();
+
+        $canvas = $dom_pdf->get_canvas();
+
+        $canvas->page_text(480, 745, "Página: {PAGE_NUM} de {PAGE_COUNT}", null, 9, array(1,1,1));
+
+        $canvas->page_text(35, 745, 'MR-' .$firmaElectronica->movimientoRegistral->folio, null, 9, array(1, 1, 1));
+
+        return $pdf;
 
     }
 
