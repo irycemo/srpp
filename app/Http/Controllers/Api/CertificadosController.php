@@ -2,10 +2,13 @@
 
 namespace App\Http\Controllers\Api;
 
+use Carbon\Carbon;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 use App\Models\MovimientoRegistral;
 use Illuminate\Support\Facades\Log;
 use App\Http\Controllers\Controller;
+use Illuminate\Support\Facades\Cache;
 use App\Http\Requests\CertificadoListaRequest;
 use App\Http\Resources\CertificadoListaResource;
 use App\Http\Controllers\Certificaciones\CertificadoGravamenController;
@@ -77,6 +80,42 @@ class CertificadosController extends Controller
             ], 500);
 
         }
+
+    }
+
+    public function consultarEstadisticas(Request $request){
+
+        $validated = $request->validate(['entidad_id' => 'required|numeric|min:1']);
+
+        $array = cache()->get('estadisticas_tramites_en_linea_' . $validated['entidad_id']);
+
+        if(!$array){
+
+            $array = Cache::rememberForever('estadisticas_tramites_en_linea_' . $validated['entidad_id'], function() use ($validated){
+
+                $array = [];
+
+                $movimientos = MovimientoRegistral::select('estado', DB::raw('count(*) as total'))
+                                                        ->where('usuario_tramites_linea_id', $validated['entidad_id'])
+                                                        ->groupBy('estado')
+                                                        ->whereMonth('created_at', Carbon::now()->month)
+                                                        ->get();
+
+                foreach ($movimientos as $movimiento) {
+
+                    $array [] = ['estado' => $movimiento->estado, 'total' => $movimiento->total, 'color' => str_replace('-400', '', $movimiento->getEstadoColorAttribute())];
+
+                }
+
+                return $array;
+
+            });
+
+        }
+
+        return response()->json([
+            'data' => $array
+        ], 200);
 
     }
 

@@ -48,6 +48,8 @@ Route::middleware('auth:sanctum')->group(function () {
 
     Route::post('generar_certificado_gravamen_pdf', [CertificadosController::class, 'generarCertificadoGravamenPdf']);
 
+    Route::post('consultar_estadisticas', [CertificadosController::class, 'consultarEstadisticas']);
+
 });
 
 Route::fallback(function(){

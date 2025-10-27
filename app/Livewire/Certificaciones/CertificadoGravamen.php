@@ -16,6 +16,7 @@ use App\Traits\ComponentesTrait;
 use Illuminate\Support\Facades\DB;
 use App\Models\MovimientoRegistral;
 use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Facades\Cache;
 use App\Traits\CalcularDiaElaboracionTrait;
 use App\Http\Services\SistemaTramitesService;
 use App\Exceptions\InscripcionesServiceException;
@@ -275,7 +276,11 @@ class CertificadoGravamen extends Component
 
             });
 
+            if($this->moviminetoRegistral->usuario_tramites_linea_id){
 
+                Cache::forget('estadisticas_tramites_en_linea_' . $this->moviminetoRegistral->usuario_tramites_linea_id);
+
+            }
 
         } catch (\Throwable $th) {
 
@@ -350,6 +355,12 @@ class CertificadoGravamen extends Component
                 $this->modelo_editar->movimientoRegistral->update(['estado' => 'rechazado', 'actualizado_por' => auth()->user()->id]);
 
             });
+
+            if($this->moviminetoRegistral->usuario_tramites_linea_id){
+
+                Cache::forget('estadisticas_tramites_en_linea_' . $this->moviminetoRegistral->usuario_tramites_linea_id);
+
+            }
 
             $this->dispatch('mostrarMensaje', ['success', "El trámite se rechazó con éxito."]);
 
@@ -446,6 +457,12 @@ class CertificadoGravamen extends Component
                 $this->modelo_editar->movimientoRegistral->audits()->latest()->first()->update(['tags' => 'Cambio estado a corrección']);
 
             });
+
+            if($this->moviminetoRegistral->usuario_tramites_linea_id){
+
+                Cache::forget('estadisticas_tramites_en_linea_' . $this->moviminetoRegistral->usuario_tramites_linea_id);
+
+            }
 
             $this->dispatch('mostrarMensaje', ['success', "La información se guardó con éxito."]);
 
