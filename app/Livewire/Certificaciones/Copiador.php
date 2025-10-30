@@ -34,6 +34,7 @@ class Copiador extends Component
 
     public $fecha_final;
     public $fecha_inicio;
+    public $copiador;
 
     public function crearModeloVacio(){
         $this->modelo_editar = Certificacion::make();
@@ -160,15 +161,30 @@ class Copiador extends Component
         $carga = MovimientoRegistral::with('certificacion')
                                         ->where('estado', 'nuevo')
                                         ->whereBetween('created_at', [$fecha_inicio, $fecha_final])
-                                        ->where('usuario_asignado', auth()->user()->id)
                                         ->whereHas('certificacion', function ($q){
                                             $q->whereIn('servicio', ['DL13', 'DL14']);
                                         })
+                                        ->when($this->copiador, function($q){
+                                            $q->where('usuario_asignado', $this->copiador);
+                                        })
+                                        ->when(!$this->copiador, function($q){
+                                            $q->where('usuario_asignado', auth()->user()->id);
+                                        })
                                         ->get();
+
+        if($this->copiador){
+
+            $copiador = $this->usuarios->where('id', $this->copiador)->first()->name;
+
+        }else{
+
+            $copiador = auth()->user()->name;
+        }
 
         $pdf = Pdf::loadView('certificaciones.cargaTrabajo', compact(
             'fecha_inicio',
             'fecha_final',
+            'copiador',
             'carga',
         ))->output();
 

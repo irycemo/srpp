@@ -2,8 +2,9 @@
 
 namespace App\Http\Services;
 
-use App\Exceptions\SistemaTramitesServiceException;
+use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Http;
+use App\Exceptions\SistemaTramitesServiceException;
 
 
 class SistemaTramitesService{
@@ -47,6 +48,8 @@ class SistemaTramitesService{
         ]);
 
         if($response->status() != 200){
+
+            Log::error('Error al enviar tramite rechazado al sistema trámites.' . $response);
 
             throw new SistemaTramitesServiceException('Error al enviar tramite rechazado al sistema trámites.' . $response);
 

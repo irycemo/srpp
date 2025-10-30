@@ -21,18 +21,14 @@
 
             </div>
 
-            @if(auth()->user()->hasRole(['Copiador']))
+            <button wire:click="$set('modalCarga', '!modalCarga')" wire:loading.attr="disabled" class="bg-gray-500 hover:shadow-lg hover:bg-gray-700 text-sm py-2 px-4 text-white rounded-full hidden md:block items-center justify-center focus:outline-gray-400 focus:outline-offset-2">
 
-                <button wire:click="$set('modalCarga', '!modalCarga')" wire:loading.attr="disabled" class="bg-gray-500 hover:shadow-lg hover:bg-gray-700 text-sm py-2 px-4 text-white rounded-full hidden md:block items-center justify-center focus:outline-gray-400 focus:outline-offset-2">
+                <img wire:loading wire:target="modalCarga" class="mx-auto h-4 mr-1" src="{{ asset('storage/img/loading3.svg') }}" alt="Loading">
+                Imprimir carga de trabajo
 
-                    <img wire:loading wire:target="modalCarga" class="mx-auto h-4 mr-1" src="{{ asset('storage/img/loading3.svg') }}" alt="Loading">
-                    Imprimir carga de trabajo
+            </button>
 
-                </button>
-
-                <button wire:click="$set('modalCarga', '!modalCarga')" class="bg-gray-500 hover:shadow-lg hover:bg-gray-700 float-right text-sm py-2 px-4 text-white rounded-full focus:outline-none md:hidden">+</button>
-
-            @endif
+            <button wire:click="$set('modalCarga', '!modalCarga')" class="bg-gray-500 hover:shadow-lg hover:bg-gray-700 float-right text-sm py-2 px-4 text-white rounded-full focus:outline-none md:hidden">+</button>
 
         </div>
 
@@ -444,6 +440,22 @@
                 </div>
 
             </div>
+
+            @if(!auth()->user()->hasRole('Copiador'))
+
+                <x-input-select id="copiador" wire:model="copiador" class="w-full">
+
+                    <option value="">Seleccione una opción</option>
+
+                    @foreach ($usuarios as $user)
+
+                        <option value="{{ $user->id }}">{{ $user->name }}</option>
+
+                    @endforeach
+
+                </x-input-select>
+
+            @endif
 
         </x-slot>
 

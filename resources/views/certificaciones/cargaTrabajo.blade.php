@@ -22,8 +22,11 @@
 
                 <p class="parrafo">
                     Carga de trabajo, copias. Fecha inicial: {{ $fecha_inicio }} - Fecha final: {{ $fecha_final }}
+                    @if($copiador)
+                       , Copiador: {{ $copiador }}
+                    @endif
                 </p>
-                <p>{{ auth()->user()->name }}</p>
+                <p>Imprimió: {{ auth()->user()->name }}</p>
 
                 <div>
 
