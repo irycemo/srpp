@@ -19,6 +19,7 @@ use Livewire\WithFileUploads;
 use App\Constantes\Constantes;
 use Illuminate\Validation\Rule;
 use Illuminate\Support\Facades\DB;
+use App\Http\Services\OldBDService;
 use App\Models\MovimientoRegistral;
 use Illuminate\Support\Facades\Log;
 use App\Livewire\PaseFolio\PaseFolio;
@@ -443,14 +444,13 @@ class Elaboracion extends Component
 
     public function consultarGravamenesAntecedente($distrito, $tomo, $registro, $numero_propiedad){
 
-        $gravamenes = DB::connection('mysql2')->select("call spTractoGravamenes(" .
-                                                                                $distrito .
-                                                                                "," . $tomo .
-                                                                                "," . '\'\'' .
-                                                                                "," . $registro .
-                                                                                "," .  '\'\'' .
-                                                                                "," . $numero_propiedad .
-                                                                                ")");
+        $propieadad = Propiedadold::where("distrito", $distrito)
+                                    ->where("tomo", $tomo)
+                                    ->where("registro", $registro)
+                                    ->where("noprop", $numero_propiedad)
+                                    ->first();
+
+        $gravamenes = (new OldBDService())->tractoGravamenes($propieadad->id);
 
         foreach($gravamenes as $gravamen){
 

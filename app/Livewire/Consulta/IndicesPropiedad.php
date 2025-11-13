@@ -6,13 +6,14 @@ use Livewire\Component;
 use App\Models\FolioReal;
 use App\Models\Personaold;
 use App\Models\Propiedadold;
+use App\Models\Old\VariosOld;
 use App\Constantes\Constantes;
-use App\Models\Old\AntecedenteOld;
-use App\Models\Old\AntecedenteSentencia;
-use App\Models\Old\AntecedenteVario;
 use App\Models\Old\GravamenOld;
 use App\Models\Old\SentenciaOld;
-use App\Models\Old\VariosOld;
+use App\Models\Old\AntecedenteOld;
+use App\Http\Services\OldBDService;
+use App\Models\Old\AntecedenteVario;
+use App\Models\Old\AntecedenteSentencia;
 
 class IndicesPropiedad extends Component
 {
@@ -161,7 +162,7 @@ class IndicesPropiedad extends Component
 
         }
 
-        $this->gravamenes = GravamenOld::where('idPropiedad', $this->propiedad->id)->get();
+        $this->gravamenes = (new OldBDService())->tractoGravamenes($this->propiedad->id);
 
         $antesedentes_sentencias = AntecedenteSentencia::where('distrito', $this->propiedad->distrito)
                                             ->where('tomo', $this->propiedad->tomo)
