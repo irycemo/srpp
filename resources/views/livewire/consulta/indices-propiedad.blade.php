@@ -24,6 +24,21 @@
 
             </x-input-group>
 
+            <x-input-group for="distrito" label="Distrito" :error="$errors->first('distrito')" class="w-full">
+
+                <x-input-select id="distrito" wire:model="distrito" class="w-full">
+
+                    <option value="">Seleccione una opción</option>
+                    @foreach ($distritos as $key => $value)
+
+                        <option value="{{ $key }}">{{ $value }}</option>
+
+                    @endforeach
+
+                </x-input-select>
+
+            </x-input-group>
+
         </div>
 
         <div class="felx justify-center mb-5">
@@ -222,6 +237,23 @@
         </div>
 
     @else
+
+        <div id="toggle">
+
+            <div class="flex justify-end mb-3">
+                <x-button-blue
+                        wire:click="resetPredio"
+                        wire:loading.attr="disabled"
+                        wire:target="resetPredio">
+                    <span>
+                        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="h-4">
+                            <path stroke-linecap="round" stroke-linejoin="round" d="M9 15 3 9m0 0 6-6M3 9h12a6 6 0 0 1 0 12h-3" />
+                        </svg>
+                    </span>
+                </x-button-blue>
+            </div>
+
+        </div>
 
         <div x-data="{ activeTab: 0 }">
 

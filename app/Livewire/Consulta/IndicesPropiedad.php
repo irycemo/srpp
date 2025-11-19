@@ -8,7 +8,6 @@ use App\Models\Personaold;
 use App\Models\Propiedadold;
 use App\Models\Old\VariosOld;
 use App\Constantes\Constantes;
-use App\Models\Old\GravamenOld;
 use App\Models\Old\SentenciaOld;
 use App\Models\Old\AntecedenteOld;
 use App\Http\Services\OldBDService;
@@ -58,6 +57,9 @@ class IndicesPropiedad extends Component
                             })
                             ->when($this->ap_paterno, function($q){
                                 $q->where('materno', 'LIKE', '%'. $this->ap_materno . '%');
+                            })
+                            ->when($this->distrito && $this->distrito != '', function($q){
+                                $q->where('distrito', $this->distrito);
                             })
                             ->get()
                             ->toArray();
@@ -177,6 +179,12 @@ class IndicesPropiedad extends Component
                                             ->get();
 
         $this->varios = VariosOld::find($antesedentes_varios->pluck('idVarios'));
+
+    }
+
+    public function resetPredio(){
+
+        $this->propiedad = Propiedadold::make();
 
     }
 
