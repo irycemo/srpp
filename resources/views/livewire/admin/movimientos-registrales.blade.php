@@ -35,6 +35,9 @@
                     <option value="rechazado">Rechazado</option>
                     <option value="finalizado">Finalizado</option>
                     <option value="precalificacion">Precalificación</option>
+                    <option value="no recibido">No Recibido</option>
+                    <option value="no recibido">No Recibido</option>
+                    <option value="carga_parcial">Carga parcial</option>
 
                 </select>
 
@@ -44,7 +47,7 @@
 
                 <select class="bg-white rounded-full text-sm" wire:model.live="filters.distrito">
 
-                    <option value="">Seleccione una opción</option>
+                    <option value="">Seleccione un distrito</option>
 
                     @foreach ($distritos as $key => $distrito)
 
@@ -56,9 +59,9 @@
 
                 <select class="bg-white rounded-full text-sm" wire:model.live="filters.usuario_asignado">
 
-                    <option value="">Seleccione una opción</option>
+                    <option value="">Seleccione un usuario asignado</option>
 
-                    @foreach ($usuarios as $usuario)
+                    @foreach ($usuarios_filtro as $usuario)
 
                         <option value="{{ $usuario->id }}">{{ $usuario->name }}</option>
 

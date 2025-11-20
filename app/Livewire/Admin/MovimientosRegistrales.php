@@ -23,6 +23,7 @@ class MovimientosRegistrales extends Component
 
     public $distritos;
     public $usuarios = [];
+    public $usuarios_filtro;
     public $supervisores = [];
     public $años;
 
@@ -405,6 +406,13 @@ class MovimientosRegistrales extends Component
 
     public function mount(): void
     {
+
+        $this->usuarios_filtro = User::where('status', 'activo')
+                                        ->whereHas('roles', function($q){
+                                            $q->whereNotIn('name', ['Administrador']);
+                                        })
+                                        ->orderBy('name')
+                                        ->get();
 
         $this->crearModeloVacio();
 
