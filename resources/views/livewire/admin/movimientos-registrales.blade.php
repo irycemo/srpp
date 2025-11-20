@@ -30,6 +30,7 @@
 
                 <select class="bg-white rounded-full text-sm w-min" wire:model.live="filters.estado">
 
+                    <option value="">Seleccione un estado</option>
                     <option value="nuevo">Nuevo</option>
                     <option value="elaborado">Elaborado</option>
                     <option value="rechazado">Rechazado</option>
