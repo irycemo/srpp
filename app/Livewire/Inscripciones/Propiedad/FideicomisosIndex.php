@@ -7,8 +7,12 @@ use Livewire\Component;
 use Livewire\WithPagination;
 use App\Constantes\Constantes;
 use App\Traits\ComponentesTrait;
+use Illuminate\Support\Facades\DB;
 use App\Models\MovimientoRegistral;
+use Illuminate\Support\Facades\Log;
 use App\Traits\Inscripciones\InscripcionesIndex;
+use App\Exceptions\InscripcionesServiceException;
+use App\Http\Services\FideicomisoService;
 
 class FideicomisosIndex extends Component
 {
@@ -16,6 +20,29 @@ class FideicomisosIndex extends Component
     use WithPagination;
     use ComponentesTrait;
     use InscripcionesIndex;
+
+    public function corregir(MovimientoRegistral $movimientoRegistral){
+
+        try {
+
+            DB::transaction(function () use ($movimientoRegistral){
+
+                (new FideicomisoService())->corregir($movimientoRegistral);
+
+            });
+
+            $this->dispatch('mostrarMensaje', ['success', "La información se guardó con éxito."]);
+
+        } catch (InscripcionesServiceException $th) {
+
+            $this->dispatch('mostrarMensaje', ['error', $th->getMessage()]);
+
+        } catch (\Throwable $th) {
+            Log::error("Error al enviar a corrección fideicomiso por el usuario: (id: " . auth()->user()->id . ") " . auth()->user()->name . ". " . $th);
+            $this->dispatch('mostrarMensaje', ['error', "Ha ocurrido un error."]);
+        }
+
+    }
 
     public function mount(){
 

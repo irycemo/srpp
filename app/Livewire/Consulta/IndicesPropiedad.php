@@ -200,4 +200,5 @@ class IndicesPropiedad extends Component
     {
         return view('livewire.consulta.indices-propiedad')->extends('layouts.admin');
     }
+
 }
