@@ -66,7 +66,13 @@ class IndicesPropiedad extends Component
 
         $nombre = $this->nombre . ' ' . $this->ap_paterno . ' ' . $this->ap_materno;
 
-        $propiedades = Propiedadold::select('id')->where('propietarios', 'like', '%' . $nombre . '%')->get()->toArray();
+        $propiedades = Propiedadold::select('id')
+                                        ->where('propietarios', 'like', '%' . $nombre . '%')
+                                        ->when($this->distrito && $this->distrito != '', function($q){
+                                            $q->where('distrito', $this->distrito);
+                                        })
+                                        ->get()
+                                        ->toArray();
 
         if($propiedades){
 

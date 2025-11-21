@@ -59,6 +59,8 @@ class FideicomisoService{
             'actualizado_por' => auth()->id()
         ]);
 
+        $movimiento->fideicomiso->update(['estado' => 'nuevo']);
+
         foreach ($movimiento->fideicomiso->actores as $actor) {
 
             $actor->delete();
