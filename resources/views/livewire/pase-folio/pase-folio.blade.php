@@ -4,7 +4,7 @@
 
         <x-header>Asignación de folio</x-header>
 
-        <div class="flex justify-between">
+        <div class="flex justify-between items-center">
 
             <div class="flex gap-3 overflow-auto p-1">
 
@@ -50,29 +50,49 @@
 
             </div>
 
-            @if(auth()->user()->hasRole(['Pase a folio', 'Propiedad', 'Registrador Propiedad']) && auth()->user()->ubicacion === 'Regional 4')
+            <div class="ml-3 relative" x-data="{ open_drop_down:false }">
 
-                <button wire:click="$toggle('modalBuscarTramite')" class="bg-gray-500 hover:shadow-lg hover:bg-gray-700 text-sm py-2 px-4 text-white rounded-full hidden md:block items-center justify-center focus:outline-gray-400 focus:outline-offset-2">
+                <div>
 
-                    <img wire:loading wire:target="$toggle('modalBuscarTramite')" class="mx-auto h-4 mr-1" src="{{ asset('storage/img/loading3.svg') }}" alt="Loading">
-                    Asignarme trámite
+                    <button x-on:click="open_drop_down=true" type="button" class="border-gray-500 border-2 rounded-full focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-offset-gray-800 focus:ring-white">
 
-                </button>
+                        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-6 h-6">
+                            <path stroke-linecap="round" stroke-linejoin="round" d="M6.75 12a.75.75 0 1 1-1.5 0 .75.75 0 0 1 1.5 0ZM12.75 12a.75.75 0 1 1-1.5 0 .75.75 0 0 1 1.5 0ZM18.75 12a.75.75 0 1 1-1.5 0 .75.75 0 0 1 1.5 0Z" />
+                        </svg>
 
-                <button wire:click="$toggle('modalBuscarTramite')" class="bg-gray-500 hover:shadow-lg hover:bg-gray-700 float-right text-sm py-2 px-4 text-white rounded-full md:hidden focus:outline-gray-400 focus:outline-offset-2">+</button>
+                    </button>
 
-            @elseif(!auth()->user()->hasRole(['Administrador' , 'Operador']))
+                </div>
 
-                <button wire:click="abrirModalNuevoFolio" class="bg-gray-500 hover:shadow-lg hover:bg-gray-700 text-sm py-2 px-4 text-white rounded-full hidden md:block items-center justify-center focus:outline-gray-400 focus:outline-offset-2">
+                <div x-cloak x-show="open_drop_down" x-on:click="open_drop_down=false" x-on:click.away="open_drop_down=false" class="z-50 origin-top-right absolute right-0 mt-2 w-48 rounded-md shadow-lg py-1 bg-white ring-1 ring-black ring-opacity-5 focus:outline-none" role="menu" aria-orientation="vertical" aria-labelledby="user-menu">
 
-                    <img wire:loading wire:target="abrirModalNuevoFolio" class="mx-auto h-4 mr-1" src="{{ asset('storage/img/loading3.svg') }}" alt="Loading">
-                    Agregar nuevo folio
+                    @if(auth()->user()->hasRole(['Pase a folio', 'Propiedad', 'Registrador Propiedad']) && auth()->user()->ubicacion === 'Regional 4')
 
-                </button>
+                        <button
+                            wire:click="$toggle('modalBuscarTramite')"
+                            wire:loading.attr="disabled"
+                            class="w-full text-left block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 focus:outline-none focus:bg-gray-100"
+                            role="menuitem">
+                            Reasignarme pase a folio
+                        </button>
 
-                <button wire:click="abrirModalNuevoFolio" class="bg-gray-500 hover:shadow-lg hover:bg-gray-700 float-right text-sm py-2 px-4 text-white rounded-full md:hidden focus:outline-gray-400 focus:outline-offset-2">+</button>
+                    @endif
 
-            @endif
+                    @if(!auth()->user()->hasRole(['Administrador' , 'Operador']))
+
+                        <button
+                            wire:click="abrirModalNuevoFolio"
+                            wire:loading.attr="disabled"
+                            class="w-full text-left block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 focus:outline-none focus:bg-gray-100"
+                            role="menuitem">
+                            Crear nuevo folio
+                        </button>
+
+                    @endif
+
+                </div>
+
+            </div>
 
         </div>
 
