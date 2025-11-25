@@ -29,9 +29,19 @@
 
                             <h2 class="mt-6 text-xl font-semibold text-gray-900">Verificación de documento</h2>
 
-                            <p class="mt-4 text-gray-500 text-sm leading-relaxed">
-                                El Instituto Registral y Catastral verifica el siguiente movimiento: <strong>{{ $firma_electronica->movimientoRegistral->servicio_nombre }}</strong>.
-                            </p>
+                            @if($firma_electronica->movimientoRegistral)
+
+                                <p class="mt-4 text-gray-500 text-sm leading-relaxed">
+                                    El Instituto Registral y Catastral verifica el siguiente movimiento: <strong>{{ $firma_electronica->movimientoRegistral->servicio_nombre }}</strong>.
+                                </p>
+
+                            @elseif($firma_electronica->folioReal)
+
+                                <p class="mt-4 text-gray-500 text-sm leading-relaxed">
+                                    El Instituto Registral y Catastral verifica el siguiente movimiento: <strong>{{ $firma_electronica->folioReal->movimientosRegistrales()->where('folio', 1)->fisrt()->servicio_nombre }}</strong>.
+                                </p>
+
+                            @endif
 
                         </div>
 
@@ -47,21 +57,35 @@
 
                 <div class="scale-100 p-6 bg-white from-gray-700/50 via-transparent rounded-lg shadow-2xl shadow-gray-500/20 text-center space-y-3">
 
-                    <div class="rounded-lg bg-gray-100 py-1 px-2">
+                    @if($firma_electronica->movimientoRegistral)
 
-                        <strong>Folio real</strong>
+                        <div class="rounded-lg bg-gray-100 py-1 px-2">
 
-                        <p class="text-gray-500 text-sm leading-relaxed">{{ $firma_electronica->movimientoRegistral->folioReal->folio ?? 'Sin folio real' }}</p>
+                            <strong>Folio real</strong>
 
-                    </div>
+                            <p class="text-gray-500 text-sm leading-relaxed">{{ $firma_electronica->movimientoRegistral->folioReal->folio ?? 'Sin folio real' }}</p>
 
-                    <div class="rounded-lg bg-gray-100 py-1 px-2">
+                        </div>
 
-                        <strong>Folio del movimiento</strong>
+                        <div class="rounded-lg bg-gray-100 py-1 px-2">
 
-                        <p class="text-gray-500 text-sm leading-relaxed">{{ $firma_electronica->movimientoRegistral->folio }}</p>
+                            <strong>Folio del movimiento</strong>
 
-                    </div>
+                            <p class="text-gray-500 text-sm leading-relaxed">{{ $firma_electronica->movimientoRegistral->folio }}</p>
+
+                        </div>
+
+                    @elseif($firma_electronica->folioReal)
+
+                        <div class="rounded-lg bg-gray-100 py-1 px-2">
+
+                            <strong>Folio real</strong>
+
+                            <p class="text-gray-500 text-sm leading-relaxed">{{ $firma_electronica->folioReal->folio ?? 'Sin folio real' }}</p>
+
+                        </div>
+
+                    @endif
 
                     <div class="rounded-lg bg-gray-100 py-1 px-2 mt-3">
 
