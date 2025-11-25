@@ -68,12 +68,6 @@ class RepresentanteCrear extends Component
 
             if($this->persona->getKey() && $persona){
 
-                foreach($this->modelo->actores as $actor){
-
-                    if($actor->persona_id == $persona->id) throw new ActoresException('La persona ya es un actor.');
-
-                }
-
                 $actor = $this->modelo->actores()->create([
                     'persona_id' => $persona->id,
                     'tipo_actor' => 'representante',
@@ -85,16 +79,6 @@ class RepresentanteCrear extends Component
                     Representado::create(['representante_id' => $actor->id, 'representado_id' => $representado]);
 
                 }
-
-            }elseif($persona){
-
-                foreach($this->modelo->actores as $actor){
-
-                    if($actor->persona_id == $persona->id) throw new ActoresException('La persona ya es un actor.');
-
-                }
-
-                throw new ActoresException('Ya existe un persona registrada con la información ingresada.');
 
             }else{
 
