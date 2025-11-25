@@ -449,7 +449,7 @@ class AsignacionService{
 
         if($distrito == 2){
 
-            $roles = ['Pase a folio', 'Registrador Propiedad'];
+            $roles = ['Propiedad'];
 
             $idActual = Asignacion::first()?->propiedad_uruapan;
 

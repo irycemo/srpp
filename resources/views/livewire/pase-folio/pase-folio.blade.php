@@ -50,8 +50,18 @@
 
             </div>
 
+            @if(auth()->user()->hasRole(['Pase a folio']) && auth()->user()->ubicacion === 'Regional 4')
 
-            @if(!auth()->user()->hasRole(['Administrador' , 'Operador']))
+                <button wire:click="$toggle('modalBuscarTramite')" class="bg-gray-500 hover:shadow-lg hover:bg-gray-700 text-sm py-2 px-4 text-white rounded-full hidden md:block items-center justify-center focus:outline-gray-400 focus:outline-offset-2">
+
+                    <img wire:loading wire:target="$toggle('modalBuscarTramite')" class="mx-auto h-4 mr-1" src="{{ asset('storage/img/loading3.svg') }}" alt="Loading">
+                    Asignarme trámite
+
+                </button>
+
+                <button wire:click="$toggle('modalBuscarTramite')" class="bg-gray-500 hover:shadow-lg hover:bg-gray-700 float-right text-sm py-2 px-4 text-white rounded-full md:hidden focus:outline-gray-400 focus:outline-offset-2">+</button>
+
+            @elseif(!auth()->user()->hasRole(['Administrador' , 'Operador']))
 
                 <button wire:click="abrirModalNuevoFolio" class="bg-gray-500 hover:shadow-lg hover:bg-gray-700 text-sm py-2 px-4 text-white rounded-full hidden md:block items-center justify-center focus:outline-gray-400 focus:outline-offset-2">
 
@@ -778,6 +788,54 @@
                 wire:target="recibirDocumentacion"
             >
                 Recibir
+            </x-button-blue>
+
+        </x-slot>
+
+    </x-dialog-modal >
+
+    <x-dialog-modal  wire:model="modalBuscarTramite" maxWidth="sm">
+
+        <x-slot name="title">
+            Buscar tramite
+        </x-slot>
+
+        <x-slot name="content">
+
+            <div class="flex justify-center">
+
+                <select class="bg-white rounded-l text-sm border border-r-transparent  focus:ring-0 @error('año') border-red-500 @enderror " wire:model="año">
+                    @foreach ($años as $año)
+
+                        <option value="{{ $año }}">{{ $año }}</option>
+
+                    @endforeach
+                </select>
+
+                <input type="number" placeholder="# Control" min="1" class="bg-white w-24 text-sm focus:ring-0 @error('tramite') border-red-500 @enderror " wire:model="tramite">
+
+                <input type="number" placeholder="Usuario" min="1" class="bg-white text-sm w-20 focus:ring-0 border-l-0 rounded-r @error('usuario') border-red-500 @enderror" wire:model="usuario">
+
+            </div>
+
+        </x-slot>
+
+        <x-slot name="footer">
+
+            <x-button-red
+                wire:click="$toggle('modalBuscarTramite')"
+                wire:loading.attr="disabled"
+            >
+                No
+            </x-button-red>
+
+            <x-button-blue
+                class="ml-2"
+                wire:click="asignarmeTramite"
+                wire:loading.attr="disabled"
+                wire:target="asignarmeTramite"
+            >
+                Asignarme
             </x-button-blue>
 
         </x-slot>

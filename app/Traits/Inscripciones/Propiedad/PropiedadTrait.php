@@ -9,7 +9,6 @@ use App\Models\Predio;
 use App\Models\Gravamen;
 use App\Models\FolioReal;
 use App\Models\Propiedad;
-use Illuminate\Support\Str;
 use Illuminate\Support\Facades\DB;
 use App\Models\MovimientoRegistral;
 use Illuminate\Support\Facades\Log;

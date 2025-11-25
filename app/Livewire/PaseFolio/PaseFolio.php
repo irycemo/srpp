@@ -36,10 +36,15 @@ class PaseFolio extends Component
     public $modalNuevoFolio = false;
     public $modalReasignarUsuario = false;
     public $modalRecibirDocumentacion = false;
+    public $modalBuscarTramite = false;
     public $motivos;
     public $motivo;
     public $supervisor = false;
     public $contraseña;
+
+    public $año;
+    public $tramite;
+    public $usuario;
 
     public $distritos;
     public $distrito;
@@ -712,6 +717,48 @@ class PaseFolio extends Component
 
     }
 
+    public function asignarmeTramite(){
+
+        try {
+
+            $movimientoRegistral = MovimientoRegistral::where('año', $this->año)
+                                                        ->where('tramite', $this->tramite)
+                                                        ->where('usuario', $this->usuario)
+                                                        ->where('folio', 1)
+                                                        ->first();
+
+            if(!$movimientoRegistral){
+
+                $this->dispatch('mostrarMensaje', ['warning', "No se encontro el movimiento registral."]);
+
+                return;
+
+            }
+
+            DB::transaction(function () use($movimientoRegistral) {
+
+                $movimientoRegistral->update([
+                    'usuario_asignado' => auth()->id(),
+                    'actualizado_por' => auth()->id()
+                ]);
+
+                $movimientoRegistral->audits()->latest()->first()->update(['tags' => 'Reasignó usuario']);
+
+            });
+
+            $this->dispatch('mostrarMensaje', ['success', "Se reasigno correctamente."]);
+
+            $this->reset(['tramite', 'usuario', 'modalBuscarTramite']);
+
+        } catch (\Throwable $th) {
+
+            Log::error("Error al reasignar movimiento registral para asignacion de folio real inmobiliario por el usuario: (id: " . auth()->user()->id . ") " . auth()->user()->name . ". " . $th);
+            $this->dispatch('mostrarMensaje', ['error', "Ha ocurrido un error."]);
+
+        }
+
+    }
+
     public function mount(){
 
         $this->crearModeloVacio();
@@ -729,6 +776,8 @@ class PaseFolio extends Component
         }
 
         $this->años = Constantes::AÑOS;
+
+        $this->año = now()->format('Y');
 
         $this->motivos = Constantes::RECHAZO_MOTIVOS;
 

@@ -22,6 +22,53 @@ class PropiedadIndex extends Component
     use ComponentesTrait;
     use InscripcionesIndex;
 
+    public $año;
+    public $tramite;
+    public $usuario;
+    public $modalBuscarTramite = false;
+
+    public function asignarmeTramite(){
+
+        try {
+
+            $movimientoRegistral = MovimientoRegistral::where('año', $this->año)
+                                                        ->where('tramite', $this->tramite)
+                                                        ->where('usuario', $this->usuario)
+                                                        ->where('folio', 1)
+                                                        ->first();
+
+            if(!$movimientoRegistral){
+
+                $this->dispatch('mostrarMensaje', ['warning', "No se encontro el movimiento registral."]);
+
+                return;
+
+            }
+
+            DB::transaction(function () use($movimientoRegistral) {
+
+                $movimientoRegistral->update([
+                    'usuario_asignado' => auth()->id(),
+                    'actualizado_por' => auth()->id()
+                ]);
+
+                $movimientoRegistral->audits()->latest()->first()->update(['tags' => 'Reasignó usuario']);
+
+            });
+
+            $this->dispatch('mostrarMensaje', ['success', "Se reasigno correctamente."]);
+
+            $this->reset(['tramite', 'usuario', 'modalBuscarTramite']);
+
+        } catch (\Throwable $th) {
+
+            Log::error("Error al reasignar movimiento registral para asignacion de folio real inmobiliario por el usuario: (id: " . auth()->user()->id . ") " . auth()->user()->name . ". " . $th);
+            $this->dispatch('mostrarMensaje', ['error', "Ha ocurrido un error."]);
+
+        }
+
+    }
+
     public function corregir(MovimientoRegistral $movimientoRegistral){
 
         if(in_array($movimientoRegistral->inscripcionPropiedad->servicio, ['D149'])){

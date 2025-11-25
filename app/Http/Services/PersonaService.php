@@ -12,23 +12,7 @@ class PersonaService{
 
         $persona = null;
 
-        if($rfc && $curp){
-
-            $personaRfc = Persona::where('rfc', $rfc)->first();
-
-            $personaCurp = Persona::where('curp', $curp)->first();
-
-            if($personaRfc?->id != $personaCurp?->id){
-
-                throw new Exception('Ya esta registrada otra persona con la misma CURP o RFC');
-
-            }else{
-
-                $persona = $personaRfc;
-
-            }
-
-        }elseif($rfc){
+        if($rfc){
 
             $persona = Persona::where('rfc', $rfc)->first();
 
