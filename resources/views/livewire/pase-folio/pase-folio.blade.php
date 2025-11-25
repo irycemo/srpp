@@ -50,7 +50,7 @@
 
             </div>
 
-            @if(auth()->user()->hasRole(['Pase a folio']) && auth()->user()->ubicacion === 'Regional 4')
+            @if(auth()->user()->hasRole(['Pase a folio', 'Propiedad', 'Registrador Propiedad']) && auth()->user()->ubicacion === 'Regional 4')
 
                 <button wire:click="$toggle('modalBuscarTramite')" class="bg-gray-500 hover:shadow-lg hover:bg-gray-700 text-sm py-2 px-4 text-white rounded-full hidden md:block items-center justify-center focus:outline-gray-400 focus:outline-offset-2">
 
