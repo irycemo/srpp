@@ -855,6 +855,8 @@ class Elaboracion extends Component
 
         if($propiedad){
 
+            info($propiedad);
+
             $this->dispatch('mostrarMensaje', ['warning', "El antecedente no puede ser fusionado."]);
 
             return;
