@@ -122,7 +122,7 @@
                     <x-table.heading >Distrito</x-table.heading>
                     <x-table.heading >Tomo</x-table.heading>
                     <x-table.heading >Registro</x-table.heading>
-                    <x-table.heading ># Propiead</x-table.heading>
+                    <x-table.heading ># Propiedad</x-table.heading>
                     <x-table.heading >Propietarios</x-table.heading>
                     <x-table.heading >Ubicación</x-table.heading>
                     <x-table.heading >Acciones</x-table.heading>
