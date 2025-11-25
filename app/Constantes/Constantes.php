@@ -470,7 +470,8 @@ class Constantes{
         'DEUDOR / GARANTE HIPOTECARIO',
         'DEUDOR PARTE ALICUOTA',
         'MUTUANTE',
-        'MUTUARIO'
+        'MUTUARIO',
+        'CONTRIBUYENTE'
     ];
 
     const ACTORES_FIDEICOMISO = [

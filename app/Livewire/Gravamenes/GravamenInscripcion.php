@@ -7,8 +7,6 @@ use App\Models\User;
 use App\Models\Actor;
 use Livewire\Component;
 use App\Models\Gravamen;
-use App\Models\FolioReal;
-use Illuminate\Support\Str;
 use Livewire\WithFileUploads;
 use App\Constantes\Constantes;
 use Illuminate\Validation\Rule;
