@@ -117,13 +117,7 @@ class Personas extends Component
 
         $personaService = new PersonaService();
 
-        $persona = $personaService->buscarPersona($this->rfc, $this->curp, $this->tipo_persona, $this->nombre, $this->ap_materno, $this->ap_paterno, $this->razon_social);
-
-        if($persona){
-
-            throw new GeneralException('Ya existe registro de una persona con la información ingresada.');
-
-        }
+        $this->modelo_editar = $personaService->buscarPersona($this->rfc, $this->curp, $this->tipo_persona, $this->nombre, $this->ap_materno, $this->ap_paterno, $this->razon_social);
 
     }
 
