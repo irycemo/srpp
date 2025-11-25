@@ -21,9 +21,9 @@ class VerificacionController extends Controller
 
             return redirect($firma_electronica->movimientoRegistral->caratula());
 
-        }elseif($firma_electronica->movimientoRegistral){
+        }elseif($firma_electronica->folioReal){
 
-            return redirect($firma_electronica->movimientoRegistral->caratula());
+            return redirect($firma_electronica->folioReal->caratula());
 
         }
 
