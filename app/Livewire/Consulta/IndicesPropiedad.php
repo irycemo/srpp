@@ -40,14 +40,21 @@ class IndicesPropiedad extends Component
 
     public function buscarPorPropietario(){
 
-        $this->validate([
-            'nombre' => 'required',
-        ]);
+        if($this->nombre == null && $this->ap_paterno == null && $this->ap_materno == null){
+
+            $this->dispatch('mostrarMensaje', ['warning', "Debe ingresar al menos un campo."]);
+
+            return;
+
+        }
 
         $this->propiedad = Propiedadold::make();
 
         $ids = Personaold::select('idPropiedad')
                             ->distinct()
+                            ->when($this->distrito && $this->distrito != '', function($q){
+                                $q->where('distrito', $this->distrito);
+                            })
                             ->where(function($q){
                                 $q->where('nombre2', 'LIKE', '%' . $this->nombre . '%')
                                     ->orWhere('nombre1', 'LIKE', '%' . $this->nombre . '%');
@@ -58,19 +65,16 @@ class IndicesPropiedad extends Component
                             ->when($this->ap_paterno, function($q){
                                 $q->where('materno', 'LIKE', '%'. $this->ap_materno . '%');
                             })
-                            ->when($this->distrito && $this->distrito != '', function($q){
-                                $q->where('distrito', $this->distrito);
-                            })
                             ->get()
                             ->toArray();
 
         $nombre = $this->nombre . ' ' . $this->ap_paterno . ' ' . $this->ap_materno;
 
         $propiedades = Propiedadold::select('id')
-                                        ->where('propietarios', 'like', '%' . $nombre . '%')
                                         ->when($this->distrito && $this->distrito != '', function($q){
                                             $q->where('distrito', $this->distrito);
                                         })
+                                        ->where('propietarios', 'like', '%' . $nombre . '%')
                                         ->get()
                                         ->toArray();
 

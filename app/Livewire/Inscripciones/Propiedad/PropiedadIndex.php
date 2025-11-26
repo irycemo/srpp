@@ -61,6 +61,8 @@ class PropiedadIndex extends Component
 
             }
 
+
+
             DB::transaction(function () use($movimientoRegistral) {
 
                 $movimientoRegistral->update([
@@ -72,7 +74,15 @@ class PropiedadIndex extends Component
 
             });
 
-            $this->dispatch('mostrarMensaje', ['success', "Se reasigno correctamente."]);
+            if($movimientoRegistral->estado == 'rechazado'){
+
+                $this->dispatch('mostrarMensaje', ['info', "Se reasigno correctamente. El movimiento registral esta rechazado."]);
+
+            }else{
+
+                $this->dispatch('mostrarMensaje', ['success', "Se reasigno correctamente."]);
+
+            }
 
             $this->reset(['tramite', 'usuario', 'modalBuscarTramite']);
 
