@@ -345,6 +345,8 @@ class Varios extends Component
 
         $this->actos = Constantes::ACTOS_INSCRIPCION_VARIOS;
 
+        array_push($this->actos, 'SUBDIVISIÓN');
+
         $this->vario = Vario::make();
 
     }

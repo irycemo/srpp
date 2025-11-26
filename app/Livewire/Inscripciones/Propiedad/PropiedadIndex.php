@@ -45,6 +45,14 @@ class PropiedadIndex extends Component
 
             }
 
+            if(!$movimientoRegistral->folioReal->esta){
+
+                $this->dispatch('mostrarMensaje', ['warning', "No se encontro el movimiento registral."]);
+
+                return;
+
+            }
+
             DB::transaction(function () use($movimientoRegistral) {
 
                 $movimientoRegistral->update([
