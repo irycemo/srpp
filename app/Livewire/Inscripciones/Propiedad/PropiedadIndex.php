@@ -53,7 +53,7 @@ class PropiedadIndex extends Component
 
             }
 
-            if(!$movimientoRegistral->folioReal->estado != 'activo'){
+            if($movimientoRegistral->folioReal->estado != 'activo'){
 
                 $this->dispatch('mostrarMensaje', ['warning', "El folio real no esta activo."]);
 
