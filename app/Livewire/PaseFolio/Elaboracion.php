@@ -12,7 +12,6 @@ use App\Models\Escritura;
 use App\Models\FolioReal;
 use App\Models\Sentencia;
 use App\Models\Antecedente;
-use Illuminate\Support\Str;
 use Livewire\Attributes\On;
 use App\Models\Propiedadold;
 use Livewire\WithFileUploads;
@@ -23,7 +22,6 @@ use App\Http\Services\OldBDService;
 use App\Models\MovimientoRegistral;
 use Illuminate\Support\Facades\Log;
 use App\Livewire\PaseFolio\PaseFolio;
-use Illuminate\Support\Facades\Storage;
 use App\Http\Services\AsignacionService;
 use Spatie\LivewireFilepond\WithFilePond;
 
@@ -444,19 +442,23 @@ class Elaboracion extends Component
 
     public function consultarGravamenesAntecedente($distrito, $tomo, $registro, $numero_propiedad){
 
-        $propieadad = Propiedadold::where("distrito", $distrito)
+        $propiedad = Propiedadold::where("distrito", $distrito)
                                     ->where("tomo", $tomo)
                                     ->where("registro", $registro)
                                     ->where("noprop", $numero_propiedad)
                                     ->first();
 
-        $gravamenes = (new OldBDService())->tractoGravamenes($propieadad->id);
+        if($propiedad){
 
-        foreach($gravamenes as $gravamen){
+            $gravamenes = (new OldBDService())->tractoGravamenes($propiedad->id);
 
-            if(isset($gravamen->fcancelacion) && isset($gravamen->stGravamen) && $gravamen->stGravamen == 'C') continue;
+            foreach($gravamenes as $gravamen){
 
-            $this->creargravamen($gravamen);
+                if(isset($gravamen->fcancelacion) && isset($gravamen->stGravamen) && $gravamen->stGravamen == 'C') continue;
+
+                $this->creargravamen($gravamen);
+
+            }
 
         }
 
