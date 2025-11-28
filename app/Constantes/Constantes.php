@@ -470,7 +470,8 @@ class Constantes{
         'MUTUANTE',
         'MUTUARIO',
         'CONTRIBUYENTE',
-        'El TRABAJADOR Y/O DERECHOHABIENTE'
+        'El TRABAJADOR Y/O DERECHOHABIENTE',
+        'CO-ACREDITADO'
     ];
 
     const ACTORES_FIDEICOMISO = [
