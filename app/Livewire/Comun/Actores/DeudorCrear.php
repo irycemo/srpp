@@ -16,6 +16,8 @@ class DeudorCrear extends Component
 
     use ActoresTrait;
 
+    public $tipos_deudor = [];
+
     protected function rules(){
 
         return $this->traitRules() +[
@@ -27,7 +29,7 @@ class DeudorCrear extends Component
                 'nullable',
                 'regex:/^([A-ZÑ&]{3,4}) ?(?:- ?)?(\d{2}(?:0[1-9]|1[0-2])(?:0[1-9]|[12]\d|3[01])) ?(?:- ?)?([A-Z\d]{2})([A\d])$/'
             ],
-            'sub_tipo' => 'required'
+            'tipos_deudor' => 'required'
         ];
 
     }
@@ -71,7 +73,7 @@ class DeudorCrear extends Component
                 $this->modelo->actores()->create([
                     'persona_id' => $persona->id,
                     'tipo_actor' => 'deudor',
-                    'tipo_deudor' => $this->sub_tipo,
+                    'tipo_deudor' => implode(',', $this->tipos_deudor),
                     'creado_por' => auth()->id()
                 ]);
 
@@ -114,7 +116,7 @@ class DeudorCrear extends Component
                     $this->modelo->actores()->create([
                         'persona_id' => $persona->id,
                         'tipo_actor' => 'deudor',
-                        'tipo_deudor' => $this->sub_tipo,
+                        'tipo_deudor' => implode(',', $this->tipos_deudor),
                         'creado_por' => auth()->id()
                     ]);
 

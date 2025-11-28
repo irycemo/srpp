@@ -21,7 +21,7 @@ trait NombreServicioTrait{
 
         if($response->status() === 200){
 
-            return $data['nombre'];
+            return $data['nombre'] ?? '';
 
         }
 

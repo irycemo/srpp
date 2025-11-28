@@ -14,7 +14,7 @@
 
             @if($flag_agregar)
 
-                @include('livewire.comun.actores.modal-content-form')
+                @include('livewire.comun.actores.modal-content-deudores-form')
 
             @else
 
