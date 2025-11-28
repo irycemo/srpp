@@ -14,6 +14,8 @@ class DeudorActualizar extends Component
 
     use ActoresTrait;
 
+    public $tipos_deudor = [];
+
     protected function rules(){
 
         return $this->traitRules() +[
@@ -65,7 +67,7 @@ class DeudorActualizar extends Component
                 ]);
 
                 $this->actor->update([
-                    'tipo_deudor' => $this->sub_tipo,
+                    'tipo_deudor' => implode(',', $this->tipos_deudor),
                     'actualizado_por' => auth()->id()
                 ]);
 

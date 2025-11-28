@@ -16,7 +16,7 @@
 
         <x-slot name="content">
 
-            @include('livewire.comun.actores.modal-content-form')
+            @include('livewire.comun.actores.modal-content-deudores-form')
 
         </x-slot>
 

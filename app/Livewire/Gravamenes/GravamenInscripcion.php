@@ -73,7 +73,7 @@ class GravamenInscripcion extends Component
 
             $this->dispatch('mostrarMensaje', ['success', "La información se eliminó con éxito."]);
 
-            $this->refresh();
+            $this->gravamen->refresh();
 
         } catch (\Throwable $th) {
 
