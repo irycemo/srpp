@@ -313,7 +313,11 @@ class PaseFolio extends Component
                 /* Revisar si su antecedente es un folio matriz */
                 if($this->modelo_editar->folioReal?->folioRealAntecedente?->matriz){
 
-                    $this->modelo_editar->update(['estado' => 'concluido']);
+                    if($this->modelo_editar->inscripcionPropiedad){
+
+                        $this->modelo_editar->update(['estado' => 'concluido']);
+
+                    }
 
                 }
 

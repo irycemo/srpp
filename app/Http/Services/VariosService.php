@@ -4,9 +4,12 @@ namespace App\Http\Services;
 
 use App\Models\User;
 use App\Models\Vario;
+use App\Models\Predio;
+use App\Models\FolioReal;
 use App\Models\MovimientoRegistral;
 use Illuminate\Support\Facades\Log;
 use App\Exceptions\CertificacionServiceException;
+use App\Models\Propiedad;
 
 class VariosService{
 
@@ -54,6 +57,8 @@ class VariosService{
             ]);
 
             if(in_array($vario->acto_contenido, ['SEGUNDO AVISO PREVENTIVO', 'PRIMER AVISO PREVENTIVO'])){
+
+                $this->revisarFolioMatriz($vario->movimientoRegistral);
 
                 $vario->movimientoRegistral->update(['usuario_asignado' => $this->obtenerUsuarioRolAvisos($vario->movimientoRegistral->getRawOriginal('distrito'))]);
 
@@ -130,6 +135,51 @@ class VariosService{
         $movimientoAviso = $movimiento->folioReal->movimientosRegistrales()->where('folio', $request['asiento_registral'])->first();
 
         $movimientoAviso->update(['movimiento_padre' => $request['movimiento_registral']]);
+
+    }
+
+    public function revisarFolioMatriz(MovimientoRegistral $movimiento)
+    {
+
+        if($movimiento->folioReal?->matriz){
+
+            $folioReal = FolioReal::create([
+                'estado' => 'captura',
+                'folio' => (FolioReal::max('folio') ?? 0) + 1,
+                'antecedente' => $movimiento->folioReal->id,
+                'distrito_antecedente' => $movimiento->getRawOriginal('distrito'),
+                'seccion_antecedente' => $movimiento->seccion,
+                'autoridad_cargo' => $movimiento->autoridad_cargo,
+                'autoridad_nombre' => $movimiento->autoridad_nombre,
+                'autoridad_numero' => $movimiento->autoridad_numero,
+                'numero_documento' => $movimiento->numero_documento,
+                'fecha_emision' => $movimiento->fecha_emision,
+                'fecha_inscripcion' => $movimiento->fecha_inscripcion,
+                'procedencia' => $movimiento->procedencia,
+                'tipo_documento' => $movimiento->tipo_documento,
+            ]);
+
+            Predio::create(['folio_real' => $folioReal->id, 'status' => 'nuevo']);
+
+            $nuevoMovimientoRegistral = $movimiento->replicate();
+            $nuevoMovimientoRegistral->tomo = null;
+            $nuevoMovimientoRegistral->registro = null;
+            $nuevoMovimientoRegistral->numero_propiedad = null;
+            $nuevoMovimientoRegistral->estado = 'concluido';
+            $nuevoMovimientoRegistral->servicio_nombre = 'Genera nuevo folio real';
+            $nuevoMovimientoRegistral->folio = $movimiento->folioReal->ultimoFolio();
+            $nuevoMovimientoRegistral->save();
+
+            Propiedad::create([
+                'servicio' => 'D114',
+                'acto_contenido' => 'CREA NUEVO FOLIO',
+                'descripcion_acto' => 'ESTE MOVIMIENTO REGISTRAL CREA EL FOLIO REAL: ' . $folioReal->folio . '.',
+                'movimiento_registral_id' => $nuevoMovimientoRegistral->id
+            ]);
+
+            $movimiento->update(['folio_real' => $folioReal->id, 'folio' => 1]);
+
+        }
 
     }
 

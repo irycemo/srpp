@@ -129,7 +129,8 @@ class PrimerAvisoPreventivo extends Component
             'monto' => $this->vario->movimientoRegistral->monto,
             'usuario_asignado' => (new AsignacionService())->obtenerUltimoUsuarioConAsignacion($this->obtenerUsuarios()),
             'usuario_supervisor' => $this->obtenerSupervisor(),
-            'movimiento_padre' => $this->vario->movimientoRegistral->id
+            'movimiento_padre' => $this->vario->movimientoRegistral->id,
+            'servicio_nombre' => 'Certificado de gravamen'
         ]);
 
         $movimiento->certificacion()->create([
