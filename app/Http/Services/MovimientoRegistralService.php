@@ -364,7 +364,39 @@ class MovimientoRegistralService{
 
                 if(isset($request['tomo']) && isset($request['registro']) && isset($request['numero_propiedad'])){
 
-                    $array = array_merge($array, $this->revisarEncolamientoSinFolioInmobiliario($request));
+                    $folioReal = FolioReal::where('tomo_antecedente', $request['tomo'])
+                                            ->where('registro_antecedente', $request['registro'])
+                                            ->where('distrito_antecedente', $request['distrito'])
+                                            ->where('numero_propiedad_antecedente', $request['numero_propiedad'])
+                                            ->first();
+
+                    if($folioReal){
+
+                        $array['folio_real'] = $folioReal->id;
+                        $array['folio'] = $this->calcularFolio($request);
+
+                        if($folioReal->estado == 'activo'){
+
+                            if($request['categoria_servicio'] == 'Certificaciones'){
+
+                                $array['estado'] = 'nuevo';
+
+                            }else{
+
+                                $array['estado'] = 'no recibido';
+
+                            }
+
+                        }else{
+
+                            $array['estado'] = 'precalificacion';
+                        }
+
+                    }else{
+
+                        $array = array_merge($array, $this->revisarEncolamientoSinFolioInmobiliario($request));
+
+                    }
 
                 }else{
 

@@ -38,7 +38,7 @@ class FolioRealController extends Controller
                                             $q->where('distrito_antecedente', $validated['distrito']);
                                         })
                                         ->when(isset($validated['folio_real']), function($q)use($validated){
-                                            $q->whereHas('folioRealAntecedente', function($q) use($validated){
+                                            $q->whereHas('folioReal', function($q) use($validated){
                                                 $q->where('folio', $validated['folio_real']);
                                             });
                                         })->first();
