@@ -1190,6 +1190,8 @@ class Elaboracion extends Component
 
         $this->actos_contenidos[] = 'FIDEICOMISO';
 
+        $this->actos_contenidos[] = 'AVISO PREVENTIVO';
+
         $this->cargos_autoridad = Constantes::CARGO_AUTORIDAD;
 
         if($this->movimientoRegistral->folioReal){
