@@ -3,7 +3,6 @@
 namespace App\Http\Services;
 
 use App\Models\Persona;
-use Exception;
 
 class PersonaService{
 

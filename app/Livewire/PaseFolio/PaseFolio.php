@@ -729,6 +729,7 @@ class PaseFolio extends Component
                                                         ->where('tramite', $this->tramite)
                                                         ->where('usuario', $this->usuario)
                                                         ->where('folio', 1)
+                                                        ->whereIn('estado', ['nuevo', 'no recibido'])
                                                         ->first();
 
             if(!$movimientoRegistral){
