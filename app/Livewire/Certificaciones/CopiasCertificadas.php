@@ -19,6 +19,7 @@ use App\Http\Controllers\PaseFolio\PaseFolioController;
 use App\Http\Controllers\Sentencias\SentenciasController;
 use App\Http\Controllers\Cancelaciones\CancelacionController;
 use App\Http\Controllers\InscripcionesPropiedad\PropiedadController;
+use App\Http\Controllers\Certificaciones\CertificadoGravamenController;
 
 class CopiasCertificadas extends Component
 {
@@ -445,7 +446,7 @@ class CopiasCertificadas extends Component
 
             if($movimientoRegistral->certificacion){
 
-                $pdf = (new SentenciasController())->reimprimirFirmado($movimientoRegistral->firmaElectronica);
+                $pdf = (new CertificadoGravamenController())->reimprimirFirmado($movimientoRegistral->firmaElectronica);
 
             }
 
