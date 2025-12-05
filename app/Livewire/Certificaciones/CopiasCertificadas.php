@@ -443,6 +443,12 @@ class CopiasCertificadas extends Component
 
             }
 
+            if($movimientoRegistral->certificacion){
+
+                $pdf = (new SentenciasController())->reimprimirFirmado($movimientoRegistral->firmaElectronica);
+
+            }
+
             return response()->streamDownload(
                 fn () => print($pdf->output()),
                 'documento.pdf'
