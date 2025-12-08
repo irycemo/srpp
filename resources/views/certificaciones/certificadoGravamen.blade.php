@@ -283,6 +283,10 @@
                         <p class="parrafo"><strong>movimiento registral: </strong>({{ $folioReal->folio }}-{{ $sentencia->movimiento_folio }})</p>
 
                         <p class="parrafo">
+                            <strong>Expediente:</strong> {{ $sentencia->expediente }}
+                        </p>
+
+                        <p class="parrafo">
                             <strong>Acto contenido:</strong> {{ $sentencia->acto_contenido }}
                         </p>
 
