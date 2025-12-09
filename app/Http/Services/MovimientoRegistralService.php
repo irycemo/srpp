@@ -324,6 +324,7 @@ class MovimientoRegistralService{
                 'autoridad_numero',
                 'fecha_emision',
                 'procedencia',
+                'observaciones'
             ];
 
             foreach($fields as $field){
