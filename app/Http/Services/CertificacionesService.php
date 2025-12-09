@@ -76,7 +76,7 @@ class CertificacionesService{
         return [
             'servicio' => $request['servicio'],
             'numero_paginas' => $request['numero_paginas'],
-            'observaciones' => $request['observaciones'],
+            'observaciones' => $request['observaciones'] ?? null,
             'movimiento_registral_id' => $request['movimiento_registral'],
             'folio_real' => $request['folio_real'] ?? null,
             'movimiento_registral' => $request['asiento_registral'] ?? null,
