@@ -111,11 +111,15 @@ class Cancelacion extends Component
 
         }
 
-        if($this->valor >= $this->gravamenCancelarMovimiento->gravamen->valor_gravamen){
+        if($this->cancelacion->acto_contenido == 'CANCELACIÓN PARCIAL DE GRAVAMEN'){
 
-            $this->dispatch('mostrarMensaje', ['error', "La parcialidad del valor debe ser menor al valor del gravamen."]);
+            if($this->valor >= $this->gravamenCancelarMovimiento->gravamen->valor_gravamen){
 
-            return;
+                $this->dispatch('mostrarMensaje', ['error', "La parcialidad del valor debe ser menor al valor del gravamen."]);
+
+                return;
+
+            }
 
         }
 
