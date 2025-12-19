@@ -128,7 +128,7 @@ trait CertificadoPropiedadTrait{
 
             if(!$personas->count()){
 
-                $nombre = $propietario['nombre'] . ' ' . $propietario['ap_paterno'] . ' ' . $propietario['ap_materno'];
+                $nombre = trim($propietario['nombre'] . ' ' . $propietario['ap_paterno'] . ' ' . $propietario['ap_materno']);
 
                 $propiedades = Propiedadold::where('propietarios', 'like', '%' . $nombre . '%')
                                             ->where('status', '!=', 'V')

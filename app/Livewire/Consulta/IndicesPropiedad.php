@@ -68,7 +68,7 @@ class IndicesPropiedad extends Component
                             ->get()
                             ->toArray();
 
-        $nombre = $this->nombre . ' ' . $this->ap_paterno . ' ' . $this->ap_materno;
+        $nombre = trim($this->nombre . ' ' . $this->ap_paterno . ' ' . $this->ap_materno);
 
         $propiedades = Propiedadold::select('id')
                                         ->when($this->distrito && $this->distrito != '', function($q){
