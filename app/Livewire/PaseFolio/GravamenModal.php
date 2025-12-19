@@ -21,7 +21,7 @@ class GravamenModal extends Component
 
     public $editar = false;
     public $crear = false;
-    public $reserva_dominio = false;
+    public $acto_sin_antecedente;
 
     public $actores;
     public $divisas;
@@ -82,11 +82,15 @@ class GravamenModal extends Component
 
     protected $listeners = ['refresh', 'cargarGravamen'];
 
-    public function updatedReservaDominio(){
+    public function updatedActoSinAntecedente(){
 
-        if($this->reserva_dominio){
+        if($this->acto_sin_antecedente != ''){
 
-            $this->acto_contenido = 'RESERVA DE DOMINIO';
+            $this->acto_contenido = $this->acto_sin_antecedente;
+
+        }else{
+
+            $this->acto_contenido = null;
 
         }
 
@@ -155,7 +159,7 @@ class GravamenModal extends Component
 
         $this->editar = true;
 
-        if($this->gravamen->acto_contenido == 'RESERVA DE DOMINIO') $this->reserva_dominio = true;
+        if(in_array($this->gravamen->acto_contenido, ['RESERVA DE DOMINIO', 'ANOTACIONES MARGINALES'])) $this->acto_sin_antecedente = $this->gravamen->acto_contenido;
 
     }
 
@@ -186,8 +190,8 @@ class GravamenModal extends Component
         if($string == 'documento_entrada'){
 
             $this->validate([
-                'antecente_tomo' => 'required_if:reserva_dominio,false',
-                'antecente_registro' => 'required_if:reserva_dominio,false',
+                'antecente_tomo' => Rule::requiredIf(! isset($this->acto_sin_antecedente)),
+                'antecente_registro' => Rule::requiredIf(! isset($this->acto_sin_antecedente)),
             ]);
 
             $this->antecedente = false;
@@ -333,6 +337,7 @@ class GravamenModal extends Component
                 'estado' => 'pase_folio',
                 'folio' => $this->folioReal->ultimoFolio() + 1,
                 'seccion' => 'Gravamen',
+                'servicio_nombre' => 'Gravamen',
                 'tomo_gravamen' => $this->antecente_tomo,
                 'registro_gravamen' => $this->antecente_registro,
                 'distrito' => $this->folioReal->getRawOriginal('distrito_antecedente'),
@@ -452,4 +457,5 @@ class GravamenModal extends Component
     {
         return view('livewire.pase-folio.gravamen-modal');
     }
+
 }

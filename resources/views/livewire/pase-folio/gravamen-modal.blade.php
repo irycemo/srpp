@@ -12,7 +12,7 @@
 
     @if($antecedente)
 
-        <div class="grid grid-cols-1 sm:grid-cols-2 gap-3  col-span-2 rounded-lg mb-3 w-full lg:w-1/2 mx-auto" x-transition:enter.duration.500ms x-transition:leave.duration.500ms>
+        <div class="grid grid-cols-1 sm:grid-cols-2 gap-3  col-span-2 rounded-lg mb-3 w-full lg:w-2/3 mx-auto" x-transition:enter.duration.500ms x-transition:leave.duration.500ms>
 
             <span class="flex items-center justify-center  text-gray-700 md:col-span-3 col-span-1 sm:col-span-2">Antecedente</span>
 
@@ -30,11 +30,13 @@
 
             <div class="flex justify-between items-center w-full col-span-3">
 
-                <x-input-group for="reserva_dominio" label="Reserva de dominio" :error="$errors->first('reserva_dominio')" class="flex gap-3 items-center">
+                <x-input-select id="acto_sin_antecedente" wire:model.live="acto_sin_antecedente" class="w-full" >
 
-                    <x-checkbox wire:model.live="reserva_dominio"/>
+                    <option value="">Selecciona una opción</option>
+                    <option value="RESERVA DE DOMINIO">Reserva de dominio</option>
+                    <option value="ANOTACIONES MARGINALES">Anotaciones marginales</option>
 
-                </x-input-group>
+                </x-input-select>
 
                 <x-button-gray
                     wire:click="cambiar('documento_entrada')"
@@ -54,7 +56,7 @@
 
     @if($documento_entrada)
 
-        <div class="grid grid-cols-1 sm:grid-cols-2 gap-3  col-span-2 rounded-lg mb-3 w-full lg:w-1/2 mx-auto" x-transition:enter.duration.500ms x-transition:leave.duration.500ms>
+        <div class="grid grid-cols-1 sm:grid-cols-2 gap-3  col-span-2 rounded-lg mb-3 w-full lg:w-2/3 mx-auto" x-transition:enter.duration.500ms x-transition:leave.duration.500ms>
 
             <span class="flex items-center justify-center text-gray-700 md:col-span-3 col-span-1 sm:col-span-2">Documento de entrada</span>
 
@@ -133,13 +135,13 @@
 
     @if($datos_gravamen)
 
-        <div class="grid grid-cols-1 sm:grid-cols-2 gap-3  col-span-2 rounded-lg mb-3 w-full lg:w-1/2 mx-auto" x-transition:enter.duration.500ms x-transition:leave.duration.500ms>
+        <div class="grid grid-cols-1 sm:grid-cols-2 gap-3  col-span-2 rounded-lg mb-3 w-full lg:w-2/3 mx-auto" x-transition:enter.duration.500ms x-transition:leave.duration.500ms>
 
             <span class="flex items-center justify-center ext-gray-700 col-span-3">Datos del gravámen</span>
 
             <x-input-group for="acto_contenido" label="Acto contenido" :error="$errors->first('acto_contenido')" class="w-full">
 
-                <x-input-select id="acto_contenido" wire:model="acto_contenido" class="w-full" :disabled="$this->reserva_dominio">
+                <x-input-select id="acto_contenido" wire:model="acto_contenido" class="w-full" :disabled="isset($this->acto_sin_antecedente)">
 
                     <option value="">Seleccione una opción</option>
 
@@ -231,7 +233,7 @@
 
     @if($deudores)
 
-        <div class="w-full lg:w-1/2 mx-auto" x-transition:enter.duration.500ms x-transition:leave.duration.500ms>
+        <div class="w-full lg:w-2/3 mx-auto" x-transition:enter.duration.500ms x-transition:leave.duration.500ms>
 
             <span class="flex items-center justify-center text-gray-700 md:col-span-3 col-span-1 sm:col-span-2">Actores</span>
 
@@ -316,7 +318,7 @@
 
     @if($acreedores)
 
-        <div class="w-full lg:w-1/2 mx-auto" x-transition:enter.duration.500ms x-transition:leave.duration.500ms>
+        <div class="w-full lg:w-2/3 mx-auto" x-transition:enter.duration.500ms x-transition:leave.duration.500ms>
 
             <span class="flex items-center justify-center text-gray-700 col-span-3">Acreedores</span>
 
@@ -388,7 +390,7 @@
 
     @endif
 
-    <div class="flex justify-end gap-3">
+    <div class="flex justify-end gap-3 mt-2">
 
         @if($acreedores)
 

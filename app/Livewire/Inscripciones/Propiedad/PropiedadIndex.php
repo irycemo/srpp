@@ -34,7 +34,6 @@ class PropiedadIndex extends Component
             $movimientoRegistral = MovimientoRegistral::where('año', $this->año)
                                                         ->where('tramite', $this->tramite)
                                                         ->where('usuario', $this->usuario)
-                                                        ->where('folio', 1)
                                                         ->first();
 
             if(!$movimientoRegistral){
