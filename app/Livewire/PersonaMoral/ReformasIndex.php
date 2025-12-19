@@ -165,7 +165,7 @@ class ReformasIndex extends Component
 
         try {
 
-            $this->revisarMovimientosPosteriores($movimientoRegistral);
+            $this->revisarMovimientosPosterioresFolioPersonaMoral($movimientoRegistral);
 
             DB::transaction(function () use ($movimientoRegistral){
 
