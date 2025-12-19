@@ -153,6 +153,14 @@ class Reformas extends Component
 
                 $this->actualizarDocumentoEntrada($this->reformaMoral->movimientoRegistral);
 
+                $this->reformaMoral->movimientoRegistral->folioRealPersona->update([
+                    'denominacion' => $this->denominacion,
+                    'capital' => $this->capital,
+                    'duracion' => $this->duracion,
+                    'tipo' => $this->tipo,
+                    'domicilio' => $this->domicilio,
+                ]);
+
                 if($this->nuevo_objeto){
 
                     foreach ($this->reformaMoral->movimientoRegistral->folioRealPersona->objetos as $objeto) {

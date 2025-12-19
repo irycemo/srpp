@@ -29,7 +29,7 @@
             {{-- Nav --}}
             <nav class="p-4 text-rojo overflow-y-auto h-menu">
 
-                @if(auth()->user()->hasRole(['Administrador', 'Operador', 'Director', 'Jefe de departamento certificaciones', 'Jefe de departamento inscripciones', 'Jefe de departamento jurídico']))
+                @if(auth()->user()->hasRole(['Administrador', 'Operador', 'Director', 'Jefe de departamento certificaciones', 'Jefe de departamento inscripciones', 'Jefe de departamento jurídico', 'Supervisor uruapan']))
 
                     @include('layouts.sidebar-administrador')
 
