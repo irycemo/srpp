@@ -33,7 +33,6 @@ trait DocumentoEntradaTrait{
 
     public function cargarDocumentoEntrada(MovimientoRegistral $movimientoRegistral){
 
-        $this->actos = Constantes::ACTOS_INSCRIPCION_CANCELACIONES;
         $this->documentos_entrada = Constantes::DOCUMENTOS_DE_ENTRADA;
         $this->cargos_autoridad = Constantes::CARGO_AUTORIDAD;
 
