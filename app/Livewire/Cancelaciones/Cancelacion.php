@@ -2,6 +2,7 @@
 
 namespace App\Livewire\Cancelaciones;
 
+use App\Constantes\Constantes;
 use App\Models\File;
 use Livewire\Component;
 use Livewire\WithFileUploads;
@@ -356,6 +357,8 @@ class Cancelacion extends Component
             $this->gravamenCancelarMovimiento = $this->cancelacion->gravamenCancelado;
 
         }
+
+        $this->actos = Constantes::ACTOS_INSCRIPCION_CANCELACIONES;
 
         $this->cargarDocumentoEntrada($this->cancelacion->movimientoRegistral);
 
