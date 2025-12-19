@@ -13,6 +13,7 @@ use Illuminate\Support\Facades\Hash;
 use App\Http\Services\AsignacionService;
 use App\Traits\Inscripciones\Varios\VariosTrait;
 use App\Http\Controllers\Varios\VariosController;
+use App\Traits\Inscripciones\DocumentoEntradaTrait;
 use Livewire\WithFileUploads;
 use Spatie\LivewireFilepond\WithFilePond;
 
@@ -22,12 +23,19 @@ class PrimerAvisoPreventivo extends Component
     use WithFileUploads;
     use VariosTrait;
     use WithFilePond;
+    use DocumentoEntradaTrait;
 
     protected function rules(){
         return [
             'vario.descripcion' => 'required',
             'vario.acto_contenido' => 'required',
-            'documento' => 'nullable|mimes:pdf|max:100000'
+            'documento' => 'nullable|mimes:pdf|max:100000',
+            'tipo_documento' => 'required',
+            'autoridad_cargo' => 'required',
+            'autoridad_nombre' => 'required',
+            'numero_documento' => 'nullable',
+            'fecha_emision' => 'required',
+            'procedencia' => 'nullable',
         ];
     }
 
@@ -51,6 +59,8 @@ class PrimerAvisoPreventivo extends Component
                 $this->vario->actualizado_por = auth()->id();
                 $this->vario->fecha_inscripcion = $this->vario->movimientoRegistral->fecha_prelacion;
                 $this->vario->save();
+
+                $this->actualizarDocumentoEntrada($this->vario->movimientoRegistral);
 
                 $this->crearCertificadoGravamen();
 
@@ -88,6 +98,8 @@ class PrimerAvisoPreventivo extends Component
 
                 $this->vario->movimientoRegistral->actualizado_por = auth()->id();
                 $this->vario->save();
+
+                $this->actualizarDocumentoEntrada($this->vario->movimientoRegistral);
 
             });
 
@@ -180,6 +192,12 @@ class PrimerAvisoPreventivo extends Component
                                 $q->where('name', 'Certificador Gravamen');
                             })
                             ->get();
+    }
+
+    public function mount(){
+
+        $this->cargarDocumentoEntrada($this->cancelacion->movimientoRegistral);
+
     }
 
     public function render()

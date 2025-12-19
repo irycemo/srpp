@@ -10,12 +10,14 @@ use Illuminate\Support\Facades\Hash;
 use Spatie\LivewireFilepond\WithFilePond;
 use App\Traits\Inscripciones\Varios\VariosTrait;
 use App\Http\Controllers\Varios\VariosController;
+use App\Traits\Inscripciones\DocumentoEntradaTrait;
 
 class CancelacionAvisoPreventivo extends Component
 {
 
     use VariosTrait;
     use WithFilePond;
+    use DocumentoEntradaTrait;
 
     public $avisoCancelar;
 
@@ -23,7 +25,13 @@ class CancelacionAvisoPreventivo extends Component
         return [
             'vario.descripcion' => 'required',
             'vario.acto_contenido' => 'required',
-            'documento' => 'nullable|mimes:pdf|max:100000'
+            'documento' => 'nullable|mimes:pdf|max:100000',
+            'tipo_documento' => 'required',
+            'autoridad_cargo' => 'required',
+            'autoridad_nombre' => 'required',
+            'numero_documento' => 'nullable',
+            'fecha_emision' => 'required',
+            'procedencia' => 'nullable',
         ];
     }
 
@@ -52,6 +60,8 @@ class CancelacionAvisoPreventivo extends Component
                     'estado' => 'inactivo',
                     'descripcion' => $this->avisoCancelar->descripcion . ' AVISO CANCELADO MEDIANTE MOVIMIENTO REGISTRAL ' . $this->vario->movimientoRegistral->folio
                 ]);
+
+                $this->actualizarDocumentoEntrada($this->vario->movimientoRegistral);
 
                 $this->vario->movimientoRegistral->update(['estado' => 'elaborado', 'actualizado_por' => auth()->id()]);
 
@@ -88,6 +98,8 @@ class CancelacionAvisoPreventivo extends Component
                 $this->vario->movimientoRegistral->actualizado_por = auth()->id();
                 $this->vario->save();
 
+                $this->actualizarDocumentoEntrada($this->vario->movimientoRegistral);
+
             });
 
             $this->dispatch('mostrarMensaje', ['success', "La información se guardó con éxito."]);
@@ -104,6 +116,8 @@ class CancelacionAvisoPreventivo extends Component
         $this->avisoCancelar = $this->vario->movimientoRegistral->movimientosHijos->first()->vario;
 
         $this->vario->acto_contenido = 'CANCELACIÓN DE PRIMER AVISO PREVENTIVO';
+
+        $this->cargarDocumentoEntrada($this->cancelacion->movimientoRegistral);
 
     }
 

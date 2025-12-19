@@ -1,5 +1,7 @@
 <div>
 
+    @include('livewire.comun.documento_entrada_campos')
+
     <div class="bg-white rounded-lg p-4 shadow-lg mb-4">
 
         <x-input-group for="inscripcion.acto_contenido" label="Acto" :error="$errors->first('inscripcion.acto_contenido')" class="w-full lg:w-1/4 mx-auto mb-2">

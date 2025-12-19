@@ -6,7 +6,6 @@ use Exception;
 use App\Models\File;
 use Livewire\Component;
 use App\Models\Propiedad;
-use Illuminate\Support\Str;
 use App\Constantes\Constantes;
 use App\Imports\FolioRealImport;
 use Illuminate\Support\Facades\DB;
@@ -14,6 +13,7 @@ use Illuminate\Support\Facades\Log;
 use Maatwebsite\Excel\Facades\Excel;
 use Spatie\LivewireFilepond\WithFilePond;
 use App\Http\Controllers\Subdivisiones\SubdivisionesController;
+use App\Traits\Inscripciones\DocumentoEntradaTrait;
 
 class Fraccionamientos extends Component
 {
@@ -34,7 +34,7 @@ class Fraccionamientos extends Component
     protected function rules(){
         return [
             'documento' => 'required',
-            'propiedad.descripcion_acto' => 'required',
+            'propiedad.descripcion_acto' => 'required'
         ];
     }
 

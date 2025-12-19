@@ -2,6 +2,8 @@
 
     <x-header>Fideicomiso <span class="text-sm tracking-widest">Folio real: {{ $fideicomiso->movimientoRegistral->folioReal->folio }} - {{ $fideicomiso->movimientoRegistral->folio }}</span></x-header>
 
+    @include('livewire.comun.documento_entrada_campos')
+
     <div class="p-4 bg-white shadow-xl rounded-xl mb-5">
 
         <div class="flex gap-3 items-center w-full lg:w-1/2 justify-center mx-auto mb-4">

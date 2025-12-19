@@ -10,9 +10,11 @@ use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Hash;
 use App\Http\Controllers\Reformas\ReformaController;
+use App\Traits\Inscripciones\DocumentoEntradaTrait;
 
 class Reformas extends Component
 {
+    use DocumentoEntradaTrait;
 
     public ReformaMoral $reformaMoral;
 
@@ -40,7 +42,13 @@ class Reformas extends Component
             'duracion' => 'required|numeric|min:0',
             'tipo' => 'required',
             'domicilio' => 'required',
-            'nuevo_objeto' => 'nullable'
+            'nuevo_objeto' => 'nullable',
+            'tipo_documento' => 'required',
+            'autoridad_cargo' => 'required',
+            'autoridad_nombre' => 'required',
+            'numero_documento' => 'nullable',
+            'fecha_emision' => 'required',
+            'procedencia' => 'nullable',
          ];
     }
 
@@ -67,6 +75,8 @@ class Reformas extends Component
 
                 $this->reformaMoral->acto_contenido = 'ACTA DE ASAMBLEA';
                 $this->reformaMoral->save();
+
+                $this->actualizarDocumentoEntrada($this->reformaMoral->movimientoRegistral);
 
                 $this->reformaMoral->movimientoRegistral->folioRealPersona->actualizado_por = auth()->id();
                 $this->reformaMoral->movimientoRegistral->folioRealPersona->save();
@@ -141,6 +151,8 @@ class Reformas extends Component
 
                 $this->reformaMoral->movimientoRegistral->update(['estado' => 'elaborado', 'actualizado_por' => auth()->id()]);
 
+                $this->actualizarDocumentoEntrada($this->reformaMoral->movimientoRegistral);
+
                 if($this->nuevo_objeto){
 
                     foreach ($this->reformaMoral->movimientoRegistral->folioRealPersona->objetos as $objeto) {
@@ -204,6 +216,8 @@ class Reformas extends Component
         $this->nuevo_objeto = $this->reformaMoral->movimientoRegistral->folioRealPersona->objetos()->where('estado', 'captura')->first()?->objeto;
 
         $this->refreshActores();
+
+        $this->cargarDocumentoEntrada($this->reformaMoral->movimientoRegistral);
 
     }
 

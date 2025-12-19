@@ -20,7 +20,7 @@ class Sentencia extends Component
     protected function rules(){
         return [
             'sentencia.acto_contenido' => 'required',
-            'sentencia.descripcion' => 'required',
+            'sentencia.descripcion' => 'required'
         ];
 
     }

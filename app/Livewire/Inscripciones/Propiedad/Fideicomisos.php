@@ -7,18 +7,19 @@ use App\Models\File;
 use App\Models\Actor;
 use Livewire\Component;
 use App\Models\Fideicomiso;
-use Illuminate\Support\Str;
 use App\Constantes\Constantes;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Hash;
 use Spatie\LivewireFilepond\WithFilePond;
 use App\Http\Controllers\InscripcionesPropiedad\FideicomisoController;
+use App\Traits\Inscripciones\DocumentoEntradaTrait;
 
 class Fideicomisos extends Component
 {
 
     use WithFilePond;
+    use DocumentoEntradaTrait;
 
     public Fideicomiso $fideicomiso;
 
@@ -91,6 +92,8 @@ class Fideicomisos extends Component
 
                 $this->fideicomiso->save();
 
+                $this->actualizarDocumentoEntrada($this->fideicomiso->movimientoRegistral);
+
             });
 
             $this->dispatch('mostrarMensaje', ['success', "La información se guardó con éxito."]);
@@ -131,6 +134,8 @@ class Fideicomisos extends Component
                 $this->fideicomiso->actualizado_por = auth()->id();
                 $this->fideicomiso->fecha_inscripcion = now()->toDateString();
                 $this->fideicomiso->save();
+
+                $this->actualizarDocumentoEntrada($this->fideicomiso->movimientoRegistral);
 
                 $this->fideicomiso->movimientoRegistral->update(['estado' => 'elaborado']);
 
@@ -266,6 +271,8 @@ class Fideicomisos extends Component
         ];
 
         $this->actores = Constantes::ACTORES_FIDEICOMISO;
+
+        $this->cargarDocumentoEntrada($this->fideicomiso->movimientoRegistral);
 
     }
 

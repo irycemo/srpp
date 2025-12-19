@@ -12,6 +12,7 @@ use Illuminate\Support\Facades\Hash;
 use App\Traits\Inscripciones\ColindanciasTrait;
 use App\Traits\Inscripciones\Propiedad\PropiedadTrait;
 use App\Http\Controllers\InscripcionesPropiedad\PropiedadController;
+use App\Traits\Inscripciones\DocumentoEntradaTrait;
 use Livewire\WithFileUploads;
 
 class InscripcionGeneral extends Component
@@ -20,6 +21,7 @@ class InscripcionGeneral extends Component
     use PropiedadTrait;
     use WithFileUploads;
     use ColindanciasTrait;
+    use DocumentoEntradaTrait;
 
     public $transmitentes = [];
 
@@ -91,7 +93,13 @@ class InscripcionGeneral extends Component
             'inscripcion.etapa_fraccionador' => 'nullable',
             'inscripcion.clave_edificio' => 'nullable',
             'inscripcion.partes_iguales' => 'required',
-            'documento' => 'nullable|mimes:pdf|max:153600'
+            'documento' => 'nullable|mimes:pdf|max:153600',
+            'tipo_documento' => 'required',
+            'autoridad_cargo' => 'required',
+            'autoridad_nombre' => 'required',
+            'numero_documento' => 'nullable',
+            'fecha_emision' => 'required',
+            'procedencia' => 'nullable',
          ];
     }
 
@@ -269,6 +277,8 @@ class InscripcionGeneral extends Component
                 $this->inscripcion->movimientoRegistral->save();
 
                 $this->inscripcion->save();
+
+                $this->actualizarDocumentoEntrada($this->inscripcion->movimientoRegistral);
 
                 $this->guardarColindancias($this->inscripcion->movimientoRegistral->folioReal->predio);
 
@@ -703,6 +713,7 @@ class InscripcionGeneral extends Component
                 $this->inscripcion->movimientoRegistral->folioReal->predio->actualizado_por = auth()->id();
                 $this->inscripcion->movimientoRegistral->folioReal->predio->save();
 
+                $this->actualizarDocumentoEntrada($this->inscripcion->movimientoRegistral);
 
                 $this->guardarColindancias($this->inscripcion->movimientoRegistral->folioReal->predio);
 
@@ -804,6 +815,8 @@ class InscripcionGeneral extends Component
         $this->tipos_vialidades = Constantes::TIPO_VIALIDADES;
 
         $this->tipos_asentamientos = Constantes::TIPO_ASENTAMIENTO;
+
+        $this->cargarDocumentoEntrada($this->inscripcion->movimientoRegistral);
 
     }
 

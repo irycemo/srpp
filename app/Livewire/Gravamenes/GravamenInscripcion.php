@@ -18,12 +18,14 @@ use Illuminate\Support\Facades\Storage;
 use Spatie\LivewireFilepond\WithFilePond;
 use Illuminate\Http\Client\ConnectionException;
 use App\Http\Controllers\Gravamen\GravamenController;
+use App\Traits\Inscripciones\DocumentoEntradaTrait;
 
 class GravamenInscripcion extends Component
 {
 
     use WithFileUploads;
     use WithFilePond;
+    use DocumentoEntradaTrait;
 
     public $distritos;
     public $actos;
@@ -52,6 +54,12 @@ class GravamenInscripcion extends Component
             'gravamen.estado' => 'required',
             'gravamen.expediente' => 'nullable',
             'gravamen.observaciones' => 'required',
+            'tipo_documento' => 'required',
+            'autoridad_cargo' => 'required',
+            'autoridad_nombre' => 'required',
+            'numero_documento' => 'nullable',
+            'fecha_emision' => 'required',
+            'procedencia' => 'nullable',
          ];
     }
 
@@ -143,6 +151,8 @@ class GravamenInscripcion extends Component
                 $this->gravamen->actualizado_por = auth()->id();
                 $this->gravamen->save();
 
+                $this->actualizarDocumentoEntrada($this->gravamen->movimientoRegistral);
+
                 $this->gravamen->movimientoRegistral->update(['estado' => 'elaborado', 'actualizado_por' => auth()->id()]);
 
                 $this->gravamen->movimientoRegistral->audits()->latest()->first()->update(['tags' => 'Elaboró inscripción de gravamen']);
@@ -173,6 +183,8 @@ class GravamenInscripcion extends Component
                 $this->gravamen->movimientoRegistral->save();
 
                 $this->gravamen->save();
+
+                $this->actualizarDocumentoEntrada($this->gravamen->movimientoRegistral);
 
             });
 
@@ -341,6 +353,8 @@ class GravamenInscripcion extends Component
         })->first();
 
         if(!$jefe_departamento) abort(500, message:"Es necesario registrar al jefe de Departamento de Registro de Inscripciones.");
+
+        $this->cargarDocumentoEntrada($this->gravamen->movimientoRegistral);
 
     }
 

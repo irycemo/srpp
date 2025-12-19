@@ -8,6 +8,8 @@
 
     <x-header>Inscripción de gravamen  <span class="text-sm tracking-widest">Folio real: {{ $gravamen->movimientoRegistral->folioReal->folio }} - {{ $gravamen->movimientoRegistral->folio }}</span></x-header>
 
+    @include('livewire.comun.documento_entrada_campos')
+
     <div class="p-4 bg-white shadow-xl rounded-xl mb-5">
 
         <span class="flex items-center justify-center text-gray-700">Datos del gravamen</span>

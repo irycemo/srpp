@@ -14,6 +14,7 @@ use Illuminate\Support\Facades\Hash;
 use Spatie\LivewireFilepond\WithFilePond;
 use App\Traits\Inscripciones\Varios\VariosTrait;
 use App\Http\Controllers\Varios\VariosController;
+use App\Traits\Inscripciones\DocumentoEntradaTrait;
 
 class DonacionUsufructo extends Component
 {
@@ -21,6 +22,7 @@ class DonacionUsufructo extends Component
     use VariosTrait;
     use WithFileUploads;
     use WithFilePond;
+    use DocumentoEntradaTrait;
 
     protected $listeners = ['refresh'];
 
@@ -105,6 +107,8 @@ class DonacionUsufructo extends Component
                 $this->vario->fecha_inscripcion = now()->toDateString();
                 $this->vario->save();
 
+                $this->actualizarDocumentoEntrada($this->vario->movimientoRegistral);
+
                 $this->vario->movimientoRegistral->update(['estado' => 'elaborado']);
 
                 $this->procesarPropietarios();
@@ -170,6 +174,8 @@ class DonacionUsufructo extends Component
 
                 $this->vario->save();
 
+                $this->actualizarDocumentoEntrada($this->vario->movimientoRegistral);
+
             });
 
             $this->dispatch('mostrarMensaje', ['success', "La información se guardó con éxito."]);
@@ -202,6 +208,8 @@ class DonacionUsufructo extends Component
         }
 
         $this->vario->load('actores.persona');
+
+        $this->cargarDocumentoEntrada($this->vario->movimientoRegistral);
 
     }
 

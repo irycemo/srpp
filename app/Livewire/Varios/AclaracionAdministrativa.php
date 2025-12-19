@@ -15,6 +15,7 @@ use Spatie\LivewireFilepond\WithFilePond;
 use App\Traits\Inscripciones\ColindanciasTrait;
 use App\Traits\Inscripciones\Varios\VariosTrait;
 use App\Http\Controllers\Varios\VariosController;
+use App\Traits\Inscripciones\DocumentoEntradaTrait;
 
 class AclaracionAdministrativa extends Component
 {
@@ -22,6 +23,7 @@ class AclaracionAdministrativa extends Component
     use VariosTrait;
     use WithFilePond;
     use ColindanciasTrait;
+    use DocumentoEntradaTrait;
 
     public $areas;
     public $divisas;
@@ -83,7 +85,13 @@ class AclaracionAdministrativa extends Component
             'vario.predio.manzana_fraccionador' => 'nullable',
             'vario.predio.etapa_fraccionador' => 'nullable',
             'vario.predio.clave_edificio' => 'nullable',
-            'documento' => 'nullable|mimes:pdf|max:100000'
+            'documento' => 'nullable|mimes:pdf|max:100000',
+            'tipo_documento' => 'required',
+            'autoridad_cargo' => 'required',
+            'autoridad_nombre' => 'required',
+            'numero_documento' => 'nullable',
+            'fecha_emision' => 'required',
+            'procedencia' => 'nullable',
          ];
     }
 
@@ -169,6 +177,8 @@ class AclaracionAdministrativa extends Component
 
             $this->vario->update(['predio_id' => $predio->id]);
 
+            $this->actualizarDocumentoEntrada($this->vario->movimientoRegistral);
+
             foreach ($this->vario->movimientoRegistral->folioReal->predio->colindancias as $colindancia) {
 
                 $predio->colindancias()->create([
@@ -216,6 +226,8 @@ class AclaracionAdministrativa extends Component
                 $this->vario->save();
 
                 $this->vario->predio->save();
+
+                $this->actualizarDocumentoEntrada($this->vario->movimientoRegistral);
 
                 $this->guardarColindancias($this->vario->predio);
 
@@ -412,6 +424,8 @@ class AclaracionAdministrativa extends Component
         $this->tipos_vialidades = Constantes::TIPO_VIALIDADES;
 
         $this->tipos_asentamientos = Constantes::TIPO_ASENTAMIENTO;
+
+        $this->cargarDocumentoEntrada($this->vario->movimientoRegistral);
 
     }
 

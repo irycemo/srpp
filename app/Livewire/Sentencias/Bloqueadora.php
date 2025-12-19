@@ -14,6 +14,7 @@ use Illuminate\Support\Facades\Storage;
 use Illuminate\Http\Client\ConnectionException;
 use App\Traits\Inscripciones\Sentencias\SentenciaTrait;
 use App\Http\Controllers\Sentencias\SentenciasController;
+use App\Traits\Inscripciones\DocumentoEntradaTrait;
 use Spatie\LivewireFilepond\WithFilePond;
 
 class Bloqueadora extends Component
@@ -22,6 +23,7 @@ class Bloqueadora extends Component
     use SentenciaTrait;
     use WithFileUploads;
     use WithFilePond;
+    use DocumentoEntradaTrait;
 
     protected function rules(){
         return [
@@ -32,7 +34,13 @@ class Bloqueadora extends Component
             'sentencia.expediente' => 'nullable',
             'sentencia.tomo' => 'nullable',
             'sentencia.registro' => 'nullable',
-            'documento' => 'nullable|mimes:pdf|max:100000'
+            'documento' => 'nullable|mimes:pdf|max:100000',
+            'tipo_documento' => 'required',
+            'autoridad_cargo' => 'required',
+            'autoridad_nombre' => 'required',
+            'numero_documento' => 'nullable',
+            'fecha_emision' => 'required',
+            'procedencia' => 'nullable',
         ];
 
     }
@@ -50,6 +58,8 @@ class Bloqueadora extends Component
                 $this->sentencia->movimientoRegistral->save();
 
                 $this->sentencia->save();
+
+                $this->actualizarDocumentoEntrada($this->casentenciancelacion->movimientoRegistral);
 
             });
 
@@ -82,6 +92,8 @@ class Bloqueadora extends Component
                 $this->sentencia->actualizado_por = auth()->id();
                 $this->sentencia->fecha_inscripcion = now()->toDateString();
                 $this->sentencia->save();
+
+                $this->actualizarDocumentoEntrada($this->casentenciancelacion->movimientoRegistral);
 
                 $this->sentencia->movimientoRegistral->folioReal->update(['estado' => 'bloqueado']);
 
@@ -161,6 +173,8 @@ class Bloqueadora extends Component
 
 
         $this->actos = Constantes::ACTOS_INSCRIPCION_SENTENCIAS;
+
+        $this->cargarDocumentoEntrada($this->cancelacion->movimientoRegistral);
 
     }
 

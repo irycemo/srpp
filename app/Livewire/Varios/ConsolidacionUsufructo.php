@@ -11,6 +11,7 @@ use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Hash;
 use App\Traits\Inscripciones\Varios\VariosTrait;
 use App\Http\Controllers\Varios\VariosController;
+use App\Traits\Inscripciones\DocumentoEntradaTrait;
 use Spatie\LivewireFilepond\WithFilePond;
 
 class ConsolidacionUsufructo extends Component
@@ -19,6 +20,7 @@ class ConsolidacionUsufructo extends Component
     use VariosTrait;
     use WithFileUploads;
     use WithFilePond;
+    use DocumentoEntradaTrait;
 
     public $porcentaje_propiedad = 0;
     public $porcentaje_nuda = 0;
@@ -32,6 +34,12 @@ class ConsolidacionUsufructo extends Component
             'porcentaje_propiedad' => 'required|numeric|min:0',
             'porcentaje_nuda' => 'required|numeric|min:0',
             'porcentaje_usufructo' => 'required|numeric|min:0',
+            'tipo_documento' => 'required',
+            'autoridad_cargo' => 'required',
+            'autoridad_nombre' => 'required',
+            'numero_documento' => 'nullable',
+            'fecha_emision' => 'required',
+            'procedencia' => 'nullable',
 
          ];
     }
@@ -113,6 +121,8 @@ class ConsolidacionUsufructo extends Component
                 $this->vario->actualizado_por = auth()->id();
                 $this->vario->fecha_inscripcion = now()->toDateString();
                 $this->vario->save();
+
+                $this->actualizarDocumentoEntrada($this->vario->movimientoRegistral);
 
                 $this->vario->movimientoRegistral->update(['estado' => 'elaborado']);
 
@@ -225,6 +235,8 @@ class ConsolidacionUsufructo extends Component
 
                 $this->vario->save();
 
+                $this->actualizarDocumentoEntrada($this->vario->movimientoRegistral);
+
             });
 
             $this->dispatch('mostrarMensaje', ['success', "La información se guardó con éxito."]);
@@ -257,6 +269,8 @@ class ConsolidacionUsufructo extends Component
         }
 
         $this->vario->load('actores.persona');
+
+        $this->cargarDocumentoEntrada($this->vario->movimientoRegistral);
 
     }
 

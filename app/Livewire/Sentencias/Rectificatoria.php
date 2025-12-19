@@ -7,7 +7,6 @@ use App\Models\Actor;
 use App\Models\Predio;
 use Livewire\Component;
 use App\Models\Sentencia;
-use App\Models\Colindancia;
 use Livewire\WithFileUploads;
 use App\Constantes\Constantes;
 use Illuminate\Support\Facades\DB;
@@ -22,6 +21,7 @@ use App\Traits\Inscripciones\ColindanciasTrait;
 use Illuminate\Http\Client\ConnectionException;
 use App\Traits\Inscripciones\Sentencias\SentenciaTrait;
 use App\Http\Controllers\Sentencias\SentenciasController;
+use App\Traits\Inscripciones\DocumentoEntradaTrait;
 
 class Rectificatoria extends Component
 {
@@ -30,6 +30,7 @@ class Rectificatoria extends Component
     use SentenciaTrait;
     use WithFilePond;
     use ColindanciasTrait;
+    use DocumentoEntradaTrait;
 
     public $areas;
     public $divisas;
@@ -101,6 +102,12 @@ class Rectificatoria extends Component
             'sentenciaPredio.manzana_fraccionador' => 'nullable',
             'sentenciaPredio.etapa_fraccionador' => 'nullable',
             'sentenciaPredio.clave_edificio' => 'nullable',
+            'tipo_documento' => 'required',
+            'autoridad_cargo' => 'required',
+            'autoridad_nombre' => 'required',
+            'numero_documento' => 'nullable',
+            'fecha_emision' => 'required',
+            'procedencia' => 'nullable',
          ];
     }
 
@@ -210,6 +217,8 @@ class Rectificatoria extends Component
 
                 $this->sentencia->save();
 
+                $this->actualizarDocumentoEntrada($this->sentencia->movimientoRegistral);
+
                 $this->sentencia->movimientoRegistral->update(['estado' => 'elaborado', 'actualizado_por' => auth()->id()]);
 
                 $this->sentencia->movimientoRegistral->audits()->latest()->first()->update(['tags' => 'Elaboró inscripción de sentencia']);
@@ -242,6 +251,8 @@ class Rectificatoria extends Component
                 $this->sentenciaPredio->save();
 
                 $this->sentencia->save();
+
+                $this->actualizarDocumentoEntrada($this->sentencia->movimientoRegistral);
 
                 $this->guardarColindancias($this->sentenciaPredio);
 
@@ -486,6 +497,8 @@ class Rectificatoria extends Component
         $this->tipos_vialidades = Constantes::TIPO_VIALIDADES;
 
         $this->tipos_asentamientos = Constantes::TIPO_ASENTAMIENTO;
+
+        $this->cargarDocumentoEntrada($this->sentencia->movimientoRegistral);
 
     }
 
