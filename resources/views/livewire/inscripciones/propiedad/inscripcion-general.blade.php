@@ -52,11 +52,11 @@
 
                 <span class="flex items-center justify-center text-gray-700">Cuenta predial</span>
 
-                <input title="Localidad" placeholder="Localidad" type="number" class="bg-white rounded text-xs w-20 @error('inscripcion.cp_localidad') border-1 border-red-500 @enderror" wire:model.lazy="inscripcion.cp_localidad">
+                <input title="Localidad" placeholder="Localidad" type="number" min="1" max="9" class="bg-white rounded text-xs w-20 @error('inscripcion.cp_localidad') border-1 border-red-500 @enderror" wire:model.lazy="inscripcion.cp_localidad">
 
                 <input title="Oficina" placeholder="Oficina" type="number" class="bg-white rounded text-xs w-20 @error('inscripcion.cp_oficina') border-1 border-red-500 @enderror" wire:model.defer="inscripcion.cp_oficina">
 
-                <input title="Tipo de predio" placeholder="Tipo" type="number" class="bg-white rounded text-xs w-20 @error('inscripcion.cp_tipo_predio') border-1 border-red-500 @enderror" wire:model.defer="inscripcion.cp_tipo_predio">
+                <input title="Tipo de predio" placeholder="Tipo" type="number" min="1" max="2" class="bg-white rounded text-xs w-20 @error('inscripcion.cp_tipo_predio') border-1 border-red-500 @enderror" wire:model.defer="inscripcion.cp_tipo_predio">
 
                 <input title="Número de registro" placeholder="Registro" type="number" class="bg-white rounded text-xs w-20 @error('inscripcion.cp_registro') border-1 border-red-500 @enderror" wire:model.lazy="inscripcion.cp_registro">
 
