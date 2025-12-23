@@ -59,7 +59,7 @@ class Bloqueadora extends Component
 
                 $this->sentencia->save();
 
-                $this->actualizarDocumentoEntrada($this->casentenciancelacion->movimientoRegistral);
+                $this->actualizarDocumentoEntrada($this->sentencia->movimientoRegistral);
 
             });
 
@@ -93,7 +93,7 @@ class Bloqueadora extends Component
                 $this->sentencia->fecha_inscripcion = now()->toDateString();
                 $this->sentencia->save();
 
-                $this->actualizarDocumentoEntrada($this->casentenciancelacion->movimientoRegistral);
+                $this->actualizarDocumentoEntrada($this->sentencia->movimientoRegistral);
 
                 $this->sentencia->movimientoRegistral->folioReal->update(['estado' => 'bloqueado']);
 
