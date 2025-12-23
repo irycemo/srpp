@@ -363,6 +363,8 @@ class AclaracionAdministrativa extends Component
                 $this->vario->predio_id = null;
                 $this->vario->save();
 
+                $this->actualizarDocumentoEntrada($this->vario->movimientoRegistral);
+
                 $this->vario->movimientoRegistral->update(['estado' => 'elaborado']);
 
                 $this->procesarPredio();

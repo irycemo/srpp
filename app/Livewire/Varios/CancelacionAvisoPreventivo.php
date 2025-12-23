@@ -117,7 +117,7 @@ class CancelacionAvisoPreventivo extends Component
 
         $this->vario->acto_contenido = 'CANCELACIÓN DE PRIMER AVISO PREVENTIVO';
 
-        $this->cargarDocumentoEntrada($this->cancelacion->movimientoRegistral);
+        $this->cargarDocumentoEntrada($this->vario->movimientoRegistral);
 
     }
 

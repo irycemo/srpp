@@ -196,7 +196,7 @@ class PrimerAvisoPreventivo extends Component
 
     public function mount(){
 
-        $this->cargarDocumentoEntrada($this->cancelacion->movimientoRegistral);
+        $this->cargarDocumentoEntrada($this->vario->movimientoRegistral);
 
     }
 
