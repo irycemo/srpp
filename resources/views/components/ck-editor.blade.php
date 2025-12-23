@@ -18,7 +18,10 @@
                 .create(document.querySelector(`#{{ $attributes['id'] }}`), {
                     ckfinder: {
                         uploadUrl: "{{ route('ckImage', ['_token' => csrf_token()]) }}"
-                    }
+                    },
+                    mediaEmbed: {
+                        previewsInData:true
+                    },
                 })
                 .then(editor => {
                     editor.model.document.on('change:data', () => {
