@@ -174,7 +174,7 @@ class Bloqueadora extends Component
 
         $this->actos = Constantes::ACTOS_INSCRIPCION_SENTENCIAS;
 
-        $this->cargarDocumentoEntrada($this->cancelacion->movimientoRegistral);
+        $this->cargarDocumentoEntrada($this->sentencia->movimientoRegistral);
 
     }
 
