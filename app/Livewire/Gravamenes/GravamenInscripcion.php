@@ -285,7 +285,7 @@ class GravamenInscripcion extends Component
 
     public function mount(){
 
-        if(!$this->gravamen->movimientoRegistral->documentoEntrada()){
+       /*  if(!$this->gravamen->movimientoRegistral->documentoEntrada()){
 
             try {
 
@@ -326,7 +326,7 @@ class GravamenInscripcion extends Component
 
             }
 
-        }
+        } */
 
         $this->distritos = Constantes::DISTRITOS;
 
