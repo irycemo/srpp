@@ -409,17 +409,6 @@ trait InscripcionesIndex{
 
     }
 
-    public function abrirModalRechazar(MovimientoRegistral $modelo){
-
-        $this->reset(['observaciones', 'motivo']);
-
-        if($this->modelo_editar->isNot($modelo))
-            $this->modelo_editar = $modelo;
-
-        $this->modalRechazar = true;
-
-    }
-
     public function abrirModalConcluir(MovimientoRegistral $modelo){
 
         if($this->modelo_editar->isNot($modelo))
@@ -700,12 +689,6 @@ trait InscripcionesIndex{
             $this->dispatch('mostrarMensaje', ['error', "Ha ocurrido un error."]);
 
         }
-
-    }
-
-    public function seleccionarMotivo($key){
-
-        $this->motivo = $this->motivos[$key];
 
     }
 

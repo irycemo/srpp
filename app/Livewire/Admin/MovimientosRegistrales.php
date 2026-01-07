@@ -9,15 +9,17 @@ use App\Constantes\Constantes;
 use App\Traits\ComponentesTrait;
 use Illuminate\Support\Facades\DB;
 use App\Models\MovimientoRegistral;
+use App\Traits\Inscripciones\EnviarMovimientoCorreccion;
 use Illuminate\Support\Facades\Log;
-use App\Http\Services\FolioRealService;
-use App\Http\Services\SistemaTramitesService;
+use App\Traits\Inscripciones\RechazarMovimientoTrait;
 
 class MovimientosRegistrales extends Component
 {
 
     use WithPagination;
     use ComponentesTrait;
+    use RechazarMovimientoTrait;
+    use EnviarMovimientoCorreccion;
 
     public MovimientoRegistral $modelo_editar;
 
@@ -30,7 +32,6 @@ class MovimientosRegistrales extends Component
     public $modalReasignarUsuario = false;
     public $modalReasignarSupervisor = false;
     public $modalCorreccion = false;
-    public $modalRechazar = false;
 
     public $mensaje;
     public $observaciones;
@@ -66,6 +67,15 @@ class MovimientosRegistrales extends Component
     public function crearModeloVacio(){
 
         $this->modelo_editar = MovimientoRegistral::make();
+
+    }
+
+    public function abrirModalReasignarSupervisor(MovimientoRegistral $modelo){
+
+        if($this->modelo_editar->isNot($modelo))
+            $this->modelo_editar = $modelo;
+
+        $this->modalReasignarSupervisor = true;
 
     }
 
@@ -157,7 +167,16 @@ class MovimientosRegistrales extends Component
         if($this->modelo_editar->isNot($modelo))
             $this->modelo_editar = $modelo;
 
-        $this->modalRechazar = true;
+        $this->modal_rechazar = true;
+
+    }
+
+    public function abrirModalCorreccion(MovimientoRegistral $modelo){
+
+        if($this->modelo_editar->isNot($modelo))
+            $this->modelo_editar = $modelo;
+
+        $this->modalCorreccion = true;
 
     }
 
@@ -171,25 +190,19 @@ class MovimientosRegistrales extends Component
 
             DB::transaction(function (){
 
-                $observaciones = auth()->user()->name . ' rechaza el ' . now() . ', con motivo: ' . $this->observaciones . '<|>';
-
-                (new SistemaTramitesService())->rechazarTramite($this->modelo_editar->año, $this->modelo_editar->tramite, $this->modelo_editar->usuario, $observaciones);
-
-                $this->modelo_editar->update(['estado' => 'rechazado']);
-
-                $this->modelo_editar->actualizado_por = auth()->user()->id;
-
-                $this->modelo_editar->save();
-
-                $this->modelo_editar->audits()->latest()->first()->update(['tags' => 'Rechazó el trámite']);
-
-                $this->dispatch('mostrarMensaje', ['success', "El trámite se rechazó con éxito."]);
+                $this->rechazarMovimiento($this->modelo_editar);
 
             });
 
+            $this->reset(['modal_rechazar', 'observaciones']);
+
+            $this->dispatch('mostrarMensaje', ['success', "El trámite se rechazó con éxito."]);
+
         } catch (\Throwable $th) {
+
             Log::error("Error al rechazar trámite por el usuario: (id: " . auth()->user()->id . ") " . auth()->user()->name . ". " . $th);
             $this->dispatch('mostrarMensaje', ['error', "Ha ocurrido un error."]);
+
         }
 
     }
@@ -250,86 +263,19 @@ class MovimientosRegistrales extends Component
 
     }
 
-    public function abrirModalReasignarSupervisor(MovimientoRegistral $modelo){
-
-        if($this->modelo_editar->isNot($modelo))
-            $this->modelo_editar = $modelo;
-
-        $this->modalReasignarSupervisor = true;
-
-    }
-
-    public function abrirModalCorreccion(MovimientoRegistral $modelo){
-
-        if($this->modelo_editar->isNot($modelo))
-            $this->modelo_editar = $modelo;
-
-        $this->modalCorreccion = true;
-
-        if($modelo->inscripcionPropiedad && in_array($modelo->inscripcionPropiedad->servicio, ['D121', 'D120', 'D123', 'D122', 'D119', 'D124', 'D125', 'D126'])){
-
-            $this->mensaje = "Al enviar a corrección borrara " . $modelo->movimientosHijos->count() . ' folios reales. ';
-
-        }
-
-    }
-
     public function correccion(){
-
-        $movimiento = $this->modelo_editar->folioReal->movimientosRegistrales()
-                                                        ->whereIn('estado', ['finalizado', 'concluido', 'elaborado'])
-                                                        ->where('folio', '>', $this->modelo_editar->folio)
-                                                        ->first();
-
-        if($movimiento){
-
-            $this->dispatch('mostrarMensaje', ['warning', "El folio real ya tiene movimientos registrales posteriores concluidos ó finalizados."]);
-
-            return;
-
-        }
-
-        /* if($this->modelo_editar->fecha_entrega->addDays(30) < now()){
-
-            $this->dispatch('mostrarMensaje', ['warning', "Han pasado 30 dias desde su fecha de entrega no es posible enviar a corrección."]);
-
-            return;
-
-        } */
-
-        if(in_array($this->modelo_editar->folioReal->estado, ['bloqueado', 'centinela'])){
-
-            $this->dispatch('mostrarMensaje', ['warning', "El folio esta bloqueado."]);
-
-            return;
-
-        }
 
         try {
 
             DB::transaction(function () {
 
-                $folios = $this->modelo_editar->movimientosHijos()->pluck('folio_real') ;
-
-                foreach($folios as $folio){
-
-                    (new FolioRealService())->borrarFolioReal($folio);
-
-                }
-
-                $this->modelo_editar->estado = 'correccion';
-                $this->modelo_editar->actualizado_por = auth()->id();
-                $this->modelo_editar->save();
-
-                $this->revisarMovimientosDeCorreccion();
-
-                $this->modelo_editar->audits()->latest()->first()->update(['tags' => 'Cambio estado a corrección']);
-
-                $this->dispatch('mostrarMensaje', ['success', "La información se actualizó con éxito."]);
-
-                $this->modalCorreccion = false;
+                $this->enviarCorreccion($this->modelo_editar);
 
             });
+
+            $this->dispatch('mostrarMensaje', ['success', "La información se actualizó con éxito."]);
+
+            $this->modalCorreccion = false;
 
         } catch (\Throwable $th) {
 
@@ -370,6 +316,12 @@ class MovimientosRegistrales extends Component
                                     $q->whereIn('name', $roles);
                                 })
                                 ->where('status', 'activo')
+                                ->when($this->modelo_editar->getRawOriginal('distrito') == 2, function($q){
+                                    $q->where('ubicacion', 'Regional 4');
+                                })
+                                ->when($this->modelo_editar->getRawOriginal('distrito') != 2, function($q){
+                                    $q->where('ubicacion', '!=', 'Regional 4');
+                                })
                                 ->orderBy('name')
                                 ->get();
 
@@ -386,26 +338,10 @@ class MovimientosRegistrales extends Component
 
     }
 
-    public function revisarMovimientosDeCorreccion(){
-
-        if($this->modelo_editar->sentencia){
-
-            if($this->modelo_editar->sentencia->acto_contenido == 'CANCELACIÓN DE SENTENCIA'){
-
-                $cancelado = MovimientoRegistral::where('movimiento_padre', $this->modelo_editar->id)->first();
-
-                $cancelado->update(['movimiento_padre' => null]);
-
-                $cancelado->sentencia->update(['estado' => 'activo']);
-
-            }
-
-        }
-
-    }
-
     public function mount(): void
     {
+
+        $this->crearModeloVacio();
 
         $this->usuarios_filtro = User::where('status', 'activo')
                                         ->whereHas('roles', function($q){
@@ -414,11 +350,11 @@ class MovimientosRegistrales extends Component
                                         ->orderBy('name')
                                         ->get();
 
-        $this->crearModeloVacio();
-
         $this->distritos = Constantes::DISTRITOS;
 
         $this->años = Constantes::AÑOS;
+
+        $this->motivos_rechazo = Constantes::RECHAZO_MOTIVOS;
 
     }
 

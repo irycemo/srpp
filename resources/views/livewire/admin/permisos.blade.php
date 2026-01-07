@@ -1,6 +1,6 @@
 <div class="">
 
-    <div class="mb-6">
+    <div class="mb-2 lg:mb-5">
 
         <x-header>Permisos</x-header>
 
@@ -59,7 +59,7 @@
 
                         <x-table.cell>
 
-                            <span class="lg:hidden absolute top-0 left-0 bg-blue-300 px-2 py-1 text-xs text-white font-bold uppercase rounded-br-xl">Nombre</span>
+                            <span class="lg:hidden absolute top-0 left-0 bg-blue-300 px-2 text-[10px] text-white font-bold uppercase rounded-br-xl">Nombre</span>
 
                             {{ $permiso->name }}
 
@@ -67,7 +67,7 @@
 
                         <x-table.cell>
 
-                            <span class="lg:hidden absolute top-0 left-0 bg-blue-300 px-2 py-1 text-xs text-white font-bold uppercase rounded-br-xl">Registrado</span>
+                            <span class="lg:hidden absolute top-0 left-0 bg-blue-300 px-2 text-[10px] text-white font-bold uppercase rounded-br-xl">Registrado</span>
 
 
                             <span class="font-semibold">@if($permiso->creadoPor != null)Registrado por: {{$permiso->creadoPor->name}} @else Registro: @endif</span> <br>
@@ -86,7 +86,7 @@
 
                         <x-table.cell>
 
-                            <span class="lg:hidden absolute top-0 left-0 bg-blue-300 px-2 py-1 text-xs text-white font-bold uppercase rounded-br-xl">Acciones</span>
+                            <span class="lg:hidden absolute top-0 left-0 bg-blue-300 px-2 text-[10px] text-white font-bold uppercase rounded-br-xl">Acciones</span>
 
                             <div class="flex justify-center lg:justify-start gap-2">
 

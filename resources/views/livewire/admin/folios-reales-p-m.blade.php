@@ -1,40 +1,36 @@
 <div class="">
 
-    <div class="mb-6">
+    <div class="mb-2 lg:mb-5">
 
         <x-header>Folios reales PM</x-header>
 
-        <div class="flex justify-between">
+        <div class="flex gap-3 overflow-auto p-1">
 
-            <div class="flex gap-3">
+            <input type="number" wire:model.live.debounce.500ms="filters.folio" placeholder="Folio" class="bg-white rounded-full text-sm">
 
-                <input type="number" wire:model.live.debounce.500ms="filters.folio" placeholder="Folio" class="bg-white rounded-full text-sm">
+            <select class="bg-white rounded-full text-sm" wire:model.live="filters.estado">
 
-                <select class="bg-white rounded-full text-sm" wire:model.live="filters.estado">
+                <option value="activo">Activo</option>
+                <option value="elaborado">Elaborado</option>
+                <option value="rechazado">Rechazado</option>
+                <option value="bloqueado">Bloqueado</option>
 
-                    <option value="activo">Activo</option>
-                    <option value="elaborado">Elaborado</option>
-                    <option value="rechazado">Rechazado</option>
-                    <option value="bloqueado">Bloqueado</option>
+            </select>
 
-                </select>
+            <input type="number" wire:model.live.debounce.500ms="filters.tomo" placeholder="Tomo" class="bg-white rounded-full text-sm">
 
-                <input type="number" wire:model.live.debounce.500ms="filters.tomo" placeholder="Tomo" class="bg-white rounded-full text-sm">
+            <input type="number" wire:model.live.debounce.500ms="filters.registro" placeholder="Registro" class="bg-white rounded-full text-sm">
 
-                <input type="number" wire:model.live.debounce.500ms="filters.registro" placeholder="Registro" class="bg-white rounded-full text-sm">
+            <input type="number" wire:model.live.debounce.500ms="filters.distrito" placeholder="Distrito" class="bg-white rounded-full text-sm">
 
-                <input type="number" wire:model.live.debounce.500ms="filters.distrito" placeholder="Distrito" class="bg-white rounded-full text-sm">
+            <x-input-select class="bg-white rounded-full text-sm w-min" wire:model.live="pagination">
 
-                <x-input-select class="bg-white rounded-full text-sm w-min" wire:model.live="pagination">
+                <option value="10">10</option>
+                <option value="25">25</option>
+                <option value="50">50</option>
+                <option value="100">100</option>
 
-                    <option value="10">10</option>
-                    <option value="25">25</option>
-                    <option value="50">50</option>
-                    <option value="100">100</option>
-
-                </x-input-select>
-
-            </div>
+            </x-input-select>
 
         </div>
 
@@ -67,7 +63,7 @@
 
                         <x-table.cell>
 
-                            <span class="lg:hidden absolute top-0 left-0 bg-blue-300 px-2 py-1 text-xs text-white font-bold uppercase rounded-br-xl">Folio</span>
+                            <span class="lg:hidden absolute top-0 left-0 bg-blue-300 px-2 text-[10px] text-white font-bold uppercase rounded-br-xl">Folio</span>
 
                             {{ $folio->folio }}
 
@@ -75,7 +71,7 @@
 
                         <x-table.cell>
 
-                            <span class="lg:hidden absolute top-0 left-0 bg-blue-300 px-2 py-1 text-xs text-white font-bold uppercase rounded-br-xl">Estado</span>
+                            <span class="lg:hidden absolute top-0 left-0 bg-blue-300 px-2 text-[10px] text-white font-bold uppercase rounded-br-xl">Estado</span>
 
                             <span class="bg-{{ $folio->estado_color }} py-1 px-2 rounded-full text-white text-xs">{{ ucfirst($folio->estado) }}</span>
 
@@ -83,7 +79,7 @@
 
                         <x-table.cell>
 
-                            <span class="lg:hidden absolute top-0 left-0 bg-blue-300 px-2 py-1 text-xs text-white font-bold uppercase rounded-br-xl">Tomo</span>
+                            <span class="lg:hidden absolute top-0 left-0 bg-blue-300 px-2 text-[10px] text-white font-bold uppercase rounded-br-xl">Tomo</span>
 
                             {{ $folio->tomo_antecedente ?? 'N/A' }}
 
@@ -91,7 +87,7 @@
 
                         <x-table.cell>
 
-                            <span class="lg:hidden absolute top-0 left-0 bg-blue-300 px-2 py-1 text-xs text-white font-bold uppercase rounded-br-xl">Registro</span>
+                            <span class="lg:hidden absolute top-0 left-0 bg-blue-300 px-2 text-[10px] text-white font-bold uppercase rounded-br-xl">Registro</span>
 
                             {{ $folio->registro_antecedente ?? 'N/A' }}
 
@@ -99,7 +95,7 @@
 
                         <x-table.cell>
 
-                            <span class="lg:hidden absolute top-0 left-0 bg-blue-300 px-2 py-1 text-xs text-white font-bold uppercase rounded-br-xl">Distrito</span>
+                            <span class="lg:hidden absolute top-0 left-0 bg-blue-300 px-2 text-[10px] text-white font-bold uppercase rounded-br-xl">Distrito</span>
 
                             {{ App\Constantes\Constantes::DISTRITOS[$folio->getRawOriginal('distrito')] }}
 
@@ -107,7 +103,7 @@
 
                         <x-table.cell>
 
-                            <span class="lg:hidden absolute top-0 left-0 bg-blue-300 px-2 py-1 text-xs text-white font-bold uppercase rounded-br-xl">Registrado</span>
+                            <span class="lg:hidden absolute top-0 left-0 bg-blue-300 px-2 text-[10px] text-white font-bold uppercase rounded-br-xl">Registrado</span>
 
 
                             <span class="font-semibold">@if($folio->creadoPor != null)Registrado por: {{$folio->creadoPor->name}} @else Registro: @endif</span> <br>
@@ -128,7 +124,7 @@
 
                             <x-table.cell>
 
-                                <span class="lg:hidden absolute top-0 left-0 bg-blue-300 px-2 py-1 text-xs text-white font-bold uppercase rounded-br-xl">Acciones</span>
+                                <span class="lg:hidden absolute top-0 left-0 bg-blue-300 px-2 text-[10px] text-white font-bold uppercase rounded-br-xl">Acciones</span>
 
                                 <div class="ml-3 relative" x-data="{ open_drop_down:false }">
 

@@ -46,7 +46,7 @@ class FoliosReales extends Component
 
         if(in_array($folioReal->estado, ['bloqueado', 'centinela'])){
 
-            $this->dispatch('mostrarMensaje', ['error', "El folio esta bloqueado no es posible enviarlo a captura."]);
+            $this->dispatch('mostrarMensaje', ['warning', "El folio esta bloqueado no es posible enviarlo a captura."]);
 
             return;
 
@@ -54,9 +54,9 @@ class FoliosReales extends Component
 
         $movimientos = $folioReal->movimientosRegistrales()->where('estado', '!=', 'pase_folio')->get();
 
-        if(!in_array($movimientos->first()->estado, ['nuevo', 'correccion'])){
+        if(!in_array($movimientos->first()->estado, ['nuevo', 'correccion', 'no recibido'])){
 
-            $this->dispatch('mostrarMensaje', ['warning', "El movimiento inicial debe estar nuevo o en corrección."]);
+            $this->dispatch('mostrarMensaje', ['warning', "El folio real tiene movimientos posteriores elaborados."]);
 
             return;
 

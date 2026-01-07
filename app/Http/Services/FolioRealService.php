@@ -4,10 +4,11 @@ namespace App\Http\Services;
 
 use App\Models\FolioReal;
 use App\Models\MovimientoRegistral;
+use App\Exceptions\GeneralException;
 
 class FolioRealService{
 
-    public function borrarFolioReal($folioRealId){
+    public function borrarFolioReal($folioRealId, $revisar_movimientos_registrales = null){
 
         $folioReal = FolioReal::Find($folioRealId);
 
@@ -23,7 +24,7 @@ class FolioRealService{
 
         foreach ($folioReal->movimientosRegistrales as $movimiento) {
 
-            $this->borrarMovimientoRegistral($movimiento);
+            $this->borrarMovimientoRegistral($movimiento, $revisar_movimientos_registrales);
 
         }
 
@@ -53,7 +54,17 @@ class FolioRealService{
 
     }
 
-    public function borrarMovimientoRegistral(MovimientoRegistral $movimiento){
+    public function borrarMovimientoRegistral(MovimientoRegistral $movimiento, $revisar_movimientos_registrales){
+
+        if($revisar_movimientos_registrales){
+
+            if(!in_array($movimiento->estado, ['nuevo', 'correccion', 'pase_folio', 'no recibido', 'recahzado'])){
+
+                throw new GeneralException("El folio real: " . $movimiento->folioReal->folio . " tiene movimientos registrales elaborados no es posible borrarlo.");
+
+            }
+
+        }
 
         $movimiento->load('firmasElectronicas','certificacion','inscripcionPropiedad.actores', 'cancelacion', 'gravamen.actores', 'sentencia', 'vario.actores', 'reformaMoral.actores', 'archivos');
 

@@ -1,85 +1,81 @@
 <div class="">
 
-    <div class="mb-6">
+    <div class="mb-2 lg:mb-5">
 
         <x-header>Movimientos Registrales</x-header>
 
-        <div class="flex justify-between">
+        <div class="flex gap-3 overflow-auto p-1">
 
-            <div class="flex gap-3 overflow-auto p-1">
+            <select class="bg-white rounded-full text-sm" wire:model.live="filters.año">
 
-                <select class="bg-white rounded-full text-sm" wire:model.live="filters.año">
+                <option value="">Año</option>
 
-                    <option value="">Año</option>
+                @foreach ($años as $año)
 
-                    @foreach ($años as $año)
+                    <option value="{{ $año }}">{{ $año }}</option>
 
-                        <option value="{{ $año }}">{{ $año }}</option>
+                @endforeach
 
-                    @endforeach
+            </select>
 
-                </select>
+            <input type="number" wire:model.live.debounce.500ms="filters.tramite" placeholder="# control" class="bg-white rounded-full text-sm w-24">
 
-                <input type="number" wire:model.live.debounce.500ms="filters.tramite" placeholder="# control" class="bg-white rounded-full text-sm w-24">
+            <input type="number" wire:model.live.debounce.500ms="filters.usuario" placeholder="Usuario" class="bg-white rounded-full text-sm w-20">
 
-                <input type="number" wire:model.live.debounce.500ms="filters.usuario" placeholder="Usuario" class="bg-white rounded-full text-sm w-20">
+            <input type="number" wire:model.live.debounce.500ms="filters.folio_real" placeholder="F. Real" class="bg-white rounded-full text-sm w-24">
 
-                <input type="number" wire:model.live.debounce.500ms="filters.folio_real" placeholder="F. Real" class="bg-white rounded-full text-sm w-24">
+            <input type="number" wire:model.live.debounce.500ms="filters.folio" placeholder="M.R." class="bg-white rounded-full text-sm w-24">
 
-                <input type="number" wire:model.live.debounce.500ms="filters.folio" placeholder="M.R." class="bg-white rounded-full text-sm w-24">
+            <select class="bg-white rounded-full text-sm w-min" wire:model.live="filters.estado">
 
-                <select class="bg-white rounded-full text-sm w-min" wire:model.live="filters.estado">
+                <option value="">Seleccione un estado</option>
+                <option value="nuevo">Nuevo</option>
+                <option value="no recibido">No Recibido</option>
+                <option value="elaborado">Elaborado</option>
+                <option value="finalizado">Finalizado</option>
+                <option value="concluido">Concluido</option>
+                <option value="rechazado">Rechazado</option>
+                <option value="carga_parcial">Carga parcial</option>
+                <option value="precalificacion">Precalificación</option>
 
-                    <option value="">Seleccione un estado</option>
-                    <option value="nuevo">Nuevo</option>
-                    <option value="elaborado">Elaborado</option>
-                    <option value="rechazado">Rechazado</option>
-                    <option value="finalizado">Finalizado</option>
-                    <option value="precalificacion">Precalificación</option>
-                    <option value="no recibido">No Recibido</option>
-                    <option value="no recibido">No Recibido</option>
-                    <option value="carga_parcial">Carga parcial</option>
+            </select>
 
-                </select>
+            <input type="number" wire:model.live.debounce.500ms="filters.tomo" placeholder="Tomo" class="bg-white rounded-full text-sm w-24">
 
-                <input type="number" wire:model.live.debounce.500ms="filters.tomo" placeholder="Tomo" class="bg-white rounded-full text-sm w-24">
+            <input type="number" wire:model.live.debounce.500ms="filters.registro" placeholder="Registro" class="bg-white rounded-full text-sm w-24">
 
-                <input type="number" wire:model.live.debounce.500ms="filters.registro" placeholder="Registro" class="bg-white rounded-full text-sm w-24">
+            <select class="bg-white rounded-full text-sm" wire:model.live="filters.distrito">
 
-                <select class="bg-white rounded-full text-sm" wire:model.live="filters.distrito">
+                <option value="">Seleccione un distrito</option>
 
-                    <option value="">Seleccione un distrito</option>
+                @foreach ($distritos as $key => $distrito)
 
-                    @foreach ($distritos as $key => $distrito)
+                    <option value="{{ $key }}">{{ $distrito }}</option>
 
-                        <option value="{{ $key }}">{{ $distrito }}</option>
+                @endforeach
 
-                    @endforeach
+            </select>
 
-                </select>
+            <select class="bg-white rounded-full text-sm" wire:model.live="filters.usuario_asignado">
 
-                <select class="bg-white rounded-full text-sm" wire:model.live="filters.usuario_asignado">
+                <option value="">Seleccione un usuario asignado</option>
 
-                    <option value="">Seleccione un usuario asignado</option>
+                @foreach ($usuarios_filtro as $usuario)
 
-                    @foreach ($usuarios_filtro as $usuario)
+                    <option value="{{ $usuario->id }}">{{ $usuario->name }}</option>
 
-                        <option value="{{ $usuario->id }}">{{ $usuario->name }}</option>
+                @endforeach
 
-                    @endforeach
+            </select>
 
-                </select>
+            <x-input-select class="bg-white rounded-full text-sm w-min" wire:model.live="pagination">
 
-                <x-input-select class="bg-white rounded-full text-sm w-min" wire:model.live="pagination">
+                <option value="10">10</option>
+                <option value="25">25</option>
+                <option value="50">50</option>
+                <option value="100">100</option>
 
-                    <option value="10">10</option>
-                    <option value="25">25</option>
-                    <option value="50">50</option>
-                    <option value="100">100</option>
-
-                </x-input-select>
-
-            </div>
+            </x-input-select>
 
         </div>
 
@@ -117,7 +113,7 @@
 
                         <x-table.cell>
 
-                            <span class="lg:hidden absolute top-0 left-0 bg-blue-300 px-2 py-1 text-xs text-white font-bold uppercase rounded-br-xl">Folio</span>
+                            <span class="lg:hidden absolute top-0 left-0 bg-blue-300 px-2 text-[10px] text-white font-bold uppercase rounded-br-xl"># Control</span>
 
                             <span class="whitespace-nowrap">{{ $movimiento->año }}-{{ $movimiento->tramite }}-{{ $movimiento->usuario }}</span>
 
@@ -125,9 +121,9 @@
 
                         <x-table.cell>
 
-                            <span class="lg:hidden absolute top-0 left-0 bg-blue-300 px-2 py-1 text-xs text-white font-bold uppercase rounded-br-xl">Tomo</span>
+                            <span class="lg:hidden absolute top-0 left-0 bg-blue-300 px-2 text-[10px] text-white font-bold uppercase rounded-br-xl">M.R.</span>
 
-                            <span class="whitespace-nowrap flex items-center">
+                            <span class="whitespace-nowrap flex items-center justify-center">
 
                                 @if($movimiento->folioReal?->estado == 'pendiente')
 
@@ -151,7 +147,7 @@
 
                         <x-table.cell>
 
-                            <span class="lg:hidden absolute top-0 left-0 bg-blue-300 px-2 py-1 text-xs text-white font-bold uppercase rounded-br-xl">Estado</span>
+                            <span class="lg:hidden absolute top-0 left-0 bg-blue-300 px-2 text-[10px] text-white font-bold uppercase rounded-br-xl">Estado</span>
 
                             <span class="bg-{{ $movimiento->estado_color }} py-1 px-2 rounded-full text-white text-xs whitespace-nowrap">{{ ucfirst($movimiento->estado) }}</span>
 
@@ -159,7 +155,7 @@
 
                         <x-table.cell>
 
-                            <span class="lg:hidden absolute top-0 left-0 bg-blue-300 px-2 py-1 text-xs text-white font-bold uppercase rounded-br-xl">Tomo</span>
+                            <span class="lg:hidden absolute top-0 left-0 bg-blue-300 px-2 text-[10px] text-white font-bold uppercase rounded-br-xl">Tomo</span>
 
                             {{ $movimiento->tomo ?? 'N/A' }}
 
@@ -167,7 +163,7 @@
 
                         <x-table.cell>
 
-                            <span class="lg:hidden absolute top-0 left-0 bg-blue-300 px-2 py-1 text-xs text-white font-bold uppercase rounded-br-xl">Registro</span>
+                            <span class="lg:hidden absolute top-0 left-0 bg-blue-300 px-2 text-[10px] text-white font-bold uppercase rounded-br-xl">Registro</span>
 
                             {{ $movimiento->registro ?? 'N/A' }}
 
@@ -175,7 +171,7 @@
 
                         <x-table.cell>
 
-                            <span class="lg:hidden absolute top-0 left-0 bg-blue-300 px-2 py-1 text-xs text-white font-bold uppercase rounded-br-xl"># Propiedad</span>
+                            <span class="lg:hidden absolute top-0 left-0 bg-blue-300 px-2 text-[10px] text-white font-bold uppercase rounded-br-xl"># Propiedad</span>
 
                             {{ $movimiento->numero_propiedad ?? 'N/A' }}
 
@@ -183,7 +179,7 @@
 
                         <x-table.cell>
 
-                            <span class="lg:hidden absolute top-0 left-0 bg-blue-300 px-2 py-1 text-xs text-white font-bold uppercase rounded-br-xl">Distrito</span>
+                            <span class="lg:hidden absolute top-0 left-0 bg-blue-300 px-2 text-[10px] text-white font-bold uppercase rounded-br-xl">Distrito</span>
 
                             {{ $movimiento->distrito }}
 
@@ -191,31 +187,31 @@
 
                         <x-table.cell>
 
-                            <span class="lg:hidden absolute top-0 left-0 bg-blue-300 px-2 py-1 text-xs text-white font-bold uppercase rounded-br-xl">Servicio</span>
+                            <span class="lg:hidden absolute top-0 left-0 bg-blue-300 px-2 text-[10px] text-white font-bold uppercase rounded-br-xl">Servicio</span>
 
-                            {{ $movimiento->servicio_nombre ?? 'N/A' }}
-
-                        </x-table.cell>
-
-                        <x-table.cell>
-
-                            <span class="lg:hidden absolute top-0 left-0 bg-blue-300 px-2 py-1 text-xs text-white font-bold uppercase rounded-br-xl">Asignado a</span>
-
-                            {{ $movimiento->asignadoA?->name }}
+                            <p class="mt-2">{{ $movimiento->servicio_nombre ?? 'N/A' }}</p>
 
                         </x-table.cell>
 
                         <x-table.cell>
 
-                            <span class="lg:hidden absolute top-0 left-0 bg-blue-300 px-2 py-1 text-xs text-white font-bold uppercase rounded-br-xl">Supervisor</span>
+                            <span class="lg:hidden absolute top-0 left-0 bg-blue-300 px-2 text-[10px] text-white font-bold uppercase rounded-br-xl">Asignado a</span>
 
-                            {{ $movimiento->supervisor?->name }}
+                            <p class="mt-2">{{ $movimiento->asignadoA?->name }}</p>
 
                         </x-table.cell>
 
                         <x-table.cell>
 
-                            <span class="lg:hidden absolute top-0 left-0 bg-blue-300 px-2 py-1 text-xs text-white font-bold uppercase rounded-br-xl">Registrado</span>
+                            <span class="lg:hidden absolute top-0 left-0 bg-blue-300 px-2 text-[10px] text-white font-bold uppercase rounded-br-xl">Supervisor</span>
+
+                            <p class="mt-2">{{ $movimiento->supervisor?->name }}</p>
+
+                        </x-table.cell>
+
+                        <x-table.cell>
+
+                            <span class="lg:hidden absolute top-0 left-0 bg-blue-300 px-2 text-[10px] text-white font-bold uppercase rounded-br-xl">Registrado</span>
 
                             {{ $movimiento->created_at }}
 
@@ -233,7 +229,7 @@
 
                             <x-table.cell>
 
-                                <span class="lg:hidden absolute top-0 left-0 bg-blue-300 px-2 py-1 text-xs text-white font-bold uppercase rounded-br-xl">Acciones</span>
+                                <span class="lg:hidden absolute top-0 left-0 bg-blue-300 px-2 text-[10px] text-white font-bold uppercase rounded-br-xl">Acciones</span>
 
                                 <div class="ml-3 relative" x-data="{ open_drop_down:false }">
 
@@ -271,7 +267,19 @@
 
                                         @endif
 
-                                        @if($movimiento->estado == 'precalificacion')
+                                        @if(in_array($movimiento->estado, ['elaborado', 'finalizado', 'concluido']))
+
+                                            <button
+                                                wire:click="abrirModalCorreccion({{ $movimiento->id }})"
+                                                wire:loading.attr="disabled"
+                                                class="w-full text-left block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 focus:outline-none focus:bg-gray-100"
+                                                role="menuitem">
+                                                Enviar a corrección
+                                            </button>
+
+                                        @endif
+
+                                        @if(in_array($movimiento->estado, ['precalificacion', 'nuevo', 'no_recibido']))
 
                                             <button
                                                 wire:click="abrirModalRechazar({{ $movimiento->id }})"
@@ -485,7 +493,7 @@
         </x-slot>
 
         <x-slot name="content">
-            {{ $mensaje }} ¿Esta seguro que desea cambiar estado a corrección?
+            {{ $mensaje }} ¿Esta seguro que desea enviar el movimiento registral a corrección? Si el movimiento registral ha generado nuevos folios reales estos serán eliminados junto con sus movimientos registrales. La información eliminada no podra ser recuperada.
         </x-slot>
 
         <x-slot name="footer">
@@ -510,68 +518,6 @@
 
     </x-confirmation-modal>
 
-    <x-dialog-modal wire:model="modalRechazar" maxWidth="sm">
-
-        <x-slot name="title">
-
-            Rechazar
-
-        </x-slot>
-
-        <x-slot name="content">
-
-            <div class="flex flex-col md:flex-row justify-between md:space-x-3 mb-5">
-
-                <div class="flex-auto ">
-
-                    <div>
-
-                        <Label>Observaciones</Label>
-                    </div>
-
-                    <div>
-
-                        <textarea rows="5" class="bg-white rounded text-sm w-full" wire:model="observaciones"></textarea>
-
-                    </div>
-
-                    <div>
-
-                        @error('observaciones') <span class="error text-sm text-red-500">{{ $message }}</span> @enderror
-
-                    </div>
-
-                </div>
-
-            </div>
-
-        </x-slot>
-
-        <x-slot name="footer">
-
-            <div class="flex items-center justify-end space-x-3">
-
-                <x-button-blue
-                    wire:click="rechazar"
-                    wire:loading.attr="disabled"
-                    wire:target="rechazar">
-
-                    <img wire:loading wire:target="rechazar" class="mx-auto h-4 mr-1" src="{{ asset('storage/img/loading3.svg') }}" alt="Loading">
-
-                    Rechazar
-                </x-button-blue>
-
-                <x-button-red
-                    wire:click="resetearTodo"
-                    wire:loading.attr="disabled"
-                    wire:target="resetearTodo">
-                    Cerrar
-                </x-button-red>
-
-            </div>
-
-        </x-slot>
-
-    </x-dialog-modal>
+    @include('livewire.comun.modal-rechazar')
 
 </div>

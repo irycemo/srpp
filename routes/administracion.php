@@ -13,6 +13,7 @@ use App\Livewire\Admin\FoliosReales;
 use Illuminate\Support\Facades\Route;
 use App\Livewire\Admin\FoliosRealesPM;
 use App\Livewire\Admin\MovimientosRegistrales;
+use App\Livewire\Admin\VerFolioReal;
 
 Route::group(['middleware' => ['auth', 'esta.activo']], function(){
 
@@ -25,6 +26,8 @@ Route::group(['middleware' => ['auth', 'esta.activo']], function(){
     Route::get('e_firmas', Efirmas::class)->middleware('permission:Lista de efirmas')->name('e_firmas');
 
     Route::get('folios_reales', FoliosReales::class)->middleware('permission:Lista de folios reales')->name('folios_reales');
+
+    Route::get('ver_folio_real/{folioReal}', VerFolioReal::class)->middleware('permission:Lista de folios reales')->name('ver_folio_real');
 
     Route::get('folios_reales_pm', FoliosRealesPM::class)->middleware('permission:Lista de folios reales')->name('folios_reales_pm');
 

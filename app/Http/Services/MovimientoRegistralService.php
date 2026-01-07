@@ -212,6 +212,8 @@ class MovimientoRegistralService{
 
                             $this->actualizarMovimientoRegistral($data + $array, $movimiento_registral);
 
+                            $this->reacomodarFolios($movimiento_registral->folioReal);
+
                         }else{
 
                             $this->actualizarMovimientoRegistral($data, $movimiento_registral);
@@ -799,11 +801,20 @@ class MovimientoRegistralService{
         if($folioReal->estado != 'activo') throw new MovimientoRegistralServiceException('El folio real no esta activo.');
 
         $data['folio_real'] = $folioReal->id;
-        $data['folio'] = $folioReal->ultimoFolio() + 1;
         $data['estado'] = 'nuevo';
         $data['tomo'] = null;
         $data['registro'] = null;
         $data['numero_propiedad'] = null;
+
+        if(! $movimiento_registral->folioReal->movimientosRegistrales()->where('folio', 1)->first()){
+
+            $data['folio'] = 1;
+
+        }else{
+
+            $data['folio'] = $folioReal->ultimoFolio() + 1;
+
+        }
 
         $this->actualizarMovimientoRegistral($data, $movimiento_registral);
 
@@ -859,29 +870,34 @@ class MovimientoRegistralService{
 
     public function revisarEncolamientoSinFolioInmobiliario($data){
 
-        $mRegsitral = MovimientoRegistral::where('tomo', $data['tomo'])
+        $movimientos_registrales = MovimientoRegistral::where('tomo', $data['tomo'])
                                                     ->where('registro', $data['registro'])
                                                     ->where('numero_propiedad', $data['numero_propiedad'])
                                                     ->where('distrito', $data['distrito'])
                                                     ->whereNull('folio_real')
-                                                    ->where('folio', '>=', 1)
-                                                    ->first();
+                                                    ->get();
 
-        if($mRegsitral){
+        if($movimientos_registrales->count()){
 
-            $maxFolio = MovimientoRegistral::where('tomo', $data['tomo'])
-                                            ->where('registro', $data['registro'])
-                                            ->where('numero_propiedad', $data['numero_propiedad'])
-                                            ->where('distrito', $data['distrito'])
-                                            ->whereNull('folio_real')
-                                            ->where('folio', '>=', 1)
-                                            ->max('folio');
+            if(! $movimientos_registrales->where('folio', 1)->first()){
 
-            return [
-                'folio' => $maxFolio + 1,
-                'estado' => 'precalificacion',
-                'folio_real' => null
-            ];
+                return [
+                    'folio' => 1,
+                    'estado' => 'nuevo',
+                    'folio_real' => null
+                ];
+
+            }else{
+
+                $max_folio = $movimientos_registrales->max('folio');
+
+                return [
+                    'folio' => $max_folio + 1,
+                    'estado' => 'precalificacion',
+                    'folio_real' => null
+                ];
+
+            }
 
         }else{
 
@@ -905,6 +921,38 @@ class MovimientoRegistralService{
 
         }
 
+
+    }
+
+    public function reacomodarFolios(FolioReal $folioReal){
+
+        $total_movimientos = $folioReal->movimientosRegistrales->count();
+
+        for ($i=1; $i <= $total_movimientos; $i++) {
+
+            if(! $folioReal->movimientosRegistrales()->where('folio', $i)){
+
+                $movimiento = MovimientoRegistral::where('folio_real', $folioReal->id)
+                                                ->where('estado', 'nuevo')
+                                                ->orderBy('folio')
+                                                ->first();
+
+                if(! $movimiento){
+
+                    $movimiento = MovimientoRegistral::where('folio_real', $folioReal->id)
+                                                ->whereIn('estado', ['carga_parcial', 'pase_folio'])
+                                                ->orderBy('folio')
+                                                ->first();
+
+                }
+
+                if(! $movimiento) break;
+
+                $movimiento->update(['folio' => $i]);
+
+            }
+
+        }
 
     }
 
