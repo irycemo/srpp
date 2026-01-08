@@ -6,11 +6,11 @@ use App\Models\Fideicomiso;
 use App\Models\MovimientoRegistral;
 use Illuminate\Support\Facades\Log;
 use App\Exceptions\InscripcionesServiceException;
-use App\Traits\Inscripciones\RecuperarPropietariosTrait;
+use App\Traits\Inscripciones\RecuperarPredioTrait;
 
 class FideicomisoService{
 
-    use RecuperarPropietariosTrait;
+    use RecuperarPredioTrait;
 
     public function store(array $request)
     {
@@ -52,7 +52,7 @@ class FideicomisoService{
 
         $this->validaciones($movimiento);
 
-        $this->obtenerMovimientoConPropietarios($movimiento);
+        $this->obtenerMovimientoConFirmaElectronica($movimiento);
 
         $movimiento->update([
             'estado' => 'correccion',

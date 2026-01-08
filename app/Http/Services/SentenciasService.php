@@ -5,11 +5,8 @@ namespace App\Http\Services;
 use Illuminate\Support\Facades\Log;
 use App\Exceptions\InscripcionesServiceException;
 use App\Models\Sentencia;
-use App\Traits\Inscripciones\RecuperarPropietariosTrait;
 
 class SentenciasService{
-
-    use RecuperarPropietariosTrait;
 
     public function store(array $request){
 
