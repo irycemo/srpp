@@ -212,7 +212,7 @@ class MovimientoRegistralService{
 
                             $this->actualizarMovimientoRegistral($data + $array, $movimiento_registral);
 
-                            $this->reacomodarFolios($movimiento_registral->folioReal);
+                            if($movimiento_registral->folioReal) $this->reacomodarFolios($movimiento_registral->folioReal);
 
                         }else{
 
