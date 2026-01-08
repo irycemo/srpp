@@ -62,7 +62,7 @@ class VariosService{
 
                 $vario->movimientoRegistral->update(['usuario_asignado' => $this->obtenerUsuarioRolAvisos($vario->movimientoRegistral->getRawOriginal('distrito'))]);
 
-                if($vario->movimientoRegistral->folioReal->avisoPreventivo()){
+                if($vario->movimientoRegistral->folioReal?->avisoPreventivo()){
 
                     $aviso = $vario->movimientoRegistral->folioReal->avisoPreventivo();
 
