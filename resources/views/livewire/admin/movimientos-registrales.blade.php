@@ -1,10 +1,10 @@
 <div class="">
 
-    <div class="mb-2 lg:mb-5">
+    <div class="mb-6">
 
         <x-header>Movimientos Registrales</x-header>
 
-        <div class="flex gap-3 overflow-auto p-1">
+        <div class="flex gap-3 justify-between overflow-auto p-1">
 
             <select class="bg-white rounded-full text-sm" wire:model.live="filters.año">
 

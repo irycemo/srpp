@@ -1,10 +1,10 @@
 <div class="">
 
-    <div class="mb-2 lg:mb-5">
+    <div class="mb-6">
 
         <x-header>Permisos</x-header>
 
-        <div class="flex justify-between">
+        <div class="flex gap-3 justify-between overflow-auto p-1">
 
             <div class="flex gap-3">
 

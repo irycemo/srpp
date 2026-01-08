@@ -8,11 +8,11 @@ use App\Models\Propiedad;
 use App\Models\MovimientoRegistral;
 use Illuminate\Support\Facades\Log;
 use App\Exceptions\InscripcionesServiceException;
-use App\Traits\Inscripciones\RecuperarPropietariosTrait;
+use App\Traits\Inscripciones\RecuperarPredioTrait;
 
 class InscripcionesPropiedadService{
 
-    use RecuperarPropietariosTrait;
+    use RecuperarPredioTrait;
 
     public function store(array $request)
     {
@@ -145,7 +145,7 @@ class InscripcionesPropiedadService{
 
         $this->validaciones($movimiento);
 
-        $this->obtenerMovimientoConPropietarios($movimiento);
+        $this->obtenerMovimientoConFirmaElectronica($movimiento);
 
         $movimiento->update([
             'estado' => 'correccion',

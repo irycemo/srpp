@@ -4,7 +4,7 @@
 
         <x-header>Propiedades</x-header>
 
-        <div class="flex justify-between">
+        <div class="flex gap-3 justify-between overflow-auto p-1">
 
             <div class="flex">
 
