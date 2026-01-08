@@ -46,31 +46,31 @@
 
         </x-input-group>
 
-        <div class="col-span-1 sm:col-span-2 md:col-span-3 lg:col-span-6 flex justify-center gap-3">
+    </div>
 
-            <x-button-green
-                wire:click="limpiar"
-                wire:loading.attr="disabled"
-                wire:target="limpiar">
+    <div class="flex justify-center gap-3 bg-white rounded-lg p-3 shadow-lg mb-5">
 
-                <img wire:loading wire:target="limpiar" class="mx-auto h-4 mr-1" src="{{ asset('storage/img/loading3.svg') }}" alt="Loading">
+        <x-button-green
+            wire:click="limpiar"
+            wire:loading.attr="disabled"
+            wire:target="limpiar">
 
-                Limpiar
+            <img wire:loading wire:target="limpiar" class="mx-auto h-4 mr-1" src="{{ asset('storage/img/loading3.svg') }}" alt="Loading">
 
-            </x-button-green>
+            Limpiar
 
-            <x-button-blue
-                wire:click="buscar"
-                wire:loading.attr="disabled"
-                wire:target="buscar">
+        </x-button-green>
 
-                <img wire:loading wire:target="buscar" class="mx-auto h-4 mr-1" src="{{ asset('storage/img/loading3.svg') }}" alt="Loading">
+        <x-button-blue
+            wire:click="buscar"
+            wire:loading.attr="disabled"
+            wire:target="buscar">
 
-                Buscar
+            <img wire:loading wire:target="buscar" class="mx-auto h-4 mr-1" src="{{ asset('storage/img/loading3.svg') }}" alt="Loading">
 
-            </x-button-blue>
+            Buscar
 
-        </div>
+        </x-button-blue>
 
     </div>
 
@@ -100,7 +100,7 @@
 
                             <x-table.cell>
 
-                                <span class="lg:hidden absolute top-0 left-0 bg-blue-300 px-2 py-1 text-xs text-white font-bold uppercase rounded-br-xl">Folio</span>
+                                <span class="lg:hidden absolute top-0 left-0 bg-blue-300 px-2 text-[10px] text-white font-bold uppercase rounded-br-xl">Folio</span>
 
                                 {{ $folio->folio }}
 
@@ -108,7 +108,7 @@
 
                             <x-table.cell>
 
-                                <span class="lg:hidden absolute top-0 left-0 bg-blue-300 px-2 py-1 text-xs text-white font-bold uppercase rounded-br-xl">Estado</span>
+                                <span class="lg:hidden absolute top-0 left-0 bg-blue-300 px-2 text-[10px] text-white font-bold uppercase rounded-br-xl">Estado</span>
 
                                 <span class="bg-{{ $folio->estado_color }} py-1 px-2 rounded-full text-white text-xs">{{ ucfirst($folio->estado) }}</span>
 
@@ -116,7 +116,7 @@
 
                             <x-table.cell>
 
-                                <span class="lg:hidden absolute top-0 left-0 bg-blue-300 px-2 py-1 text-xs text-white font-bold uppercase rounded-br-xl">Tomo</span>
+                                <span class="lg:hidden absolute top-0 left-0 bg-blue-300 px-2 text-[10px] text-white font-bold uppercase rounded-br-xl">Tomo</span>
 
                                 {{ $folio->tomo_antecedente ?? 'N/A' }}
 
@@ -124,7 +124,7 @@
 
                             <x-table.cell>
 
-                                <span class="lg:hidden absolute top-0 left-0 bg-blue-300 px-2 py-1 text-xs text-white font-bold uppercase rounded-br-xl">Registro</span>
+                                <span class="lg:hidden absolute top-0 left-0 bg-blue-300 px-2 text-[10px] text-white font-bold uppercase rounded-br-xl">Registro</span>
 
                                 {{ $folio->registro_antecedente ?? 'N/A' }}
 
@@ -132,7 +132,7 @@
 
                             <x-table.cell>
 
-                                <span class="lg:hidden absolute top-0 left-0 bg-blue-300 px-2 py-1 text-xs text-white font-bold uppercase rounded-br-xl">Distrito</span>
+                                <span class="lg:hidden absolute top-0 left-0 bg-blue-300 px-2 text-[10px] text-white font-bold uppercase rounded-br-xl">Distrito</span>
 
                                 {{ $folio->distrito }}
 
@@ -140,21 +140,22 @@
 
                             <x-table.cell>
 
-                                <span class="lg:hidden absolute top-0 left-0 bg-blue-300 px-2 py-1 text-xs text-white font-bold uppercase rounded-br-xl">Denominación</span>
+                                <span class="lg:hidden absolute top-0 left-0 bg-blue-300 px-2 text-[10px] text-white font-bold uppercase rounded-br-xl">Denominación</span>
 
-                                {{ Str::limit($folio->denominacion, 150) }}
+                                <p class="mt-2">{{ Str::limit($folio->denominacion, 150) }}</p>
 
                             </x-table.cell>
 
                             <x-table.cell>
 
-                                <span class="lg:hidden absolute top-0 left-0 bg-blue-300 px-2 py-1 text-xs text-white font-bold uppercase rounded-br-xl">Acciones</span>
+                                <span class="lg:hidden absolute top-0 left-0 bg-blue-300 px-2 text-[10px] text-white font-bold uppercase rounded-br-xl">Acciones</span>
 
-                                <div class="">
+                                <div >
 
                                     <x-button-green
                                         wire:click="ver({{ $folio->id }})"
-                                        wire:loading.attr="disabled">
+                                        wire:loading.attr="disabled"
+                                        class="mx-auto">
 
                                         <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-4 h-4 mr-3">
                                             <path stroke-linecap="round" stroke-linejoin="round" d="M2.036 12.322a1.012 1.012 0 0 1 0-.639C3.423 7.51 7.36 4.5 12 4.5c4.638 0 8.573 3.007 9.963 7.178.07.207.07.431 0 .639C20.577 16.49 16.64 19.5 12 19.5c-4.638 0-8.573-3.007-9.963-7.178Z" />
@@ -195,7 +196,7 @@
 
     @if ($folioReal)
 
-        <x-h4 class="mb-5">Folio real PM: {{ $folioReal->folio }} <span class="text-sm tracking-widest capitalize">({{ $folioReal->estado }})</span></x-h4>
+        <x-h4 class="mt-5">Folio real PM: {{ $folioReal->folio }} <span class="text-sm tracking-widest capitalize">({{ $folioReal->estado }})</span></x-h4>
 
         <div x-data="{ activeTab: 1 }">
 

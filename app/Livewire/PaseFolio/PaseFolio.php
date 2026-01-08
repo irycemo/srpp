@@ -782,7 +782,7 @@ class PaseFolio extends Component
 
         $this->años = Constantes::AÑOS;
 
-        $this->año = now()->format('Y');
+        $this->filters['año'] = now()->format('Y');
 
         $this->motivos = Constantes::RECHAZO_MOTIVOS;
 
@@ -795,7 +795,8 @@ class PaseFolio extends Component
 
         if(auth()->user()->hasRole('Administrador')){
 
-            $movimientos = MovimientoRegistral::with('actualizadoPor', 'asignadoA', 'folioReal:id,folio,estado', 'supervisor')
+            $movimientos = MovimientoRegistral::select('id', 'folio', 'folio_real', 'año', 'tramite', 'usuario', 'actualizado_por', 'usuario_asignado', 'usuario_supervisor', 'estado', 'distrito', 'created_at', 'updated_at', 'tomo', 'registro', 'numero_propiedad')
+                                                    ->with('actualizadoPor:id,name', 'asignadoA:id,name', 'folioReal:id,folio,estado', 'supervisor:id,name')
                                                     ->doesnthave('reformaMoral')
                                                     ->whereIn('folio', [0, 1])
                                                     ->whereIn('estado', ['nuevo', 'correccion', 'no recibido'])
@@ -823,7 +824,8 @@ class PaseFolio extends Component
 
         }elseif(auth()->user()->hasRole(['Supervisor inscripciones', 'Supervisor certificaciones', 'Supervisor uruapan'])){
 
-            $movimientos = MovimientoRegistral::with('actualizadoPor', 'folioReal:id,folio,estado', 'asignadoA')
+            $movimientos = MovimientoRegistral::select('id', 'folio', 'folio_real', 'año', 'tramite', 'usuario', 'actualizado_por', 'usuario_asignado', 'usuario_supervisor', 'estado', 'distrito', 'created_at', 'updated_at', 'tomo', 'registro', 'numero_propiedad')
+                                                    ->with('actualizadoPor:id,name', 'asignadoA:id,name', 'folioReal:id,folio,estado', 'supervisor:id,name')
                                                     ->doesnthave('reformaMoral')
                                                     ->whereIn('folio', [0, 1])
                                                     ->whereIn('estado', ['nuevo', 'correccion', 'no recibido'])
@@ -854,7 +856,8 @@ class PaseFolio extends Component
 
         }elseif(auth()->user()->hasRole(['Jefe de departamento certificaciones', 'Jefe de departamento inscripciones'])){
 
-            $movimientos = MovimientoRegistral::with('actualizadoPor', 'folioReal:id,folio,estado', 'asignadoA')
+            $movimientos = MovimientoRegistral::select('id', 'folio', 'folio_real', 'año', 'tramite', 'usuario', 'actualizado_por', 'usuario_asignado', 'usuario_supervisor', 'estado', 'distrito', 'created_at', 'updated_at', 'tomo', 'registro', 'numero_propiedad')
+                                                    ->with('actualizadoPor:id,name', 'asignadoA:id,name', 'folioReal:id,folio,estado', 'supervisor:id,name')
                                                     ->doesnthave('reformaMoral')
                                                     ->whereIn('folio', [0, 1])
                                                     ->whereIn('estado', ['nuevo', 'correccion', 'no recibido'])
@@ -887,7 +890,8 @@ class PaseFolio extends Component
                                                     ->paginate($this->pagination);
         }else{
 
-            $movimientos = MovimientoRegistral::with('actualizadoPor', 'folioReal:id,folio,estado', 'asignadoA')
+            $movimientos = MovimientoRegistral::select('id', 'folio', 'folio_real', 'año', 'tramite', 'usuario', 'actualizado_por', 'usuario_asignado', 'usuario_supervisor', 'estado', 'distrito', 'created_at', 'updated_at', 'tomo', 'registro', 'numero_propiedad')
+                                                    ->with('actualizadoPor:id,name', 'asignadoA:id,name', 'folioReal:id,folio,estado', 'supervisor:id,name')
                                                     ->doesnthave('reformaMoral')
                                                     ->whereIn('folio', [0, 1])
                                                     ->whereIn('estado', ['nuevo', 'correccion', 'no recibido'])

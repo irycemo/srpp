@@ -4,7 +4,7 @@
 
     <div class="bg-white p-4 rounded-lg mb-5 shadow-xl">
 
-        <div class="flex gap-3 justify-center items-center lg:w-1/2 mx-auto mb-4">
+        <div class="lg:flex gap-3 justify-center items-center lg:w-1/2 mx-auto mb-4">
 
             <x-input-group for="nombre" label="Nombre" :error="$errors->first('nombre')" class="w-full">
 
@@ -137,7 +137,7 @@
 
                             <x-table.cell>
 
-                                <span class="lg:hidden absolute top-0 left-0 bg-blue-300 px-2 py-1 text-xs text-white font-bold uppercase rounded-br-xl">Distrito</span>
+                                <span class="lg:hidden absolute top-0 left-0 bg-blue-300 px-2 text-[10px] text-white font-bold uppercase rounded-br-xl">Distrito</span>
 
                                 {{$item->distrito }}
 
@@ -145,7 +145,7 @@
 
                             <x-table.cell>
 
-                                <span class="lg:hidden absolute top-0 left-0 bg-blue-300 px-2 py-1 text-xs text-white font-bold uppercase rounded-br-xl">Tomo</span>
+                                <span class="lg:hidden absolute top-0 left-0 bg-blue-300 px-2 text-[10px] text-white font-bold uppercase rounded-br-xl">Tomo</span>
 
                                 {{$item->tomo }}
 
@@ -153,7 +153,7 @@
 
                             <x-table.cell>
 
-                                <span class="lg:hidden absolute top-0 left-0 bg-blue-300 px-2 py-1 text-xs text-white font-bold uppercase rounded-br-xl">Registro</span>
+                                <span class="lg:hidden absolute top-0 left-0 bg-blue-300 px-2 text-[10px] text-white font-bold uppercase rounded-br-xl">Registro</span>
 
                                 {{$item->registro }}
 
@@ -161,7 +161,7 @@
 
                             <x-table.cell>
 
-                                <span class="lg:hidden absolute top-0 left-0 bg-blue-300 px-2 py-1 text-xs text-white font-bold uppercase rounded-br-xl"># Propiedad</span>
+                                <span class="lg:hidden absolute top-0 left-0 bg-blue-300 px-2 text-[10px] text-white font-bold uppercase rounded-br-xl"># Propiedad</span>
 
                                 {{$item->noprop }} {{$item->status }}
 
@@ -169,23 +169,23 @@
 
                             <x-table.cell>
 
-                                <span class="lg:hidden absolute top-0 left-0 bg-blue-300 px-2 py-1 text-xs text-white font-bold uppercase rounded-br-xl">Propietarios</span>
+                                <span class="lg:hidden absolute top-0 left-0 bg-blue-300 px-2 text-[10px] text-white font-bold uppercase rounded-br-xl">Propietarios</span>
 
-                                {{ Str::limit($item->propietarios, 50) }}
-
-                            </x-table.cell>
-
-                            <x-table.cell>
-
-                                <span class="lg:hidden absolute top-0 left-0 bg-blue-300 px-2 py-1 text-xs text-white font-bold uppercase rounded-br-xl">Ubicación</span>
-
-                                {{ Str::limit($item->ubicacion, 70) }}
+                                <p class="mt-2">{{ Str::limit($item->propietarios, 50) }}</p>
 
                             </x-table.cell>
 
                             <x-table.cell>
 
-                                <span class="lg:hidden absolute top-0 left-0 bg-blue-300 px-2 py-1 text-xs text-white font-bold uppercase rounded-br-xl">Acciones</span>
+                                <span class="lg:hidden absolute top-0 left-0 bg-blue-300 px-2 text-[10px] text-white font-bold uppercase rounded-br-xl">Ubicación</span>
+
+                                <p class="mt-2">{{ Str::limit($item->ubicacion, 70) }}</p>
+
+                            </x-table.cell>
+
+                            <x-table.cell>
+
+                                <span class="lg:hidden absolute top-0 left-0 bg-blue-300 px-2 text-[10px] text-white font-bold uppercase rounded-br-xl">Acciones</span>
 
                                 <div class="flex justify-center lg:justify-start gap-2">
 
@@ -257,7 +257,7 @@
 
         <div x-data="{ activeTab: 0 }">
 
-            <div class="flex px-4 gap-4 justify-center items-center mb-5">
+            <div class="flex px-4 gap-4 lg:justify-center lg:items-center mb-5 overflow-auto">
 
                 <x-button-pill @click="activeTab = 0" x-bind:class="{ 'bg-gray-300 bg-opacity-5 text-black ': activeTab === 0 }">Propiedad</x-button-pill>
 

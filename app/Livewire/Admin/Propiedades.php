@@ -62,7 +62,7 @@ class Propiedades extends Component
 
         if(!$propiedad){
 
-            $this->dispatch('mostrarMensaje', ['error', "No se encontro la propiedad."]);
+            $this->dispatch('mostrarMensaje', ['warning', "No se encontro la propiedad."]);
 
             return;
 

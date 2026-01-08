@@ -110,7 +110,7 @@
 
     <div class="bg-white rounded-lg p-4 shadow-xl grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-4 text-sm mb-3">
 
-        <span class="flex items-center justify-center text-lg text-gray-700 md:col-span-3 col-span-1 sm:col-span-2 lg:col-span-6">Generales</span>
+        <span class="flex items-center justify-center text-lg text-gray-700 md:col-span-3 col-span-1 sm:col-span-2 lg:col-span-5">Generales</span>
 
         <div class="rounded-lg bg-gray-100 py-1 px-2">
 
@@ -168,7 +168,7 @@
 
         </div>
 
-        <div class="rounded-lg bg-gray-100 py-1 px-2 col-span-2">
+        <div class="rounded-lg bg-gray-100 py-1 px-2 lg:col-span-2">
 
             <strong>Domicilio</strong>
 
@@ -176,7 +176,7 @@
 
         </div>
 
-        <div class="rounded-lg bg-gray-100 py-1 px-2 col-span-3">
+        <div class="rounded-lg bg-gray-100 py-1 px-2 lg:col-span-3">
 
             <strong>Observaciones</strong>
 
@@ -184,7 +184,7 @@
 
         </div>
 
-        <div class="rounded-lg bg-gray-100 py-1 px-2 md:col-span-3 col-span-1 sm:col-span-2 lg:col-span-6">
+        <div class="rounded-lg bg-gray-100 py-1 px-2 md:col-span-3 col-span-1 sm:col-span-2 lg:col-span-5">
 
             <strong>Objeto</strong>
 

@@ -1,10 +1,10 @@
 <div class="">
 
-    <div class="mb-6">
+    <div class="mb-2 lg:mb-5">
 
         <x-header>Folios reales I</x-header>
 
-        <div class="flex gap-3 justify-between overflow-auto p-1">
+        <div class="flex justify-between gap-3 overflow-auto p-1">
 
             <input type="number" wire:model.live.debounce.500ms="filters.folio" placeholder="Folio" class="bg-white rounded-full text-sm">
 
@@ -132,18 +132,27 @@
 
                             <span class="lg:hidden absolute top-0 left-0 bg-blue-300 px-2 text-[10px] text-white font-bold uppercase rounded-br-xl">Registrado</span>
 
+                            <p class="mt-2">
 
-                            <span class="font-semibold">@if($folio->creadoPor != null)Registrado por: {{$folio->creadoPor->name}} @else Registro: @endif</span> <br>
+                                <span class="font-semibold">@if($folio->creadoPor != null)Registrado por: {{$folio->creadoPor->name}} @else Registro: @endif</span> <br>
 
-                            {{ $folio->created_at }}
+                                {{ $folio->created_at }}
+
+                            </p>
 
                         </x-table.cell>
 
                         <x-table.cell>
 
-                            <span class="font-semibold">@if($folio->actualizadoPor != null)Actualizado por: {{$folio->actualizadoPor->name}} @else Actualizado: @endif</span> <br>
+                            <span class="lg:hidden absolute top-0 left-0 bg-blue-300 px-2 text-[10px] text-white font-bold uppercase rounded-br-xl">Actualizado</span>
 
-                            {{ $folio->updated_at }}
+                            <p class="mt-2">
+
+                                <span class="font-semibold">@if($folio->actualizadoPor != null)Actualizado por: {{$folio->actualizadoPor->name}} @else Actualizado: @endif</span> <br>
+
+                                {{ $folio->updated_at }}
+
+                            </p>
 
                         </x-table.cell>
 

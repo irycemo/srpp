@@ -1,6 +1,6 @@
 <div class="text-sm bg-white p-4 rounded-lg shadow-xl">
 
-    <div class="flex gap-4 justify-center mb-5">
+    <div class="lg:flex gap-4 justify-center mb-5 space-y-2 lg:space-y-0">
 
         <div class="rounded-lg bg-gray-100 py-1 px-2">
 
@@ -36,7 +36,7 @@
 
     </div>
 
-    <div class="flex gap-4 justify-center mb-5">
+    <div class="lg:flex gap-4 justify-center mb-5 space-y-2 lg:space-y-0">
 
         <div class="rounded-lg bg-gray-100 py-1 px-2">
 

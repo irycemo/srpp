@@ -181,17 +181,25 @@ class Efirmas extends Component
         try {
 
 
-            $fiel = Credential::openFiles(Storage::disk('efirmas')->path($efirma->cer), Storage::disk('efirmas')->path($efirma->key), $efirma->contraseña);
+            $fiel = Credential::openFiles(
+                                            Storage::disk('efirmas')->path($efirma->cer),
+                                            Storage::disk('efirmas')->path($efirma->key),
+                                            $efirma->contraseña
+                                        );
 
             $string = "KJBFLSDKJF#HRH#ROHÑOSDUIHSDFHSDUIFHÑSODIUHOEWUBHFUIOE$";
 
             $firma = $fiel->sign($string);
 
-            dd(base64_encode($firma));
+            if($firma){
+
+                $this->dispatch('mostrarMensaje', ['success', "La firma funciona correctamente."]);
+
+            }
 
 
         } catch (\Throwable $th) {
-            dd($th);
+            $this->dispatch('mostrarMensaje', ['error', "La firma no funciona correctamente."]);
         }
 
 
