@@ -147,9 +147,13 @@
 
         <x-slot name="content">
 
-            <input type="text" class="sr-only">
+            <div class="overflow-auto">
 
-            {!! $pregunta?->contenido !!}
+                <input type="text" class="sr-only">
+
+                {!! $pregunta?->contenido !!}
+
+            </div>
 
         </x-slot>
 
