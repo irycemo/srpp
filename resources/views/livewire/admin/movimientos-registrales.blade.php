@@ -502,8 +502,8 @@
 
     </x-dialog-modal>
 
-    @include('livewire.comun.modal-correccion')
+    @include('livewire.comun.inscripciones.modal-correccion')
 
-    @include('livewire.comun.modal-rechazar')
+    @include('livewire.comun.inscripciones.modal-rechazar')
 
 </div>
