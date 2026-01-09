@@ -20,13 +20,13 @@
 
     <div class="bg-white shadow-xl rounded-lg p-4 mb-5">
 
-        <input type="text" class="rounded-lg lg:w-1/2 mx-auto flex" placeholder="Buscar.." autofocus wire:model.live="search">
+        <input type="text" class="rounded-lg w-full lg:w-1/2 mx-auto flex" placeholder="Buscar.." autofocus wire:model.live="search">
 
     </div>
 
     <div class="bg-white shadow-xl rounded-lg p-4" wire:loading.class.delaylongest="opacity-50">
 
-        <div class="w-1/2 mx-auto ">
+        <div class="w-full lg:w-1/2 mx-auto ">
 
             <div class="flex items-center justify-center gap-9 mb-5">
 
