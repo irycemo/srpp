@@ -478,7 +478,7 @@
 
     </x-dialog-modal>
 
-    @include('livewire.comun.modal-rechazar')
+    @include('livewire.comun.inscripciones.modal-rechazar')
 
     <x-dialog-modal wire:model="modalNuevoFolio" maxWidth="sm">
 
