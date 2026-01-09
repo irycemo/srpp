@@ -186,7 +186,7 @@ trait EnviarMovimientoCorreccion{
 
         if(! $movimientoCertificadoGravamen) return;
 
-        $movimientoCertificadoGravamen->certificacion->delete();
+        $movimientoCertificadoGravamen->certificacion?->delete();
 
         $movimientoCertificadoGravamen->firmasElectronicas?->each->delete();
 
