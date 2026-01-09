@@ -48,12 +48,13 @@ class FoliosRealesPM extends Component
     public function render()
     {
 
-        $folios = FolioRealPersona::with('actualizadoPor', 'creadoPor')
+        $folios = FolioRealPersona::select('id', 'estado', 'folio', 'tomo_antecedente', 'registro_antecedente', 'distrito', 'actualizado_por', 'creado_por', 'created_at', 'updated_at')
+                            ->with('actualizadoPor', 'creadoPor')
                             ->when($this->filters['folio'], fn($q, $folio) => $q->where('folio', $folio))
                             ->when($this->filters['estado'], fn($q, $estado) => $q->where('estado', $estado))
                             ->when($this->filters['tomo'], fn($q, $tomo) => $q->where('tomo_antecedente', $tomo))
                             ->when($this->filters['registro'], fn($q, $registro) => $q->where('registro_antecedente', $registro))
-                            ->when($this->filters['distrito'], fn($q, $distrito) => $q->where('distrito_antecedente', $distrito))
+                            ->when($this->filters['distrito'], fn($q, $distrito) => $q->where('distrito', $distrito))
                             ->orderBy($this->sort, $this->direction)
                             ->paginate($this->pagination);
 

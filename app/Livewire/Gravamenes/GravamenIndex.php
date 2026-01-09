@@ -8,11 +8,9 @@ use Livewire\WithPagination;
 use Livewire\WithFileUploads;
 use App\Constantes\Constantes;
 use App\Traits\ComponentesTrait;
-use Illuminate\Support\Facades\DB;
 use App\Models\MovimientoRegistral;
-use Illuminate\Support\Facades\Log;
 use App\Traits\Inscripciones\InscripcionesIndex;
-use App\Exceptions\InscripcionesServiceException;
+use App\Traits\Inscripciones\EnviarMovimientoCorreccion;
 use App\Traits\Inscripciones\RechazarMovimientoTrait;
 use App\Traits\RevisarMovimientosPosterioresTrait;
 
@@ -25,44 +23,13 @@ class GravamenIndex extends Component
     use InscripcionesIndex;
     use RevisarMovimientosPosterioresTrait;
     use RechazarMovimientoTrait;
-
-    public function corregir(MovimientoRegistral $movimientoRegistral){
-
-        try {
-
-            $this->revisarMovimientosPosteriores($movimientoRegistral);
-
-            DB::transaction(function () use ($movimientoRegistral){
-
-                $movimientoRegistral->update([
-                    'estado' => 'correccion',
-                    'actualizado_por' => auth()->id()
-                ]);
-
-                $movimientoRegistral->audits()->latest()->first()->update(['tags' => 'Cambio estado a corrección']);
-
-            });
-
-            $this->dispatch('mostrarMensaje', ['success', "La información se guardó con éxito."]);
-
-        } catch (InscripcionesServiceException $ex) {
-
-            $this->dispatch('mostrarMensaje', ['warning', $ex->getMessage()]);
-
-        }catch (\Throwable $th) {
-            Log::error("Error al enviar a corrección gravamen por el usuario: (id: " . auth()->user()->id . ") " . auth()->user()->name . ". " . $th);
-            $this->dispatch('mostrarMensaje', ['error', "Ha ocurrido un error."]);
-        }
-
-    }
+    use EnviarMovimientoCorreccion;
 
     public function mount(){
 
         $this->crearModeloVacio();
 
         $this->años = Constantes::AÑOS;
-
-        $this->filters['año'] = now()->format('Y');
 
         $this->motivos_rechazo = Constantes::RECHAZO_MOTIVOS;
 
@@ -91,7 +58,8 @@ class GravamenIndex extends Component
 
         if(auth()->user()->hasRole(['Gravamen', 'Registrador Gravamen'])){
 
-            $movimientos = MovimientoRegistral::with('gravamen', 'actualizadoPor', 'folioReal')
+            $movimientos = MovimientoRegistral::select('id', 'folio', 'folio_real', 'año', 'tramite', 'usuario', 'actualizado_por', 'usuario_asignado', 'usuario_supervisor', 'estado', 'distrito', 'created_at', 'updated_at', 'tomo', 'registro', 'numero_propiedad', 'tipo_servicio', 'fecha_entrega')
+                                                    ->with('gravamen:id,movimiento_registral_id', 'actualizadoPor:id,name', 'folioReal:id,folio')
                                                     ->whereHas('folioReal', function($q){
                                                         $q->whereIn('estado', ['activo', 'centinela']);
                                                     })
@@ -121,7 +89,8 @@ class GravamenIndex extends Component
 
         }elseif(auth()->user()->hasRole(['Supervisor inscripciones', 'Supervisor uruapan'])){
 
-            $movimientos = MovimientoRegistral::with('gravamen', 'actualizadoPor', 'folioReal', 'asignadoA')
+            $movimientos = MovimientoRegistral::select('id', 'folio', 'folio_real', 'año', 'tramite', 'usuario', 'actualizado_por', 'usuario_asignado', 'usuario_supervisor', 'estado', 'distrito', 'created_at', 'updated_at', 'tomo', 'registro', 'numero_propiedad', 'tipo_servicio', 'fecha_entrega')
+                                                    ->with('gravamen:id,movimiento_registral_id', 'actualizadoPor:id,name', 'folioReal:id,folio', 'asignadoA:id,name')
                                                     ->whereHas('folioReal', function($q){
                                                         $q->whereIn('estado', ['activo', 'centinela']);
                                                     })
@@ -150,7 +119,8 @@ class GravamenIndex extends Component
 
         }elseif(auth()->user()->hasRole(['Jefe de departamento inscripciones'])){
 
-            $movimientos = MovimientoRegistral::with('gravamen', 'asignadoA', 'actualizadoPor', 'folioReal')
+            $movimientos = MovimientoRegistral::select('id', 'folio', 'folio_real', 'año', 'tramite', 'usuario', 'actualizado_por', 'usuario_asignado', 'usuario_supervisor', 'estado', 'distrito', 'created_at', 'updated_at', 'tomo', 'registro', 'numero_propiedad', 'tipo_servicio', 'fecha_entrega')
+                                                    ->with('gravamen:id,movimiento_registral_id', 'actualizadoPor:id,name', 'folioReal:id,folio', 'asignadoA:id,name')
                                                     ->whereHas('folioReal', function($q){
                                                         $q->whereIn('estado', ['activo', 'centinela']);
                                                     })
@@ -178,7 +148,8 @@ class GravamenIndex extends Component
 
         }elseif(auth()->user()->hasRole(['Administrador', 'Operador', 'Director', 'Jefe de departamento jurídico'])){
 
-            $movimientos = MovimientoRegistral::with('gravamen', 'asignadoA', 'actualizadoPor', 'folioReal')
+            $movimientos = MovimientoRegistral::select('id', 'folio', 'folio_real', 'año', 'tramite', 'usuario', 'actualizado_por', 'usuario_asignado', 'usuario_supervisor', 'estado', 'distrito', 'created_at', 'updated_at', 'tomo', 'registro', 'numero_propiedad', 'tipo_servicio', 'fecha_entrega')
+                                                    ->with('gravamen:id,movimiento_registral_id', 'actualizadoPor:id,name', 'folioReal:id,folio', 'asignadoA:id,name')
                                                     ->whereHas('folioReal', function($q){
                                                         $q->whereIn('estado', ['activo', 'centinela', 'bloqueado']);
                                                     })
@@ -200,7 +171,8 @@ class GravamenIndex extends Component
 
         }elseif(auth()->user()->hasRole(['Regional'])){
 
-            $movimientos = MovimientoRegistral::with('gravamen', 'actualizadoPor', 'folioReal', 'asignadoA')
+            $movimientos = MovimientoRegistral::select('id', 'folio', 'folio_real', 'año', 'tramite', 'usuario', 'actualizado_por', 'usuario_asignado', 'usuario_supervisor', 'estado', 'distrito', 'created_at', 'updated_at', 'tomo', 'registro', 'numero_propiedad', 'tipo_servicio', 'fecha_entrega')
+                                                    ->with('gravamen:id,movimiento_registral_id', 'actualizadoPor:id,name', 'folioReal:id,folio', 'asignadoA:id,name')
                                                     ->whereHas('folioReal', function($q){
                                                         $q->whereIn('estado', ['activo', 'centinela']);
                                                     })

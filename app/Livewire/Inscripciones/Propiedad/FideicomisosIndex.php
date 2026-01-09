@@ -7,12 +7,10 @@ use Livewire\Component;
 use Livewire\WithPagination;
 use App\Constantes\Constantes;
 use App\Traits\ComponentesTrait;
-use Illuminate\Support\Facades\DB;
 use App\Models\MovimientoRegistral;
-use Illuminate\Support\Facades\Log;
 use App\Traits\Inscripciones\InscripcionesIndex;
-use App\Exceptions\InscripcionesServiceException;
-use App\Http\Services\FideicomisoService;
+use App\Traits\Inscripciones\EnviarMovimientoCorreccion;
+use App\Traits\Inscripciones\RechazarMovimientoTrait;
 
 class FideicomisosIndex extends Component
 {
@@ -20,29 +18,8 @@ class FideicomisosIndex extends Component
     use WithPagination;
     use ComponentesTrait;
     use InscripcionesIndex;
-
-    public function corregir(MovimientoRegistral $movimientoRegistral){
-
-        try {
-
-            DB::transaction(function () use ($movimientoRegistral){
-
-                (new FideicomisoService())->corregir($movimientoRegistral);
-
-            });
-
-            $this->dispatch('mostrarMensaje', ['success', "La información se guardó con éxito."]);
-
-        } catch (InscripcionesServiceException $th) {
-
-            $this->dispatch('mostrarMensaje', ['error', $th->getMessage()]);
-
-        } catch (\Throwable $th) {
-            Log::error("Error al enviar a corrección fideicomiso por el usuario: (id: " . auth()->user()->id . ") " . auth()->user()->name . ". " . $th);
-            $this->dispatch('mostrarMensaje', ['error', "Ha ocurrido un error."]);
-        }
-
-    }
+    use RechazarMovimientoTrait;
+    use EnviarMovimientoCorreccion;
 
     public function mount(){
 
@@ -50,9 +27,7 @@ class FideicomisosIndex extends Component
 
         $this->años = Constantes::AÑOS;
 
-        $this->filters['año'] = now()->format('Y');
-
-        $this->motivos = Constantes::RECHAZO_MOTIVOS;
+        $this->motivos_rechazo = Constantes::RECHAZO_MOTIVOS;
 
         $this->usuarios = User::where('status', 'activo')
                                         ->whereHas('roles', function($q){
@@ -68,7 +43,8 @@ class FideicomisosIndex extends Component
 
         if(auth()->user()->hasRole(['Propiedad', 'Registrador Propiedad'])){
 
-            $movimientos = MovimientoRegistral::with('inscripcionPropiedad', 'asignadoA', 'actualizadoPor', 'folioReal:id,folio')
+            $movimientos = MovimientoRegistral::select('id', 'folio', 'folio_real', 'año', 'tramite', 'usuario', 'actualizado_por', 'usuario_asignado', 'usuario_supervisor', 'estado', 'distrito', 'created_at', 'updated_at', 'tomo', 'registro', 'numero_propiedad', 'tipo_servicio', 'fecha_entrega')
+                                                    ->with('inscripcionPropiedad:id,movimiento_registral_id', 'asignadoA:id,name', 'actualizadoPor:id,name', 'folioReal:id,folio')
                                                     ->has('fideicomiso')
                                                     ->where('usuario_asignado', auth()->id())
                                                     ->whereHas('folioReal', function($q){
@@ -96,7 +72,8 @@ class FideicomisosIndex extends Component
 
         }elseif(auth()->user()->hasRole(['Supervisor inscripciones', 'Supervisor uruapan'])){
 
-            $movimientos = MovimientoRegistral::with('asignadoA', 'actualizadoPor', 'folioReal:id,folio')
+            $movimientos = MovimientoRegistral::select('id', 'folio', 'folio_real', 'año', 'tramite', 'usuario', 'actualizado_por', 'usuario_asignado', 'usuario_supervisor', 'estado', 'distrito', 'created_at', 'updated_at', 'tomo', 'registro', 'numero_propiedad', 'tipo_servicio', 'fecha_entrega')
+                                                    ->with('inscripcionPropiedad:id,movimiento_registral_id', 'asignadoA:id,name', 'actualizadoPor:id,name', 'folioReal:id,folio')
                                                     ->has('fideicomiso')
                                                     ->whereHas('folioReal', function($q){
                                                         $q->whereIn('estado', ['activo', 'centinela']);
@@ -123,7 +100,8 @@ class FideicomisosIndex extends Component
 
         }elseif(auth()->user()->hasRole(['Jefe de departamento inscripciones'])){
 
-            $movimientos = MovimientoRegistral::with('asignadoA', 'actualizadoPor', 'folioReal:id,folio')
+            $movimientos = MovimientoRegistral::select('id', 'folio', 'folio_real', 'año', 'tramite', 'usuario', 'actualizado_por', 'usuario_asignado', 'usuario_supervisor', 'estado', 'distrito', 'created_at', 'updated_at', 'tomo', 'registro', 'numero_propiedad', 'tipo_servicio', 'fecha_entrega')
+                                                    ->with('inscripcionPropiedad:id,movimiento_registral_id', 'asignadoA:id,name', 'actualizadoPor:id,name', 'folioReal:id,folio')
                                                     ->has('fideicomiso')
                                                     ->whereHas('folioReal', function($q){
                                                         $q->whereIn('estado', ['activo', 'centinela']);
@@ -149,7 +127,8 @@ class FideicomisosIndex extends Component
 
         }elseif(auth()->user()->hasRole(['Administrador', 'Operador', 'Director', 'Jefe de departamento jurídico'])){
 
-            $movimientos = MovimientoRegistral::with('inscripcionPropiedad', 'asignadoA', 'actualizadoPor', 'folioReal:id,folio')
+            $movimientos = MovimientoRegistral::select('id', 'folio', 'folio_real', 'año', 'tramite', 'usuario', 'actualizado_por', 'usuario_asignado', 'usuario_supervisor', 'estado', 'distrito', 'created_at', 'updated_at', 'tomo', 'registro', 'numero_propiedad', 'tipo_servicio', 'fecha_entrega')
+                                                    ->with('inscripcionPropiedad:id,movimiento_registral_id', 'asignadoA:id,name', 'actualizadoPor:id,name', 'folioReal:id,folio')
                                                     ->has('fideicomiso')
                                                     ->whereHas('folioReal', function($q){
                                                         $q->whereIn('estado', ['activo', 'centinela', 'bloqueado']);

@@ -228,17 +228,19 @@ class Usuarios extends Component
     {
 
         $usuarios = User::with('creadoPor:id,name', 'actualizadoPor:id,name')
-                            ->where('name', 'LIKE', '%' . $this->search . '%')
-                            ->orWhere('email', 'LIKE', '%' . $this->search . '%')
-                            ->orWhere('ubicacion', 'LIKE', '%' . $this->search . '%')
-                            ->orWhere('area', 'LIKE', '%' . $this->search . '%')
-                            ->orWhere('status', 'LIKE', '%' . $this->search . '%')
-                            ->orWhere(function($q){
-                                return $q->whereHas('roles', function($q){
-                                    return $q->where('name', 'LIKE', '%' . $this->search . '%');
+                            ->where(function($q){
+                                $q->where('name', 'LIKE', '%' . $this->search . '%')
+                                ->orWhere('email', 'LIKE', '%' . $this->search . '%')
+                                ->orWhere('ubicacion', 'LIKE', '%' . $this->search . '%')
+                                ->orWhere('area', 'LIKE', '%' . $this->search . '%')
+                                ->orWhere('status', 'LIKE', '%' . $this->search . '%')
+                                ->orWhere(function($q){
+                                    return $q->whereHas('roles', function($q){
+                                        return $q->where('name', 'LIKE', '%' . $this->search . '%');
+                                    });
                                 });
                             })
-                            ->when($this->filters['rol'], fn($q, $rol) => $q->orWhereHas('roles', function($q) use($rol){ $q->where('name', $rol); }))
+                            ->when($this->filters['rol'] && $this->filters['rol'] != '', fn($q) => $q->whereHas('roles', function($q) { $q->where('name', $this->filters['rol']); }))
                             ->orderBy($this->sort, $this->direction)
                             ->paginate($this->pagination);
 

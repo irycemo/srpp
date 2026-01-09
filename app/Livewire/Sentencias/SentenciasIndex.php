@@ -8,11 +8,9 @@ use Livewire\WithPagination;
 use Livewire\WithFileUploads;
 use App\Constantes\Constantes;
 use App\Traits\ComponentesTrait;
-use Illuminate\Support\Facades\DB;
 use App\Models\MovimientoRegistral;
-use Illuminate\Support\Facades\Log;
 use App\Traits\Inscripciones\InscripcionesIndex;
-use App\Exceptions\InscripcionesServiceException;
+use App\Traits\Inscripciones\EnviarMovimientoCorreccion;
 use App\Traits\Inscripciones\RechazarMovimientoTrait;
 use App\Traits\RevisarMovimientosPosterioresTrait;
 
@@ -25,75 +23,13 @@ class SentenciasIndex extends Component
     use InscripcionesIndex;
     use RevisarMovimientosPosterioresTrait;
     use RechazarMovimientoTrait;
-
-    public function corregir(MovimientoRegistral $movimientoRegistral){
-
-        try {
-
-            $this->revisarMovimientosPosteriores($movimientoRegistral);
-
-            if($movimientoRegistral->sentencia->acto_contenido == 'CANCELACIÓN DE SENTENCIA'){
-
-                $this->revertirSentenciaCancelatoria($movimientoRegistral);
-
-            }elseif(in_array($movimientoRegistral->sentencia->acto_contenido, ['RESOLUCIÓN', 'DEMANDA', 'PROVIDENCIA PRECAUTORIA'])){
-
-                $this->revertirSentenciaBloqueadora($movimientoRegistral);
-
-            }
-
-            DB::transaction(function () use ($movimientoRegistral){
-
-                $movimientoRegistral->update([
-                    'estado' => 'correccion',
-                    'actualizado_por' => auth()->id()
-                ]);
-
-                $movimientoRegistral->audits()->latest()->first()->update(['tags' => 'Cambio estado a corrección']);
-
-            });
-
-            $this->dispatch('mostrarMensaje', ['success', "La información se guardó con éxito."]);
-
-        } catch (InscripcionesServiceException $ex) {
-
-            $this->dispatch('mostrarMensaje', ['warning', $ex->getMessage()]);
-
-        } catch (\Throwable $th) {
-            Log::error("Error al enviar a corrección sentencia por el usuario: (id: " . auth()->user()->id . ") " . auth()->user()->name . ". " . $th);
-            $this->dispatch('mostrarMensaje', ['error', "Ha ocurrido un error."]);
-        }
-
-    }
-
-    public function revertirSentenciaCancelatoria(MovimientoRegistral $movimientoRegistral){
-
-        $movimientoCancelado = MovimientoRegistral::where('movimiento_padre', $movimientoRegistral->id)->first();
-
-        $movimientoCancelado->update(['movimiento_padre' => null]);
-
-        $movimientoCancelado->sentencia->update(['estado' => 'activo']);
-
-    }
-
-    public function revertirSentenciaBloqueadora(MovimientoRegistral $movimientoRegistral){
-
-        $movimientoRegistral->folioReal->update(['estado' => 'activo']);
-
-        $movimientoRegistral->folioReal->bloqueos()->where('estado', 'activo')->first()->update([
-            'estado' => 'inactivo',
-            'observaciones_desbloqueo' => 'Se desbloquea folio por corrección en la sentencia con folio: ' . $movimientoRegistral->folio,
-            'actualizado_por' => auth()->id()
-        ]);
-    }
+    use EnviarMovimientoCorreccion;
 
     public function mount(){
 
         $this->crearModeloVacio();
 
         $this->años = Constantes::AÑOS;
-
-        $this->filters['año'] = now()->format('Y');
 
         $this->motivos_rechazo = Constantes::RECHAZO_MOTIVOS;
 
@@ -121,7 +57,8 @@ class SentenciasIndex extends Component
 
         if(auth()->user()->hasRole(['Sentencias', 'Registrador Sentencias'])){
 
-            $movimientos = MovimientoRegistral::with('sentencia', 'asignadoA', 'actualizadoPor', 'folioReal:id,folio')
+            $movimientos = MovimientoRegistral::select('id', 'folio', 'folio_real', 'año', 'tramite', 'usuario', 'actualizado_por', 'usuario_asignado', 'usuario_supervisor', 'estado', 'distrito', 'created_at', 'updated_at', 'tomo', 'registro', 'numero_propiedad', 'tipo_servicio', 'fecha_entrega')
+                                                    ->with('sentencia:id,movimiento_registral_id', 'asignadoA:id,name', 'actualizadoPor:id,name', 'folioReal:id,folio')
                                                     ->where('usuario_asignado', auth()->id())
                                                     ->whereHas('folioReal', function($q){
                                                         $q->whereIn('estado', ['activo', 'centinela']);
@@ -151,7 +88,8 @@ class SentenciasIndex extends Component
 
         }elseif(auth()->user()->hasRole(['Supervisor inscripciones', 'Supervisor uruapan'])){
 
-            $movimientos = MovimientoRegistral::with('sentencia', 'asignadoA', 'actualizadoPor', 'folioReal:id,folio')
+            $movimientos = MovimientoRegistral::select('id', 'folio', 'folio_real', 'año', 'tramite', 'usuario', 'actualizado_por', 'usuario_asignado', 'usuario_supervisor', 'estado', 'distrito', 'created_at', 'updated_at', 'tomo', 'registro', 'numero_propiedad', 'tipo_servicio', 'fecha_entrega')
+                                                    ->with('sentencia:id,movimiento_registral_id', 'asignadoA:id,name', 'actualizadoPor:id,name', 'folioReal:id,folio')
                                                     ->whereHas('folioReal', function($q){
                                                         $q->whereIn('estado', ['activo', 'centinela', 'bloqueado']);
                                                     })
@@ -180,7 +118,8 @@ class SentenciasIndex extends Component
 
         }elseif(auth()->user()->hasRole(['Jefe de departamento inscripciones'])){
 
-            $movimientos = MovimientoRegistral::with('sentencia', 'asignadoA', 'actualizadoPor', 'folioReal:id,folio')
+            $movimientos = MovimientoRegistral::select('id', 'folio', 'folio_real', 'año', 'tramite', 'usuario', 'actualizado_por', 'usuario_asignado', 'usuario_supervisor', 'estado', 'distrito', 'created_at', 'updated_at', 'tomo', 'registro', 'numero_propiedad', 'tipo_servicio', 'fecha_entrega')
+                                                    ->with('sentencia:id,movimiento_registral_id', 'asignadoA:id,name', 'actualizadoPor:id,name', 'folioReal:id,folio')
                                                     ->whereHas('folioReal', function($q){
                                                         $q->whereIn('estado', ['activo', 'centinela','bloqueado']);
                                                     })
@@ -208,7 +147,8 @@ class SentenciasIndex extends Component
 
         }elseif(auth()->user()->hasRole(['Administrador', 'Operador', 'Director', 'Jefe de departamento jurídico'])){
 
-            $movimientos = MovimientoRegistral::with('sentencia', 'asignadoA', 'actualizadoPor', 'folioReal:id,folio')
+            $movimientos = MovimientoRegistral::select('id', 'folio', 'folio_real', 'año', 'tramite', 'usuario', 'actualizado_por', 'usuario_asignado', 'usuario_supervisor', 'estado', 'distrito', 'created_at', 'updated_at', 'tomo', 'registro', 'numero_propiedad', 'tipo_servicio', 'fecha_entrega')
+                                                    ->with('sentencia:id,movimiento_registral_id', 'asignadoA:id,name', 'actualizadoPor:id,name', 'folioReal:id,folio')
                                                     ->whereHas('folioReal', function($q){
                                                         $q->whereIn('estado', ['activo', 'centinela', 'bloqueado']);
                                                     })
@@ -230,7 +170,8 @@ class SentenciasIndex extends Component
 
         }elseif(auth()->user()->hasRole(['Regional'])){
 
-            $movimientos = MovimientoRegistral::with('sentencia', 'asignadoA', 'actualizadoPor', 'folioReal:id,folio')
+            $movimientos = MovimientoRegistral::select('id', 'folio', 'folio_real', 'año', 'tramite', 'usuario', 'actualizado_por', 'usuario_asignado', 'usuario_supervisor', 'estado', 'distrito', 'created_at', 'updated_at', 'tomo', 'registro', 'numero_propiedad', 'tipo_servicio', 'fecha_entrega')
+                                                    ->with('sentencia:id,movimiento_registral_id', 'asignadoA:id,name', 'actualizadoPor:id,name', 'folioReal:id,folio')
                                                     ->whereHas('folioReal', function($q){
                                                         $q->whereIn('estado', ['activo', 'centinela', 'bloqueado']);
                                                     })

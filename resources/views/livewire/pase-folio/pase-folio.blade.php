@@ -30,12 +30,14 @@
 
                 <select class="bg-white rounded-full text-sm w-min" wire:model.live="filters.estado">
 
+                    <option value="">Estado</option>
                     <option value="nuevo">Nuevo</option>
                     <option value="elaborado">Elaborado</option>
                     <option value="rechazado">Rechazado</option>
                     <option value="finalizado">Finalizado</option>
                     <option value="correccion">Corrección</option>
                     <option value="pendiente">Pendiente</option>
+                    <option value="no recibido">No recibido</option>
 
                 </select>
 
@@ -269,81 +271,7 @@
 
                                         @endif
 
-                                        @if($movimiento->folioReal)
-
-                                            @if($movimiento->folioReal->estado == 'elaborado' )
-
-                                                <button
-                                                    wire:click="pasarCaptura({{ $movimiento->id }})"
-                                                    wire:loading.attr="disabled"
-                                                    class="w-full text-left block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 focus:outline-none focus:bg-gray-100"
-                                                    role="menuitem">
-                                                    Corregir
-                                                </button>
-
-                                                <button
-                                                    wire:click="abrirModalFinalizar({{ $movimiento->id }})"
-                                                    wire:loading.attr="disabled"
-                                                    class="w-full text-left block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 focus:outline-none focus:bg-gray-100"
-                                                    role="menuitem">
-                                                    Finalizar
-                                                </button>
-
-                                                <button
-                                                    wire:click="imprimir({{ $movimiento->id }})"
-                                                    wire:loading.attr="disabled"
-                                                    class="w-full text-left block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 focus:outline-none focus:bg-gray-100"
-                                                    role="menuitem">
-                                                    Imprimir
-                                                </button>
-
-                                            @elseif(!$supervisor && $movimiento->estado !== 'no recibido')
-
-                                                @if($movimiento->folioReal->estado == 'pendiente')
-
-                                                    <button
-                                                        wire:click="pasarCaptura({{ $movimiento->id }})"
-                                                        wire:loading.attr="disabled"
-                                                        class="w-full text-left block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 focus:outline-none focus:bg-gray-100"
-                                                        role="menuitem">
-                                                        Corregir
-                                                    </button>
-
-                                                    <button
-                                                        wire:click="imprimir({{ $movimiento->id }})"
-                                                        wire:loading.attr="disabled"
-                                                        class="w-full text-left block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 focus:outline-none focus:bg-gray-100"
-                                                        role="menuitem">
-                                                        Imprimir
-                                                    </button>
-
-                                                @else
-
-                                                    <a class="w-full text-left block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 focus:outline-none focus:bg-gray-100" href="{{ route('elaboracion_folio', $movimiento->id) }}">Elaborar</a>
-
-                                                @endif
-
-                                            @endif
-
-                                        @elseif(!$supervisor)
-
-                                            @if($movimiento->estado !== 'no recibido')
-
-                                                <a class="w-full text-left block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 focus:outline-none focus:bg-gray-100" href="{{ route('elaboracion_folio', $movimiento->id) }}">Elaborar</a>
-
-                                            @endif
-
-                                            <button
-                                                wire:click="abrirModalRechazar({{ $movimiento->id }})"
-                                                wire:loading.attr="disabled"
-                                                class="w-full text-left block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 focus:outline-none focus:bg-gray-100"
-                                                role="menuitem">
-                                                Rechazar
-                                            </button>
-
-                                        @endif
-
-                                        @if(auth()->user()->hasRole(['Jefe de departamento certificaciones', 'Jefe de departamento inscripciones']) || $supervisor)
+                                        @can('Reasignar pase a folio')
 
                                             <button
                                                 wire:click="abrirModalReasignarUsuario({{ $movimiento->id }})"
@@ -353,49 +281,63 @@
                                                 Reasignar
                                             </button>
 
-                                            <button
-                                                wire:click="abrirModalRechazar({{ $movimiento->id }})"
-                                                wire:loading.attr="disabled"
-                                                class="w-full text-left block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 focus:outline-none focus:bg-gray-100"
-                                                role="menuitem">
-                                                Rechazar
-                                            </button>
+                                        @endcan
+
+                                        @can('Elaborar pase a folio')
 
                                             @if($movimiento->folioReal)
 
-                                                @if($movimiento->folioReal->estado == 'pendiente' )
+                                                @if($movimiento->estado !== 'no recibido'  && $movimiento->folioReal->estado != 'pendiente')
 
-                                                    <button
-                                                        wire:click="pasarCaptura({{ $movimiento->id }})"
-                                                        wire:loading.attr="disabled"
-                                                        class="w-full text-left block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 focus:outline-none focus:bg-gray-100"
-                                                        role="menuitem">
-                                                        Corregir
-                                                    </button>
+                                                    <a class="w-full text-left block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 focus:outline-none focus:bg-gray-100" href="{{ route('elaboracion_folio', $movimiento->id) }}">Elaborar</a>
 
-                                                    <button
-                                                        wire:click="imprimir({{ $movimiento->id }})"
-                                                        wire:loading.attr="disabled"
-                                                        class="w-full text-left block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 focus:outline-none focus:bg-gray-100"
-                                                        role="menuitem">
-                                                        Imprimir
-                                                    </button>
+                                                @endif
 
-                                                    <button
-                                                        wire:click="abrirModalFinalizar({{ $movimiento->id }})"
-                                                        wire:loading.attr="disabled"
-                                                        class="w-full text-left block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 focus:outline-none focus:bg-gray-100"
-                                                        role="menuitem">
-                                                        Finalizar
-                                                    </button>
+                                            @else
+
+                                                @if($movimiento->estado !== 'no recibido')
+
+                                                    <a class="w-full text-left block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 focus:outline-none focus:bg-gray-100" href="{{ route('elaboracion_folio', $movimiento->id) }}">Elaborar</a>
 
                                                 @endif
 
                                             @endif
 
-                                        @endif
+                                        @endcan
 
-                                        {{-- @if(!$movimiento->folio_real)
+                                        @can('Corregir pase a folio')
+
+                                            @if($movimiento->folioReal && in_array($movimiento->folioReal->estado, ['elaborado', 'pendiente', 'captura']))
+
+                                                <button
+                                                    wire:click="pasarCaptura({{ $movimiento->id }})"
+                                                    wire:loading.attr="disabled"
+                                                    class="w-full text-left block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 focus:outline-none focus:bg-gray-100"
+                                                    role="menuitem">
+                                                    Corregir
+                                                </button>
+
+                                            @endif
+
+                                        @endcan
+
+                                        @can('Imprimir pase a folio')
+
+                                            @if($movimiento->folioReal && in_array($movimiento->folioReal->estado, ['elaborado', 'pendiente']))
+
+                                                <button
+                                                    wire:click="imprimir({{ $movimiento->id }})"
+                                                    wire:loading.attr="disabled"
+                                                    class="w-full text-left block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 focus:outline-none focus:bg-gray-100"
+                                                    role="menuitem">
+                                                    Imprimir
+                                                </button>
+
+                                            @endif
+
+                                        @endcan
+
+                                        @can('Rechazar pase a folio')
 
                                             <button
                                                 wire:click="abrirModalRechazar({{ $movimiento->id }})"
@@ -405,7 +347,23 @@
                                                 Rechazar
                                             </button>
 
-                                        @endif --}}
+                                        @endcan
+
+                                        @can('Finalizar pase a folio')
+
+                                            @if($movimiento->folioReal && in_array($movimiento->folioReal->estado, ['elaborado', 'pendiente']))
+
+                                                <button
+                                                    wire:click="abrirModalFinalizar({{ $movimiento->id }})"
+                                                    wire:loading.attr="disabled"
+                                                    class="w-full text-left block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 focus:outline-none focus:bg-gray-100"
+                                                    role="menuitem">
+                                                    Finalizar
+                                                </button>
+
+                                            @endif
+
+                                        @endcan
 
                                     </div>
 
@@ -520,84 +478,7 @@
 
     </x-dialog-modal>
 
-    <x-dialog-modal wire:model="modalRechazar">
-
-        <x-slot name="title">
-
-            Rechazar
-
-        </x-slot>
-
-        <x-slot name="content">
-
-            <div class="max-h-80 overflow-auto">
-            @if(!$motivo)
-
-                @foreach ($motivos as $key => $item)
-
-                    <div
-                        wire:click="seleccionarMotivo('{{ $key }}')"
-                        wire:loading.attr="disabled"
-                        class="border rounded-lg text-sm mb-2 p-2 hover:bg-gray-100 cursor-pointer">
-
-                        <p>{{ $item }}</p>
-
-                    </div>
-
-                @endforeach
-
-            @else
-
-                <div class="border rounded-lg text-sm mb-2 p-2 relative pr-16">
-
-                    <span
-                        wire:click="$set('motivo', null)"
-                        wire:loading.attr="disabled"
-                        class="rounded-full px-2 border hover:bg-gray-700 hover:text-white absolute top-1 right-1 cursor-pointer">
-                        x
-                    </span>
-
-                    <p>{{ $motivo }}</p>
-
-                </div>
-
-            @endif
-        </div>
-
-            <x-input-group for="observaciones" label="Observaciones" :error="$errors->first('observaciones')" class="w-full">
-
-                <textarea autofocus="false" class="bg-white rounded text-xs w-full " rows="4" wire:model="observaciones" placeholder="Se lo mas especifico posible acerca del motivo del rechazo."></textarea>
-
-            </x-input-group>
-
-        </x-slot>
-
-        <x-slot name="footer">
-
-            <div class="flex items-center justify-end space-x-3">
-
-                <x-button-blue
-                    wire:click="rechazar"
-                    wire:loading.attr="disabled"
-                    wire:target="rechazar">
-
-                    <img wire:loading wire:target="rechazar" class="mx-auto h-4 mr-1" src="{{ asset('storage/img/loading3.svg') }}" alt="Loading">
-
-                    Rechazar
-                </x-button-blue>
-
-                <x-button-red
-                    wire:click="$set('modalRechazar',false)"
-                    wire:loading.attr="disabled"
-                    wire:target="$set('modalRechazar',false)">
-                    Cerrar
-                </x-button-red>
-
-            </div>
-
-        </x-slot>
-
-    </x-dialog-modal>
+    @include('livewire.comun.modal-rechazar')
 
     <x-dialog-modal wire:model="modalNuevoFolio" maxWidth="sm">
 

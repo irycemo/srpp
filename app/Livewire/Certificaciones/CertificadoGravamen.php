@@ -485,8 +485,6 @@ class CertificadoGravamen extends Component
 
         $this->años = Constantes::AÑOS;
 
-        $this->filters['año'] = now()->format('Y');
-
         $this->director = User::where('status', 'activo')
                                 ->whereHas('roles', function($q){
                                     $q->where('name', 'Director');
@@ -526,7 +524,8 @@ class CertificadoGravamen extends Component
 
         if(auth()->user()->hasRole(['Certificador Gravamen', 'Certificador Oficialia', 'Certificador Juridico'])){
 
-            $certificados = MovimientoRegistral::with('asignadoA', 'supervisor', 'actualizadoPor', 'certificacion.actualizadoPor', 'folioReal:id,folio')
+            $certificados = MovimientoRegistral::select('id', 'folio', 'folio_real', 'año', 'tramite', 'usuario', 'actualizado_por', 'usuario_asignado', 'usuario_supervisor', 'estado', 'distrito', 'created_at', 'updated_at', 'tomo', 'registro', 'numero_propiedad', 'tipo_servicio', 'fecha_entrega', 'seccion', 'solicitante')
+                                                ->with('asignadoA:id,name', 'supervisor:id,name', 'actualizadoPor:id,name', 'certificacion.actualizadoPor:id,name', 'folioReal:id,folio')
                                                 ->where('usuario_asignado', auth()->id())
                                                 ->whereHas('folioReal', function($q){
                                                     $q->whereIn('estado', ['activo', 'centinela']);
@@ -558,7 +557,8 @@ class CertificadoGravamen extends Component
 
         }elseif(auth()->user()->hasRole(['Supervisor certificaciones', 'Supervisor uruapan'])){
 
-            $certificados = MovimientoRegistral::with('asignadoA', 'supervisor', 'actualizadoPor', 'certificacion.actualizadoPor', 'folioReal:id,folio')
+            $certificados = MovimientoRegistral::select('id', 'folio', 'folio_real', 'año', 'tramite', 'usuario', 'actualizado_por', 'usuario_asignado', 'usuario_supervisor', 'estado', 'distrito', 'created_at', 'updated_at', 'tomo', 'registro', 'numero_propiedad', 'tipo_servicio', 'fecha_entrega', 'seccion', 'solicitante')
+                                                ->with('asignadoA:id,name', 'supervisor:id,name', 'actualizadoPor:id,name', 'certificacion.actualizadoPor:id,name', 'folioReal:id,folio')
                                                 ->whereHas('folioReal', function($q){
                                                     $q->whereIn('estado', ['activo', 'centinela']);
                                                 })
@@ -588,7 +588,8 @@ class CertificadoGravamen extends Component
 
         }elseif(auth()->user()->hasRole(['Jefe de departamento certificaciones'])){
 
-            $certificados = MovimientoRegistral::with('asignadoA', 'supervisor', 'actualizadoPor', 'certificacion.actualizadoPor', 'folioReal:id,folio')
+            $certificados = MovimientoRegistral::select('id', 'folio', 'folio_real', 'año', 'tramite', 'usuario', 'actualizado_por', 'usuario_asignado', 'usuario_supervisor', 'estado', 'distrito', 'created_at', 'updated_at', 'tomo', 'registro', 'numero_propiedad', 'tipo_servicio', 'fecha_entrega', 'seccion', 'solicitante')
+                                                ->with('asignadoA:id,name', 'supervisor:id,name', 'actualizadoPor:id,name', 'certificacion.actualizadoPor:id,name', 'folioReal:id,folio')
                                                 ->whereHas('folioReal', function($q){
                                                     $q->whereIn('estado', ['activo', 'centinela']);
                                                 })
@@ -617,7 +618,8 @@ class CertificadoGravamen extends Component
 
         }elseif(auth()->user()->hasRole(['Administrador', 'Operador', 'Director', 'Jefe de departamento jurídico'])){
 
-            $certificados = MovimientoRegistral::with('asignadoA', 'supervisor', 'actualizadoPor', 'certificacion.actualizadoPor', 'folioReal:id,folio')
+            $certificados = MovimientoRegistral::select('id', 'folio', 'folio_real', 'año', 'tramite', 'usuario', 'actualizado_por', 'usuario_asignado', 'usuario_supervisor', 'estado', 'distrito', 'created_at', 'updated_at', 'tomo', 'registro', 'numero_propiedad', 'tipo_servicio', 'fecha_entrega', 'seccion', 'solicitante')
+                                                ->with('asignadoA:id,name', 'supervisor:id,name', 'actualizadoPor:id,name', 'certificacion.actualizadoPor:id,name', 'folioReal:id,folio')
                                                 ->whereHas('folioReal', function($q){
                                                     $q->whereIn('estado', ['activo', 'centinela', 'bloqueado']);
                                                 })
@@ -640,7 +642,8 @@ class CertificadoGravamen extends Component
 
         }elseif(auth()->user()->hasRole(['Regional'])){
 
-            $certificados = MovimientoRegistral::with('asignadoA', 'supervisor', 'actualizadoPor', 'certificacion.actualizadoPor', 'folioReal:id,folio')
+            $certificados = MovimientoRegistral::select('id', 'folio', 'folio_real', 'año', 'tramite', 'usuario', 'actualizado_por', 'usuario_asignado', 'usuario_supervisor', 'estado', 'distrito', 'created_at', 'updated_at', 'tomo', 'registro', 'numero_propiedad', 'tipo_servicio', 'fecha_entrega', 'seccion', 'solicitante')
+                                                ->with('asignadoA:id,name', 'supervisor:id,name', 'actualizadoPor:id,name', 'certificacion.actualizadoPor:id,name', 'folioReal:id,folio')
                                                 ->when(auth()->user()->ubicacion === 'Regional 1', function($q){
                                                     $q->where(function($q){
                                                         $q->whereIn('distrito', [3, 9])

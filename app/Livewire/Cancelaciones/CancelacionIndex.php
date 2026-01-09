@@ -4,16 +4,13 @@ namespace App\Livewire\Cancelaciones;
 
 use App\Models\User;
 use Livewire\Component;
-use App\Models\Gravamen;
 use Livewire\WithPagination;
 use Livewire\WithFileUploads;
 use App\Constantes\Constantes;
 use App\Traits\ComponentesTrait;
-use Illuminate\Support\Facades\DB;
 use App\Models\MovimientoRegistral;
-use Illuminate\Support\Facades\Log;
 use App\Traits\Inscripciones\InscripcionesIndex;
-use App\Exceptions\InscripcionesServiceException;
+use App\Traits\Inscripciones\EnviarMovimientoCorreccion;
 use App\Traits\Inscripciones\RechazarMovimientoTrait;
 use App\Traits\RevisarMovimientosPosterioresTrait;
 
@@ -26,75 +23,13 @@ class CancelacionIndex extends Component
     use InscripcionesIndex;
     use RevisarMovimientosPosterioresTrait;
     use RechazarMovimientoTrait;
-
-    public function corregir(MovimientoRegistral $movimientoRegistral){
-
-        if($this->modelo_editar->isNot($movimientoRegistral))
-            $this->modelo_editar = $movimientoRegistral;
-
-        try {
-
-            $this->revisarMovimientosPosteriores($movimientoRegistral);
-
-            DB::transaction(function () use ($movimientoRegistral){
-
-                $this->reactivarGravamen($movimientoRegistral->cancelacion->gravamenCancelado->gravamen);
-
-                $movimientoRegistral->update([
-                    'estado' => 'correccion',
-                    'actualizado_por' => auth()->id()
-                ]);
-
-                $movimientoRegistral->audits()->latest()->first()->update(['tags' => 'Cambio estado a corrección']);
-
-            });
-
-            $this->dispatch('mostrarMensaje', ['success', "La información se guardó con éxito."]);
-
-        } catch (InscripcionesServiceException $ex) {
-
-            $this->dispatch('mostrarMensaje', ['warning', $ex->getMessage()]);
-
-        } catch (\Throwable $th) {
-
-            Log::error("Error al enviar a corrección cancelación por el usuario: (id: " . auth()->user()->id . ") " . auth()->user()->name . ". " . $th);
-            $this->dispatch('mostrarMensaje', ['error', "Ha ocurrido un error."]);
-
-        }
-
-    }
-
-    public function reactivarGravamen(Gravamen $gravamen){
-
-        $observaciones = str_replace('Cancelado parcialmente mediante movimiento registral: ' . $this->modelo_editar->folioReal->folio . '-' . $this->modelo_editar->folio, '', $gravamen->observaciones);
-
-        $observaciones = str_replace('Cancelado mediante movimiento registral: ' . $this->modelo_editar->folioReal->folio . '-' . $this->modelo_editar->folio, '', $observaciones);
-
-        if($gravamen->movimientoRegistral->estado == 'pase_folio'){
-
-            $monto = $gravamen->valor_gravamen;
-
-        }else{
-
-            $monto = json_decode($gravamen->movimientoRegistral->firmaElectronica->cadena_original)->gravamen->valor_gravamen;
-
-        }
-
-        $gravamen->update([
-            'observaciones' => $observaciones,
-            'valor_gravamen' => $monto,
-            'estado' => 'activo'
-        ]);
-
-    }
+    use EnviarMovimientoCorreccion;
 
     public function mount(){
 
         $this->crearModeloVacio();
 
         $this->años = Constantes::AÑOS;
-
-        $this->filters['año'] = now()->format('Y');
 
         $this->motivos_rechazo = Constantes::RECHAZO_MOTIVOS;
 
@@ -122,7 +57,8 @@ class CancelacionIndex extends Component
 
         if(auth()->user()->hasRole(['Cancelación', 'Registrador Cancelación'])){
 
-            $movimientos = MovimientoRegistral::with('cancelacion', 'asignadoA', 'actualizadoPor', 'folioReal:id,folio')
+            $movimientos = MovimientoRegistral::select('id', 'folio', 'folio_real', 'año', 'tramite', 'usuario', 'actualizado_por', 'usuario_asignado', 'usuario_supervisor', 'estado', 'distrito', 'created_at', 'updated_at', 'tomo', 'registro', 'numero_propiedad', 'tipo_servicio', 'fecha_entrega')
+                                                    ->with('cancelacion:id,movimiento_registral_id', 'asignadoA:id,name', 'actualizadoPor:id,name', 'folioReal:id,folio')
                                                     ->where('usuario_asignado', auth()->id())
                                                     ->whereHas('folioReal', function($q){
                                                         $q->whereIn('estado', ['activo', 'centinela']);
@@ -152,7 +88,8 @@ class CancelacionIndex extends Component
 
         }if(auth()->user()->hasRole(['Supervisor inscripciones', 'Supervisor uruapan'])){
 
-            $movimientos = MovimientoRegistral::with('cancelacion', 'asignadoA', 'actualizadoPor', 'folioReal:id,folio')
+            $movimientos = MovimientoRegistral::select('id', 'folio', 'folio_real', 'año', 'tramite', 'usuario', 'actualizado_por', 'usuario_asignado', 'usuario_supervisor', 'estado', 'distrito', 'created_at', 'updated_at', 'tomo', 'registro', 'numero_propiedad', 'tipo_servicio', 'fecha_entrega')
+                                                    ->with('cancelacion:id,movimiento_registral_id', 'asignadoA:id,name', 'actualizadoPor:id,name', 'folioReal:id,folio')
                                                     ->whereHas('folioReal', function($q){
                                                         $q->whereIn('estado', ['activo', 'centinela']);
                                                     })
@@ -181,7 +118,8 @@ class CancelacionIndex extends Component
 
         }elseif(auth()->user()->hasRole(['Jefe de departamento inscripciones'])){
 
-            $movimientos = MovimientoRegistral::with('cancelacion', 'asignadoA', 'actualizadoPor', 'folioReal:id,folio')
+            $movimientos = MovimientoRegistral::select('id', 'folio', 'folio_real', 'año', 'tramite', 'usuario', 'actualizado_por', 'usuario_asignado', 'usuario_supervisor', 'estado', 'distrito', 'created_at', 'updated_at', 'tomo', 'registro', 'numero_propiedad', 'tipo_servicio', 'fecha_entrega')
+                                                    ->with('cancelacion:id,movimiento_registral_id', 'asignadoA:id,name', 'actualizadoPor:id,name', 'folioReal:id,folio')
                                                     ->whereHas('folioReal', function($q){
                                                         $q->whereIn('estado', ['activo', 'centinela']);
                                                     })
@@ -209,7 +147,8 @@ class CancelacionIndex extends Component
 
         }elseif(auth()->user()->hasRole(['Administrador', 'Operador', 'Director', 'Jefe de departamento jurídico'])){
 
-            $movimientos = MovimientoRegistral::with('cancelacion', 'asignadoA', 'actualizadoPor', 'folioReal:id,folio')
+            $movimientos = MovimientoRegistral::select('id', 'folio', 'folio_real', 'año', 'tramite', 'usuario', 'actualizado_por', 'usuario_asignado', 'usuario_supervisor', 'estado', 'distrito', 'created_at', 'updated_at', 'tomo', 'registro', 'numero_propiedad', 'tipo_servicio', 'fecha_entrega')
+                                                    ->with('cancelacion:id,movimiento_registral_id', 'asignadoA:id,name', 'actualizadoPor:id,name', 'folioReal:id,folio')
                                                     ->whereHas('folioReal', function($q){
                                                         $q->whereIn('estado', ['activo', 'centinela', 'bloqueado']);
                                                     })
@@ -231,7 +170,8 @@ class CancelacionIndex extends Component
 
         }elseif(auth()->user()->hasRole(['Regional'])){
 
-            $movimientos = MovimientoRegistral::with('cancelacion', 'asignadoA', 'actualizadoPor', 'folioReal:id,folio')
+            $movimientos = MovimientoRegistral::select('id', 'folio', 'folio_real', 'año', 'tramite', 'usuario', 'actualizado_por', 'usuario_asignado', 'usuario_supervisor', 'estado', 'distrito', 'created_at', 'updated_at', 'tomo', 'registro', 'numero_propiedad', 'tipo_servicio', 'fecha_entrega')
+                                                    ->with('cancelacion:id,movimiento_registral_id', 'asignadoA:id,name', 'actualizadoPor:id,name', 'folioReal:id,folio')
                                                     ->whereHas('folioReal', function($q){
                                                         $q->whereIn('estado', ['activo', 'centinela']);
                                                     })
@@ -285,4 +225,5 @@ class CancelacionIndex extends Component
         return view('livewire.cancelaciones.cancelacion-index', compact('movimientos'))->extends('layouts.admin');
 
     }
+
 }

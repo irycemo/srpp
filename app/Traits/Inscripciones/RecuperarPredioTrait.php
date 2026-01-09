@@ -16,7 +16,7 @@ trait RecuperarPredioTrait{
 
         if($movimientoRegistral->folio == 1){
 
-            if(! $movimientoRegistral->folioReal->firmaElectronica) throw new GeneralException('No hay una firma electronica para recuperar la información.');
+            if(! $movimientoRegistral->folioReal->firmaElectronica) throw new GeneralException('No hay una firma electronica activa para recuperar la información.');
 
             $propietarios = $this->recuperarPropietarios($movimientoRegistral->folioReal->firmaElectronica);
 
@@ -45,6 +45,8 @@ trait RecuperarPredioTrait{
                 $folio = $folio - 1;
 
                 if($folio < 1){
+
+                    if(! $movimientoRegistral->folioReal->firmaElectronica) throw new GeneralException('No hay una firma electronica activa para recuperar la información.');
 
                     $propietarios = $this->recuperarPropietarios($movimientoRegistral->folioReal->firmaElectronica);
 

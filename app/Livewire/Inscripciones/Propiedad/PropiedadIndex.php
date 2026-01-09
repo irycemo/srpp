@@ -12,8 +12,7 @@ use Illuminate\Support\Facades\DB;
 use App\Models\MovimientoRegistral;
 use Illuminate\Support\Facades\Log;
 use App\Traits\Inscripciones\InscripcionesIndex;
-use App\Exceptions\InscripcionesServiceException;
-use App\Http\Services\InscripcionesPropiedadService;
+use App\Traits\Inscripciones\EnviarMovimientoCorreccion;
 use App\Traits\Inscripciones\RechazarMovimientoTrait;
 
 class PropiedadIndex extends Component
@@ -23,6 +22,7 @@ class PropiedadIndex extends Component
     use ComponentesTrait;
     use InscripcionesIndex;
     use RechazarMovimientoTrait;
+    use EnviarMovimientoCorreccion;
 
     public $año;
     public $tramite;
@@ -96,37 +96,6 @@ class PropiedadIndex extends Component
 
     }
 
-    public function corregir(MovimientoRegistral $movimientoRegistral){
-
-        if(in_array($movimientoRegistral->inscripcionPropiedad->servicio, ['D149'])){
-
-            $this->dispatch('mostrarMensaje', ['warning', "No es posible enviar a corrección."]);
-
-            return;
-
-        }
-
-        try {
-
-            DB::transaction(function () use ($movimientoRegistral){
-
-                (new InscripcionesPropiedadService())->corregir($movimientoRegistral);
-
-            });
-
-            $this->dispatch('mostrarMensaje', ['success', "La información se guardó con éxito."]);
-
-        } catch (InscripcionesServiceException $th) {
-
-            $this->dispatch('mostrarMensaje', ['error', $th->getMessage()]);
-
-        } catch (\Throwable $th) {
-            Log::error("Error al enviar a corrección inscripcion de propiedad por el usuario: (id: " . auth()->user()->id . ") " . auth()->user()->name . ". " . $th);
-            $this->dispatch('mostrarMensaje', ['error', "Ha ocurrido un error."]);
-        }
-
-    }
-
     public function mount(){
 
         $this->crearModeloVacio();
@@ -134,8 +103,6 @@ class PropiedadIndex extends Component
         $this->años = Constantes::AÑOS;
 
         $this->año = now()->format('Y');
-
-        $this->filters['año'] = now()->format('Y');
 
         $this->motivos_rechazo = Constantes::RECHAZO_MOTIVOS;
 
@@ -165,7 +132,8 @@ class PropiedadIndex extends Component
 
         if(auth()->user()->hasRole(['Propiedad', 'Registrador Propiedad', 'Registrador fraccionamientos'])){
 
-            $movimientos = MovimientoRegistral::with('inscripcionPropiedad', 'asignadoA', 'actualizadoPor', 'folioReal:id,folio')
+            $movimientos = MovimientoRegistral::select('id', 'folio', 'folio_real', 'año', 'tramite', 'usuario', 'actualizado_por', 'usuario_asignado', 'usuario_supervisor', 'estado', 'distrito', 'created_at', 'updated_at', 'tomo', 'registro', 'numero_propiedad', 'tipo_servicio', 'fecha_entrega')
+                                                    ->with('inscripcionPropiedad:id,movimiento_registral_id', 'asignadoA:id,name', 'actualizadoPor:id,name', 'folioReal:id,folio')
                                                     ->where('usuario_asignado', auth()->id())
                                                     ->whereHas('folioReal', function($q){
                                                         $q->whereIn('estado', ['activo', 'centinela']);
@@ -195,7 +163,8 @@ class PropiedadIndex extends Component
 
         }elseif(auth()->user()->hasRole(['Supervisor inscripciones', 'Supervisor uruapan'])){
 
-            $movimientos = MovimientoRegistral::with('inscripcionPropiedad', 'asignadoA', 'actualizadoPor', 'folioReal:id,folio')
+            $movimientos = MovimientoRegistral::select('id', 'folio', 'folio_real', 'año', 'tramite', 'usuario', 'actualizado_por', 'usuario_asignado', 'usuario_supervisor', 'estado', 'distrito', 'created_at', 'updated_at', 'tomo', 'registro', 'numero_propiedad', 'tipo_servicio', 'fecha_entrega')
+                                                    ->with('inscripcionPropiedad:id,movimiento_registral_id', 'asignadoA:id,name', 'actualizadoPor:id,name', 'folioReal:id,folio')
                                                     ->whereHas('folioReal', function($q){
                                                         $q->whereIn('estado', ['activo', 'centinela']);
                                                     })
@@ -224,7 +193,8 @@ class PropiedadIndex extends Component
 
         }elseif(auth()->user()->hasRole(['Jefe de departamento inscripciones'])){
 
-            $movimientos = MovimientoRegistral::with('inscripcionPropiedad', 'asignadoA', 'actualizadoPor', 'folioReal:id,folio')
+            $movimientos = MovimientoRegistral::select('id', 'folio', 'folio_real', 'año', 'tramite', 'usuario', 'actualizado_por', 'usuario_asignado', 'usuario_supervisor', 'estado', 'distrito', 'created_at', 'updated_at', 'tomo', 'registro', 'numero_propiedad', 'tipo_servicio', 'fecha_entrega')
+                                                    ->with('inscripcionPropiedad:id,movimiento_registral_id', 'asignadoA:id,name', 'actualizadoPor:id,name', 'folioReal:id,folio')
                                                     ->whereHas('folioReal', function($q){
                                                         $q->whereIn('estado', ['activo', 'centinela']);
                                                     })
@@ -253,7 +223,8 @@ class PropiedadIndex extends Component
 
         }elseif(auth()->user()->hasRole(['Administrador', 'Operador', 'Director', 'Jefe de departamento jurídico'])){
 
-            $movimientos = MovimientoRegistral::with('inscripcionPropiedad', 'asignadoA', 'actualizadoPor', 'folioReal:id,folio')
+            $movimientos = MovimientoRegistral::select('id', 'folio', 'folio_real', 'año', 'tramite', 'usuario', 'actualizado_por', 'usuario_asignado', 'usuario_supervisor', 'estado', 'distrito', 'created_at', 'updated_at', 'tomo', 'registro', 'numero_propiedad', 'tipo_servicio', 'fecha_entrega')
+                                                    ->with('inscripcionPropiedad:id,movimiento_registral_id', 'asignadoA:id,name', 'actualizadoPor:id,name', 'folioReal:id,folio')
                                                     ->whereHas('folioReal', function($q){
                                                         $q->whereIn('estado', ['activo', 'centinela', 'bloqueado']);
                                                     })
@@ -276,7 +247,8 @@ class PropiedadIndex extends Component
 
         }elseif(auth()->user()->hasRole(['Regional'])){
 
-            $movimientos = MovimientoRegistral::with('inscripcionPropiedad', 'asignadoA', 'actualizadoPor', 'folioReal:id,folio')
+            $movimientos = MovimientoRegistral::select('id', 'folio', 'folio_real', 'año', 'tramite', 'usuario', 'actualizado_por', 'usuario_asignado', 'usuario_supervisor', 'estado', 'distrito', 'created_at', 'updated_at', 'tomo', 'registro', 'numero_propiedad', 'tipo_servicio', 'fecha_entrega')
+                                                    ->with('inscripcionPropiedad:id,movimiento_registral_id', 'asignadoA:id,name', 'actualizadoPor:id,name', 'folioReal:id,folio')
                                                     ->whereHas('folioReal', function($q){
                                                         $q->whereIn('estado', ['activo', 'centinela']);
                                                     })

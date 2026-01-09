@@ -4,7 +4,9 @@ namespace App\Traits\Inscripciones;
 
 use App\Models\Gravamen;
 use Illuminate\Support\Str;
+use Illuminate\Support\Facades\DB;
 use App\Models\MovimientoRegistral;
+use Illuminate\Support\Facades\Log;
 use App\Exceptions\GeneralException;
 use App\Http\Services\FolioRealService;
 use Illuminate\Support\Facades\Storage;
@@ -13,6 +15,44 @@ use App\Traits\Inscripciones\RecuperarPredioTrait;
 trait EnviarMovimientoCorreccion{
 
     use RecuperarPredioTrait;
+
+    public $modalCorreccion = false;
+
+    public function abrirModalCorreccion(MovimientoRegistral $modelo){
+
+        if($this->modelo_editar->isNot($modelo))
+            $this->modelo_editar = $modelo;
+
+        $this->modalCorreccion = true;
+
+    }
+
+    public function correccion(){
+
+        try {
+
+            DB::transaction(function () {
+
+                $this->enviarCorreccion($this->modelo_editar);
+
+            });
+
+            $this->dispatch('mostrarMensaje', ['success', "La información se actualizó con éxito."]);
+
+            $this->modalCorreccion = false;
+
+        } catch (GeneralException $ex) {
+
+            $this->dispatch('mostrarMensaje', ['warning', $ex->getMessage()]);
+
+        } catch (\Throwable $th) {
+
+            $this->dispatch('mostrarMensaje', ['error', "Hubo un error."]);
+            Log::error("Error al enviar a corrección movimiento registral por el usuario: (id: " . auth()->user()->id . ") " . auth()->user()->name . ". " . $th);
+
+        }
+
+    }
 
     public function enviarCorreccion(MovimientoRegistral $movimientoRegistral){
 
@@ -96,12 +136,6 @@ trait EnviarMovimientoCorreccion{
             $this->reactivarGravamen($movimientoRegistral, $movimientoRegistral->cancelacion->gravamenCancelado->gravamen);
 
             $this->obtenerMovimientoConFirmaElectronica($movimientoRegistral);
-
-            foreach ($movimientoRegistral->cancelacion->actores as $actor) {
-
-                $actor->delete();
-
-            }
 
         }
 
@@ -269,7 +303,15 @@ trait EnviarMovimientoCorreccion{
 
         }else{
 
-            $monto = json_decode($gravamen->movimientoRegistral->firmaElectronica->cadena_original)->gravamen->valor_gravamen;
+            if($gravamen->movimientoRegistral->firmaElectronica){
+
+                $monto = json_decode($gravamen->movimientoRegistral->firmaElectronica->cadena_original)->gravamen->valor_gravamen;
+
+            }else{
+
+                $monto = null;
+
+            }
 
         }
 

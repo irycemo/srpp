@@ -8,7 +8,10 @@ use App\Models\FolioReal;
 use Livewire\WithPagination;
 use App\Constantes\Constantes;
 use App\Traits\ComponentesTrait;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
+use App\Exceptions\GeneralException;
+use App\Http\Services\FolioRealService;
 
 class FoliosReales extends Component
 {
@@ -138,6 +141,31 @@ class FoliosReales extends Component
 
     }
 
+    public function borrarFolioReal(FolioReal $folioReal){
+
+        try {
+
+            DB::transaction(function () use($folioReal){
+
+                (new FolioRealService())->borrarFolioReal($folioReal->id);
+
+            });
+
+            $this->dispatch('mostrarMensaje', ['success', "El folio se eliminó con éxito."]);
+
+        } catch (GeneralException $ex) {
+
+            $this->dispatch('mostrarMensaje', ['warning', $ex->getMessage()]);
+
+        } catch (\Throwable $th) {
+
+            $this->dispatch('mostrarMensaje', ['error', "Hubo un error."]);
+            Log::error("Error al eliminar folio real por el usuario: (id: " . auth()->user()->id . ") " . auth()->user()->name . ". " . $th);
+
+        }
+
+    }
+
     public function mount(): void
     {
 
@@ -167,7 +195,8 @@ class FoliosReales extends Component
     public function render()
     {
 
-        $folios = FolioReal::with('actualizadoPor', 'creadoPor')
+        $folios = FolioReal::select('id', 'matriz', 'folio', 'estado', 'tomo_antecedente', 'registro_antecedente', 'distrito_antecedente', 'created_at', 'updated_at', 'actualizado_por', 'creado_por')
+                            ->with('actualizadoPor', 'creadoPor')
                             ->when($this->filters['folio'], fn($q, $folio) => $q->where('folio', $folio))
                             ->when($this->filters['estado'], fn($q, $estado) => $q->where('estado', $estado))
                             ->when($this->filters['tomo'], fn($q, $tomo) => $q->where('tomo_antecedente', $tomo))

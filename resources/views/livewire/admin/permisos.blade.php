@@ -45,6 +45,7 @@
             <x-slot name="head">
 
                 <x-table.heading sortable wire:click="sortBy('name')" :direction="$sort === 'name' ? $direction : null" >Nombre</x-table.heading>
+                <x-table.heading sortable wire:click="sortBy('area')" :direction="$sort === 'area' ? $direction : null" >Área</x-table.heading>
                 <x-table.heading sortable wire:click="sortBy('created_at')" :direction="$sort === 'created_at' ? $direction : null">Registro</x-table.heading>
                 <x-table.heading sortable wire:click="sortBy('updated_at')" :direction="$sort === 'updated_at' ? $direction : null">Actualizado</x-table.heading>
                 <x-table.heading >Acciones</x-table.heading>
@@ -61,7 +62,15 @@
 
                             <span class="lg:hidden absolute top-0 left-0 bg-blue-300 px-2 text-[10px] text-white font-bold uppercase rounded-br-xl">Nombre</span>
 
-                            {{ $permiso->name }}
+                            <p class="mt-2">{{ $permiso->name }}</p>
+
+                        </x-table.cell>
+
+                        <x-table.cell>
+
+                            <span class="lg:hidden absolute top-0 left-0 bg-blue-300 px-2 text-[10px] text-white font-bold uppercase rounded-br-xl">Área</span>
+
+                            <p class="mt-2">{{ $permiso->area }}</p>
 
                         </x-table.cell>
 

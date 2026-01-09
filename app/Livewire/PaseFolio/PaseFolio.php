@@ -12,7 +12,6 @@ use App\Models\Propiedadold;
 use Livewire\WithPagination;
 use Livewire\WithFileUploads;
 use App\Constantes\Constantes;
-use Barryvdh\DomPDF\Facade\Pdf;
 use App\Traits\ComponentesTrait;
 use Illuminate\Support\Facades\DB;
 use App\Models\MovimientoRegistral;
@@ -21,6 +20,7 @@ use Illuminate\Support\Facades\Hash;
 use App\Http\Services\AsignacionService;
 use App\Http\Services\SistemaTramitesService;
 use App\Http\Controllers\PaseFolio\PaseFolioController;
+use App\Traits\Inscripciones\RechazarMovimientoTrait;
 
 class PaseFolio extends Component
 {
@@ -28,17 +28,15 @@ class PaseFolio extends Component
     use ComponentesTrait;
     use WithFileUploads;
     use WithPagination;
+    use RechazarMovimientoTrait;
 
     public $observaciones;
     public $modal = false;
     public $modalFinalizar = false;
-    public $modalRechazar = false;
     public $modalNuevoFolio = false;
     public $modalReasignarUsuario = false;
     public $modalRecibirDocumentacion = false;
     public $modalBuscarTramite = false;
-    public $motivos;
-    public $motivo;
     public $supervisor = false;
     public $contraseña;
 
@@ -77,66 +75,9 @@ class PaseFolio extends Component
         $this->modelo_editar = MovimientoRegistral::make();
     }
 
-    public function rechazar(){
-
-        $this->authorize('update', $this->modelo_editar);
-
-        $this->validate([
-            'observaciones' => 'required'
-        ]);
-
-        try {
-
-            DB::transaction(function (){
-
-                $observaciones = auth()->user()->name . ' rechaza el ' . now() . ', con motivo: ' . $this->observaciones ;
-
-                (new SistemaTramitesService())->rechazarTramite($this->modelo_editar->año, $this->modelo_editar->tramite, $this->modelo_editar->usuario, $this->motivo . ' ' . $observaciones);
-
-                $this->modelo_editar->update(['estado' => 'rechazado', 'actualizado_por' => auth()->user()->id]);
-
-                $this->modelo_editar->folioReal?->update(['estado' => 'rechazado', 'actualizado_por' => auth()->user()->id]);
-
-            });
-
-            $this->dispatch('mostrarMensaje', ['success', "El trámite se rechazó con éxito."]);
-
-            $pdf = Pdf::loadView('rechazos.rechazo', [
-                'movimientoRegistral' => $this->modelo_editar,
-                'motivo' => $this->motivo,
-                'observaciones' => $this->observaciones
-            ])->output();
-
-            $this->reset(['modalRechazar', 'observaciones']);
-
-            return response()->streamDownload(
-                fn () => print($pdf),
-                'rechazo.pdf'
-            );
-
-        } catch (\Throwable $th) {
-
-            Log::error("Error al rechazar pase a folio por el usuario: (id: " . auth()->user()->id . ") " . auth()->user()->name . ". " . $th);
-            $this->dispatch('mostrarMensaje', ['error', "Ha ocurrido un error."]);
-            $this->reset(['modal', 'observaciones']);
-        }
-
-    }
-
     public function abrirModalNuevoFolio(){
 
         $this->modalNuevoFolio = true;
-
-    }
-
-    public function abrirModalRechazar(MovimientoRegistral $movimientoRegistral){
-
-        $this->reset(['observaciones', 'motivo']);
-
-        if($this->modelo_editar->isNot($movimientoRegistral))
-            $this->modelo_editar = $movimientoRegistral;
-
-        $this->modalRechazar = true;
 
     }
 
@@ -625,12 +566,6 @@ class PaseFolio extends Component
 
     }
 
-    public function seleccionarMotivo($key){
-
-        $this->motivo = $this->motivos[$key];
-
-    }
-
     public function obtenerUsuarios($role){
 
         return User::with('ultimoMovimientoRegistralAsignado')
@@ -782,9 +717,7 @@ class PaseFolio extends Component
 
         $this->años = Constantes::AÑOS;
 
-        $this->filters['año'] = now()->format('Y');
-
-        $this->motivos = Constantes::RECHAZO_MOTIVOS;
+        $this->motivos_rechazo = Constantes::RECHAZO_MOTIVOS;
 
         $this->supervisor = in_array(auth()->user()->getRoleNames()->first(), ['Supervisor inscripciones', 'Supervisor certificaciones', 'Supervisor uruapan']);
 
@@ -806,16 +739,16 @@ class PaseFolio extends Component
                                                                 $q->whereIn('estado', ['nuevo', 'captura', 'elaborado', 'rechazado', 'pendiente']);
                                                             });
                                                     })
-                                                    ->when($this->filters['año'], fn($q, $año) => $q->where('año', $año))
-                                                    ->when($this->filters['tramite'], fn($q, $tramite) => $q->where('tramite', $tramite))
-                                                    ->when($this->filters['usuario'], fn($q, $usuario) => $q->where('usuario', $usuario))
+                                                    ->when($this->filters['año'] && $this->filters['año'] != '', fn($q) => $q->where('año', $this->filters['año']))
+                                                    ->when($this->filters['tramite'] && $this->filters['tramite'] != '', fn($q) => $q->where('tramite', $this->filters['tramite']))
+                                                    ->when($this->filters['usuario'] && $this->filters['usuario'] != '', fn($q) => $q->where('usuario', $this->filters['usuario']))
                                                     ->when($this->filters['folio_real'], function($q){
                                                         $q->whereHas('folioreal', function ($q){
                                                             $q->where('folio', $this->filters['folio_real']);
                                                         });
                                                     })
-                                                    ->when($this->filters['folio'], fn($q, $folio) => $q->where('folio', $folio))
-                                                    ->when($this->filters['estado'], fn($q, $estado) => $q->where('estado', $estado))
+                                                    ->when($this->filters['folio'] && $this->filters['folio'] != '', fn($q) => $q->where('folio', $this->filters['folio']))
+                                                    ->when($this->filters['estado'] && $this->filters['estado'] != '', fn($q) => $q->where('estado', $this->filters['estado']))
                                                     ->whereDoesntHave('certificacion', function($q){
                                                         $q->whereNotIn('servicio', ['DL07', 'DL10']);
                                                     })
@@ -835,16 +768,16 @@ class PaseFolio extends Component
                                                                 $q->whereIn('estado', ['nuevo', 'captura', 'elaborado', 'rechazado', 'pendiente']);
                                                             });
                                                     })
-                                                    ->when($this->filters['año'], fn($q, $año) => $q->where('año', $año))
-                                                    ->when($this->filters['tramite'], fn($q, $tramite) => $q->where('tramite', $tramite))
-                                                    ->when($this->filters['usuario'], fn($q, $usuario) => $q->where('usuario', $usuario))
+                                                    ->when($this->filters['año'] && $this->filters['año'] != '', fn($q) => $q->where('año', $this->filters['año']))
+                                                    ->when($this->filters['tramite'] && $this->filters['tramite'] != '', fn($q) => $q->where('tramite', $this->filters['tramite']))
+                                                    ->when($this->filters['usuario'] && $this->filters['usuario'] != '', fn($q) => $q->where('usuario', $this->filters['usuario']))
                                                     ->when($this->filters['folio_real'], function($q){
                                                         $q->whereHas('folioreal', function ($q){
                                                             $q->where('folio', $this->filters['folio_real']);
                                                         });
                                                     })
-                                                    ->when($this->filters['folio'], fn($q, $folio) => $q->where('folio', $folio))
-                                                    ->when($this->filters['estado'], fn($q, $estado) => $q->where('estado', $estado))
+                                                    ->when($this->filters['folio'] && $this->filters['folio'] != '', fn($q) => $q->where('folio', $this->filters['folio']))
+                                                    ->when($this->filters['estado'] && $this->filters['estado'] != '', fn($q) => $q->where('estado', $this->filters['estado']))
                                                     ->when(auth()->user()->ubicacion == 'Regional 4', function($q){
                                                         $q->where('distrito', 2);
                                                     })
@@ -867,16 +800,16 @@ class PaseFolio extends Component
                                                                 $q->whereIn('estado', ['nuevo', 'captura', 'elaborado', 'rechazado', 'pendiente']);
                                                             });
                                                     })
-                                                    ->when($this->filters['año'], fn($q, $año) => $q->where('año', $año))
-                                                    ->when($this->filters['tramite'], fn($q, $tramite) => $q->where('tramite', $tramite))
-                                                    ->when($this->filters['usuario'], fn($q, $usuario) => $q->where('usuario', $usuario))
+                                                    ->when($this->filters['año'] && $this->filters['año'] != '', fn($q) => $q->where('año', $this->filters['año']))
+                                                    ->when($this->filters['tramite'] && $this->filters['tramite'] != '', fn($q) => $q->where('tramite', $this->filters['tramite']))
+                                                    ->when($this->filters['usuario'] && $this->filters['usuario'] != '', fn($q) => $q->where('usuario', $this->filters['usuario']))
                                                     ->when($this->filters['folio_real'], function($q){
                                                         $q->whereHas('folioreal', function ($q){
                                                             $q->where('folio', $this->filters['folio_real']);
                                                         });
                                                     })
-                                                    ->when($this->filters['folio'], fn($q, $folio) => $q->where('folio', $folio))
-                                                    ->when($this->filters['estado'], fn($q, $estado) => $q->where('estado', $estado))
+                                                    ->when($this->filters['folio'] && $this->filters['folio'] != '', fn($q) => $q->where('folio', $this->filters['folio']))
+                                                    ->when($this->filters['estado'] && $this->filters['estado'] != '', fn($q) => $q->where('estado', $this->filters['estado']))
                                                     ->when(auth()->user()->ubicacion == 'Regional 4', function($q){
                                                         $q->where('distrito', 2);
                                                     })
@@ -901,16 +834,16 @@ class PaseFolio extends Component
                                                                 $q->whereIn('estado', ['nuevo', 'captura', 'elaborado', 'pendiente']);
                                                             });
                                                     })
-                                                    ->when($this->filters['año'], fn($q, $año) => $q->where('año', $año))
-                                                    ->when($this->filters['tramite'], fn($q, $tramite) => $q->where('tramite', $tramite))
-                                                    ->when($this->filters['usuario'], fn($q, $usuario) => $q->where('usuario', $usuario))
+                                                    ->when($this->filters['año'] && $this->filters['año'] != '', fn($q) => $q->where('año', $this->filters['año']))
+                                                    ->when($this->filters['tramite'] && $this->filters['tramite'] != '', fn($q) => $q->where('tramite', $this->filters['tramite']))
+                                                    ->when($this->filters['usuario'] && $this->filters['usuario'] != '', fn($q) => $q->where('usuario', $this->filters['usuario']))
                                                     ->when($this->filters['folio_real'], function($q){
                                                         $q->whereHas('folioreal', function ($q){
                                                             $q->where('folio', $this->filters['folio_real']);
                                                         });
                                                     })
-                                                    ->when($this->filters['folio'], fn($q, $folio) => $q->where('folio', $folio))
-                                                    ->when($this->filters['estado'], fn($q, $estado) => $q->where('estado', $estado))
+                                                    ->when($this->filters['folio'] && $this->filters['folio'] != '', fn($q) => $q->where('folio', $this->filters['folio']))
+                                                    ->when($this->filters['estado'] && $this->filters['estado'] != '', fn($q) => $q->where('estado', $this->filters['estado']))
                                                     ->when(auth()->user()->ubicacion == 'Regional 4', function($q){
                                                         $q->where('distrito', 2);
                                                     })

@@ -99,7 +99,7 @@
                 <x-table.heading sortable wire:click="sortBy('usuario_supervisor')" :direction="$sort === 'usuario_supervisor' ? $direction : null" >Supervisor</x-table.heading>
                 <x-table.heading sortable wire:click="sortBy('created_at')" :direction="$sort === 'created_at' ? $direction : null">Registro</x-table.heading>
                 <x-table.heading sortable wire:click="sortBy('updated_at')" :direction="$sort === 'updated_at' ? $direction : null">Actualizado</x-table.heading>
-                @if(auth()->user()->hasRole(['Administrador']))
+                @if(auth()->user()->hasRole(['Administrador', 'Jefe de departamento jurídico', 'Jefe de departamento certificaciones', 'Jefe de departamento inscripciones']))
                     <x-table.heading >Acciones</x-table.heading>
                 @endif
 
@@ -237,7 +237,7 @@
 
                         </x-table.cell>
 
-                        @if(auth()->user()->hasRole(['Administrador']))
+                        @if(auth()->user()->hasRole(['Administrador', 'Jefe de departamento jurídico', 'Jefe de departamento certificaciones', 'Jefe de departamento inscripciones']))
 
                             <x-table.cell>
 
@@ -303,12 +303,16 @@
 
                                         @endif
 
-                                        <a
-                                            href="{{ route('auditoria') . "?modelo=MovimientoRegistral&modelo_id=" . $movimiento->id }}"
-                                            class="w-full text-left block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 focus:outline-none focus:bg-gray-100"
-                                            role="menuitem">
-                                            Auditar
-                                        </a>
+                                        @can('Auditoria')
+
+                                            <a
+                                                href="{{ route('auditoria') . "?modelo=MovimientoRegistral&modelo_id=" . $movimiento->id }}"
+                                                class="w-full text-left block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 focus:outline-none focus:bg-gray-100"
+                                                role="menuitem">
+                                                Auditar
+                                            </a>
+
+                                        @endcan
 
                                     </div>
 
@@ -498,37 +502,7 @@
 
     </x-dialog-modal>
 
-    <x-confirmation-modal wire:model="modalCorreccion" maxWidth="sm">
-
-        <x-slot name="title">
-            Corrección
-        </x-slot>
-
-        <x-slot name="content">
-            {{ $mensaje }} ¿Esta seguro que desea enviar el movimiento registral a corrección? Si el movimiento registral ha generado nuevos folios reales estos serán eliminados junto con sus movimientos registrales. La información eliminada no podra ser recuperada.
-        </x-slot>
-
-        <x-slot name="footer">
-
-            <x-secondary-button
-                wire:click="$toggle('modalCorreccion')"
-                wire:loading.attr="disabled"
-            >
-                No
-            </x-secondary-button>
-
-            <x-danger-button
-                class="ml-2"
-                wire:click="correccion"
-                wire:loading.attr="disabled"
-                wire:target="correccion"
-            >
-                Si
-            </x-danger-button>
-
-        </x-slot>
-
-    </x-confirmation-modal>
+    @include('livewire.comun.modal-correccion')
 
     @include('livewire.comun.modal-rechazar')
 

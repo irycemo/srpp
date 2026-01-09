@@ -245,44 +245,12 @@
 
                                     <div x-cloak x-show="open_drop_down" x-on:click="open_drop_down=false" x-on:click.away="open_drop_down=false" class="z-50 origin-top-right absolute right-0 mt-2 w-48 rounded-md shadow-lg py-1 bg-white ring-1 ring-black ring-opacity-5 focus:outline-none" role="menu" aria-orientation="vertical" aria-labelledby="user-menu">
 
-                                        @if (auth()->user()->hasRole(['Certificador Gravamen', 'Certificador Oficialia', 'Certificador Juridico']))
-
-                                            <button
-                                                wire:click="abrirModalRechazar({{ $certificado->certificacion->id }})"
-                                                wire:loading.attr="disabled"
-                                                class="w-full text-left block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 focus:outline-none focus:bg-gray-100"
-                                                role="menuitem">
-
-                                                Rechazar
-
-                                            </button>
-
-                                            <button
-                                                wire:click="visualizarGravamenes({{ $certificado->certificacion->id }})"
-                                                wire:loading.attr="disabled"
-                                                class="w-full text-left block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 focus:outline-none focus:bg-gray-100"
-                                                role="menuitem">
-
-                                                Revisar
-
-                                            </button>
-
-                                        @elseif(auth()->user()->hasRole('Jefe de departamento certificaciones'))
+                                        @can('Rechazar certificado')
 
                                             @if(in_array($certificado->estado, ['nuevo' ,'correccion']))
 
                                                 <button
-                                                    wire:click="abrirModalReasignar({{ $certificado->certificacion->id }})"
-                                                    wire:loading.attr="disabled"
-                                                    class="w-full text-left block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 focus:outline-none focus:bg-gray-100"
-                                                    role="menuitem">
-
-                                                    Reasignar
-
-                                                </button>
-
-                                                <button
-                                                    wire:click="abrirModalRechazar({{ $certificado->certificacion->id }})"
+                                                    wire:click="abrirModalRechazar({{ $certificado->id }})"
                                                     wire:loading.attr="disabled"
                                                     class="w-full text-left block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 focus:outline-none focus:bg-gray-100"
                                                     role="menuitem">
@@ -290,6 +258,14 @@
                                                     Rechazar
 
                                                 </button>
+
+                                            @endif
+
+                                        @endcan
+
+                                        @can('Elaborar certificado')
+
+                                            @if(in_array($certificado->estado, ['nuevo' ,'correccion']))
 
                                                 <button
                                                     wire:click="visualizarGravamenes({{ $certificado->certificacion->id }})"
@@ -303,26 +279,14 @@
 
                                             @endif
 
-                                        @elseif(auth()->user()->hasRole(['Supervisor certificaciones', 'Jefe de departamento certificaciones', 'Supervisor uruapan', 'Regional']))
+                                        @endcan
 
-                                            @if($certificado->estado == 'elaborado')
-
-                                                <button
-                                                    wire:click="abrirModalFinalizar({{ $certificado->certificacion->id }})"
-                                                    wire:loading.attr="disabled"
-                                                    class="w-full text-left block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 focus:outline-none focus:bg-gray-100"
-                                                    role="menuitem">
-
-                                                    <span>Finalizar</span>
-
-                                                </button>
-
-                                            @endif
+                                        @can('Reasignar certificado')
 
                                             @if(in_array($certificado->estado, ['nuevo' ,'correccion']))
 
                                                 <button
-                                                    wire:click="abrirModalReasignar({{ $certificado->certificacion->id }})"
+                                                    wire:click="abrirModalReasignar({{ $certificado->id }})"
                                                     wire:loading.attr="disabled"
                                                     class="w-full text-left block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 focus:outline-none focus:bg-gray-100"
                                                     role="menuitem">
@@ -333,14 +297,14 @@
 
                                             @endif
 
-                                        @endif
+                                        @endcan
 
-                                        @if(in_array($certificado->estado, ['elaborado','finalizado', 'concluido']))
+                                        @can('Corregir certificado')
 
-                                            @if(!auth()->user()->hasRole(['Regional']))
+                                            @if(in_array($certificado->estado, ['elaborado','finalizado', 'concluido']))
 
                                                 <button
-                                                    wire:click="corregir({{  $certificado->certificacion->id }})"
+                                                    wire:click="corregir({{  $certificado->id }})"
                                                     wire:loading.attr="disabled"
                                                     class="w-full text-left block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 focus:outline-none focus:bg-gray-100"
                                                     role="menuitem">
@@ -349,17 +313,41 @@
 
                                             @endif
 
-                                            <button
-                                                wire:click="reimprimir({{ $certificado->id }})"
-                                                wire:loading.attr="disabled"
-                                                class="w-full text-left block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 focus:outline-none focus:bg-gray-100"
-                                                role="menuitem">
+                                        @endcan
 
-                                                Reimprimir
+                                        @can('Reimprimir certificado')
 
-                                            </button>
+                                            @if(in_array($certificado->estado, ['elaborado','finalizado', 'concluido']))
 
-                                        @endif
+                                                <button
+                                                    wire:click="reimprimir({{  $certificado->id }})"
+                                                    wire:loading.attr="disabled"
+                                                    class="w-full text-left block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 focus:outline-none focus:bg-gray-100"
+                                                    role="menuitem">
+                                                    Reimprimir
+                                                </button>
+
+                                            @endif
+
+                                        @endcan
+
+                                        @can('Finalizar certificado')
+
+                                            @if(in_array($certificado->estado, ['elaborado','finalizado', 'concluido']))
+
+                                                <button
+                                                    wire:click="abrirModalFinalizar({{ $certificado->id }})"
+                                                    wire:loading.attr="disabled"
+                                                    class="w-full text-left block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 focus:outline-none focus:bg-gray-100"
+                                                    role="menuitem">
+
+                                                    <span>Finalizar</span>
+
+                                                </button>
+
+                                            @endif
+
+                                        @endcan
 
                                     </div>
 

@@ -8,11 +8,9 @@ use Livewire\WithPagination;
 use Livewire\WithFileUploads;
 use App\Constantes\Constantes;
 use App\Traits\ComponentesTrait;
-use Illuminate\Support\Facades\DB;
 use App\Models\MovimientoRegistral;
-use Illuminate\Support\Facades\Log;
 use App\Traits\Inscripciones\InscripcionesIndex;
-use App\Exceptions\InscripcionesServiceException;
+use App\Traits\Inscripciones\EnviarMovimientoCorreccion;
 use App\Traits\Inscripciones\RechazarMovimientoTrait;
 use App\Traits\Inscripciones\RecuperarPredioTrait;
 use App\Traits\RevisarMovimientosPosterioresTrait;
@@ -27,100 +25,13 @@ class VariosIndex extends Component
     use RevisarMovimientosPosterioresTrait;
     use RechazarMovimientoTrait;
     use RecuperarPredioTrait;
-
-    public function corregir(MovimientoRegistral $movimientoRegistral){
-
-        try {
-
-            $this->revisarMovimientosPosteriores($movimientoRegistral);
-
-            if(in_array($movimientoRegistral->vario->acto_contenido, ['DONACIÓN / VENTA DE USUFRUCTO', 'CONSOLIDACIÓN DEL USUFRUCTO', 'ACLARACIÓN ADMINISTRATIVA', 'ESCRITURA ACLARATORIA'])){
-
-                $this->obtenerMovimientoConFirmaElectronica($movimientoRegistral);
-
-            }elseif($movimientoRegistral->vario->acto_contenido == 'PRIMER AVISO PREVENTIVO'){
-
-                $this->revertirPrimerAvisoPreventivo($movimientoRegistral);
-
-            }elseif(in_array($movimientoRegistral->vario->acto_contenido, ['CANCELACIÓN DE PRIMER AVISO PREVENTIVO', 'CANCELACIÓN DE SEGUNDO AVISO PREVENTIVO'])){
-
-                $this->revertirCancelacionAvisoPreventivo($movimientoRegistral);
-
-            }
-
-            DB::transaction(function () use ($movimientoRegistral){
-
-                $movimientoRegistral->update([
-                    'estado' => 'correccion',
-                    'actualizado_por' => auth()->id()
-                ]);
-
-                $movimientoRegistral->audits()->latest()->first()->update(['tags' => 'Cambio estado a corrección']);
-
-            });
-
-            $this->dispatch('mostrarMensaje', ['success', "La información se guardó con éxito."]);
-
-        } catch (InscripcionesServiceException $ex) {
-
-            $this->dispatch('mostrarMensaje', ['warning', $ex->getMessage()]);
-
-        } catch (\Throwable $th) {
-            Log::error("Error al enviar a corrección varios por el usuario: (id: " . auth()->user()->id . ") " . auth()->user()->name . ". " . $th);
-            $this->dispatch('mostrarMensaje', ['error', "Ha ocurrido un error."]);
-        }
-
-    }
-
-    public function revertirPrimerAvisoPreventivo(MovimientoRegistral $movimientoRegistral){
-
-        $movimientoCertificadoGravamen = MovimientoRegistral::where('movimiento_padre', $movimientoRegistral->id)->first();
-
-        if(! $movimientoCertificadoGravamen) return;
-
-        $this->revisarMovimientosPosteriores($movimientoCertificadoGravamen);
-
-        $movimientoCertificadoGravamen->certificacion->delete();
-
-        $movimientoCertificadoGravamen->firmasElectronicas?->each->delete();
-
-        foreach($movimientoCertificadoGravamen->archivos as $archivo){
-
-            if($archivo->descripcion == 'caratula'){
-
-                unlink('caratulas/' . $archivo->url);
-
-            }elseif($archivo->descripcion == 'documento_entrada'){
-
-                unlink('documento_entrada/' . $archivo->url);
-
-            }
-
-            $archivo->delete();
-
-        }
-
-        $movimientoCertificadoGravamen->delete();
-
-    }
-
-    public function revertirCancelacionAvisoPreventivo(MovimientoRegistral $movimientoRegistral){
-
-        $movimientoAvisoCancelado = MovimientoRegistral::where('movimiento_padre', $movimientoRegistral->id)->first();
-
-        $descripcion = str_replace(' AVISO CANCELADO MEDIANTE MOVIMIENTO REGISTRAL ' . $movimientoAvisoCancelado->folio, '', $movimientoAvisoCancelado->vario->descripcion);
-
-        $movimientoAvisoCancelado->vario->update(['estado' => 'activo', 'descripcion' => $descripcion]);
-
-    }
+    use EnviarMovimientoCorreccion;
 
     public function mount(){
 
         $this->crearModeloVacio();
 
         $this->años = Constantes::AÑOS;
-
-        $this->filters['año'] = now()->format('Y');
 
         $this->motivos_rechazo = Constantes::RECHAZO_MOTIVOS;
 
@@ -148,7 +59,8 @@ class VariosIndex extends Component
 
         if(auth()->user()->hasRole(['Varios', 'Registrador Varios', 'Aclaraciones administrativas', 'Avisos preventivos'])){
 
-            $movimientos = MovimientoRegistral::with('vario', 'actualizadoPor', 'folioReal')
+            $movimientos = MovimientoRegistral::select('id', 'folio', 'folio_real', 'año', 'tramite', 'usuario', 'actualizado_por', 'usuario_asignado', 'usuario_supervisor', 'estado', 'distrito', 'created_at', 'updated_at', 'tomo', 'registro', 'numero_propiedad', 'tipo_servicio', 'fecha_entrega')
+                                                    ->with('vario:id,movimiento_registral_id', 'actualizadoPor:id,name', 'folioReal:id,folio')
                                                     ->whereHas('folioReal', function($q){
                                                         $q->whereIn('estado', ['activo', 'centinela']);
                                                     })
@@ -178,7 +90,8 @@ class VariosIndex extends Component
 
         }elseif(auth()->user()->hasRole(['Supervisor inscripciones', 'Supervisor uruapan'])){
 
-            $movimientos = MovimientoRegistral::with('vario', 'actualizadoPor', 'folioReal', 'asignadoA')
+            $movimientos = MovimientoRegistral::select('id', 'folio', 'folio_real', 'año', 'tramite', 'usuario', 'actualizado_por', 'usuario_asignado', 'usuario_supervisor', 'estado', 'distrito', 'created_at', 'updated_at', 'tomo', 'registro', 'numero_propiedad', 'tipo_servicio', 'fecha_entrega')
+                                                    ->with('vario:id,movimiento_registral_id', 'actualizadoPor:id,name', 'folioReal:id,folio', 'asignadoA:id,name')
                                                     ->whereHas('folioReal', function($q){
                                                         $q->whereIn('estado', ['activo', 'centinela']);
                                                     })
@@ -207,7 +120,8 @@ class VariosIndex extends Component
 
         }elseif(auth()->user()->hasRole(['Jefe de departamento inscripciones'])){
 
-            $movimientos = MovimientoRegistral::with('vario', 'asignadoA', 'actualizadoPor', 'folioReal')
+            $movimientos = MovimientoRegistral::select('id', 'folio', 'folio_real', 'año', 'tramite', 'usuario', 'actualizado_por', 'usuario_asignado', 'usuario_supervisor', 'estado', 'distrito', 'created_at', 'updated_at', 'tomo', 'registro', 'numero_propiedad', 'tipo_servicio', 'fecha_entrega')
+                                                    ->with('vario:id,movimiento_registral_id', 'actualizadoPor:id,name', 'folioReal:id,folio', 'asignadoA:id,name')
                                                     ->whereHas('folioReal', function($q){
                                                         $q->whereIn('estado', ['activo', 'centinela']);
                                                     })
@@ -235,7 +149,8 @@ class VariosIndex extends Component
 
         }elseif(auth()->user()->hasRole(['Administrador', 'Operador', 'Director', 'Jefe de departamento jurídico'])){
 
-            $movimientos = MovimientoRegistral::with('vario', 'asignadoA', 'actualizadoPor', 'folioReal')
+            $movimientos = MovimientoRegistral::select('id', 'folio', 'folio_real', 'año', 'tramite', 'usuario', 'actualizado_por', 'usuario_asignado', 'usuario_supervisor', 'estado', 'distrito', 'created_at', 'updated_at', 'tomo', 'registro', 'numero_propiedad', 'tipo_servicio', 'fecha_entrega')
+                                                    ->with('vario:id,movimiento_registral_id', 'actualizadoPor:id,name', 'folioReal:id,folio', 'asignadoA:id,name')
                                                     ->whereHas('folioReal', function($q){
                                                         $q->whereIn('estado', ['activo', 'centinela', 'bloqueado']);
                                                     })
@@ -257,7 +172,8 @@ class VariosIndex extends Component
 
         }elseif(auth()->user()->hasRole(['Regional'])){
 
-            $movimientos = MovimientoRegistral::with('vario', 'actualizadoPor', 'folioReal', 'asignadoA')
+            $movimientos = MovimientoRegistral::select('id', 'folio', 'folio_real', 'año', 'tramite', 'usuario', 'actualizado_por', 'usuario_asignado', 'usuario_supervisor', 'estado', 'distrito', 'created_at', 'updated_at', 'tomo', 'registro', 'numero_propiedad', 'tipo_servicio', 'fecha_entrega')
+                                                    ->with('vario:id,movimiento_registral_id', 'actualizadoPor:id,name', 'folioReal:id,folio', 'asignadoA:id,name')
                                                     ->whereHas('folioReal', function($q){
                                                         $q->whereIn('estado', ['activo', 'centinela']);
                                                     })

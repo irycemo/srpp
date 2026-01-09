@@ -8,81 +8,71 @@ use App\Models\Predio;
 use App\Models\FolioReal;
 use App\Models\MovimientoRegistral;
 use Illuminate\Support\Facades\Log;
-use App\Exceptions\CertificacionServiceException;
+use App\Exceptions\GeneralException;
 use App\Models\Propiedad;
 
 class VariosService{
 
     public function store(array $request){
 
-        try {
+        if($request['servicio_nombre'] == 'Segundo aviso preventivo'){
 
-            if($request['servicio_nombre'] == 'Segundo aviso preventivo'){
+            $acto = 'SEGUNDO AVISO PREVENTIVO';
 
-                $acto = 'SEGUNDO AVISO PREVENTIVO';
+        }elseif($request['servicio_nombre'] == 'Donación / Venta de usufructo'){
 
-            }elseif($request['servicio_nombre'] == 'Donación / Venta de usufructo'){
+            $acto = 'DONACIÓN / VENTA DE USUFRUCTO';
 
-                $acto = 'DONACIÓN / VENTA DE USUFRUCTO';
+        }elseif($request['servicio_nombre'] == 'Aclaraciones administrativas de inscripciones'){
 
-            }elseif($request['servicio_nombre'] == 'Aclaraciones administrativas de inscripciones'){
+            $acto = 'ACLARACIÓN ADMINISTRATIVA';
 
-                $acto = 'ACLARACIÓN ADMINISTRATIVA';
+        }elseif($request['servicio'] == 'DN83'){
 
-            }elseif($request['servicio'] == 'DN83'){
+            $acto = 'PRIMER AVISO PREVENTIVO';
 
-                $acto = 'PRIMER AVISO PREVENTIVO';
+        }elseif($request['servicio_nombre'] == 'Cancelación de primer aviso preventivo'){
 
-            }elseif($request['servicio_nombre'] == 'Cancelación de primer aviso preventivo'){
+            $acto = 'CANCELACIÓN DE PRIMER AVISO PREVENTIVO';
 
-                $acto = 'CANCELACIÓN DE PRIMER AVISO PREVENTIVO';
+            $this->avisoAclaratorioCancelar($request);
 
-                $this->avisoAclaratorioCancelar($request);
+        }elseif($request['servicio_nombre'] == 'Cancelación de segundo aviso preventivo'){
 
-            }elseif($request['servicio_nombre'] == 'Cancelación de segundo aviso preventivo'){
+            $acto = 'CANCELACIÓN DE SEGUNDO AVISO PREVENTIVO';
 
-                $acto = 'CANCELACIÓN DE SEGUNDO AVISO PREVENTIVO';
+            $this->avisoAclaratorioCancelar($request);
 
-                $this->avisoAclaratorioCancelar($request);
+        }else{
 
-            }else{
+            $acto = null;
+        }
 
-                $acto = null;
-            }
+        $vario = Vario::create([
+            'acto_contenido' => $acto,
+            'servicio' => $request['servicio'],
+            'movimiento_registral_id' => $request['movimiento_registral'],
+        ]);
 
-            $vario = Vario::create([
-                'acto_contenido' => $acto,
-                'servicio' => $request['servicio'],
-                'movimiento_registral_id' => $request['movimiento_registral'],
-            ]);
+        if(in_array($vario->acto_contenido, ['SEGUNDO AVISO PREVENTIVO', 'PRIMER AVISO PREVENTIVO'])){
 
-            if(in_array($vario->acto_contenido, ['SEGUNDO AVISO PREVENTIVO', 'PRIMER AVISO PREVENTIVO'])){
+            $this->revisarFolioMatriz($vario->movimientoRegistral);
 
-                $this->revisarFolioMatriz($vario->movimientoRegistral);
+            $vario->movimientoRegistral->update(['usuario_asignado' => $this->obtenerUsuarioRolAvisos($vario->movimientoRegistral->getRawOriginal('distrito'))]);
 
-                $vario->movimientoRegistral->update(['usuario_asignado' => $this->obtenerUsuarioRolAvisos($vario->movimientoRegistral->getRawOriginal('distrito'))]);
+            if($vario->movimientoRegistral->folioReal?->avisoPreventivo()){
 
-                if($vario->movimientoRegistral->folioReal?->avisoPreventivo()){
+                $aviso = $vario->movimientoRegistral->folioReal->avisoPreventivo();
 
-                    $aviso = $vario->movimientoRegistral->folioReal->avisoPreventivo();
-
-                    $aviso->update(['estado' => 'inactivo']);
-
-                }
+                $aviso->update(['estado' => 'inactivo']);
 
             }
 
-            if($vario->acto_contenido == 'ACLARACIÓN ADMINISTRATIVA'){
+        }
 
-                $vario->movimientoRegistral->update(['usuario_asignado' => $this->obtenerUsuarioRolAclaraciones($vario->movimientoRegistral->getRawOriginal('distrito'))]);
+        if($vario->acto_contenido == 'ACLARACIÓN ADMINISTRATIVA'){
 
-            }
-
-        } catch (\Throwable $th) {
-
-            Log::error('Error al ingresar el trámite: ' . $request['año'] . '-' . $request['tramite'] . '-' . $request['usuario'] . ' desde Sistema Trámites. ' . $th);
-
-            throw new CertificacionServiceException('Error al ingresar inscripción de varios con el trámite: ' . $request['año'] . '-' . $request['tramite'] . '-' . $request['usuario'] . ' desde Sistema Trámites.');
+            $vario->movimientoRegistral->update(['usuario_asignado' => $this->obtenerUsuarioRolAclaraciones($vario->movimientoRegistral->getRawOriginal('distrito'))]);
 
         }
 
@@ -102,7 +92,7 @@ class VariosService{
                             })
                             ->first();
 
-        if(!$usuario) throw new CertificacionServiceException('No hay usuario con rol de Avisos preventivos.');
+        if(!$usuario) throw new GeneralException('No hay usuario con rol de Avisos preventivos.');
 
         return $usuario->id;
 
@@ -122,7 +112,7 @@ class VariosService{
                             })
                             ->first();
 
-        if(!$usuario) throw new CertificacionServiceException('No hay usuario con rol de Aclaraciones administrativas.');
+        if(!$usuario) throw new GeneralException('No hay usuario con rol de Aclaraciones administrativas.');
 
         return $usuario->id;
 

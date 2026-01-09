@@ -12,6 +12,7 @@ use App\Models\MovimientoRegistral;
 use Illuminate\Support\Facades\Log;
 use App\Traits\Inscripciones\InscripcionesIndex;
 use App\Exceptions\InscripcionesServiceException;
+use App\Traits\Inscripciones\EnviarMovimientoCorreccion;
 use App\Traits\Inscripciones\RechazarMovimientoTrait;
 use App\Traits\RevisarMovimientosPosterioresTrait;
 
@@ -23,6 +24,7 @@ class ReformasIndex extends Component
     use InscripcionesIndex;
     use RevisarMovimientosPosterioresTrait;
     use RechazarMovimientoTrait;
+    use EnviarMovimientoCorreccion;
 
     public function estaBloqueado(){
 
@@ -140,8 +142,6 @@ class ReformasIndex extends Component
 
         $this->años = Constantes::AÑOS;
 
-        $this->filters['año'] = now()->format('Y');
-
         $this->motivos_rechazo = Constantes::RECHAZO_MOTIVOS;
 
         $this->usuarios_regionales = Constantes::USUARIOS_REGIONALES;
@@ -163,24 +163,26 @@ class ReformasIndex extends Component
 
     }
 
-    public function corregir(MovimientoRegistral $movimientoRegistral){
+    public function correccion(){
 
         try {
 
-            $this->revisarMovimientosPosterioresFolioPersonaMoral($movimientoRegistral);
+            $this->revisarMovimientosPosterioresFolioPersonaMoral($this->modelo_editar);
 
-            DB::transaction(function () use ($movimientoRegistral){
+            DB::transaction(function () {
 
-                $movimientoRegistral->update([
+                $this->modelo_editar->update([
                     'estado' => 'correccion',
                     'actualizado_por' => auth()->id()
                 ]);
 
-                $movimientoRegistral->audits()->latest()->first()->update(['tags' => 'Cambio estado a corrección']);
+                $this->modelo_editar->audits()->latest()->first()->update(['tags' => 'Cambio estado a corrección']);
 
             });
 
-            $this->dispatch('mostrarMensaje', ['success', "La información se guardó con éxito."]);
+            $this->dispatch('mostrarMensaje', ['success', "La información se actualizó con éxito."]);
+
+            $this->modalCorreccion = false;
 
         } catch (InscripcionesServiceException $ex) {
 
@@ -198,7 +200,8 @@ class ReformasIndex extends Component
 
         if(auth()->user()->hasRole(['Folio real moral'])){
 
-            $movimientos = MovimientoRegistral::with('reformaMoral', 'actualizadoPor', 'folioRealPersona')
+            $movimientos = MovimientoRegistral::select('id', 'folio', 'folio_real_persona', 'año', 'tramite', 'usuario', 'actualizado_por', 'usuario_asignado', 'usuario_supervisor', 'estado', 'distrito', 'created_at', 'updated_at', 'tomo', 'registro', 'numero_propiedad', 'tipo_servicio', 'fecha_entrega')
+                                                    ->with('reformaMoral:id,movimiento_registral_id', 'actualizadoPor:id,name', 'folioRealPersona:id,folio')
                                                     ->has('reformaMoral')
                                                     ->WhereHas('folioRealPersona', function($q){
                                                         $q->where('estado', 'activo');
@@ -226,7 +229,8 @@ class ReformasIndex extends Component
 
         }elseif(auth()->user()->hasRole(['Supervisor inscripciones', 'Supervisor uruapan'])){
 
-            $movimientos = MovimientoRegistral::with('reformaMoral', 'actualizadoPor', 'folioRealPersona', 'asignadoA')
+            $movimientos = MovimientoRegistral::select('id', 'folio', 'folio_real_persona', 'año', 'tramite', 'usuario', 'actualizado_por', 'usuario_asignado', 'usuario_supervisor', 'estado', 'distrito', 'created_at', 'updated_at', 'tomo', 'registro', 'numero_propiedad', 'tipo_servicio', 'fecha_entrega')
+                                                    ->with('reformaMoral:id,movimiento_registral_id', 'actualizadoPor:id,name', 'folioRealPersona:id,folio', 'asignadoA:id,name')
                                                     ->has('reformaMoral')
                                                     ->WhereHas('folioRealPersona', function($q){
                                                         $q->where('estado', 'activo');
@@ -263,7 +267,8 @@ class ReformasIndex extends Component
 
         }elseif(auth()->user()->hasRole(['Jefe de departamento inscripciones'])){
 
-            $movimientos = MovimientoRegistral::with('reformaMoral', 'actualizadoPor', 'folioRealPersona', 'asignadoA')
+            $movimientos = MovimientoRegistral::select('id', 'folio', 'folio_real_persona', 'año', 'tramite', 'usuario', 'actualizado_por', 'usuario_asignado', 'usuario_supervisor', 'estado', 'distrito', 'created_at', 'updated_at', 'tomo', 'registro', 'numero_propiedad', 'tipo_servicio', 'fecha_entrega')
+                                                    ->with('reformaMoral:id,movimiento_registral_id', 'actualizadoPor:id,name', 'folioRealPersona:id,folio', 'asignadoA:id,name')
                                                     ->has('reformaMoral')
                                                     ->WhereHas('folioRealPersona', function($q){
                                                         $q->where('estado', 'activo');
@@ -302,24 +307,12 @@ class ReformasIndex extends Component
 
         }elseif(auth()->user()->hasRole(['Administrador', 'Operador', 'Director', 'Jefe de departamento jurídico'])){
 
-            $movimientos = MovimientoRegistral::with('asignadoA', 'actualizadoPor', 'folioRealPersona')
+            $movimientos = MovimientoRegistral::select('id', 'folio', 'folio_real_persona', 'año', 'tramite', 'usuario', 'actualizado_por', 'usuario_asignado', 'usuario_supervisor', 'estado', 'distrito', 'created_at', 'updated_at', 'tomo', 'registro', 'numero_propiedad', 'tipo_servicio', 'fecha_entrega')
+                                                    ->with('reformaMoral:id,movimiento_registral_id', 'actualizadoPor:id,name', 'folioRealPersona:id,folio', 'asignadoA:id,name')
                                                     ->has('reformaMoral')
                                                     ->WhereHas('folioRealPersona', function($q){
                                                         $q->where('estado', 'activo');
                                                     })
-                                                   /*  ->where(function($q){
-                                                        $q->whereHas('asignadoA', function($q){
-                                                                $q->where('name', 'LIKE', '%' . $this->search . '%');
-                                                            })
-                                                            ->orWhereHas('folioRealPersona', function($q){
-                                                                $q->where('folio', $this->search);
-                                                            })
-                                                            ->orWhere('solicitante', 'LIKE', '%' . $this->search . '%')
-                                                            ->orWhere('tomo', 'LIKE', '%' . $this->search . '%')
-                                                            ->orWhere('registro', 'LIKE', '%' . $this->search . '%')
-                                                            ->orWhere('distrito', 'LIKE', '%' . $this->search . '%')
-                                                            ->orWhere('estado', 'LIKE', '%' . $this->search . '%');
-                                                    }) */
                                                     ->when($this->filters['año'], fn($q, $año) => $q->where('año', $año))
                                                     ->when($this->filters['tramite'], fn($q, $tramite) => $q->where('tramite', $tramite))
                                                     ->when($this->filters['usuario'], fn($q, $usuario) => $q->where('usuario', $usuario))

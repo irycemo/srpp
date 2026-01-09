@@ -2,6 +2,43 @@
 
     <x-header>Folio Real Inmobiliario ({{ $folioReal->folio }})</x-header>
 
+    <div class="flex justify-end mb-5 relative" x-data="{ open_drop_down:false }">
+
+        <div>
+
+            <button x-on:click="open_drop_down=true" type="button" class="border-gray-500 border-2 rounded-full focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-offset-gray-800 focus:ring-white">
+
+                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-6 h-6">
+                    <path stroke-linecap="round" stroke-linejoin="round" d="M6.75 12a.75.75 0 1 1-1.5 0 .75.75 0 0 1 1.5 0ZM12.75 12a.75.75 0 1 1-1.5 0 .75.75 0 0 1 1.5 0ZM18.75 12a.75.75 0 1 1-1.5 0 .75.75 0 0 1 1.5 0Z" />
+                </svg>
+
+            </button>
+
+        </div>
+
+        <div x-cloak x-show="open_drop_down" x-on:click="open_drop_down=false" x-on:click.away="open_drop_down=false" class="z-50 origin-top-right absolute right-0 mt-2 w-48 rounded-md shadow-lg py-1 bg-white ring-1 ring-black ring-opacity-5 focus:outline-none" role="menu" aria-orientation="vertical" aria-labelledby="user-menu">
+
+            <button
+                wire:click="agregarAclaracionAdministrativa"
+                wire:confirm="¿Esta seguro que desea agregar un nuevo movimiento registral?"
+                wire:loading.attr="disabled"
+                class="w-full text-left block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 focus:outline-none focus:bg-gray-100"
+                role="menuitem">
+                Agregar aclaración administrativa
+            </button>
+
+            <button
+                wire:click="quitarPartesIguales"
+                wire:loading.attr="disabled"
+                class="w-full text-left block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 focus:outline-none focus:bg-gray-100"
+                role="menuitem">
+                Quitar partes iguales
+            </button>
+
+        </div>
+
+    </div>
+
     <div class="grid grid-cols-1 lg:grid-cols-12 gap-4">
 
         <div class="bg-white p-4 shadow-xl rounded-lg col-span-4">
@@ -135,6 +172,12 @@
                 </x-h4>
 
                 <div class="my-5 text-sm space-y-3 tab-panel"  :class="{ 'active': activeTab === 1 }" x-show.transition.in.opacity.duration.800="activeTab === 1"  wire:key="tab-1">
+
+                    <div class="rounded-lg bg-gray-100 py-1 px-2">
+
+                        <p><strong>Partes iguales:</strong> {{ $folioReal->predio->partes_iguales ? 'Si' : ' No' }}</p>
+
+                    </div>
 
                     <div class="rounded-lg bg-gray-100 py-1 px-2">
 
@@ -642,12 +685,6 @@
                         <p><strong>Trámite:</strong> {{ $movimiento_registral->año }}-{{ $movimiento_registral->tramite }}-{{ $movimiento_registral->usuario }}</p>
 
                         @if($movimiento_registral->usuario_tramites_linea_id) Trámite en línea @endif
-
-                    </div>
-
-                    <div class="rounded-lg bg-gray-100 py-1 px-2">
-
-                        <p><strong>Servicio:</strong> {{ $movimiento_registral->servicio_nombre }}</p>
 
                     </div>
 

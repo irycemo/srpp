@@ -136,11 +136,30 @@ class RoleSeeder extends Seeder
         Permission::create(['name' => 'Reactivar trámite', 'area' => 'Certificaciones'])->syncRoles([$role1, $role6]);
         Permission::create(['name' => 'Certificado gravamen', 'area' => 'Certificaciones'])->syncRoles([$role1, $role6]);
         Permission::create(['name' => 'Certificado propiedad', 'area' => 'Certificaciones'])->syncRoles([$role1, $role6]);
+        Permission::create(['name' => 'Rechazar certificado', 'area' => 'Certificaciones'])->syncRoles([$role1, $role6]);
+        Permission::create(['name' => 'Elaborar certificado', 'area' => 'Certificaciones'])->syncRoles([$role1, $role6]);
+        Permission::create(['name' => 'Reasignar certificado', 'area' => 'Certificaciones'])->syncRoles([$role1, $role6]);
+        Permission::create(['name' => 'Corregir certificado', 'area' => 'Certificaciones'])->syncRoles([$role1, $role6]);
+        Permission::create(['name' => 'Reimprimir certificado', 'area' => 'Certificaciones'])->syncRoles([$role1, $role6]);
+        Permission::create(['name' => 'Finalizar certificado', 'area' => 'Certificaciones'])->syncRoles([$role1, $role6]);
 
         Permission::create(['name' => 'Pase a folio', 'area' => 'Pase a folio'])->syncRoles([$role1, $role7, $role9]);
+        Permission::create(['name' => 'Reasignar pase a folio', 'area' => 'Pase a folio'])->syncRoles([$role1]);
+        Permission::create(['name' => 'Elaborar pase a folio', 'area' => 'Pase a folio'])->syncRoles([$role1]);
+        Permission::create(['name' => 'Corregir pase a folio', 'area' => 'Pase a folio'])->syncRoles([$role1]);
+        Permission::create(['name' => 'Imprimir pase a folio', 'area' => 'Pase a folio'])->syncRoles([$role1]);
+        Permission::create(['name' => 'Rechazar pase a folio', 'area' => 'Pase a folio'])->syncRoles([$role1]);
+        Permission::create(['name' => 'Finalizar pase a folio', 'area' => 'Pase a folio'])->syncRoles([$role1]);
 
         Permission::create(['name' => 'Área Inscripciones', 'area' => 'Inscripciones'])->syncRoles([$role1, $role7, $role9, $role8]);
         Permission::create(['name' => 'Consultas inscripción', 'area' => 'Inscripciones'])->syncRoles([$role1, $role7, $role9, $role8]);
+        Permission::create(['name' => 'Elaborar inscripción', 'area' => 'Inscripciones'])->syncRoles([$role1, $role7, $role9, $role8]);
+        Permission::create(['name' => 'Rechazar inscripción', 'area' => 'Inscripciones'])->syncRoles([$role1, $role7, $role9, $role8]);
+        Permission::create(['name' => 'Reasignar inscripción', 'area' => 'Inscripciones'])->syncRoles([$role1, $role7, $role9, $role8]);
+        Permission::create(['name' => 'Imprimir inscripción', 'area' => 'Inscripciones'])->syncRoles([$role1, $role7, $role9, $role8]);
+        Permission::create(['name' => 'Finalizar inscripción', 'area' => 'Inscripciones'])->syncRoles([$role1, $role7, $role9, $role8]);
+        Permission::create(['name' => 'Concluir inscripción', 'area' => 'Inscripciones'])->syncRoles([$role1, $role7, $role9, $role8]);
+        Permission::create(['name' => 'Corregir inscripción', 'area' => 'Inscripciones'])->syncRoles([$role1, $role7, $role9, $role8]);
 
         Permission::create(['name' => 'Propiedad', 'area' => 'Inscripciones'])->syncRoles([$role1, $role7, $role9, $role8]);
         Permission::create(['name' => 'Propiedad inscripción', 'area' => 'Inscripciones'])->syncRoles([$role1, $role7, $role9, $role8]);

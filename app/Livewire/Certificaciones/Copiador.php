@@ -202,7 +202,8 @@ class Copiador extends Component
 
         if(auth()->user()->hasRole(['Copiador'])){
 
-           return MovimientoRegistral::with('asignadoA', 'supervisor', 'actualizadoPor', 'certificacion.actualizadoPor')
+           return MovimientoRegistral::select('id', 'folio', 'folio_real', 'año', 'tramite', 'usuario', 'actualizado_por', 'usuario_asignado', 'usuario_supervisor', 'estado', 'distrito', 'created_at', 'updated_at', 'tomo', 'registro', 'numero_propiedad', 'tipo_servicio', 'fecha_entrega', 'seccion', 'solicitante')
+                                        ->with('asignadoA:id,name', 'supervisor:id,name', 'actualizadoPor:id:name', 'certificacion.actualizadoPor:id,name')
                                         ->where(function($q){
                                             $q->whereHas('asignadoA', function($q){
                                                     $q->where('name', 'LIKE', '%' . $this->search . '%');
@@ -235,7 +236,8 @@ class Copiador extends Component
 
         }elseif(auth()->user()->hasRole(['Supervisor certificaciones', 'Supervisor uruapan'])){
 
-            return MovimientoRegistral::with('asignadoA', 'supervisor', 'actualizadoPor', 'certificacion.actualizadoPor')
+            return MovimientoRegistral::select('id', 'folio', 'folio_real', 'año', 'tramite', 'usuario', 'actualizado_por', 'usuario_asignado', 'usuario_supervisor', 'estado', 'distrito', 'created_at', 'updated_at', 'tomo', 'registro', 'numero_propiedad', 'tipo_servicio', 'fecha_entrega', 'seccion', 'solicitante')
+                                        ->with('asignadoA:id,name', 'supervisor:id,name', 'actualizadoPor:id:name', 'certificacion.actualizadoPor:id,name')
                                         ->where(function($q){
                                             $q->whereHas('asignadoA', function($q){
                                                     $q->where('name', 'LIKE', '%' . $this->search . '%');
@@ -268,28 +270,29 @@ class Copiador extends Component
 
         }elseif(auth()->user()->hasRole(['Administrador', 'Operador', 'Director', 'Jefe de departamento jurídico', 'Jefe de departamento certificaciones'])){
 
-           return MovimientoRegistral::with('asignadoA', 'supervisor', 'actualizadoPor', 'certificacion.actualizadoPor')
-                                                ->where(function($q){
-                                                    $q->whereHas('asignadoA', function($q){
-                                                            $q->where('name', 'LIKE', '%' . $this->search . '%');
-                                                        })
-                                                        ->orWhereHas('supervisor', function($q){
-                                                            $q->where('name', 'LIKE', '%' . $this->search . '%');
-                                                        })
-                                                        ->orWhere('solicitante', 'LIKE', '%' . $this->search . '%')
-                                                        ->orWhere('tomo', 'LIKE', '%' . $this->search . '%')
-                                                        ->orWhere('registro', 'LIKE', '%' . $this->search . '%')
-                                                        ->orWhere('distrito', 'LIKE', '%' . $this->search . '%')
-                                                        ->orWhere('seccion', 'LIKE', '%' . $this->search . '%')
-                                                        ->orWhere('tramite', 'LIKE', '%' . $this->search . '%')
-                                                        ->orWhere('estado', 'LIKE', '%' . $this->search . '%')
-                                                        ->orWhere('tramite', 'LIKE', '%' . $this->search . '%');
+           return MovimientoRegistral::select('id', 'folio', 'folio_real', 'año', 'tramite', 'usuario', 'actualizado_por', 'usuario_asignado', 'usuario_supervisor', 'estado', 'distrito', 'created_at', 'updated_at', 'tomo', 'registro', 'numero_propiedad', 'tipo_servicio', 'fecha_entrega', 'seccion', 'solicitante')
+                                        ->with('asignadoA:id,name', 'supervisor:id,name', 'actualizadoPor:id:name', 'certificacion.actualizadoPor:id,name')
+                                        ->where(function($q){
+                                            $q->whereHas('asignadoA', function($q){
+                                                    $q->where('name', 'LIKE', '%' . $this->search . '%');
                                                 })
-                                                ->whereHas('certificacion', function($q){
-                                                    $q->whereIn('servicio', ['DL13', 'DL14']);
+                                                ->orWhereHas('supervisor', function($q){
+                                                    $q->where('name', 'LIKE', '%' . $this->search . '%');
                                                 })
-                                                ->orderBy($this->sort, $this->direction)
-                                                ->paginate($this->pagination);
+                                                ->orWhere('solicitante', 'LIKE', '%' . $this->search . '%')
+                                                ->orWhere('tomo', 'LIKE', '%' . $this->search . '%')
+                                                ->orWhere('registro', 'LIKE', '%' . $this->search . '%')
+                                                ->orWhere('distrito', 'LIKE', '%' . $this->search . '%')
+                                                ->orWhere('seccion', 'LIKE', '%' . $this->search . '%')
+                                                ->orWhere('tramite', 'LIKE', '%' . $this->search . '%')
+                                                ->orWhere('estado', 'LIKE', '%' . $this->search . '%')
+                                                ->orWhere('tramite', 'LIKE', '%' . $this->search . '%');
+                                        })
+                                        ->whereHas('certificacion', function($q){
+                                            $q->whereIn('servicio', ['DL13', 'DL14']);
+                                        })
+                                        ->orderBy($this->sort, $this->direction)
+                                        ->paginate($this->pagination);
 
         }
 

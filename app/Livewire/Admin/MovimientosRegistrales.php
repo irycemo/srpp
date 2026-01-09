@@ -6,9 +6,7 @@ use App\Models\User;
 use Livewire\Component;
 use Livewire\WithPagination;
 use App\Constantes\Constantes;
-use App\Exceptions\GeneralException;
 use App\Traits\ComponentesTrait;
-use Illuminate\Support\Facades\DB;
 use App\Models\MovimientoRegistral;
 use App\Traits\Inscripciones\EnviarMovimientoCorreccion;
 use Illuminate\Support\Facades\Log;
@@ -32,7 +30,6 @@ class MovimientosRegistrales extends Component
 
     public $modalReasignarUsuario = false;
     public $modalReasignarSupervisor = false;
-    public $modalCorreccion = false;
 
     public $mensaje;
     public $observaciones;
@@ -161,53 +158,6 @@ class MovimientosRegistrales extends Component
 
     }
 
-    public function abrirModalRechazar(MovimientoRegistral $modelo){
-
-        $this->reset(['observaciones']);
-
-        if($this->modelo_editar->isNot($modelo))
-            $this->modelo_editar = $modelo;
-
-        $this->modal_rechazar = true;
-
-    }
-
-    public function abrirModalCorreccion(MovimientoRegistral $modelo){
-
-        if($this->modelo_editar->isNot($modelo))
-            $this->modelo_editar = $modelo;
-
-        $this->modalCorreccion = true;
-
-    }
-
-    public function rechazar(){
-
-        $this->validate([
-            'observaciones' => 'required'
-        ]);
-
-        try {
-
-            DB::transaction(function (){
-
-                $this->rechazarMovimiento($this->modelo_editar);
-
-            });
-
-            $this->reset(['modal_rechazar', 'observaciones']);
-
-            $this->dispatch('mostrarMensaje', ['success', "El trámite se rechazó con éxito."]);
-
-        } catch (\Throwable $th) {
-
-            Log::error("Error al rechazar trámite por el usuario: (id: " . auth()->user()->id . ") " . auth()->user()->name . ". " . $th);
-            $this->dispatch('mostrarMensaje', ['error', "Ha ocurrido un error."]);
-
-        }
-
-    }
-
     public function reasignarUsuario(){
 
         $this->validate();
@@ -259,33 +209,6 @@ class MovimientosRegistrales extends Component
 
             $this->dispatch('mostrarMensaje', ['error', "Hubo un error."]);
             Log::error("Error al reasignar usuario a movimiento registral por el usuario: (id: " . auth()->user()->id . ") " . auth()->user()->name . ". " . $th);
-
-        }
-
-    }
-
-    public function correccion(){
-
-        try {
-
-            DB::transaction(function () {
-
-                $this->enviarCorreccion($this->modelo_editar);
-
-            });
-
-            $this->dispatch('mostrarMensaje', ['success', "La información se actualizó con éxito."]);
-
-            $this->modalCorreccion = false;
-
-        } catch (GeneralException $ex) {
-
-            $this->dispatch('mostrarMensaje', ['warning', $ex->getMessage()]);
-
-        } catch (\Throwable $th) {
-
-            $this->dispatch('mostrarMensaje', ['error', "Hubo un error."]);
-            Log::error("Error al enviar a corrección movimiento registral por el usuario: (id: " . auth()->user()->id . ") " . auth()->user()->name . ". " . $th);
 
         }
 
@@ -366,7 +289,8 @@ class MovimientosRegistrales extends Component
     public function render()
     {
 
-        $movimientos = MovimientoRegistral::with('actualizadoPor', 'folioReal:id,folio,estado,matriz', 'asignadoA:id,name', 'supervisor:id,name')
+        $movimientos = MovimientoRegistral::select('id', 'folio', 'folio_real', 'año', 'tramite', 'usuario', 'tomo', 'registro', 'distrito', 'numero_propiedad', 'servicio_nombre', 'usuario_asignado', 'usuario_supervisor', 'created_at', 'updated_at', 'actualizado_por', 'estado')
+                            ->with('actualizadoPor', 'folioReal:id,folio,estado,matriz', 'asignadoA:id,name', 'supervisor:id,name')
                             ->when($this->filters['año'], fn($q, $año) => $q->where('año', $año))
                             ->when($this->filters['tramite'], fn($q, $tramite) => $q->where('tramite', $tramite))
                             ->when($this->filters['usuario'], fn($q, $usuario) => $q->where('usuario', $usuario))

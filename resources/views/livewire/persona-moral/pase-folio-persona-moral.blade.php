@@ -301,7 +301,7 @@
 
     </div>
 
-    @include('livewire.comun.modal-rechazar')
+    @include('livewire.comun.inscripciones.modal-rechazar')
 
     <x-confirmation-modal wire:model="modalFinalizar" maxWidth="sm">
 

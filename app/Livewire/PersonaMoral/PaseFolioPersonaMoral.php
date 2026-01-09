@@ -7,12 +7,10 @@ use Livewire\Component;
 use Livewire\WithPagination;
 use App\Constantes\Constantes;
 use App\Http\Controllers\FolioPersonaMoralController\FolioPersonaMoralController;
-use Barryvdh\DomPDF\Facade\Pdf;
 use App\Traits\ComponentesTrait;
 use Illuminate\Support\Facades\DB;
 use App\Models\MovimientoRegistral;
 use Illuminate\Support\Facades\Log;
-use App\Http\Services\SistemaTramitesService;
 use App\Traits\Inscripciones\InscripcionesIndex;
 use App\Traits\Inscripciones\RechazarMovimientoTrait;
 
@@ -122,7 +120,8 @@ class PaseFolioPersonaMoral extends Component
 
         if(auth()->user()->hasRole(['Folio real moral'])){
 
-            $movimientos = MovimientoRegistral::with('actualizadoPor', 'folioRealPersona')
+            $movimientos = MovimientoRegistral::select('id', 'folio', 'folio_real_persona', 'año', 'tramite', 'usuario', 'actualizado_por', 'usuario_asignado', 'usuario_supervisor', 'estado', 'distrito', 'created_at', 'updated_at', 'tomo', 'registro', 'numero_propiedad', 'tipo_servicio', 'fecha_entrega')
+                                                    ->with('actualizadoPor:id,name', 'folioRealPersona:id,folio,estado')
                                                     ->has('reformaMoral')
                                                     ->where('folio', 1)
                                                     ->whereIn('estado', ['nuevo', 'correccion', 'elaborado', 'no recibido'])
@@ -144,7 +143,8 @@ class PaseFolioPersonaMoral extends Component
 
         }elseif(auth()->user()->hasRole(['Supervisor inscripciones', 'Supervisor uruapan'])){
 
-            $movimientos = MovimientoRegistral::with('actualizadoPor', 'folioRealPersona', 'asignadoA')
+            $movimientos = MovimientoRegistral::select('id', 'folio', 'folio_real_persona', 'año', 'tramite', 'usuario', 'actualizado_por', 'usuario_asignado', 'usuario_supervisor', 'estado', 'distrito', 'created_at', 'updated_at', 'tomo', 'registro', 'numero_propiedad', 'tipo_servicio', 'fecha_entrega')
+                                                    ->with('actualizadoPor:id,name', 'folioRealPersona:id,folio,estado', 'asignadoA:id,name')
                                                     ->has('reformaMoral')
                                                     ->where('folio', 1)
                                                     ->where('usuario_supervisor', auth()->user()->id)
@@ -165,7 +165,8 @@ class PaseFolioPersonaMoral extends Component
 
         }elseif(auth()->user()->hasRole(['Administrador', 'Operador', 'Jefe de departamento jurídico', 'Jefe de departamento inscripciones', 'Director'])){
 
-            $movimientos = MovimientoRegistral::with('asignadoA', 'actualizadoPor', 'folioRealPersona')
+            $movimientos = MovimientoRegistral::select('id', 'folio', 'folio_real_persona', 'año', 'tramite', 'usuario', 'actualizado_por', 'usuario_asignado', 'usuario_supervisor', 'estado', 'distrito', 'created_at', 'updated_at', 'tomo', 'registro', 'numero_propiedad', 'tipo_servicio', 'fecha_entrega')
+                                                ->with('actualizadoPor:id,name', 'folioRealPersona:id,folio,estado', 'asignadoA:id,name')
                                                 ->has('reformaMoral')
                                                 ->where('folio', 1)
                                                 ->where(function($q){

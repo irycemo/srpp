@@ -3,7 +3,6 @@
 namespace App\Traits\Inscripciones;
 
 use App\Models\User;
-use Barryvdh\DomPDF\Facade\Pdf;
 use Illuminate\Support\Facades\DB;
 use App\Models\MovimientoRegistral;
 use Illuminate\Support\Facades\Log;
@@ -26,7 +25,6 @@ trait InscripcionesIndex{
     use RevisarMovimientosPosterioresTrait;
 
     public $modalFinalizar = false;
-    public $modalRechazar = false;
     public $modalConcluir = false;
     public $modalReasignarUsuario = false;
     public $modalRecibirDocumentacion = false;
@@ -643,50 +641,6 @@ trait InscripcionesIndex{
 
             $this->dispatch('mostrarMensaje', ['error', "Hubo un error."]);
             Log::error("Error al reasignar usuario a movimiento registral por el usuario: (id: " . auth()->user()->id . ") " . auth()->user()->name . ". " . $th);
-
-        }
-
-    }
-
-    public function rechazar(){
-
-        $this->validate([
-            'observaciones' => 'required'
-        ]);
-
-        try {
-
-            DB::transaction(function () {
-
-                $observaciones = auth()->user()->name . ' rechaza el ' . now() . ', con motivo: ' . $this->observaciones ;
-
-                (new SistemaTramitesService())->rechazarTramite($this->modelo_editar->año, $this->modelo_editar->tramite, $this->modelo_editar->usuario, $this->motivo . ' ' . $observaciones);
-
-                $this->modelo_editar->update(['estado' => 'rechazado', 'actualizado_por' => auth()->user()->id]);
-
-                $this->modelo_editar->audits()->latest()->first()->update(['tags' => 'Rechazó inscripción']);
-
-            });
-
-            $this->dispatch('mostrarMensaje', ['success', "El trámite se rechazó con éxito."]);
-
-            $this->modalRechazar = false;
-
-            $pdf = Pdf::loadView('rechazos.rechazo', [
-                'movimientoRegistral' => $this->modelo_editar,
-                'motivo' => $this->motivo,
-                'observaciones' => $this->observaciones
-            ])->output();
-
-            return response()->streamDownload(
-                fn () => print($pdf),
-                'rechazo.pdf'
-            );
-
-        } catch (\Throwable $th) {
-
-            Log::error("Error al rechazar inscripcion por el usuario: (id: " . auth()->user()->id . ") " . auth()->user()->name . ". " . $th);
-            $this->dispatch('mostrarMensaje', ['error', "Ha ocurrido un error."]);
 
         }
 

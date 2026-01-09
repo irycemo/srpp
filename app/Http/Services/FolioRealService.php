@@ -16,11 +16,9 @@ class FolioRealService{
 
         $folioReal->predio->actores->each->delete();
 
-        $escritura = $folioReal->predio->escritura;
+        $es = $folioReal->predio->escritura;
 
         $folioReal->predio->delete();
-
-        if($escritura) $escritura->delete();
 
         foreach ($folioReal->movimientosRegistrales as $movimiento) {
 
@@ -52,11 +50,19 @@ class FolioRealService{
 
         $folioReal->delete();
 
+        if($es){
+
+            $es->delete();
+
+        }
+
     }
 
     public function borrarMovimientoRegistral(MovimientoRegistral $movimiento, $revisar_movimientos_registrales){
 
         if($revisar_movimientos_registrales){
+
+            $movimiento->load('folioReal');
 
             if(!in_array($movimiento->estado, ['nuevo', 'correccion', 'pase_folio', 'no recibido', 'recahzado'])){
 
