@@ -86,7 +86,7 @@
 
                         <x-table.cell>
 
-                            <span class="lg:hidden absolute top-0 left-0 bg-blue-300 px-2 py-1 text-xs text-white font-bold uppercase rounded-br-xl"># Control</span>
+                            <span class="lg:hidden absolute top-0 left-0 bg-blue-300 px-2 text-[10px] text-white font-bold uppercase rounded-br-xl"># Control</span>
 
                             <div class="text-center flex flex-col">
 
@@ -104,14 +104,14 @@
 
                         <x-table.cell>
 
-                            <span class="lg:hidden absolute top-0 left-0 bg-blue-300 px-2 py-1 text-xs text-white font-bold uppercase rounded-br-xl">Estado</span>
+                            <span class="lg:hidden absolute top-0 left-0 bg-blue-300 px-2 text-[10px] text-white font-bold uppercase rounded-br-xl">Estado</span>
 
                             <span class="bg-{{ $copiaConsultada->estado_color }} py-1 px-2 rounded-full text-white text-xs">{{ ucfirst($copiaConsultada->estado) }}</span>
 
                         </x-table.cell>
                         <x-table.cell>
 
-                            <span class="lg:hidden absolute top-0 left-0 bg-blue-300 px-2 py-1 text-xs text-white font-bold uppercase rounded-br-xl">Tipo de servicio</span>
+                            <span class="lg:hidden absolute top-0 left-0 bg-blue-300 px-2 text-[10px] text-white font-bold uppercase rounded-br-xl">Tipo de servicio</span>
 
                             {{ $copiaConsultada->tipo_servicio }}
 
@@ -119,7 +119,7 @@
 
                         <x-table.cell>
 
-                            <span class="lg:hidden absolute top-0 left-0 bg-blue-300 px-2 py-1 text-xs text-white font-bold uppercase rounded-br-xl">Tomo / Bis</span>
+                            <span class="lg:hidden absolute top-0 left-0 bg-blue-300 px-2 text-[10px] text-white font-bold uppercase rounded-br-xl">Tomo / Bis</span>
 
                             {{ $copiaConsultada->tomo }}
 
@@ -127,7 +127,7 @@
 
                         <x-table.cell>
 
-                            <span class="lg:hidden absolute top-0 left-0 bg-blue-300 px-2 py-1 text-xs text-white font-bold uppercase rounded-br-xl">Registro / Bis</span>
+                            <span class="lg:hidden absolute top-0 left-0 bg-blue-300 px-2 text-[10px] text-white font-bold uppercase rounded-br-xl">Registro / Bis</span>
 
                             {{ $copiaConsultada->registro }}
 
@@ -135,7 +135,7 @@
 
                         <x-table.cell>
 
-                            <span class="lg:hidden absolute top-0 left-0 bg-blue-300 px-2 py-1 text-xs text-white font-bold uppercase rounded-br-xl">Distrito</span>
+                            <span class="lg:hidden absolute top-0 left-0 bg-blue-300 px-2 text-[10px] text-white font-bold uppercase rounded-br-xl">Distrito</span>
 
                             {{ $copiaConsultada->distrito }}
 
@@ -143,7 +143,7 @@
 
                         <x-table.cell>
 
-                            <span class="lg:hidden absolute top-0 left-0 bg-blue-300 px-2 py-1 text-xs text-white font-bold uppercase rounded-br-xl">Sección</span>
+                            <span class="lg:hidden absolute top-0 left-0 bg-blue-300 px-2 text-[10px] text-white font-bold uppercase rounded-br-xl">Sección</span>
 
                             {{ $copiaConsultada->seccion }}
 
@@ -151,15 +151,15 @@
 
                         <x-table.cell>
 
-                            <span class="lg:hidden absolute top-0 left-0 bg-blue-300 px-2 py-1 text-xs text-white font-bold uppercase rounded-br-xl">Solicitante</span>
+                            <span class="lg:hidden absolute top-0 left-0 bg-blue-300 px-2 text-[10px] text-white font-bold uppercase rounded-br-xl">Solicitante</span>
 
-                            {{ $copiaConsultada->solicitante }}
+                            <p class="mt-2">{{ $copiaConsultada->solicitante }}</p>
 
                         </x-table.cell>
 
                         <x-table.cell>
 
-                            <span class="lg:hidden absolute top-0 left-0 bg-blue-300 px-2 py-1 text-xs text-white font-bold uppercase rounded-br-xl">Número de páginas</span>
+                            <span class="lg:hidden absolute top-0 left-0 bg-blue-300 px-2 text-[10px] text-white font-bold uppercase rounded-br-xl">Número de páginas</span>
 
                             {{ $copiaConsultada->certificacion->numero_paginas }}
 
@@ -169,17 +169,17 @@
 
                             <x-table.cell>
 
-                                <span class="lg:hidden absolute top-0 left-0 bg-blue-300 px-2 py-1 text-xs text-white font-bold uppercase rounded-br-xl">Folio de carpeta</span>
+                                <span class="lg:hidden absolute top-0 left-0 bg-blue-300 px-2 text-[10px] text-white font-bold uppercase rounded-br-xl">Folio de carpeta</span>
 
-                                {{ $copiaConsultada->certificacion->folio_carpeta_copias ?? 'N/A' }}
+                                <p class="mt-2">{{ $copiaConsultada->certificacion->folio_carpeta_copias ?? 'N/A' }}</p>
 
                             </x-table.cell>
 
                             <x-table.cell>
 
-                                <span class="lg:hidden absolute top-0 left-0 bg-blue-300 px-2 py-1 text-xs text-white font-bold uppercase rounded-br-xl">Folio de carpeta</span>
+                                <span class="lg:hidden absolute top-0 left-0 bg-blue-300 px-2 text-[10px] text-white font-bold uppercase rounded-br-xl">Folio de carpeta</span>
 
-                                {{ $copiaConsultada->asignadoA->name ?? 'N/A' }}
+                                <p class="mt-2">{{ $copiaConsultada->asignadoA->name ?? 'N/A' }}</p>
 
                             </x-table.cell>
 
@@ -189,7 +189,7 @@
 
                             <x-table.cell>
 
-                                <span class="lg:hidden absolute top-0 left-0 bg-blue-300 px-2 py-1 text-xs text-white font-bold uppercase rounded-br-xl">Reimpreso en</span>
+                                <span class="lg:hidden absolute top-0 left-0 bg-blue-300 px-2 text-[10px] text-white font-bold uppercase rounded-br-xl">Reimpreso en</span>
 
                                 {{ optional($copiaConsultada->certificacion->reimpreso_en)->format('d-m-Y H:i:s') ?? 'N/A' }}
 
@@ -199,7 +199,7 @@
 
                         <x-table.cell>
 
-                            <span class="lg:hidden absolute top-0 left-0 bg-blue-300 px-2 py-1 text-xs text-white font-bold uppercase rounded-br-xl">Fecha de entrega</span>
+                            <span class="lg:hidden absolute top-0 left-0 bg-blue-300 px-2 text-[10px] text-white font-bold uppercase rounded-br-xl">Fecha de entrega</span>
 
                             {{ optional($copiaConsultada->fecha_entrega)->format('d-m-Y') ?? 'N/A' }}
 
@@ -207,7 +207,7 @@
 
                         <x-table.cell>
 
-                            <span class="lg:hidden absolute top-0 left-0 bg-blue-300 px-2 py-1 text-xs text-white font-bold uppercase rounded-br-xl">Ingreso</span>
+                            <span class="lg:hidden absolute top-0 left-0 bg-blue-300 px-2 text-[10px] text-white font-bold uppercase rounded-br-xl">Ingreso</span>
 
                             {{ $copiaConsultada->created_at }}
 
@@ -215,9 +215,15 @@
 
                         <x-table.cell>
 
-                            <span class="font-semibold">@if($copiaConsultada->actualizadoPor != null)Actualizado por: {{$copiaConsultada->actualizadoPor->name}} @else Actualizado: @endif</span> <br>
+                            <span class="lg:hidden absolute top-0 left-0 bg-blue-300 px-2 text-[10px] text-white font-bold uppercase rounded-br-xl">Actualizado</span>
 
-                            {{ $copiaConsultada->updated_at }}
+                            <p class="mt-2">
+
+                                <span class="font-semibold">@if($copiaConsultada->actualizadoPor != null)Actualizado por: {{$copiaConsultada->actualizadoPor->name}} @else Actualizado: @endif</span> <br>
+
+                                {{ $copiaConsultada->updated_at }}
+
+                            </p>
 
                         </x-table.cell>
 
@@ -225,7 +231,7 @@
 
                             <x-table.cell>
 
-                                <span class="lg:hidden absolute top-0 left-0 bg-blue-300 px-2 py-1 text-xs text-white font-bold uppercase rounded-br-xl">Acciones</span>
+                                <span class="lg:hidden absolute top-0 left-0 bg-blue-300 px-2 text-[10px] text-white font-bold uppercase rounded-br-xl">Acciones</span>
 
                                 <div class="ml-3 relative" x-data="{ open_drop_down:false }">
 

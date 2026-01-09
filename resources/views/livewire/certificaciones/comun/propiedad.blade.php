@@ -178,7 +178,7 @@
 
         <p class="text-center"><strong>Propietarios</strong></p>
 
-        <div class="text-gray-500 text-sm leading-relaxed lg:w-1/2 mb-5 mx-auto">
+        <div class="text-gray-500 text-sm leading-relaxed lg:w-1/2 mb-5 mx-auto overflow-auto">
 
             <table class="mx-auto">
 

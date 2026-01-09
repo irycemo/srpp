@@ -13,6 +13,7 @@ use App\Models\MovimientoRegistral;
 use Illuminate\Support\Facades\Log;
 use App\Traits\Inscripciones\InscripcionesIndex;
 use App\Exceptions\InscripcionesServiceException;
+use App\Traits\Inscripciones\RechazarMovimientoTrait;
 use App\Traits\RevisarMovimientosPosterioresTrait;
 
 class SentenciasIndex extends Component
@@ -23,6 +24,7 @@ class SentenciasIndex extends Component
     use ComponentesTrait;
     use InscripcionesIndex;
     use RevisarMovimientosPosterioresTrait;
+    use RechazarMovimientoTrait;
 
     public function corregir(MovimientoRegistral $movimientoRegistral){
 
@@ -93,7 +95,7 @@ class SentenciasIndex extends Component
 
         $this->filters['año'] = now()->format('Y');
 
-        $this->motivos = Constantes::RECHAZO_MOTIVOS;
+        $this->motivos_rechazo = Constantes::RECHAZO_MOTIVOS;
 
         $this->usuarios_regionales = Constantes::USUARIOS_REGIONALES;
 

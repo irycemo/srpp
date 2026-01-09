@@ -13,6 +13,8 @@ use App\Models\MovimientoRegistral;
 use Illuminate\Support\Facades\Log;
 use App\Traits\Inscripciones\InscripcionesIndex;
 use App\Exceptions\InscripcionesServiceException;
+use App\Traits\Inscripciones\RechazarMovimientoTrait;
+use App\Traits\Inscripciones\RecuperarPredioTrait;
 use App\Traits\RevisarMovimientosPosterioresTrait;
 
 class VariosIndex extends Component
@@ -23,6 +25,8 @@ class VariosIndex extends Component
     use ComponentesTrait;
     use InscripcionesIndex;
     use RevisarMovimientosPosterioresTrait;
+    use RechazarMovimientoTrait;
+    use RecuperarPredioTrait;
 
     public function corregir(MovimientoRegistral $movimientoRegistral){
 
@@ -32,7 +36,7 @@ class VariosIndex extends Component
 
             if(in_array($movimientoRegistral->vario->acto_contenido, ['DONACIÓN / VENTA DE USUFRUCTO', 'CONSOLIDACIÓN DEL USUFRUCTO', 'ACLARACIÓN ADMINISTRATIVA', 'ESCRITURA ACLARATORIA'])){
 
-                $this->obtenerMovimientoConPropietarios($movimientoRegistral);
+                $this->obtenerMovimientoConFirmaElectronica($movimientoRegistral);
 
             }elseif($movimientoRegistral->vario->acto_contenido == 'PRIMER AVISO PREVENTIVO'){
 
@@ -71,6 +75,8 @@ class VariosIndex extends Component
     public function revertirPrimerAvisoPreventivo(MovimientoRegistral $movimientoRegistral){
 
         $movimientoCertificadoGravamen = MovimientoRegistral::where('movimiento_padre', $movimientoRegistral->id)->first();
+
+        if(! $movimientoCertificadoGravamen) return;
 
         $this->revisarMovimientosPosteriores($movimientoCertificadoGravamen);
 
@@ -116,7 +122,7 @@ class VariosIndex extends Component
 
         $this->filters['año'] = now()->format('Y');
 
-        $this->motivos = Constantes::RECHAZO_MOTIVOS;
+        $this->motivos_rechazo = Constantes::RECHAZO_MOTIVOS;
 
         $this->usuarios_regionales = Constantes::USUARIOS_REGIONALES;
 

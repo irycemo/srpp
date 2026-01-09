@@ -13,6 +13,7 @@ use App\Models\MovimientoRegistral;
 use Illuminate\Support\Facades\Log;
 use App\Traits\Inscripciones\InscripcionesIndex;
 use App\Exceptions\InscripcionesServiceException;
+use App\Traits\Inscripciones\RechazarMovimientoTrait;
 use App\Traits\RevisarMovimientosPosterioresTrait;
 
 class GravamenIndex extends Component
@@ -23,6 +24,7 @@ class GravamenIndex extends Component
     use ComponentesTrait;
     use InscripcionesIndex;
     use RevisarMovimientosPosterioresTrait;
+    use RechazarMovimientoTrait;
 
     public function corregir(MovimientoRegistral $movimientoRegistral){
 
@@ -62,7 +64,7 @@ class GravamenIndex extends Component
 
         $this->filters['año'] = now()->format('Y');
 
-        $this->motivos = Constantes::RECHAZO_MOTIVOS;
+        $this->motivos_rechazo = Constantes::RECHAZO_MOTIVOS;
 
         $this->usuarios = User::where('status', 'activo')
                                         ->whereHas('roles', function($q){

@@ -12,6 +12,17 @@ trait RechazarMovimientoTrait{
     public $observaciones;
     public $modal_rechazar = false;
 
+    public function abrirModalRechazar(MovimientoRegistral $modelo){
+
+        $this->reset(['observaciones']);
+
+        if($this->modelo_editar->isNot($modelo))
+            $this->modelo_editar = $modelo;
+
+        $this->modal_rechazar = true;
+
+    }
+
     public function rechazarMovimiento(MovimientoRegistral $movimientoRegistral){
 
         $observaciones = auth()->user()->name . ' rechaza el ' . now() . ', con motivo: ' . $this->observaciones ;

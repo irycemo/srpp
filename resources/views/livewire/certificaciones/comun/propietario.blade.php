@@ -1,4 +1,4 @@
-<div class="flex gap-3 justify-center items-center">
+<div class="lg:flex gap-3 lg:justify-center lg:items-center">
 
     <x-input-group for="nombre" label="Nombre" :error="$errors->first('nombre')" class="w-full">
 

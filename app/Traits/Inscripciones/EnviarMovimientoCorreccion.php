@@ -184,6 +184,8 @@ trait EnviarMovimientoCorreccion{
 
         $movimientoCertificadoGravamen = MovimientoRegistral::where('movimiento_padre', $movimientoRegistral->id)->first();
 
+        if(! $movimientoCertificadoGravamen) return;
+
         $movimientoCertificadoGravamen->certificacion->delete();
 
         $movimientoCertificadoGravamen->firmasElectronicas?->each->delete();

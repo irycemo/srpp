@@ -14,6 +14,7 @@ use Illuminate\Support\Facades\Log;
 use App\Traits\Inscripciones\InscripcionesIndex;
 use App\Exceptions\InscripcionesServiceException;
 use App\Http\Services\InscripcionesPropiedadService;
+use App\Traits\Inscripciones\RechazarMovimientoTrait;
 
 class PropiedadIndex extends Component
 {
@@ -21,6 +22,7 @@ class PropiedadIndex extends Component
     use WithFileUploads;
     use ComponentesTrait;
     use InscripcionesIndex;
+    use RechazarMovimientoTrait;
 
     public $año;
     public $tramite;
@@ -135,7 +137,7 @@ class PropiedadIndex extends Component
 
         $this->filters['año'] = now()->format('Y');
 
-        $this->motivos = Constantes::RECHAZO_MOTIVOS;
+        $this->motivos_rechazo = Constantes::RECHAZO_MOTIVOS;
 
         $this->usuarios_regionales = Constantes::USUARIOS_REGIONALES;
 

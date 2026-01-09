@@ -12,6 +12,7 @@ use App\Models\MovimientoRegistral;
 use Illuminate\Support\Facades\Log;
 use App\Traits\Inscripciones\InscripcionesIndex;
 use App\Exceptions\InscripcionesServiceException;
+use App\Traits\Inscripciones\RechazarMovimientoTrait;
 use App\Traits\RevisarMovimientosPosterioresTrait;
 
 class ReformasIndex extends Component
@@ -21,6 +22,7 @@ class ReformasIndex extends Component
     use ComponentesTrait;
     use InscripcionesIndex;
     use RevisarMovimientosPosterioresTrait;
+    use RechazarMovimientoTrait;
 
     public function estaBloqueado(){
 
@@ -140,7 +142,7 @@ class ReformasIndex extends Component
 
         $this->filters['año'] = now()->format('Y');
 
-        $this->motivos = Constantes::RECHAZO_MOTIVOS;
+        $this->motivos_rechazo = Constantes::RECHAZO_MOTIVOS;
 
         $this->usuarios_regionales = Constantes::USUARIOS_REGIONALES;
 

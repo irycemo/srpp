@@ -458,9 +458,9 @@ class CertificadoGravamen extends Component
 
             });
 
-            if($this->movimientoRegistral->usuario_tramites_linea_id){
+            if($this->modelo_editar->movimientoRegistral->usuario_tramites_linea_id){
 
-                Cache::forget('estadisticas_tramites_en_linea_' . $this->movimientoRegistral->usuario_tramites_linea_id);
+                Cache::forget('estadisticas_tramites_en_linea_' . $this->modelo_editar->movimientoRegistral->usuario_tramites_linea_id);
 
             }
 

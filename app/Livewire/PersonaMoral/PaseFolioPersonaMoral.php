@@ -14,6 +14,7 @@ use App\Models\MovimientoRegistral;
 use Illuminate\Support\Facades\Log;
 use App\Http\Services\SistemaTramitesService;
 use App\Traits\Inscripciones\InscripcionesIndex;
+use App\Traits\Inscripciones\RechazarMovimientoTrait;
 
 class PaseFolioPersonaMoral extends Component
 {
@@ -21,6 +22,7 @@ class PaseFolioPersonaMoral extends Component
     use WithPagination;
     use ComponentesTrait;
     use InscripcionesIndex;
+    use RechazarMovimientoTrait;
 
     public $supervisor;
 
@@ -78,52 +80,6 @@ class PaseFolioPersonaMoral extends Component
         }
     }
 
-    public function rechazar(){
-
-        $this->authorize('update', $this->modelo_editar);
-
-        $this->validate([
-            'observaciones' => 'required'
-        ]);
-
-        try {
-
-            DB::transaction(function (){
-
-                $observaciones = auth()->user()->name . ' rechaza el ' . now() . ', con motivo: ' . $this->observaciones ;
-
-                (new SistemaTramitesService())->rechazarTramite($this->modelo_editar->año, $this->modelo_editar->tramite, $this->modelo_editar->usuario, $this->motivo . ' ' . $observaciones);
-
-                $this->modelo_editar->update(['estado' => 'rechazado', 'actualizado_por' => auth()->user()->id]);
-
-                $this->modelo_editar->folioReal?->update(['estado' => 'rechazado', 'actualizado_por' => auth()->user()->id]);
-
-            });
-
-            $this->dispatch('mostrarMensaje', ['success', "El trámite se rechazó con éxito."]);
-
-            $pdf = Pdf::loadView('rechazos.rechazo', [
-                'movimientoRegistral' => $this->modelo_editar,
-                'motivo' => $this->motivo,
-                'observaciones' => $this->observaciones
-            ])->output();
-
-            $this->reset(['modalRechazar', 'observaciones']);
-
-            return response()->streamDownload(
-                fn () => print($pdf),
-                'rechazo.pdf'
-            );
-
-        } catch (\Throwable $th) {
-
-            Log::error("Error al rechazar pase a folio de persona moral por el usuario: (id: " . auth()->user()->id . ") " . auth()->user()->name . ". " . $th);
-            $this->dispatch('mostrarMensaje', ['error', "Ha ocurrido un error."]);
-            $this->reset(['modal', 'observaciones']);
-        }
-
-    }
-
     public function imprimir(MovimientoRegistral $modelo){
 
         try {
@@ -146,7 +102,7 @@ class PaseFolioPersonaMoral extends Component
 
         $this->crearModeloVacio();
 
-        $this->motivos = Constantes::RECHAZO_MOTIVOS;
+        $this->motivos_rechazo = Constantes::RECHAZO_MOTIVOS;
 
         $this->usuarios_regionales = Constantes::USUARIOS_REGIONALES;
 

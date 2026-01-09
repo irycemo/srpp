@@ -40,6 +40,21 @@ class VerFolioReal extends Component
 
     }
 
+    public function agregarAclaracionAdministrativa(){
+
+        try {
+
+            $movimiento_registral = MovimientoRegistral::create([
+                'folio_real' => $this->folioReal->id,
+
+            ]);
+
+        } catch (\Throwable $th) {
+            //throw $th;
+        }
+
+    }
+
     public function render()
     {
         return view('livewire.admin.ver-folio-real')->extends('layouts.admin');

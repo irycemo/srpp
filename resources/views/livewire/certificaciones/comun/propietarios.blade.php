@@ -2,7 +2,7 @@
 
     @for ($i = 0; $i < $certificacion->numero_paginas; $i++)
 
-        <div class="flex gap-3 justify-center items-center">
+        <div class="lg:flex gap-3 lg:justify-center lg:items-center">
 
             <x-input-group for="propietarios.{{ $i }}.nombre" label="Nombre" :error="$errors->first('propietarios.'. $i . '.nombre')" class="w-full">
 

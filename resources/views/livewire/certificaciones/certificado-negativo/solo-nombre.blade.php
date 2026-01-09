@@ -2,7 +2,7 @@
 
     @if($certificacion->movimientoRegistral->folioReal)
 
-        <div class="bg-white rounded-lg p-4 shadow-lg w-full  mx-auto mb-5 text-center">
+        <div class="w-full  mx-auto mb-5 text-center">
 
             <span class="rounded-lg bg-red-400 text-white px-3 py-1">Se calificó con antecedente de propiedad</span>
 

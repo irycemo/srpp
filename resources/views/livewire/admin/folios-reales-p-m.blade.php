@@ -4,7 +4,7 @@
 
         <x-header>Folios reales PM</x-header>
 
-        <div class="flex justify-between gap-3 overflow-auto p-1">
+        <div class="flex gap-3 overflow-auto p-1">
 
             <input type="number" wire:model.live.debounce.500ms="filters.folio" placeholder="Folio" class="bg-white rounded-full text-sm">
 
