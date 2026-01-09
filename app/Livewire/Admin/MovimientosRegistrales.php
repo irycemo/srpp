@@ -6,6 +6,7 @@ use App\Models\User;
 use Livewire\Component;
 use Livewire\WithPagination;
 use App\Constantes\Constantes;
+use App\Exceptions\GeneralException;
 use App\Traits\ComponentesTrait;
 use Illuminate\Support\Facades\DB;
 use App\Models\MovimientoRegistral;
@@ -276,6 +277,10 @@ class MovimientosRegistrales extends Component
             $this->dispatch('mostrarMensaje', ['success', "La información se actualizó con éxito."]);
 
             $this->modalCorreccion = false;
+
+        } catch (GeneralException $ex) {
+
+            $this->dispatch('mostrarMensaje', ['warning', $ex->getMessage()]);
 
         } catch (\Throwable $th) {
 
