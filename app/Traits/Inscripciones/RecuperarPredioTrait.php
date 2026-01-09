@@ -2,6 +2,7 @@
 
 namespace App\Traits\Inscripciones;
 
+use App\Exceptions\GeneralException;
 use App\Models\Predio;
 use App\Models\Persona;
 use App\Models\FolioReal;
@@ -14,6 +15,8 @@ trait RecuperarPredioTrait{
     public function obtenerMovimientoConFirmaElectronica(MovimientoRegistral $movimientoRegistral){
 
         if($movimientoRegistral->folio == 1){
+
+            if(! $movimientoRegistral->folioReal->firmaElectronica) throw new GeneralException('No hay una firma electronica para recuperar la información.');
 
             $propietarios = $this->recuperarPropietarios($movimientoRegistral->folioReal->firmaElectronica);
 
