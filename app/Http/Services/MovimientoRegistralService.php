@@ -798,7 +798,7 @@ class MovimientoRegistralService{
 
         if(!$folioReal) throw new MovimientoRegistralServiceException('El folio real no existe.');
 
-        if($folioReal->estado != 'activo') throw new MovimientoRegistralServiceException('El folio real no esta activo.');
+        /* if($folioReal->estado != 'activo') throw new MovimientoRegistralServiceException('El folio real no esta activo.'); */
 
         $data['folio_real'] = $folioReal->id;
         $data['estado'] = 'nuevo';
