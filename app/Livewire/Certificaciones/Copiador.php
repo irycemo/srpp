@@ -203,7 +203,7 @@ class Copiador extends Component
         if(auth()->user()->hasRole(['Copiador'])){
 
            return MovimientoRegistral::select('id', 'folio', 'folio_real', 'año', 'tramite', 'usuario', 'actualizado_por', 'usuario_asignado', 'usuario_supervisor', 'estado', 'distrito', 'created_at', 'updated_at', 'tomo', 'registro', 'numero_propiedad', 'tipo_servicio', 'fecha_entrega', 'seccion', 'solicitante')
-                                        ->with('asignadoA:id,name', 'supervisor:id,name', 'actualizadoPor:id:name', 'certificacion.actualizadoPor:id,name')
+                                        ->with('asignadoA:id,name', 'supervisor:id,name', 'actualizadoPor:id,name', 'certificacion.actualizadoPor:id,name')
                                         ->where(function($q){
                                             $q->whereHas('asignadoA', function($q){
                                                     $q->where('name', 'LIKE', '%' . $this->search . '%');
@@ -237,7 +237,7 @@ class Copiador extends Component
         }elseif(auth()->user()->hasRole(['Supervisor certificaciones', 'Supervisor uruapan'])){
 
             return MovimientoRegistral::select('id', 'folio', 'folio_real', 'año', 'tramite', 'usuario', 'actualizado_por', 'usuario_asignado', 'usuario_supervisor', 'estado', 'distrito', 'created_at', 'updated_at', 'tomo', 'registro', 'numero_propiedad', 'tipo_servicio', 'fecha_entrega', 'seccion', 'solicitante')
-                                        ->with('asignadoA:id,name', 'supervisor:id,name', 'actualizadoPor:id:name', 'certificacion.actualizadoPor:id,name')
+                                        ->with('asignadoA:id,name', 'supervisor:id,name', 'actualizadoPor:id,name', 'certificacion.actualizadoPor:id,name')
                                         ->where(function($q){
                                             $q->whereHas('asignadoA', function($q){
                                                     $q->where('name', 'LIKE', '%' . $this->search . '%');
@@ -271,7 +271,7 @@ class Copiador extends Component
         }elseif(auth()->user()->hasRole(['Administrador', 'Operador', 'Director', 'Jefe de departamento jurídico', 'Jefe de departamento certificaciones'])){
 
            return MovimientoRegistral::select('id', 'folio', 'folio_real', 'año', 'tramite', 'usuario', 'actualizado_por', 'usuario_asignado', 'usuario_supervisor', 'estado', 'distrito', 'created_at', 'updated_at', 'tomo', 'registro', 'numero_propiedad', 'tipo_servicio', 'fecha_entrega', 'seccion', 'solicitante')
-                                        ->with('asignadoA:id,name', 'supervisor:id,name', 'actualizadoPor:id:name', 'certificacion.actualizadoPor:id,name')
+                                        ->with('asignadoA:id,name', 'supervisor:id,name', 'actualizadoPor:id,name', 'certificacion.actualizadoPor:id,name')
                                         ->where(function($q){
                                             $q->whereHas('asignadoA', function($q){
                                                     $q->where('name', 'LIKE', '%' . $this->search . '%');
