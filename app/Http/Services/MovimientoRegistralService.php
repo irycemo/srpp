@@ -806,7 +806,7 @@ class MovimientoRegistralService{
         $data['registro'] = null;
         $data['numero_propiedad'] = null;
 
-        if(! $movimiento_registral->folioReal->movimientosRegistrales()->where('folio', 1)->first()){
+        if(! $movimiento_registral->folioReal?->movimientosRegistrales()->where('folio', 1)->first()){
 
             $data['folio'] = 1;
 
