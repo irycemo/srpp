@@ -438,29 +438,26 @@ class CertificadoGravamen extends Component
 
     }
 
-    public function corregir(Certificacion $movimientoRegistral){
-
-        if($this->modelo_editar->isNot($movimientoRegistral))
-            $this->modelo_editar = $movimientoRegistral;
+    public function corregir(MovimientoRegistral $movimientoRegistral){
 
         try {
 
-            $this->revisarMovimientosPosteriores($this->modelo_editar->movimientoRegistral);
+            $this->revisarMovimientosPosteriores($movimientoRegistral);
 
-            DB::transaction(function (){
+            DB::transaction(function () use ($movimientoRegistral){
 
-                $this->modelo_editar->movimientoRegistral->update([
+                $movimientoRegistral->update([
                     'estado' => 'correccion',
                     'actualizado_por' => auth()->id()
                 ]);
 
-                $this->modelo_editar->movimientoRegistral->audits()->latest()->first()->update(['tags' => 'Cambio estado a corrección']);
+                $movimientoRegistral->audits()->latest()->first()->update(['tags' => 'Cambio estado a corrección']);
 
             });
 
-            if($this->modelo_editar->movimientoRegistral->usuario_tramites_linea_id){
+            if($movimientoRegistral->usuario_tramites_linea_id){
 
-                Cache::forget('estadisticas_tramites_en_linea_' . $this->modelo_editar->movimientoRegistral->usuario_tramites_linea_id);
+                Cache::forget('estadisticas_tramites_en_linea_' . $movimientoRegistral->usuario_tramites_linea_id);
 
             }
 

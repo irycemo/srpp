@@ -250,7 +250,7 @@
                                             @if(in_array($certificado->estado, ['nuevo' ,'correccion']))
 
                                                 <button
-                                                    wire:click="abrirModalRechazar({{ $certificado->id }})"
+                                                    wire:click="abrirModalRechazar({{ $certificado->certificacion->id }})"
                                                     wire:loading.attr="disabled"
                                                     class="w-full text-left block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 focus:outline-none focus:bg-gray-100"
                                                     role="menuitem">
@@ -286,7 +286,7 @@
                                             @if(in_array($certificado->estado, ['nuevo' ,'correccion']))
 
                                                 <button
-                                                    wire:click="abrirModalReasignar({{ $certificado->id }})"
+                                                    wire:click="abrirModalReasignar({{ $certificado->certificacion->id }})"
                                                     wire:loading.attr="disabled"
                                                     class="w-full text-left block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 focus:outline-none focus:bg-gray-100"
                                                     role="menuitem">
