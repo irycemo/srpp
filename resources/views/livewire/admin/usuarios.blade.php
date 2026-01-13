@@ -70,7 +70,7 @@
 
             <x-slot name="body">
 
-                @forelse ($usuarios as $usuario)
+                @forelse ($this->usuarios as $usuario)
 
                     <x-table.row wire:loading.class.delaylongest="opacity-50" wire:key="row-{{ $usuario->id }}">
 
@@ -254,7 +254,7 @@
 
                     <x-table.cell colspan="9" class="bg-gray-50">
 
-                        {{ $usuarios->links()}}
+                        {{ $this->usuarios->links()}}
 
                     </x-table.cell>
 

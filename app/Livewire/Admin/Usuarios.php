@@ -8,6 +8,7 @@ use Livewire\Component;
 use Livewire\WithPagination;
 use App\Constantes\Constantes;
 use App\Traits\ComponentesTrait;
+use Livewire\Attributes\Computed;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
 
@@ -206,6 +207,29 @@ class Usuarios extends Component
 
     }
 
+    #[Computed]
+    public function usuarios(){
+
+        return User::with('creadoPor:id,name', 'actualizadoPor:id,name')
+                        ->where(function($q){
+                            $q->where('name', 'LIKE', '%' . $this->search . '%')
+                            ->orWhere('email', 'LIKE', '%' . $this->search . '%')
+                            ->orWhere('ubicacion', 'LIKE', '%' . $this->search . '%')
+                            ->orWhere('area', 'LIKE', '%' . $this->search . '%')
+                            ->orWhere('status', 'LIKE', '%' . $this->search . '%')
+                            ->orWhere(function($q){
+                                return $q->whereHas('roles', function($q){
+                                    return $q->select('id', 'name')
+                                                ->where('name', 'LIKE', '%' . $this->search . '%');
+                                });
+                            });
+                        })
+                        ->when($this->filters['rol'] && $this->filters['rol'] != '', fn($q) => $q->whereHas('roles', function($q) { $q->where('name', $this->filters['rol']); }))
+                        ->orderBy($this->sort, $this->direction)
+                        ->paginate($this->pagination);
+
+    }
+
     public function mount(){
 
         $this->crearModeloVacio();
@@ -226,26 +250,7 @@ class Usuarios extends Component
 
     public function render()
     {
-
-        $usuarios = User::with('creadoPor:id,name', 'actualizadoPor:id,name')
-                            ->where(function($q){
-                                $q->where('name', 'LIKE', '%' . $this->search . '%')
-                                ->orWhere('email', 'LIKE', '%' . $this->search . '%')
-                                ->orWhere('ubicacion', 'LIKE', '%' . $this->search . '%')
-                                ->orWhere('area', 'LIKE', '%' . $this->search . '%')
-                                ->orWhere('status', 'LIKE', '%' . $this->search . '%')
-                                ->orWhere(function($q){
-                                    return $q->whereHas('roles', function($q){
-                                        return $q->where('name', 'LIKE', '%' . $this->search . '%');
-                                    });
-                                });
-                            })
-                            ->when($this->filters['rol'] && $this->filters['rol'] != '', fn($q) => $q->whereHas('roles', function($q) { $q->where('name', $this->filters['rol']); }))
-                            ->orderBy($this->sort, $this->direction)
-                            ->paginate($this->pagination);
-
-        return view('livewire.admin.usuarios', compact('usuarios'))->extends('layouts.admin');
-
+        return view('livewire.admin.usuarios')->extends('layouts.admin');
     }
 
 }

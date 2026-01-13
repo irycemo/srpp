@@ -54,7 +54,7 @@
 
             <x-slot name="body">
 
-                @forelse ($permisos as $permiso)
+                @forelse ($this->permisos as $permiso)
 
                     <x-table.row wire:loading.class.delaylongest="opacity-50" wire:key="row-{{ $permiso->id }}">
 
@@ -182,7 +182,7 @@
 
                     <x-table.cell colspan="9" class="bg-gray-50">
 
-                        {{ $permisos->links()}}
+                        {{ $this->permisos->links()}}
 
                     </x-table.cell>
 

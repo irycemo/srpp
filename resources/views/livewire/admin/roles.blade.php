@@ -53,7 +53,7 @@
 
             <x-slot name="body">
 
-                @forelse ($roles as $rol)
+                @forelse ($this->roles as $rol)
 
                     <x-table.row wire:loading.class.delaylongest="opacity-50" wire:key="row-{{ $rol->id }}">
 
@@ -173,7 +173,7 @@
 
                     <x-table.cell colspan="9" class="bg-gray-50">
 
-                        {{ $roles->links()}}
+                        {{ $this->roles->links()}}
 
                     </x-table.cell>
 

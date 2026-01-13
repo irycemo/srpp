@@ -243,4 +243,6 @@
 
     @include('livewire.comun.inscripciones.modal-recibir-documento')
 
+    @include('livewire.comun.inscripciones.modal-buscar-tramite')
+
 </div>
