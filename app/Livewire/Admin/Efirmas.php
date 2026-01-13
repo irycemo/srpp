@@ -8,6 +8,7 @@ use Livewire\Component;
 use Livewire\WithPagination;
 use Livewire\WithFileUploads;
 use App\Traits\ComponentesTrait;
+use Livewire\Attributes\Computed;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
 use PhpCfdi\Credentials\Credential;
@@ -205,6 +206,19 @@ class Efirmas extends Component
 
     }
 
+    #[Computed]
+    public function efirmas(){
+
+        return Efirma::select('id', 'user_id', 'estado', 'creado_por', 'actualizado_por', 'created_at', 'updated_at')
+                        ->with('creadoPor:id,name', 'actualizadoPor:id,name', 'user:id,name')
+                        ->whereHas('user',function($q){
+                            $q->where('name', 'LIKE', '%' . $this->search . '%');
+                        })
+                        ->orderBy($this->sort, $this->direction)
+                        ->paginate($this->pagination);
+
+    }
+
     public function mount(){
 
         array_push($this->fields, 'cer', 'key', 'imagen');
@@ -217,15 +231,6 @@ class Efirmas extends Component
 
     public function render()
     {
-
-        $efirmas = Efirma::with('creadoPor', 'actualizadoPor', 'user')
-                            ->whereHas('user',function($q){
-                                $q->where('name', 'LIKE', '%' . $this->search . '%');
-                            })
-                            ->orderBy($this->sort, $this->direction)
-                            ->paginate($this->pagination);
-
-        return view('livewire.admin.efirmas', compact('efirmas'))->extends('layouts.admin');
-
+        return view('livewire.admin.efirmas')->extends('layouts.admin');
     }
 }

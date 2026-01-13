@@ -195,7 +195,7 @@ class FoliosReales extends Component
     public function render()
     {
 
-        $folios = FolioReal::select('id', 'matriz', 'folio', 'estado', 'tomo_antecedente', 'registro_antecedente', 'distrito_antecedente', 'created_at', 'updated_at', 'actualizado_por', 'creado_por')
+        $folios = FolioReal::select('id', 'matriz', 'folio', 'estado', 'tomo_antecedente', 'registro_antecedente', 'distrito_antecedente', 'numero_propiedad_antecedente', 'created_at', 'updated_at', 'actualizado_por', 'creado_por')
                             ->with('actualizadoPor', 'creadoPor')
                             ->when($this->filters['folio'], fn($q, $folio) => $q->where('folio', $folio))
                             ->when($this->filters['estado'], fn($q, $estado) => $q->where('estado', $estado))

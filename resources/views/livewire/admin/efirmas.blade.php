@@ -54,7 +54,7 @@
 
             <x-slot name="body">
 
-                @forelse ($efirmas as $efirma)
+                @forelse ($this->efirmas as $efirma)
 
                     <x-table.row wire:loading.class.delaylongest="opacity-50" wire:key="row-{{ $efirma->id }}">
 
@@ -199,7 +199,7 @@
 
                     <x-table.cell colspan="9" class="bg-gray-50">
 
-                        {{ $efirmas->links()}}
+                        {{ $this->efirmas->links()}}
 
                     </x-table.cell>
 
