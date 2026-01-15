@@ -50,7 +50,12 @@ trait RevisarFolioMatrizTrait
                 'movimiento_registral_id' => $nuevoMovimientoRegistral->id
             ]);
 
-            $movimiento->update(['folio_real' => $folioReal->id, 'folio' => 1, 'pase_a_folio' => true]);
+            $movimiento->update([
+                'folio_real' => $folioReal->id,
+                'folio' => 1,
+                'pase_a_folio' => true,
+                'movimiento_padre' => $nuevoMovimientoRegistral->id
+            ]);
 
         }
 

@@ -66,7 +66,7 @@ class VerFolioReal extends Component
                 (new VariosService())->crear([
                     'servicio_nombre' => 'Aclaraciones administrativas de inscripciones',
                     'servicio' => 'D112',
-                    'movimiento_registral' => $movimiento_registral->id,
+                    'movimiento_registral_id' => $movimiento_registral->id,
                     'año' => null,
                     'tramite' => null,
                     'usuario' => null,
