@@ -124,7 +124,7 @@ class GravamenIndex extends Component
                                                     ->whereHas('folioReal', function($q){
                                                         $q->whereIn('estado', ['activo', 'centinela']);
                                                     })
-                                                    ->when(auth()->user()->ubicacion == 'Regional 4', function($q){
+                                                    /* ->when(auth()->user()->ubicacion == 'Regional 4', function($q){
                                                         $q->where('distrito', 2);
                                                     })
                                                     ->when(auth()->user()->ubicacion != 'Regional 4', function($q){
@@ -132,7 +132,7 @@ class GravamenIndex extends Component
                                                     })
                                                     ->whereHas('gravamen', function($q){
                                                         $q->whereIn('servicio', ['D127', 'D153', 'D150', 'D155', 'DM68', 'D154']);
-                                                    })
+                                                    }) */
                                                     ->when($this->filters['año'], fn($q, $año) => $q->where('año', $año))
                                                     ->when($this->filters['tramite'], fn($q, $tramite) => $q->where('tramite', $tramite))
                                                     ->when($this->filters['usuario'], fn($q, $usuario) => $q->where('usuario', $usuario))

@@ -175,12 +175,6 @@ class PaseFolioPersonaMoral extends Component
                                                             $q->whereIn('estado', ['nuevo', 'captura', 'elaborado', 'no recibido']);
                                                         });
                                                 })
-                                                ->when(auth()->user()->ubicacion == 'Regional 4', function($q){
-                                                    $q->where('distrito', 2);
-                                                })
-                                                ->when(auth()->user()->ubicacion != 'Regional 4', function($q){
-                                                    $q->where('distrito', '!=', 2);
-                                                })
                                                 ->orderBy($this->sort, $this->direction)
                                                 ->paginate($this->pagination);
 

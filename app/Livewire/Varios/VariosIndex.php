@@ -125,12 +125,12 @@ class VariosIndex extends Component
                                                     ->whereHas('folioReal', function($q){
                                                         $q->whereIn('estado', ['activo', 'centinela']);
                                                     })
-                                                    ->when(auth()->user()->ubicacion == 'Regional 4', function($q){
+                                                    /* ->when(auth()->user()->ubicacion == 'Regional 4', function($q){
                                                         $q->where('distrito', 2);
                                                     })
                                                     ->when(auth()->user()->ubicacion != 'Regional 4', function($q){
                                                         $q->where('distrito', '!=', 2);
-                                                    })
+                                                    }) */
                                                     ->whereHas('vario', function($q){
                                                         $q->whereIn('servicio', ['DN83', 'D128', 'D112', 'D110', 'D157', 'DL19', 'DL16']);
                                                     })

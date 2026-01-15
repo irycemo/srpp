@@ -286,12 +286,12 @@ class ReformasIndex extends Component
                                                             ->orWhere('distrito', 'LIKE', '%' . $this->search . '%')
                                                             ->orWhere('estado', 'LIKE', '%' . $this->search . '%');
                                                     })
-                                                    ->when(auth()->user()->ubicacion == 'Regional 4', function($q){
+                                                    /* ->when(auth()->user()->ubicacion == 'Regional 4', function($q){
                                                         $q->where('distrito', 2);
                                                     })
                                                     ->when(auth()->user()->ubicacion != 'Regional 4', function($q){
                                                         $q->where('distrito', '!=', 2);
-                                                    })
+                                                    }) */
                                                     ->when($this->filters['año'], fn($q, $año) => $q->where('año', $año))
                                                     ->when($this->filters['tramite'], fn($q, $tramite) => $q->where('tramite', $tramite))
                                                     ->when($this->filters['usuario'], fn($q, $usuario) => $q->where('usuario', $usuario))
