@@ -63,7 +63,7 @@ class VerFolioReal extends Component
                     'distrito' => $this->folioReal->getOriginal('distrito_antecedente')
                 ]);
 
-                (new VariosService())->store([
+                (new VariosService())->crear([
                     'servicio_nombre' => 'Aclaraciones administrativas de inscripciones',
                     'servicio' => 'D112',
                     'movimiento_registral' => $movimiento_registral->id,
