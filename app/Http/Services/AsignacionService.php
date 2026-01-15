@@ -5,7 +5,7 @@ namespace App\Http\Services;
 use App\Models\User;
 use App\Models\Asignacion;
 use Illuminate\Support\Facades\Log;
-use App\Exceptions\AsignacionServiceException;
+use App\Exceptions\GeneralException;
 
 class AsignacionService{
 
@@ -74,7 +74,7 @@ class AsignacionService{
 
         if(count($usuarios) == 0){
 
-            throw new AsignacionServiceException('No se encontraron usuarios de propiedad para asignar al movimiento registral.');
+            throw new GeneralException('No se encontraron usuarios de propiedad para asignar al movimiento registral.');
 
         }else if(count($usuarios) == 1){
 
@@ -119,7 +119,7 @@ class AsignacionService{
 
         if($usuarios->count() == 0){
 
-            throw new AsignacionServiceException('No se encontraron usuarios de consulta para asignar al movimiento registral.');
+            throw new GeneralException('No se encontraron usuarios de consulta para asignar al movimiento registral.');
 
         }else if($usuarios->count() == 1){
 
@@ -133,7 +133,7 @@ class AsignacionService{
 
     }
 
-    public function obtenerCopiador($distrito, $solicitante, $tipo_servicio, $random):int
+    public function obtenerCopiador($distrito, $random):int
     {
 
         if($distrito == 2){
@@ -162,7 +162,7 @@ class AsignacionService{
 
             Log::error('No se encontraron usuario copiador para asignar la certificación.');
 
-            throw new AsignacionServiceException('No se encontraron copiadores para asignar al movimiento registral.');
+            throw new GeneralException('No se encontraron copiadores para asignar al movimiento registral.');
 
         }else if($random){
 
@@ -236,7 +236,7 @@ class AsignacionService{
 
             Log::error('No se encontraron usuario para asignar la certificación.');
 
-            throw new AsignacionServiceException('No se encontraron certificadores para asignar al movimiento registral.');
+            throw new GeneralException('No se encontraron certificadores para asignar al movimiento registral.');
 
         }else if($random){
 
@@ -316,7 +316,7 @@ class AsignacionService{
 
             Log::error('No se encontraron usuario para asignar la certificación.');
 
-            throw new AsignacionServiceException('No se encontraron certificadores para asignar al movimiento registral.');
+            throw new GeneralException('No se encontraron certificadores para asignar al movimiento registral.');
 
         }else if($random){
 
@@ -346,7 +346,7 @@ class AsignacionService{
 
     }
 
-    public function obtenerCertificadorPropiedad($distrito, $solicitante, $tipo_servicio, $random, $folioReal):int
+    public function obtenerCertificadorPropiedad($distrito, $random):int
     {
 
         if($distrito == 2){
@@ -375,7 +375,7 @@ class AsignacionService{
 
             Log::error('No se encontraron usuario para asignar la certificación.');
 
-            throw new AsignacionServiceException('No se encontraron certificadores para asignar al movimiento registral.');
+            throw new GeneralException('No se encontraron certificadores para asignar al movimiento registral.');
 
         }else if($random){
 
@@ -435,7 +435,7 @@ class AsignacionService{
 
         if(!$supervisor){
 
-            throw new AsignacionServiceException('No se encontraron supervisores de certificaciones para asignar al movimiento registral.');
+            throw new GeneralException('No se encontraron supervisores de certificaciones para asignar al movimiento registral.');
 
         }
 
@@ -482,7 +482,7 @@ class AsignacionService{
 
         if(count($usuarios) == 0){
 
-            throw new AsignacionServiceException('No se encontraron usuarios de propiedad para asignar al movimiento registral.');
+            throw new GeneralException('No se encontraron usuarios de propiedad para asignar al movimiento registral.');
 
         }else if(count($usuarios) == 1){
 
@@ -536,7 +536,7 @@ class AsignacionService{
 
         if(count($usuarios) == 0){
 
-            throw new AsignacionServiceException('No se encontraron usuarios de propiedad para asignar al movimiento registral.');
+            throw new GeneralException('No se encontraron usuarios de propiedad para asignar al movimiento registral.');
 
         }else if(count($usuarios) == 1){
 
@@ -601,7 +601,7 @@ class AsignacionService{
 
         if(count($usuarios) == 0){
 
-            throw new AsignacionServiceException('No se encontraron usuarios de gravamen para asignar al movimiento registral.');
+            throw new GeneralException('No se encontraron usuarios de gravamen para asignar al movimiento registral.');
 
         }else if(count($usuarios) == 1){
 
@@ -662,7 +662,7 @@ class AsignacionService{
 
         if(count($usuarios) == 0){
 
-            throw new AsignacionServiceException('No se encontraron usuarios de cancelación para asignar al movimiento registral.');
+            throw new GeneralException('No se encontraron usuarios de cancelación para asignar al movimiento registral.');
 
         }else if(count($usuarios) == 1){
 
@@ -727,7 +727,7 @@ class AsignacionService{
 
         if(count($usuarios) == 0){
 
-            throw new AsignacionServiceException('No se encontraron usuarios de varios para asignar al movimiento registral.');
+            throw new GeneralException('No se encontraron usuarios de varios para asignar al movimiento registral.');
 
         }else if(count($usuarios) == 1){
 
@@ -793,7 +793,7 @@ class AsignacionService{
 
         if(count($usuarios) == 0){
 
-            throw new AsignacionServiceException('No se encontraron usuarios de sentencias para asignar al movimiento registral.');
+            throw new GeneralException('No se encontraron usuarios de sentencias para asignar al movimiento registral.');
 
         }else if(count($usuarios) == 1){
 
@@ -849,7 +849,7 @@ class AsignacionService{
 
         if(!$supervisor){
 
-            throw new AsignacionServiceException('No se encontraron supervisores de inscripciones para asignar al movimiento registral.');
+            throw new GeneralException('No se encontraron supervisores de inscripciones para asignar al movimiento registral.');
 
         }
 
@@ -885,7 +885,7 @@ class AsignacionService{
 
         if(count($usuarios) == 0){
 
-            throw new AsignacionServiceException('No se encontraron usuarios de folio real de persona moral para asignar al movimiento registral.');
+            throw new GeneralException('No se encontraron usuarios de folio real de persona moral para asignar al movimiento registral.');
 
         }else if(count($usuarios) == 1){
 

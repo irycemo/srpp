@@ -7,6 +7,7 @@ use App\Models\MovimientoRegistral;
 use Illuminate\Foundation\Inspiring;
 use Illuminate\Support\Facades\Artisan;
 use App\Http\Controllers\Certificaciones\CertificadoPropiedadController;
+use App\Models\FolioReal;
 
 /*
 |--------------------------------------------------------------------------
@@ -70,5 +71,44 @@ Artisan::command('bienestar', function(){
 
 
     info("Proceso de genrar imagen de caratulas finalizado.");
+
+});
+
+Artisan::command('pase_a_folio', function(){
+
+    DB::transaction(function () {
+
+        $folio_real_ids = FolioReal::pluck('id');
+
+        DB::table('movimiento_registrals')->where('folio', 1)->whereIn('folio_real', $folio_real_ids)->update(['pase_a_folio' => true]);
+
+        DB::table('movimiento_registrals')->join('propiedads', 'movimiento_registrals.id', '=', 'propiedads.movimiento_registral_id')->where('folio', 1)->whereNull('folio_real')->update(['pase_a_folio' => true]);
+
+        DB::table('movimiento_registrals')->join('cancelacions', 'movimiento_registrals.id', '=', 'cancelacions.movimiento_registral_id')->where('folio', 1)->whereNull('folio_real')->update(['pase_a_folio' => true]);
+
+        DB::table('movimiento_registrals')->join('gravamens', 'movimiento_registrals.id', '=', 'gravamens.movimiento_registral_id')->where('folio', 1)->whereNull('folio_real')->update(['pase_a_folio' => true]);
+
+        DB::table('movimiento_registrals')->join('sentencias', 'movimiento_registrals.id', '=', 'sentencias.movimiento_registral_id')->where('folio', 1)->whereNull('folio_real')->update(['pase_a_folio' => true]);
+
+        DB::table('movimiento_registrals')->join('varios', 'movimiento_registrals.id', '=', 'varios.movimiento_registral_id')->where('folio', 1)->whereNull('folio_real')->update(['pase_a_folio' => true]);
+
+        DB::table('movimiento_registrals')->join('certificacions', 'movimiento_registrals.id', '=', 'certificacions.movimiento_registral_id')
+                                            ->where('certificacions.servicio', 'DL07')
+                                            ->where('folio', 1)
+                                            ->whereNull('movimiento_registrals.folio_real')
+                                            ->update(['pase_a_folio' => true]);
+
+        DB::table('movimiento_registrals')->join('certificacions', 'movimiento_registrals.id', '=', 'certificacions.movimiento_registral_id')
+                                            ->where('certificacions.servicio', 'DL10')
+                                            ->where('folio', 1)
+                                            ->whereNull('movimiento_registrals.folio_real')
+                                            ->whereNotNull('tomo')
+                                            ->whereNotNull('registro')
+                                            ->whereNotNull('numero_propiedad')
+                                            ->update(['pase_a_folio' => true]);
+
+    });
+
+    info("Proceso actualizar condicion de pase a folio finalizado.");
 
 });

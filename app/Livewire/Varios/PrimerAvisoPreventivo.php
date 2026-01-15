@@ -127,6 +127,8 @@ class PrimerAvisoPreventivo extends Component
             'año' => $this->vario->movimientoRegistral->año,
             'tramite' => $this->vario->movimientoRegistral->tramite,
             'usuario' => $this->vario->movimientoRegistral->usuario,
+            'tomo' => $this->vario->movimientoRegistral->tomo,
+            'registro' => $this->vario->movimientoRegistral->registro,
             'distrito' => $this->vario->movimientoRegistral->getRawOriginal('distrito'),
             'tipo_documento' => $this->vario->movimientoRegistral->tipo_documento,
             'numero_documento' => $this->vario->movimientoRegistral->numero_documento,

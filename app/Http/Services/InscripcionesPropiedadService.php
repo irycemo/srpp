@@ -2,52 +2,74 @@
 
 namespace App\Http\Services;
 
-use App\Models\Predio;
-use App\Models\FolioReal;
 use App\Models\Propiedad;
 use App\Models\MovimientoRegistral;
-use Illuminate\Support\Facades\Log;
 use App\Exceptions\InscripcionesServiceException;
+use App\Http\Services\MovimientoServiceInterface;
 use App\Traits\Inscripciones\RecuperarPredioTrait;
+use App\Traits\Inscripciones\RevisarFolioMatrizTrait;
 
-class InscripcionesPropiedadService{
+class InscripcionesPropiedadService implements MovimientoServiceInterface{
 
     use RecuperarPredioTrait;
+    use RevisarFolioMatrizTrait;
 
-    public function store(array $request)
+    public function crear(array $request):void
     {
 
-        try {
+        $propiedad = Propiedad::create($this->requestCrear($request));
 
-            $propiedad = Propiedad::create($this->requestCrear($request));
+        /* Revisar si son para folio matriz */
+        if(in_array($propiedad->servicio, ['D114', 'D113', 'D116', 'D115'])){
 
-            /* Revisar si son para folio matriz */
-            if(in_array($propiedad->servicio, ['D114', 'D113', 'D116', 'D115'])){
-
-                $this->revisarFolioMatriz($propiedad->movimientoRegistral);
-
-            }
-
-            if($request['servicio_nombre'] == 'Captura especial de folio real'){
-
-                $usuario = (new AsignacionService())->obtenerUsuarioPaseAFolio($propiedad->movimientoRegistral->getRawOriginal('distrito'));
-
-                $propiedad->movimientoRegistral->update(['usuario_asignado' => $usuario]);
-
-                $propiedad->update([
-                    'acto_contenido' => 'CAPTURA ESPECIAL DE FOLIO REAL',
-                    'descripcion_acto' => 'ESTE MOVIMIENTO REGISTRAL CREA EL FOLIO REAL POR CAPTURA ESPECIAL.'
-                ]);
-
-            }
-
-        } catch (\Throwable $th) {
-
-            Log::error('Error al ingresar inscripción de propiedad con el trámite: ' . $request['año'] . '-' . $request['tramite'] . '-' . $request['usuario'] . ' desde Sistema Trámites. ' . $th);
-
-            throw new InscripcionesServiceException('Error al ingresar inscripción de propiedad con el trámite: ' . $request['año'] . '-' . $request['tramite'] . '-' . $request['usuario'] . ' desde Sistema Trámites.');
+            $this->revisarFolioMatriz($propiedad->movimientoRegistral);
 
         }
+
+        if($request['servicio_nombre'] == 'Captura especial de folio real'){
+
+            $usuario = (new AsignacionService())->obtenerUsuarioPaseAFolio($propiedad->movimientoRegistral->getRawOriginal('distrito'));
+
+            $propiedad->movimientoRegistral->update(['usuario_asignado' => $usuario]);
+
+            $propiedad->update([
+                'acto_contenido' => 'CAPTURA ESPECIAL DE FOLIO REAL',
+                'descripcion_acto' => 'ESTE MOVIMIENTO REGISTRAL CREA EL FOLIO REAL POR CAPTURA ESPECIAL.'
+            ]);
+
+        }
+
+    }
+
+    public function obtenerUsuarioAsignado(array $request):int
+    {
+        return (new AsignacionService())->obtenerUsuarioPropiedad(isset($request['folio_real']), $request['distrito'], $request['estado']);
+    }
+
+    public function obtenerSupervisorAsignado(array $request):int
+    {
+        return (new AsignacionService())->obtenerSupervisorInscripciones($request['distrito']);
+    }
+
+    public function corregir(MovimientoRegistral $movimiento):void
+    {
+
+        $this->validaciones($movimiento);
+
+        $this->obtenerMovimientoConFirmaElectronica($movimiento);
+
+        $movimiento->update([
+            'estado' => 'correccion',
+            'actualizado_por' => auth()->id()
+        ]);
+
+        foreach ($movimiento->inscripcionPropiedad->actores as $actor) {
+
+            $actor->delete();
+
+        }
+
+        $movimiento->audits()->latest()->first()->update(['tags' => 'Cambio estado a corrección']);
 
     }
 
@@ -73,55 +95,8 @@ class InscripcionesPropiedadService{
 
         return $array +  [
             'servicio' => $request['servicio'],
-            'movimiento_registral_id' => $request['movimiento_registral'],
+            'movimiento_registral_id' => $request['movimiento_registral_id'],
         ];
-
-    }
-
-    public function revisarFolioMatriz(MovimientoRegistral $movimiento)
-    {
-
-        if($movimiento->folioReal?->matriz){
-
-            $folioReal = FolioReal::create([
-                'estado' => 'captura',
-                'folio' => (FolioReal::max('folio') ?? 0) + 1,
-                'antecedente' => $movimiento->folioReal->id,
-                'distrito_antecedente' => $movimiento->getRawOriginal('distrito'),
-                'seccion_antecedente' => $movimiento->seccion,
-                'autoridad_cargo' => $movimiento->autoridad_cargo,
-                'autoridad_nombre' => $movimiento->autoridad_nombre,
-                'autoridad_numero' => $movimiento->autoridad_numero,
-                'numero_documento' => $movimiento->numero_documento,
-                'fecha_emision' => $movimiento->fecha_emision,
-                'fecha_inscripcion' => $movimiento->fecha_inscripcion,
-                'procedencia' => $movimiento->procedencia,
-                'tipo_documento' => $movimiento->tipo_documento,
-            ]);
-
-            Predio::create(['folio_real' => $folioReal->id, 'status' => 'nuevo']);
-
-            $nuevoMovimientoRegistral = $movimiento->replicate();
-            $nuevoMovimientoRegistral->tomo = null;
-            $nuevoMovimientoRegistral->registro = null;
-            $nuevoMovimientoRegistral->numero_propiedad = null;
-            $nuevoMovimientoRegistral->estado = 'nuevo';
-            $nuevoMovimientoRegistral->folio_real = $folioReal->id;
-            $nuevoMovimientoRegistral->folio = 1;
-            $nuevoMovimientoRegistral->save();
-
-            $nuevoPropiedad = $movimiento->inscripcionPropiedad->replicate();
-            $nuevoPropiedad->movimiento_registral_id = $nuevoMovimientoRegistral->id;
-            $nuevoPropiedad->save();
-
-            $movimiento->update(['estado' => 'concluido']);
-
-            $movimiento->inscripcionPropiedad->update([
-                'acto_contenido' => 'CREA NUEVO FOLIO',
-                'descripcion_acto' => 'ESTE MOVIMIENTO REGISTRAL CREA EL FOLIO REAL: ' . $folioReal->folio . '.'
-            ]);
-
-        }
 
     }
 
@@ -138,27 +113,6 @@ class InscripcionesPropiedadService{
         $movimiento = MovimientoRegistral::where('movimiento_padre', $movimientoRegistral->id)->first();
 
         if($movimiento) throw new InscripcionesServiceException("Este movimiento generó un folio real nuevo.");
-
-    }
-
-    public function corregir(MovimientoRegistral $movimiento){
-
-        $this->validaciones($movimiento);
-
-        $this->obtenerMovimientoConFirmaElectronica($movimiento);
-
-        $movimiento->update([
-            'estado' => 'correccion',
-            'actualizado_por' => auth()->id()
-        ]);
-
-        foreach ($movimiento->inscripcionPropiedad->actores as $actor) {
-
-            $actor->delete();
-
-        }
-
-        $movimiento->audits()->latest()->first()->update(['tags' => 'Cambio estado a corrección']);
 
     }
 

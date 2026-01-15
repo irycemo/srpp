@@ -4,63 +4,95 @@ namespace App\Http\Services;
 
 use App\Models\Certificacion;
 use App\Models\MovimientoRegistral;
-use Illuminate\Support\Facades\Log;
-use App\Http\Requests\CopiasUpdateRequest;
-use App\Exceptions\CertificacionServiceException;
+use App\Http\Services\MovimientoServiceInterface;
 
-class CertificacionesService{
+class CertificacionesService implements MovimientoServiceInterface{
 
-    public function store(array $request){
+    public function crear(array $request):void
+    {
 
-        try {
+        Certificacion::create($this->requestCrear($request));
 
-            Certificacion::create($this->requestCrear($request));
+        if($request['servicio_nombre'] == 'Certificado negativo de vivienda bienestar' && $request['solicitante'] == 'Vivienda Bienestar'){
 
-            if($request['servicio_nombre'] == 'Certificado negativo de vivienda bienestar' && $request['solicitante'] == 'Vivienda Bienestar'){
+            $movimientoRegistral = MovimientoRegistral::find($request['movimiento_registral']);
 
-                $movimientoRegistral = MovimientoRegistral::find($request['movimiento_registral']);
-
-                $movimientoRegistral->update([
-                    'tipo_servicio' => 'extra_urgente',
-                ]);
-
-            }
-
-        } catch (\Throwable $th) {
-
-            Log::error('Error al ingresar el trámite: ' . $request['año'] . '-' . $request['tramite'] . ' desde Sistema Trámites. ' . $th);
-
-            throw new CertificacionServiceException('Error al ingresar el trámite: ' . $request['año'] . '-' . $request['tramite'] . ' desde Sistema Trámites.');
+            $movimientoRegistral->update([
+                'tipo_servicio' => 'extra_urgente',
+            ]);
 
         }
 
     }
 
-    public function actualizarPaginas(CopiasUpdateRequest $request)
+    public function obtenerUsuarioAsignado(array $request):int |null
     {
 
-        try {
+        $asignacion_service = (new AsignacionService());
 
-            $data = $request->validated();
+        /* Certificaciones: Copias simples, Copias certificadas */
+        if(in_array($request['servicio'], ['DL13', 'DL14'])){
 
-            $movimientoRegistral = MovimientoRegistral::find($data['movimiento_registral']);
+            if(isset($request['folio_real'])){
 
-            $movimientoRegistral->update([
-                'estado' => 'nuevo',
-                'monto' => $movimientoRegistral->monto + (float)$data['monto'],
-                'fecha_entrega' => $this->recalcularFechaEntrega($data['tipo_servicio']),
-                'tipo_servicio' => $data['tipo_servicio'],
-            ]);
+                return $asignacion_service->obtenerCertificador($request['distrito'], $request['solicitante'], $request['tipo_servicio'], false);
 
-            $movimientoRegistral->certificacion->update(['numero_paginas' => $movimientoRegistral->certificacion->numero_paginas + (int)$data['numero_paginas']]);
+            }else{
 
-        } catch (\Throwable $th) {
+                return $asignacion_service->obtenerCopiador($request['distrito'], false);
 
-            Log::error('Error al ingresar el trámite: ' . $request['año'] . '-' . $request['tramite'] . '-' . $request['usuario'] . ' desde Sistema Trámites. ' . $th);
-
-            throw new CertificacionServiceException('Error al ingresar el trámite: ' . $request['año'] . '-' . $request['tramite'] . '-' . $request['usuario'] . ' desde Sistema Trámites.');
+            }
 
         }
+
+        /* Certificaciones: Consultas */
+        if(in_array($request['servicio'], ['DC90', 'DC91', 'DC92', 'DC93'])){
+
+            return $asignacion_service->obtenerUsuarioConsulta($request['distrito']);
+
+        }
+
+        /* Certificaciones: Gravamen */
+        if($request['servicio'] == 'DL07'){
+
+            return $asignacion_service->obtenerCertificadorGravamen($request['distrito'], $request['solicitante'], $request['tipo_servicio'], false, isset($request['folio_real']));
+
+        }
+
+        /* Certificaciones: Propiedad */
+        if(in_array($request['servicio'], ['DL10'])){
+
+            return $asignacion_service->obtenerCertificadorPropiedad($request['distrito'], false);
+
+        }
+
+        return null;
+
+    }
+
+    public function obtenerSupervisorAsignado(array $request):int
+    {
+
+        return (new AsignacionService())->obtenerSupervisorCertificaciones($request['distrito']);
+
+    }
+
+    public function corregir(MovimientoRegistral $movimientoRegistral):void
+    {}
+
+    public function actualizarPaginas(array $request):void
+    {
+
+        $movimientoRegistral = MovimientoRegistral::find($request['movimiento_registral']);
+
+        $movimientoRegistral->update([
+            'estado' => 'nuevo',
+            'monto' => $movimientoRegistral->monto + (float)$request['monto'],
+            'fecha_entrega' => $this->recalcularFechaEntrega($request['tipo_servicio']),
+            'tipo_servicio' => $request['tipo_servicio'],
+        ]);
+
+        $movimientoRegistral->certificacion->update(['numero_paginas' => $movimientoRegistral->certificacion->numero_paginas + (int)$request['numero_paginas']]);
 
     }
 
@@ -69,7 +101,7 @@ class CertificacionesService{
 
         if(in_array($request['servicio'], ['DL13', 'DL14']) && isset($request['folio_real'])){
 
-            MovimientoRegistral::find($request['movimiento_registral'])->update(['estado' => 'elaborado']);
+            MovimientoRegistral::find($request['movimiento_registral_id'])->update(['estado' => 'elaborado']);
 
         }
 
@@ -77,14 +109,15 @@ class CertificacionesService{
             'servicio' => $request['servicio'],
             'numero_paginas' => $request['numero_paginas'],
             'observaciones' => $request['observaciones'] ?? null,
-            'movimiento_registral_id' => $request['movimiento_registral'],
+            'movimiento_registral_id' => $request['movimiento_registral_id'],
             'folio_real' => $request['folio_real'] ?? null,
             'movimiento_registral' => $request['asiento_registral'] ?? null,
         ];
 
     }
 
-    public function recalcularFechaEntrega($tipo_servicio){
+    public function recalcularFechaEntrega($tipo_servicio):string
+    {
 
         if($tipo_servicio == 'ordinario'){
 

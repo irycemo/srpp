@@ -2,44 +2,37 @@
 
 namespace App\Http\Services;
 
-use Illuminate\Support\Facades\Log;
-use App\Exceptions\InscripcionesServiceException;
 use App\Models\Sentencia;
+use App\Models\MovimientoRegistral;
+use App\Http\Services\MovimientoServiceInterface;
+use App\Traits\Inscripciones\RevisarFolioMatrizTrait;
 
-class SentenciasService{
+class SentenciasService implements MovimientoServiceInterface{
 
-    public function store(array $request){
+    use RevisarFolioMatrizTrait;
 
-        try {
+    public function crear(array $request):void
+    {
 
-            Sentencia::create([
-                'servicio' => $request['servicio'],
-                'movimiento_registral_id' => $request['movimiento_registral'],
-            ]);
-
-        } catch (\Throwable $th) {
-
-            Log::error('Error al ingresar el trámite: ' . $request['año'] . '-' . $request['tramite'] . '-' . $request['usuario'] . ' desde Sistema Trámites. ' . $th);
-
-            throw new InscripcionesServiceException('Error al ingresar cancelación de gravamen con trámite: ' . $request['año'] . '-' . $request['tramite'] . '-' . $request['usuario'] . ' desde Sistema Trámites.');
-
-        }
+        Sentencia::create([
+            'servicio' => $request['servicio'],
+            'movimiento_registral_id' => $request['movimiento_registral_id'],
+        ]);
 
     }
 
-    public function corregir(Sentencia $sentencia){
+    public function obtenerUsuarioAsignado(array $request):int | null
+    {
+        return (new AsignacionService())->obtenerUsuarioSentencias(isset($request['folio_real']), $request['distrito'], $request['estado']);
+    }
 
-        if($sentencia->acto_contenido == 'SENTENCIA RECTIFICACTORIA'){
+    public function obtenerSupervisorAsignado(array $request):int
+    {
+        return (new AsignacionService())->obtenerSupervisorInscripciones($request['distrito']);
+    }
 
-        }elseif($sentencia->acto_contenido == 'CANCELACIÓN DE SENTENCIA'){
-
-        }elseif(in_array($sentencia->acto_contenido, ['RESOLUCIÓN', 'DEMANDA', 'PROVIDENCIA PRECAUTORIA'])){
-
-        }else{
-
-            throw new InscripcionesServiceException('El acto contenido no esta registrado para corrección.');
-
-        }
+    public function corregir(MovimientoRegistral $movimientoRegistral):void
+    {
 
     }
 

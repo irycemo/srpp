@@ -33,4 +33,10 @@ return [
         'ruta_documento_entrada' => 'srpp/documento_entrada',
     ],
 
+    'sistema_tramites' => [
+        'token' => env('SISTEMA_TRAMITES_TOKEN'),
+        'finaliar_tramite' => env('SISTEMA_TRAMITES_FINALIZAR'),
+        'rechazar_tramite' => env('SISTEMA_TRAMITES_RECHAZAR'),
+    ],
+
 ];

@@ -730,8 +730,7 @@ class PaseFolio extends Component
 
             $movimientos = MovimientoRegistral::select('id', 'folio', 'folio_real', 'año', 'tramite', 'usuario', 'actualizado_por', 'usuario_asignado', 'usuario_supervisor', 'estado', 'distrito', 'created_at', 'updated_at', 'tomo', 'registro', 'numero_propiedad')
                                                     ->with('actualizadoPor:id,name', 'asignadoA:id,name', 'folioReal:id,folio,estado', 'supervisor:id,name')
-                                                    ->doesnthave('reformaMoral')
-                                                    ->whereIn('folio', [0, 1])
+                                                    ->where('pase_a_folio', true)
                                                     ->whereIn('estado', ['nuevo', 'correccion', 'no recibido'])
                                                     ->where(function($q){
                                                         $q->whereNull('folio_real')
@@ -744,14 +743,12 @@ class PaseFolio extends Component
                                                     ->when($this->filters['usuario'] && $this->filters['usuario'] != '', fn($q) => $q->where('usuario', $this->filters['usuario']))
                                                     ->when($this->filters['folio_real'], function($q){
                                                         $q->whereHas('folioreal', function ($q){
-                                                            $q->where('folio', $this->filters['folio_real']);
+                                                            $q->select('id', 'folio')
+                                                                ->where('folio', $this->filters['folio_real']);
                                                         });
                                                     })
                                                     ->when($this->filters['folio'] && $this->filters['folio'] != '', fn($q) => $q->where('folio', $this->filters['folio']))
                                                     ->when($this->filters['estado'] && $this->filters['estado'] != '', fn($q) => $q->where('estado', $this->filters['estado']))
-                                                    ->whereDoesntHave('certificacion', function($q){
-                                                        $q->whereNotIn('servicio', ['DL07', 'DL10']);
-                                                    })
                                                     ->orderBy($this->sort, $this->direction)
                                                     ->paginate($this->pagination);
 
@@ -759,11 +756,11 @@ class PaseFolio extends Component
 
             $movimientos = MovimientoRegistral::select('id', 'folio', 'folio_real', 'año', 'tramite', 'usuario', 'actualizado_por', 'usuario_asignado', 'usuario_supervisor', 'estado', 'distrito', 'created_at', 'updated_at', 'tomo', 'registro', 'numero_propiedad')
                                                     ->with('actualizadoPor:id,name', 'asignadoA:id,name', 'folioReal:id,folio,estado', 'supervisor:id,name')
-                                                    ->doesnthave('reformaMoral')
-                                                    ->whereIn('folio', [0, 1])
+                                                    ->where('pase_a_folio', true)
                                                     ->whereIn('estado', ['nuevo', 'correccion', 'no recibido'])
                                                     ->where(function($q){
-                                                        $q->whereNull('folio_real')
+                                                        $q->select('id', 'folio', 'estado')
+                                                            ->whereNull('folio_real')
                                                             ->orWhereHas('folioReal', function($q){
                                                                 $q->whereIn('estado', ['nuevo', 'captura', 'elaborado', 'rechazado', 'pendiente']);
                                                             });
@@ -773,7 +770,8 @@ class PaseFolio extends Component
                                                     ->when($this->filters['usuario'] && $this->filters['usuario'] != '', fn($q) => $q->where('usuario', $this->filters['usuario']))
                                                     ->when($this->filters['folio_real'], function($q){
                                                         $q->whereHas('folioreal', function ($q){
-                                                            $q->where('folio', $this->filters['folio_real']);
+                                                            $q->select('id', 'folio')
+                                                                ->where('folio', $this->filters['folio_real']);
                                                         });
                                                     })
                                                     ->when($this->filters['folio'] && $this->filters['folio'] != '', fn($q) => $q->where('folio', $this->filters['folio']))
@@ -791,13 +789,13 @@ class PaseFolio extends Component
 
             $movimientos = MovimientoRegistral::select('id', 'folio', 'folio_real', 'año', 'tramite', 'usuario', 'actualizado_por', 'usuario_asignado', 'usuario_supervisor', 'estado', 'distrito', 'created_at', 'updated_at', 'tomo', 'registro', 'numero_propiedad')
                                                     ->with('actualizadoPor:id,name', 'asignadoA:id,name', 'folioReal:id,folio,estado', 'supervisor:id,name')
-                                                    ->doesnthave('reformaMoral')
-                                                    ->whereIn('folio', [0, 1])
+                                                    ->where('pase_a_folio', true)
                                                     ->whereIn('estado', ['nuevo', 'correccion', 'no recibido'])
                                                     ->where(function($q){
                                                         $q->whereNull('folio_real')
                                                             ->orWhereHas('folioReal', function($q){
-                                                                $q->whereIn('estado', ['nuevo', 'captura', 'elaborado', 'rechazado', 'pendiente']);
+                                                                $q->select('id', 'estado')
+                                                                    ->whereIn('estado', ['nuevo', 'captura', 'elaborado', 'rechazado', 'pendiente']);
                                                             });
                                                     })
                                                     ->when($this->filters['año'] && $this->filters['año'] != '', fn($q) => $q->where('año', $this->filters['año']))
@@ -805,7 +803,8 @@ class PaseFolio extends Component
                                                     ->when($this->filters['usuario'] && $this->filters['usuario'] != '', fn($q) => $q->where('usuario', $this->filters['usuario']))
                                                     ->when($this->filters['folio_real'], function($q){
                                                         $q->whereHas('folioreal', function ($q){
-                                                            $q->where('folio', $this->filters['folio_real']);
+                                                            $q->select('id', 'folio')
+                                                                ->where('folio', $this->filters['folio_real']);
                                                         });
                                                     })
                                                     ->when($this->filters['folio'] && $this->filters['folio'] != '', fn($q) => $q->where('folio', $this->filters['folio']))
@@ -816,17 +815,13 @@ class PaseFolio extends Component
                                                     ->when(auth()->user()->ubicacion != 'Regional 4', function($q){
                                                         $q->where('distrito', '!=', 2);
                                                     })
-                                                    ->whereDoesntHave('certificacion', function($q){
-                                                        $q->whereNotIn('servicio', ['DL07', 'DL10']);
-                                                    })
                                                     ->orderBy($this->sort, $this->direction)
                                                     ->paginate($this->pagination);
         }else{
 
             $movimientos = MovimientoRegistral::select('id', 'folio', 'folio_real', 'año', 'tramite', 'usuario', 'actualizado_por', 'usuario_asignado', 'usuario_supervisor', 'estado', 'distrito', 'created_at', 'updated_at', 'tomo', 'registro', 'numero_propiedad')
                                                     ->with('actualizadoPor:id,name', 'asignadoA:id,name', 'folioReal:id,folio,estado', 'supervisor:id,name')
-                                                    ->doesnthave('reformaMoral')
-                                                    ->whereIn('folio', [0, 1])
+                                                    ->where('pase_a_folio', true)
                                                     ->whereIn('estado', ['nuevo', 'correccion', 'no recibido'])
                                                     ->where(function($q){
                                                         $q->whereNull('folio_real')

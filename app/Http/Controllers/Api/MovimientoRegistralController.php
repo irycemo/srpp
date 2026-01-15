@@ -2,40 +2,47 @@
 
 namespace App\Http\Controllers\Api;
 
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
+use App\Exceptions\GeneralException;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\MovimientoRegistralRequest;
-use App\Exceptions\MovimientoRegistralServiceException;
-use App\Http\Requests\MovimientoRegistralCambiarTipoServicioRequest;
-use App\Http\Requests\MovimientoRegistralUpdateRequest;
 use App\Http\Services\MovimientoRegistralService;
+use App\Http\Requests\MovimientoRegistralUpdateRequest;
+use App\Http\Requests\MovimientoRegistralCambiarTipoServicioRequest;
 
 
 class MovimientoRegistralController extends Controller
 {
 
-    public function __construct(public MovimientoRegistralService $movimientoRegistralService){}
-
     public function store(MovimientoRegistralRequest $request)
     {
 
+        $validated = $request->validated();
+
         try {
 
-            $data = $this->movimientoRegistralService->store($request);
+            $movimientoRegistral = null;
+
+            DB::transaction(function () use($validated, &$movimientoRegistral){
+
+                $movimientoRegistral = (new MovimientoRegistralService($validated['categoria_servicio']))->crear($validated);
+
+            });
 
             return response()->json([
-                'result' => 'success',
-                'data' => $data,
-                'usuario_asignado' => $data?->asignadoA->name
+                'data' => [
+                    'id' => $movimientoRegistral?->id,
+                    'usuario_asignado' => $movimientoRegistral?->asignadoA->name
+                ],
             ], 200);
 
-        } catch (MovimientoRegistralServiceException $th) {
+        } catch (GeneralException $th) {
 
             Log::error('Error al ingresar el trámite: ' . $request->año . '-' . $request->tramite . '-' . $request->usuario . ' desde Sistema Trámites. ' . $th);
 
             return response()->json([
-                'result' => 'error',
-                'data' => $th->getMessage(),
+                'error' => $th->getMessage(),
             ], 500);
 
         }catch (\Throwable $th) {
@@ -43,8 +50,7 @@ class MovimientoRegistralController extends Controller
             Log::error('Error al ingresar el trámite: ' . $request->año . '-' . $request->tramite  . '-' . $request->usuario .' desde Sistema Trámites. ' . $th);
 
             return response()->json([
-                'result' => 'error',
-                'data' => $th->getMessage(),
+                'error' => 'Error al actualizar el trámite: ' . $request->año . '-' . $request->tramite . '-' . $request->usuario . ' en Sistema RPP.',
             ], 500);
 
         }
@@ -53,20 +59,26 @@ class MovimientoRegistralController extends Controller
 
     public function update(MovimientoRegistralUpdateRequest $request){
 
+        $validated = $request->validated();
+
         try {
 
-            $this->movimientoRegistralService->update($request);
+            DB::transaction(function () use($validated){
+
+                (new MovimientoRegistralService($validated['categoria_servicio']))->actualizar($validated);
+
+            });
 
             return response()->json([
-                'result' => 'success',
                 'data' => []
             ], 200);
 
-        } catch (MovimientoRegistralServiceException $th) {
+        } catch (GeneralException $th) {
+
+            Log::error('Error al actualizar el trámite: ' . $request->año . '-' . $request->tramite . '-' . $request->usuario . ' desde Sistema Trámites. ' . $th);
 
             return response()->json([
-                'result' => 'error',
-                'data' => $th->getMessage(),
+                'error' => $th->getMessage(),
             ], 500);
 
         } catch (\Throwable $th) {
@@ -74,8 +86,7 @@ class MovimientoRegistralController extends Controller
             Log::error('Error al actualizar el trámite: ' . $request->año . '-' . $request->tramite . '-' . $request->usuario . ' desde Sistema Trámites. ' . $th);
 
             return response()->json([
-                'result' => 'error',
-                'data' => $th->getMessage(),
+                'error' => 'Error al actualizar el trámite: ' . $request->año . '-' . $request->tramite . '-' . $request->usuario . ' en Sistema RPP.',
             ], 500);
 
         }
@@ -84,22 +95,26 @@ class MovimientoRegistralController extends Controller
 
     public function cambiarTipoServicio(MovimientoRegistralCambiarTipoServicioRequest $request){
 
+        $validated = $request->validated();
+
         try {
 
-            $this->movimientoRegistralService->cambiarTipoServicio($request);
+            DB::transaction(function () use($validated){
+
+                (new MovimientoRegistralService($validated['categoria_servicio']))->cambiarTipoServicio($validated);
+
+            });
 
             return response()->json([
-                'result' => 'success',
                 'data' => []
             ], 200);
 
-        } catch (MovimientoRegistralServiceException $th) {
+        } catch (GeneralException $th) {
 
             Log::error('Error al actualizar el trámite: ' . $request->año . '-' . $request->tramite . '-' . $request->usuario . ' desde Sistema Trámites. ' . $th);
 
             return response()->json([
-                'result' => 'error',
-                'data' => $th->getMessage(),
+                'derrorata' => $th->getMessage(),
             ], 500);
 
         } catch (\Throwable $th) {
@@ -107,8 +122,7 @@ class MovimientoRegistralController extends Controller
             Log::error('Error al actualizar el trámite: ' . $request->año . '-' . $request->tramite . '-' . $request->usuario . ' desde Sistema Trámites. ' . $th);
 
             return response()->json([
-                'result' => 'error',
-                'data' => 'Error al actualizar el trámite: ' . $request->año . '-' . $request->tramite . '-' . $request->usuario . ' en Sistema RPP.',
+                'error' => 'Error al actualizar el trámite: ' . $request->año . '-' . $request->tramite . '-' . $request->usuario . ' en Sistema RPP.',
             ], 500);
 
         }

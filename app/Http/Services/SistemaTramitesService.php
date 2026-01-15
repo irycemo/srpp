@@ -3,33 +3,39 @@
 namespace App\Http\Services;
 
 use Illuminate\Support\Facades\Log;
+use App\Exceptions\GeneralException;
 use Illuminate\Support\Facades\Http;
-use App\Exceptions\SistemaTramitesServiceException;
-
 
 class SistemaTramitesService{
 
-    public $token;
-
-    public function __construct()
-    {
-        $this->token = env('SISTEMA_TRAMITES_TOKEN');
-    }
-
     public function finaliarTramite($año, $tramite, $usuario, $estado){
 
-        $url = env('SISTEMA_TRAMITES_FINALIZAR');
+        $response = Http::withToken(config('services.sistema_tramites.token'))
+                            ->accept('application/json')
+                            ->asForm()
+                            ->post(
+                                config('services.sistema_tramites.finaliar_tramite'),
+                                [
+                                    'año' => $año,
+                                    'tramite' => $tramite,
+                                    'usuario' => $usuario,
+                                    'estado' => $estado,
+                                ]
+                            );
 
-        $response = Http::withToken($this->token)->acceptJson()->asForm()->post($url, [
-            'año' => $año,
-            'tramite' => $tramite,
-            'usuario' => $usuario,
-            'estado' => $estado,
-        ]);
+        if($response->status() !== 200){
 
-        if($response->status() != 200){
+            Log::error("Error al finalizar trámite en Sistema Trámites, tramite: " . $tramite->año . '-' . $tramite->numero_control . '-' . $tramite->usuario . " por el usuario: (id: " . auth()->user()->id . ") " . auth()->user()->name . ". " . $response);
 
-            throw new SistemaTramitesServiceException('Error al enviar trámite actualizado al sistema trámites.' . $response);
+            $data = json_decode($response, true);
+
+            if(isset($data['error'])){
+
+                throw new GeneralException($data['error']);
+
+            }
+
+            throw new GeneralException("Error al finalizar trámite en Sistema Trámites.");
 
         }
 
@@ -37,21 +43,33 @@ class SistemaTramitesService{
 
     public function rechazarTramite($año, $tramite, $usuario, $observaciones){
 
-        $url = env('SISTEMA_TRAMITES_RECHAZAR');
+        $response = Http::withToken(config('services.sistema_tramites.token'))
+                            ->accept('application/json')
+                            ->asForm()
+                            ->post(
+                                config('services.sistema_tramites.rechazar_tramite'),
+                                [
+                                    'año' => $año,
+                                    'tramite' => $tramite,
+                                    'usuario' => $usuario,
+                                    'observaciones' => $observaciones,
+                                    'estado' => 'rechazado'
+                                ]
+                            );
 
-        $response = Http::withToken($this->token)->acceptJson()->asForm()->post($url, [
-            'año' => $año,
-            'tramite' => $tramite,
-            'usuario' => $usuario,
-            'observaciones' => $observaciones,
-            'estado' => 'rechazado'
-        ]);
+        if($response->status() !== 200){
 
-        if($response->status() != 200){
+            Log::error("Error al rechazar trámite en Sistema Trámites, tramite: " . $tramite->año . '-' . $tramite->numero_control . '-' . $tramite->usuario . " por el usuario: (id: " . auth()->user()->id . ") " . auth()->user()->name . ". " . $response);
 
-            Log::error('Error al enviar tramite rechazado al sistema trámites.' . $response);
+            $data = json_decode($response, true);
 
-            throw new SistemaTramitesServiceException('Error al enviar tramite rechazado al sistema trámites.' . $response);
+            if(isset($data['error'])){
+
+                throw new GeneralException($data['error']);
+
+            }
+
+            throw new GeneralException("Error al rechazar trámite en Sistema Trámites.");
 
         }
 

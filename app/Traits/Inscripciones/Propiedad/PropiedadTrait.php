@@ -250,6 +250,7 @@ trait PropiedadTrait{
         $movimiento = MovimientoRegistral::create([
             'estado' => 'nuevo',
             'folio' => 1,
+            'pase_a_folio' => true,
             'folio_real' => $folioRealNuevo->id,
             'fecha_prelacion' => $this->inscripcion->movimientoRegistral->fecha_prelacion,
             'fecha_entrega' => $this->inscripcion->movimientoRegistral->fecha_entrega,

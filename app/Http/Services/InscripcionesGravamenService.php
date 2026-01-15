@@ -2,30 +2,37 @@
 
 namespace App\Http\Services;
 
-use Illuminate\Support\Facades\Log;
-use App\Exceptions\CertificacionServiceException;
 use App\Models\Gravamen;
+use App\Models\MovimientoRegistral;
+use App\Http\Services\MovimientoServiceInterface;
+use App\Traits\Inscripciones\RevisarFolioMatrizTrait;
 
-class InscripcionesGravamenService{
+class InscripcionesGravamenService implements MovimientoServiceInterface{
 
-    public function store(array $request){
+    use RevisarFolioMatrizTrait;
 
-        try {
+    public function crear(array $request):void
+    {
 
-            Gravamen::create([
-                'estado' => 'nuevo',
-                'servicio' => $request['servicio'],
-                'movimiento_registral_id' => $request['movimiento_registral'],
-            ]);
-
-        } catch (\Throwable $th) {
-
-            Log::error('Error al ingresar el trámite: ' . $request['año'] . '-' . $request['tramite'] . '-' . $request['usuario'] . ' desde Sistema Trámites. ' . $th);
-
-            throw new CertificacionServiceException('Error al ingresar inscripción de gravamen con trámite: ' . $request['año'] . '-' . $request['tramite'] . '-' . $request['usuario'] . ' desde Sistema Trámites.');
-
-        }
+        Gravamen::create([
+            'estado' => 'nuevo',
+            'servicio' => $request['servicio'],
+            'movimiento_registral_id' => $request['movimiento_registral_id'],
+        ]);
 
     }
+
+    public function obtenerUsuarioAsignado(array $request):int | null
+    {
+        return (new AsignacionService())->obtenerUsuarioGravamen(isset($request['folio_real']), $request['distrito'], $request['estado']);
+    }
+
+    public function obtenerSupervisorAsignado(array $request):int
+    {
+        return (new AsignacionService())->obtenerSupervisorInscripciones($request['distrito']);
+    }
+
+    public function corregir(MovimientoRegistral $movimientoRegistral):void
+    {}
 
 }

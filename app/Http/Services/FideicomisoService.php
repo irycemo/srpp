@@ -4,51 +4,36 @@ namespace App\Http\Services;
 
 use App\Models\Fideicomiso;
 use App\Models\MovimientoRegistral;
-use Illuminate\Support\Facades\Log;
 use App\Exceptions\InscripcionesServiceException;
+use App\Http\Services\MovimientoServiceInterface;
 use App\Traits\Inscripciones\RecuperarPredioTrait;
 
-class FideicomisoService{
+class FideicomisoService implements MovimientoServiceInterface{
 
     use RecuperarPredioTrait;
 
-    public function store(array $request)
+    public function crear(array $request):void
     {
 
-        try {
-
-            Fideicomiso::create([
-                'estado' => 'nuevo',
-                'movimiento_registral_id' => $request['movimiento_registral'],
-            ]);
-
-        } catch (\Throwable $th) {
-
-            Log::error('Error al ingresar inscripción de propiedad con el trámite: ' . $request['año'] . '-' . $request['tramite'] . '-' . $request['usuario'] . ' desde Sistema Trámites. ' . $th);
-
-            throw new InscripcionesServiceException('Error al ingresar inscripción de propiedad con el trámite: ' . $request['año'] . '-' . $request['tramite'] . '-' . $request['usuario'] . ' desde Sistema Trámites.');
-
-        }
+        Fideicomiso::create([
+            'estado' => 'nuevo',
+            'movimiento_registral_id' => $request['movimiento_registral_id'],
+        ]);
 
     }
 
-    public function validaciones($movimientoRegistral){
-
-        $movimiento = $movimientoRegistral->folioReal
-                                            ->movimientosRegistrales()
-                                            ->where('folio', ($movimientoRegistral->folio + 1))
-                                            ->whereNotIn('estado', ['nuevo', 'correccion', 'pase_folio', 'no recibido'])
-                                            ->first();
-
-        if($movimiento) throw new InscripcionesServiceException("El folio real tiene movimientos registrales posteriores elaborados.");
-
-        $movimiento = MovimientoRegistral::where('movimiento_padre', $movimientoRegistral->id)->first();
-
-        if($movimiento) throw new InscripcionesServiceException("Este movimiento generó un folio real nuevo.");
-
+    public function obtenerUsuarioAsignado(array $request):int | null
+    {
+        return null;
     }
 
-    public function corregir(MovimientoRegistral $movimiento){
+    public function obtenerSupervisorAsignado(array $request):int
+    {
+        return 0;
+    }
+
+    public function corregir(MovimientoRegistral $movimiento):void
+    {
 
         $this->validaciones($movimiento);
 
@@ -68,6 +53,22 @@ class FideicomisoService{
         }
 
         $movimiento->audits()->latest()->first()->update(['tags' => 'Cambio estado a corrección']);
+
+    }
+
+    public function validaciones($movimientoRegistral){
+
+        $movimiento = $movimientoRegistral->folioReal
+                                            ->movimientosRegistrales()
+                                            ->where('folio', ($movimientoRegistral->folio + 1))
+                                            ->whereNotIn('estado', ['nuevo', 'correccion', 'pase_folio', 'no recibido'])
+                                            ->first();
+
+        if($movimiento) throw new InscripcionesServiceException("El folio real tiene movimientos registrales posteriores elaborados.");
+
+        $movimiento = MovimientoRegistral::where('movimiento_padre', $movimientoRegistral->id)->first();
+
+        if($movimiento) throw new InscripcionesServiceException("Este movimiento generó un folio real nuevo.");
 
     }
 

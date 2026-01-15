@@ -347,8 +347,6 @@ class CopiasSimples extends Component
 
         $this->años = Constantes::AÑOS;
 
-        $this->año = now()->format('Y');
-
         $this->usuarios_regionales = Constantes::USUARIOS_REGIONALES;
 
     }

@@ -4,44 +4,51 @@ namespace App\Http\Services;
 
 use App\Models\FolioReal;
 use App\Models\Cancelacion;
-use Illuminate\Support\Facades\Log;
-use App\Exceptions\CertificacionServiceException;
+use App\Models\MovimientoRegistral;
+use App\Http\Services\MovimientoServiceInterface;
+use App\Traits\Inscripciones\RevisarFolioMatrizTrait;
 
-class InscripcionesCancelacionService{
+class InscripcionesCancelacionService implements MovimientoServiceInterface{
 
-    public function store(array $request){
+    use RevisarFolioMatrizTrait;
 
-        try {
+    public function crear(array $request):void
+    {
 
-            if(isset($request['asiento_registral'])){
+        if(isset($request['asiento_registral'])){
 
-                $gravamen = FolioReal::where('folio', $request['folio_real'])
-                                        ->first()
-                                        ->movimientosRegistrales()
-                                        ->where('folio', $request['asiento_registral'])
-                                        ->first()
-                                        ->id;
+            $gravamen = FolioReal::where('folio', $request['folio_real'])
+                                    ->first()
+                                    ->movimientosRegistrales()
+                                    ->where('folio', $request['asiento_registral'])
+                                    ->first()
+                                    ->id;
 
-            }else{
+        }else{
 
-                $gravamen = null;
-
-            }
-
-            Cancelacion::create([
-                'gravamen' => $gravamen,
-                'servicio' => $request['servicio'],
-                'movimiento_registral_id' => $request['movimiento_registral'],
-            ]);
-
-        } catch (\Throwable $th) {
-
-            Log::error('Error al ingresar el trámite: ' . $request['año'] . '-' . $request['tramite'] . '-' . $request['usuario'] . ' desde Sistema Trámites. ' . $th);
-
-            throw new CertificacionServiceException('Error al ingresar cancelación de gravamen con trámite: ' . $request['año'] . '-' . $request['tramite'] . '-' . $request['usuario'] . ' desde Sistema Trámites.');
+            $gravamen = null;
 
         }
 
+        Cancelacion::create([
+            'gravamen' => $gravamen,
+            'servicio' => $request['servicio'],
+            'movimiento_registral_id' => $request['movimiento_registral_id'],
+        ]);
+
     }
+
+    public function obtenerUsuarioAsignado(array $request):int | null
+    {
+        return (new AsignacionService())->obtenerUsuarioCancelacion(isset($request['folio_real']), $request['distrito'], $request['estado']);
+    }
+
+    public function obtenerSupervisorAsignado(array $request):int
+    {
+        return (new AsignacionService())->obtenerSupervisorInscripciones($request['distrito']);
+    }
+
+    public function corregir(MovimientoRegistral $movimientoRegistral):void
+    {}
 
 }

@@ -22,6 +22,7 @@ class MovimientoRegistralCambiarTipoServicioRequest extends FormRequest
     public function rules(): array
     {
         return [
+            'categoria_servicio' => 'required',
             'movimiento_registral' => 'required',
             'tipo_servicio' => 'required',
             'monto' => 'required'
