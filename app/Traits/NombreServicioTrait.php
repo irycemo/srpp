@@ -9,13 +9,13 @@ trait NombreServicioTrait{
     public function nombreServicio($año, $tramite, $usuario){
 
         $response = Http::acceptJson()
-                        ->withToken(env('SISTEMA_TRAMITES_TOKEN'))
+                        ->withToken(config('services.sistema_tramites.token'))
                         ->withQueryParameters([
                             'ano' => $año,
                             'numero_control' => $tramite,
                             'usuario' => $usuario
                         ])
-                        ->get(env('SISTEMA_TRAMITES_CONSULTAR_SERVICIO'));
+                        ->get(config('services.sistema_tramites.consultar_servicio'));
 
         $data = json_decode($response, true);
 

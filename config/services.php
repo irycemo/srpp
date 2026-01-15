@@ -37,6 +37,8 @@ return [
         'token' => env('SISTEMA_TRAMITES_TOKEN'),
         'finaliar_tramite' => env('SISTEMA_TRAMITES_FINALIZAR'),
         'rechazar_tramite' => env('SISTEMA_TRAMITES_RECHAZAR'),
+        'consultar_archivo' => env('SISTEMA_TRAMITES_CONSULTAR_ARCHIVO'),
+        'consultar_servicio' => env('SISTEMA_TRAMITES_CONSULTAR_SERVICIO'),
     ],
 
 ];

@@ -52,10 +52,10 @@ trait PropiedadTrait{
 
             try {
 
-                $response = Http::withToken(env('SISTEMA_TRAMITES_TOKEN'))
+                $response = Http::withToken(config('services.sistema_tramites.token'))
                                     ->accept('application/json')
                                     ->asForm()
-                                    ->post(env('SISTEMA_TRAMITES_CONSULTAR_ARCHIVO'), [
+                                    ->post(config('services.sistema_tramites.consultar_archivo'), [
                                                                                         'año' => $this->inscripcion->movimientoRegistral->año,
                                                                                         'tramite' => $this->inscripcion->movimientoRegistral->tramite,
                                                                                         'usuario' => $this->inscripcion->movimientoRegistral->usuario,
@@ -71,6 +71,16 @@ trait PropiedadTrait{
                     $filename = basename($data['url']);
 
                     Storage::disk('documento_entrada')->put($filename, $contents);
+
+                    if(app()->isProduction()){
+
+                        Storage::disk('documento_entrada')->put(config('services.ses.ruta_documento_entrada'). $filename, $contents);
+
+                    }else{
+
+                        Storage::disk('documento_entrada')->put($filename, $contents);
+
+                    }
 
                     File::create([
                         'fileable_id' => $this->inscripcion->movimientoRegistral->id,
