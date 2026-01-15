@@ -15,7 +15,7 @@ class CertificacionesService implements MovimientoServiceInterface{
 
         if($request['servicio_nombre'] == 'Certificado negativo de vivienda bienestar' && $request['solicitante'] == 'Vivienda Bienestar'){
 
-            $movimientoRegistral = MovimientoRegistral::find($request['movimiento_registral']);
+            $movimientoRegistral = MovimientoRegistral::find($request['movimiento_registral_id']);
 
             $movimientoRegistral->update([
                 'tipo_servicio' => 'extra_urgente',
