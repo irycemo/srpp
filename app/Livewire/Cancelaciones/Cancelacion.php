@@ -17,6 +17,7 @@ use Spatie\LivewireFilepond\WithFilePond;
 use App\Models\Cancelacion as ModelCancelacion;
 use Illuminate\Http\Client\ConnectionException;
 use App\Http\Controllers\Cancelaciones\CancelacionController;
+use App\Traits\Inscripciones\ConsultarArchivoTrait;
 use App\Traits\Inscripciones\DocumentoEntradaTrait;
 
 class Cancelacion extends Component
@@ -25,6 +26,7 @@ class Cancelacion extends Component
     use WithFileUploads;
     use WithFilePond;
     use DocumentoEntradaTrait;
+    use ConsultarArchivoTrait;
 
     public $modalContraseña = false;
     public $modalRechazar = false;
@@ -291,49 +293,7 @@ class Cancelacion extends Component
 
     public function mount(){
 
-        if(!$this->cancelacion->movimientoRegistral->documentoEntrada()){
-
-            try {
-
-                $response = Http::withToken(env('SISTEMA_TRAMITES_TOKEN'))
-                                    ->accept('application/json')
-                                    ->asForm()
-                                    ->post(env('SISTEMA_TRAMITES_CONSULTAR_ARCHIVO'), [
-                                                                                        'año' => $this->cancelacion->movimientoRegistral->año,
-                                                                                        'tramite' => $this->cancelacion->movimientoRegistral->tramite,
-                                                                                        'usuario' => $this->cancelacion->movimientoRegistral->usuario,
-                                                                                        'estado' => 'nuevo'
-                                                                                    ]);
-
-                $data = collect(json_decode($response, true));
-
-                if($response->status() == 200){
-
-                    $contents = file_get_contents($data['url']);
-
-                    $filename = basename($data['url']);
-
-                    Storage::disk('documento_entrada')->put($filename, $contents);
-
-                    File::create([
-                        'fileable_id' => $this->cancelacion->movimientoRegistral->id,
-                        'fileable_type' => 'App\Models\MovimientoRegistral',
-                        'descripcion' => 'documento_entrada',
-                        'url' => $filename
-                    ]);
-
-                }
-
-            } catch (ConnectionException $th) {
-
-                Log::error("Error al cargar archivo en cancelación: (id: " . auth()->user()->id . ") " . auth()->user()->name . ". " . $th);
-
-                $this->dispatch('mostrarMensaje', ['error', "Ha ocurrido un error."]);
-
-            }
-
-        }
-
+        $this->consultarArchivo($this->cancelacion->movimientoRegistral);
 
         if(!$this->cancelacion->gravamen){
 

@@ -1,4 +1,4 @@
-@if($movimiento->estado === 'no recibido' && !auth()->user()->hasRole(['Supervisor inscripciones', 'Supervisor uruapan']))
+@if($movimiento->estado === 'no recibido' && !auth()->user()->hasRole(['Supervisor inscripciones']))
 
     <button
         wire:click="abrirModalRecibirDocumentacion({{  $movimiento->id }})"

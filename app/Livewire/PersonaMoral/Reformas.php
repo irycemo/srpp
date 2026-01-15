@@ -10,11 +10,13 @@ use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Hash;
 use App\Http\Controllers\Reformas\ReformaController;
+use App\Traits\Inscripciones\ConsultarArchivoTrait;
 use App\Traits\Inscripciones\DocumentoEntradaTrait;
 
 class Reformas extends Component
 {
     use DocumentoEntradaTrait;
+    use ConsultarArchivoTrait;
 
     public ReformaMoral $reformaMoral;
 
@@ -212,6 +214,8 @@ class Reformas extends Component
     }
 
     public function mount(){
+
+        $this->consultarArchivo($this->reformaMoral->movimientoRegistral);
 
         $this->actores = Constantes::ACTORES_FOLIO_REAL_PERSONA_MORAL;
 

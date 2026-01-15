@@ -12,6 +12,7 @@ use Illuminate\Support\Facades\Hash;
 use App\Traits\Inscripciones\ColindanciasTrait;
 use App\Traits\Inscripciones\Propiedad\PropiedadTrait;
 use App\Http\Controllers\InscripcionesPropiedad\PropiedadController;
+use App\Traits\Inscripciones\ConsultarArchivoTrait;
 use App\Traits\Inscripciones\DocumentoEntradaTrait;
 use Livewire\WithFileUploads;
 
@@ -22,6 +23,7 @@ class InscripcionGeneral extends Component
     use WithFileUploads;
     use ColindanciasTrait;
     use DocumentoEntradaTrait;
+    use ConsultarArchivoTrait;
 
     public $transmitentes = [];
 
@@ -769,7 +771,7 @@ class InscripcionGeneral extends Component
 
     public function mount(){
 
-        $this->consultarArchivo();
+        $this->consultarArchivo($this->inscripcion->movimientoRegistral);
 
         foreach($this->inscripcion->getAttributes() as $attribute => $value){
 

@@ -11,6 +11,7 @@ use Illuminate\Support\Facades\Hash;
 use Spatie\LivewireFilepond\WithFilePond;
 use App\Traits\Inscripciones\Propiedad\PropiedadTrait;
 use App\Http\Controllers\InscripcionesPropiedad\PropiedadController;
+use App\Traits\Inscripciones\ConsultarArchivoTrait;
 use App\Traits\Inscripciones\RecuperarPropietariosTrait;
 
 class FideicomisoCancelacion extends Component
@@ -18,7 +19,7 @@ class FideicomisoCancelacion extends Component
 
     use WithFilePond;
     use PropiedadTrait;
-    use RecuperarPropietariosTrait;
+    use ConsultarArchivoTrait;
 
     public $inscripcion;
 
@@ -153,6 +154,8 @@ class FideicomisoCancelacion extends Component
     }
 
     public function mount(){
+
+        $this->consultarArchivo($this->inscripcion->movimientoRegistral);
 
         if($this->inscripcion->movimientoRegistral->folioReal->fideicomisoActivo()){
 

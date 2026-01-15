@@ -12,6 +12,7 @@ use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Hash;
 use App\Traits\Inscripciones\Varios\VariosTrait;
 use App\Http\Controllers\Varios\VariosController;
+use App\Traits\Inscripciones\ConsultarArchivoTrait;
 use Spatie\LivewireFilepond\WithFilePond;
 
 class Varios extends Component
@@ -20,6 +21,7 @@ class Varios extends Component
     use WithFileUploads;
     use VariosTrait;
     use WithFilePond;
+    use ConsultarArchivoTrait;
 
     public $actos;
 
@@ -117,7 +119,7 @@ class Varios extends Component
 
     public function mount(){
 
-        $this->consultarArchivo();
+        $this->consultarArchivo($this->vario->movimientoRegistral);
 
         if($this->vario->acto_contenido == 'SEGUNDO AVISO PREVENTIVO'){
 

@@ -13,6 +13,7 @@ use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Hash;
 use Spatie\LivewireFilepond\WithFilePond;
 use App\Http\Controllers\InscripcionesPropiedad\FideicomisoController;
+use App\Traits\Inscripciones\ConsultarArchivoTrait;
 use App\Traits\Inscripciones\DocumentoEntradaTrait;
 
 class Fideicomisos extends Component
@@ -20,6 +21,7 @@ class Fideicomisos extends Component
 
     use WithFilePond;
     use DocumentoEntradaTrait;
+    use ConsultarArchivoTrait;
 
     public Fideicomiso $fideicomiso;
 
@@ -263,6 +265,8 @@ class Fideicomisos extends Component
     }
 
     public function mount(){
+
+        $this->consultarArchivo($this->fideicomiso->movimientoRegistral);
 
         $this->actos = [
             'FIDEICOMISO TRASLATIVO',
