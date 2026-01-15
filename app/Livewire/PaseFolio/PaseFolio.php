@@ -603,7 +603,8 @@ class PaseFolio extends Component
                     'distrito' => $this->distrito,
                     'numero_propiedad' => $this->numero_propiedad,
                     'seccion' => 'Propiedad',
-                    'folio' => 1
+                    'folio' => 1,
+                    'pase_a_folio' => true
                 ]);
 
                 Propiedad::create([
