@@ -20,7 +20,7 @@ class FolioSimplificadoService implements MovimientoServiceInterface{
     public function obtenerUsuarioAsignado(array $request):int|null
     {
 
-         return (new AsignacionService())->obtenerUsuarioPropiedad($request['folio_real'], $request['distrito'], $request['estado']);
+         return (new AsignacionService())->obtenerUsuarioPropiedad(false, $request['distrito'], $request['estado']);
 
     }
 

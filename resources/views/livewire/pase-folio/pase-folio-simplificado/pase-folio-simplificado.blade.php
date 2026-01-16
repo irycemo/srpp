@@ -2,7 +2,7 @@
 
     <div class="mb-2 lg:mb-5">
 
-        <x-header>Asignación de folio</x-header>
+        <x-header>Asignación de folio simplificado</x-header>
 
         <div class="flex justify-between items-center">
 
@@ -76,18 +76,6 @@
                             class="w-full text-left block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 focus:outline-none focus:bg-gray-100"
                             role="menuitem">
                             Reasignarme pase a folio
-                        </button>
-
-                    @endif
-
-                    @if(!auth()->user()->hasRole(['Administrador' , 'Operador']))
-
-                        <button
-                            wire:click="abrirModalNuevoFolio"
-                            wire:loading.attr="disabled"
-                            class="w-full text-left block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 focus:outline-none focus:bg-gray-100"
-                            role="menuitem">
-                            Crear nuevo folio
                         </button>
 
                     @endif
@@ -259,7 +247,7 @@
 
                                     <div x-cloak x-show="open_drop_down" x-on:click="open_drop_down=false" x-on:click.away="open_drop_down=false" class="z-50 origin-top-right absolute right-0 mt-2 w-48 rounded-md shadow-lg py-1 bg-white ring-1 ring-black ring-opacity-5 focus:outline-none" role="menu" aria-orientation="vertical" aria-labelledby="user-menu">
 
-                                        @if($movimiento->estado === 'no recibido' && !auth()->user()->hasRole(['Supervisor inscripciones']))
+                                        @if($movimiento->estado === 'no recibido' && !auth()->user()->hasRole(['Supervisor inscripciones', 'Supervisor uruapan']))
 
                                             <button
                                                 wire:click="abrirModalRecibirDocumentacion({{  $movimiento->id }})"
@@ -289,7 +277,7 @@
 
                                                 @if($movimiento->estado !== 'no recibido'  && !in_array($movimiento->folioReal->estado, ['elaborado', 'pendiente']))
 
-                                                    <a class="w-full text-left block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 focus:outline-none focus:bg-gray-100" href="{{ route('elaboracion_folio', $movimiento->id) }}">Elaborar</a>
+                                                    <a class="w-full text-left block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 focus:outline-none focus:bg-gray-100" href="{{ route('elaboracion_folio_simplificado', $movimiento->id) }}">Elaborar</a>
 
                                                 @endif
 
@@ -297,7 +285,7 @@
 
                                                 @if($movimiento->estado !== 'no recibido')
 
-                                                    <a class="w-full text-left block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 focus:outline-none focus:bg-gray-100" href="{{ route('elaboracion_folio', $movimiento->id) }}">Elaborar</a>
+                                                    <a class="w-full text-left block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 focus:outline-none focus:bg-gray-100" href="{{ route('elaboracion_folio_simplificado', $movimiento->id) }}">Elaborar</a>
 
                                                 @endif
 
@@ -330,7 +318,15 @@
                                                     wire:loading.attr="disabled"
                                                     class="w-full text-left block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 focus:outline-none focus:bg-gray-100"
                                                     role="menuitem">
-                                                    Imprimir
+                                                    Imprimir folio real
+                                                </button>
+
+                                                <button
+                                                    wire:click="imprimirInscripcionPropiedad({{ $movimiento->id }})"
+                                                    wire:loading.attr="disabled"
+                                                    class="w-full text-left block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 focus:outline-none focus:bg-gray-100"
+                                                    role="menuitem">
+                                                    Imprimir inscripción de propiedad
                                                 </button>
 
                                             @endif
@@ -413,95 +409,14 @@
 
     </div>
 
-    <x-dialog-modal wire:model="modalNuevoFolio" maxWidth="sm">
-
-        <x-slot name="title">
-
-            Ingresar antecedente
-
-        </x-slot>
-
-        <x-slot name="content">
-
-            <div class="flex flex-col md:flex-row justify-between gap-3 mb-3">
-
-                <x-input-group for="tomo" label="Tomo" :error="$errors->first('tomo')" class="w-full">
-
-                    <x-input-text type="number" id="tomo" wire:model="tomo" />
-
-                </x-input-group>
-
-                <x-input-group for="registro" label="Registro" :error="$errors->first('registro')" class="w-full">
-
-                    <x-input-text type="number" id="registro" wire:model="registro" />
-
-                </x-input-group>
-
-            </div>
-
-            <div class="flex flex-col md:flex-row justify-between gap-3 mb-3">
-
-                <x-input-group for="numero_propiedad" label="Número de propiedad" :error="$errors->first('numero_propiedad')" class="w-full">
-
-                    <x-input-text type="number" id="numero_propiedad" wire:model="numero_propiedad" />
-
-                </x-input-group>
-
-                <x-input-group for="distrito" label="Distrito" :error="$errors->first('distrito')" class="w-full">
-
-                    <x-input-select id="distrito" wire:model="distrito" class="w-full">
-
-                        <option value="">Seleccione una opción</option>
-
-                        @foreach ($distritos as $key => $distrito)
-                            <option value="{{ $key }}">{{ $distrito }}</option>
-                        @endforeach
-
-                    </x-input-select>
-
-                </x-input-group>
-
-            </div>
-
-
-        </x-slot>
-
-        <x-slot name="footer">
-
-            <div class="flex items-center justify-end space-x-3">
-
-                <x-button-blue
-                    wire:click="buscarAntecedente"
-                    wire:loading.attr="disabled"
-                    wire:target="buscarAntecedente">
-
-                    <img wire:loading wire:target="buscarAntecedente" class="mx-auto h-4 mr-1" src="{{ asset('storage/img/loading3.svg') }}" alt="Loading">
-
-                    <span>Crear nuevo folio</span>
-                </x-button-blue>
-
-                <x-button-red
-                    wire:click="$toggle('modalNuevoFolio')"
-                    wire:loading.attr="disabled"
-                    wire:target="$toggle('modalNuevoFolio')"
-                    type="button">
-                    <span>Cerrar</span>
-                </x-button-red>
-
-            </div>
-
-        </x-slot>
-
-    </x-dialog-modal>
-
     @include('livewire.comun.inscripciones.modal-rechazar')
-
-    @include('livewire.comun.inscripciones.modal-finalizar')
-
-    @include('livewire.comun.inscripciones.modal-reasignarme-movimiento-registral')
 
     @include('livewire.comun.inscripciones.modal-recibir-documento')
 
+    @include('livewire.comun.inscripciones.modal-reasignarme-movimiento-registral')
+
     @include('livewire.comun.inscripciones.modal-reasignar-usuario')
+
+    @include('livewire.comun.inscripciones.modal-finalizar')
 
 </div>

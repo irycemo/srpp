@@ -1,4 +1,4 @@
-<x-dialog-modal wire:model="modalReasignarUsuario" maxWidth="sm">
+<x-dialog-modal wire:model="modal_reasignar_usuario" maxWidth="sm">
 
     <x-slot name="title">
 
@@ -55,9 +55,9 @@
             </x-button-blue>
 
             <x-button-red
-                wire:click="$toggle('modalReasignarUsuario')"
+                wire:click="$toggle('modal_reasignar_usuario')"
                 wire:loading.attr="disabled"
-                wire:target="$toggle('modalReasignarUsuario')"
+                wire:target="$toggle('modal_reasignar_usuario')"
                 type="button">
                 Cerrar
             </x-button-red>

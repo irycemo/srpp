@@ -234,6 +234,8 @@ class ConsultasCertificaciones extends Component
 
         $this->años = Constantes::AÑOS;
 
+        $this->año = now()->format('Y');
+
         $this->usuarios = User::whereHas('roles', function($q){
                                         $q->whereIn('name', [
                                             'Certificador',

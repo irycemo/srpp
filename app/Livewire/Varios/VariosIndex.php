@@ -12,6 +12,7 @@ use App\Models\MovimientoRegistral;
 use App\Traits\Inscripciones\InscripcionesIndex;
 use App\Traits\Inscripciones\EnviarMovimientoCorreccion;
 use App\Traits\Inscripciones\RechazarMovimientoTrait;
+use App\Traits\Inscripciones\RecibirDocumentoTrait;
 use App\Traits\Inscripciones\RecuperarPredioTrait;
 use App\Traits\RevisarMovimientosPosterioresTrait;
 
@@ -26,6 +27,7 @@ class VariosIndex extends Component
     use RechazarMovimientoTrait;
     use RecuperarPredioTrait;
     use EnviarMovimientoCorreccion;
+    use RecibirDocumentoTrait;
 
     public function mount(){
 

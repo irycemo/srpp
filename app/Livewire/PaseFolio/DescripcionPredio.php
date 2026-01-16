@@ -55,6 +55,8 @@ class DescripcionPredio extends Component
 
     public $propiedadOld;
 
+    public $simplificado = false;
+
     protected function rules(){
         return [
             'localidad' => 'nullable',
@@ -171,7 +173,7 @@ class DescripcionPredio extends Component
 
         if(!$this->movimientoRegistral->folio_real){
 
-            $this->dispatch('mostrarMensaje', ['error', "Primero ingrese la información del documento de entrada."]);
+            $this->dispatch('mostrarMensaje', ['warning', "Primero ingrese la información del documento de entrada."]);
 
             return;
 
@@ -327,6 +329,15 @@ class DescripcionPredio extends Component
 
     public function render()
     {
-        return view('livewire.pase-folio.descripcion-predio');
+        if($this->simplificado){
+
+            return view('livewire.pase-folio.pase-folio-simplificado.descripcion-predio');
+
+        }else{
+
+            return view('livewire.pase-folio.descripcion-predio');
+
+        }
+
     }
 }

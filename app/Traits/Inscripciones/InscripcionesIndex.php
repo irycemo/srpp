@@ -6,7 +6,6 @@ use App\Models\User;
 use Illuminate\Support\Facades\DB;
 use App\Models\MovimientoRegistral;
 use Illuminate\Support\Facades\Log;
-use Illuminate\Support\Facades\Hash;
 use App\Traits\CalcularDiaElaboracionTrait;
 use App\Http\Services\SistemaTramitesService;
 use App\Http\Controllers\Varios\VariosController;
@@ -27,7 +26,6 @@ trait InscripcionesIndex{
     public $modalFinalizar = false;
     public $modalConcluir = false;
     public $modalReasignarUsuario = false;
-    public $modalRecibirDocumentacion = false;
     public $documento;
     public $observaciones;
     public $motivos;
@@ -35,7 +33,6 @@ trait InscripcionesIndex{
     public $usuarios;
     public $usuarios_regionales;
     public $usuarios_regionales_fliped;
-    public $contraseña;
 
     public $años;
     public $filters = [
@@ -398,15 +395,6 @@ trait InscripcionesIndex{
 
     }
 
-    public function abrirModalRecibirDocumentacion(MovimientoRegistral $modelo){
-
-        if($this->modelo_editar->isNot($modelo))
-            $this->modelo_editar = $modelo;
-
-        $this->modalRecibirDocumentacion = true;
-
-    }
-
     public function abrirModalConcluir(MovimientoRegistral $modelo){
 
         if($this->modelo_editar->isNot($modelo))
@@ -456,49 +444,6 @@ trait InscripcionesIndex{
         if($this->modelo_editar->reformaMoral){
 
             $this->cargarUsuarios(['Folio real moral']);
-
-        }
-
-    }
-
-    public function recibirDocumentacion(){
-
-        if(!Hash::check($this->contraseña, auth()->user()->password)){
-
-            $this->dispatch('mostrarMensaje', ['error', "Contraseña incorrecta."]);
-
-            return;
-
-        }
-
-        try {
-
-            DB::transaction(function () {
-
-                if(auth()->user()->hasRole('Jefe de departamento inscripciones')){
-
-                    $this->modelo_editar->usuario_asignado = auth()->id();
-
-                }
-
-                $this->modelo_editar->estado = 'nuevo';
-
-                $this->modelo_editar->actualizado_por = auth()->id();
-
-                $this->modelo_editar->save();
-
-                $this->modelo_editar->audits()->latest()->first()->update(['tags' => 'Recibió documentación']);
-
-            });
-
-            $this->modalRecibirDocumentacion = false;
-
-            $this->dispatch('mostrarMensaje', ['success', "La información se actualizó con éxito."]);
-
-        } catch (\Throwable $th) {
-
-            Log::error("Error al recibir documentación de inscripción por el usuario: (id: " . auth()->user()->id . ") " . auth()->user()->name . ". " . $th);
-            $this->dispatch('mostrarMensaje', ['error', "Ha ocurrido un error."]);
 
         }
 

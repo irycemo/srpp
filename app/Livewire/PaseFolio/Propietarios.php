@@ -20,6 +20,8 @@ class Propietarios extends Component
 
     public $propiedadOld;
 
+    public $simplificado = false;
+
     protected $listeners = ['refresh'];
 
     #[On('cargarPropiedad')]
@@ -71,6 +73,16 @@ class Propietarios extends Component
 
     public function render()
     {
-        return view('livewire.pase-folio.propietarios');
+
+        if($this->simplificado){
+
+            return view('livewire.pase-folio.pase-folio-simplificado.propietarios');
+
+        }else{
+
+            return view('livewire.pase-folio.propietarios');
+
+        }
+
     }
 }

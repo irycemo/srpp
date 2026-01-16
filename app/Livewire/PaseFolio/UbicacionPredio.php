@@ -52,6 +52,8 @@ class UbicacionPredio extends Component
 
     public $propiedadOld;
 
+    public $simplificado = false;
+
     protected function rules(){
 
         return [
@@ -103,31 +105,6 @@ class UbicacionPredio extends Component
         'zona_ubicacion' => 'zona'
     ];
 
-    /* public function updatedCodigoPostal(){
-
-        $this->codigos_postales = CodigoPostal::where('codigo', $this->codigo_postal)->get();
-
-        if($this->codigos_postales->count()){
-
-            $this->municipio_ubicacion = $this->codigos_postales->first()->municipio;
-
-            $this->ciudad = $this->codigos_postales->first()->ciudad;
-
-            foreach ($this->codigos_postales as $codigo) {
-
-                array_push($this->nombres_asentamientos, $codigo->nombre_asentamiento);
-            }
-
-        }
-
-    }
-
-    public function updatedNombreAsentamiento(){
-
-        $this->tipo_asentamiento = $this->codigos_postales->where('nombre_asentamiento', $this->nombre_asentamiento)->first()->tipo_asentamiento;
-
-    } */
-
     #[On('cargarPropiedad')]
     public function cargarPropiedad($id){
 
@@ -172,7 +149,7 @@ class UbicacionPredio extends Component
 
         if(!$this->movimientoRegistral->folio_real){
 
-            $this->dispatch('mostrarMensaje', ['error', "Primero ingrese la información del documento de entrada."]);
+            $this->dispatch('mostrarMensaje', ['warning', "Primero ingrese la información del documento de entrada."]);
 
             return;
 
@@ -272,6 +249,14 @@ class UbicacionPredio extends Component
 
     public function render()
     {
-        return view('livewire.pase-folio.ubicacion-predio');
+        if($this->simplificado){
+
+            return view('livewire.pase-folio.pase-folio-simplificado.ubicacion-predio');
+
+        }else{
+
+            return view('livewire.pase-folio.ubicacion-predio');
+
+        }
     }
 }

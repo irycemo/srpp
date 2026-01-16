@@ -251,7 +251,7 @@
 
                 <p class="separador">Documento de entrada</p>
 
-                @if(in_array($folioReal->tipo_documento, ['OFICIO', 'TÍTULO DE PROPIEDAD','ESCRITURA INSTITUCIONAL', 'RESOLUCIÓN JUDICIAL', 'CONTRATO']))
+                @if(!in_array($folioReal->tipo_documento, ['ESCRITURA PÚBLICA', 'ESCRITURA PRIVADA']))
 
                     <p class="parrafo">
                         <strong>Tipo de documento: </strong> {{ $folioReal->tipo_documento }}; <strong>Número de documento: </strong> {{ $folioReal->numero_documento }}; <strong>Cargo de la autoridad: </strong> {{ $folioReal->autoridad_cargo }}; <strong>Nombre de la autoridad: </strong> {{ $folioReal->autoridad_nombre }}; <strong>Número de la autoridad: </strong> {{ $folioReal->autoridad_numero }}; <strong>Fecha de emisión: </strong> {{ $folioReal->fecha_emision }}; <strong>Fecha de inscripción: </strong> {{$folioReal->fecha_inscripcion }}; <strong>Dependencia: </strong>{{ $folioReal->procedencia }}

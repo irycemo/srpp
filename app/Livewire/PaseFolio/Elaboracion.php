@@ -4,7 +4,6 @@ namespace App\Livewire\PaseFolio;
 
 use Exception;
 use Carbon\Carbon;
-use App\Models\File;
 use App\Models\Predio;
 use Livewire\Component;
 use App\Models\Gravamen;
@@ -23,6 +22,7 @@ use App\Models\MovimientoRegistral;
 use Illuminate\Support\Facades\Log;
 use App\Livewire\PaseFolio\PaseFolio;
 use App\Http\Services\AsignacionService;
+use App\Traits\Inscripciones\GuardarDocumentoEntradaTrait;
 use Spatie\LivewireFilepond\WithFilePond;
 
 class Elaboracion extends Component
@@ -30,6 +30,7 @@ class Elaboracion extends Component
 
     use WithFileUploads;
     use WithFilePond;
+    use GuardarDocumentoEntradaTrait;
 
     /* Documento entrada */
     public $tipo_documento;
@@ -68,7 +69,6 @@ class Elaboracion extends Component
     public $folio_real_antecedente;
 
     public $modal = false;
-    public $modalDocumento = false;
     public $editar = false;
     public $crear = false;
 
@@ -78,8 +78,6 @@ class Elaboracion extends Component
     public $actos_contenidos;
 
     public $propiedadOld;
-
-    public $documento;
 
     public $folio_matriz = false;
 
@@ -104,7 +102,6 @@ class Elaboracion extends Component
             'escritura_observaciones' => 'nullable',
             'acto_contenido_antecedente' => 'required',
             'observaciones_antecedente' => 'nullable',
-            'documento' => 'nullable|mimes:pdf|max:1000000'
         ];
     }
 
@@ -286,7 +283,7 @@ class Elaboracion extends Component
 
             if($folioRealExistente){
 
-                $this->dispatch('mostrarMensaje', ['error', "Ya existe un folio real con el mismo antecedente."]);
+                $this->dispatch('mostrarMensaje', ['warning', "Ya existe un folio real con el mismo antecedente."]);
 
                 return;
 
@@ -542,7 +539,7 @@ class Elaboracion extends Component
 
             if($pn < 99.9){
 
-                $this->dispatch('mostrarMensaje', ['error', "El porcentaje de nuda propiedad no es el 100%."]);
+                $this->dispatch('mostrarMensaje', ['warning', "El porcentaje de nuda propiedad no es el 100%."]);
 
                 return;
 
@@ -550,7 +547,7 @@ class Elaboracion extends Component
 
             if($pu < 99.9){
 
-                $this->dispatch('mostrarMensaje', ['error', "El porcentaje de usufructo no es el 100%."]);
+                $this->dispatch('mostrarMensaje', ['warning', "El porcentaje de usufructo no es el 100%."]);
 
                 return;
 
@@ -560,7 +557,7 @@ class Elaboracion extends Component
 
             if(($pn + $pp) < 99.9){
 
-                $this->dispatch('mostrarMensaje', ['error', "El porcentaje de nuda propiedad no es el 100%."]);
+                $this->dispatch('mostrarMensaje', ['warning', "El porcentaje de nuda propiedad no es el 100%."]);
 
                 return;
 
@@ -568,7 +565,7 @@ class Elaboracion extends Component
 
             if(($pu + $pp) < 99.9){
 
-                $this->dispatch('mostrarMensaje', ['error', "El porcentaje de usufructo no es el 100%."]);
+                $this->dispatch('mostrarMensaje', ['warning', "El porcentaje de usufructo no es el 100%."]);
 
                 return;
 
@@ -578,7 +575,7 @@ class Elaboracion extends Component
 
         /* if($this->propiedad->colindancias->count() == 0){
 
-            $this->dispatch('mostrarMensaje', ['error', "El predio debe tener al menos una colindancia."]);
+            $this->dispatch('mostrarMensaje', ['warning', "El predio debe tener al menos una colindancia."]);
 
             return;
 
@@ -586,7 +583,7 @@ class Elaboracion extends Component
 
         if(!$this->propiedad->superficie_terreno){
 
-            $this->dispatch('mostrarMensaje', ['error', "El predio debe tener superficie de terreno."]);
+            $this->dispatch('mostrarMensaje', ['warning', "El predio debe tener superficie de terreno."]);
 
             return;
 
@@ -594,7 +591,7 @@ class Elaboracion extends Component
 
         /* if(!$this->propiedad->superficie_construccion){
 
-            $this->dispatch('mostrarMensaje', ['error', "El predio debe tener superficie de construcción."]);
+            $this->dispatch('mostrarMensaje', ['warning', "El predio debe tener superficie de construcción."]);
 
             return;
 
@@ -609,7 +606,7 @@ class Elaboracion extends Component
 
             if(!$this->propiedad->monto_transaccion){
 
-                $this->dispatch('mostrarMensaje', ['error', "El predio debe tener monto de transacción."]);
+                $this->dispatch('mostrarMensaje', ['warning', "El predio debe tener monto de transacción."]);
 
                 return;
 
@@ -619,7 +616,7 @@ class Elaboracion extends Component
 
         /* if(!$this->propiedad->codigo_postal){
 
-            $this->dispatch('mostrarMensaje', ['error', "El predio debe tener código postal."]);
+            $this->dispatch('mostrarMensaje', ['warning', "El predio debe tener código postal."]);
 
             return;
 
@@ -627,7 +624,7 @@ class Elaboracion extends Component
 
         /* if(!$this->propiedad->nombre_asentamiento){
 
-            $this->dispatch('mostrarMensaje', ['error', "El predio debe nombre de asentamiento."]);
+            $this->dispatch('mostrarMensaje', ['warning', "El predio debe nombre de asentamiento."]);
 
             return;
 
@@ -635,7 +632,7 @@ class Elaboracion extends Component
 
         if(!$this->propiedad->municipio){
 
-            $this->dispatch('mostrarMensaje', ['error', "El predio debe tener municipio."]);
+            $this->dispatch('mostrarMensaje', ['warning', "El predio debe tener municipio."]);
 
             return;
 
@@ -643,7 +640,7 @@ class Elaboracion extends Component
 
         /* if(!$this->propiedad->tipo_asentamiento){
 
-            $this->dispatch('mostrarMensaje', ['error', "El predio debe tener tipo de asentamiento."]);
+            $this->dispatch('mostrarMensaje', ['warning', "El predio debe tener tipo de asentamiento."]);
 
             return;
 
@@ -651,7 +648,7 @@ class Elaboracion extends Component
 
         /* if(!$this->propiedad->localidad){
 
-            $this->dispatch('mostrarMensaje', ['error', "El predio debe localidad."]);
+            $this->dispatch('mostrarMensaje', ['warning', "El predio debe localidad."]);
 
             return;
 
@@ -659,7 +656,7 @@ class Elaboracion extends Component
 
         /* if(!$this->propiedad->nombre_vialidad){
 
-            $this->dispatch('mostrarMensaje', ['error', "El predio debe nombre de vialidad."]);
+            $this->dispatch('mostrarMensaje', ['warning', "El predio debe nombre de vialidad."]);
 
             return;
 
@@ -667,7 +664,7 @@ class Elaboracion extends Component
 
         /* if(!$this->propiedad->numero_exterior){
 
-            $this->dispatch('mostrarMensaje', ['error', "El predio debe nombre de numero_exterior."]);
+            $this->dispatch('mostrarMensaje', ['warning', "El predio debe nombre de numero_exterior."]);
 
             return;
 
@@ -675,7 +672,7 @@ class Elaboracion extends Component
 
         if($this->propiedad->propietarios()->count() == 0){
 
-            $this->dispatch('mostrarMensaje', ['error', "Debe tener al menos un propietario."]);
+            $this->dispatch('mostrarMensaje', ['warning', "Debe tener al menos un propietario."]);
 
             return;
 
@@ -683,7 +680,7 @@ class Elaboracion extends Component
 
         if($this->propiedad->transmitentes()->count() == 0){
 
-            $this->dispatch('mostrarMensaje', ['error', "Debe tener al menos un transmitente."]);
+            $this->dispatch('mostrarMensaje', ['warning', "Debe tener al menos un transmitente."]);
 
             return;
 
@@ -751,56 +748,6 @@ class Elaboracion extends Component
         $this->modal = true;
 
         $this->editar = true;
-
-    }
-
-    public function abrirModalDocumento(){
-
-        $this->reset('documento');
-
-        $this->dispatch('removeFiles');
-
-        $this->modalDocumento = true;
-
-    }
-
-    public function guardarDocumento(){
-
-        $this->validate(['documento' => 'required']);
-
-        try {
-
-            DB::transaction(function (){
-
-                if(app()->isProduction()){
-
-                    $pdf = $this->documento->store(config('services.ses.ruta_documento_entrada'), 's3');
-
-                }else{
-
-                    $pdf = $this->documento->store('/', 'documento_entrada');
-
-                }
-
-                File::create([
-                    'fileable_id' => $this->movimientoRegistral->folioReal->id,
-                    'fileable_type' => 'App\Models\FolioReal',
-                    'descripcion' => 'documento_entrada',
-                    'url' => $pdf
-                ]);
-
-                $this->dispatch('mostrarMensaje', ['success', "El documento de entrada se guardó con éxitos."]);
-
-                $this->modalDocumento = false;
-
-            });
-
-        } catch (\Throwable $th) {
-
-            Log::error("Error al guardar documento de entrada en pase a folio por el usuario: (id: " . auth()->user()->id . ") " . auth()->user()->name . ". " . $th);
-            $this->dispatch('mostrarMensaje', ['error', "Ha ocurrido un error."]);
-
-        }
 
     }
 

@@ -10,9 +10,11 @@ use App\Http\Controllers\FolioPersonaMoralController\FolioPersonaMoralController
 use App\Traits\ComponentesTrait;
 use Illuminate\Support\Facades\DB;
 use App\Models\MovimientoRegistral;
+use App\Traits\Inscripciones\FinalizarInscripcionTrait;
 use Illuminate\Support\Facades\Log;
 use App\Traits\Inscripciones\InscripcionesIndex;
 use App\Traits\Inscripciones\RechazarMovimientoTrait;
+use App\Traits\Inscripciones\RecibirDocumentoTrait;
 
 class PaseFolioPersonaMoral extends Component
 {
@@ -21,17 +23,9 @@ class PaseFolioPersonaMoral extends Component
     use ComponentesTrait;
     use InscripcionesIndex;
     use RechazarMovimientoTrait;
+    use RecibirDocumentoTrait;
 
     public $supervisor;
-
-    public function abrirModalFinalizar(MovimientoRegistral $modelo){
-
-        if($this->modelo_editar->isNot($modelo))
-            $this->modelo_editar = $modelo;
-
-        $this->modalFinalizar = true;
-
-    }
 
     public function finalizar(){
 

@@ -12,6 +12,7 @@ use App\Models\MovimientoRegistral;
 use App\Traits\Inscripciones\InscripcionesIndex;
 use App\Traits\Inscripciones\EnviarMovimientoCorreccion;
 use App\Traits\Inscripciones\RechazarMovimientoTrait;
+use App\Traits\Inscripciones\RecibirDocumentoTrait;
 use App\Traits\RevisarMovimientosPosterioresTrait;
 
 class SentenciasIndex extends Component
@@ -24,6 +25,7 @@ class SentenciasIndex extends Component
     use RevisarMovimientosPosterioresTrait;
     use RechazarMovimientoTrait;
     use EnviarMovimientoCorreccion;
+    use RecibirDocumentoTrait;
 
     public function mount(){
 

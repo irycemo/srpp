@@ -150,6 +150,8 @@ class RoleSeeder extends Seeder
         Permission::create(['name' => 'Imprimir pase a folio', 'area' => 'Pase a folio'])->syncRoles([$role1]);
         Permission::create(['name' => 'Rechazar pase a folio', 'area' => 'Pase a folio'])->syncRoles([$role1]);
         Permission::create(['name' => 'Finalizar pase a folio', 'area' => 'Pase a folio'])->syncRoles([$role1]);
+        Permission::create(['name' => 'Pase a folio simplificado', 'area' => 'Pase a folio'])->syncRoles([$role1, $role7, $role9]);
+        Permission::create(['name' => 'Elaborar pase a folio simplificado', 'area' => 'Pase a folio'])->syncRoles([$role1]);
 
         Permission::create(['name' => 'Área Inscripciones', 'area' => 'Inscripciones'])->syncRoles([$role1, $role7, $role9, $role8]);
         Permission::create(['name' => 'Consultas inscripción', 'area' => 'Inscripciones'])->syncRoles([$role1, $role7, $role9, $role8]);

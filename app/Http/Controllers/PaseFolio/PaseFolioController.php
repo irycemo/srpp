@@ -224,7 +224,7 @@ class PaseFolioController extends Controller
 
     }
 
-    public function reimprimir(FirmaElectronica $firmaElectronica){
+    public function reimprimirSinFirma(FirmaElectronica $firmaElectronica){
 
         $objeto = json_decode($firmaElectronica->cadena_original);
 
@@ -238,7 +238,7 @@ class PaseFolioController extends Controller
             'director' => $objeto->director,
             'predio' => $objeto->predio,
             'datos_control' => $objeto->datos_control,
-            'firma_electronica' => base64_encode($firmaElectronica->cadena_encriptada),
+            'firma_electronica' => null,
             'qr'=> $qr
         ]);
 

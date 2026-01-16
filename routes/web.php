@@ -22,7 +22,8 @@ use App\Http\Controllers\VerificacionController;
 use App\Livewire\PersonaMoral\PaseFolioPersonaMoral;
 use App\Http\Controllers\Consultas\PreguntasController;
 use App\Http\Controllers\PaseFolio\PaseFolioController;
-use App\Livewire\PaseFolio\PaseFolioSimplificado;
+use App\Livewire\PaseFolio\PaseFolioSimplificado\PaseFolioSimplificado;
+use App\Livewire\PaseFolio\PaseFolioSimplificado\PaseFolioSimplificadoElaborar;
 
 /*
 |--------------------------------------------------------------------------
@@ -46,9 +47,10 @@ Route::group(['middleware' => ['auth', 'esta.activo']], function(){
 
     /* Pase a folio */
     Route::get('pase_folio', PaseFolio::class)->middleware('permission:Pase a folio')->name('pase_folio');
-    Route::get('pase_folio_simplificado', PaseFolioSimplificado::class)->middleware('permission:Pase a folio')->name('pase_folio_simplificado');
+    Route::get('pase_folio_simplificado', PaseFolioSimplificado::class)->middleware('permission:Pase a folio simplificado')->name('pase_folio_simplificado');
     Route::get('pase_folio/{folioReal}', [PaseFolioController::class, 'caratula'])->name('pase_folio_caratula');
     Route::get('elaboracion_folio/{movimientoRegistral}', Elaboracion::class)->middleware('permission:Pase a folio')->name('elaboracion_folio');
+    Route::get('elaboracion_folio_simplificado/{movimientoRegistral}', PaseFolioSimplificadoElaborar::class)->middleware('permission:Pase a folio simplificado')->name('elaboracion_folio_simplificado');
 
     /* Personas morales */
     Route::get('pase_folio_persona_moral', PaseFolioPersonaMoral::class)->middleware('permission:Personas morales')->name('pase_folio_personas_morales');

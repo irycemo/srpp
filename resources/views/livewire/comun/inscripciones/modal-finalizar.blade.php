@@ -1,4 +1,4 @@
-<x-confirmation-modal wire:model="modalFinalizar" maxWidth="sm">
+<x-confirmation-modal wire:model="modal_finalizar" maxWidth="sm">
 
     <x-slot name="title">
         Finalizar movimiento registral
@@ -11,7 +11,7 @@
     <x-slot name="footer">
 
         <x-secondary-button
-            wire:click="$toggle('modalFinalizar')"
+            wire:click="$toggle('modal_finalizar')"
             wire:loading.attr="disabled"
         >
             No

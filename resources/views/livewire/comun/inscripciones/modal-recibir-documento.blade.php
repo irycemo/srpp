@@ -1,4 +1,4 @@
-<x-dialog-modal  wire:model="modalRecibirDocumentacion" maxWidth="sm">
+<x-dialog-modal  wire:model="modal_recibir_documento" maxWidth="sm">
 
     <x-slot name="title">
         Recibir documentación
@@ -17,7 +17,7 @@
     <x-slot name="footer">
 
         <x-button-red
-            wire:click="$toggle('modalRecibirDocumentacion')"
+            wire:click="$toggle('modal_recibir_documento')"
             wire:loading.attr="disabled"
         >
             No

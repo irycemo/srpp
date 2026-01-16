@@ -1,4 +1,4 @@
-<x-dialog-modal  wire:model="modalBuscarTramite" maxWidth="sm">
+<x-dialog-modal  wire:model="modal_reasignarme_movimiento_registral" maxWidth="sm">
 
     <x-slot name="title">
         Buscar tramite
@@ -27,7 +27,7 @@
     <x-slot name="footer">
 
         <x-button-red
-            wire:click="$toggle('modalBuscarTramite')"
+            wire:click="$toggle('modal_reasignarme_movimiento_registral')"
             wire:loading.attr="disabled"
         >
             No
@@ -35,9 +35,9 @@
 
         <x-button-blue
             class="ml-2"
-            wire:click="asignarmeTramite"
+            wire:click="asignarmeMovimientoRegistral"
             wire:loading.attr="disabled"
-            wire:target="asignarmeTramite"
+            wire:target="asignarmeMovimientoRegistral"
         >
             Asignarme
         </x-button-blue>

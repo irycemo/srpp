@@ -11,6 +11,7 @@ use App\Models\MovimientoRegistral;
 use App\Traits\Inscripciones\InscripcionesIndex;
 use App\Traits\Inscripciones\EnviarMovimientoCorreccion;
 use App\Traits\Inscripciones\RechazarMovimientoTrait;
+use App\Traits\Inscripciones\RecibirDocumentoTrait;
 
 class FideicomisosIndex extends Component
 {
@@ -20,6 +21,7 @@ class FideicomisosIndex extends Component
     use InscripcionesIndex;
     use RechazarMovimientoTrait;
     use EnviarMovimientoCorreccion;
+    use RecibirDocumentoTrait;
 
     public function mount(){
 
