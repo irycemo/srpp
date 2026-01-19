@@ -13,6 +13,7 @@ use App\Models\MovimientoRegistral;
 use App\Traits\Inscripciones\FinalizarInscripcionTrait;
 use Illuminate\Support\Facades\Log;
 use App\Traits\Inscripciones\InscripcionesIndex;
+use App\Traits\Inscripciones\ReasignarUsuarioTrait;
 use App\Traits\Inscripciones\RechazarMovimientoTrait;
 use App\Traits\Inscripciones\RecibirDocumentoTrait;
 
@@ -24,6 +25,8 @@ class PaseFolioPersonaMoral extends Component
     use InscripcionesIndex;
     use RechazarMovimientoTrait;
     use RecibirDocumentoTrait;
+    use ReasignarUsuarioTrait;
+    use FinalizarInscripcionTrait;
 
     public $supervisor;
 
@@ -45,7 +48,7 @@ class PaseFolioPersonaMoral extends Component
 
                 $this->dispatch('mostrarMensaje', ['success', "El folio se finalizó con éxito."]);
 
-                $this->modalFinalizar = false;
+                $this->modal_finalizar = false;
 
             });
 

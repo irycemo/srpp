@@ -13,6 +13,7 @@ use Illuminate\Support\Facades\Log;
 use App\Traits\Inscripciones\InscripcionesIndex;
 use App\Exceptions\InscripcionesServiceException;
 use App\Traits\Inscripciones\EnviarMovimientoCorreccion;
+use App\Traits\Inscripciones\ReasignarUsuarioTrait;
 use App\Traits\Inscripciones\RechazarMovimientoTrait;
 use App\Traits\Inscripciones\RecibirDocumentoTrait;
 use App\Traits\RevisarMovimientosPosterioresTrait;
@@ -27,6 +28,7 @@ class ReformasIndex extends Component
     use RechazarMovimientoTrait;
     use EnviarMovimientoCorreccion;
     use RecibirDocumentoTrait;
+    use ReasignarUsuarioTrait;
 
     public function estaBloqueado(){
 

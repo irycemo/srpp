@@ -30,7 +30,6 @@ trait InscripcionesIndex{
     public $observaciones;
     public $motivos;
     public $motivo;
-    public $usuarios;
     public $usuarios_regionales;
     public $usuarios_regionales_fliped;
 
@@ -385,67 +384,6 @@ trait InscripcionesIndex{
 
     }
 
-    public function abrirModalReasignar(MovimientoRegistral $modelo){
-
-        if($this->modelo_editar->isNot($modelo))
-            $this->modelo_editar = $modelo;
-
-        $this->modalReasignarUsuario = true;
-
-        if($this->modelo_editar->inscripcionPropiedad){
-
-            $this->cargarUsuarios(['Propiedad', 'Registrador Propiedad']);
-
-        }
-
-        if($this->modelo_editar->gravamen){
-
-            $this->cargarUsuarios(['Gravamen', 'Registrador Gravamen']);
-
-        }
-
-        if($this->modelo_editar->vario){
-
-            $this->cargarUsuarios(['Varios', 'Registrador Varios', 'Aclaraciones administrativas', 'Avisos preventivos']);
-
-        }
-
-        if($this->modelo_editar->cancelacion){
-
-            $this->cargarUsuarios(['Cancelación', 'Registrador cancelación']);
-
-        }
-
-        if($this->modelo_editar->sentencia){
-
-            $this->cargarUsuarios(['Sentencias', 'Registrador sentencias']);
-
-        }
-
-        if($this->modelo_editar->reformaMoral){
-
-            $this->cargarUsuarios(['Folio real moral']);
-
-        }
-
-    }
-
-    public function cargarUsuarios($roles){
-
-        $this->usuarios = User::whereHas('roles', function($q) use($roles){
-                                    $q->whereIn('name', $roles);
-                                })
-                                ->when(auth()->user()->ubicacion == 'Regional 4', function($q){
-                                    $q->where('ubicacion', 'Regional 4');
-                                })
-                                ->when(auth()->user()->ubicacion != 'Regional 4', function($q){
-                                    $q->where('ubicacion', '!=', 'Regional 4');
-                                })
-                                ->orderBy('name')
-                                ->get();
-
-    }
-
     public function finalizar(){
 
         try {
@@ -503,70 +441,6 @@ trait InscripcionesIndex{
 
             Log::error("Error al concluir inscripción por el usuario: (id: " . auth()->user()->id . ") " . auth()->user()->name . ". " . $th);
             $this->dispatch('mostrarMensaje', ['error', "Ha ocurrido un error."]);
-
-        }
-
-    }
-
-    public function reasignarUsuario(){
-
-        try {
-
-            DB::transaction(function () {
-
-                $this->modelo_editar->actualizado_por = auth()->user()->id;
-
-                $this->modelo_editar->save();
-
-                $this->modelo_editar->audits()->latest()->first()->update(['tags' => 'Reasignó usuario']);
-
-            });
-
-            $this->dispatch('mostrarMensaje', ['success', "El trámite se reasignó con éxito."]);
-
-            $this->modalReasignarUsuario = false;
-
-        } catch (\Throwable $th) {
-
-            Log::error("Error al reasignar movimiento registral por el usuario: (id: " . auth()->user()->id . ") " . auth()->user()->name . ". " . $th);
-            $this->dispatch('mostrarMensaje', ['error', "Ha ocurrido un error."]);
-
-        }
-
-    }
-
-    public function reasignarUsuarioAleatoriamente(){
-
-        $cantidad = $this->modelo_editar->audits()->where('tags', 'Reasignó usuario')->count();
-
-        if($cantidad >= 2){
-
-            $this->dispatch('mostrarMensaje', ['warning', "Ya se ha reasignado multiples veces."]);
-
-            return;
-
-        }
-
-        try {
-
-            DB::transaction(function () {
-
-                $this->modelo_editar->usuario_asignado = $this->usuarios->random()->id;
-                $this->modelo_editar->actualizado_por = auth()->id();
-                $this->modelo_editar->save();
-
-                $this->modelo_editar->audits()->latest()->first()->update(['tags' => 'Reasignó usuario']);
-
-            });
-
-            $this->dispatch('mostrarMensaje', ['success', "El usuario se reasignó con éxito."]);
-
-            $this->modalReasignarUsuario = false;
-
-        } catch (\Throwable $th) {
-
-            $this->dispatch('mostrarMensaje', ['error', "Hubo un error."]);
-            Log::error("Error al reasignar usuario a movimiento registral por el usuario: (id: " . auth()->user()->id . ") " . auth()->user()->name . ". " . $th);
 
         }
 
