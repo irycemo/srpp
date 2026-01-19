@@ -376,25 +376,6 @@ trait InscripcionesIndex{
 
     }
 
-    public function abrirModalFinalizar(MovimientoRegistral $modelo){
-
-        if($modelo->getRawOriginal('distrito') != 2 && !auth()->user()->hasRole(['Jefe de departamento inscripciones'])){
-
-            if($this->calcularDiaElaboracion($modelo)) return;
-
-        }
-
-        $this->reset('documento');
-
-        $this->dispatch('removeFiles');
-
-        if($this->modelo_editar->isNot($modelo))
-            $this->modelo_editar = $modelo;
-
-        $this->modalFinalizar = true;
-
-    }
-
     public function abrirModalConcluir(MovimientoRegistral $modelo){
 
         if($this->modelo_editar->isNot($modelo))
