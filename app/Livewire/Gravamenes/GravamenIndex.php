@@ -11,6 +11,7 @@ use App\Traits\ComponentesTrait;
 use App\Models\MovimientoRegistral;
 use App\Traits\Inscripciones\InscripcionesIndex;
 use App\Traits\Inscripciones\EnviarMovimientoCorreccion;
+use App\Traits\Inscripciones\FinalizarInscripcionTrait;
 use App\Traits\Inscripciones\RechazarMovimientoTrait;
 use App\Traits\Inscripciones\RecibirDocumentoTrait;
 use App\Traits\RevisarMovimientosPosterioresTrait;
@@ -26,6 +27,7 @@ class GravamenIndex extends Component
     use RechazarMovimientoTrait;
     use EnviarMovimientoCorreccion;
     use RecibirDocumentoTrait;
+    use FinalizarInscripcionTrait;
 
     public function mount(){
 
