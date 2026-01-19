@@ -21,7 +21,7 @@ trait DocumentoEntradaTrait{
 
         if($this->tipo_documento == ''){
 
-            $this->reset('labelNumeroDocumento');
+            $this->reset('label_numero_documento');
 
         }else{
 
