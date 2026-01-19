@@ -57,7 +57,7 @@ class FoliosReales extends Component
 
         $movimientos = $folioReal->movimientosRegistrales()->where('estado', '!=', 'pase_folio')->get();
 
-        if(!in_array($movimientos->first()->estado, ['nuevo', 'correccion', 'no recibido'])){
+        if(!in_array($movimientos->first()->estado, ['nuevo', 'correccion', 'no recibido', 'captura'])){
 
             $this->dispatch('mostrarMensaje', ['warning', "El folio real tiene movimientos posteriores elaborados."]);
 

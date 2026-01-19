@@ -2,7 +2,7 @@
 
     <div class="mb-6">
 
-        <x-header>Subdivisión <span class="text-sm tracking-widest">Folio real matriz: {{ $propiedad->movimientoRegistral->folioReal->folio }} - {{ $propiedad->movimientoRegistral->folio }}</span></x-header>
+        <x-header>Subdivisión <span class="text-sm tracking-widest">Folio real: {{ $propiedad->movimientoRegistral->folioReal->folio }} - {{ $propiedad->movimientoRegistral->folio }}</span></x-header>
 
     </div>
 

@@ -8,7 +8,6 @@ use App\Models\Gravamen;
 use App\Models\Escritura;
 use App\Models\FolioReal;
 use App\Models\Propiedad;
-use Illuminate\Support\Str;
 use App\Constantes\Constantes;
 use Illuminate\Validation\Rule;
 use Illuminate\Support\Facades\DB;
