@@ -11,6 +11,7 @@ use App\Traits\ComponentesTrait;
 use App\Models\MovimientoRegistral;
 use App\Traits\Inscripciones\InscripcionesIndex;
 use App\Traits\Inscripciones\EnviarMovimientoCorreccion;
+use App\Traits\Inscripciones\FinalizarInscripcionTrait;
 use App\Traits\Inscripciones\ReasignarmeMovimientoTrait;
 use App\Traits\Inscripciones\RechazarMovimientoTrait;
 use App\Traits\Inscripciones\RecibirDocumentoTrait;
@@ -25,6 +26,7 @@ class PropiedadIndex extends Component
     use EnviarMovimientoCorreccion;
     use RecibirDocumentoTrait;
     use ReasignarmeMovimientoTrait;
+    use FinalizarInscripcionTrait;
 
     public function mount(){
 
