@@ -466,7 +466,7 @@ trait InscripcionesIndex{
 
             $this->dispatch('mostrarMensaje', ['success', "El trámite se finalizó con éxito."]);
 
-            $this->modalFinalizar = false;
+            $this->modal_finalizar = false;
 
         } catch (\Throwable $th) {
 

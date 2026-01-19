@@ -77,10 +77,13 @@ class PaseFolioSimplificado extends Component
 
                     $this->modelo_editar->update([
                         'usuario_asignado' => $this->usuarios->random()->id,
-                        'estado' => 'concluido'
                     ]);
 
                 }
+
+                $this->modelo_editar->update([
+                    'estado' => 'concluido'
+                ]);
 
                 $this->modelo_editar->folioReal->update([
                     'estado' => 'activo',
