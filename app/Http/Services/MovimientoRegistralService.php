@@ -57,6 +57,10 @@ class MovimientoRegistralService{
             /* Cambio el folio real */
             if($request['folio_real'] != $movimiento_registral->folioReal?->folio){
 
+                if($movimiento_registral->folioReal) $this->reacomodarFolios($movimiento_registral->folioReal);
+
+                $this->reacomodarFoliosPrecalificacion($movimiento_registral);
+
                 $this->buscarNuevoFolioReal($request, $movimiento_registral);
 
             /* No cambio el folio real */
@@ -79,9 +83,11 @@ class MovimientoRegistralService{
 
                     $array = $this->revisarEncolamientoSinFolioInmobiliario($request, $movimiento_registral->id);
 
-                    $this->actualizarMovimientoRegistral($request + $array, $movimiento_registral);
-
                     if($movimiento_registral->folioReal) $this->reacomodarFolios($movimiento_registral->folioReal);
+
+                    $this->reacomodarFoliosPrecalificacion($movimiento_registral);
+
+                    $this->actualizarMovimientoRegistral($request + $array, $movimiento_registral);
 
                 /* No cambio el antecedente */
                 }else{
@@ -108,6 +114,8 @@ class MovimientoRegistralService{
 
         /* Actualizar relacion de cancelacion con su gravamen */
         if($movimiento_registral->cancelacion && $movimiento_registral->folio_real){
+
+            $movimiento_registral->refresh();
 
             $movimientoACancelar = $movimiento_registral->folioReal->movimientosRegistrales()->where('folio', $request['asiento_registral'])->first();
 
@@ -544,7 +552,7 @@ class MovimientoRegistralService{
         $request['registro'] = null;
         $request['numero_propiedad'] = null;
 
-        if(! $movimiento_registral->folioReal?->movimientosRegistrales()->where('folio', 1)->first()){
+        if(! $folioReal->movimientosRegistrales()->where('folio', 1)->first()){
 
             $request['folio'] = 1;
             $request['pase_a_folio'] = true;
@@ -713,7 +721,7 @@ class MovimientoRegistralService{
                 if(! $movimiento){
 
                     $movimiento = MovimientoRegistral::where('folio_real', $folioReal->id)
-                                                ->whereIn('estado', ['carga_parcial', 'pase_folio'])
+                                                ->whereIn('estado', ['carga_parcial', 'pase_folio', 'no recibido'])
                                                 ->orderBy('folio')
                                                 ->first();
 
@@ -732,6 +740,24 @@ class MovimientoRegistralService{
                 }
 
             }
+
+        }
+
+    }
+
+    public function reacomodarFoliosPrecalificacion(MovimientoRegistral $movimiento_registral):void
+    {
+
+        $movimientos = MovimientoRegistral::where('tomo', $movimiento_registral->tomo)
+                                                ->where('registro', $movimiento_registral->registro)
+                                                ->where('numero_propiedad', $movimiento_registral->numero_propiedad)
+                                                ->where('distrito', $movimiento_registral->getRawOriginal('distrito'))
+                                                ->where('folio', '>', $movimiento_registral->folio)
+                                                ->get();
+
+        foreach ($movimientos as $movimiento) {
+
+            $movimiento->decrement('folio');
 
         }
 

@@ -143,6 +143,9 @@ class GravamenIndex extends Component
                                                             $q->where('folio', $this->filters['folio_real']);
                                                         });
                                                     })
+                                                    ->whereHas('gravamen', function($q){
+                                                        $q->whereIn('servicio', ['D127', 'D153', 'D150', 'D155', 'DM68', 'D154']);
+                                                    })
                                                     ->when($this->filters['folio'], fn($q, $folio) => $q->where('folio', $folio))
                                                     ->when($this->filters['estado'], fn($q, $estado) => $q->where('estado', $estado))
                                                     ->orderBy($this->sort, $this->direction)
@@ -179,32 +182,25 @@ class GravamenIndex extends Component
                                                         $q->whereIn('estado', ['activo', 'centinela']);
                                                     })
                                                     ->when(auth()->user()->ubicacion === 'Regional 1', function($q){
-                                                        $q->whereIn('distrito', [3, 9])
-                                                            ->orWhereIn('usuario', $this->usuarios_regionales_fliped);
+                                                        $q->whereIn('distrito', [3, 9]);
                                                     })
                                                     ->when(auth()->user()->ubicacion === 'Regional 2', function($q){
-                                                        $q->whereIn('distrito', [12, 19])
-                                                            ->orWhereIn('usuario', $this->usuarios_regionales_fliped);
+                                                        $q->whereIn('distrito', [12, 19]);
                                                     })
                                                     ->when(auth()->user()->ubicacion === 'Regional 3', function($q){
-                                                        $q->whereIn('distrito', [4, 17])
-                                                            ->orWhereIn('usuario', $this->usuarios_regionales_fliped);
+                                                        $q->whereIn('distrito', [4, 17]);
                                                     })
                                                     ->when(auth()->user()->ubicacion === 'Regional 4', function($q){
-                                                        $q->whereIn('distrito', [2, 18])
-                                                            ->orWhereIn('usuario', $this->usuarios_regionales_fliped);
+                                                        $q->whereIn('distrito', [2, 18]);
                                                     })
                                                     ->when(auth()->user()->ubicacion === 'Regional 5', function($q){
-                                                        $q->where('distrito', 13)
-                                                            ->orWhereIn('usuario', $this->usuarios_regionales_fliped);
+                                                        $q->where('distrito', 13);
                                                     })
                                                     ->when(auth()->user()->ubicacion === 'Regional 6', function($q){
-                                                        $q->where('distrito', 15)
-                                                            ->orWhereIn('usuario', $this->usuarios_regionales_fliped);
+                                                        $q->where('distrito', 15);
                                                     })
                                                     ->when(auth()->user()->ubicacion === 'Regional 7', function($q){
-                                                        $q->whereIn('distrito', [5, 14, 8])
-                                                            ->orWhereIn('usuario', $this->usuarios_regionales_fliped);
+                                                        $q->whereIn('distrito', [5, 14, 8]);
                                                     })
                                                     ->whereIn('estado', ['nuevo', 'captura', 'elaborado', 'finalizado', 'correccion'])
                                                     ->whereHas('gravamen', function($q){

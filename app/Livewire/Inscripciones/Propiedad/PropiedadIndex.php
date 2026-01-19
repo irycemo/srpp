@@ -184,42 +184,43 @@ class PropiedadIndex extends Component
                                                     ->whereHas('folioReal', function($q){
                                                         $q->whereIn('estado', ['activo', 'centinela']);
                                                     })
-                                                    ->when(auth()->user()->ubicacion === 'Regional 1', function($q){
-                                                        $q->whereIn('distrito', [3, 9])
-                                                            ->orWhereIn('usuario', $this->usuarios_regionales_fliped);
-                                                    })
-                                                    ->when(auth()->user()->ubicacion === 'Regional 2', function($q){
-                                                        $q->whereIn('distrito', [12, 19])
-                                                            ->orWhereIn('usuario', $this->usuarios_regionales_fliped);
-                                                    })
-                                                    ->when(auth()->user()->ubicacion === 'Regional 3', function($q){
-                                                        $q->whereIn('distrito', [4, 17])
-                                                            ->orWhereIn('usuario', $this->usuarios_regionales_fliped);
-                                                    })
-                                                    ->when(auth()->user()->ubicacion === 'Regional 4', function($q){
-                                                        $q->whereIn('distrito', [2, 18])
-                                                            ->orWhereIn('usuario', $this->usuarios_regionales_fliped);
-                                                    })
-                                                    ->when(auth()->user()->ubicacion === 'Regional 5', function($q){
-                                                        $q->where('distrito', 13)
-                                                            ->orWhereIn('usuario', $this->usuarios_regionales_fliped);
-                                                    })
-                                                    ->when(auth()->user()->ubicacion === 'Regional 6', function($q){
-                                                        $q->where('distrito', 15)
-                                                            ->orWhereIn('usuario', $this->usuarios_regionales_fliped);
-                                                    })
-                                                    ->when(auth()->user()->ubicacion === 'Regional 7', function($q){
-                                                        $q->whereIn('distrito', [5, 14, 8])
-                                                            ->orWhereIn('usuario', $this->usuarios_regionales_fliped);
-                                                    })
                                                     ->whereHas('inscripcionPropiedad', function($q){
                                                         $q->whereIn('servicio', ['D158', 'D114', 'D113', 'D115', 'D116', 'D118', 'D149']);
                                                     })
                                                     ->whereIn('estado', ['nuevo', 'captura', 'elaborado', 'finalizado', 'correccion'])
+                                                    ->when(auth()->user()->ubicacion === 'Regional 1', function($q){
+                                                        $q->whereIn('distrito', [3, 9]);
+                                                            /* ->orWhereIn('usuario', $this->usuarios_regionales_fliped); */
+                                                    })
+                                                    ->when(auth()->user()->ubicacion === 'Regional 2', function($q){
+                                                        $q->whereIn('distrito', [12, 19]);
+
+                                                    })
+                                                    ->when(auth()->user()->ubicacion === 'Regional 3', function($q){
+                                                        $q->whereIn('distrito', [4, 17]);
+
+                                                    })
+                                                    ->when(auth()->user()->ubicacion === 'Regional 4', function($q){
+                                                        $q->whereIn('distrito', [2, 18]);
+
+                                                    })
+                                                    ->when(auth()->user()->ubicacion === 'Regional 5', function($q){
+                                                        $q->where('distrito', 13);
+
+                                                    })
+                                                    ->when(auth()->user()->ubicacion === 'Regional 6', function($q){
+                                                        $q->where('distrito', 15);
+
+                                                    })
+                                                    ->when(auth()->user()->ubicacion === 'Regional 7', function($q){
+                                                        $q->whereIn('distrito', [5, 14, 8]);
+
+                                                    })
+
                                                     ->when($this->filters['año'], fn($q, $año) => $q->where('año', $año))
                                                     ->when($this->filters['tramite'], fn($q, $tramite) => $q->where('tramite', $tramite))
                                                     ->when($this->filters['usuario'], fn($q, $usuario) => $q->where('usuario', $usuario))
-                                                    ->when($this->filters['folio_real'], function($q){
+                                                    ->when($this->filters['folio_real'] && $this->filters['folio_real'] != '', function($q){
                                                         $q->whereHas('folioreal', function ($q){
                                                             $q->where('folio', $this->filters['folio_real']);
                                                         });
