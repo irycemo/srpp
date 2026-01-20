@@ -5,6 +5,7 @@ namespace App\Traits\Inscripciones;
 use App\Models\File;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Facades\Storage;
 
 trait GuardarDocumentoEntradaTrait{
 
@@ -46,7 +47,7 @@ trait GuardarDocumentoEntradaTrait{
                     'url' => $pdf
                 ]);
 
-                $this->dispatch('mostrarMensaje', ['success', "El documento de entrada se guardó con éxitos."]);
+                $this->dispatch('mostrarMensaje', ['success', "El documento de entrada se guardó con éxito."]);
 
                 $this->modal_documento_entrada = false;
 
@@ -55,6 +56,39 @@ trait GuardarDocumentoEntradaTrait{
         } catch (\Throwable $th) {
 
             Log::error("Error al guardar documento de entrada por el usuario: (id: " . auth()->user()->id . ") " . auth()->user()->name . ". " . $th);
+            $this->dispatch('mostrarMensaje', ['error', "Ha ocurrido un error."]);
+
+        }
+
+    }
+
+    public function eliminarDocumentoEntradaPDF(){
+
+        try {
+
+            DB::transaction(function (){
+
+                if(app()->isProduction()){
+
+                    Storage::disk('s3')->delete(config('services.ses.ruta_caratulas') . $this->movimientoRegistral->archivos()->where('descripcion', 'caratula')->first()->url);
+
+                }else{
+
+                    Storage::disk('caratulas')->delete($this->movimientoRegistral->archivos()->where('descripcion', 'caratula')->first()->url);
+
+                }
+
+                $this->movimientoRegistral->archivos->each()->delete();
+
+                $this->dispatch('mostrarMensaje', ['success', "El documento de entrada se eliminó con éxito."]);
+
+                $this->modal_documento_entrada = false;
+
+            });
+
+        } catch (\Throwable $th) {
+
+            Log::error("Error al eliminar documento de entrada por el usuario: (id: " . auth()->user()->id . ") " . auth()->user()->name . ". " . $th);
             $this->dispatch('mostrarMensaje', ['error', "Ha ocurrido un error."]);
 
         }
