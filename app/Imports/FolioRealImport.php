@@ -541,6 +541,7 @@ class FolioRealImport implements ToCollection, WithHeadingRow, WithValidation, W
 
         $movimientoRegistralPropiedad->movimiento_padre = $this->movimientoRegistral->id;
         $movimientoRegistralPropiedad->folio = 1;
+        $movimientoRegistralPropiedad->pase_a_folio = 1;
         $movimientoRegistralPropiedad->estado = 'nuevo';
         $movimientoRegistralPropiedad->folio_real = $folioRealNuevo->id;
         $movimientoRegistralPropiedad->save();

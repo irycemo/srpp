@@ -215,6 +215,7 @@ class Subdivisiones extends Component
                     $movimientoRegistral = $this->propiedad->movimientoRegistral->replicate();
                     $movimientoRegistral->movimiento_padre = $this->propiedad->movimientoRegistral->id;
                     $movimientoRegistral->folio = 1;
+                    $movimientoRegistral->pase_a_folio = 1;
                     $movimientoRegistral->estado = 'nuevo';
                     $movimientoRegistral->folio_real = $folioReal->id;
                     $movimientoRegistral->usuario_asignado = auth()->id();
