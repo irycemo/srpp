@@ -220,7 +220,7 @@
 
     @if($folioReal->predio->lote_fraccionador)
 
-        <div class="rounded-lg bg-gray-100py-1 px-2">
+        <div class="rounded-lg bg-gray-100 py-1 px-2">
 
             <strong>Lote del fraccionador</strong>
 
@@ -232,7 +232,7 @@
 
     @if($folioReal->predio->manzana_fraccionador)
 
-        <div class="rounded-lg bg-gray-100py-1 px-2">
+        <div class="rounded-lg bg-gray-100 py-1 px-2">
 
             <strong>Manzana del fraccionador</strong>
 

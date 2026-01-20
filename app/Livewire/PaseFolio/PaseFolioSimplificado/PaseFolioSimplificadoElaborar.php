@@ -516,7 +516,7 @@ class PaseFolioSimplificadoElaborar extends Component
 
         $this->movimientoRegistral->inscripcionPropiedad->update([
             'acto_contenido' => $this->acto_contenido_antecedente,
-            'descripcion_acto' => $this->observaciones_antecedente,
+            'descripcion_acto' => $this->observaciones_antecedente ?? $this->escritura_observaciones,
         ]);
 
         (new PropiedadController())->caratula($this->movimientoRegistral->inscripcionPropiedad);
