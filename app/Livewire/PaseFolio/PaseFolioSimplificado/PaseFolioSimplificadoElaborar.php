@@ -336,14 +336,6 @@ class PaseFolioSimplificadoElaborar extends Component
 
         }
 
-        if(! $this->movimientoRegistral->folioReal->documentoEntrada()){
-
-            $this->dispatch('mostrarMensaje', ['warning', "El documento de entrada es obligatorio."]);
-
-            return;
-
-        }
-
         try {
 
             $this->revisarGravamenes();
@@ -490,6 +482,14 @@ class PaseFolioSimplificadoElaborar extends Component
             return;
 
         } */
+
+        if(! $this->movimientoRegistral->folioReal->documentoEntrada()){
+
+            $this->dispatch('mostrarMensaje', ['warning', "El documento de entrada es obligatorio."]);
+
+            return;
+
+        }
 
         if(!$this->propiedad->superficie_terreno){
 
