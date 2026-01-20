@@ -145,9 +145,15 @@ class PaseFolioSimplificado extends Component
 
         try {
 
-            $modelo->folioReal->update(['estado' => 'captura']);
+            DB::transaction(function () use ($modelo){
 
-            $modelo->update(['estado' => 'nuevo']);
+                $modelo->folioReal->update(['estado' => 'captura']);
+
+                $modelo->update(['estado' => 'nuevo']);
+
+                $modelo->inscripcionPropiedad->actores->each->delete();
+
+            });
 
         } catch (\Throwable $th) {
 

@@ -64,9 +64,6 @@ class PaseFolioSimplificadoElaborar extends Component
 
     public MovimientoRegistral $movimientoRegistral;
 
-    public $acto_contenido_inscripcion;
-    public $descripcion_inscripcion;
-
     protected function rules(){
         return [
             'tipo_documento' => 'required',
@@ -518,8 +515,8 @@ class PaseFolioSimplificadoElaborar extends Component
         }
 
         $this->movimientoRegistral->inscripcionPropiedad->update([
-            'acto_contenido' => $this->acto_contenido_inscripcion,
-            'descripcion_acto' => $this->descripcion_inscripcion,
+            'acto_contenido' => $this->acto_contenido_antecedente,
+            'descripcion_acto' => $this->observaciones_antecedente,
         ]);
 
         (new PropiedadController())->caratula($this->movimientoRegistral->inscripcionPropiedad);
