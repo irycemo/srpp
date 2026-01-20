@@ -18,6 +18,7 @@ use Illuminate\Support\Facades\Log;
 use App\Exceptions\GeneralException;
 use Spatie\LivewireFilepond\WithFilePond;
 use App\Traits\Inscripciones\ConsultarArchivoTrait;
+use App\Http\Controllers\PaseFolio\PaseFolioController;
 use App\Traits\Inscripciones\GuardarDocumentoEntradaTrait;
 use App\Http\Controllers\InscripcionesPropiedad\PropiedadController;
 
@@ -461,6 +462,8 @@ class PaseFolioSimplificadoElaborar extends Component
                 }
 
                 $this->procesarInscripcionPropiedad();
+
+                (new PaseFolioController())->caratula($this->movimientoRegistral->folioReal);
 
             });
 
