@@ -391,7 +391,7 @@ class PaseFolio extends Component
         try {
 
             $movimientoRegistral->update([
-                'pase_a_folio' => true,
+                'pase_a_folio' => false,
                 'actualizado_por' => auth()->id()
             ]);
 
