@@ -199,6 +199,22 @@ class PaseFolioSimplificado extends Component
 
     }
 
+    public function enviarPaseFolio(MovimientoRegistral $movimientoRegistral){
+
+        try {
+
+            $movimientoRegistral->update([
+                'pase_a_folio' => false,
+                'actualizado_por' => auth()->id()
+            ]);
+
+        } catch (\Throwable $th) {
+            Log::error("Error al envia a pase a folio por el usuario: (id: " . auth()->user()->id . ") " . auth()->user()->name . ". " . $th);
+            $this->dispatch('mostrarMensaje', ['error', "Ha ocurrido un error."]);
+        }
+
+    }
+
     public function mount(){
 
         $this->crearModeloVacio();

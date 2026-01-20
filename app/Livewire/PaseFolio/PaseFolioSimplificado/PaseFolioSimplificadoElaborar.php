@@ -253,6 +253,8 @@ class PaseFolioSimplificadoElaborar extends Component
 
             $this->revisarGravamenes();
 
+            $this->consultarSentenciasAntecedente($this->movimientoRegistral->getRawOriginal('distrito'), $this->movimientoRegistral->tomo, $this->movimientoRegistral->registro, $this->movimientoRegistral->numero_propiedad);
+
             DB::transaction(function () {
 
                 if(!$this->movimientoRegistral->folio_real) {
@@ -542,6 +544,25 @@ class PaseFolioSimplificadoElaborar extends Component
                 throw new GeneralException("La propiedad tiene un gravamen vigente.");
 
             }
+
+        }
+
+    }
+
+    public function consultarSentenciasAntecedente($distrito, $tomo, $registro, $numero_propiedad){
+
+        $sentencias = DB::connection('mysql2')->select("call spQSentencias(" .
+                                                                            $distrito .
+                                                                            "," . $tomo .
+                                                                            "," . '\'\'' .
+                                                                            "," . $registro .
+                                                                            "," .  '\'\'' .
+                                                                            "," . $numero_propiedad .
+                                                                            ")");
+
+        if(count($sentencias)){
+
+            throw new GeneralException('El antecedente cuenta tiene sentencias.');
 
         }
 
