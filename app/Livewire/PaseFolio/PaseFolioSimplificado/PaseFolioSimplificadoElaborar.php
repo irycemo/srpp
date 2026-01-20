@@ -85,6 +85,7 @@ class PaseFolioSimplificadoElaborar extends Component
             'escritura_observaciones' => 'nullable',
             'acto_contenido_antecedente' => 'required',
             'observaciones_antecedente' => 'nullable',
+            'documento_entrada_pdf' => 'required'
         ];
     }
 
@@ -105,7 +106,8 @@ class PaseFolioSimplificadoElaborar extends Component
         'escritura_estado_notario' => 'estado de la notaría',
         'escritura_observaciones' => 'observaciones',
         'acto_contenido_antecedente' => 'acto contenido',
-        'observaciones_antecedente' => 'observaciones'
+        'observaciones_antecedente' => 'observaciones',
+        'documento_entrada_pdf' => 'documento de entrada'
     ];
 
     protected $messages = [
