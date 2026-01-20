@@ -39,7 +39,7 @@ class MovimientoRegistralController extends Controller
 
         } catch (GeneralException $th) {
 
-            Log::error('Error al ingresar el trámite: ' . $request->año . '-' . $request->tramite . '-' . $request->usuario . ' desde Sistema Trámites. ' . $th);
+            Log::error('Error al ingresar el trámite: ' . $validated['año'] . '-' . $validated['tramite'] . '-' . $validated['usuario'] . ' desde Sistema Trámites. ' . $th);
 
             return response()->json([
                 'error' => $th->getMessage(),
@@ -47,10 +47,10 @@ class MovimientoRegistralController extends Controller
 
         }catch (\Throwable $th) {
 
-            Log::error('Error al ingresar el trámite: ' . $request->año . '-' . $request->tramite  . '-' . $request->usuario .' desde Sistema Trámites. ' . $th);
+            Log::error('Error al ingresar el trámite: ' . $validated['año'] . '-' . $validated['tramite'] . '-' . $validated['usuario'] .' desde Sistema Trámites. ' . $th);
 
             return response()->json([
-                'error' => 'Error al actualizar el trámite: ' . $request->año . '-' . $request->tramite . '-' . $request->usuario . ' en Sistema RPP.',
+                'error' => 'Error al actualizar el trámite: ' . $validated['año'] . '-' . $validated['tramite'] . '-' . $validated['usuario'] . ' en Sistema RPP.',
             ], 500);
 
         }
@@ -75,7 +75,7 @@ class MovimientoRegistralController extends Controller
 
         } catch (GeneralException $th) {
 
-            Log::error('Error al actualizar el trámite: ' . $request->año . '-' . $request->tramite . '-' . $request->usuario . ' desde Sistema Trámites. ' . $th);
+            Log::error('Error al actualizar el trámite: ' . $validated['año'] . '-' . $validated['tramite'] . '-' . $validated['usuario'] . ' desde Sistema Trámites. ' . $th);
 
             return response()->json([
                 'error' => $th->getMessage(),
@@ -83,10 +83,10 @@ class MovimientoRegistralController extends Controller
 
         } catch (\Throwable $th) {
 
-            Log::error('Error al actualizar el trámite: ' . $request->año . '-' . $request->tramite . '-' . $request->usuario . ' desde Sistema Trámites. ' . $th);
+            Log::error('Error al actualizar el trámite: ' . $validated['año'] . '-' . $validated['tramite'] . '-' . $validated['usuario'] . ' desde Sistema Trámites. ' . $th);
 
             return response()->json([
-                'error' => 'Error al actualizar el trámite: ' . $request->año . '-' . $request->tramite . '-' . $request->usuario . ' en Sistema RPP.',
+                'error' => 'Error al actualizar el trámite: ' . $validated['año'] . '-' . $validated['tramite'] . '-' . $validated['usuario'] . ' en Sistema RPP.',
             ], 500);
 
         }
@@ -111,7 +111,7 @@ class MovimientoRegistralController extends Controller
 
         } catch (GeneralException $th) {
 
-            Log::error('Error al actualizar el trámite: ' . $request->año . '-' . $request->tramite . '-' . $request->usuario . ' desde Sistema Trámites. ' . $th);
+            Log::error('Error al actualizar el trámite: ' . $validated['año'] . '-' . $validated['tramite'] . '-' . $validated['usuario'] . ' desde Sistema Trámites. ' . $th);
 
             return response()->json([
                 'derrorata' => $th->getMessage(),
@@ -119,10 +119,10 @@ class MovimientoRegistralController extends Controller
 
         } catch (\Throwable $th) {
 
-            Log::error('Error al actualizar el trámite: ' . $request->año . '-' . $request->tramite . '-' . $request->usuario . ' desde Sistema Trámites. ' . $th);
+            Log::error('Error al actualizar el trámite: ' . $validated['año'] . '-' . $validated['tramite'] . '-' . $validated['usuario'] . ' desde Sistema Trámites. ' . $th);
 
             return response()->json([
-                'error' => 'Error al actualizar el trámite: ' . $request->año . '-' . $request->tramite . '-' . $request->usuario . ' en Sistema RPP.',
+                'error' => 'Error al actualizar el trámite: ' . $validated['año'] . '-' . $validated['tramite'] . '-' . $validated['usuario'] . ' en Sistema RPP.',
             ], 500);
 
         }

@@ -548,9 +548,9 @@ class MovimientoRegistralService{
 
         $request['folio_real'] = $folioReal->id;
         $request['estado'] = 'nuevo';
-        $request['tomo'] = null;
-        $request['registro'] = null;
-        $request['numero_propiedad'] = null;
+        $request['tomo'] = $folioReal->tomo_antecedente;
+        $request['registro'] = $folioReal->registro_antecedente;
+        $request['numero_propiedad'] = $folioReal->numero_propiedad_antecedente;
 
         if(! $folioReal->movimientosRegistrales()->where('folio', 1)->first()){
 
