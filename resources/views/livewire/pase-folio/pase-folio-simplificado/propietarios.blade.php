@@ -189,16 +189,19 @@
 
     </div>
 
-    <div class=" flex justify-end items-center bg-white rounded-lg p-2 shadow-lg md:col-span-3 col-span-1 sm:col-span-2">
+    <div class="flex justify-end items-center bg-white rounded-lg p-2 shadow-lg md:col-span-3 col-span-1 sm:col-span-2" >
 
-        <x-button-red
-            wire:click="$parent.finalizarPaseAFolio"
-            wire:loading.attr="disabled">
+        <button
+            x-data="{ loading: false }"
+            @click="async () => { loading = true; await $wire.$parent.finalizarPaseAFolio(); loading = false; }"
+            :disabled="loading"
+            class='bg-red-400 hover:shadow-lg text-white px-4 py-1 rounded-full text-sm hover:bg-red-700 flex items-center justify-center focus:outline-red-400 focus:outline-offset-2'
+        >
 
-            <img wire:loading class="mx-auto h-4 mr-1" src="{{ asset('storage/img/loading3.svg') }}" alt="Loading">
+            <img x-show="loading" class="mx-auto h-4 mr-1" src="{{ asset('storage/img/loading3.svg') }}" alt="Loading">
             Finalizar pase a folio
 
-        </x-button-red>
+        </button>
 
     </div>
 
