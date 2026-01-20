@@ -87,7 +87,7 @@ class PaseFolioSimplificadoElaborar extends Component
             'escritura_observaciones' => 'nullable',
             'acto_contenido_antecedente' => 'required',
             'observaciones_antecedente' => 'nullable',
-            'documento_entrada_pdf' => Rule::requiredIf(! $this->movimientoRegistral->folioReal->documentoEntrada())
+            'documento_entrada_pdf' => Rule::requiredIf(! $this->movimientoRegistral->documentoEntrada())
         ];
     }
 
@@ -289,13 +289,13 @@ class PaseFolioSimplificadoElaborar extends Component
 
                 }
 
-                $this->movimientoRegistral->archivos->each()->delete();
+                $this->movimientoRegistral->archivos->each->delete();
 
-                $this->movimientoRegistral->folioReal->archivos->each()->delete();
-
-                $this->dispatch('mostrarMensaje', ['success', "El documento de entrada se eliminó con éxito."]);
+                $this->movimientoRegistral->folioReal->archivos->each->delete();
 
             });
+
+            $this->dispatch('mostrarMensaje', ['success', "El documento de entrada se eliminó con éxito."]);
 
         } catch (\Throwable $th) {
 

@@ -270,6 +270,18 @@
 
             </div>
 
+            <x-button-red
+                wire:click="eliminarDocumentoEntradaPDF"
+                wire:confirm="¿Esta seguro que desea eliminar el documento de entrada?"
+                wire:loading.attr="disabled"
+                wire:target="eliminarDocumentoEntradaPDF">
+
+                <img wire:loading wire:target="eliminarDocumentoEntradaPDF" class="mx-auto h-4 mr-1" src="{{ asset('storage/img/loading3.svg') }}" alt="Loading">
+
+                Eliminar documento de entrada
+
+            </x-button-red>
+
         @endif
 
     @endif

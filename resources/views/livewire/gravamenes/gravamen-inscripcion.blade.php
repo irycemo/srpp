@@ -212,159 +212,6 @@
 
     </div>
 
-    {{-- @if($gravamen->acto_contenido == 'DIVISIÓN DE HIPOTECA')
-
-        <div class="p-4 bg-white shadow-xl rounded-xl mb-5">
-
-            <div class="w-full  justify-center mx-auto">
-
-                <div class="flex-auto text-center mb-3 lg:w-1/2 mx-auto">
-
-                    <div >
-
-                        <Label class="text-base tracking-widest rounded-xl border-gray-500">Folio del gravmen</Label>
-
-                    </div>
-
-                    <div class="inline-flex">
-
-                        <input type="number" class="bg-white text-sm w-20 rounded-l focus:ring-0 @error('folio') border-red-500 @enderror" value="{{ $gravamen->movimientoRegistral->folioReal->folio }}" readonly>
-
-                        <input type="number" class="bg-white text-sm w-20 border-l-0 rounded-r focus:ring-0 @error('folio_gravamen') border-red-500 @enderror" wire:model="folio_gravamen">
-
-                    </div>
-
-                    <button
-                        wire:click="buscarGravamen"
-                        wire:loading.attr="disabled"
-                        wire:target="buscarGravamen"
-                        type="button"
-                        class="bg-blue-400 mx-auto mt-3 hover:shadow-lg text-white font-bold px-4 py-2 rounded text-xs hover:bg-blue-700 focus:outline-none flex items-center justify-center focus:outline-blue-400 focus:outline-offset-2">
-
-                        <img wire:loading wire:target="buscarGravamen" class="mx-auto h-4 mr-1" src="{{ asset('storage/img/loading3.svg') }}" alt="Loading">
-
-                        Buscar gravamen
-
-                    </button>
-
-                </div>
-
-                @if($gravamenHipoteca)
-
-                    <div class="lg:w-1/2 mx-auto">
-
-                        <div class="flex gap-3 items-center justify-center mx-auto mb-4">
-
-                            <input type="text" value="{{ $gravamenHipoteca->gravamen->acto_contenido }}" class="bg-white rounded text-sm w-full" readonly>
-
-                            <input type="text" value="{{ $gravamenHipoteca->gravamen->tipo }}" class="bg-white rounded text-sm w-full" readonly>
-
-                        </div>
-
-                        <div class="flex gap-3 items-center justify-center mx-auto mb-4">
-
-                            <input type="text" value="{{ $gravamenHipoteca->gravamen->valor_gravamen }}" class="bg-white rounded text-sm w-full" readonly>
-
-                            <input type="text" value="{{ $gravamenHipoteca->gravamen->fecha_inscripcion }}" class="bg-white rounded text-sm w-full" readonly>
-
-                        </div>
-
-                        <textarea class="bg-white rounded text-sm w-full" readonly>{{ $gravamenHipoteca->gravamen->observaciones }}</textarea>
-
-                    </div>
-
-                    <div class="flex-auto text-center mb-3 lg:w-1/2 mx-auto">
-
-                        <div >
-
-                            <Label class="text-base tracking-widest rounded-xl border-gray-500">Folio real</Label>
-
-                        </div>
-
-                        <div class="inline-flex">
-
-                            <input type="number" class="bg-white text-sm w-20 rounded focus:ring-0 @error('folio_real_division') border-red-500 @enderror" wire:model="folio_real_division">
-
-                        </div>
-
-                        <button
-                            wire:click="agregarFolioReal"
-                            wire:loading.attr="disabled"
-                            wire:target="agregarFolioReal"
-                            type="button"
-                            class="bg-blue-400 mx-auto mt-3 hover:shadow-lg text-white font-bold px-4 py-2 rounded text-xs hover:bg-blue-700 focus:outline-none flex items-center justify-center focus:outline-blue-400 focus:outline-offset-2">
-
-                            <img wire:loading wire:target="agregarFolioReal" class="mx-auto h-4 mr-1" src="{{ asset('storage/img/loading3.svg') }}" alt="Loading">
-
-                            Agregar folio real
-
-                        </button>
-
-                    </div>
-
-                    <div class="flex-auto text-center mb-3 mx-auto">
-
-                        @if(count($folios_reales))
-
-                        <table class="mx-auto">
-
-                            <thead class="border-b border-gray-300 ">
-
-                                <tr class="text-sm text-gray-500 text-left traling-wider whitespace-nowrap">
-
-                                    <th class="px-2">Folio</th>
-                                    <th class="px-2">Propietario</th>
-                                    <th class="px-2">Ubicación</th>
-                                    <th class="px-2">Valor de gravamen</th>
-                                    <th class="px-2"></th>
-
-                                </tr>
-
-                            </thead>
-
-                            <tbody class="divide-y divide-gray-200">
-
-                                @foreach ($folios_reales as $key => $folio)
-
-                                    <tr class="text-gray-500 text-sm leading-relaxed">
-                                        <td class=" p-2">{{ $folio->folio }}</td>
-                                        <td class=" p-2">{{ $folio->predio->primerPropietario() }}</td>
-                                        <td class=" p-2">{{ $folio->predio->nombre_vialidad }} {{ $folio->predio->numero_exterior }}</td>
-                                        <td class=" p-2">${{ number_format($gravamenHipoteca->gravamen->valor_gravamen / count($folios_reales), 2) }}</td>
-                                        <td class=" p-2">
-                                            <button
-                                                wire:click="quitarFolio({{ $key }})"
-                                                wire:loading.attr="disabled"
-                                                wire:target="quitarFolio({{ $key }})"
-                                                class=" bg-red-400 text-white text-xs p-1 items-center rounded-full hover:bg-red-700 flex justify-center focus:outline-none"
-                                            >
-
-                                                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" class="w-4 h-4">
-                                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
-                                                </svg>
-
-                                            </button>
-                                        </td>
-                                    </tr>
-
-                                @endforeach
-
-                            </tbody>
-
-                        </table>
-
-                        @endif
-
-                    </div>
-
-                @endif
-
-            </div>
-
-        </div>
-
-    @endif --}}
-
     @if(count($errors) > 0)
 
         <div class="mb-5 bg-white rounded-lg p-2 shadow-lg flex gap-2 flex-wrap ">
@@ -406,6 +253,18 @@
                 <x-link-blue target="_blank" href="{{ $gravamen->movimientoRegistral->documentoEntrada() }}">Documento de entrada</x-link-blue>
 
             </div>
+
+            <x-button-red
+                wire:click="eliminarDocumentoEntradaPDF"
+                wire:confirm="¿Esta seguro que desea eliminar el documento de entrada?"
+                wire:loading.attr="disabled"
+                wire:target="eliminarDocumentoEntradaPDF">
+
+                <img wire:loading wire:target="eliminarDocumentoEntradaPDF" class="mx-auto h-4 mr-1" src="{{ asset('storage/img/loading3.svg') }}" alt="Loading">
+
+                Eliminar documento de entrada
+
+            </x-button-red>
 
         @endif
 
