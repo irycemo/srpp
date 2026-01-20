@@ -247,38 +247,42 @@
 
 <div class=" flex justify-end items-center bg-white rounded-lg p-2 shadow-lg gap-3">
 
-    @if(!$movimientoRegistral->documentoEntrada())
+    @if ($movimientoRegistral->folioReal)
 
-        <x-button-blue
-            wire:click="abrirModalDocumentoEntrada"
-            wire:loading.attr="disabled"
-            wire:target="abrirModalDocumentoEntrada">
+        @if(!$movimientoRegistral->folioReal->documentoEntrada())
 
-            <img wire:loading wire:target="abrirModalDocumentoEntrada" class="mx-auto h-4 mr-1" src="{{ asset('storage/img/loading3.svg') }}" alt="Loading">
+            <x-button-blue
+                wire:click="abrirModalDocumentoEntrada"
+                wire:loading.attr="disabled"
+                wire:target="abrirModalDocumentoEntrada">
 
-            Subir documento de entrada
+                <img wire:loading wire:target="abrirModalDocumentoEntrada" class="mx-auto h-4 mr-1" src="{{ asset('storage/img/loading3.svg') }}" alt="Loading">
 
-        </x-button-blue>
+                Subir documento de entrada
 
-    @else
+            </x-button-blue>
 
-        <div class="inline-block">
+        @else
 
-            <x-link-blue target="_blank" href="{{ $movimientoRegistral->documentoEntrada() }}">Documento de entrada</x-link-blue>
+            <div class="inline-block">
 
-        </div>
+                <x-link-blue target="_blank" href="{{ $movimientoRegistral->folioReal->documentoEntrada() }}">Documento de entrada</x-link-blue>
 
-        <x-button-red
-            wire:click="eliminarDocumentoEntradaPDF"
-            wire:confirm="¿Esta seguro que desea eliminar el documento de entrada?"
-            wire:loading.attr="disabled"
-            wire:target="eliminarDocumentoEntradaPDF">
+            </div>
 
-            <img wire:loading wire:target="eliminarDocumentoEntradaPDF" class="mx-auto h-4 mr-1" src="{{ asset('storage/img/loading3.svg') }}" alt="Loading">
+            <x-button-red
+                wire:click="eliminarDocumentoEntradaPDF"
+                wire:confirm="¿Esta seguro que desea eliminar el documento de entrada?"
+                wire:loading.attr="disabled"
+                wire:target="eliminarDocumentoEntradaPDF">
 
-            Eliminar documento de entrada
+                <img wire:loading wire:target="eliminarDocumentoEntradaPDF" class="mx-auto h-4 mr-1" src="{{ asset('storage/img/loading3.svg') }}" alt="Loading">
 
-        </x-button-red>
+                Eliminar documento de entrada
+
+            </x-button-red>
+
+        @endif
 
     @endif
 

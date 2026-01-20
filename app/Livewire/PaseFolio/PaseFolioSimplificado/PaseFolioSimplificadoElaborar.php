@@ -87,7 +87,6 @@ class PaseFolioSimplificadoElaborar extends Component
             'escritura_observaciones' => 'nullable',
             'acto_contenido_antecedente' => 'required',
             'observaciones_antecedente' => 'nullable',
-            'documento_entrada_pdf' => Rule::requiredIf(! $this->movimientoRegistral->documentoEntrada())
         ];
     }
 
@@ -334,6 +333,14 @@ class PaseFolioSimplificadoElaborar extends Component
                 return;
 
             }
+
+        }
+
+        if(! $this->movimientoRegistral->folioReal->documentoEntrada()){
+
+            $this->dispatch('mostrarMensaje', ['warning', "El documento de entrada es obligatorio."]);
+
+            return;
 
         }
 
