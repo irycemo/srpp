@@ -365,18 +365,14 @@
 
                                         @endcan
 
-                                        @if($movimiento->inscripcionPropiedad)
-
-                                            <button
-                                                wire:click="enviarFolioSimlificado({{ $movimiento->id }})"
-                                                wire:confirm="¿Esta seguro que desea enviar a folio simlificado?"
-                                                wire:loading.attr="disabled"
-                                                class="w-full text-left block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 focus:outline-none focus:bg-gray-100"
-                                                role="menuitem">
-                                                Enviar a folio simplificado
-                                            </button>
-
-                                        @endif
+                                        <button
+                                            wire:click="enviarFolioSimlificado({{ $movimiento->id }})"
+                                            wire:confirm="¿Esta seguro que desea enviar a folio simlificado?"
+                                            wire:loading.attr="disabled"
+                                            class="w-full text-left block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 focus:outline-none focus:bg-gray-100"
+                                            role="menuitem">
+                                            Enviar a folio simplificado
+                                        </button>
 
                                     </div>
 

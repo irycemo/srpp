@@ -388,6 +388,14 @@ class PaseFolio extends Component
 
     public function enviarFolioSimlificado(MovimientoRegistral $movimientoRegistral){
 
+        if(! $movimientoRegistral->inscripcionPropiedad){
+
+            $this->dispatch('mostrarMensaje', ['warning', "El movmiento debe se una inscripción de propiedad."]);
+
+            return;
+
+        }
+
         try {
 
             $movimientoRegistral->update([
