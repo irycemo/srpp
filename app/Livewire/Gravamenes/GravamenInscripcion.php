@@ -59,6 +59,7 @@ class GravamenInscripcion extends Component
             'numero_documento' => 'nullable',
             'fecha_emision' => 'required',
             'procedencia' => 'nullable',
+            'documento_entrada_pdf' => 'nullable|mimes:pdf|max:100000',
          ];
     }
 

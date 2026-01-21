@@ -33,7 +33,7 @@ class Fraccionamientos extends Component
 
     protected function rules(){
         return [
-            'documento' => 'required',
+            'documento_entrada_pdf' => 'nullable|mimes:pdf|max:100000',
             'propiedad.descripcion_acto' => 'required'
         ];
     }

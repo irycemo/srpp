@@ -33,7 +33,7 @@ class Varios extends Component
         return [
             'vario.acto_contenido' => 'required',
             'vario.descripcion' => 'required',
-            'documento' => 'nullable|mimes:pdf|max:100000'
+            'documento_entrada_pdf' => 'nullable|mimes:pdf|max:100000',
          ];
     }
 

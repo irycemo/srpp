@@ -30,7 +30,7 @@ class ConsolidacionUsufructo extends Component
         return [
             'vario.acto_contenido' => 'required',
             'vario.descripcion' => 'required',
-            'documento' => 'nullable|mimes:pdf|max:100000',
+            'documento_entrada_pdf' => 'nullable|mimes:pdf|max:100000',
             'porcentaje_propiedad' => 'required|numeric|min:0',
             'porcentaje_nuda' => 'required|numeric|min:0',
             'porcentaje_usufructo' => 'required|numeric|min:0',

@@ -99,13 +99,13 @@ class InscripcionGeneral extends Component
             'inscripcion.etapa_fraccionador' => 'nullable',
             'inscripcion.clave_edificio' => 'nullable',
             'inscripcion.partes_iguales' => 'required',
-            'documento' => 'nullable|mimes:pdf|max:153600',
             'tipo_documento' => 'required',
             'autoridad_cargo' => 'required',
             'autoridad_nombre' => 'required',
             'numero_documento' => 'nullable',
             'fecha_emision' => 'required',
             'procedencia' => 'nullable',
+            'documento_entrada_pdf' => 'nullable|mimes:pdf|max:100000',
          ];
     }
 

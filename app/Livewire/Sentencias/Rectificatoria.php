@@ -53,7 +53,7 @@ class Rectificatoria extends Component
 
     protected function rules(){
         return [
-            'documento' => 'nullable|mimes:pdf|max:100000',
+            'documento_entrada_pdf' => 'nullable|mimes:pdf|max:100000',
             'sentencia.acto_contenido' => 'required',
             'sentencia.descripcion' => 'required',
             'sentencia.tipo' => 'required',

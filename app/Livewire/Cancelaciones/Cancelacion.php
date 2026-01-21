@@ -46,7 +46,7 @@ class Cancelacion extends Component
             'cancelacion.observaciones' => 'required',
             'gravamenCancelarMovimiento' => 'required',
             'valor' => Rule::requiredIf($this->cancelacion->acto_contenido === 'PARCIAL'),
-            'documento' => 'nullable|mimes:pdf|max:100000',
+            'documento_entrada_pdf' => 'nullable|mimes:pdf|max:100000',
             'tipo_documento' => 'required',
             'autoridad_cargo' => 'required',
             'autoridad_nombre' => 'required',

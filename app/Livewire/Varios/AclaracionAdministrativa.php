@@ -87,7 +87,7 @@ class AclaracionAdministrativa extends Component
             'vario.predio.manzana_fraccionador' => 'nullable',
             'vario.predio.etapa_fraccionador' => 'nullable',
             'vario.predio.clave_edificio' => 'nullable',
-            'documento' => 'nullable|mimes:pdf|max:100000',
+            'documento_entrada_pdf' => 'nullable|mimes:pdf|max:100000',
             'tipo_documento' => 'required',
             'autoridad_cargo' => 'required',
             'autoridad_nombre' => 'required',
