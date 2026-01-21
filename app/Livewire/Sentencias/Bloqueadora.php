@@ -15,6 +15,7 @@ use Illuminate\Http\Client\ConnectionException;
 use App\Traits\Inscripciones\Sentencias\SentenciaTrait;
 use App\Http\Controllers\Sentencias\SentenciasController;
 use App\Traits\Inscripciones\DocumentoEntradaTrait;
+use App\Traits\Inscripciones\GuardarDocumentoEntradaTrait;
 use Spatie\LivewireFilepond\WithFilePond;
 
 class Bloqueadora extends Component
@@ -24,6 +25,7 @@ class Bloqueadora extends Component
     use WithFileUploads;
     use WithFilePond;
     use DocumentoEntradaTrait;
+    use GuardarDocumentoEntradaTrait;
 
     protected function rules(){
         return [

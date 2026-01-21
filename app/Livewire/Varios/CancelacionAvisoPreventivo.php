@@ -11,6 +11,7 @@ use Spatie\LivewireFilepond\WithFilePond;
 use App\Traits\Inscripciones\Varios\VariosTrait;
 use App\Http\Controllers\Varios\VariosController;
 use App\Traits\Inscripciones\DocumentoEntradaTrait;
+use App\Traits\Inscripciones\GuardarDocumentoEntradaTrait;
 
 class CancelacionAvisoPreventivo extends Component
 {
@@ -18,6 +19,7 @@ class CancelacionAvisoPreventivo extends Component
     use VariosTrait;
     use WithFilePond;
     use DocumentoEntradaTrait;
+    use GuardarDocumentoEntradaTrait;
 
     public $avisoCancelar;
 

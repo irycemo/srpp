@@ -13,6 +13,8 @@ use Illuminate\Support\Facades\Hash;
 use App\Traits\Inscripciones\Varios\VariosTrait;
 use App\Http\Controllers\Varios\VariosController;
 use App\Traits\Inscripciones\ConsultarArchivoTrait;
+use App\Traits\Inscripciones\GuardarDocumentoEntradaTrait;
+use App\Traits\Inscripciones\ReasignarmeMovimientoTrait;
 use Spatie\LivewireFilepond\WithFilePond;
 
 class Varios extends Component
@@ -22,6 +24,8 @@ class Varios extends Component
     use VariosTrait;
     use WithFilePond;
     use ConsultarArchivoTrait;
+    use GuardarDocumentoEntradaTrait;
+    use ReasignarmeMovimientoTrait;
 
     public $actos;
 

@@ -14,16 +14,18 @@ use App\Traits\Inscripciones\Propiedad\PropiedadTrait;
 use App\Http\Controllers\InscripcionesPropiedad\PropiedadController;
 use App\Traits\Inscripciones\ConsultarArchivoTrait;
 use App\Traits\Inscripciones\DocumentoEntradaTrait;
-use Livewire\WithFileUploads;
+use App\Traits\Inscripciones\GuardarDocumentoEntradaTrait;
+use Spatie\LivewireFilepond\WithFilePond;
 
 class InscripcionGeneral extends Component
 {
 
     use PropiedadTrait;
-    use WithFileUploads;
+    use WithFilePond;
     use ColindanciasTrait;
     use DocumentoEntradaTrait;
     use ConsultarArchivoTrait;
+    use GuardarDocumentoEntradaTrait;
 
     public $transmitentes = [];
 
@@ -32,6 +34,8 @@ class InscripcionGeneral extends Component
 
     public $partes_iguales;
     public $partes_iguales_flag = true;
+
+    public $movimientoRegistral;
 
     protected $listeners = ['refresh'];
 
@@ -771,7 +775,9 @@ class InscripcionGeneral extends Component
 
     public function mount(){
 
-        $this->consultarArchivo($this->inscripcion->movimientoRegistral);
+        $this->movimientoRegistral = $this->inscripcion->movimientoRegistral;
+
+        $this->consultarArchivo($this->movimientoRegistral);
 
         foreach($this->inscripcion->getAttributes() as $attribute => $value){
 

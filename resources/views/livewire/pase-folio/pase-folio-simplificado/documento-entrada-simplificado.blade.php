@@ -42,7 +42,7 @@
 
     </div >
 
-    <div class="grid grid-cols-1 md:grid-cols-3 sm:grid-cols-2 gap-3 mb-3 bg-white rounded-lg p-3 shadow-lg">
+    <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-5 gap-3 mb-3 bg-white rounded-lg p-3 shadow-lg">
 
         <span class="flex items-center justify-center text-lg text-gray-700 md:col-span-5 col-span-1 sm:col-span-2">Documento de entrada</span>
 
@@ -86,7 +86,7 @@
 
             </x-input-group>
 
-            <x-input-group for="autoridad_numero" label="Número de la autoridad" :error="$errors->first('autoridad_numero')" class="w-full">
+            <x-input-group for="autoridad_numero" label="Número de la autoridad" :error="$errors->first('autoridad_numero')" >
 
                 <x-input-text id="autoridad_numero" wire:model="autoridad_numero" />
 
@@ -132,7 +132,7 @@
 
             </x-input-group>
 
-            <x-input-group for="observaciones_antecedente" label="Descripción" :error="$errors->first('observaciones_antecedente')" class="sm:col-span-2 lg:col-span-5">
+            <x-input-group for="observaciones_antecedente" label="Descripción" :error="$errors->first('observaciones_antecedente')" class="col-span-1 sm:col-span-2 md:col-span-3 lg:col-span-5">
 
                 <textarea rows="3" class="w-full bg-white rounded text-sm" wire:model="observaciones_antecedente"></textarea>
 

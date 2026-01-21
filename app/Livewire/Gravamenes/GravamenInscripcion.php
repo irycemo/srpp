@@ -17,6 +17,7 @@ use Spatie\LivewireFilepond\WithFilePond;
 use App\Http\Controllers\Gravamen\GravamenController;
 use App\Traits\Inscripciones\ConsultarArchivoTrait;
 use App\Traits\Inscripciones\DocumentoEntradaTrait;
+use App\Traits\Inscripciones\GuardarDocumentoEntradaTrait;
 
 class GravamenInscripcion extends Component
 {
@@ -25,6 +26,7 @@ class GravamenInscripcion extends Component
     use WithFilePond;
     use DocumentoEntradaTrait;
     use ConsultarArchivoTrait;
+    use GuardarDocumentoEntradaTrait;
 
     public $distritos;
     public $actos;
@@ -36,10 +38,8 @@ class GravamenInscripcion extends Component
 
     public $propiedad;
 
-    public $documento;
     public $contraseña;
 
-    public $modalDocumento = false;
     public $modalContraseña;
 
     protected $listeners = ['refresh'];
@@ -226,54 +226,6 @@ class GravamenInscripcion extends Component
                                 $q->where('name', 'Gravamen');
                             })
                             ->get();
-    }
-
-    public function abrirModalFinalizar(){
-
-        $this->reset('documento');
-
-        $this->dispatch('removeFiles');
-
-        $this->modalDocumento = true;
-
-    }
-
-    public function guardarDocumento(){
-
-        $this->validate(['documento' => 'required']);
-
-        try {
-
-            DB::transaction(function (){
-
-                if(app()->isProduction()){
-
-                    $pdf = $this->documento->store(config('services.ses.ruta_documento_entrada'), 's3');
-
-                }else{
-
-                    $pdf = $this->documento->store('/', 'documento_entrada');
-
-                }
-
-                File::create([
-                    'fileable_id' => $this->gravamen->movimientoRegistral->id,
-                    'fileable_type' => 'App\Models\MovimientoRegistral',
-                    'descripcion' => 'documento_entrada',
-                    'url' => $pdf
-                ]);
-
-                $this->modalDocumento = false;
-
-            });
-
-        } catch (\Throwable $th) {
-
-            Log::error("Error al finalizar trámite de inscripción de gravamen por el usuario: (id: " . auth()->user()->id . ") " . auth()->user()->name . ". " . $th);
-            $this->dispatch('mostrarMensaje', ['error', "Ha ocurrido un error."]);
-
-        }
-
     }
 
     public function refresh(){

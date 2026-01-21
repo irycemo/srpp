@@ -3,37 +3,31 @@
 namespace App\Livewire\Cancelaciones;
 
 use App\Constantes\Constantes;
-use App\Models\File;
 use Livewire\Component;
-use Livewire\WithFileUploads;
 use Illuminate\Validation\Rule;
 use Illuminate\Support\Facades\DB;
 use App\Models\MovimientoRegistral;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Hash;
-use Illuminate\Support\Facades\Http;
-use Illuminate\Support\Facades\Storage;
 use Spatie\LivewireFilepond\WithFilePond;
 use App\Models\Cancelacion as ModelCancelacion;
-use Illuminate\Http\Client\ConnectionException;
 use App\Http\Controllers\Cancelaciones\CancelacionController;
 use App\Traits\Inscripciones\ConsultarArchivoTrait;
 use App\Traits\Inscripciones\DocumentoEntradaTrait;
+use App\Traits\Inscripciones\GuardarDocumentoEntradaTrait;
 
 class Cancelacion extends Component
 {
 
-    use WithFileUploads;
     use WithFilePond;
     use DocumentoEntradaTrait;
     use ConsultarArchivoTrait;
+    USE GuardarDocumentoEntradaTrait;
 
     public $modalContraseña = false;
     public $modalRechazar = false;
-    public $modalDocumento = false;
     public $link;
     public $contraseña;
-    public $documento;
     public $actos;
 
     public $gravamenCancelarMovimiento;
@@ -43,6 +37,7 @@ class Cancelacion extends Component
     public $motivo_rechazo;
 
     public ModelCancelacion $cancelacion;
+    public $movimientoRegistral;
 
     protected function rules(){
         return [
@@ -71,42 +66,6 @@ class Cancelacion extends Component
     public function updatedCancelacionActoContenido(){
 
         $this->valor = null;
-
-    }
-
-    public function consultarArchivo(){
-
-        try {
-
-            $response = Http::withToken(env('SISTEMA_TRAMITES_TOKEN'))
-                                ->accept('application/json')
-                                ->asForm()
-                                ->post(env('SISTEMA_TRAMITES_CONSULTAR_ARCHIVO'), [
-                                                                                    'año' => $this->cancelacion->movimientoRegistral->año,
-                                                                                    'tramite' => $this->cancelacion->movimientoRegistral->tramite,
-                                                                                    'usuario' => $this->cancelacion->movimientoRegistral->usuario,
-                                                                                    'estado' => 'nuevo'
-                                                                                ]);
-
-            $data = collect(json_decode($response, true));
-
-            if($response->status() == 200){
-
-                $this->dispatch('ver_documento', ['url' => $data['url']]);
-
-            }else{
-
-                $this->dispatch('mostrarMensaje', ['error', "No se encontro el documento."]);
-
-            }
-
-        } catch (ConnectionException $th) {
-
-            Log::error("Error al cargar archivo en cancelacion: (id: " . auth()->user()->id . ") " . auth()->user()->name . ". " . $th);
-
-            $this->dispatch('mostrarMensaje', ['error', "Ha ocurrido un error."]);
-
-        }
 
     }
 
@@ -243,57 +202,11 @@ class Cancelacion extends Component
 
     }
 
-    public function abrirModalFinalizar(){
-
-        $this->reset('documento');
-
-        $this->dispatch('removeFiles');
-
-        $this->modalDocumento = true;
-
-    }
-
-    public function guardarDocumento(){
-
-        $this->validate(['documento' => 'required']);
-
-        try {
-
-            DB::transaction(function (){
-
-                if(app()->isProduction()){
-
-                    $pdf = $this->documento->store(config('services.ses.ruta_documento_entrada'), 's3');
-
-                }else{
-
-                    $pdf = $this->documento->store('/', 'documento_entrada');
-
-                }
-
-                File::create([
-                    'fileable_id' => $this->cancelacion->movimientoRegistral->id,
-                    'fileable_type' => 'App\Models\MovimientoRegistral',
-                    'descripcion' => 'documento_entrada',
-                    'url' => $pdf
-                ]);
-
-                $this->modalDocumento = false;
-
-            });
-
-        } catch (\Throwable $th) {
-
-            Log::error("Error al finalizar trámite de inscripción de cancelación por el usuario: (id: " . auth()->user()->id . ") " . auth()->user()->name . ". " . $th);
-            $this->dispatch('mostrarMensaje', ['error', "Ha ocurrido un error."]);
-
-        }
-
-    }
-
     public function mount(){
 
-        $this->consultarArchivo($this->cancelacion->movimientoRegistral);
+        $this->movimientoRegistral = $this->cancelacion->movimientoRegistral;
+
+        $this->consultarArchivo($this->movimientoRegistral);
 
         if(!$this->cancelacion->gravamen){
 

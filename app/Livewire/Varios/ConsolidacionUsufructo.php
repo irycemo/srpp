@@ -5,22 +5,22 @@ namespace App\Livewire\Varios;
 use Exception;
 use App\Models\Actor;
 use Livewire\Component;
-use Livewire\WithFileUploads;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Hash;
 use App\Traits\Inscripciones\Varios\VariosTrait;
 use App\Http\Controllers\Varios\VariosController;
 use App\Traits\Inscripciones\DocumentoEntradaTrait;
+use App\Traits\Inscripciones\GuardarDocumentoEntradaTrait;
 use Spatie\LivewireFilepond\WithFilePond;
 
 class ConsolidacionUsufructo extends Component
 {
 
     use VariosTrait;
-    use WithFileUploads;
     use WithFilePond;
     use DocumentoEntradaTrait;
+    use GuardarDocumentoEntradaTrait;
 
     public $porcentaje_propiedad = 0;
     public $porcentaje_nuda = 0;

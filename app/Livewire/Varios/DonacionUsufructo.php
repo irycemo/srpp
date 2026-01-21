@@ -5,7 +5,6 @@ namespace App\Livewire\Varios;
 use Exception;
 use App\Models\Actor;
 use Livewire\Component;
-use Livewire\WithFileUploads;
 use Illuminate\Support\Facades\DB;
 use App\Exceptions\PredioException;
 use Illuminate\Support\Facades\Log;
@@ -20,7 +19,6 @@ class DonacionUsufructo extends Component
 {
 
     use VariosTrait;
-    use WithFileUploads;
     use WithFilePond;
     use DocumentoEntradaTrait;
 

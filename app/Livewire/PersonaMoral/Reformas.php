@@ -12,11 +12,13 @@ use Illuminate\Support\Facades\Hash;
 use App\Http\Controllers\Reformas\ReformaController;
 use App\Traits\Inscripciones\ConsultarArchivoTrait;
 use App\Traits\Inscripciones\DocumentoEntradaTrait;
+use App\Traits\Inscripciones\GuardarDocumentoEntradaTrait;
 
 class Reformas extends Component
 {
     use DocumentoEntradaTrait;
     use ConsultarArchivoTrait;
+    use GuardarDocumentoEntradaTrait;
 
     public ReformaMoral $reformaMoral;
 

@@ -2,15 +2,10 @@
 
 namespace App\Livewire\Sentencias;
 
-use App\Models\File;
 use Livewire\Component;
 use Livewire\Attributes\On;
 use App\Constantes\Constantes;
 use App\Traits\Inscripciones\ConsultarArchivoTrait;
-use Illuminate\Support\Facades\Log;
-use Illuminate\Support\Facades\Http;
-use Illuminate\Support\Facades\Storage;
-use Illuminate\Http\Client\ConnectionException;
 use App\Traits\Inscripciones\Sentencias\SentenciaTrait;
 
 class Sentencia extends Component

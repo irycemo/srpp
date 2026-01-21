@@ -8,7 +8,7 @@
 
             @include('livewire.comun.filtros-inscripciones')
 
-            @if(auth()->user()->hasRole(['Propiedad', 'Registrador Propiedad']) && auth()->user()->ubicacion === 'Regional 4')
+            @if(auth()->user()->ubicacion === 'Regional 4')
 
                 <div class="">
 

@@ -9,7 +9,6 @@ use App\Models\Predio;
 use App\Models\Gravamen;
 use App\Models\FolioReal;
 use App\Models\Propiedad;
-use Illuminate\Support\Facades\DB;
 use App\Models\MovimientoRegistral;
 use Illuminate\Support\Facades\Log;
 use App\Http\Controllers\Gravamen\GravamenController;
@@ -19,8 +18,6 @@ trait PropiedadTrait{
 
     public $modalTransmitente;
     public $modalContraseña;
-    public $modalDocumento = false;
-    public $documento;
 
     public $areas;
     public $divisas;
@@ -118,52 +115,6 @@ trait PropiedadTrait{
         if($this->validaciones()) return;
 
         $this->modalContraseña = true;
-
-    }
-
-    public function abrirModalDocumento(){
-
-        $this->reset('documento');
-
-        $this->modalDocumento = true;
-
-    }
-
-    public function guardarDocumento(){
-
-        $this->validate(['documento' => 'nullable|mimes:pdf|max:153600']);
-
-        try {
-
-            DB::transaction(function (){
-
-                if(app()->isProduction()){
-
-                    $pdf = $this->documento->store(config('services.ses.ruta_documento_entrada'), 's3');
-
-                }else{
-
-                    $pdf = $this->documento->store('/', 'documento_entrada');
-
-                }
-
-                File::create([
-                    'fileable_id' => $this->inscripcion->movimientoRegistral->id,
-                    'fileable_type' => 'App\Models\MovimientoRegistral',
-                    'descripcion' => 'documento_entrada',
-                    'url' => $pdf
-                ]);
-
-                $this->modalDocumento = false;
-
-            });
-
-        } catch (\Throwable $th) {
-
-            Log::error("Error al guardar documento de entrada en inscripción de propiedad por el usuario: (id: " . auth()->user()->id . ") " . auth()->user()->name . ". " . $th);
-            $this->dispatch('mostrarMensaje', ['error', "Ha ocurrido un error."]);
-
-        }
 
     }
 

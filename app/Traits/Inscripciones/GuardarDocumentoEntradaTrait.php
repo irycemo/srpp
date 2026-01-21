@@ -41,8 +41,8 @@ trait GuardarDocumentoEntradaTrait{
                 }
 
                 File::create([
-                    'fileable_id' => $this->movimientoRegistral->folioReal->id,
-                    'fileable_type' => 'App\Models\FolioReal',
+                    'fileable_id' => $this->movimientoRegistral->id,
+                    'fileable_type' => 'App\Models\MovimientoRegistral',
                     'descripcion' => 'documento_entrada',
                     'url' => $pdf
                 ]);
@@ -68,17 +68,19 @@ trait GuardarDocumentoEntradaTrait{
 
             DB::transaction(function (){
 
+                $file = $this->movimientoRegistral->archivos()->where('descripcion', 'documento_entrada')->first();
+
                 if(app()->isProduction()){
 
-                    Storage::disk('s3')->delete(config('services.ses.ruta_caratulas') . $this->movimientoRegistral->archivos()->where('descripcion', 'caratula')->first()->url);
+                    Storage::disk('s3')->delete(config('services.ses.ruta_documento_entrada') . '/' . $file->url);
 
                 }else{
 
-                    Storage::disk('caratulas')->delete($this->movimientoRegistral->archivos()->where('descripcion', 'caratula')->first()->url);
+                    Storage::disk('documento_entrada')->delete($file->url);
 
                 }
 
-                $this->movimientoRegistral->archivos->each()->delete();
+                $file->delete();
 
                 $this->dispatch('mostrarMensaje', ['success', "El documento de entrada se eliminó con éxito."]);
 

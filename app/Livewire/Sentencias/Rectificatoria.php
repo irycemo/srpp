@@ -22,6 +22,7 @@ use Illuminate\Http\Client\ConnectionException;
 use App\Traits\Inscripciones\Sentencias\SentenciaTrait;
 use App\Http\Controllers\Sentencias\SentenciasController;
 use App\Traits\Inscripciones\DocumentoEntradaTrait;
+use App\Traits\Inscripciones\GuardarDocumentoEntradaTrait;
 
 class Rectificatoria extends Component
 {
@@ -31,6 +32,7 @@ class Rectificatoria extends Component
     use WithFilePond;
     use ColindanciasTrait;
     use DocumentoEntradaTrait;
+    use GuardarDocumentoEntradaTrait;
 
     public $areas;
     public $divisas;

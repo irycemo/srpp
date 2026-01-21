@@ -16,6 +16,7 @@ use App\Traits\Inscripciones\ColindanciasTrait;
 use App\Traits\Inscripciones\Varios\VariosTrait;
 use App\Http\Controllers\Varios\VariosController;
 use App\Traits\Inscripciones\DocumentoEntradaTrait;
+use App\Traits\Inscripciones\GuardarDocumentoEntradaTrait;
 
 class AclaracionAdministrativa extends Component
 {
@@ -24,6 +25,7 @@ class AclaracionAdministrativa extends Component
     use WithFilePond;
     use ColindanciasTrait;
     use DocumentoEntradaTrait;
+    use GuardarDocumentoEntradaTrait;
 
     public $areas;
     public $divisas;

@@ -13,7 +13,6 @@ use App\Models\Sentencia;
 use App\Models\Antecedente;
 use Livewire\Attributes\On;
 use App\Models\Propiedadold;
-use Livewire\WithFileUploads;
 use App\Constantes\Constantes;
 use Illuminate\Validation\Rule;
 use Illuminate\Support\Facades\DB;
@@ -28,7 +27,6 @@ use Spatie\LivewireFilepond\WithFilePond;
 class Elaboracion extends Component
 {
 
-    use WithFileUploads;
     use WithFilePond;
     use GuardarDocumentoEntradaTrait;
 

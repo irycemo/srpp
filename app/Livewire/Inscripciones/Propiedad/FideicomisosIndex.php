@@ -10,6 +10,7 @@ use App\Traits\ComponentesTrait;
 use App\Models\MovimientoRegistral;
 use App\Traits\Inscripciones\InscripcionesIndex;
 use App\Traits\Inscripciones\EnviarMovimientoCorreccion;
+use App\Traits\Inscripciones\ReasignarmeMovimientoTrait;
 use App\Traits\Inscripciones\ReasignarUsuarioTrait;
 use App\Traits\Inscripciones\RechazarMovimientoTrait;
 use App\Traits\Inscripciones\RecibirDocumentoTrait;
@@ -24,6 +25,7 @@ class FideicomisosIndex extends Component
     use EnviarMovimientoCorreccion;
     use RecibirDocumentoTrait;
     use ReasignarUsuarioTrait;
+    use ReasignarmeMovimientoTrait;
 
     public function mount(){
 

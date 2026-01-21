@@ -14,16 +14,16 @@ use App\Http\Services\AsignacionService;
 use App\Traits\Inscripciones\Varios\VariosTrait;
 use App\Http\Controllers\Varios\VariosController;
 use App\Traits\Inscripciones\DocumentoEntradaTrait;
-use Livewire\WithFileUploads;
+use App\Traits\Inscripciones\GuardarDocumentoEntradaTrait;
 use Spatie\LivewireFilepond\WithFilePond;
 
 class PrimerAvisoPreventivo extends Component
 {
 
-    use WithFileUploads;
     use VariosTrait;
     use WithFilePond;
     use DocumentoEntradaTrait;
+    use GuardarDocumentoEntradaTrait;
 
     protected function rules(){
         return [
