@@ -35,6 +35,7 @@ class GravamenInscripcion extends Component
     public $tipo_deudor;
 
     public Gravamen $gravamen;
+    public $movimientoRegistral;
 
     public $propiedad;
 
@@ -237,7 +238,9 @@ class GravamenInscripcion extends Component
 
     public function mount(){
 
-       $this->consultarArchivo($this->gravamen->movimientoRegistral);
+        $this->movimientoRegistral = $this->gravamen->movimientoRegistral;
+
+        $this->consultarArchivo($this->movimientoRegistral);
 
         $this->distritos = Constantes::DISTRITOS;
 

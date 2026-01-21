@@ -10,6 +10,7 @@ use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Hash;
 use App\Traits\Inscripciones\Varios\VariosTrait;
 use App\Http\Controllers\Varios\VariosController;
+use App\Traits\Inscripciones\ConsultarArchivoTrait;
 use App\Traits\Inscripciones\DocumentoEntradaTrait;
 use App\Traits\Inscripciones\GuardarDocumentoEntradaTrait;
 use Spatie\LivewireFilepond\WithFilePond;
@@ -21,6 +22,7 @@ class ConsolidacionUsufructo extends Component
     use WithFilePond;
     use DocumentoEntradaTrait;
     use GuardarDocumentoEntradaTrait;
+    use ConsultarArchivoTrait;
 
     public $porcentaje_propiedad = 0;
     public $porcentaje_nuda = 0;
@@ -249,6 +251,10 @@ class ConsolidacionUsufructo extends Component
     }
 
     public function mount(){
+
+        $this->movimientoRegistral = $this->vario->movimientoRegistral;
+
+        $this->consultarArchivo($this->vario->movimientoRegistral);
 
         $this->vario->acto_contenido = 'CONSOLIDACIÓN DEL USUFRUCTO';
 

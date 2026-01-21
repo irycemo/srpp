@@ -12,6 +12,7 @@ trait VariosTrait{
     public $contraseña;
 
     public Vario $vario;
+    public $movimientoRegistral;
 
     public $modal = false;
     public $crear = false;

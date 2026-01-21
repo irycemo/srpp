@@ -15,13 +15,13 @@ use App\Livewire\PersonaMoral\Asiganacion;
 use App\Livewire\Consulta\IndicesPropiedad;
 use App\Livewire\Consulta\IndicesSentencia;
 use App\Livewire\PersonaMoral\ReformasIndex;
-use App\Http\Controllers\DashboardController;
 use App\Livewire\Consulta\IndicesCancelacion;
 use App\Http\Controllers\SetPasswordController;
 use App\Http\Controllers\VerificacionController;
 use App\Livewire\PersonaMoral\PaseFolioPersonaMoral;
 use App\Http\Controllers\Consultas\PreguntasController;
 use App\Http\Controllers\PaseFolio\PaseFolioController;
+use App\Livewire\Dashboard\Dashboard;
 use App\Livewire\PaseFolio\PaseFolioSimplificado\PaseFolioSimplificado;
 use App\Livewire\PaseFolio\PaseFolioSimplificado\PaseFolioSimplificadoElaborar;
 
@@ -43,7 +43,7 @@ Route::get('/', function () {
 Route::group(['middleware' => ['auth', 'esta.activo']], function(){
 
     /* Dashboard */
-    Route::get('dashboard', DashboardController::class)->name('dashboard');
+    Route::get('dashboard', Dashboard::class)->name('dashboard');
 
     /* Pase a folio */
     Route::get('pase_folio', PaseFolio::class)->middleware('permission:Pase a folio')->name('pase_folio');

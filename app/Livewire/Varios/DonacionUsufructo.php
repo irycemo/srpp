@@ -13,6 +13,7 @@ use Illuminate\Support\Facades\Hash;
 use Spatie\LivewireFilepond\WithFilePond;
 use App\Traits\Inscripciones\Varios\VariosTrait;
 use App\Http\Controllers\Varios\VariosController;
+use App\Traits\Inscripciones\ConsultarArchivoTrait;
 use App\Traits\Inscripciones\DocumentoEntradaTrait;
 
 class DonacionUsufructo extends Component
@@ -21,6 +22,7 @@ class DonacionUsufructo extends Component
     use VariosTrait;
     use WithFilePond;
     use DocumentoEntradaTrait;
+    use ConsultarArchivoTrait;
 
     protected $listeners = ['refresh'];
 
@@ -186,6 +188,10 @@ class DonacionUsufructo extends Component
     }
 
     public function mount(){
+
+        $this->movimientoRegistral = $this->vario->movimientoRegistral;
+
+        $this->consultarArchivo($this->vario->movimientoRegistral);
 
         $this->vario->acto_contenido = 'DONACIÓN / VENTA DE USUFRUCTO';
 

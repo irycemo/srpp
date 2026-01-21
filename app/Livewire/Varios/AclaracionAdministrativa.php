@@ -15,6 +15,7 @@ use Spatie\LivewireFilepond\WithFilePond;
 use App\Traits\Inscripciones\ColindanciasTrait;
 use App\Traits\Inscripciones\Varios\VariosTrait;
 use App\Http\Controllers\Varios\VariosController;
+use App\Traits\Inscripciones\ConsultarArchivoTrait;
 use App\Traits\Inscripciones\DocumentoEntradaTrait;
 use App\Traits\Inscripciones\GuardarDocumentoEntradaTrait;
 
@@ -26,6 +27,7 @@ class AclaracionAdministrativa extends Component
     use ColindanciasTrait;
     use DocumentoEntradaTrait;
     use GuardarDocumentoEntradaTrait;
+    use ConsultarArchivoTrait;
 
     public $areas;
     public $divisas;
@@ -412,6 +414,10 @@ class AclaracionAdministrativa extends Component
     }
 
     public function mount(){
+
+        $this->movimientoRegistral = $this->vario->movimientoRegistral;
+
+        $this->consultarArchivo($this->vario->movimientoRegistral);
 
         $this->vario->acto_contenido = $this->vario->acto_contenido ?? 'ACLARACIÓN ADMINISTRATIVA';
 

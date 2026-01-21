@@ -21,6 +21,7 @@ use App\Traits\Inscripciones\ColindanciasTrait;
 use Illuminate\Http\Client\ConnectionException;
 use App\Traits\Inscripciones\Sentencias\SentenciaTrait;
 use App\Http\Controllers\Sentencias\SentenciasController;
+use App\Traits\Inscripciones\ConsultarArchivoTrait;
 use App\Traits\Inscripciones\DocumentoEntradaTrait;
 use App\Traits\Inscripciones\GuardarDocumentoEntradaTrait;
 
@@ -33,6 +34,7 @@ class Rectificatoria extends Component
     use ColindanciasTrait;
     use DocumentoEntradaTrait;
     use GuardarDocumentoEntradaTrait;
+    use ConsultarArchivoTrait;
 
     public $areas;
     public $divisas;
@@ -41,6 +43,7 @@ class Rectificatoria extends Component
     public $tipos_asentamientos;
 
     public Sentencia $sentencia;
+    public $movimientoRegistral;
 
     public $predio;
     public $sentenciaPredio;
@@ -482,7 +485,9 @@ class Rectificatoria extends Component
 
     public function mount(){
 
-        $this->consultarArchivo();
+        $this->movimientoRegistral = $this->sentencia->movimientoRegistral;
+
+        $this->consultarArchivo($this->movimientoRegistral);
 
         $this->cargarPredioInicial();
 

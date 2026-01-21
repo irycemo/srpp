@@ -2,10 +2,7 @@
 
 namespace App\Traits\Inscripciones\Sentencias;
 
-use App\Models\File;
 use App\Models\Sentencia;
-use Illuminate\Support\Facades\DB;
-use Illuminate\Support\Facades\Log;
 
 trait SentenciaTrait{
 

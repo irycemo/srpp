@@ -13,6 +13,7 @@ use Illuminate\Support\Facades\Hash;
 use App\Http\Services\AsignacionService;
 use App\Traits\Inscripciones\Varios\VariosTrait;
 use App\Http\Controllers\Varios\VariosController;
+use App\Traits\Inscripciones\ConsultarArchivoTrait;
 use App\Traits\Inscripciones\DocumentoEntradaTrait;
 use App\Traits\Inscripciones\GuardarDocumentoEntradaTrait;
 use Spatie\LivewireFilepond\WithFilePond;
@@ -24,6 +25,7 @@ class PrimerAvisoPreventivo extends Component
     use WithFilePond;
     use DocumentoEntradaTrait;
     use GuardarDocumentoEntradaTrait;
+    use ConsultarArchivoTrait;
 
     protected function rules(){
         return [
@@ -197,6 +199,10 @@ class PrimerAvisoPreventivo extends Component
     }
 
     public function mount(){
+
+        $this->movimientoRegistral = $this->vario->movimientoRegistral;
+
+        $this->consultarArchivo($this->vario->movimientoRegistral);
 
         $this->cargarDocumentoEntrada($this->vario->movimientoRegistral);
 

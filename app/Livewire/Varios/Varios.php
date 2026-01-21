@@ -27,6 +27,8 @@ class Varios extends Component
 
     public $actos;
 
+    public $movimientoRegistral;
+
     protected function rules(){
         return [
             'vario.acto_contenido' => 'required',
@@ -120,6 +122,8 @@ class Varios extends Component
     }
 
     public function mount(){
+
+        $this->movimientoRegistral = $this->vario->movimientoRegistral;
 
         $this->consultarArchivo($this->vario->movimientoRegistral);
 
