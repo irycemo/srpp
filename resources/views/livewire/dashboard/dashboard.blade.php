@@ -14,7 +14,7 @@
 
         @include('livewire.dashboard.propiedad-dashboard', ['inscripcion' => $certificado_propiedad, 'titulo' => 'Certificados de propiedad'])
 
-        @include('livewire.dashboard.propiedad-dashboard', ['inscripcion' => $certificado_gravamen, 'titulo' => 'Inscripciones de gravamen'])
+        @include('livewire.dashboard.propiedad-dashboard', ['inscripcion' => $certificado_gravamen, 'titulo' => 'Certificados de gravamen'])
 
         @include('livewire.dashboard.propiedad-dashboard', ['inscripcion' => $reforma, 'titulo' => 'Inscripciones de folio real de persona moral'])
 
