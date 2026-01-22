@@ -29,6 +29,9 @@ class Dashboard extends Component
                             })
                             ->where('created_at', '>', now()->startOfMonth())
                             ->whereHas('inscripcionPropiedad')
+                            ->when(auth()->user()->ubicacion == 'Regional 4', function($q){
+                                $q->where('distrito', 2);
+                            })
                             ->groupBy('estado')
                             ->get()
                             ->map(function($movimiento){
@@ -41,6 +44,9 @@ class Dashboard extends Component
         MovimientoRegistral::select('estado', DB::raw('count(*) as count'))
                             ->when($user_id, function($q) use($user_id){
                                 $q->where('usuario_asignado', $user_id);
+                            })
+                            ->when(auth()->user()->ubicacion == 'Regional 4', function($q){
+                                $q->where('distrito', 2);
                             })
                             ->where('created_at', '>', now()->startOfMonth())
                             ->whereHas('gravamen')
@@ -57,6 +63,9 @@ class Dashboard extends Component
                             ->when($user_id, function($q) use($user_id){
                                 $q->where('usuario_asignado', $user_id);
                             })
+                            ->when(auth()->user()->ubicacion == 'Regional 4', function($q){
+                                $q->where('distrito', 2);
+                            })
                             ->where('created_at', '>', now()->startOfMonth())
                             ->whereHas('sentencia')
                             ->groupBy('estado')
@@ -71,6 +80,9 @@ class Dashboard extends Component
         MovimientoRegistral::select('estado', DB::raw('count(*) as count'))
                             ->when($user_id, function($q) use($user_id){
                                 $q->where('usuario_asignado', $user_id);
+                            })
+                            ->when(auth()->user()->ubicacion == 'Regional 4', function($q){
+                                $q->where('distrito', 2);
                             })
                             ->where('created_at', '>', now()->startOfMonth())
                             ->whereHas('cancelacion')
@@ -87,6 +99,9 @@ class Dashboard extends Component
                             ->when($user_id, function($q) use($user_id){
                                 $q->where('usuario_asignado', $user_id);
                             })
+                            ->when(auth()->user()->ubicacion == 'Regional 4', function($q){
+                                $q->where('distrito', 2);
+                            })
                             ->where('created_at', '>', now()->startOfMonth())
                             ->whereHas('vario')
                             ->groupBy('estado')
@@ -101,6 +116,9 @@ class Dashboard extends Component
         MovimientoRegistral::select('estado', DB::raw('count(*) as count'))
                             ->when($user_id, function($q) use($user_id){
                                 $q->where('usuario_asignado', $user_id);
+                            })
+                            ->when(auth()->user()->ubicacion == 'Regional 4', function($q){
+                                $q->where('distrito', 2);
                             })
                             ->where('created_at', '>', now()->startOfMonth())
                             ->whereHas('certificacion', function($q){
@@ -118,6 +136,9 @@ class Dashboard extends Component
         MovimientoRegistral::select('estado', DB::raw('count(*) as count'))
                             ->when($user_id, function($q) use($user_id){
                                 $q->where('usuario_asignado', $user_id);
+                            })
+                            ->when(auth()->user()->ubicacion == 'Regional 4', function($q){
+                                $q->where('distrito', 2);
                             })
                             ->where('created_at', '>', now()->startOfMonth())
                             ->whereHas('certificacion', function($q){
@@ -139,6 +160,9 @@ class Dashboard extends Component
                             ->when($user_id, function($q) use($user_id){
                                 $q->where('usuario_asignado', $user_id);
                             })
+                            ->when(auth()->user()->ubicacion == 'Regional 4', function($q){
+                                $q->where('distrito', 2);
+                            })
                             ->where('created_at', '>', now()->startOfMonth())
                             ->whereIn('estado', ['nuevo', 'correccion', 'no_recibido'])
                             ->where('folio', 1)
@@ -158,6 +182,9 @@ class Dashboard extends Component
         MovimientoRegistral::select('estado', DB::raw('count(*) as count'))
                             ->when($user_id, function($q) use($user_id){
                                 $q->where('usuario_asignado', $user_id);
+                            })
+                            ->when(auth()->user()->ubicacion == 'Regional 4', function($q){
+                                $q->where('distrito', 2);
                             })
                             ->where('created_at', '>', now()->startOfMonth())
                             ->whereHas('reformaMoral')
