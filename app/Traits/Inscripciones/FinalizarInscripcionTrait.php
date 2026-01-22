@@ -34,7 +34,11 @@ trait FinalizarInscripcionTrait{
 
                 $this->modelo_editar->audits()->latest()->first()->update(['tags' => 'Finalizó inscripción']);
 
-                (new SistemaTramitesService())->finaliarTramite($this->modelo_editar->año, $this->modelo_editar->tramite, $this->modelo_editar->usuario, 'concluido');
+                if($this->modelo_editar->año && $this->modelo_editar->tramite && $this->modelo_editar->usuario){
+
+                    (new SistemaTramitesService())->finaliarTramite($this->modelo_editar->año, $this->modelo_editar->tramite, $this->modelo_editar->usuario, 'concluido');
+
+                }
 
             });
 

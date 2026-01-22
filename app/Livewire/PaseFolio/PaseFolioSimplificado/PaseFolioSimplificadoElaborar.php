@@ -405,6 +405,10 @@ class PaseFolioSimplificadoElaborar extends Component
 
             });
 
+        } catch (GeneralException $ex) {
+
+            $this->dispatch('mostrarMensaje', ['warning', $ex->getMessage()]);
+
         } catch (\Throwable $th) {
 
             Log::error("Error al guardar documento de entrada en pase a folio simplificado por el usuario: (id: " . auth()->user()->id . ") " . auth()->user()->name . ". " . $th);
