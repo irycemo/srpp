@@ -1,88 +1,92 @@
-<x-header>{{ $titulo }} ({{ ucfirst(now()->locale('es')->monthName) }})</x-header>
+<div class="mb-5">
 
-<div class="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-7 gap-4 text-gray-600">
+    <x-header>{{ $titulo }} ({{ ucfirst(now()->locale('es')->monthName) }})</x-header>
 
-    <div class="mb-5 flex justify-evenly items-center space-x-2 border-t-2 border-gray-400 px-2 rounded-xl bg-white text-center">
+    <div class="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-7 gap-4 text-gray-600">
 
-            <span class="font-semibold text-2xl text-blueGray-600">
+        <div class="flex justify-evenly items-center space-x-2 border-t-2 border-gray-400 px-2 rounded-xl bg-white text-center">
 
-                <p>{{ $inscripcion['no recibido'] ?? 0 }}</p>
+                <span class="font-semibold text-2xl text-blueGray-600">
 
-            </span>
+                    <p>{{ $inscripcion['no recibido'] ?? 0 }}</p>
 
-            <span class="text-blueGray-400 uppercase  text-center  tracking-widest md:tracking-normal">No recibido</span>
+                </span>
 
-    </div>
+                <span class="text-blueGray-400 uppercase  text-center  tracking-widest md:tracking-normal">No recibido</span>
 
-    <div class="mb-5 flex justify-evenly items-center space-x-2 border-t-2 border-blue-400 px-2 py-2 rounded-xl bg-white text-center">
+        </div>
 
-            <span class="font-semibold text-2xl text-blueGray-600">
+        <div class="flex justify-evenly items-center space-x-2 border-t-2 border-blue-400 px-2 py-2 rounded-xl bg-white text-center">
 
-                <p>{{ $inscripcion['nuevo'] ?? 0 }}</p>
+                <span class="font-semibold text-2xl text-blueGray-600">
 
-            </span>
+                    <p>{{ $inscripcion['nuevo'] ?? 0 }}</p>
 
-            <span class="text-blueGray-400 uppercase  text-center  tracking-widest md:tracking-normal">Nuevo</span>
+                </span>
 
-    </div>
+                <span class="text-blueGray-400 uppercase  text-center  tracking-widest md:tracking-normal">Nuevo</span>
 
-    <div class="mb-5 flex justify-evenly items-center space-x-2 border-t-2 border-yellow-400 px-2 py-2 rounded-xl bg-white text-center">
+        </div>
 
-            <span class="font-semibold text-2xl text-blueGray-600">
+        <div class="flex justify-evenly items-center space-x-2 border-t-2 border-yellow-400 px-2 py-2 rounded-xl bg-white text-center">
 
-                <p>{{ $inscripcion['elaborado'] ?? 0 }}</p>
+                <span class="font-semibold text-2xl text-blueGray-600">
 
-            </span>
+                    <p>{{ $inscripcion['elaborado'] ?? 0 }}</p>
 
-            <span class="text-blueGray-400 uppercase  text-center  tracking-widest md:tracking-normal">Elaborado</span>
+                </span>
 
-    </div>
+                <span class="text-blueGray-400 uppercase  text-center  tracking-widest md:tracking-normal">Elaborado</span>
 
-    <div class="mb-5 flex justify-evenly items-center space-x-2 border-t-2 border-indigo-400 px-2 py-2 rounded-xl bg-white text-center">
+        </div>
 
-            <span class="font-semibold text-2xl text-blueGray-600">
+        <div class="flex justify-evenly items-center space-x-2 border-t-2 border-indigo-400 px-2 py-2 rounded-xl bg-white text-center">
 
-                <p>{{ $inscripcion['correccion'] ?? 0 }}</p>
+                <span class="font-semibold text-2xl text-blueGray-600">
 
-            </span>
+                    <p>{{ $inscripcion['correccion'] ?? 0 }}</p>
 
-            <span class="text-blueGray-400 uppercase  text-center  tracking-widest md:tracking-normal">Corrección</span>
+                </span>
 
-    </div>
+                <span class="text-blueGray-400 uppercase  text-center  tracking-widest md:tracking-normal">Corrección</span>
 
-    <div class="mb-5 flex justify-evenly items-center space-x-2 border-t-2 border-gray-400 px-2 py-2 rounded-xl bg-white text-center">
+        </div>
 
-            <span class="font-semibold text-2xl text-blueGray-600">
+        <div class="flex justify-evenly items-center space-x-2 border-t-2 border-gray-400 px-2 py-2 rounded-xl bg-white text-center">
 
-                <p>{{ $inscripcion['finalizado'] ?? 0 }}</p>
+                <span class="font-semibold text-2xl text-blueGray-600">
 
-            </span>
+                    <p>{{ $inscripcion['finalizado'] ?? 0 }}</p>
 
-            <span class="text-blueGray-400 uppercase  text-center  tracking-widest md:tracking-normal">Finalizado</span>
+                </span>
 
-    </div>
+                <span class="text-blueGray-400 uppercase  text-center  tracking-widest md:tracking-normal">Finalizado</span>
 
-    <div class="mb-5 flex justify-evenly items-center space-x-2 border-t-2 border-black px-4 py-2 rounded-xl bg-white text-center">
+        </div>
 
-            <span class="font-semibold text-2xl text-blueGray-600">
+        <div class="flex justify-evenly items-center space-x-2 border-t-2 border-black px-4 py-2 rounded-xl bg-white text-center">
 
-                <p>{{ $inscripcion['concluido'] ?? 0 }}</p>
+                <span class="font-semibold text-2xl text-blueGray-600">
 
-            </span>
+                    <p>{{ $inscripcion['concluido'] ?? 0 }}</p>
 
-            <span class="text-blueGray-400 uppercase  text-center  tracking-widest md:tracking-normal">Concluido</span>
+                </span>
 
-    </div>
+                <span class="text-blueGray-400 uppercase  text-center  tracking-widest md:tracking-normal">Concluido</span>
 
-    <div class="mb-5 flex justify-evenly items-center space-x-2 border-t-2 border-red-400 px-2 py-2 rounded-xl bg-white text-center">
+        </div>
 
-            <span class="font-semibold text-2xl text-blueGray-600">
+        <div class="flex justify-evenly items-center space-x-2 border-t-2 border-red-400 px-2 py-2 rounded-xl bg-white text-center">
 
-                <p>{{ $inscripcion['rechazado'] ?? 0 }}</p>
+                <span class="font-semibold text-2xl text-blueGray-600">
 
-            </span>
+                    <p>{{ $inscripcion['rechazado'] ?? 0 }}</p>
 
-            <span class="text-blueGray-400 uppercase  text-center  tracking-widest md:tracking-normal">Rechazado</span>
+                </span>
+
+                <span class="text-blueGray-400 uppercase  text-center  tracking-widest md:tracking-normal">Rechazado</span>
+
+        </div>
 
     </div>
 
