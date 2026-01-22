@@ -360,6 +360,18 @@ class PaseFolio extends Component
 
         if($this->modelo_editar->folioReal->movimientosRegistrales()->where('folio', 0)->first()){
 
+            for ($i=1; $i < $this->modelo_editar->folioReal->ultimoFolio(); $i++) {
+
+                if(!$this->modelo_editar->folioReal->movimientosRegistrales()->where('folio', $i)->first()){
+
+                    $this->modelo_editar->update(['folio' => $i]);
+
+                    return;
+
+                }
+
+            }
+
             $folio = $this->modelo_editar->folioReal->ultimoFolio() + 1;
 
             $this->modelo_editar->update(['folio' => $folio]);
