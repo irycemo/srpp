@@ -29,7 +29,7 @@ class Dashboard extends Component
 
         $this->propiedad = array_values($this->propiedad);
 
-        dd($this->propiedad);
+        /* dd($this->propiedad); */
 
     }
 
