@@ -70,7 +70,7 @@
 
             </span>
 
-            <span class="text-blueGray-400 uppercase  text-center  tracking-widest md:tracking-normal">Finalizado</span>
+            <span class="text-blueGray-400 uppercase  text-center  tracking-widest md:tracking-normal">Concluido</span>
 
     </div>
 
@@ -82,7 +82,7 @@
 
             </span>
 
-            <span class="text-blueGray-400 uppercase  text-center  tracking-widest md:tracking-normal">Finalizado</span>
+            <span class="text-blueGray-400 uppercase  text-center  tracking-widest md:tracking-normal">Rechazado</span>
 
     </div>
 
