@@ -4,7 +4,8 @@ namespace App\Livewire\Dashboard;
 
 use Livewire\Component;
 use App\Models\Pregunta;
-use App\Models\Propiedad;
+use Illuminate\Support\Facades\DB;
+use App\Models\MovimientoRegistral;
 
 class Dashboard extends Component
 {
@@ -12,39 +13,23 @@ class Dashboard extends Component
     public $preguntas;
     public $propiedad = [];
 
-    public function cargarPropiedad(){
+    public function cargarPropiedad($user_id = null){
 
-        $this->propiedad['no recibido'] = Propiedad::whereHas('movimientoRegistral', function($q){
-                                    $q->where('estado', 'no recibido')->where('created_at', '>', now()->startOfMonth());
-                                })->count();
+        $this->propiedad = MovimientoRegistral::select('estado', DB::raw('count(*) as count'))
+                                            ->when($user_id, function($q) use($user_id){
+                                                $q->where('usuario_asignado', $user_id);
+                                            })
+                                            ->where('created_at', '>', now()->startOfMonth())
+                                            ->whereHas('inscripcionPropiedad')
+                                            ->groupBy('estado')
+                                            ->get()
+                                            ->map(function($movimiento){
+                                                return [$movimiento->estado => $movimiento->count];
+                                            })->toArray();
 
-        $this->propiedad['nuevo'] = Propiedad::whereHas('movimientoRegistral', function($q){
-                                        $q->where('estado', 'nuevo')->where('created_at', '>', now()->startOfMonth());
-                                    })->count();
+        $this->propiedad = array_values($this->propiedad);
 
-        $this->propiedad['captura'] = Propiedad::whereHas('movimientoRegistral', function($q){
-                                        $q->where('estado', 'captura')->where('created_at', '>', now()->startOfMonth());
-                                    })->count();
-
-        $this->propiedad['correccion'] = Propiedad::whereHas('movimientoRegistral', function($q){
-                                        $q->where('estado', 'correccion')->where('created_at', '>', now()->startOfMonth());
-                                    })->count();
-
-        $this->propiedad['elaborado'] = Propiedad::whereHas('movimientoRegistral', function($q){
-                                        $q->where('estado', 'elaborado')->where('created_at', '>', now()->startOfMonth());
-                                    })->count();
-
-        $this->propiedad['finalizado'] = Propiedad::whereHas('movimientoRegistral', function($q){
-                                        $q->where('estado', 'finalizado')->where('created_at', '>', now()->startOfMonth());
-                                    })->count();
-
-        $this->propiedad['concluido'] = Propiedad::whereHas('movimientoRegistral', function($q){
-                                        $q->where('estado', 'concluido')->where('created_at', '>', now()->startOfMonth());
-                                    })->count();
-
-        $this->propiedad['rechazado'] = Propiedad::whereHas('movimientoRegistral', function($q){
-                                        $q->where('estado', 'rechazado')->where('created_at', '>', now()->startOfMonth());
-                                    })->count();
+        dd($this->propiedad);
 
     }
 

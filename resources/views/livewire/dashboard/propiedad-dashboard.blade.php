@@ -8,7 +8,7 @@
 
             <span class="font-semibold text-2xl text-blueGray-600 mb-2">
 
-                <p>{{ $inscripcion['no recibido'] }}</p>
+                <p>{{ $inscripcion['no recibido'] ?? 0 }}</p>
 
             </span>
 
@@ -24,7 +24,7 @@
 
             <span class="font-semibold text-2xl text-blueGray-600 mb-2">
 
-                <p>{{ $inscripcion['nuevo'] }}</p>
+                <p>{{ $inscripcion['nuevo'] ?? 0 }}</p>
 
             </span>
 
@@ -40,7 +40,7 @@
 
             <span class="font-semibold text-2xl text-blueGray-600 mb-2">
 
-                <p>{{ $inscripcion['elaborado'] }}</p>
+                <p>{{ $inscripcion['elaborado'] ?? 0 }}</p>
 
             </span>
 
@@ -56,7 +56,7 @@
 
             <span class="font-semibold text-2xl text-blueGray-600 mb-2">
 
-                <p>{{ $inscripcion['correccion'] }}</p>
+                <p>{{ $inscripcion['correccion'] ?? 0 }}</p>
 
             </span>
 
@@ -72,7 +72,7 @@
 
             <span class="font-semibold text-2xl text-blueGray-600 mb-2">
 
-                <p>{{ $inscripcion['finalizado'] }}</p>
+                <p>{{ $inscripcion['finalizado'] ?? 0 }}</p>
 
             </span>
 
@@ -88,7 +88,7 @@
 
             <span class="font-semibold text-2xl text-blueGray-600 mb-2">
 
-                <p>{{ $inscripcion['concluido'] }}</p>
+                <p>{{ $inscripcion['concluido'] ?? 0 }}</p>
 
             </span>
 
@@ -104,7 +104,7 @@
 
             <span class="font-semibold text-2xl text-blueGray-600 mb-2">
 
-                <p>{{ $inscripcion['rechazado'] }}</p>
+                <p>{{ $inscripcion['rechazado'] ?? 0 }}</p>
 
             </span>
 

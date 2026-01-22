@@ -429,7 +429,7 @@
 
     @if ($movimientoRegistral->folioReal)
 
-        @if(! $movimientoRegistral->documentoEntrada())
+        @if(! $movimientoRegistral->folioReal->documentoEntrada())
 
             <x-button-blue
                 wire:click="abrirModalDocumentoEntrada"

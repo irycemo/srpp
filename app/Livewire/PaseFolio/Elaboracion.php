@@ -4,6 +4,7 @@ namespace App\Livewire\PaseFolio;
 
 use Exception;
 use Carbon\Carbon;
+use App\Models\File;
 use App\Models\Predio;
 use Livewire\Component;
 use App\Models\Gravamen;
@@ -20,9 +21,10 @@ use App\Http\Services\OldBDService;
 use App\Models\MovimientoRegistral;
 use Illuminate\Support\Facades\Log;
 use App\Livewire\PaseFolio\PaseFolio;
+use Illuminate\Support\Facades\Storage;
 use App\Http\Services\AsignacionService;
-use App\Traits\Inscripciones\GuardarDocumentoEntradaTrait;
 use Spatie\LivewireFilepond\WithFilePond;
+use App\Traits\Inscripciones\GuardarDocumentoEntradaTrait;
 
 class Elaboracion extends Component
 {
@@ -244,6 +246,77 @@ class Elaboracion extends Component
                 'folio_real' => $folioReal->id,
                 'status' => 'nuevo'
             ]);
+
+        }
+
+    }
+
+    public function guardarDocumentoEntradaPdf(){
+
+        $this->validate(['documento_entrada_pdf' => 'required']);
+
+        try {
+
+            DB::transaction(function (){
+
+                if(app()->isProduction()){
+
+                    $pdf = $this->documento_entrada_pdf->store(config('services.ses.ruta_documento_entrada'), 's3');
+
+                }else{
+
+                    $pdf = $this->documento_entrada_pdf->store('/', 'documento_entrada');
+
+                }
+
+                File::create([
+                    'fileable_id' => $this->movimientoRegistral->folioReal->id,
+                    'fileable_type' => 'App\Models\FolioReal',
+                    'descripcion' => 'documento_entrada',
+                    'url' => $pdf
+                ]);
+
+                $this->dispatch('mostrarMensaje', ['success', "El documento de entrada se guardó con éxitos."]);
+
+                $this->modal_documento_entrada = false;
+
+            });
+
+        } catch (\Throwable $th) {
+
+            Log::error("Error al guardar documento de entrada por el usuario: (id: " . auth()->user()->id . ") " . auth()->user()->name . ". " . $th);
+            $this->dispatch('mostrarMensaje', ['error', "Ha ocurrido un error."]);
+
+        }
+
+    }
+
+    public function eliminarDocumentoEntradaPDF(){
+
+        try {
+
+            DB::transaction(function (){
+
+                if(app()->isProduction()){
+
+                    Storage::disk('s3')->delete(config('services.ses.ruta_caratulas') . $this->movimientoRegistral->folioReal->archivos()->where('descripcion', 'caratula')->first()->url);
+
+                }else{
+
+                    Storage::disk('caratulas')->delete($this->movimientoRegistral->folioReal->archivos()->where('descripcion', 'caratula')->first()->url);
+
+                }
+
+                $this->movimientoRegistral->folioReal->archivos->each->delete();
+
+            });
+
+            $this->dispatch('mostrarMensaje', ['success', "El documento de entrada se eliminó con éxito."]);
+
+        } catch (\Throwable $th) {
+
+            Log::error("Error al eliminar documento de entrada por el usuario: (id: " . auth()->user()->id . ") " . auth()->user()->name . ". " . $th);
+            $this->dispatch('mostrarMensaje', ['error', "Ha ocurrido un error."]);
 
         }
 
