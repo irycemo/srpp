@@ -331,7 +331,7 @@ class GravamenModal extends Component
 
         }else{
 
-            $this->cambiarFolioMovimientoInicial();
+            //$this->cambiarFolioMovimientoInicial();
 
             $movimiento_registral = MovimientoRegistral::create([
                 'estado' => 'pase_folio',
