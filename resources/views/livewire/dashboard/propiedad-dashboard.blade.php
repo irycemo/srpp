@@ -14,7 +14,7 @@
 
     </div>
 
-    <div class="mb-5 flex justify-evenly items-center space-x-2 border-t-4 border-blue-400 px-2 py-2 text-gray-600 rounded-xl bg-white text-center">
+    <div class="mb-5 flex justify-evenly items-center space-x-2 border-t-4 border-blue-400 px-2 py-2 text-blue-600 rounded-xl bg-white text-center">
 
             <span class="font-semibold text-2xl text-blueGray-600">
 
@@ -26,7 +26,7 @@
 
     </div>
 
-    <div class="mb-5 flex justify-evenly items-center space-x-2 border-t-4 border-yellow-400 px-2 py-2 text-gray-600 rounded-xl bg-white text-center">
+    <div class="mb-5 flex justify-evenly items-center space-x-2 border-t-4 border-yellow-400 px-2 py-2 text-yellow-600 rounded-xl bg-white text-center">
 
             <span class="font-semibold text-2xl text-blueGray-600">
 
