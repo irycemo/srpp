@@ -4,6 +4,20 @@
 
         @include('livewire.dashboard.propiedad-dashboard', ['inscripcion' => $propiedad, 'titulo' => 'Inscripciones de propiedad'])
 
+        @include('livewire.dashboard.propiedad-dashboard', ['inscripcion' => $gravamen, 'titulo' => 'Inscripciones de gravamen'])
+
+        @include('livewire.dashboard.propiedad-dashboard', ['inscripcion' => $sentencia, 'titulo' => 'Inscripciones de sentencias'])
+
+        @include('livewire.dashboard.propiedad-dashboard', ['inscripcion' => $cancelacion, 'titulo' => 'Inscripciones de cancelación'])
+
+        @include('livewire.dashboard.propiedad-dashboard', ['inscripcion' => $varios, 'titulo' => 'Inscripciones de varios'])
+
+        @include('livewire.dashboard.propiedad-dashboard', ['inscripcion' => $certificado_propiedad, 'titulo' => 'Certificados de propiedad'])
+
+        @include('livewire.dashboard.propiedad-dashboard', ['inscripcion' => $certificado_gravamen, 'titulo' => 'Inscripciones de gravamen'])
+
+        @include('livewire.dashboard.propiedad-dashboard', ['inscripcion' => $reforma, 'titulo' => 'Inscripciones de folio real de persona moral'])
+
     @elseif(auth()->user()->hasRole(['Jefe de departamento certificaciones', 'Supervisor certificaciones']))
 
     @elseif(auth()->user()->hasRole(['Jefe de departamento inscripciones', 'Supervisor inscripciones']))
