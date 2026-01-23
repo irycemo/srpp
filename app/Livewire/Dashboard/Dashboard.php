@@ -213,7 +213,18 @@ class Dashboard extends Component
 
         }elseif(auth()->user()->hasRole(['Jefe de departamento certificaciones', 'Supervisor certificaciones'])){
 
+            $this->cargarCertificadoGravamen();
+            $this->cargarCertificadoPropiedad();
+
         }elseif(auth()->user()->hasRole(['Jefe de departamento inscripciones', 'Supervisor inscripciones'])){
+
+            $this->cargarPropiedad();
+            $this->cargarGravamen();
+            $this->cargarSentencia();
+            $this->cargarCancelacion();
+            $this->cargarVarios();
+            $this->cargarPaseAFolio();
+            $this->cargarReforma();
 
         }elseif(auth()->user()->hasRole(['Registrador Propiedad', 'Propiedad'])){
 
