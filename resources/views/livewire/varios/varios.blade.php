@@ -193,4 +193,6 @@
 
     @endif
 
+    @filepondScripts
+
 </div>
