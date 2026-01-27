@@ -351,6 +351,8 @@
 
     @include('livewire.comun.inscripciones.modal-finalizar')
 
+    @filepondScripts
+
 </div>
 
 <script>

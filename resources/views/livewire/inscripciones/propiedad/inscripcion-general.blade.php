@@ -1377,4 +1377,6 @@
 
     @include('livewire.comun.inscripciones.modal-guardar_documento_entrada_pdf')
 
+    @filepondScripts
+
 </div>

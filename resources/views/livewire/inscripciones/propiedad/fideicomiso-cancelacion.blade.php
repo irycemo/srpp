@@ -268,4 +268,6 @@
 
     </x-dialog-modal>
 
+    @filepondScripts
+
 </div>
