@@ -57,9 +57,9 @@ class MovimientoRegistralService{
             /* Cambio el folio real */
             if($request['folio_real'] != $movimiento_registral->folioReal?->folio){
 
-                if($movimiento_registral->folioReal) $this->reacomodarFolios($movimiento_registral->folioReal);
+                /* if($movimiento_registral->folioReal) $this->reacomodarFolios($movimiento_registral->folioReal);
 
-                $this->reacomodarFoliosPrecalificacion($movimiento_registral);
+                $this->reacomodarFoliosPrecalificacion($movimiento_registral); */
 
                 $this->buscarNuevoFolioReal($request, $movimiento_registral);
 
@@ -83,9 +83,9 @@ class MovimientoRegistralService{
 
                     $array = $this->revisarEncolamientoSinFolioInmobiliario($request, $movimiento_registral->id);
 
-                    if($movimiento_registral->folioReal) $this->reacomodarFolios($movimiento_registral->folioReal);
+                    /* if($movimiento_registral->folioReal) $this->reacomodarFolios($movimiento_registral->folioReal);
 
-                    $this->reacomodarFoliosPrecalificacion($movimiento_registral);
+                    $this->reacomodarFoliosPrecalificacion($movimiento_registral); */
 
                     $this->actualizarMovimientoRegistral($request + $array, $movimiento_registral);
 
