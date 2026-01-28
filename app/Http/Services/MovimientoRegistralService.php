@@ -74,6 +74,8 @@ class MovimientoRegistralService{
 
             }
 
+            $movimiento_registral->refresh();
+
             $this->revisarFolioMatriz($movimiento_registral);
 
         /* Request no trae folio real */
