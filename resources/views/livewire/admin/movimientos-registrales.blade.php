@@ -291,7 +291,7 @@
 
                                         @endif
 
-                                        @if(in_array($movimiento->estado, ['precalificacion', 'nuevo', 'no_recibido']))
+                                        @if(in_array($movimiento->estado, ['precalificacion', 'nuevo', 'no recibido']))
 
                                             <button
                                                 wire:click="abrirModalRechazar({{ $movimiento->id }})"
