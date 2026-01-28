@@ -8,11 +8,13 @@ use App\Models\FolioRealPersona;
 use App\Models\MovimientoRegistral;
 use App\Exceptions\GeneralException;
 use App\Http\Services\MovimientoServiceInterface;
+use App\Traits\Inscripciones\RevisarFolioMatrizTrait;
 use App\Traits\MovimientoRegistral\MovimientoRegistralHelpersTrait;
 
 class MovimientoRegistralService{
 
     use MovimientoRegistralHelpersTrait;
+    use RevisarFolioMatrizTrait;
 
     public MovimientoServiceInterface $movimiento_service_interface;
 
@@ -62,6 +64,8 @@ class MovimientoRegistralService{
                 $this->reacomodarFoliosPrecalificacion($movimiento_registral); */
 
                 $this->buscarNuevoFolioReal($request, $movimiento_registral);
+
+                $this->revisarFolioMatriz($movimiento_registral);
 
             /* No cambio el folio real */
             }else{
