@@ -65,8 +65,6 @@ class MovimientoRegistralService{
 
                 $this->buscarNuevoFolioReal($request, $movimiento_registral);
 
-                $this->revisarFolioMatriz($movimiento_registral);
-
             /* No cambio el folio real */
             }else{
 
@@ -75,6 +73,8 @@ class MovimientoRegistralService{
                 $this->actualizarMovimientoRegistral($request, $movimiento_registral);
 
             }
+
+            $this->revisarFolioMatriz($movimiento_registral);
 
         /* Request no trae folio real */
         }else{

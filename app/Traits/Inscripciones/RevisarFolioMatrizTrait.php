@@ -40,7 +40,6 @@ trait RevisarFolioMatrizTrait
             $nuevoMovimientoRegistral->numero_propiedad = null;
             $nuevoMovimientoRegistral->estado = 'concluido';
             $nuevoMovimientoRegistral->servicio_nombre = 'Genera nuevo folio real';
-            $nuevoMovimientoRegistral->folio = $movimiento->folioReal->ultimoFolio() + 1;
             $nuevoMovimientoRegistral->save();
 
             Propiedad::create([
