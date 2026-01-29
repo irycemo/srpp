@@ -185,6 +185,7 @@
                                                 <button
                                                     wire:click="enviarCaptura({{ $folio->id }})"
                                                     wire:loading.attr="disabled"
+                                                    wire:confirm="¿Esta seguro que desea enviar a captura?"
                                                     class="w-full text-left block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 focus:outline-none focus:bg-gray-100"
                                                     role="menuitem">
                                                     Enviar a captura
