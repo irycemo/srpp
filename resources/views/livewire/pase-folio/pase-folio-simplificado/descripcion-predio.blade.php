@@ -1,224 +1,230 @@
 <div>
 
-    <div>
+    <div class="grid grid-cols-1 sm:grid-cols-3 gap-3">
 
-        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3 mb-3 bg-white rounded-lg p-3 shadow-lg">
+        <div class="col-span-2">
 
-            <span class="flex items-center justify-center text-lg text-gray-700  md:col-span-5 col-span-1 sm:col-span-2">Descripción del predio</span>
+            <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-3 mb-3 bg-white rounded-lg p-3 shadow-lg items-end">
 
-            <div class="space-y-1 sm:col-span-2 lg:col-span-5 mx-auto">
+                <span class="flex items-center justify-center text-lg text-gray-700  md:col-span-3 col-span-1 sm:col-span-2">Descripción del predio</span>
 
-                <span class="flex items-center justify-center text-gray-700 col-span-2  ">Cuenta predial</span>
+                <div class="space-y-1 sm:col-span-2 md:col-span-3 mx-auto">
 
-                <input title="Localidad" placeholder="Localidad" type="number" class="bg-white rounded text-xs w-20 @error('localidad') border-1 border-red-500 @enderror" wire:model.lazy="localidad">
+                    <span class="flex items-center justify-center text-gray-700 col-span-2  ">Cuenta predial</span>
 
-                <input title="Oficina" placeholder="Oficina" type="number" class="bg-white rounded text-xs w-20 @error('oficina') border-1 border-red-500 @enderror" wire:model.defer="oficina">
+                    <input title="Localidad" placeholder="Localidad" type="number" class="bg-white rounded text-xs w-20 @error('localidad') border-1 border-red-500 @enderror" wire:model.lazy="localidad">
 
-                <input title="Tipo de predio" placeholder="Tipo" type="number" class="bg-white rounded text-xs w-20 @error('tipo') border-1 border-red-500 @enderror" wire:model.defer="tipo">
+                    <input title="Oficina" placeholder="Oficina" type="number" class="bg-white rounded text-xs w-20 @error('oficina') border-1 border-red-500 @enderror" wire:model.defer="oficina">
 
-                <input title="Número de registro" placeholder="Registro" type="number" class="bg-white rounded text-xs w-20 @error('registro') border-1 border-red-500 @enderror" wire:model.lazy="registro">
+                    <input title="Tipo de predio" placeholder="Tipo" type="number" class="bg-white rounded text-xs w-20 @error('tipo') border-1 border-red-500 @enderror" wire:model.defer="tipo">
+
+                    <input title="Número de registro" placeholder="Registro" type="number" class="bg-white rounded text-xs w-20 @error('registro') border-1 border-red-500 @enderror" wire:model.lazy="registro">
+
+                </div>
+
+                <x-input-group for="superficie_terreno" label="Superficie de terreno" :error="$errors->first('superficie_terreno')" class="w-full relative">
+
+                    <x-input-text type="number" id="superficie_terreno" wire:model="superficie_terreno" />
+
+                    <div class="absolute right-0 top-6">
+
+                        <x-input-select id="unidad_area" wire:model="unidad_area">
+
+                            <option value="">-</option>
+
+                            @foreach ($areas as $unidad)
+
+                                <option value="{{ $unidad }}">@if($unidad == 'Metros cuadrados') M<sup>2</sup> @else Has.@endif</option>
+
+                            @endforeach
+
+                        </x-input-select>
+
+                    </div>
+
+                </x-input-group>
+
+                <x-input-group for="superficie_construccion" label="Superficie de construcción" :error="$errors->first('superficie_construccion')" class="w-full relative">
+
+                    <x-input-text type="number" id="superficie_construccion" wire:model="superficie_construccion" />
+
+                    <div class="absolute right-0 top-6">
+
+                        <x-input-select id="unidad_area" wire:model="unidad_area">
+
+                            <option value="">-</option>
+
+                            @foreach ($areas as $unidad)
+
+                                <option value="{{ $unidad }}">@if($unidad == 'Metros cuadrados') M<sup>2</sup> @else Has.@endif</option>
+
+                            @endforeach
+
+                        </x-input-select>
+
+                    </div>
+
+                </x-input-group>
+
+                <x-input-group for="monto_transaccion" label="Monto de la transacción" :error="$errors->first('monto_transaccion')" class="w-full relative">
+
+                    <x-input-text type="number" id="monto_transaccion" wire:model="monto_transaccion" />
+
+                    <div class="absolute right-0 top-6">
+
+                        <x-input-select id="divisa" wire:model="divisa">
+
+                            <option value="">-</option>
+
+                            @foreach ($divisas as $divisa)
+
+                                <option value="{{ $divisa }}">{{ $divisa }}</option>
+
+                            @endforeach
+
+                        </x-input-select>
+
+                    </div>
+
+                </x-input-group>
+
+                <x-input-group for="observaciones" label="Descripción" :error="$errors->first('observaciones')" class="sm:col-span-2 lg:col-span-3">
+
+                    <textarea rows="3" class="w-full bg-white rounded text-sm" wire:model="observaciones"></textarea>
+
+                </x-input-group>
 
             </div>
 
-            <x-input-group for="superficie_terreno" label="Superficie de terreno" :error="$errors->first('superficie_terreno')" class="w-full relative">
+            <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3 mb-3 bg-white rounded-lg p-3 shadow-lg">
 
-                <x-input-text type="number" id="superficie_terreno" wire:model="superficie_terreno" />
+                <span class="flex items-center justify-center text-lg text-gray-700 md:col-span-3 col-span-1 sm:col-span-2">Valores adicionales</span>
 
-                <div class="absolute right-0 top-6">
+                <x-input-group for="curt" label="CURT" :error="$errors->first('curt')" class="w-full">
 
-                    <x-input-select id="unidad_area" wire:model="unidad_area">
+                    <x-input-text id="curt" wire:model="curt" />
 
-                        <option value="">-</option>
+                </x-input-group>
 
-                        @foreach ($areas as $unidad)
+                <x-input-group for="superficie_judicial" label="Superficie judicial" :error="$errors->first('superficie_judicial')" class="w-full relative">
 
-                            <option value="{{ $unidad }}">@if($unidad == 'Metros cuadrados') M<sup>2</sup> @else Has.@endif</option>
+                    <x-input-text type="number" id="superficie_judicial" wire:model="superficie_judicial" />
 
-                        @endforeach
+                    <div class="absolute right-0 top-6">
 
-                    </x-input-select>
+                        <x-input-select id="unidad_area" wire:model="unidad_area">
 
-                </div>
+                            <option value="">-</option>
+                            @foreach ($areas as $unidad)
 
-            </x-input-group>
+                                <option value="{{ $unidad }}">@if($unidad == 'Metros cuadrados') M<sup>2</sup> @else Has.@endif</option>
 
-            <x-input-group for="superficie_construccion" label="Superficie de construcción" :error="$errors->first('superficie_construccion')" class="w-full relative">
+                            @endforeach
 
-                <x-input-text type="number" id="superficie_construccion" wire:model="superficie_construccion" />
+                        </x-input-select>
 
-                <div class="absolute right-0 top-6">
+                    </div>
 
-                    <x-input-select id="unidad_area" wire:model="unidad_area">
+                </x-input-group>
 
-                        <option value="">-</option>
+                <x-input-group for="superficie_notarial" label="Superficie notarial" :error="$errors->first('superficie_notarial')" class="w-full relative">
 
-                        @foreach ($areas as $unidad)
+                    <x-input-text type="number" id="superficie_notarial" wire:model="superficie_notarial" />
 
-                            <option value="{{ $unidad }}">@if($unidad == 'Metros cuadrados') M<sup>2</sup> @else Has.@endif</option>
+                    <div class="absolute right-0 top-6">
 
-                        @endforeach
+                        <x-input-select id="unidad_area" wire:model="unidad_area">
 
-                    </x-input-select>
+                            <option value="">-</option>
+                            @foreach ($areas as $unidad)
 
-                </div>
+                                <option value="{{ $unidad }}">@if($unidad == 'Metros cuadrados') M<sup>2</sup> @else Has.@endif</option>
 
-            </x-input-group>
+                            @endforeach
 
-            <x-input-group for="monto_transaccion" label="Valor de la propiedad (Monto de la transacción)" :error="$errors->first('monto_transaccion')" class="w-full relative">
+                        </x-input-select>
 
-                <x-input-text type="number" id="monto_transaccion" wire:model="monto_transaccion" />
+                    </div>
 
-                <div class="absolute right-0 top-6">
+                </x-input-group>
 
-                    <x-input-select id="divisa" wire:model="divisa">
+                <x-input-group for="area_comun_terreno" label="Área de terreno común" :error="$errors->first('area_comun_terreno')" class="w-full relative">
 
-                        <option value="">-</option>
+                    <x-input-text type="number" id="area_comun_terreno" wire:model="area_comun_terreno" />
 
-                        @foreach ($divisas as $divisa)
+                    <div class="absolute right-0 top-6">
 
-                            <option value="{{ $divisa }}">{{ $divisa }}</option>
+                        <x-input-select id="unidad_area" wire:model="unidad_area">
 
-                        @endforeach
+                            <option value="">-</option>
+                            @foreach ($areas as $unidad)
 
-                    </x-input-select>
+                                <option value="{{ $unidad }}">@if($unidad == 'Metros cuadrados') M<sup>2</sup> @else Has.@endif</option>
 
-                </div>
+                            @endforeach
 
-            </x-input-group>
+                        </x-input-select>
 
-            <x-input-group for="observaciones" label="Descripción" :error="$errors->first('observaciones')" class="sm:col-span-2 lg:col-span-5">
+                    </div>
 
-                <textarea rows="3" class="w-full bg-white rounded text-sm" wire:model="observaciones"></textarea>
+                </x-input-group>
 
-            </x-input-group>
+                <x-input-group for="area_comun_construccion" label="Área de contrucción común" :error="$errors->first('area_comun_construccion')" class="w-full relative">
+
+                    <x-input-text type="number" id="area_comun_construccion" wire:model="area_comun_construccion" />
+
+                    <div class="absolute right-0 top-6">
+
+                        <x-input-select id="unidad_area" wire:model="unidad_area">
+
+                            <option value="">-</option>
+                            @foreach ($areas as $unidad)
+
+                                <option value="{{ $unidad }}">@if($unidad == 'Metros cuadrados') M<sup>2</sup> @else Has.@endif</option>
+
+                            @endforeach
+
+                        </x-input-select>
+
+                    </div>
+
+                </x-input-group>
+
+                <x-input-group for="valor_terreno_comun" label="Valor de terreno común" :error="$errors->first('valor_terreno_comun')" class="w-full">
+
+                    <x-input-text type="number" id="valor_terreno_comun" wire:model="valor_terreno_comun" />
+
+                </x-input-group>
+
+                <x-input-group for="valor_construccion_comun" label="Valor de construcción común" :error="$errors->first('valor_construccion_comun')" class="w-full">
+
+                    <x-input-text type="number" id="valor_construccion_comun" wire:model="valor_construccion_comun" />
+
+                </x-input-group>
+
+                <x-input-group for="valor_total_terreno" label="Valor total del terreno" :error="$errors->first('valor_total_terreno')" class="w-full">
+
+                    <x-input-text type="number" id="valor_total_terreno" wire:model="valor_total_terreno" />
+
+                </x-input-group>
+
+                <x-input-group for="valor_total_construccion" label="Valor total de la contrucción" :error="$errors->first('valor_total_construccion')" class="w-full">
+
+                    <x-input-text type="number" id="valor_total_construccion" wire:model="valor_total_construccion" />
+
+                </x-input-group>
+
+                <x-input-group for="valor_catastral" label="Valor catastral" :error="$errors->first('valor_catastral')" class="w-full">
+
+                    <x-input-text type="number" id="valor_catastral" wire:model="valor_catastral" />
+
+                </x-input-group>
+
+            </div>
 
         </div>
 
-        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-3 mb-3 bg-white rounded-lg p-3 shadow-lg">
-
-            <span class="flex items-center justify-center text-lg text-gray-700 md:col-span-5 col-span-1 sm:col-span-2">Valores adicionales</span>
-
-            <x-input-group for="curt" label="CURT" :error="$errors->first('curt')" class="w-full">
-
-                <x-input-text id="curt" wire:model="curt" />
-
-            </x-input-group>
-
-            <x-input-group for="superficie_judicial" label="Superficie judicial" :error="$errors->first('superficie_judicial')" class="w-full relative">
-
-                <x-input-text type="number" id="superficie_judicial" wire:model="superficie_judicial" />
-
-                <div class="absolute right-0 top-6">
-
-                    <x-input-select id="unidad_area" wire:model="unidad_area">
-
-                        <option value="">-</option>
-                        @foreach ($areas as $unidad)
-
-                            <option value="{{ $unidad }}">@if($unidad == 'Metros cuadrados') M<sup>2</sup> @else Has.@endif</option>
-
-                        @endforeach
-
-                    </x-input-select>
-
-                </div>
-
-            </x-input-group>
-
-            <x-input-group for="superficie_notarial" label="Superficie notarial" :error="$errors->first('superficie_notarial')" class="w-full relative">
-
-                <x-input-text type="number" id="superficie_notarial" wire:model="superficie_notarial" />
-
-                <div class="absolute right-0 top-6">
-
-                    <x-input-select id="unidad_area" wire:model="unidad_area">
-
-                        <option value="">-</option>
-                        @foreach ($areas as $unidad)
-
-                            <option value="{{ $unidad }}">@if($unidad == 'Metros cuadrados') M<sup>2</sup> @else Has.@endif</option>
-
-                        @endforeach
-
-                    </x-input-select>
-
-                </div>
-
-            </x-input-group>
-
-            <x-input-group for="area_comun_terreno" label="Área de terreno común" :error="$errors->first('area_comun_terreno')" class="w-full relative">
-
-                <x-input-text type="number" id="area_comun_terreno" wire:model="area_comun_terreno" />
-
-                <div class="absolute right-0 top-6">
-
-                    <x-input-select id="unidad_area" wire:model="unidad_area">
-
-                        <option value="">-</option>
-                        @foreach ($areas as $unidad)
-
-                            <option value="{{ $unidad }}">@if($unidad == 'Metros cuadrados') M<sup>2</sup> @else Has.@endif</option>
-
-                        @endforeach
-
-                    </x-input-select>
-
-                </div>
-
-            </x-input-group>
-
-            <x-input-group for="area_comun_construccion" label="Área de contrucción común" :error="$errors->first('area_comun_construccion')" class="w-full relative">
-
-                <x-input-text type="number" id="area_comun_construccion" wire:model="area_comun_construccion" />
-
-                <div class="absolute right-0 top-6">
-
-                    <x-input-select id="unidad_area" wire:model="unidad_area">
-
-                        <option value="">-</option>
-                        @foreach ($areas as $unidad)
-
-                            <option value="{{ $unidad }}">@if($unidad == 'Metros cuadrados') M<sup>2</sup> @else Has.@endif</option>
-
-                        @endforeach
-
-                    </x-input-select>
-
-                </div>
-
-            </x-input-group>
-
-            <x-input-group for="valor_terreno_comun" label="Valor de terreno común" :error="$errors->first('valor_terreno_comun')" class="w-full">
-
-                <x-input-text type="number" id="valor_terreno_comun" wire:model="valor_terreno_comun" />
-
-            </x-input-group>
-
-            <x-input-group for="valor_construccion_comun" label="Valor de construcción común" :error="$errors->first('valor_construccion_comun')" class="w-full">
-
-                <x-input-text type="number" id="valor_construccion_comun" wire:model="valor_construccion_comun" />
-
-            </x-input-group>
-
-            <x-input-group for="valor_total_terreno" label="Valor total del terreno" :error="$errors->first('valor_total_terreno')" class="w-full">
-
-                <x-input-text type="number" id="valor_total_terreno" wire:model="valor_total_terreno" />
-
-            </x-input-group>
-
-            <x-input-group for="valor_total_construccion" label="Valor total de la contrucción" :error="$errors->first('valor_total_construccion')" class="w-full">
-
-                <x-input-text type="number" id="valor_total_construccion" wire:model="valor_total_construccion" />
-
-            </x-input-group>
-
-            <x-input-group for="valor_catastral" label="Valor catastral" :error="$errors->first('valor_catastral')" class="w-full">
-
-                <x-input-text type="number" id="valor_catastral" wire:model="valor_catastral" />
-
-            </x-input-group>
-
-        </div>
+        @include('livewire.pase-folio.informacion_base_datos')
 
     </div>
 
@@ -369,10 +375,11 @@
 
     @endif
 
-    <div class=" flex justify-end items-center bg-white rounded-lg p-2 shadow-lg gap-3">
+    <div class="space-y-2 lg:space-y-0 lg:flex gap-3 flex-grow justify-center lg:justify-end items-center bg-white rounded-lg p-2 shadow-lg">
 
 
         <x-button-blue
+            class="w-full lg:w-fit"
             wire:click="guardarDescripcionPredio"
             wire:loading.attr="disabled"
             wire:target="guardarDescripcionPredio">
@@ -385,7 +392,7 @@
             x-data="{ loading: false }"
             @click="async () => { loading = true; await $wire.$parent.finalizarPaseAFolio(); loading = false; }"
             :disabled="loading"
-            class='bg-red-400 hover:shadow-lg text-white px-4 py-1 rounded-full text-sm hover:bg-red-700 flex items-center justify-center focus:outline-red-400 focus:outline-offset-2'
+            class='bg-red-400 w-full lg:w-fit hover:shadow-lg text-white px-4 py-1 rounded-full text-sm hover:bg-red-700 flex items-center justify-center focus:outline-red-400 focus:outline-offset-2'
         >
 
             <img x-show="loading" class="mx-auto h-4 mr-1" src="{{ asset('storage/img/loading3.svg') }}" alt="Loading">

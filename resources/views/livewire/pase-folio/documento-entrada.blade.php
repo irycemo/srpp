@@ -419,7 +419,7 @@
 
 @endif
 
-<div class=" flex justify-end items-center bg-white rounded-lg p-2 shadow-lg gap-3">
+<div class="space-y-2 lg:space-y-0 lg:flex gap-3 flex-grow justify-center lg:justify-end items-center bg-white rounded-lg p-2 shadow-lg">
 
     <x-input-group for="folio_matriz" label="Folio matriz" :error="$errors->first('folio_matriz')" class="flex gap-3 items-center mr-auto">
 
@@ -432,6 +432,7 @@
         @if(! $movimientoRegistral->folioReal->documentoEntrada())
 
             <x-button-blue
+                class="w-full lg:w-fit"
                 wire:click="abrirModalDocumentoEntrada"
                 wire:loading.attr="disabled"
                 wire:target="abrirModalDocumentoEntrada">
@@ -444,13 +445,14 @@
 
         @else
 
-            <div class="inline-block">
+            <div class="inline-block w-full lg:w-fit">
 
                 <x-link-blue target="_blank" href="{{ $movimientoRegistral->folioReal->documentoEntrada() }}">Documento de entrada</x-link-blue>
 
             </div>
 
             <x-button-red
+                class="w-full lg:w-fit"
                 wire:click="eliminarDocumentoEntradaPDF"
                 wire:confirm="¿Esta seguro que desea eliminar el documento de entrada?"
                 wire:loading.attr="disabled"
@@ -467,6 +469,7 @@
     @endif
 
     <x-button-blue
+        class="w-full lg:w-fit"
         wire:click="guardarDocumentoEntrada"
         wire:loading.attr="disabled"
         wire:target="guardarDocumentoEntrada">
@@ -476,6 +479,7 @@
     </x-button-blue>
 
     <x-button-red
+        class="w-full lg:w-fit"
         wire:click="finalizarPaseAFolio"
         wire:loading.attr="disabled"
         wire:target="finalizarPaseAFolio">

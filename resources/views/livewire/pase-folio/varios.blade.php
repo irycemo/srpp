@@ -1,6 +1,6 @@
 <div>
 
-    <div class="grid grid-cols-3 gap-3">
+    <div class="grid grid-cols-1 sm:grid-cols-3 gap-3">
 
         <div class=" gap-3 mb-3 col-span-2 bg-white rounded-lg p-3">
 
@@ -71,9 +71,10 @@
 
     </div>
 
-    <div class=" flex justify-end items-center bg-white rounded-lg p-2 shadow-lg gap-3">
+    <div class="space-y-2 lg:space-y-0 lg:flex gap-3 flex-grow justify-center lg:justify-end items-center bg-white rounded-lg p-2 shadow-lg">
 
         <x-button-red
+            class="w-full lg:w-fit"
             wire:click="$parent.finalizarPaseAFolio"
             wire:loading.attr="disabled">
 

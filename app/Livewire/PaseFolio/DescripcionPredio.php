@@ -59,10 +59,10 @@ class DescripcionPredio extends Component
 
     protected function rules(){
         return [
-            'localidad' => 'nullable',
-            'oficina' => 'nullable',
-            'tipo' => 'nullable',
-            'registro' => 'nullable',
+            'localidad' => ['nullable', Rule::requiredIf($this->simplificado)],
+            'oficina' => ['nullable', Rule::requiredIf($this->simplificado)],
+            'tipo' => ['nullable', Rule::requiredIf($this->simplificado)],
+            'registro' => ['nullable', Rule::requiredIf($this->simplificado)],
             'region' => 'nullable',
             'municipio' => 'nullable',
             'zona' => 'nullable',

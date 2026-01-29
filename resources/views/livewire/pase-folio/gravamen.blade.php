@@ -178,9 +178,10 @@
 
     </div>
 
-    <div class=" flex justify-end items-center bg-white rounded-lg p-2 shadow-lg gap-3">
+    <div class="space-y-2 lg:space-y-0 lg:flex gap-3 flex-grow justify-center lg:justify-end items-center bg-white rounded-lg p-2 shadow-lg">
 
         <x-button-red
+            class="w-full lg:w-fit"
             wire:click="$parent.finalizarPaseAFolio"
             wire:loading.attr="disabled">
 

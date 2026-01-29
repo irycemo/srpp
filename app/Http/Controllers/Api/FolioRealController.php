@@ -94,7 +94,7 @@ class FolioRealController extends Controller
                 if(in_array($folio_real->estado, ['bloqueado', 'centinela',' inactivo'])){
 
                     return response()->json([
-                        'error' => 'El folio real esta bloqueado o en centinela',
+                        'error' => 'El folio real esta bloqueado o en centinela.',
                     ], 401);
 
                 }else{
@@ -107,7 +107,7 @@ class FolioRealController extends Controller
 
                 return response()->json([
                     'folio_real' => null,
-                    'error' => "El folio real no existe",
+                    'error' => "El folio real no existe.",
                 ], 404);
 
             }elseif(!$folio_real){
@@ -115,14 +115,14 @@ class FolioRealController extends Controller
                 if($propiedad){
 
                     return response()->json([
-                        'error' => 'La propiedad ya ha sido vendida',
+                        'error' => 'La propiedad ya ha sido vendida.',
                     ], 401);
 
                 }
 
                 return response()->json([
                     'folio_real' => null,
-                    'error' => "El folio real no existe",
+                    'error' => "No se encontro folio real.",
                 ], 204);
 
             }

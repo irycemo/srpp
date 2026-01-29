@@ -10,7 +10,7 @@
 
     <div x-data="{ activeTab: 4 }">
 
-        <div class="flex px-4 gap-4 justify-center items-center">
+        <div class="flex px-4 gap-4 lg:justify-center lg:items-center mb-5 overflow-auto">
 
             <x-button-pill @click="activeTab = 4" x-bind:class="{ 'bg-gray-300 bg-opacity-5 text-black ': activeTab === 4 }">Propiedad</x-button-pill>
 
@@ -40,7 +40,7 @@
 
                 <div x-data="{ activeTab:  0 }">
 
-                    <div class="flex px-4 gap-4 justify-center items-center  p-3 rounded-lg">
+                    <div class="flex px-4 gap-4 lg:justify-center lg:items-center mb-5 overflow-auto">
 
                         <x-button-pill  @click="activeTab = 0" x-bind:class="{ 'bg-gray-300 bg-opacity-5 text-black ': activeTab === 0 }">Documento de entrada</x-button-pill>
 

@@ -63,6 +63,7 @@ class PaseFolioSimplificadoElaborar extends Component
 
     public $escritura;
     public $propiedad;
+    public $propiedadOld;
 
     public MovimientoRegistral $movimientoRegistral;
 
@@ -724,7 +725,23 @@ class PaseFolioSimplificadoElaborar extends Component
 
             $this->movimientoRegistral->load('folioReal.antecedentes.folioRealAntecedente');
 
+        }else{
+
+            $this->tipo_documento = $this->movimientoRegistral->tipo_documento;
+            $this->autoridad_cargo = $this->movimientoRegistral->autoridad_cargo;
+            $this->autoridad_nombre = $this->movimientoRegistral->autoridad_nombre;
+            $this->autoridad_numero = $this->movimientoRegistral->autoridad_numero;
+            $this->numero_documento = $this->movimientoRegistral->numero_documento;
+            $this->fecha_emision = $this->movimientoRegistral->fecha_emision;
+            $this->fecha_inscripcion = $this->movimientoRegistral->fecha_inscripcion;
+
         }
+
+        $this->propiedadOld = Propiedadold::where('distrito', $this->movimientoRegistral->getRawOriginal('distrito'))
+                                                ->where('tomo', $this->movimientoRegistral->tomo)
+                                                ->where('registro', $this->movimientoRegistral->registro)
+                                                ->where('noprop', $this->movimientoRegistral->numero_propiedad)
+                                                ->first();
 
     }
 

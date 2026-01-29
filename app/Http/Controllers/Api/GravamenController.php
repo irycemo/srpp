@@ -12,20 +12,22 @@ class GravamenController extends Controller
 
     public function consultarGravamen(ConsultaGravamenRequest $request){
 
-        $data = $request->validated();
+        $validated = $request->validated();
 
-        $movimientoRegistral = MovimientoRegistral::when(isset($data['folio']), function($q) use($data){
-                                                            $q->where('folio', $data['folio']);
+        $movimientoRegistral = MovimientoRegistral::when(isset($validated['folio']), function($q) use($validated){
+                                                            $q->where('folio', $validated['folio']);
                                                         })
-                                                        ->when(isset($data['tomo_gravamen']), function($q) use($data){
-                                                            $q->where('tomo_gravamen', $data['tomo_gravamen']);
+                                                        ->when(isset($validated['tomo_gravamen']), function($q) use($validated){
+                                                            $q->where('tomo_gravamen', $validated['tomo_gravamen']);
                                                         })
-                                                        ->when(isset($data['registro_gravamen']), function($q) use($data){
-                                                            $q->where('registro_gravamen', $data['registro_gravamen']);
+                                                        ->when(isset($validated['registro_gravamen']), function($q) use($validated){
+                                                            $q->where('registro_gravamen', $validated['registro_gravamen']);
                                                         })
-                                                        ->where('distrito', $data['distrito'])
-                                                        ->whereHas('folioReal', function($q) use($data){
-                                                            $q->where('folio', $data['folio_real']);
+                                                        ->where('distrito', $validated['distrito'])
+                                                        ->when(isset($validated['folio_real']), function($q) use($validated){
+                                                            $q->whereHas('folioReal', function($q) use($validated){
+                                                                $q->where('folio', $validated['folio_real']);
+                                                            });
                                                         })
                                                         ->first();
 

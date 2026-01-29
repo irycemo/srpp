@@ -66,7 +66,7 @@
 
                 </x-input-group>
 
-                <x-input-group for="monto_transaccion" label="Valor de la propiedad (Monto de la transacción)" :error="$errors->first('monto_transaccion')" class="w-full relative">
+                <x-input-group for="monto_transaccion" label="Monto de la transacción" :error="$errors->first('monto_transaccion')" class="w-full relative">
 
                     <x-input-text type="number" id="monto_transaccion" wire:model="monto_transaccion" />
 
@@ -375,10 +375,11 @@
 
     @endif
 
-    <div class=" flex justify-end items-center bg-white rounded-lg p-2 shadow-lg gap-3">
+    <div class="space-y-2 lg:space-y-0 lg:flex gap-3 flex-grow justify-center lg:justify-end items-center bg-white rounded-lg p-2 shadow-lg">
 
 
         <x-button-blue
+            class="w-full lg:w-fit"
             wire:click="guardarDescripcionPredio"
             wire:loading.attr="disabled"
             wire:target="guardarDescripcionPredio">
@@ -388,6 +389,7 @@
         </x-button-blue>
 
         <x-button-red
+            class="w-full lg:w-fit"
             wire:click="$parent.finalizarPaseAFolio"
             wire:loading.attr="disabled">
 

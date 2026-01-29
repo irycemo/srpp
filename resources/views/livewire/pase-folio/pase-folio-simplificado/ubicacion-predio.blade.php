@@ -1,200 +1,210 @@
 <div>
 
-    <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-5 gap-3 mb-3 bg-white rounded-lg p-3 shadow-lg">
+    <div class="grid grid-cols-1 sm:grid-cols-3 gap-3">
 
-        <span class="flex items-center justify-center text-lg text-gray-700 md:col-span-5 col-span-1 sm:col-span-2">Ubicación del predio</span>
+        <div class="col-span-2">
 
-        <x-input-group for="tipo_vialidad" label="Tipo de vialidad" :error="$errors->first('tipo_vialidad')" class="w-full">
+            <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-3 mb-3 bg-white rounded-lg p-3 shadow-lg">
 
-            <x-input-select id="tipo_vialidad" wire:model.live="tipo_vialidad" class="w-full">
+                <span class="flex items-center justify-center text-lg text-gray-700 md:col-span-3 col-span-1 sm:col-span-2">Ubicación del predio</span>
 
-                <option value="">Seleccione una opción</option>
+                <x-input-group for="tipo_vialidad" label="Tipo de vialidad" :error="$errors->first('tipo_vialidad')" class="w-full">
 
-                @foreach ($tipos_vialidades as $vialidad)
+                    <x-input-select id="tipo_vialidad" wire:model.live="tipo_vialidad" class="w-full">
 
-                    <option value="{{ $vialidad }}">{{ $vialidad }}</option>
+                        <option value="">Seleccione una opción</option>
 
-                @endforeach
+                        @foreach ($tipos_vialidades as $vialidad)
 
-            </x-input-select>
+                            <option value="{{ $vialidad }}">{{ $vialidad }}</option>
 
-        </x-input-group>
+                        @endforeach
 
-        <x-input-group for="nombre_vialidad" label="Nombre de la vialidad" :error="$errors->first('nombre_vialidad')" class="w-full">
+                    </x-input-select>
 
-            <x-input-text id="nombre_vialidad" wire:model="nombre_vialidad" />
+                </x-input-group>
 
-        </x-input-group>
+                <x-input-group for="nombre_vialidad" label="Nombre de la vialidad" :error="$errors->first('nombre_vialidad')" class="w-full">
 
-        <x-input-group for="numero_exterior" label="Número exterior" :error="$errors->first('numero_exterior')" class="w-full">
+                    <x-input-text id="nombre_vialidad" wire:model="nombre_vialidad" />
 
-            <x-input-text id="numero_exterior" wire:model="numero_exterior" />
+                </x-input-group>
 
-        </x-input-group>
+                <x-input-group for="numero_exterior" label="Número exterior" :error="$errors->first('numero_exterior')" class="w-full">
 
-        <x-input-group for="numero_interior" label="Número interior" :error="$errors->first('numero_interior')" class="w-full">
+                    <x-input-text id="numero_exterior" wire:model="numero_exterior" />
 
-            <x-input-text id="numero_interior" wire:model="numero_interior" />
+                </x-input-group>
 
-        </x-input-group>
+                <x-input-group for="numero_interior" label="Número interior" :error="$errors->first('numero_interior')" class="w-full">
 
-        <x-input-group for="nombre_edificio" label="Edificio" :error="$errors->first('nombre_edificio')" class="w-full">
+                    <x-input-text id="numero_interior" wire:model="numero_interior" />
 
-            <x-input-text id="nombre_edificio" wire:model="nombre_edificio" />
+                </x-input-group>
 
-        </x-input-group>
+                <x-input-group for="nombre_edificio" label="Edificio" :error="$errors->first('nombre_edificio')" class="w-full">
 
-        <x-input-group for="departamento_edificio" label="Departamento" :error="$errors->first('departamento_edificio')" class="w-full">
+                    <x-input-text id="nombre_edificio" wire:model="nombre_edificio" />
 
-            <x-input-text id="departamento_edificio" wire:model="departamento_edificio" />
+                </x-input-group>
 
-        </x-input-group>
+                <x-input-group for="departamento_edificio" label="Departamento" :error="$errors->first('departamento_edificio')" class="w-full">
 
-        <x-input-group for="tipo_asentamiento" label="Tipo de asentamiento" :error="$errors->first('tipo_asentamiento')" class="w-full">
+                    <x-input-text id="departamento_edificio" wire:model="departamento_edificio" />
 
-            <x-input-select id="tipo_asentamiento" wire:model.live="tipo_asentamiento" class="w-full">
+                </x-input-group>
 
-                <option value="">Seleccione una opción</option>
+                <x-input-group for="tipo_asentamiento" label="Tipo de asentamiento" :error="$errors->first('tipo_asentamiento')" class="w-full">
 
-                @foreach ($tipos_asentamientos as $asentamiento)
+                    <x-input-select id="tipo_asentamiento" wire:model.live="tipo_asentamiento" class="w-full">
 
-                    <option value="{{ $asentamiento }}">{{ $asentamiento }}</option>
+                        <option value="">Seleccione una opción</option>
 
-                @endforeach
+                        @foreach ($tipos_asentamientos as $asentamiento)
 
-            </x-input-select>
+                            <option value="{{ $asentamiento }}">{{ $asentamiento }}</option>
 
-        </x-input-group>
+                        @endforeach
 
-        <x-input-group for="nombre_asentamiento" label="Nombre del asentamiento" :error="$errors->first('nombre_asentamiento')" class="w-full">
+                    </x-input-select>
 
-            <x-input-text  id="nombre_asentamiento" wire:model="nombre_asentamiento" />
+                </x-input-group>
 
-        </x-input-group>
+                <x-input-group for="nombre_asentamiento" label="Nombre del asentamiento" :error="$errors->first('nombre_asentamiento')" class="w-full">
 
-        <x-input-group for="codigo_postal" label="Código postal" :error="$errors->first('codigo_postal')" class="w-full">
+                    <x-input-text  id="nombre_asentamiento" wire:model="nombre_asentamiento" />
 
-            <x-input-text type="number" id="codigo_postal" wire:model="codigo_postal" />
+                </x-input-group>
 
-        </x-input-group>
+                <x-input-group for="codigo_postal" label="Código postal" :error="$errors->first('codigo_postal')" class="w-full">
 
-        <x-input-group for="localidad_ubicacion" label="Localidad" :error="$errors->first('localidad_ubicacion')" class="w-full">
+                    <x-input-text type="number" id="codigo_postal" wire:model="codigo_postal" />
 
-            <x-input-text id="localidad_ubicacion" wire:model="localidad_ubicacion" />
+                </x-input-group>
 
-        </x-input-group>
+                <x-input-group for="localidad_ubicacion" label="Localidad" :error="$errors->first('localidad_ubicacion')" class="w-full">
 
-        <x-input-group for="municipio_ubicacion" label="Municipio" :error="$errors->first('municipio_ubicacion')" class="w-full">
+                    <x-input-text id="localidad_ubicacion" wire:model="localidad_ubicacion" />
 
-            <x-input-text id="municipio_ubicacion" wire:model="municipio_ubicacion"/>
+                </x-input-group>
 
-        </x-input-group>
+                <x-input-group for="municipio_ubicacion" label="Municipio" :error="$errors->first('municipio_ubicacion')" class="w-full">
 
-        <x-input-group for="ciudad" label="Ciudad" :error="$errors->first('ciudad')" class="w-full">
+                    <x-input-text id="municipio_ubicacion" wire:model="municipio_ubicacion"/>
 
-            <x-input-text id="ciudad" wire:model="ciudad"/>
+                </x-input-group>
 
-        </x-input-group>
+                <x-input-group for="ciudad" label="Ciudad" :error="$errors->first('ciudad')" class="w-full">
 
-        <x-input-group for="observaciones" label="Observaciones" :error="$errors->first('observaciones')" class="md:col-span-5 col-span-1 sm:col-span-2">
+                    <x-input-text id="ciudad" wire:model="ciudad"/>
 
-            <textarea rows="3" class="w-full bg-white rounded" wire:model="observaciones"></textarea>
+                </x-input-group>
 
-        </x-input-group>
+                <x-input-group for="observaciones" label="Observaciones" :error="$errors->first('observaciones')" class="md:col-span-3 col-span-1 sm:col-span-2">
 
-    </div>
+                    <textarea rows="3" class="w-full bg-white rounded" wire:model="observaciones"></textarea>
 
-    <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-3 mb-3 bg-white rounded-lg p-3 shadow-lg">
+                </x-input-group>
 
-        <span class="flex items-center justify-center text-lg text-gray-700 md:col-span-5 col-span-1 sm:col-span-2">Datos Complementarios</span>
+            </div>
 
-        <x-input-group for="zona_ubicacion" label="Zona" :error="$errors->first('zona_ubicacion')" class="w-full">
+            <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-3 mb-3 bg-white rounded-lg p-3 shadow-lg">
 
-            <x-input-text id="zona_ubicacion" wire:model="zona_ubicacion" />
+                <span class="flex items-center justify-center text-lg text-gray-700 md:col-span-3 col-span-1 sm:col-span-2">Datos Complementarios</span>
 
-        </x-input-group>
+                <x-input-group for="zona_ubicacion" label="Zona" :error="$errors->first('zona_ubicacion')" class="w-full">
 
-        <x-input-group for="lote" label="Lote" :error="$errors->first('lote')" class="w-full">
+                    <x-input-text id="zona_ubicacion" wire:model="zona_ubicacion" />
 
-            <x-input-text id="lote" wire:model="lote" />
+                </x-input-group>
 
-        </x-input-group>
+                <x-input-group for="lote" label="Lote" :error="$errors->first('lote')" class="w-full">
 
-        <x-input-group for="manzana_ubicacion" label="Manzana" :error="$errors->first('manzana_ubicacion')" class="w-full">
+                    <x-input-text id="lote" wire:model="lote" />
 
-            <x-input-text id="manzana_ubicacion" wire:model="manzana_ubicacion" />
+                </x-input-group>
 
-        </x-input-group>
+                <x-input-group for="manzana_ubicacion" label="Manzana" :error="$errors->first('manzana_ubicacion')" class="w-full">
 
-        <x-input-group for="ejido" label="Ejido" :error="$errors->first('ejido')" class="w-full">
+                    <x-input-text id="manzana_ubicacion" wire:model="manzana_ubicacion" />
 
-            <x-input-text id="ejido" wire:model="ejido" />
+                </x-input-group>
 
-        </x-input-group>
+                <x-input-group for="ejido" label="Ejido" :error="$errors->first('ejido')" class="w-full">
 
-        <x-input-group for="parcela" label="Parcela" :error="$errors->first('parcela')" class="w-full">
+                    <x-input-text id="ejido" wire:model="ejido" />
 
-            <x-input-text id="parcela" wire:model="parcela" />
+                </x-input-group>
 
-        </x-input-group>
+                <x-input-group for="parcela" label="Parcela" :error="$errors->first('parcela')" class="w-full">
 
-        <x-input-group for="solar" label="Solar" :error="$errors->first('solar')" class="w-full">
+                    <x-input-text id="parcela" wire:model="parcela" />
 
-            <x-input-text id="solar" wire:model="solar" />
+                </x-input-group>
 
-        </x-input-group>
+                <x-input-group for="solar" label="Solar" :error="$errors->first('solar')" class="w-full">
 
-        <x-input-group for="poblado" label="Poblado" :error="$errors->first('poblado')" class="w-full">
+                    <x-input-text id="solar" wire:model="solar" />
 
-            <x-input-text id="poblado" wire:model="poblado" />
+                </x-input-group>
 
-        </x-input-group>
+                <x-input-group for="poblado" label="Poblado" :error="$errors->first('poblado')" class="w-full">
 
-    </div>
+                    <x-input-text id="poblado" wire:model="poblado" />
 
-    <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-5 gap-3 mb-3 bg-white rounded-lg p-3 shadow-lg">
+                </x-input-group>
 
-        <x-input-group for="numero_exterior_2" label="Número exterior 2" :error="$errors->first('numero_exterior_2')" class="w-full">
+            </div>
 
-            <x-input-text id="numero_exterior_2" wire:model="numero_exterior_2" />
+            <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-3 mb-3 bg-white rounded-lg p-3 shadow-lg">
 
-        </x-input-group>
+                <x-input-group for="numero_exterior_2" label="Número exterior 2" :error="$errors->first('numero_exterior_2')" class="w-full">
 
-        <x-input-group for="numero_adicional" label="Número adicional" :error="$errors->first('numero_adicional')" class="w-full">
+                    <x-input-text id="numero_exterior_2" wire:model="numero_exterior_2" />
 
-            <x-input-text id="numero_adicional" wire:model="numero_adicional" />
+                </x-input-group>
 
-        </x-input-group>
+                <x-input-group for="numero_adicional" label="Número adicional" :error="$errors->first('numero_adicional')" class="w-full">
 
-        <x-input-group for="numero_adicional_2" label="Número adicional 2" :error="$errors->first('numero_adicional_2')" class="w-full">
+                    <x-input-text id="numero_adicional" wire:model="numero_adicional" />
 
-            <x-input-text id="numero_adicional_2" wire:model="numero_adicional_2" />
+                </x-input-group>
 
-        </x-input-group>
+                <x-input-group for="numero_adicional_2" label="Número adicional 2" :error="$errors->first('numero_adicional_2')" class="w-full">
 
-        <x-input-group for="lote_fraccionador" label="Lote del fraccionador" :error="$errors->first('lote_fraccionador')" class="w-full">
+                    <x-input-text id="numero_adicional_2" wire:model="numero_adicional_2" />
 
-            <x-input-text id="lote_fraccionador" wire:model="lote_fraccionador" />
+                </x-input-group>
 
-        </x-input-group>
+                <x-input-group for="lote_fraccionador" label="Lote del fraccionador" :error="$errors->first('lote_fraccionador')" class="w-full">
 
-        <x-input-group for="manzana_fraccionador" label="Manzana del fraccionador" :error="$errors->first('manzana_fraccionador')" class="w-full">
+                    <x-input-text id="lote_fraccionador" wire:model="lote_fraccionador" />
 
-            <x-input-text id="manzana_fraccionador" wire:model="manzana_fraccionador" />
+                </x-input-group>
 
-        </x-input-group>
+                <x-input-group for="manzana_fraccionador" label="Manzana del fraccionador" :error="$errors->first('manzana_fraccionador')" class="w-full">
 
-        <x-input-group for="etapa_fraccionador" label="Etapa del fraccionador" :error="$errors->first('etapa_fraccionador')" class="w-full">
+                    <x-input-text id="manzana_fraccionador" wire:model="manzana_fraccionador" />
 
-            <x-input-text id="etapa_fraccionador" wire:model="etapa_fraccionador" />
+                </x-input-group>
 
-        </x-input-group>
+                <x-input-group for="etapa_fraccionador" label="Etapa del fraccionador" :error="$errors->first('etapa_fraccionador')" class="w-full">
 
-        <x-input-group for="clave_edificio" label="Clave del edificio" :error="$errors->first('clave_edificio')" class="w-full">
+                    <x-input-text id="etapa_fraccionador" wire:model="etapa_fraccionador" />
 
-            <x-input-text id="clave_edificio" wire:model="clave_edificio" />
+                </x-input-group>
 
-        </x-input-group>
+                <x-input-group for="clave_edificio" label="Clave del edificio" :error="$errors->first('clave_edificio')" class="w-full">
+
+                    <x-input-text id="clave_edificio" wire:model="clave_edificio" />
+
+                </x-input-group>
+
+            </div>
+
+        </div>
+
+        @include('livewire.pase-folio.informacion_base_datos')
 
     </div>
 
@@ -217,9 +227,10 @@
 
     @endif
 
-    <div class=" flex justify-end items-center bg-white rounded-lg p-2 shadow-lg gap-3">
+    <div class="space-y-2 lg:space-y-0 lg:flex gap-3 flex-grow justify-center lg:justify-end items-center bg-white rounded-lg p-2 shadow-lg">
 
         <x-button-blue
+            class="w-full lg:w-fit"
             wire:click="guardarUbicacionPredio"
             wire:loading.attr="disabled"
             wire:target="guardarUbicacionPredio">
@@ -229,6 +240,7 @@
         </x-button-blue>
 
         <x-button-red
+            class="w-full lg:w-fit"
             wire:click="$parent.finalizarPaseAFolio"
             wire:loading.attr="disabled">
 

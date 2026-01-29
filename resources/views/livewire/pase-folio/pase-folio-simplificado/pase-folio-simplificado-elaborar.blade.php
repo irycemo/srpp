@@ -4,7 +4,7 @@
 
         <div x-data="{ activeTab:  0 }">
 
-            <div class="flex px-4 gap-4 justify-center items-center  p-3 rounded-lg">
+            <div class="flex px-4 gap-4 lg:justify-center lg:items-center mb-5 overflow-auto">
 
                 <x-button-pill  @click="activeTab = 0" x-bind:class="{ 'bg-gray-300 bg-opacity-5 text-black ': activeTab === 0 }">Documento de entrada</x-button-pill>
 
@@ -24,19 +24,19 @@
 
             <div class="tab-panel rounded-lg" :class="{ 'active': activeTab === 1 }" x-show.transition.in.opacity.duration.800="activeTab === 1" x-cloak>
 
-                @livewire('pase-folio.ubicacion-predio', ['movimientoRegistral' => $this->movimientoRegistral, 'simplificado' => true])
+                @livewire('pase-folio.ubicacion-predio', ['movimientoRegistral' => $this->movimientoRegistral, 'simplificado' => true, 'propiedadOld' => $this->propiedadOld])
 
             </div>
 
             <div class="tab-panel rounded-lg" :class="{ 'active': activeTab === 2 }" x-show.transition.in.opacity.duration.800="activeTab === 2" x-cloak>
 
-                @livewire('pase-folio.descripcion-predio', ['movimientoRegistral' => $this->movimientoRegistral, 'simplificado' => true])
+                @livewire('pase-folio.descripcion-predio', ['movimientoRegistral' => $this->movimientoRegistral, 'simplificado' => true, 'propiedadOld' => $this->propiedadOld])
 
             </div>
 
             <div class="tab-panel rounded-lg" :class="{ 'active': activeTab === 3 }" x-show.transition.in.opacity.duration.800="activeTab === 3" x-cloak>
 
-                @livewire('pase-folio.propietarios', ['movimientoRegistral' => $this->movimientoRegistral, 'simplificado' => true])
+                @livewire('pase-folio.propietarios', ['movimientoRegistral' => $this->movimientoRegistral, 'simplificado' => true, 'propiedadOld' => $this->propiedadOld])
 
             </div>
 
