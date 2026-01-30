@@ -479,6 +479,8 @@ class Elaboracion extends Component
 
                 foreach($sentencias as $sentencia){
 
+                    if($sentencia->status == 'C') continue;
+
                     $this->crearSentencia($sentencia);
 
                 }
@@ -498,17 +500,17 @@ class Elaboracion extends Component
             'distrito' => $this->movimientoRegistral->getRawOriginal('distrito'),
             'estado' => 'carga_parcial',
             'usuario_asignado' => auth()->id(),
-            'procedencia' => $sentencia->juzgado_emisor_sentencia,
+            'procedencia' => $sentencia->juzgado,
             'numero_oficio' => $sentencia->oficio,
         ]);
 
         Sentencia::create([
             'movimiento_registral_id' => $movimientoRegistralSentenciaNueva->id,
-            'fecha_inscripcion' => $sentencia->fecha_inscripción_sentencia,
+            'fecha_inscripcion' => $sentencia->fechains,
             'estado' => 'concluido',
-            'descripcion' => $sentencia->descripción_sentencia . ' ' . $sentencia->información_complementaria,
-            'tomo' => $sentencia->tomo_sentencia,
-            'registro' => $sentencia->registro_sentencia,
+            'descripcion' => $sentencia->descripcion . ' ' . $sentencia->comentarios,
+            'tomo' => $sentencia->tomosen,
+            'registro' => $sentencia->registrosen,
             'hojas' => $sentencia->hojas,
             'expediente' => $sentencia->expediente,
         ]);
