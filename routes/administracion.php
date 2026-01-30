@@ -10,10 +10,11 @@ use App\Livewire\Admin\Centinela;
 use App\Livewire\Admin\Regionales;
 use App\Livewire\Admin\Propiedades;
 use App\Livewire\Admin\FoliosReales;
+use App\Livewire\Admin\VerFolioReal;
 use Illuminate\Support\Facades\Route;
 use App\Livewire\Admin\FoliosRealesPM;
 use App\Livewire\Admin\MovimientosRegistrales;
-use App\Livewire\Admin\VerFolioReal;
+use App\Livewire\Admin\MovimientosRegistralesOrdenar;
 
 Route::group(['middleware' => ['auth', 'esta.activo']], function(){
 
@@ -32,6 +33,8 @@ Route::group(['middleware' => ['auth', 'esta.activo']], function(){
     Route::get('folios_reales_pm', FoliosRealesPM::class)->middleware('permission:Lista de folios reales')->name('folios_reales_pm');
 
     Route::get('movimientos_registrales', MovimientosRegistrales::class)->middleware('permission:Lista de movimientos registrales')->name('movimientos_registrales');
+
+    Route::get('movimientos_registrales_ordenar', MovimientosRegistralesOrdenar::class)->middleware('permission:Lista de movimientos registrales')->name('movimientos_registrales_ordenar');
 
     Route::get('centinela', Centinela::class)->middleware('permission:Centinela')->name('centinela');
 
