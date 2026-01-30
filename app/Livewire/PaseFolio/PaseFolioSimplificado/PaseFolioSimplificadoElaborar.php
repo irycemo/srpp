@@ -649,7 +649,7 @@ class PaseFolioSimplificadoElaborar extends Component
 
     }
 
-    /* public function consultarSentenciasAntecedente($distrito, $tomo, $registro, $numero_propiedad){ */
+    public function consultarSentenciasAntecedente($distrito, $tomo, $registro, $numero_propiedad){
 
         $sentencias = DB::connection('mysql2')->select("call spQSentencias(" .
                                                                             1 .
