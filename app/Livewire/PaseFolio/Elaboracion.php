@@ -465,18 +465,25 @@ class Elaboracion extends Component
 
     public function consultarSentenciasAntecedente($distrito, $tomo, $registro, $numero_propiedad){
 
-        $sentencias = DB::connection('mysql2')->select("call spQSentencias(" .
-                                                                            $distrito .
-                                                                            "," . $tomo .
-                                                                            "," . '\'\'' .
-                                                                            "," . $registro .
-                                                                            "," .  '\'\'' .
-                                                                            "," . $numero_propiedad .
-                                                                            ")");
+        $propiedad = Propiedadold::where("distrito", $distrito)
+                                    ->where("tomo", $tomo)
+                                    ->where("registro", $registro)
+                                    ->where("noprop", $numero_propiedad)
+                                    ->first();
 
-        foreach($sentencias as $sentencia){
+        if($propiedad){
 
-            $this->crearSentencia($sentencia);
+            $sentencias = (new OldBDService())->sentencias($propiedad->id);
+
+            if(count($sentencias)){
+
+                foreach($sentencias as $sentencia){
+
+                    $this->crearSentencia($sentencia);
+
+                }
+
+            }
 
         }
 

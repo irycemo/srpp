@@ -341,7 +341,7 @@ class PaseFolioSimplificadoElaborar extends Component
 
             $this->revisarGravamenes();
 
-            /* $this->consultarSentenciasAntecedente($this->movimientoRegistral->getRawOriginal('distrito'), $this->movimientoRegistral->tomo, $this->movimientoRegistral->registro, $this->movimientoRegistral->numero_propiedad); */
+            $this->consultarSentenciasAntecedente($this->movimientoRegistral->getRawOriginal('distrito'), $this->movimientoRegistral->tomo, $this->movimientoRegistral->registro, $this->movimientoRegistral->numero_propiedad);
 
             DB::transaction(function () {
 
@@ -651,19 +651,21 @@ class PaseFolioSimplificadoElaborar extends Component
 
     public function consultarSentenciasAntecedente($distrito, $tomo, $registro, $numero_propiedad){
 
-        $sentencias = DB::connection('mysql2')->select("call spQSentencias(" .
-                                                                            1 .
-                                                                            $distrito .
-                                                                            "," . $tomo .
-                                                                            "," . '\'\'' .
-                                                                            "," . $registro .
-                                                                            "," .  '\'\'' .
-                                                                            "," . $numero_propiedad .
-                                                                            ")");
+        $propiedad = Propiedadold::where("distrito", $distrito)
+                                    ->where("tomo", $tomo)
+                                    ->where("registro", $registro)
+                                    ->where("noprop", $numero_propiedad)
+                                    ->first();
 
-        if(count($sentencias)){
+        if($propiedad){
 
-            throw new GeneralException('El antecedente cuenta tiene sentencias.');
+            $sentencias = (new OldBDService())->sentencias($propiedad->id);
+
+            if(count($sentencias)){
+
+                throw new GeneralException('El antecedente cuenta tiene sentencias.');
+
+            }
 
         }
 

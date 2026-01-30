@@ -216,7 +216,7 @@
 
                 </x-input-group>
 
-                <x-input-group for="escritura_observaciones" label="Descripción" :error="$errors->first('escritura_observaciones')" class="sm:col-span-2">
+                <x-input-group for="escritura_observaciones" label="Descripción" :error="$errors->first('escritura_observaciones')" class="sm:col-span-3">
 
                     <textarea rows="3" class="w-full bg-white rounded text-sm" wire:model="escritura_observaciones"></textarea>
 
