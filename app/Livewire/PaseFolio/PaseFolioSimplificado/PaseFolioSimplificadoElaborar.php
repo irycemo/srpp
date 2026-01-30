@@ -341,7 +341,7 @@ class PaseFolioSimplificadoElaborar extends Component
 
             $this->revisarGravamenes();
 
-            $this->consultarSentenciasAntecedente($this->movimientoRegistral->getRawOriginal('distrito'), $this->movimientoRegistral->tomo, $this->movimientoRegistral->registro, $this->movimientoRegistral->numero_propiedad);
+            /* $this->consultarSentenciasAntecedente($this->movimientoRegistral->getRawOriginal('distrito'), $this->movimientoRegistral->tomo, $this->movimientoRegistral->registro, $this->movimientoRegistral->numero_propiedad); */
 
             DB::transaction(function () {
 
@@ -649,9 +649,10 @@ class PaseFolioSimplificadoElaborar extends Component
 
     }
 
-    public function consultarSentenciasAntecedente($distrito, $tomo, $registro, $numero_propiedad){
+    /* public function consultarSentenciasAntecedente($distrito, $tomo, $registro, $numero_propiedad){ */
 
         $sentencias = DB::connection('mysql2')->select("call spQSentencias(" .
+                                                                            1 .
                                                                             $distrito .
                                                                             "," . $tomo .
                                                                             "," . '\'\'' .

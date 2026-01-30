@@ -91,10 +91,10 @@ class FolioRealController extends Controller
 
             if($folio_real){
 
-                if(in_array($folio_real->estado, ['bloqueado', 'centinela',' inactivo'])){
+                if($folio_real->estado != 'activo'){
 
                     return response()->json([
-                        'error' => 'El folio real esta bloqueado o en centinela.',
+                        'error' => 'El folio real no esta activo.',
                     ], 401);
 
                 }else{
