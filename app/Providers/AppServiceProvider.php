@@ -26,8 +26,6 @@ class AppServiceProvider extends ServiceProvider
 
         Model::shouldBeStrict();
 
-        URL::forceScheme('https');
-
         if(app()->isProduction()){
 
             URL::forceScheme('https');
@@ -41,8 +39,6 @@ class AppServiceProvider extends ServiceProvider
             });
 
         }elseif(app()->environment('staging')){
-
-            URL::forceScheme('https');
 
             Livewire::setScriptRoute(function ($handle) {
                 return Route::get('/srpp/public/vendor/livewire/livewire.js', $handle);
