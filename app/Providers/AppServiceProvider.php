@@ -35,7 +35,7 @@ class AppServiceProvider extends ServiceProvider
             });
 
             Livewire::setUpdateRoute(function ($handle) {
-                return Route::post('/srpp/livewire/update', $handle)->name('custom_update');
+                return Route::post('/srpp/livewire/update', $handle)->name('custom.livewire.update');
             });
 
         }elseif(app()->environment('staging')){
@@ -45,7 +45,7 @@ class AppServiceProvider extends ServiceProvider
             });
 
             Livewire::setUpdateRoute(function ($handle) {
-                return Route::post('/srpp/livewire/update', $handle)->name('custom_update');
+                return Route::post('/srpp/livewire/update', $handle)->name('custom.livewire.update');
             });
 
         }
