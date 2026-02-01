@@ -35,8 +35,6 @@ class AppServiceProvider extends ServiceProvider
             });
 
             Livewire::setUpdateRoute(function ($handle) {
-
-                dd("Entra");
                 return Route::post('/srpp/livewire/update', $handle)->name('custom.livewire.update');
             });
 
