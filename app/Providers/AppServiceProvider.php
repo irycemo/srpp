@@ -30,12 +30,12 @@ class AppServiceProvider extends ServiceProvider
 
             URL::forceScheme('https');
 
-            /* Livewire::setScriptRoute(function ($handle) {
+            Livewire::setScriptRoute(function ($handle) {
                 return Route::get('/srpp/public/vendor/livewire/livewire.js', $handle);
-            }); */
+            });
 
             Livewire::setUpdateRoute(function ($handle) {
-                return Route::post('/srpp/livewire/update', $handle);
+                return Route::post('/srpp/livewire/update', $handle)->name('custom.livewire.update');
             });
 
         }elseif(app()->environment('staging')){
