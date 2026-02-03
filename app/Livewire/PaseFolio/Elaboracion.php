@@ -1218,8 +1218,12 @@ class Elaboracion extends Component
                                                     ->where('distrito', $this->movimientoRegistral->getRawOriginal('distrito'))
                                                     ->first();
 
-        $movimiento_gravamen->folio_real = $this->movimientoRegistral->folio_real;
-        $movimiento_gravamen->save();
+        if($movimiento_gravamen){
+
+            $movimiento_gravamen->folio_real = $this->movimientoRegistral->folio_real;
+            $movimiento_gravamen->save();
+
+        }
 
     }
 
