@@ -22,7 +22,15 @@ class InscripcionesPropiedadService implements MovimientoServiceInterface{
         /* Revisar si son para folio matriz */
         if(in_array($propiedad->servicio, ['D114', 'D113', 'D116', 'D115'])){
 
-            $this->revisarFolioMatriz($propiedad->movimientoRegistral);
+            $id = $this->revisarFolioMatriz($propiedad->movimientoRegistral);
+
+            if($id){
+
+                $propiedad->update(['movimiento_registral_id' => $id]);
+
+                $propiedad->refresh();
+
+            }
 
         }
 

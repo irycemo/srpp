@@ -11,7 +11,7 @@ use App\Models\MovimientoRegistral;
 trait RevisarFolioMatrizTrait
 {
 
-    public function revisarFolioMatriz(MovimientoRegistral $movimiento)
+    public function revisarFolioMatriz(MovimientoRegistral $movimiento):int|null
     {
 
         if($movimiento->folioReal?->matriz){
@@ -38,25 +38,32 @@ trait RevisarFolioMatrizTrait
             $nuevoMovimientoRegistral->tomo = null;
             $nuevoMovimientoRegistral->registro = null;
             $nuevoMovimientoRegistral->numero_propiedad = null;
-            $nuevoMovimientoRegistral->estado = 'concluido';
-            $nuevoMovimientoRegistral->servicio_nombre = 'Genera nuevo folio real';
+            $nuevoMovimientoRegistral->estado = 'nuevo';
+            $nuevoMovimientoRegistral->servicio_nombre = $movimiento->servicio_nombre;
+            $nuevoMovimientoRegistral->folio_real = $folioReal->id;
+            $nuevoMovimientoRegistral->folio = 1;
+            $nuevoMovimientoRegistral->pase_a_folio = true;
+            $nuevoMovimientoRegistral->movimiento_padre = $movimiento->id;
             $nuevoMovimientoRegistral->save();
 
             Propiedad::create([
                 'servicio' => 'D114',
                 'acto_contenido' => 'CREA NUEVO FOLIO',
                 'descripcion_acto' => 'ESTE MOVIMIENTO REGISTRAL CREA EL FOLIO REAL: ' . $folioReal->folio . '.',
-                'movimiento_registral_id' => $nuevoMovimientoRegistral->id
+                'movimiento_registral_id' => $movimiento->id
             ]);
 
             $movimiento->update([
-                'folio_real' => $folioReal->id,
-                'folio' => 1,
-                'pase_a_folio' => true,
-                'movimiento_padre' => $nuevoMovimientoRegistral->id
+                'servicio_nombre' => 'Genera nuevo folio real',
+                'pase_a_folio' => false,
+                'estado' => 'concluido',
             ]);
 
+            return $nuevoMovimientoRegistral->id;
+
         }
+
+        return null;
 
     }
 

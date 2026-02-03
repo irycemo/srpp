@@ -57,7 +57,15 @@ class VariosService implements MovimientoServiceInterface{
 
         if(in_array($vario->acto_contenido, ['SEGUNDO AVISO PREVENTIVO', 'PRIMER AVISO PREVENTIVO'])){
 
-            $this->revisarFolioMatriz($vario->movimientoRegistral);
+            $id = $this->revisarFolioMatriz($vario->movimientoRegistral);
+
+            if($id){
+
+                $vario->update(['movimiento_registral_id' => $id]);
+
+                $vario->refresh();
+
+            }
 
             $vario->movimientoRegistral->update(['usuario_asignado' => $this->obtenerUsuarioRolAvisos($vario->movimientoRegistral->getRawOriginal('distrito'))]);
 
