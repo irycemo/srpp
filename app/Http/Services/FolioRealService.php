@@ -64,7 +64,7 @@ class FolioRealService{
 
             $movimiento->load('folioReal');
 
-            if(!in_array($movimiento->estado, ['nuevo', 'correccion', 'pase_folio', 'no recibido', 'recahzado'])){
+            if(!in_array($movimiento->estado, ['nuevo', 'correccion', 'pase_folio', 'no recibido', 'recahzado', 'precalificacion'])){
 
                 throw new GeneralException("El folio real: " . $movimiento->folioReal->folio . " tiene movimientos registrales elaborados no es posible borrarlo.");
 

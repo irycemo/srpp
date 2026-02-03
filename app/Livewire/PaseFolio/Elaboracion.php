@@ -392,6 +392,8 @@ class Elaboracion extends Component
                             $this->movimientoRegistral->numero_propiedad
                         );
 
+                        $this->revisarGravamenReservaDominio();
+
                     }
 
                 }
@@ -1204,6 +1206,20 @@ class Elaboracion extends Component
             }
 
         }
+
+    }
+
+    public function revisarGravamenReservaDominio(){
+
+        $movimiento_gravamen = MovimientoRegistral::where('estado', 'pase_folio')
+                                                    ->where('tomo', $this->movimientoRegistral->tomo)
+                                                    ->where('registro', $this->movimientoRegistral->registro)
+                                                    ->where('numero_propiedad', $this->movimientoRegistral->numero_propiedad)
+                                                    ->where('distrito', $this->movimientoRegistral->getRawOriginal('distrito'))
+                                                    ->first();
+
+        $movimiento_gravamen->folio_real = $this->movimientoRegistral->folio_real;
+        $movimiento_gravamen->save();
 
     }
 
