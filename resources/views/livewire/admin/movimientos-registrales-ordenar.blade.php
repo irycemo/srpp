@@ -79,8 +79,6 @@
                     <li
                         drag-item
                         draggable="true"
-                        {{-- wire:sortable.item="{{ $movimiento->id }}"
-                        wire:sortable.handle --}}
                         wire:key="{{ $movimiento->id }}"
                         class="rounded-lg bg-gray-100 p-2 flex gap-4 items-center cursor-pointer">
 
@@ -149,64 +147,6 @@
             }
 
         </script>
-
-        {{-- <script>
-
-            document.addEventListener('livewire:init', () => {
-
-                Livewire.on('cargar_ordenamiento', (event) => {
-
-                    let root = document.querySelector('[drag-root]')
-
-                    root.querySelectorAll('[drag-item]').forEach(el => {
-
-                        el.addEventListener('dragstart', e => {
-
-                            e.target.setAttribute('dragging', true);
-
-                        })
-
-                        el.addEventListener('drop', e => {
-
-                            e.target.closest('li').classList.remove('bg-gray-300')
-
-                            let dragging = root.querySelector('[dragging]')
-
-                            Livewire.first().reaordenarMovimientos(dragging.getAttribute('wire:key'), e.target.getAttribute('wire:key'))
-
-                        })
-
-                        el.addEventListener('dragenter', e => {
-
-                            e.target.closest('li').classList.add('bg-gray-300')
-
-                            e.preventDefault()
-
-                        })
-
-                        el.addEventListener('dragover', e => e.preventDefault())
-
-                        el.addEventListener('dragleave', e => {
-
-                            e.target.closest('li').classList.remove('bg-gray-300')
-
-                        })
-
-                        el.addEventListener('dragend', e => {
-
-                            e.target.removeAttribute('dragging');
-
-                        })
-
-                    })
-
-                });
-
-            });
-
-
-
-        </script> --}}
 
     @endpush
 

@@ -38,11 +38,24 @@ class VerFolioReal extends Component
 
         if($folio_1 == 1){
 
-            $movimiento_registral_2->update([
-                'pase_a_folio' => true,
-                'folio' => $folio_1,
-                'actualizado_por' => auth()->id()
-            ]);
+            if(in_array($movimiento_registral_2->estado, ['precalificacion', 'no_recibido'])){
+
+                $movimiento_registral_2->update([
+                    'pase_a_folio' => true,
+                    'folio' => $folio_1,
+                    'estado' => 'nuevo',
+                    'actualizado_por' => auth()->id()
+                ]);
+
+            }else{
+
+                $movimiento_registral_2->update([
+                    'pase_a_folio' => true,
+                    'folio' => $folio_1,
+                    'actualizado_por' => auth()->id()
+                ]);
+
+            }
 
         }else{
 
