@@ -98,7 +98,7 @@
 
         <script>
 
-            document.addEventListener('livewire:init', () => {
+            document.addEventListener('livewire:load', () => {
 
                 Livewire.on('cargar_ordenamiento', (event) => {
 
