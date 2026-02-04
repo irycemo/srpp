@@ -229,13 +229,13 @@ trait ActoresTrait{
                                             $q->where('curp', $this->curp);
                                         })
                                         ->when($this->nombre && $this->nombre != '', function($q){
-                                            $q->where('nombre', $this->nombre);
+                                            $q->where('nombre', 'like', '%' . $this->nombre . '%');
                                         })
                                         ->when($this->ap_materno && $this->ap_materno != '', function($q){
-                                            $q->where('ap_materno', $this->ap_materno);
+                                            $q->where('ap_materno', 'like', '%' . $this->ap_materno . '%');
                                         })
                                         ->when($this->ap_paterno && $this->ap_paterno != '', function($q){
-                                            $q->where('ap_paterno', $this->ap_paterno);
+                                            $q->where('ap_paterno', 'like', '%' . $this->ap_paterno . '%');
                                         })
                                         ->when($this->razon_social && $this->razon_social != '', function($q){
                                             $q->where('razon_social', 'like', '%' . $this->razon_social . '%');
