@@ -9,7 +9,6 @@ use Illuminate\Validation\Rule;
 use App\Traits\ComponentesTrait;
 use Illuminate\Support\Facades\Log;
 use App\Exceptions\GeneralException;
-use App\Http\Services\PersonaService;
 
 class Personas extends Component
 {
@@ -113,31 +112,6 @@ class Personas extends Component
 
     }
 
-    public function buscarPersona(){
-
-        $personaService = new PersonaService();
-
-        if($this->rfc){
-
-            $this->modelo_editar = Persona::where('rfc', $this->rfc)->first();
-
-        }elseif($this->curp){
-
-            $this->modelo_editar = Persona::where('curp', $this->curp)->first();
-
-        }else{
-
-            $this->modelo_editar = Persona::query()
-                            ->where('nombre', $this->nombre)
-                            ->where('ap_paterno', $this->ap_paterno)
-                            ->where('ap_materno', $this->ap_materno)
-                            ->where('razon_social', 'like', '%' . $this->razon_social . '%')
-                            ->first();
-
-        }
-
-    }
-
     public function buscar(){
 
         if(!$this->nombre && !$this->ap_materno && !$this->ap_paterno && !$this->razon_social && !$this->rfc && !$this->curp){
@@ -151,7 +125,7 @@ class Personas extends Component
         $this->validate([
             'nombre' => Rule::requiredIf($this->ap_materno || $this->ap_paterno),
             'ap_materno' => 'nullable',
-            'ap_paterno' => Rule::requiredIf($this->nombre || $this->ap_materno),
+            'ap_paterno' => 'nullable',
             'curp' => [
                 'nullable',
                 'regex:/^[A-Z]{1}[AEIOUX]{1}[A-Z]{2}[0-9]{2}(0[1-9]|1[0-2])(0[1-9]|1[0-9]|2[0-9]|3[0-1])[HM]{1}(AS|BC|BS|CC|CS|CH|CL|CM|DF|DG|GT|GR|HG|JC|MC|MN|MS|NT|NL|OC|PL|QT|QR|SP|SL|SR|TC|TS|TL|VZ|YN|ZS|NE)[B-DF-HJ-NP-TV-Z]{3}[0-9A-Z]{1}[0-9]{1}$/i'
@@ -170,16 +144,16 @@ class Personas extends Component
                                         $q->where('curp', $this->curp);
                                     })
                                     ->when($this->nombre && $this->nombre != '', function($q){
-                                        $q->where('nombre', $this->nombre);
+                                        $q->where('nombre', 'like' , '%' . $this->nombre . '%');
                                     })
                                     ->when($this->ap_materno && $this->ap_materno != '', function($q){
-                                        $q->where('ap_materno', $this->ap_materno);
+                                        $q->where('ap_materno', 'like' , '%' . $this->ap_materno .'%');
                                     })
                                     ->when($this->ap_paterno && $this->ap_paterno != '', function($q){
-                                        $q->where('ap_paterno', $this->ap_paterno);
+                                        $q->where('ap_paterno', 'like' , '%' . $this->ap_paterno .'%');
                                     })
                                     ->when($this->razon_social && $this->razon_social != '', function($q){
-                                        $q->where('razon_social', $this->razon_social);
+                                        $q->where('razon_social', 'like', '%' . $this->razon_social . '%');
                                     })
                                     ->get();
 
