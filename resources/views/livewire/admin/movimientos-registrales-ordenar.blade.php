@@ -66,13 +66,13 @@
 
     </div>
 
-    @if($movimientos)
+    <div class="bg-white p-4 shadow-xl rounded-lg col-span-4 lg:w-1/2 mx-auto">
 
-        <div class="bg-white p-4 shadow-xl rounded-lg col-span-4 lg:w-1/2 mx-auto">
+        <x-h4>Movimientos registrales</x-h4>
 
-            <x-h4>Movimientos registrales</x-h4>
+        <ul drag-root class="text-sm space-y-3 rounded-md" wire:loading.class.delay.longest="opacity-50">
 
-            <ul drag-root class="text-sm space-y-3 rounded-md" wire:loading.class.delay.longest="opacity-50">
+            @if($movimientos)
 
                 @foreach ($movimientos->sortBy('folio') as $movimiento)
 
@@ -88,17 +88,17 @@
 
                 @endforeach
 
-            </ul>
+            @endif
 
-        </div>
+        </ul>
 
-    @endif
+    </div>
 
     @push('scripts')
 
         <script>
 
-            document.addEventListener('livewire:load', () => {
+            document.addEventListener('livewire:init', () => {
 
                 Livewire.on('cargar_ordenamiento', (event) => {
 
