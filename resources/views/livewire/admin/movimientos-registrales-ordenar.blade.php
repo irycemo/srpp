@@ -68,19 +68,19 @@
 
     @if($movimientos)
 
-        <div class="bg-white p-4 shadow-xl rounded-lg col-span-4 lg:w-1/2 mx-auto" x-data="sorting">
+        <div class="bg-white p-4 shadow-xl rounded-lg col-span-4 lg:w-1/2 mx-auto" x-data="sorting()">
 
             <x-h4>Movimientos registrales</x-h4>
 
-            <ul wire:sortable="reaordenarMovimientos" drag-root class="text-sm space-y-3 rounded-md" wire:loading.class.delay.longest="opacity-50">
+            <ul drag-root class="text-sm space-y-3 rounded-md" wire:loading.class.delay.longest="opacity-50">
 
                 @foreach ($movimientos->sortBy('folio') as $movimiento)
 
                     <li
                         drag-item
                         draggable="true"
-                        wire:sortable.item="{{ $movimiento->id }}"
-                        wire:sortable.handle
+                        {{-- wire:sortable.item="{{ $movimiento->id }}"
+                        wire:sortable.handle --}}
                         wire:key="{{ $movimiento->id }}"
                         class="rounded-lg bg-gray-100 p-2 flex gap-4 items-center cursor-pointer">
 
@@ -98,55 +98,53 @@
 
     @push('scripts')
 
-        <script src="https://cdn.jsdelivr.net/gh/livewire/sortable@v1.x.x/dist/livewire-sortable.js"></script>
-
         <script>
 
-            sorting(){
+            function sorting(){
 
                 let root = document.querySelector('[drag-root]')
 
-                    root.querySelectorAll('[drag-item]').forEach(el => {
+                root.querySelectorAll('[drag-item]').forEach(el => {
 
-                        el.addEventListener('dragstart', e => {
+                    el.addEventListener('dragstart', e => {
 
-                            e.target.setAttribute('dragging', true);
-
-                        })
-
-                        el.addEventListener('drop', e => {
-
-                            e.target.closest('li').classList.remove('bg-gray-300')
-
-                            let dragging = root.querySelector('[dragging]')
-
-                            Livewire.first().reaordenarMovimientos(dragging.getAttribute('wire:key'), e.target.getAttribute('wire:key'))
-
-                        })
-
-                        el.addEventListener('dragenter', e => {
-
-                            e.target.closest('li').classList.add('bg-gray-300')
-
-                            e.preventDefault()
-
-                        })
-
-                        el.addEventListener('dragover', e => e.preventDefault())
-
-                        el.addEventListener('dragleave', e => {
-
-                            e.target.closest('li').classList.remove('bg-gray-300')
-
-                        })
-
-                        el.addEventListener('dragend', e => {
-
-                            e.target.removeAttribute('dragging');
-
-                        })
+                        e.target.setAttribute('dragging', true);
 
                     })
+
+                    el.addEventListener('drop', e => {
+
+                        e.target.closest('li').classList.remove('bg-gray-300')
+
+                        let dragging = root.querySelector('[dragging]')
+
+                        Livewire.first().reaordenarMovimientos(dragging.getAttribute('wire:key'), e.target.getAttribute('wire:key'))
+
+                    })
+
+                    el.addEventListener('dragenter', e => {
+
+                        e.target.closest('li').classList.add('bg-gray-300')
+
+                        e.preventDefault()
+
+                    })
+
+                    el.addEventListener('dragover', e => e.preventDefault())
+
+                    el.addEventListener('dragleave', e => {
+
+                        e.target.closest('li').classList.remove('bg-gray-300')
+
+                    })
+
+                    el.addEventListener('dragend', e => {
+
+                        e.target.removeAttribute('dragging');
+
+                    })
+
+                })
 
             }
 
