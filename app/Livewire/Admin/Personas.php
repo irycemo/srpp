@@ -117,7 +117,24 @@ class Personas extends Component
 
         $personaService = new PersonaService();
 
-        $this->modelo_editar = $personaService->buscarPersona($this->rfc, $this->curp, $this->tipo_persona, $this->nombre, $this->ap_materno, $this->ap_paterno, $this->razon_social);
+        if($this->rfc){
+
+            $this->modelo_editar = Persona::where('rfc', $this->rfc)->first();
+
+        }elseif($this->curp){
+
+            $this->modelo_editar = Persona::where('curp', $this->curp)->first();
+
+        }else{
+
+            $this->modelo_editar = Persona::query()
+                            ->where('nombre', $this->nombre)
+                            ->where('ap_paterno', $this->ap_paterno)
+                            ->where('ap_materno', $this->ap_materno)
+                            ->where('razon_social', 'like', '%' . $this->razon_social . '%')
+                            ->first();
+
+        }
 
     }
 
