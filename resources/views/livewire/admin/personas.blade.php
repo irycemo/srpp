@@ -67,6 +67,7 @@
                 <x-table.heading sortable wire:click="sortBy('nombre')" :direction="$sort === 'nombre' ? $direction : null" >Nombre</x-table.heading>
                 <x-table.heading sortable wire:click="sortBy('ap_paterno')" :direction="$sort === 'ap_paterno' ? $direction : null" >Ap paterno</x-table.heading>
                 <x-table.heading sortable wire:click="sortBy('ap_paterno')" :direction="$sort === 'ap_paterno' ? $direction : null" >Ap materno</x-table.heading>
+                <x-table.heading sortable wire:click="sortBy('razon_social')" :direction="$sort === 'razon_social' ? $direction : null" >Razón social</x-table.heading>
                 <x-table.heading sortable wire:click="sortBy('rfc')" :direction="$sort === 'rfc' ? $direction : null" >RFC</x-table.heading>
                 <x-table.heading sortable wire:click="sortBy('curp')" :direction="$sort === 'curp' ? $direction : null" >CURP</x-table.heading>
                 <x-table.heading sortable wire:click="sortBy('created_at')" :direction="$sort === 'created_at' ? $direction : null">Registro</x-table.heading>
@@ -85,7 +86,7 @@
 
                             <span class="lg:hidden absolute top-0 left-0 bg-blue-300 px-2 py-1 text-xs text-white font-bold uppercase rounded-br-xl">Nombre</span>
 
-                            {{$persona->nombre }}
+                            {{$persona->nombre ?? 'N/A' }}
 
                         </x-table.cell>
 
@@ -93,7 +94,7 @@
 
                             <span class="lg:hidden absolute top-0 left-0 bg-blue-300 px-2 py-1 text-xs text-white font-bold uppercase rounded-br-xl">Ap paterno</span>
 
-                            {{$persona->ap_paterno }}
+                            {{$persona->ap_paterno ?? 'N/A' }}
 
                         </x-table.cell>
 
@@ -101,7 +102,15 @@
 
                             <span class="lg:hidden absolute top-0 left-0 bg-blue-300 px-2 py-1 text-xs text-white font-bold uppercase rounded-br-xl">Ap materno</span>
 
-                            {{$persona->ap_materno }}
+                            {{$persona->ap_materno ?? 'N/A' }}
+
+                        </x-table.cell>
+
+                        <x-table.cell>
+
+                            <span class="lg:hidden absolute top-0 left-0 bg-blue-300 px-2 py-1 text-xs text-white font-bold uppercase rounded-br-xl">Razón social</span>
+
+                            {{$persona->razon_social ?? 'N/A' }}
 
                         </x-table.cell>
 
@@ -109,7 +118,7 @@
 
                             <span class="lg:hidden absolute top-0 left-0 bg-blue-300 px-2 py-1 text-xs text-white font-bold uppercase rounded-br-xl">RFC</span>
 
-                            {{$persona->rfc }}
+                            {{$persona->rfc ?? 'N/A' }}
 
                         </x-table.cell>
 
@@ -117,7 +126,7 @@
 
                             <span class="lg:hidden absolute top-0 left-0 bg-blue-300 px-2 py-1 text-xs text-white font-bold uppercase rounded-br-xl">CURP</span>
 
-                            {{$persona->curp }}
+                            {{$persona->curp ?? 'N/A' }}
 
                         </x-table.cell>
 
