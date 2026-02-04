@@ -31,7 +31,7 @@ class PersonaService{
 
             }else{
 
-                $persona = Persona::where('razon_social', $razon_social)->first();
+                $persona = Persona::where('razon_social', 'like', '%' . $razon_social . '%')->first();
 
             }
 
