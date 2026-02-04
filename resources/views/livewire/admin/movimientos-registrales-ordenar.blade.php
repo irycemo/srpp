@@ -70,7 +70,7 @@
 
         <x-h4>Movimientos registrales</x-h4>
 
-        <ul drag-root class="text-sm space-y-3 rounded-md" wire:loading.class.delay.longest="opacity-50">
+        <ul wire:sortable="movimientos" drag-root class="text-sm space-y-3 rounded-md" wire:loading.class.delay.longest="opacity-50">
 
             @if($movimientos)
 
@@ -79,6 +79,8 @@
                     <li
                         drag-item
                         draggable="true"
+                        wire:sortable.item="{{ $movimiento->id }}"
+                        wire:sortable.handle
                         class="rounded-lg bg-gray-100 p-2 flex gap-4 items-center cursor-pointer"
                         wire:key="{{ $movimiento->id }}">
 
@@ -96,7 +98,9 @@
 
     @push('scripts')
 
-        <script>
+        <script src="https://cdn.jsdelivr.net/gh/livewire/sortable@v1.x.x/dist/livewire-sortable.js"></script>
+
+        {{-- <script>
 
             document.addEventListener('livewire:init', () => {
 
@@ -152,7 +156,7 @@
 
 
 
-        </script>
+        </script> --}}
 
     @endpush
 

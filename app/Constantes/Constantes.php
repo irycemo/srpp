@@ -495,7 +495,7 @@ class Constantes{
         'CONSENTIMIENTO CONYUGAL',
         'AVAL HIPOTECARIO',
         'GARANTE PRENDARIO',
-        'GARANTES',
+        'GARANTE',
         'MANDATORIO',
         'ACREDITADO',
         'DEUDOR PARTE ALICUOTA',
