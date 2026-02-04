@@ -238,7 +238,7 @@ trait ActoresTrait{
                                             $q->where('ap_paterno', $this->ap_paterno);
                                         })
                                         ->when($this->razon_social && $this->razon_social != '', function($q){
-                                            $q->where('razon_social', 'like' . '%' . $this->razon_social . '%');
+                                            $q->where('razon_social', 'like', '%' . $this->razon_social . '%');
                                         })
                                         ->get();
 
