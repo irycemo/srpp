@@ -61,18 +61,22 @@
 
             </div>
 
-            @if(auth()->user()->hasRole(['Certificador', 'Certificador Oficialia', 'Certificador Juridico']))
+            @if(auth()->user()->ubicacion === 'Regional 4')
 
-                <button wire:click="$set('modalCarga', '!modalCarga')" wire:loading.attr="disabled" class="bg-gray-500 hover:shadow-lg hover:bg-gray-700 text-sm py-2 px-4 text-white rounded-full hidden md:block items-center justify-center focus:outline-gray-400 focus:outline-offset-2">
+                <div class="">
 
-                    <img wire:loading wire:target="modalCarga" class="mx-auto h-4 mr-1" src="{{ asset('storage/img/loading3.svg') }}" alt="Loading">
-                    Imprimir carga de trabajo
+                    <button wire:click="$toggle('modal_reasignarme_movimiento_registral')" class="bg-gray-500 hover:shadow-lg hover:bg-gray-700 text-sm py-2 px-4 text-white rounded-full hidden md:block items-center justify-center focus:outline-gray-400 focus:outline-offset-2">
 
-                </button>
+                        <img wire:loading wire:target="$toggle('modal_reasignarme_movimiento_registral')" class="mx-auto h-4 mr-1" src="{{ asset('storage/img/loading3.svg') }}" alt="Loading">
+                        Asignarme trámite
 
-                <button wire:click="$set('modalCarga', '!modalCarga')" class="bg-gray-500 hover:shadow-lg hover:bg-gray-700 float-right text-sm py-2 px-4 text-white rounded-full focus:outline-none md:hidden">+</button>
+                    </button>
 
-           @endif
+                    <button wire:click="$toggle('modal_reasignarme_movimiento_registral')" class="bg-gray-500 hover:shadow-lg hover:bg-gray-700 float-right text-sm py-2 px-4 text-white rounded-full md:hidden focus:outline-gray-400 focus:outline-offset-2">+</button>
+
+                </div>
+
+            @endif
 
         </div>
 
@@ -748,6 +752,8 @@
         </x-slot>
 
     </x-dialog-modal>
+
+    @include('livewire.comun.inscripciones.modal-reasignarme-movimiento-registral')
 
 </div>
 

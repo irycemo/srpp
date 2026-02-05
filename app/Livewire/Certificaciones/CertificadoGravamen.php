@@ -20,6 +20,7 @@ use Illuminate\Support\Facades\Cache;
 use App\Traits\CalcularDiaElaboracionTrait;
 use App\Http\Services\SistemaTramitesService;
 use App\Exceptions\InscripcionesServiceException;
+use App\Traits\Inscripciones\ReasignarmeMovimientoTrait;
 use App\Traits\RevisarMovimientosPosterioresTrait;
 
 class CertificadoGravamen extends Component
@@ -31,6 +32,7 @@ class CertificadoGravamen extends Component
     use QrTrait;
     use CalcularDiaElaboracionTrait;
     use RevisarMovimientosPosterioresTrait;
+    use ReasignarmeMovimientoTrait;
 
     public Certificacion $modelo_editar;
 
@@ -57,6 +59,7 @@ class CertificadoGravamen extends Component
     public $usuario_asignado;
 
     public $años;
+
     public $filters = [
         'año' => '',
         'tramite' => '',
@@ -179,41 +182,45 @@ class CertificadoGravamen extends Component
                                                         ->orderBy('created_at')
                                                         ->get();
 
-        foreach($movimientoAsignados as $movimiento){
+        if(! auth()->user()->ubicacion == 'Regional 4'){
 
-            if($movimiento->tipo_servicio == 'ordinario'){
+            foreach($movimientoAsignados as $movimiento){
 
-                if($movimiento->fecha_entrega <= now()){
+                if($movimiento->tipo_servicio == 'ordinario'){
 
-                    if($this->moviminetoRegistral->id == $movimiento->id){
+                    if($movimiento->fecha_entrega <= now()){
 
-                        break;
+                        if($this->moviminetoRegistral->id == $movimiento->id){
+
+                            break;
+
+                        }else{
+
+                            $this->dispatch('mostrarMensaje', ['error', "Debe elaborar el movimiento registral " . $movimiento->folioReal->folio . '-' . $movimiento->folio . ' primero.']);
+
+                            return;
+
+                        }
 
                     }else{
 
-                        $this->dispatch('mostrarMensaje', ['error', "Debe elaborar el movimiento registral " . $movimiento->folioReal->folio . '-' . $movimiento->folio . ' primero.']);
-
-                        return;
+                        continue;
 
                     }
 
                 }else{
 
-                    continue;
+                    if($this->moviminetoRegistral->id != $movimiento->id){
 
-                }
+                        $this->dispatch('mostrarMensaje', ['error', "Debe elaborar el movimiento registral " . $movimiento->folioReal->folio . '-' . $movimiento->folio . ' primero.']);
 
-            }else{
+                        return;
 
-                if($this->moviminetoRegistral->id != $movimiento->id){
+                    }else{
 
-                    $this->dispatch('mostrarMensaje', ['error', "Debe elaborar el movimiento registral " . $movimiento->folioReal->folio . '-' . $movimiento->folio . ' primero.']);
+                        break;
 
-                    return;
-
-                }else{
-
-                    break;
+                    }
 
                 }
 
@@ -490,6 +497,8 @@ class CertificadoGravamen extends Component
         $this->crearModeloVacio();
 
         $this->años = Constantes::AÑOS;
+
+        $this->año = now()->year;
 
         $this->director = User::where('status', 'activo')
                                 ->whereHas('roles', function($q){
