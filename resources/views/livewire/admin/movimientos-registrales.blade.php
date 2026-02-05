@@ -32,6 +32,7 @@
                 <option value="nuevo">Nuevo</option>
                 <option value="no recibido">No Recibido</option>
                 <option value="elaborado">Elaborado</option>
+                <option value="captura">Captura</option>
                 <option value="finalizado">Finalizado</option>
                 <option value="concluido">Concluido</option>
                 <option value="rechazado">Rechazado</option>
@@ -279,7 +280,7 @@
 
                                         @endif
 
-                                        @if(in_array($movimiento->estado, ['elaborado', 'finalizado', 'concluido']))
+                                        @if(in_array($movimiento->estado, ['elaborado', 'finalizado', 'concluido', 'captura']))
 
                                             <button
                                                 wire:click="abrirModalCorreccion({{ $movimiento->id }})"
