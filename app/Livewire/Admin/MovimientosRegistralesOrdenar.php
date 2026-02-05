@@ -54,26 +54,26 @@ class MovimientosRegistralesOrdenar extends Component
 
         $folio_2 = $movimiento_registral_2->folio;
 
-        $movimiento_registral_1->update(['folio' => $folio_2, 'actualizado_por' => auth()->id(), 'pase_a_folio' => false]);
+        $movimiento_registral_2->update(['folio' => $folio_1, 'actualizado_por' => auth()->id(), 'pase_a_folio' => false]);
 
-        $movimiento_registral_1->audits()->latest()->first()->update(['tags' => 'Cambió el orden de folio']);
+        $movimiento_registral_2->audits()->latest()->first()->update(['tags' => 'Cambió el orden de folio']);
 
-        if($folio_1 == 1){
+        if($folio_2 == 1){
 
-            if(in_array($movimiento_registral_2->estado, ['precalificacion', 'no_recibido'])){
+            if(in_array($movimiento_registral_1->estado, ['precalificacion', 'no recibido'])){
 
-                $movimiento_registral_2->update([
+                $movimiento_registral_1->update([
                     'pase_a_folio' => true,
-                    'folio' => $folio_1,
+                    'folio' => $folio_2,
                     'estado' => 'nuevo',
                     'actualizado_por' => auth()->id()
                 ]);
 
             }else{
 
-                $movimiento_registral_2->update([
+                $movimiento_registral_1->update([
                     'pase_a_folio' => true,
-                    'folio' => $folio_1,
+                    'folio' => $folio_2,
                     'actualizado_por' => auth()->id()
                 ]);
 
