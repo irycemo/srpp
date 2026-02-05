@@ -55,6 +55,14 @@ class FoliosReales extends Component
 
         }
 
+        if(! in_array($folioReal->movimientosRegistrales()->where('folio', 1)->first()->estado, ['nuevo', 'correccion', 'no recibido'])){
+
+            $this->dispatch('mostrarMensaje', ['warning', "El estado del movimiento 1 debe estar nuevo ó en correccion."]);
+
+            return;
+
+        }
+
         $movimientos = $folioReal->movimientosRegistrales()->where('estado', '!=', 'pase_folio')->get();
 
         if(!in_array($movimientos->first()->estado, ['nuevo', 'correccion', 'no recibido', 'captura'])){
