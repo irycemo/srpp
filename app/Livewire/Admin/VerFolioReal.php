@@ -32,10 +32,6 @@ class VerFolioReal extends Component
 
         $folio_2 = $movimiento_registral_2->folio;
 
-        $movimiento_registral_2->update(['folio' => $folio_1, 'actualizado_por' => auth()->id(), 'pase_a_folio' => false]);
-
-        $movimiento_registral_2->audits()->latest()->first()->update(['tags' => 'Cambió el orden de folio']);
-
         if($folio_2 == 1){
 
             if(in_array($movimiento_registral_1->estado, ['precalificacion', 'no recibido'])){
@@ -59,9 +55,13 @@ class VerFolioReal extends Component
 
         }else{
 
-            $movimiento_registral_2->update(['folio' => $folio_1, 'actualizado_por' => auth()->id()]);
+            $movimiento_registral_1->update(['folio' => $folio_2, 'actualizado_por' => auth()->id()]);
 
         }
+
+        $movimiento_registral_2->update(['folio' => $folio_1, 'actualizado_por' => auth()->id(), 'pase_a_folio' => false]);
+
+        $movimiento_registral_2->audits()->latest()->first()->update(['tags' => 'Cambió el orden de folio']);
 
         $movimiento_registral_2->audits()->latest()->first()->update(['tags' => 'Cambió el orden de folio']);
 

@@ -5,6 +5,7 @@ namespace App\Http\Services;
 use App\Models\FolioReal;
 use App\Models\MovimientoRegistral;
 use App\Exceptions\GeneralException;
+use Illuminate\Support\Facades\Storage;
 
 class FolioRealService{
 
@@ -16,7 +17,7 @@ class FolioRealService{
 
         $folioReal->predio->actores->each->delete();
 
-        $es = $folioReal->predio->escritura;
+        $folioReal->predio->update(['escritura_id' => null]);
 
         $folioReal->predio->delete();
 
@@ -30,13 +31,35 @@ class FolioRealService{
 
             if($archivo->descripcion == 'caratula'){
 
-                if(file_exists('caratulas/' . $archivo->url))
+            if(app()->isProduction()){
+
+                Storage::disk('s3')->delete(config('services.ses.ruta_caratulas') . $archivo->url);
+
+            }else{
+
+                if(file_exists('caratulas/' . $archivo->url)){
+
                     unlink('caratulas/' . $archivo->url);
+
+                }
+
+            }
 
             }elseif($archivo->descripcion == 'documento_entrada'){
 
-                if(file_exists('documento_entrada/' . $archivo->url))
-                    unlink('documento_entrada/' . $archivo->url);
+                if(app()->isProduction()){
+
+                    Storage::disk('s3')->delete(config('services.ses.ruta_documento_entrada') . $archivo->url);
+
+                }else{
+
+                    if(file_exists('documento_entrada/' . $archivo->url)){
+
+                        unlink('documento_entrada/' . $archivo->url);
+
+                    }
+
+                }
 
             }
 
@@ -49,12 +72,6 @@ class FolioRealService{
         $folioReal->antecedentes?->each->delete();
 
         $folioReal->delete();
-
-        if($es){
-
-            $es->delete();
-
-        }
 
     }
 

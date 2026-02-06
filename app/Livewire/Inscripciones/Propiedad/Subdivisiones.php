@@ -45,7 +45,7 @@ class Subdivisiones extends Component
             'propiedad.superficie_terreno' => [
                 'nullable',
                 'numeric',
-                Rule::requiredIf($this->propiedad->acto_contenido == 'SUBDIVISIÓN CON RESTO'),
+                Rule::requiredIf($this->propiedad->acto_contenido == 'SUBDIVISIÓN CON RESTO' && !$this->propiedad->movimientoRegistral->folioReal->matriz),
                 'lt:' . $this->propiedad->movimientoRegistral->folioReal->predio->superficie_terreno,
                 'gt:0'
             ],
@@ -155,9 +155,13 @@ class Subdivisiones extends Component
 
                 }else{
 
-                    $this->propiedad->movimientoRegistral->folioReal->predio->update(['superficie_terreno' => $this->propiedad->superficie_terreno]);
+                    if(!$this->propiedad->movimientoRegistral->folioReal->matriz){
 
-                    $this->guardarColindancias($this->propiedad->movimientoRegistral->folioReal->predio);
+                        $this->propiedad->movimientoRegistral->folioReal->predio->update(['superficie_terreno' => $this->propiedad->superficie_terreno]);
+
+                        $this->guardarColindancias($this->propiedad->movimientoRegistral->folioReal->predio);
+
+                    }
 
                     $cantidad = $this->propiedad->numero_inmuebles - 1;
 
@@ -354,6 +358,12 @@ class Subdivisiones extends Component
         $this->actos = Constantes::ACTOS_SUBDIVISIONES;
 
         $this->vientos = Constantes::VIENTOS;
+
+        if($this->propiedad->movimientoRegistral->folioReal->matriz){
+
+            $this->propiedad->acto_contenido = 'SUBDIVISIÓN CON RESTO';
+
+        }
 
     }
 

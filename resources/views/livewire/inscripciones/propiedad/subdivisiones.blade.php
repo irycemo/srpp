@@ -30,21 +30,25 @@
 
             </div>
 
-            <x-input-group for="propiedad.acto_contenido" label="Acto" :error="$errors->first('propiedad.acto_contenido')" class="w-full lg:w-1/4 mx-auto mb-2">
+            @if(! $propiedad->movimientoRegistral->folioReal->matriz)
 
-                <x-input-select id="propiedad.acto_contenido" wire:model.live="propiedad.acto_contenido" class="">
+                <x-input-group for="propiedad.acto_contenido" label="Acto" :error="$errors->first('propiedad.acto_contenido')" class="w-full lg:w-1/4 mx-auto mb-2">
 
-                    <option value="">Seleccione una opción</option>
+                    <x-input-select id="propiedad.acto_contenido" wire:model.live="propiedad.acto_contenido" class="">
 
-                    @foreach ($actos as $acto)
+                        <option value="">Seleccione una opción</option>
 
-                        <option value="{{ $acto }}">{{ $acto }}</option>
+                        @foreach ($actos as $acto)
 
-                    @endforeach
+                            <option value="{{ $acto }}">{{ $acto }}</option>
 
-                </x-input-select>
+                        @endforeach
 
-            </x-input-group>
+                    </x-input-select>
+
+                </x-input-group>
+
+            @endif
 
             <x-input-group for="propiedad.descripcion_acto" label="Descripción del acto" :error="$errors->first('propiedad.descripcion_acto')" class="w-full lg:w-1/4 mx-auto mb-2">
 
@@ -52,7 +56,7 @@
 
             </x-input-group>
 
-            @if($propiedad->acto_contenido == 'SUBDIVISIÓN CON RESTO')
+            @if($propiedad->acto_contenido == 'SUBDIVISIÓN CON RESTO' && ! $propiedad->movimientoRegistral->folioReal->matriz)
 
                 <x-input-group for="propiedad.superficie_terreno" label="Superficie de terreno restante" :error="$errors->first('propiedad.superficie_terreno')" class="w-full lg:w-1/4 mx-auto mb-2">
 
@@ -64,7 +68,7 @@
 
         </div>
 
-        @if($propiedad->acto_contenido == 'SUBDIVISIÓN CON RESTO')
+        @if($propiedad->acto_contenido == 'SUBDIVISIÓN CON RESTO' && ! $propiedad->movimientoRegistral->folioReal->matriz)
 
             <div class="p-4 bg-white shadow-xl rounded-xl mb-5">
 
