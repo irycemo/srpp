@@ -40,6 +40,7 @@ class Auditoria extends Component
         'Sentencia' => 'App\Models\Sentencia',
         'Vario' => 'App\Models\Vario',
         'Reforma' => 'App\Models\ReformaMoral',
+        'Reforma' => 'App\Models\Predio',
     ];
 
     public function ver(Audit $audit){
