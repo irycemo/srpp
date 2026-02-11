@@ -58,7 +58,7 @@ trait RecuperarPredioTrait{
 
                 $movimiento = $movimientoRegistral->folioReal->movimientosRegistrales()->where('folio', $folio)->first();
 
-                if($movimiento->firmaElectronica){
+                if($movimiento?->firmaElectronica){
 
                     $propietarios = $this->recuperarPropietarios($movimiento->firmaElectronica);
 
