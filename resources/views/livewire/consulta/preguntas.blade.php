@@ -90,7 +90,7 @@
                             @if(auth()->user()->hasRole('Administrador'))
 
 
-                                <div class="ml-3 relative lg:hidden" x-data="{ open_drop_down:false }">
+                                <div class="ml-3 relative lg:hidden flex items-center" x-data="{ open_drop_down:false }">
 
                                     <div>
 

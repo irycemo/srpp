@@ -80,6 +80,7 @@ trait ReasignarUsuarioTrait{
                                 ->when(auth()->user()->ubicacion != 'Regional 4', function($q){
                                     $q->where('ubicacion', '!=', 'Regional 4');
                                 })
+                                ->where('status', 'activo')
                                 ->orderBy('name')
                                 ->get();
 
