@@ -73,13 +73,13 @@
 
             </a>
 
-            {{-- <a  href="{{ route('indices.cancelacion') }}" class="hover:bg-gray-100 hover:text-red-600 transition ease-in-out duration-500 rounded-full capitalize font-medium text-md flex items-center w-full py-2 px-4 focus:outline-rojo focus:outline-offset-2">
+            <a  href="{{ route('indices.cancelacion') }}" class="hover:bg-gray-100 hover:text-red-600 transition ease-in-out duration-500 rounded-full capitalize font-medium text-md flex items-center w-full py-2 px-4 focus:outline-rojo focus:outline-offset-2">
                 <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-5 h-5 mr-4">
                     <path stroke-linecap="round" stroke-linejoin="round" d="M21 16.811c0 .864-.933 1.406-1.683.977l-7.108-4.061a1.125 1.125 0 0 1 0-1.954l7.108-4.061A1.125 1.125 0 0 1 21 8.689v8.122ZM11.25 16.811c0 .864-.933 1.406-1.683.977l-7.108-4.061a1.125 1.125 0 0 1 0-1.954l7.108-4.061a1.125 1.125 0 0 1 1.683.977v8.122Z" />
                 </svg>
                 Cancelación
 
-            </a> --}}
+            </a>
 
             <a  href="{{ route('indices.varios') }}" class="hover:bg-gray-100 hover:text-red-600 transition ease-in-out duration-500 rounded-full capitalize font-medium text-md flex items-center w-full py-2 px-4 focus:outline-rojo focus:outline-offset-2">
                 <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-5 h-5 mr-4">
