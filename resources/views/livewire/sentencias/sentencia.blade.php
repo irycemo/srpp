@@ -2,7 +2,7 @@
 
     <x-header>Sentencia  <span class="text-sm tracking-widest">Folio real: {{ $sentencia->movimientoRegistral->folioReal->folio }} - {{ $sentencia->movimientoRegistral->folio }}</span></x-header>
 
-    @if($sentencia->acto_contenido == 'SENTENCIA RECTIFICACTORIA')
+    @if($sentencia->acto_contenido == 'SENTENCIA RECTIFICATORIA')
 
         @livewire('sentencias.rectificatoria', ['sentencia' => $this->sentencia])
 
