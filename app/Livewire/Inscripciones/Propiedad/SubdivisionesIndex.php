@@ -9,6 +9,7 @@ use App\Constantes\Constantes;
 use App\Traits\ComponentesTrait;
 use App\Models\MovimientoRegistral;
 use App\Traits\Inscripciones\EnviarMovimientoCorreccion;
+use App\Traits\Inscripciones\FinalizarInscripcionTrait;
 use App\Traits\Inscripciones\InscripcionesIndex;
 use App\Traits\Inscripciones\ReasignarmeMovimientoTrait;
 use App\Traits\Inscripciones\ReasignarUsuarioTrait;
@@ -26,6 +27,7 @@ class SubdivisionesIndex extends Component
     use RecibirDocumentoTrait;
     use ReasignarUsuarioTrait;
     use ReasignarmeMovimientoTrait;
+    use FinalizarInscripcionTrait;
 
     public function mount(){
 
