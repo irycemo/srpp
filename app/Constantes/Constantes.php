@@ -499,7 +499,6 @@ class Constantes{
         'MANDATORIO',
         'ACREDITADO',
         'DEUDOR PARTE ALICUOTA',
-        'MUTUANTE',
         'MUTUARIO',
         'CONTRIBUYENTE',
         'El TRABAJADOR Y/O DERECHOHABIENTE',
