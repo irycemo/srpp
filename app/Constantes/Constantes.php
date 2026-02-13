@@ -352,7 +352,7 @@ class Constantes{
     ];
 
     const ACTOS_INSCRIPCION_SENTENCIAS = [
-        'SENTENCIA RECTIFICACTORIA',
+        'SENTENCIA RECTIFICATORIA',
         'CANCELACIÓN DE SENTENCIA',
         'RESOLUCIÓN',
         'DEMANDA',
