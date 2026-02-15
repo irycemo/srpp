@@ -679,21 +679,31 @@ class CertificadoPropiedadController extends Controller
 
             $caratula = 'certificaciones.certificadoNegativoBienestar';
 
+            $pdf = Pdf::loadView($caratula, [
+                'distrito' => $object->distrito,
+                'director' => $object->director,
+                'personas' => $object->personas,
+                'datos_control' => $object->datos_control,
+                'observaciones_certificado' => $object->observaciones_certificado,
+                'firma_electronica' => base64_encode($firmaDirector),
+                'qr' => $qr,
+            ]);
+
         }else{
 
             $caratula = 'certificaciones.certificadoNegativo';
 
-        }
+            $pdf = Pdf::loadView($caratula, [
+                'distrito' => $object->distrito,
+                'director' => $object->director,
+                'personas' => $object->personas,
+                'datos_control' => $object->datos_control,
+                'observaciones_certificado' => $object->observaciones_certificado,
+                'firma_electronica' => false,
+                'qr' => $qr,
+            ]);
 
-        $pdf = Pdf::loadView($caratula, [
-            'distrito' => $object->distrito,
-            'director' => $object->director,
-            'personas' => $object->personas,
-            'datos_control' => $object->datos_control,
-            'observaciones_certificado' => $object->observaciones_certificado,
-            'firma_electronica' => false,
-            'qr' => $qr,
-        ]);
+        }
 
         $pdf->render();
 
@@ -729,21 +739,31 @@ class CertificadoPropiedadController extends Controller
 
             $caratula = 'certificaciones.certificadoNegativoBienestar';
 
+            $pdf = Pdf::loadView($caratula, [
+                'distrito' => $object->distrito,
+                'director' => $object->director,
+                'personas' => $object->personas,
+                'datos_control' => $object->datos_control,
+                'observaciones_certificado' => $object->observaciones_certificado,
+                'firma_electronica' => base64_encode($firmaElectronica->cadena_encriptada),
+                'qr' => $qr,
+            ]);
+
         }else{
 
             $caratula = 'certificaciones.certificadoNegativo';
 
-        }
+            $pdf = Pdf::loadView($caratula, [
+                'distrito' => $object->distrito,
+                'director' => $object->director,
+                'personas' => $object->personas,
+                'datos_control' => $object->datos_control,
+                'observaciones_certificado' => $object->observaciones_certificado,
+                'firma_electronica' => false,
+                'qr' => $qr,
+            ]);
 
-        $pdf = Pdf::loadView($caratula, [
-            'distrito' => $object->distrito,
-            'director' => $object->director,
-            'personas' => $object->personas,
-            'datos_control' => $object->datos_control,
-            'observaciones_certificado' => $object->observaciones_certificado,
-            'firma_electronica' => false,
-            'qr' => $qr,
-        ]);
+        }
 
         $pdf->render();
 

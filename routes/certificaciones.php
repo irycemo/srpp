@@ -1,17 +1,19 @@
 <?php
 
-use Illuminate\Support\Facades\Route;
-use App\Livewire\Certificaciones\Consultas;
-use App\Livewire\Certificaciones\CopiasSimples;
-use App\Livewire\Certificaciones\CopiasCertificadas;
-use App\Livewire\Certificaciones\CertificadoGravamen;
-use App\Livewire\Certificaciones\CertificadoPropiedad;
-use App\Http\Controllers\Certificaciones\CopiasController;
-use App\Livewire\Certificaciones\ConsultasCertificaciones;
-use App\Livewire\Certificaciones\CertificadoPropiedadIndex;
 use App\Http\Controllers\Certificaciones\CertificadoGravamenController;
 use App\Http\Controllers\Certificaciones\CertificadoPropiedadController;
+use App\Http\Controllers\Certificaciones\CopiasController;
+use App\Livewire\Certificaciones\CertificadoBienestarIndex;
+use App\Livewire\Certificaciones\CertificadoGravamen;
+use App\Livewire\Certificaciones\CertificadoPropiedad;
+use App\Livewire\Certificaciones\CertificadoPropiedad\CertificadoBienestar;
+use App\Livewire\Certificaciones\CertificadoPropiedadIndex;
+use App\Livewire\Certificaciones\Consultas;
+use App\Livewire\Certificaciones\ConsultasCertificaciones;
 use App\Livewire\Certificaciones\Copiador;
+use App\Livewire\Certificaciones\CopiasCertificadas;
+use App\Livewire\Certificaciones\CopiasSimples;
+use Illuminate\Support\Facades\Route;
 
 Route::group(['middleware' => ['auth', 'esta.activo']], function(){
 
@@ -37,7 +39,9 @@ Route::group(['middleware' => ['auth', 'esta.activo']], function(){
     Route::get('certificado_gravamen_pdf/{movimientoRegistral}', [CertificadoGravamenController::class, 'certificadoGravamen'])->middleware('permission:Certificado gravamen')->name('certificado_gravamen_pdf');
 
     /* Certificado de propiedad */
+    Route::get('certificado_bienestar', CertificadoBienestarIndex::class)->middleware('permission:Certificado propiedad')->name('certificados_bienestar');
     Route::get('certificado_propiedad', CertificadoPropiedadIndex::class)->middleware('permission:Certificado propiedad')->name('certificados_propiedad');
+    Route::get('certificado_bienestar/{certificacion}', CertificadoBienestar::class)->middleware('permission:Certificado propiedad')->name('certificado_bienestar');
     Route::get('certificado_propiedad/{certificacion}', CertificadoPropiedad::class)->middleware('permission:Certificado propiedad')->name('certificado_propiedad');
     Route::get('certificado_negativo_propiedad_pdf/{movimientoRegistral}', [CertificadoPropiedadController::class, 'certificadoNegativoPropiedad'])->middleware('permission:Certificado propiedad')->name('certificado_negativo_propiedad_pdf');
     Route::get('certificado_propiedad_pdf/{movimientoRegistral}', [CertificadoPropiedadController::class, 'certificadoPropiedad'])->middleware('permission:Certificado propiedad')->name('certificado_propiedad_pdf');
