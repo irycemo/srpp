@@ -4,7 +4,6 @@ namespace App\Livewire\Certificaciones;
 
 use App\Constantes\Constantes;
 use App\Exceptions\GeneralException;
-use App\Exceptions\InscripcionesServiceException;
 use App\Http\Controllers\Certificaciones\CertificadoPropiedadController;
 use App\Http\Services\SistemaTramitesService;
 use App\Models\MovimientoRegistral;
@@ -101,7 +100,7 @@ class CertificadoBienestarIndex extends Component
 
         if($movimientoRegistral->getRawOriginal('distrito') != 2 && !auth()->user()->hasRole(['Jefe de departamento certificaciones'])){
 
-            if($this->calcularDiaElaboracion($movimientoRegistral)) return;
+            /* if($this->calcularDiaElaboracion($movimientoRegistral)) return; */
 
         }
 
