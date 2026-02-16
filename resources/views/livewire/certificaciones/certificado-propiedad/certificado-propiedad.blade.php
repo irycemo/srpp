@@ -39,7 +39,7 @@
 
                         <img wire:loading wire:target="generarCertificado" class="mx-auto h-4 mr-1" src="{{ asset('storage/img/loading3.svg') }}" alt="Loading">
 
-                        Generar certificado de propiedad
+                        Generar certificado de propiedads
 
                     </x-button-blue>
 
