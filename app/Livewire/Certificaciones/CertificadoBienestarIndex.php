@@ -67,95 +67,7 @@ class CertificadoBienestarIndex extends Component
 
     public function updatedFilters() { $this->resetPage(); }
 
-
-    public function estaBloqueado(){
-
-        $movimientos = $this->actual->folioReal->movimientosRegistrales()->whereIn('estado', ['nuevo', 'captura'])->orderBy('folio')->get();
-
-        if($movimientos->count()){
-
-            $primerMovimiento = $movimientos->first();
-
-            if($this->actual->folio > $primerMovimiento->folio){
-
-                $this->dispatch('mostrarMensaje', ['warning', "El movimiento registral: (" . $this->actual->folioReal->folio . '-' . $primerMovimiento->folio . ') debe elaborarce primero.']);
-
-                return true;
-
-            }else{
-
-               return false;
-
-            }
-
-        }else{
-
-            return false;
-
-        }
-
-    }
-
     public function elaborar(MovimientoRegistral $movimientoRegistral){
-
-        if($movimientoRegistral->getRawOriginal('distrito') != 2 && !auth()->user()->hasRole(['Jefe de departamento certificaciones'])){
-
-            /* if($this->calcularDiaElaboracion($movimientoRegistral)) return; */
-
-        }
-
-        /* $movimientoAsignados = MovimientoRegistral::whereIn('estado', ['nuevo'])
-                                                        ->where('usuario_Asignado', auth()->id())
-                                                        ->withWhereHas('folioReal', function($q){
-                                                            $q->where('estado', 'activo');
-                                                        })
-                                                        ->whereHas('certificacion', function($q){
-                                                            $q->whereIn('servicio', ['DL10', 'DL11']);
-                                                        })
-                                                        ->orderBy('created_at')
-                                                        ->get();
-
-        foreach($movimientoAsignados as $movimiento){
-
-            if($movimiento->tipo_servicio == 'ordinario'){
-
-                if($movimiento->fecha_entrega <= now()){
-
-                    if($movimientoRegistral->id == $movimiento->id){
-
-                        break;
-
-                    }else{
-
-                        $this->dispatch('mostrarMensaje', ['error', "Debe elaborar el movimiento registral " . $movimiento->folioReal->folio . '-' . $movimiento->folio . ' primero.']);
-
-                        return;
-
-                    }
-
-                }else{
-
-                    continue;
-
-                }
-
-            }else{
-
-                if($movimientoRegistral->id != $movimiento->id){
-
-                    $this->dispatch('mostrarMensaje', ['error', "Debe elaborar el movimiento registral " . $movimiento->folioReal->folio . '-' . $movimiento->folio . ' primero.']);
-
-                    return;
-
-                }else{
-
-                    break;
-
-                }
-
-            }
-
-        } */
 
         return redirect()->route('certificado_propiedad', $movimientoRegistral->certificacion);
 
@@ -165,45 +77,7 @@ class CertificadoBienestarIndex extends Component
 
         try {
 
-            if($movimientoRegistral->certificacion->tipo_certificado == 1){
-
-                /* $this->dispatch('imprimir_negativo_propiedad', ['certificacion' => $movimientoRegistral->id]); */
-
-                $pdf = (new CertificadoPropiedadController())->reimprimircertificadoNegativoPropiedad($movimientoRegistral->firmaElectronica);
-
-            }elseif($movimientoRegistral->certificacion->tipo_certificado == 2){
-
-                /* $this->dispatch('imprimir_propiedad', ['certificacion' => $movimientoRegistral->id]); */
-
-                $pdf = (new CertificadoPropiedadController())->reimprimircertificadoPropiedad($movimientoRegistral->firmaElectronica);
-
-            }if($movimientoRegistral->certificacion->tipo_certificado == 3){
-
-                /* $this->dispatch('imprimir_unico_propiedad', ['certificacion' => $movimientoRegistral->id]); */
-
-                $pdf = (new CertificadoPropiedadController())->reimprimircertificadoUnicoPropiedad($movimientoRegistral->firmaElectronica);
-
-            }if($movimientoRegistral->certificacion->tipo_certificado == 5){
-
-                /* $this->dispatch('imprimir_negativo', ['certificacion' => $movimientoRegistral->id]); */
-
-                if($movimientoRegistral->servicio_nombre == 'Certificado negativo de vivienda bienestar'){
-
-                    $bienestar = true;
-
-                }else{
-
-                    $bienestar = false;
-
-                }
-
-                $pdf = (new CertificadoPropiedadController())->reimprimircertificadoNegativo($movimientoRegistral->firmaElectronica, $bienestar);
-
-            }if($movimientoRegistral->certificacion->tipo_certificado == 4){
-
-                $this->dispatch('imprimir_certificado_colindancias', ['certificacion' => $movimientoRegistral->id]);
-
-            }
+            $pdf = (new CertificadoPropiedadController())->reimprimircertificadoNegativo($movimientoRegistral->firmaElectronica, true);
 
             return response()->streamDownload(
                 fn () => print($pdf->output()),
