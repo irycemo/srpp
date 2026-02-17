@@ -270,7 +270,6 @@ class MovimientoRegistralService{
 
                 $array['folio_real'] = null;
                 $array['folio'] = 1;
-                $array['pase_a_folio'] = $request['categoria_servicio'] == 'Folio simplificado' ? false : true;
 
                 if($request['categoria_servicio'] == 'Certificaciones'){
 
@@ -279,6 +278,16 @@ class MovimientoRegistralService{
                 }else{
 
                     $array['estado'] = 'no recibido';
+
+                }
+
+                if($request['categoria_servicio'] == 'Folio simplificado' || $request['servicio'] == 'DL10'){
+
+                    $array['pase_a_folio'] = false;
+
+                }else{
+
+                    $array['pase_a_folio'] = true;
 
                 }
 
