@@ -155,7 +155,7 @@ class ConsolidacionUsufructo extends Component
 
             $propietario = $this->vario->movimientoRegistral->folioReal->predio->propietarios()->where('persona_id', $actor->persona_id)->first();
 
-            if($actor->porcentaje_propiedad == 0 && $actor->porcentaje_nuda == 0 && $actor->porcentaje_usufructo){
+            if($actor->porcentaje_propiedad == 0 && $actor->porcentaje_nuda == 0 && $actor->porcentaje_usufructo == 0){
 
                 $propietario->delete();
 
