@@ -487,16 +487,7 @@ class MovimientoRegistralService{
 
         }
 
-        /* Inscripciones */
-        if(!isset($request['folio_real'])){
-
-            return 1;
-
-        }else{
-
-            return FolioReal::where('folio', $request['folio_real'])->first()->ultimoFolio() + 1;
-
-        }
+        return FolioReal::where('folio', $request['folio_real'])->first()->ultimoFolio() + 1;
 
     }
 
