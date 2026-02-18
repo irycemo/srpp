@@ -144,9 +144,6 @@ class Dashboard extends Component
                             ->whereHas('certificacion', function($q){
                                 $q->where('servicio', 'DL10');
                             })
-                            ->whereHas('folioReal', function($q){
-                                $q->where('estado', 'activo');
-                            })
                             ->groupBy('estado')
                             ->get()
                             ->map(function($movimiento){
@@ -236,37 +233,36 @@ class Dashboard extends Component
 
         }elseif(auth()->user()->hasRole(['Registrador Sentencias'])){
 
-            $this->cargarSentencia();
+            $this->cargarSentencia(auth()->id());
 
         }elseif(auth()->user()->hasRole(['Registrador Cancelación', 'Cancelación'])){
 
-            $this->cargarCancelacion();
+            $this->cargarCancelacion(auth()->id());
 
         }elseif(auth()->user()->hasRole(['Registrador Varios', 'Varios'])){
 
-            $this->cargarVarios();
+            $this->cargarVarios(auth()->id());
 
         }elseif(auth()->user()->hasRole(['Certificador Propiedad'])){
 
-            $this->cargarCertificadoPropiedad();
+            $this->cargarCertificadoPropiedad(auth()->id());
 
         }elseif(auth()->user()->hasRole(['Certificador Gravamen'])){
 
-            $this->cargarCertificadoGravamen();
-
-        }elseif(auth()->user()->hasRole(['Certificador Gravamen'])){
+            $this->cargarCertificadoGravamen(auth()->id());
 
         }elseif(auth()->user()->hasRole(['Pase a folio'])){
 
-            $this->cargarPaseAFolio();
+            $this->cargarPaseAFolio(auth()->id());
 
         }elseif(auth()->user()->hasRole(['Folio real moral'])){
 
-            $this->cargarReforma();
+            $this->cargarReforma(auth()->id());
 
         }
 
     }
+
     public function render()
     {
         return view('livewire.dashboard.dashboard')->extends('layouts.admin');
