@@ -2,9 +2,11 @@
 
 namespace App\Http\Services;
 
+use App\Http\Controllers\Certificaciones\CertificadoGravamenController;
+use App\Http\Services\MovimientoServiceInterface;
 use App\Models\Certificacion;
 use App\Models\MovimientoRegistral;
-use App\Http\Services\MovimientoServiceInterface;
+use Illuminate\Support\Facades\Cache;
 
 class CertificacionesService implements MovimientoServiceInterface{
 
@@ -20,6 +22,18 @@ class CertificacionesService implements MovimientoServiceInterface{
             $movimientoRegistral->update([
                 'tipo_servicio' => 'extra_urgente',
             ]);
+
+        }
+
+        if($request['servicio'] == 'DL07' && $request['usuario'] == 67){
+
+            $movimientoRegistral = MovimientoRegistral::find($request['movimiento_registral_id']);
+
+            Cache::forget('estadisticas_tramites_en_linea_' . $movimientoRegistral->usuario_tramites_linea_id);
+
+            (new CertificadoGravamenController())->certificadoGravamen($movimientoRegistral);
+
+            $movimientoRegistral->update(['estado' => 'concluido']);
 
         }
 

@@ -361,7 +361,7 @@
 
                                         @endcan
 
-                                        @if(! $movimiento->folioReal)
+                                        @if(! $movimiento->pase_a_folio)
 
                                             <button
                                                 wire:click="enviarPaseFolio({{ $movimiento->id }})"
