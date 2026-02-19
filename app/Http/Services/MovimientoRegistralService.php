@@ -240,7 +240,7 @@ class MovimientoRegistralService{
                 if($folioReal){
 
                     $array['folio_real'] = $folioReal->id;
-                    $array['folio'] = $this->calcularFolio($request);
+                    $array['folio'] = $folioReal->ultimoFolio() + 1;
 
                     if($folioReal->estado == 'activo'){
 
