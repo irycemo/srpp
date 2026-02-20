@@ -533,8 +533,6 @@ class Elaboracion extends Component
 
             foreach($gravamenes as $gravamen){
 
-                info($gravamen);
-
                 if(isset($gravamen->stGravamen) && $gravamen->stGravamen == 'C') continue;
 
                 $this->creargravamen($gravamen);
@@ -547,9 +545,9 @@ class Elaboracion extends Component
 
     public function creargravamen($gravamen){
 
-        foreach($this->movimientoRegistral->folioReal->movimientosRegistrales as $movimiento){
+        foreach($this->movimientoRegistral->folioReal->gravamenes as $gravamen){
 
-            if($movimiento->tomo_gravamen == $gravamen->tomog && $movimiento->registro_gravamen == $gravamen->registrog) return;
+            if($gravamen->tomo_gravamen == $gravamen->tomog && $gravamen->registro_gravamen == $gravamen->registrog) return;
 
         }
 
