@@ -378,10 +378,7 @@ class Elaboracion extends Component
                         $this->movimientoRegistral->numero_propiedad
                     ){
 
-                        Log::debug($this->movimientoRegistral->getRawOriginal('distrito'),
-                        $this->movimientoRegistral->tomo,
-                        $this->movimientoRegistral->registro,
-                        $this->movimientoRegistral->numero_propiedad);
+                        info($this->movimientoRegistral->getRawOriginal('distrito'));
 
                         $this->consultarGravamenesAntecedente(
                             $this->movimientoRegistral->getRawOriginal('distrito'),
@@ -532,13 +529,15 @@ class Elaboracion extends Component
                                     ->where("noprop", $numero_propiedad)
                                     ->first();
 
+                                    inf($propiedad);
+
         if($propiedad){
 
             $gravamenes = (new OldBDService())->tractoGravamenes($propiedad->id);
 
             foreach($gravamenes as $gravamen){
 
-                if(isset($gravamen->fcancelacion) && isset($gravamen->stGravamen) && $gravamen->stGravamen == 'C') continue;
+                if(isset($gravamen->stGravamen) && $gravamen->stGravamen == 'C') continue;
 
                 $this->creargravamen($gravamen);
 
