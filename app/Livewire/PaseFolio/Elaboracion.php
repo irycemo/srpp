@@ -529,7 +529,7 @@ class Elaboracion extends Component
                                     ->where("noprop", $numero_propiedad)
                                     ->first();
 
-                                    inf($propiedad);
+                                    info($propiedad);
 
         if($propiedad){
 
