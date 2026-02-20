@@ -53,25 +53,19 @@
 
                             <x-table.row wire:loading.class.delaylongest="opacity-50" wire:key="row-{{$loop->index }}">
 
-                                <x-table.cell>
-
-                                    <span class="lg:hidden absolute top-0 left-0 bg-blue-300 px-2 py-1 text-xs text-white font-bold uppercase rounded-br-xl">Tomo</span>
+                                <x-table.cell title="Tomo">
 
                                     {{$tomo }}
 
                                 </x-table.cell>
 
-                                <x-table.cell>
-
-                                    <span class="lg:hidden absolute top-0 left-0 bg-blue-300 px-2 py-1 text-xs text-white font-bold uppercase rounded-br-xl">Registro</span>
+                                <x-table.cell title="Registro">
 
                                     {{ str_replace('.pdf', '', $cancelacion['name']) }}
 
                                 </x-table.cell>
 
-                                <x-table.cell>
-
-                                    <span class="lg:hidden absolute top-0 left-0 bg-blue-300 px-2 py-1 text-xs text-white font-bold uppercase rounded-br-xl">Archivo</span>
+                                <x-table.cell title="Archivo">
 
                                     <a
                                         href="{{ Storage::disk('s3')->temporaryUrl($cancelacion['route'], now()->addMinutes(10)) }}"

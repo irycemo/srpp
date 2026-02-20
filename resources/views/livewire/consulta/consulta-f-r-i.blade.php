@@ -228,52 +228,38 @@
 
                         <x-table.row wire:loading.class.delaylongest="opacity-50" wire:key="row-{{ $folio->id }}">
 
-                            <x-table.cell>
-
-                                <span class="lg:hidden absolute top-0 left-0 bg-blue-300 px-2 text-[10px] text-white font-bold uppercase rounded-br-xl">Folio</span>
+                            <x-table.cell title="Folio">
 
                                 {{ $folio->folio }}
 
                             </x-table.cell>
 
-                            <x-table.cell>
-
-                                <span class="lg:hidden absolute top-0 left-0 bg-blue-300 px-2 text-[10px] text-white font-bold uppercase rounded-br-xl">Estado</span>
+                            <x-table.cell title="Estado">
 
                                 <span class="bg-{{ $folio->estado_color }} py-1 px-2 rounded-full text-white text-xs">{{ ucfirst($folio->estado) }}</span>
 
                             </x-table.cell>
 
-                            <x-table.cell>
+                            <x-table.cell title="Ubicación">
 
-                                <span class="lg:hidden absolute top-0 left-0 bg-blue-300 px-2 text-[10px] text-white font-bold uppercase rounded-br-xl">Ubicación</span>
-
-                                <p class="mt-2">
-
-                                    {{
-                                        $folio->predio?->municipio . ', ' .
-                                        $folio->predio?->ciudad . ', ' .
-                                        $folio->predio?->codigo_postal . ', ' .
-                                        $folio->predio?->nombre_asentamiento . ', ' .
-                                        $folio->predio?->nombre_vialidad . ', # ' .
-                                        $folio->predio?->numero_exterior
-                                    }}
-
-                                </p>
+                                {{
+                                    $folio->predio?->municipio . ', ' .
+                                    $folio->predio?->ciudad . ', ' .
+                                    $folio->predio?->codigo_postal . ', ' .
+                                    $folio->predio?->nombre_asentamiento . ', ' .
+                                    $folio->predio?->nombre_vialidad . ', # ' .
+                                    $folio->predio?->numero_exterior
+                                }}
 
                             </x-table.cell>
 
-                            <x-table.cell>
+                            <x-table.cell title="Propietario">
 
-                                <span class="lg:hidden absolute top-0 left-0 bg-blue-300 px-2 text-[10px] text-white font-bold uppercase rounded-br-xl">Propietario</span>
-
-                                <p class="mt-2">{{ $folio->predio?->primerPropietario() }}</p>
+                                {{ $folio->predio?->primerPropietario() }}
 
                             </x-table.cell>
 
-                            <x-table.cell>
-
-                                <span class="lg:hidden absolute top-0 left-0 bg-blue-300 px-2 text-[10px] text-white font-bold uppercase rounded-br-xl">Acciones</span>
+                            <x-table.cell title="Acciones">
 
                                 <div class="flex flex-col justify-center lg:justify-start gap-2">
 

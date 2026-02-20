@@ -59,25 +59,19 @@
 
                     <x-table.row wire:loading.class.delaylongest="opacity-50" wire:key="row-{{ $consulta->id }}">
 
-                        <x-table.cell>
-
-                            <span class="lg:hidden absolute top-0 left-0 bg-blue-300 px-2 py-1 text-xs text-white font-bold uppercase rounded-br-xl">Año</span>
+                        <x-table.cell title="Año">
 
                             {{ $consulta->año }}
 
                         </x-table.cell>
 
-                        <x-table.cell>
-
-                            <span class="lg:hidden absolute top-0 left-0 bg-blue-300 px-2 py-1 text-xs text-white font-bold uppercase rounded-br-xl"># Control</span>
+                        <x-table.cell title="# Control">
 
                             {{ $consulta->tramite }}
 
                         </x-table.cell>
 
-                        <x-table.cell>
-
-                            <span class="lg:hidden absolute top-0 left-0 bg-blue-300 px-2 py-1 text-xs text-white font-bold uppercase rounded-br-xl">Usuario</span>
+                        <x-table.cell title="Usuario">
 
                             {{ $consulta->usuario }}
 
@@ -85,9 +79,7 @@
 
                         @if (auth()->user()->hasRole('Administrador'))
 
-                            <x-table.cell>
-
-                                <span class="lg:hidden absolute top-0 left-0 bg-blue-300 px-2 py-1 text-xs text-white font-bold uppercase rounded-br-xl">Estado</span>
+                            <x-table.cell title="Estado">
 
                                 <span class="bg-{{ $consulta->estado_color }} py-1 px-2 rounded-full text-white text-xs">{{ ucfirst($consulta->estado) }}</span>
 
@@ -95,33 +87,25 @@
 
                         @endif
 
-                        <x-table.cell>
-
-                            <span class="lg:hidden absolute top-0 left-0 bg-blue-300 px-2 py-1 text-xs text-white font-bold uppercase rounded-br-xl">Solicitante</span>
+                        <x-table.cell title="Solicitante">
 
                             {{ $consulta->solicitante }}
 
                         </x-table.cell>
 
-                        <x-table.cell>
-
-                            <span class="lg:hidden absolute top-0 left-0 bg-blue-300 px-2 py-1 text-xs text-white font-bold uppercase rounded-br-xl">Distrito</span>
+                        <x-table.cell title="Distrito">
 
                             {{ $consulta->distrito }}
 
                         </x-table.cell>
 
-                        <x-table.cell>
-
-                            <span class="lg:hidden absolute top-0 left-0 bg-blue-300 px-2 py-1 text-xs text-white font-bold uppercase rounded-br-xl">Sección</span>
+                        <x-table.cell title="Sección">
 
                             {{ $consulta->seccion }}
 
                         </x-table.cell>
 
-                        <x-table.cell>
-
-                            <span class="lg:hidden absolute top-0 left-0 bg-blue-300 px-2 py-1 text-xs text-white font-bold uppercase rounded-br-xl">Solicitante</span>
+                        <x-table.cell title="Solicitante">
 
                             {{ $certificado->solicitante }}
 
@@ -129,17 +113,13 @@
 
                         @if (!auth()->user()->hasRole('Consulta'))
 
-                            <x-table.cell>
-
-                                <span class="lg:hidden absolute top-0 left-0 bg-blue-300 px-2 py-1 text-xs text-white font-bold uppercase rounded-br-xl">Finalizado en</span>
+                            <x-table.cell title="Finalizado en">
 
                                 {{ $consulta->certificacion->finalizado_en ? $consulta->certificacion->finalizado_en->format('d-m-Y H:i:s') : 'N/A' }}
 
                             </x-table.cell>
 
-                            <x-table.cell>
-
-                                <span class="lg:hidden absolute top-0 left-0 bg-blue-300 px-2 py-1 text-xs text-white font-bold uppercase rounded-br-xl">Asignado a</span>
+                            <x-table.cell title="Asignado a">
 
                                 {{ $consulta->asignadoA->name }}
 
@@ -147,15 +127,13 @@
 
                         @endif
 
-                        <x-table.cell>
-
-                            <span class="lg:hidden absolute top-0 left-0 bg-blue-300 px-2 py-1 text-xs text-white font-bold uppercase rounded-br-xl">Registrado</span>
+                        <x-table.cell title="Registrado">
 
                             {{ $consulta->created_at }}
 
                         </x-table.cell>
 
-                        <x-table.cell>
+                        <x-table.cell title="Actualizado">
 
                             <span class="font-semibold">@if($consulta->actualizadoPor != null)Actualizado por: {{$consulta->actualizadoPor->name}} @else Actualizado: @endif</span> <br>
 
@@ -165,9 +143,7 @@
 
                         @if (!auth()->user()->hasRole('Administrador'))
 
-                            <x-table.cell>
-
-                                <span class="lg:hidden absolute top-0 left-0 bg-blue-300 px-2 py-1 text-xs text-white font-bold uppercase rounded-br-xl">Acciones</span>
+                            <x-table.cell title="Acciones">
 
                                 <div class="flex justify-center lg:justify-start gap-2">
 

@@ -67,17 +67,13 @@
 
                     <x-table.row wire:loading.class.delaylongest="opacity-50" wire:key="row-{{ $movimiento->id }}">
 
-                        <x-table.cell>
-
-                            <span class="lg:hidden absolute top-0 left-0 bg-blue-300 px-2 text-[10px] text-white font-bold uppercase rounded-br-xl">Mov. Reg.</span>
+                        <x-table.cell title="Mov. Reg.">
 
                             <span class="whitespace-nowrap">{{ $movimiento->folioRealPersona?->folio }}-{{ $movimiento->folio }}</span>
 
                         </x-table.cell>
 
-                        <x-table.cell>
-
-                            <span class="lg:hidden absolute top-0 left-0 bg-blue-300 px-2 text-[10px] text-white font-bold uppercase rounded-br-xl">Número de control</span>
+                        <x-table.cell title="Número de control">
 
                             <div class="text-center flex flex-col">
 
@@ -93,9 +89,7 @@
 
                         </x-table.cell>
 
-                        <x-table.cell>
-
-                            <span class="lg:hidden absolute top-0 left-0 bg-blue-300 px-2 text-[10px] text-white font-bold uppercase rounded-br-xl">Estado</span>
+                        <x-table.cell title="Estado">
 
                             @if($movimiento->folioRealPersona)
 
@@ -109,17 +103,13 @@
 
                         </x-table.cell>
 
-                        <x-table.cell>
-
-                            <span class="lg:hidden absolute top-0 left-0 bg-blue-300 px-2 text-[10px] text-white font-bold uppercase rounded-br-xl">Tipo de servicio</span>
+                        <x-table.cell title="Tipo de servicio">
 
                             {{ $movimiento->tipo_servicio }}
 
                         </x-table.cell>
 
-                        <x-table.cell>
-
-                            <span class="lg:hidden absolute top-0 left-0 bg-blue-300 px-2 text-[10px] text-white font-bold uppercase rounded-br-xl">Distrito</span>
+                        <x-table.cell title="Distrito">
 
                             {{ $movimiento->distrito }}
 
@@ -127,51 +117,37 @@
 
                         @if(auth()->user()->hasRole(['Supervisor varios', 'Supervisor uruapan', 'Administrador', 'Jefe de departamento', 'Operador']))
 
-                            <x-table.cell>
+                            <x-table.cell title="Usuario asignado">
 
-                                <span class="lg:hidden absolute top-0 left-0 bg-blue-300 px-2 text-[10px] text-white font-bold uppercase rounded-br-xl">Usuario asignado</span>
-
-                                <p class="mt-2">{{ $movimiento->asignadoA->name ?? 'N/A' }}</p>
+                                {{ $movimiento->asignadoA->name ?? 'N/A' }}
 
                             </x-table.cell>
 
                         @endif
 
-                        <x-table.cell>
-
-                            <span class="lg:hidden absolute top-0 left-0 bg-blue-300 px-2 text-[10px] text-white font-bold uppercase rounded-br-xl">Fecha de entrega</span>
+                        <x-table.cell title="Fecha de entrega">
 
                             {{ $movimiento->fecha_entrega->format('d-m-Y') }}
 
                         </x-table.cell>
 
-                        <x-table.cell>
-
-                            <span class="lg:hidden absolute top-0 left-0 bg-blue-300 px-2 text-[10px] text-white font-bold uppercase rounded-br-xl">Ingreso</span>
+                        <x-table.cell title="Ingreso">
 
                             {{ $movimiento->created_at }}
 
                         </x-table.cell>
 
-                        <x-table.cell>
+                        <x-table.cell title="Actualizado">
 
-                            <span class="lg:hidden absolute top-0 left-0 bg-blue-300 px-2 text-[10px] text-white font-bold uppercase rounded-br-xl">Actualizado</span>
+                            <span class="font-semibold">@if($movimiento->actualizadoPor != null)Actualizado por: {{$movimiento->actualizadoPor->name}} @else Actualizado: @endif</span> <br>
 
-                            <p class="mt-2">
-
-                                <span class="font-semibold">@if($movimiento->actualizadoPor != null)Actualizado por: {{$movimiento->actualizadoPor->name}} @else Actualizado: @endif</span> <br>
-
-                                {{ $movimiento->updated_at }}
-
-                            </p>
+                            {{ $movimiento->updated_at }}
 
                         </x-table.cell>
 
                         @if (!auth()->user()->hasRole(['Administrador', 'Operador']))
 
-                            <x-table.cell>
-
-                                <span class="lg:hidden absolute top-0 left-0 bg-blue-300 px-2 text-[10px] text-white font-bold uppercase rounded-br-xl">Acciones</span>
+                            <x-table.cell title="Acciones">
 
                                 <div class="ml-3 relative" x-data="{ open_drop_down:false }">
 

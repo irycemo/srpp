@@ -68,5 +68,6 @@
     "Page Expired": "Página expirada",
     "Too Many Requests": "Demasiadas solicitudes",
     "Server Error": "Error del servidor",
-    "Service Unavailable": "Servicio no disponible"
+    "Service Unavailable": "Servicio no disponible",
+    "User does not have the right permissions.": "El usuario no tiene los permisos adecuados."
 }

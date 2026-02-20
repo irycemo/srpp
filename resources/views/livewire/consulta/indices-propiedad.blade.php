@@ -135,57 +135,43 @@
 
                         <x-table.row wire:loading.class.delaylongest="opacity-50" wire:key="row-{{$item->id }}">
 
-                            <x-table.cell>
-
-                                <span class="lg:hidden absolute top-0 left-0 bg-blue-300 px-2 text-[10px] text-white font-bold uppercase rounded-br-xl">Distrito</span>
+                            <x-table.cell title="Distrito">
 
                                 {{$item->distrito }}
 
                             </x-table.cell>
 
-                            <x-table.cell>
-
-                                <span class="lg:hidden absolute top-0 left-0 bg-blue-300 px-2 text-[10px] text-white font-bold uppercase rounded-br-xl">Tomo</span>
+                            <x-table.cell title="Tomo">
 
                                 {{$item->tomo }}
 
                             </x-table.cell>
 
-                            <x-table.cell>
-
-                                <span class="lg:hidden absolute top-0 left-0 bg-blue-300 px-2 text-[10px] text-white font-bold uppercase rounded-br-xl">Registro</span>
+                            <x-table.cell title="Registro">
 
                                 {{$item->registro }}
 
                             </x-table.cell>
 
-                            <x-table.cell>
-
-                                <span class="lg:hidden absolute top-0 left-0 bg-blue-300 px-2 text-[10px] text-white font-bold uppercase rounded-br-xl"># Propiedad</span>
+                            <x-table.cell title="# Propiedad">
 
                                 {{$item->noprop }} {{$item->status }}
 
                             </x-table.cell>
 
-                            <x-table.cell>
+                            <x-table.cell title="Propietarios">
 
-                                <span class="lg:hidden absolute top-0 left-0 bg-blue-300 px-2 text-[10px] text-white font-bold uppercase rounded-br-xl">Propietarios</span>
-
-                                <p class="mt-2">{{ Str::limit($item->propietarios, 50) }}</p>
+                                {{ Str::limit($item->propietarios, 50) }}
 
                             </x-table.cell>
 
-                            <x-table.cell>
+                            <x-table.cell title="Ubicación">
 
-                                <span class="lg:hidden absolute top-0 left-0 bg-blue-300 px-2 text-[10px] text-white font-bold uppercase rounded-br-xl">Ubicación</span>
-
-                                <p class="mt-2">{{ Str::limit($item->ubicacion, 70) }}</p>
+                                {{ Str::limit($item->ubicacion, 70) }}
 
                             </x-table.cell>
 
-                            <x-table.cell>
-
-                                <span class="lg:hidden absolute top-0 left-0 bg-blue-300 px-2 text-[10px] text-white font-bold uppercase rounded-br-xl">Acciones</span>
+                            <x-table.cell title="Acciones">
 
                                 <div class="flex justify-center lg:justify-start gap-2">
 

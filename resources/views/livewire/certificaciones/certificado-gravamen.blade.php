@@ -115,17 +115,13 @@
 
                     <x-table.row wire:loading.class.delaylongest="opacity-50" wire:key="row-{{ $certificado->id }}">
 
-                        <x-table.cell>
-
-                            <span class="lg:hidden absolute top-0 left-0 bg-blue-300 px-2 text-[10px] text-white font-bold uppercase rounded-br-xl">Movimiento registral</span>
+                        <x-table.cell title="Movimiento registral">
 
                             <span class="whitespace-nowrap">{{ $certificado->folioReal->folio }}-{{ $certificado->folio }}</span>
 
                         </x-table.cell>
 
-                        <x-table.cell>
-
-                            <span class="lg:hidden absolute top-0 left-0 bg-blue-300 px-2 text-[10px] text-white font-bold uppercase rounded-br-xl"># Control</span>
+                        <x-table.cell title="# Control">
 
                             <div class="text-center flex flex-col">
 
@@ -141,45 +137,35 @@
 
                         </x-table.cell>
 
-                        <x-table.cell>
-
-                            <span class="lg:hidden absolute top-0 left-0 bg-blue-300 px-2 text-[10px] text-white font-bold uppercase rounded-br-xl">Estado</span>
+                        <x-table.cell title="Estado">
 
                             <span class="bg-{{ $certificado->estado_color }} py-1 px-2 rounded-full text-white text-xs">{{ ucfirst($certificado->estado) }}</span>
 
                         </x-table.cell>
 
-                        <x-table.cell>
-
-                            <span class="lg:hidden absolute top-0 left-0 bg-blue-300 px-2 text-[10px] text-white font-bold uppercase rounded-br-xl">Tipo de servicio</span>
+                        <x-table.cell title="Tipo de servicio">
 
                             {{ $certificado->tipo_servicio }}
 
                         </x-table.cell>
 
-                        <x-table.cell>
-
-                            <span class="lg:hidden absolute top-0 left-0 bg-blue-300 px-2 text-[10px] text-white font-bold uppercase rounded-br-xl">Distrito</span>
+                        <x-table.cell title="Distrito">
 
                             {{ $certificado->distrito }}
 
                         </x-table.cell>
 
-                        <x-table.cell>
+                        <x-table.cell title="Solicitante">
 
-                            <span class="lg:hidden absolute top-0 left-0 bg-blue-300 px-2 text-[10px] text-white font-bold uppercase rounded-br-xl">Solicitante</span>
-
-                            <p class="mt-2">{{ $certificado->solicitante }}</p>
+                            {{ $certificado->solicitante }}
 
                         </x-table.cell>
 
                         @if (auth()->user()->hasRole(['Supervisor certificaciones', 'Administrador', 'Operador', 'Jefe de departamento certificaciones', 'Supervisor uruapan', 'Jefe de departamento certificaciones']))
 
-                            <x-table.cell>
+                            <x-table.cell title="Usuario asignado">
 
-                                <span class="lg:hidden absolute top-0 left-0 bg-blue-300 px-2 text-[10px] text-white font-bold uppercase rounded-br-xl">Folio de carpeta</span>
-
-                                <p class="mt-2">{{ $certificado->asignadoA->name ?? 'N/A' }}</p>
+                                {{ $certificado->asignadoA->name ?? 'N/A' }}
 
                             </x-table.cell>
 
@@ -187,9 +173,7 @@
 
                         @if (auth()->user()->hasRole(['Administrador', 'Operador', 'Jefe de departamento jurídico']))
 
-                            <x-table.cell>
-
-                                <span class="lg:hidden absolute top-0 left-0 bg-blue-300 px-2 text-[10px] text-white font-bold uppercase rounded-br-xl">Reimpreso en</span>
+                            <x-table.cell title="Reimpreso en">
 
                                 {{ optional($certificado->certificacion->reimpreso_en)->format('d-m-Y H:i:s') ?? 'N/A' }}
 
@@ -197,41 +181,29 @@
 
                         @endif
 
-                        <x-table.cell>
-
-                            <span class="lg:hidden absolute top-0 left-0 bg-blue-300 px-2 text-[10px] text-white font-bold uppercase rounded-br-xl">Fecha de entrega</span>
+                        <x-table.cell title="Fecha de entrega">
 
                             {{ optional($certificado->fecha_entrega)->format('d-m-Y') ?? 'N/A' }}
 
                         </x-table.cell>
 
-                        <x-table.cell>
-
-                            <span class="lg:hidden absolute top-0 left-0 bg-blue-300 px-2 text-[10px] text-white font-bold uppercase rounded-br-xl">Ingreso</span>
+                        <x-table.cell title="Ingreso">
 
                             {{ $certificado->created_at }}
 
                         </x-table.cell>
 
-                        <x-table.cell>
+                        <x-table.cell title="Actualizado">
 
-                            <span class="lg:hidden absolute top-0 left-0 bg-blue-300 px-2 text-[10px] text-white font-bold uppercase rounded-br-xl">Actualizado</span>
+                            <span class="font-semibold">@if($certificado->actualizadoPor != null)Actualizado por: {{$certificado->actualizadoPor->name}} @else Actualizado: @endif</span> <br>
 
-                            <p class="mt-2">
-
-                                <span class="font-semibold">@if($certificado->actualizadoPor != null)Actualizado por: {{$certificado->actualizadoPor->name}} @else Actualizado: @endif</span> <br>
-
-                                {{ $certificado->updated_at }}
-
-                            </p>
+                            {{ $certificado->updated_at }}
 
                         </x-table.cell>
 
                         @if (!auth()->user()->hasRole(['Administrador', 'Operador', 'Jefe de departamento jurídico']))
 
-                            <x-table.cell>
-
-                                <span class="lg:hidden absolute top-0 left-0 bg-blue-300 px-2 text-[10px] text-white font-bold uppercase rounded-br-xl">Acciones</span>
+                            <x-table.cell title="Acciones">
 
                                 <div class="ml-3 relative" x-data="{ open_drop_down:false }">
 
@@ -558,91 +530,6 @@
                     wire:loading.attr="disabled"
                     wire:target="$set('modalRechazar',false)">
                     Cerrar
-                </x-button-red>
-
-            </div>
-
-        </x-slot>
-
-    </x-dialog-modal>
-
-    <x-dialog-modal wire:model="modalCarga" maxWidth="sm">
-
-        <x-slot name="title">
-
-            Carga de trabajo
-
-        </x-slot>
-
-        <x-slot name="content">
-
-            <div class="flex flex-col md:flex-row justify-between md:space-x-3 mb-5">
-
-                <div class="flex-auto ">
-
-                    <div>
-
-                        <Label>Fecha inicial</Label>
-                    </div>
-
-                    <div>
-
-                        <input type="date" class="bg-white rounded text-sm w-full" wire:model="fecha_inicio">
-
-                    </div>
-
-                    <div>
-
-                        @error('fecha_inicio') <span class="error text-sm text-red-500">{{ $message }}</span> @enderror
-
-                    </div>
-
-                </div>
-
-                <div class="flex-auto ">
-
-                    <div>
-
-                        <Label>Fecha final</Label>
-                    </div>
-
-                    <div>
-
-                        <input type="date" class="bg-white rounded text-sm w-full" wire:model="fecha_final">
-
-                    </div>
-
-                    <div>
-
-                        @error('fecha_final') <span class="error text-sm text-red-500">{{ $message }}</span> @enderror
-
-                    </div>
-
-                </div>
-
-            </div>
-
-        </x-slot>
-
-        <x-slot name="footer">
-
-            <div class="flex items-center justify-end space-x-3">
-
-                <x-button-blue
-                    wire:click="imprimirCarga"
-                    wire:loading.attr="disabled"
-                    wire:target="imprimirCarga">
-
-                    <img wire:loading wire:target="imprimirCarga" class="mx-auto h-4 mr-1" src="{{ asset('storage/img/loading3.svg') }}" alt="Loading">
-
-                    <span>Imprimir</span>
-                </x-button-blue>
-
-                <x-button-red
-                    wire:click="$toggle('modalCarga')"
-                    wire:loading.attr="disabled"
-                    wire:target="$toggle('modalCarga')">
-                    <span>Cerrar</span>
                 </x-button-red>
 
             </div>

@@ -84,9 +84,7 @@
 
                     <x-table.row wire:loading.class.delaylongest="opacity-50" wire:key="row-{{ $copiaConsultada->id }}">
 
-                        <x-table.cell>
-
-                            <span class="lg:hidden absolute top-0 left-0 bg-blue-300 px-2 text-[10px] text-white font-bold uppercase rounded-br-xl"># Control</span>
+                        <x-table.cell title="# Control">
 
                             <div class="text-center flex flex-col">
 
@@ -102,64 +100,49 @@
 
                         </x-table.cell>
 
-                        <x-table.cell>
-
-                            <span class="lg:hidden absolute top-0 left-0 bg-blue-300 px-2 text-[10px] text-white font-bold uppercase rounded-br-xl">Estado</span>
+                        <x-table.cell title="Estado">
 
                             <span class="bg-{{ $copiaConsultada->estado_color }} py-1 px-2 rounded-full text-white text-xs">{{ ucfirst($copiaConsultada->estado) }}</span>
 
                         </x-table.cell>
-                        <x-table.cell>
 
-                            <span class="lg:hidden absolute top-0 left-0 bg-blue-300 px-2 text-[10px] text-white font-bold uppercase rounded-br-xl">Tipo de servicio</span>
+                        <x-table.cell title="Tipo de servicio">
 
                             {{ $copiaConsultada->tipo_servicio }}
 
                         </x-table.cell>
 
-                        <x-table.cell>
-
-                            <span class="lg:hidden absolute top-0 left-0 bg-blue-300 px-2 text-[10px] text-white font-bold uppercase rounded-br-xl">Tomo / Bis</span>
+                        <x-table.cell title="Tomo">
 
                             {{ $copiaConsultada->tomo }}
 
                         </x-table.cell>
 
-                        <x-table.cell>
-
-                            <span class="lg:hidden absolute top-0 left-0 bg-blue-300 px-2 text-[10px] text-white font-bold uppercase rounded-br-xl">Registro / Bis</span>
+                        <x-table.cell title="Registro">
 
                             {{ $copiaConsultada->registro }}
 
                         </x-table.cell>
 
-                        <x-table.cell>
-
-                            <span class="lg:hidden absolute top-0 left-0 bg-blue-300 px-2 text-[10px] text-white font-bold uppercase rounded-br-xl">Distrito</span>
+                        <x-table.cell title="Distrito">
 
                             {{ $copiaConsultada->distrito }}
 
                         </x-table.cell>
 
-                        <x-table.cell>
-
-                            <span class="lg:hidden absolute top-0 left-0 bg-blue-300 px-2 text-[10px] text-white font-bold uppercase rounded-br-xl">Sección</span>
+                        <x-table.cell title="Sección">
 
                             {{ $copiaConsultada->seccion }}
 
                         </x-table.cell>
 
-                        <x-table.cell>
+                        <x-table.cell title="Solicitante">
 
-                            <span class="lg:hidden absolute top-0 left-0 bg-blue-300 px-2 text-[10px] text-white font-bold uppercase rounded-br-xl">Solicitante</span>
-
-                            <p class="mt-2">{{ $copiaConsultada->solicitante }}</p>
+                            {{ $copiaConsultada->solicitante }}
 
                         </x-table.cell>
 
-                        <x-table.cell>
-
-                            <span class="lg:hidden absolute top-0 left-0 bg-blue-300 px-2 text-[10px] text-white font-bold uppercase rounded-br-xl">Número de páginas</span>
+                        <x-table.cell title="Número de páginas">
 
                             {{ $copiaConsultada->certificacion->numero_paginas }}
 
@@ -167,19 +150,15 @@
 
                         @if (auth()->user()->hasRole(['Supervisor certificaciones', 'Administrador', 'Supervisor uruapan', 'Jefe de departamento certificaciones', 'Operador']))
 
-                            <x-table.cell>
+                            <x-table.cell title="Folio de carpeta">
 
-                                <span class="lg:hidden absolute top-0 left-0 bg-blue-300 px-2 text-[10px] text-white font-bold uppercase rounded-br-xl">Folio de carpeta</span>
-
-                                <p class="mt-2">{{ $copiaConsultada->certificacion->folio_carpeta_copias ?? 'N/A' }}</p>
+                                {{ $copiaConsultada->certificacion->folio_carpeta_copias ?? 'N/A' }}
 
                             </x-table.cell>
 
-                            <x-table.cell>
+                            <x-table.cell title="Usuario asignado">
 
-                                <span class="lg:hidden absolute top-0 left-0 bg-blue-300 px-2 text-[10px] text-white font-bold uppercase rounded-br-xl">Folio de carpeta</span>
-
-                                <p class="mt-2">{{ $copiaConsultada->asignadoA->name ?? 'N/A' }}</p>
+                                {{ $copiaConsultada->asignadoA->name ?? 'N/A' }}
 
                             </x-table.cell>
 
@@ -187,9 +166,7 @@
 
                         @if (auth()->user()->hasRole(['Administrador', 'Operador', 'Director', 'Jefe de departamento jurídico']))
 
-                            <x-table.cell>
-
-                                <span class="lg:hidden absolute top-0 left-0 bg-blue-300 px-2 text-[10px] text-white font-bold uppercase rounded-br-xl">Reimpreso en</span>
+                            <x-table.cell title="Reimpreso en">
 
                                 {{ optional($copiaConsultada->certificacion->reimpreso_en)->format('d-m-Y H:i:s') ?? 'N/A' }}
 
@@ -197,41 +174,29 @@
 
                         @endif
 
-                        <x-table.cell>
-
-                            <span class="lg:hidden absolute top-0 left-0 bg-blue-300 px-2 text-[10px] text-white font-bold uppercase rounded-br-xl">Fecha de entrega</span>
+                        <x-table.cell title="Fecha de entrega">
 
                             {{ optional($copiaConsultada->fecha_entrega)->format('d-m-Y') ?? 'N/A' }}
 
                         </x-table.cell>
 
-                        <x-table.cell>
-
-                            <span class="lg:hidden absolute top-0 left-0 bg-blue-300 px-2 text-[10px] text-white font-bold uppercase rounded-br-xl">Ingreso</span>
+                        <x-table.cell title="Ingreso">
 
                             {{ $copiaConsultada->created_at }}
 
                         </x-table.cell>
 
-                        <x-table.cell>
+                        <x-table.cell title="Actualizado">
 
-                            <span class="lg:hidden absolute top-0 left-0 bg-blue-300 px-2 text-[10px] text-white font-bold uppercase rounded-br-xl">Actualizado</span>
+                            <span class="font-semibold">@if($copiaConsultada->actualizadoPor != null)Actualizado por: {{$copiaConsultada->actualizadoPor->name}} @else Actualizado: @endif</span> <br>
 
-                            <p class="mt-2">
-
-                                <span class="font-semibold">@if($copiaConsultada->actualizadoPor != null)Actualizado por: {{$copiaConsultada->actualizadoPor->name}} @else Actualizado: @endif</span> <br>
-
-                                {{ $copiaConsultada->updated_at }}
-
-                            </p>
+                            {{ $copiaConsultada->updated_at }}
 
                         </x-table.cell>
 
                         @if (!auth()->user()->hasRole(['Administrador', 'Operador', 'Director', 'Jefe de departamento jurídico']))
 
-                            <x-table.cell>
-
-                                <span class="lg:hidden absolute top-0 left-0 bg-blue-300 px-2 text-[10px] text-white font-bold uppercase rounded-br-xl">Acciones</span>
+                            <x-table.cell title="Acciones">
 
                                 <div class="ml-3 relative" x-data="{ open_drop_down:false }">
 
