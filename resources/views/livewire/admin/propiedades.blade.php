@@ -75,57 +75,43 @@
 
                     <x-table.row wire:loading.class.delaylongest="opacity-50" wire:key="row-{{ $modelo_editar->id }}">
 
-                        <x-table.cell>
-
-                            <span class="lg:hidden absolute top-0 left-0 bg-blue-300 px-2 py-1 text-xs text-white font-bold uppercase rounded-br-xl">Distrito</span>
+                        <x-table.cell title="Distrito">
 
                             {{ $modelo_editar->distrito }}
 
                         </x-table.cell>
 
-                        <x-table.cell>
-
-                            <span class="lg:hidden absolute top-0 left-0 bg-blue-300 px-2 py-1 text-xs text-white font-bold uppercase rounded-br-xl">Tomo</span>
+                        <x-table.cell title="Tomo">
 
                             {{ $modelo_editar->tomo }}
 
                         </x-table.cell>
 
-                        <x-table.cell>
-
-                            <span class="lg:hidden absolute top-0 left-0 bg-blue-300 px-2 py-1 text-xs text-white font-bold uppercase rounded-br-xl">Registro</span>
+                        <x-table.cell title="Registro">
 
                             {{ $modelo_editar->registro }}
 
                         </x-table.cell>
 
-                        <x-table.cell>
-
-                            <span class="lg:hidden absolute top-0 left-0 bg-blue-300 px-2 py-1 text-xs text-white font-bold uppercase rounded-br-xl"># Propiedad</span>
+                        <x-table.cell title="# Propiedad">
 
                             {{ $modelo_editar->noprop }}
 
                         </x-table.cell>
 
-                        <x-table.cell>
-
-                            <span class="lg:hidden absolute top-0 left-0 bg-blue-300 px-2 py-1 text-xs text-white font-bold uppercase rounded-br-xl">Estado</span>
+                        <x-table.cell title="Estado">
 
                             {{ $modelo_editar->status }}
 
                         </x-table.cell>
 
-                        <x-table.cell>
-
-                            <span class="lg:hidden absolute top-0 left-0 bg-blue-300 px-2 py-1 text-xs text-white font-bold uppercase rounded-br-xl">Ubicación</span>
+                        <x-table.cell title="Ubicación">
 
                             {{ $modelo_editar->ubicacion }}
 
                         </x-table.cell>
 
-                        <x-table.cell>
-
-                            <span class="lg:hidden absolute top-0 left-0 bg-blue-300 px-2 py-1 text-xs text-white font-bold uppercase rounded-br-xl">Propietarios</span>
+                        <x-table.cell title="Propietarios">
 
                             {{ $modelo_editar->propietarios }}
 
@@ -133,9 +119,7 @@
 
                         @if(auth()->user()->hasRole('Administrador'))
 
-                            <x-table.cell>
-
-                                <span class="lg:hidden absolute top-0 left-0 bg-blue-300 px-2 py-1 text-xs text-white font-bold uppercase rounded-br-xl">Acciones</span>
+                            <x-table.cell title="Acciones">
 
                                 <div class="ml-3 relative" x-data="{ open_drop_down:false }">
 
