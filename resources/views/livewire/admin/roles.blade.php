@@ -57,45 +57,29 @@
 
                     <x-table.row wire:loading.class.delaylongest="opacity-50" wire:key="row-{{ $rol->id }}">
 
-                        <x-table.cell>
-
-                            <span class="lg:hidden absolute top-0 left-0 bg-blue-300 px-2 text-[10px] text-white font-bold uppercase rounded-br-xl">Nombre</span>
+                        <x-table.cell title="Nombre">
 
                             {{ $rol->name }}
 
                         </x-table.cell>
 
-                        <x-table.cell>
+                        <x-table.cell title="Registro">
 
-                            <span class="lg:hidden absolute top-0 left-0 bg-blue-300 px-2 text-[10px] text-white font-bold uppercase rounded-br-xl">Registrado</span>
+                            <span class="font-semibold">@if($rol->creadoPor != null)Registrado por: {{$rol->creadoPor->name}} @else Registro: @endif</span> <br>
 
-                            <p class="mt-2">
-
-                                <span class="font-semibold">@if($rol->creadoPor != null)Registrado por: {{$rol->creadoPor->name}} @else Registro: @endif</span> <br>
-
-                                {{ $rol->created_at }}
-
-                            </p>
+                            {{ $rol->created_at }}
 
                         </x-table.cell>
 
-                        <x-table.cell>
+                        <x-table.cell title="Actualizado">
 
-                            <span class="lg:hidden absolute top-0 left-0 bg-blue-300 px-2 text-[10px] text-white font-bold uppercase rounded-br-xl">Actualizado</span>
+                            <span class="font-semibold">@if($rol->actualizadoPor != null)Actualizado por: {{$rol->actualizadoPor->name}} @else Actualizado: @endif</span> <br>
 
-                            <p class="mt-2">
-
-                                <span class="font-semibold">@if($rol->actualizadoPor != null)Actualizado por: {{$rol->actualizadoPor->name}} @else Actualizado: @endif</span> <br>
-
-                                {{ $rol->updated_at }}
-
-                            </p>
+                            {{ $rol->updated_at }}
 
                         </x-table.cell>
 
-                        <x-table.cell>
-
-                            <span class="lg:hidden absolute top-0 left-0 bg-blue-300 px-2 text-[10px] text-white font-bold uppercase rounded-br-xl">Acciones</span>
+                        <x-table.cell title="Acciones">
 
                             <div class="ml-3 relative" x-data="{ open_drop_down:false }">
 

@@ -58,17 +58,13 @@
 
                     <x-table.row wire:loading.class.delaylongest="opacity-50" wire:key="row-{{ $efirma->id }}">
 
-                        <x-table.cell>
+                        <x-table.cell title="Usuario">
 
-                            <span class="lg:hidden absolute top-0 left-0 bg-blue-300 px-2 text-[10px] text-white font-bold uppercase rounded-br-xl">Usuario</span>
-
-                            <p class="mt-2">{{ $efirma->user->name }}</p>
+                            {{ $efirma->user->name }}
 
                         </x-table.cell>
 
-                        <x-table.cell>
-
-                            <span class="lg:hidden absolute top-0 left-0 bg-blue-300 px-2 text-[10px] text-white font-bold uppercase rounded-br-xl">Estado</span>
+                        <x-table.cell title="Estado">
 
                             @if($efirma->estado == 'activo')
 
@@ -82,31 +78,19 @@
 
                         </x-table.cell>
 
-                        <x-table.cell>
+                        <x-table.cell title="Registrado">
 
-                            <span class="lg:hidden absolute top-0 left-0 bg-blue-300 px-2 text-[10px] text-white font-bold uppercase rounded-br-xl">Registrado</span>
+                            <span class="font-semibold">@if($efirma->creadoPor != null)Registrado por: {{$efirma->creadoPor->name}} @else Registro: @endif</span> <br>
 
-                            <p class="mt-2">
-
-                                <span class="font-semibold">@if($efirma->creadoPor != null)Registrado por: {{$efirma->creadoPor->name}} @else Registro: @endif</span> <br>
-
-                                {{ $efirma->created_at }}
-
-                            </p>
+                            {{ $efirma->created_at }}
 
                         </x-table.cell>
 
-                        <x-table.cell>
+                        <x-table.cell title="Actualizado">
 
-                            <span class="lg:hidden absolute top-0 left-0 bg-blue-300 px-2 text-[10px] text-white font-bold uppercase rounded-br-xl">Actualizado</span>
+                            <span class="font-semibold">@if($efirma->actualizadoPor != null)Actualizado por: {{$efirma->actualizadoPor->name}} @else Actualizado: @endif</span> <br>
 
-                            <p class="mt-2">
-
-                                <span class="font-semibold">@if($efirma->actualizadoPor != null)Actualizado por: {{$efirma->actualizadoPor->name}} @else Actualizado: @endif</span> <br>
-
-                                {{ $efirma->updated_at }}
-
-                            </p>
+                            {{ $efirma->updated_at }}
 
                         </x-table.cell>
 

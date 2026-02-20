@@ -74,9 +74,7 @@
 
                     <x-table.row wire:loading.class.delaylongest="opacity-50" wire:key="row-{{ $usuario->id }}">
 
-                        <x-table.cell>
-
-                            <span class="lg:hidden absolute top-0 left-0 bg-blue-300 px-2 text-[10px] text-white font-bold uppercase rounded-br-xl">Nombre</span>
+                        <x-table.cell title="Nombre">
 
                             <div class="flex items-center justify-center lg:justify-start">
 
@@ -88,17 +86,13 @@
 
                         </x-table.cell>
 
-                        <x-table.cell>
+                        <x-table.cell title="Email">
 
-                            <span class="lg:hidden absolute top-0 left-0 bg-blue-300 px-2 text-[10px] text-white font-bold uppercase rounded-br-xl">Email</span>
-
-                            <p class="mt-2">{{ $usuario->email }}</p>
+                            {{ $usuario->email }}
 
                         </x-table.cell>
 
-                        <x-table.cell>
-
-                            <span class="lg:hidden absolute top-0 left-0 bg-blue-300 px-2 text-[10px] text-white font-bold uppercase rounded-br-xl">Role</span>
+                        <x-table.cell title="Role">
 
                             @if ($usuario->roles()->count())
 
@@ -108,25 +102,19 @@
 
                         </x-table.cell>
 
-                        <x-table.cell>
-
-                            <span class="lg:hidden  absolute top-0 left-0 bg-blue-300 px-2 text-[10px] text-white font-bold uppercase rounded-br-xl">Localidad</span>
+                        <x-table.cell title="Localidad">
 
                             {{ $usuario->ubicacion }}
 
                         </x-table.cell>
 
-                        <x-table.cell>
+                        <x-table.cell title="Área">
 
-                            <span class="lg:hidden  absolute top-0 left-0 bg-blue-300 px-2 text-[10px] text-white font-bold uppercase rounded-br-xl">Área</span>
-
-                            <p class="mt-2">{{ $usuario->area }}</p>
+                            {{ $usuario->area }}
 
                         </x-table.cell>
 
-                        <x-table.cell>
-
-                            <span class="lg:hidden absolute top-0 left-0 bg-blue-300 px-2 text-[10px] text-white font-bold uppercase rounded-br-xl">Status</span>
+                        <x-table.cell title="Status">
 
                             @if($usuario->status == 'activo')
 
@@ -140,37 +128,23 @@
 
                         </x-table.cell>
 
-                        <x-table.cell>
+                        <x-table.cell title="Registrado">
 
-                            <span class="lg:hidden absolute top-0 left-0 bg-blue-300 px-2 text-[10px] text-white font-bold uppercase rounded-br-xl">Registrado</span>
+                            <span class="font-semibold">@if($usuario->creadoPor != null)Registrado por: {{$usuario->creadoPor->name}} @else Registro: @endif</span> <br>
 
-                            <p class="mt-2">
-
-                                <span class="font-semibold">@if($usuario->creadoPor != null)Registrado por: {{$usuario->creadoPor->name}} @else Registro: @endif</span> <br>
-
-                                {{ $usuario->created_at }}
-
-                            </p>
+                            {{ $usuario->created_at }}
 
                         </x-table.cell>
 
-                        <x-table.cell>
+                        <x-table.cell title="Actualizado">
 
-                            <span class="lg:hidden absolute top-0 left-0 bg-blue-300 px-2 text-[10px] text-white font-bold uppercase rounded-br-xl">Actualizado</span>
+                            <span class="font-semibold">@if($usuario->actualizadoPor != null)Actualizado por: {{$usuario->actualizadoPor->name}} @else Actualizado: @endif</span> <br>
 
-                            <p class="mt-2">
-
-                                <span class="font-semibold">@if($usuario->actualizadoPor != null)Actualizado por: {{$usuario->actualizadoPor->name}} @else Actualizado: @endif</span> <br>
-
-                                {{ $usuario->updated_at }}
-
-                            </p>
+                            {{ $usuario->updated_at }}
 
                         </x-table.cell>
 
-                        <x-table.cell>
-
-                            <span class="lg:hidden absolute top-0 left-0 bg-blue-300 px-2 text-[10px] text-white font-bold uppercase rounded-br-xl">Acciones</span>
+                        <x-table.cell title="Acciones">
 
                             <div class="ml-3 relative" x-data="{ open_drop_down:false }">
 

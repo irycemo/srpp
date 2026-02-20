@@ -346,7 +346,9 @@ class Elaboracion extends Component
         ){
 
             $folioRealExistente = FolioReal::where('tomo_antecedente', $this->movimientoRegistral->tomo)
+                                            ->where('tomo_antecedente_bis', $this->movimientoRegistral->tomo_bis)
                                             ->where('registro_antecedente', $this->movimientoRegistral->registro)
+                                            ->where('registro_antecedente_bis', $this->movimientoRegistral->registro_bis)
                                             ->where('numero_propiedad_antecedente', $this->movimientoRegistral->numero_propiedad)
                                             ->where('distrito_antecedente', $this->movimientoRegistral->getRawOriginal('distrito'))
                                             ->where('seccion_antecedente', $this->movimientoRegistral->seccion)

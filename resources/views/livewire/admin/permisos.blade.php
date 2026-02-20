@@ -58,53 +58,35 @@
 
                     <x-table.row wire:loading.class.delaylongest="opacity-50" wire:key="row-{{ $permiso->id }}">
 
-                        <x-table.cell>
+                        <x-table.cell title="Nombre">
 
-                            <span class="lg:hidden absolute top-0 left-0 bg-blue-300 px-2 text-[10px] text-white font-bold uppercase rounded-br-xl">Nombre</span>
-
-                            <p class="mt-2">{{ $permiso->name }}</p>
+                            {{ $permiso->name }}
 
                         </x-table.cell>
 
-                        <x-table.cell>
+                        <x-table.cell title="Área">
 
-                            <span class="lg:hidden absolute top-0 left-0 bg-blue-300 px-2 text-[10px] text-white font-bold uppercase rounded-br-xl">Área</span>
-
-                            <p class="mt-2">{{ $permiso->area }}</p>
+                            {{ $permiso->area }}
 
                         </x-table.cell>
 
-                        <x-table.cell>
+                        <x-table.cell title="Registrado">
 
-                            <span class="lg:hidden absolute top-0 left-0 bg-blue-300 px-2 text-[10px] text-white font-bold uppercase rounded-br-xl">Registrado</span>
+                            <span class="font-semibold">@if($permiso->creadoPor != null)Registrado por: {{$permiso->creadoPor->name}} @else Registro: @endif</span> <br>
 
-                            <p class="mt-2">
-
-                                <span class="font-semibold">@if($permiso->creadoPor != null)Registrado por: {{$permiso->creadoPor->name}} @else Registro: @endif</span> <br>
-
-                                {{ $permiso->created_at }}
-
-                            </p>
+                            {{ $permiso->created_at }}
 
                         </x-table.cell>
 
-                        <x-table.cell>
+                        <x-table.cell title="Actualizado">
 
-                            <span class="lg:hidden absolute top-0 left-0 bg-blue-300 px-2 text-[10px] text-white font-bold uppercase rounded-br-xl">Actualizado</span>
+                            <span class="font-semibold">@if($permiso->actualizadoPor != null)Actualizado por: {{$permiso->actualizadoPor->name}} @else Actualizado: @endif</span> <br>
 
-                            <p class="mt-2">
-
-                                <span class="font-semibold">@if($permiso->actualizadoPor != null)Actualizado por: {{$permiso->actualizadoPor->name}} @else Actualizado: @endif</span> <br>
-
-                                {{ $permiso->updated_at }}
-
-                            </p>
+                            {{ $permiso->updated_at }}
 
                         </x-table.cell>
 
-                        <x-table.cell>
-
-                            <span class="lg:hidden absolute top-0 left-0 bg-blue-300 px-2 text-[10px] text-white font-bold uppercase rounded-br-xl">Acciones</span>
+                        <x-table.cell title="Acciones">
 
                             <div class="ml-3 relative" x-data="{ open_drop_down:false }">
 
