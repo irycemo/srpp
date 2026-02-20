@@ -378,8 +378,6 @@ class Elaboracion extends Component
                         $this->movimientoRegistral->numero_propiedad
                     ){
 
-                        info($this->movimientoRegistral->getRawOriginal('distrito'));
-
                         $this->consultarGravamenesAntecedente(
                             $this->movimientoRegistral->getRawOriginal('distrito'),
                             $this->movimientoRegistral->tomo,
@@ -529,13 +527,13 @@ class Elaboracion extends Component
                                     ->where("noprop", $numero_propiedad)
                                     ->first();
 
-                                    info($propiedad);
-
         if($propiedad){
 
             $gravamenes = (new OldBDService())->tractoGravamenes($propiedad->id);
 
             foreach($gravamenes as $gravamen){
+
+                info($gravamen);
 
                 if(isset($gravamen->stGravamen) && $gravamen->stGravamen == 'C') continue;
 
