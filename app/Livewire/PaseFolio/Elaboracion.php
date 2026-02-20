@@ -378,6 +378,11 @@ class Elaboracion extends Component
                         $this->movimientoRegistral->numero_propiedad
                     ){
 
+                        Log::debug($this->movimientoRegistral->getRawOriginal('distrito'),
+                        $this->movimientoRegistral->tomo,
+                        $this->movimientoRegistral->registro,
+                        $this->movimientoRegistral->numero_propiedad);
+
                         $this->consultarGravamenesAntecedente(
                             $this->movimientoRegistral->getRawOriginal('distrito'),
                             $this->movimientoRegistral->tomo,
