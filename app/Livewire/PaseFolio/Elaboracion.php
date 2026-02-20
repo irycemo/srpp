@@ -1293,7 +1293,13 @@ class Elaboracion extends Component
 
         $this->propiedadOld = Propiedadold::where('distrito', $this->movimientoRegistral->getRawOriginal('distrito'))
                                                 ->where('tomo', $this->movimientoRegistral->tomo)
+                                                ->when(isset($this->movimientoRegistral->tomo_bis), function($q){
+                                                    $q->whereNotNull('tomob');
+                                                })
                                                 ->where('registro', $this->movimientoRegistral->registro)
+                                                ->when(isset($this->movimientoRegistral->registro_bis), function($q){
+                                                    $q->whereNotNull('registrob');
+                                                })
                                                 ->where('noprop', $this->movimientoRegistral->numero_propiedad)
                                                 ->first();
 

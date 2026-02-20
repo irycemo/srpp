@@ -82,31 +82,25 @@
 
                     <x-table.row wire:loading.class.delaylongest="opacity-50" wire:key="row-{{$persona->id }}">
 
-                        <x-table.cell>
-
-                            <span class="lg:hidden absolute top-0 left-0 bg-blue-300 px-2 py-1 text-xs text-white font-bold uppercase rounded-br-xl">Nombre</span>
+                        <x-table.cell title="Nombre">
 
                             {{$persona->nombre ?? 'N/A' }}
 
                         </x-table.cell>
 
-                        <x-table.cell>
-
-                            <span class="lg:hidden absolute top-0 left-0 bg-blue-300 px-2 py-1 text-xs text-white font-bold uppercase rounded-br-xl">Ap paterno</span>
+                        <x-table.cell title="Ap paterno">
 
                             {{$persona->ap_paterno ?? 'N/A' }}
 
                         </x-table.cell>
 
-                        <x-table.cell>
-
-                            <span class="lg:hidden absolute top-0 left-0 bg-blue-300 px-2 py-1 text-xs text-white font-bold uppercase rounded-br-xl">Ap materno</span>
+                        <x-table.cell title="Ap materno">
 
                             {{$persona->ap_materno ?? 'N/A' }}
 
                         </x-table.cell>
 
-                        <x-table.cell>
+                        <x-table.cell title="Razón social">
 
                             <span class="lg:hidden absolute top-0 left-0 bg-blue-300 px-2 py-1 text-xs text-white font-bold uppercase rounded-br-xl">Razón social</span>
 
@@ -114,7 +108,7 @@
 
                         </x-table.cell>
 
-                        <x-table.cell>
+                        <x-table.cell title="RFC">
 
                             <span class="lg:hidden absolute top-0 left-0 bg-blue-300 px-2 py-1 text-xs text-white font-bold uppercase rounded-br-xl">RFC</span>
 
@@ -122,7 +116,7 @@
 
                         </x-table.cell>
 
-                        <x-table.cell>
+                        <x-table.cell title="CURP">
 
                             <span class="lg:hidden absolute top-0 left-0 bg-blue-300 px-2 py-1 text-xs text-white font-bold uppercase rounded-br-xl">CURP</span>
 
@@ -130,10 +124,7 @@
 
                         </x-table.cell>
 
-                        <x-table.cell>
-
-                            <span class="lg:hidden absolute top-0 left-0 bg-blue-300 px-2 py-1 text-xs text-white font-bold uppercase rounded-br-xl">Registrado</span>
-
+                        <x-table.cell title="Registrado">
 
                             <span class="font-semibold">@if($persona->creadoPor != null)Registrado por: {{$persona->creadoPor->name}} @else Registro: @endif</span> <br>
 
@@ -141,7 +132,7 @@
 
                         </x-table.cell>
 
-                        <x-table.cell>
+                        <x-table.cell title="Actualizado">
 
                             <span class="font-semibold">@if($persona->actualizadoPor != null)Actualizado por: {{$persona->actualizadoPor->name}} @else Actualizado: @endif</span> <br>
 
@@ -149,9 +140,7 @@
 
                         </x-table.cell>
 
-                        <x-table.cell>
-
-                            <span class="lg:hidden absolute top-0 left-0 bg-blue-300 px-2 py-1 text-xs text-white font-bold uppercase rounded-br-xl">Acciones</span>
+                        <x-table.cell title="Acciones">
 
                             <div class="flex justify-center lg:justify-start gap-2">
 

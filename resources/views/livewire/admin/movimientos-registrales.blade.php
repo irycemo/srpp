@@ -112,17 +112,13 @@
 
                     <x-table.row wire:loading.class.delaylongest="opacity-50" wire:key="row-{{ $movimiento->id }}">
 
-                        <x-table.cell>
-
-                            <span class="lg:hidden absolute top-0 left-0 bg-blue-300 px-2 text-[10px] text-white font-bold uppercase rounded-br-xl"># Control</span>
+                        <x-table.cell title="# Control">
 
                             <span class="whitespace-nowrap">{{ $movimiento->año }}-{{ $movimiento->tramite }}-{{ $movimiento->usuario }}</span>
 
                         </x-table.cell>
 
-                        <x-table.cell>
-
-                            <span class="lg:hidden absolute top-0 left-0 bg-blue-300 px-2 text-[10px] text-white font-bold uppercase rounded-br-xl">M.R.</span>
+                        <x-table.cell title="M.R.">
 
                             <span class="whitespace-nowrap flex items-center justify-center">
 
@@ -146,103 +142,73 @@
 
                         </x-table.cell>
 
-                        <x-table.cell>
-
-                            <span class="lg:hidden absolute top-0 left-0 bg-blue-300 px-2 text-[10px] text-white font-bold uppercase rounded-br-xl">Estado</span>
+                        <x-table.cell title="Estado">
 
                             <span class="bg-{{ $movimiento->estado_color }} py-1 px-2 rounded-full text-white text-xs whitespace-nowrap">{{ ucfirst($movimiento->estado) }}</span>
 
                         </x-table.cell>
 
-                        <x-table.cell>
-
-                            <span class="lg:hidden absolute top-0 left-0 bg-blue-300 px-2 text-[10px] text-white font-bold uppercase rounded-br-xl">Tomo</span>
+                        <x-table.cell title="Tomo">
 
                             {{ $movimiento->tomo ?? 'N/A' }}
 
                         </x-table.cell>
 
-                        <x-table.cell>
-
-                            <span class="lg:hidden absolute top-0 left-0 bg-blue-300 px-2 text-[10px] text-white font-bold uppercase rounded-br-xl">Registro</span>
+                        <x-table.cell title="Registro">
 
                             {{ $movimiento->registro ?? 'N/A' }}
 
                         </x-table.cell>
 
-                        <x-table.cell>
-
-                            <span class="lg:hidden absolute top-0 left-0 bg-blue-300 px-2 text-[10px] text-white font-bold uppercase rounded-br-xl"># Propiedad</span>
+                        <x-table.cell title="# Propiedad">
 
                             {{ $movimiento->numero_propiedad ?? 'N/A' }}
 
                         </x-table.cell>
 
-                        <x-table.cell>
-
-                            <span class="lg:hidden absolute top-0 left-0 bg-blue-300 px-2 text-[10px] text-white font-bold uppercase rounded-br-xl">Distrito</span>
+                        <x-table.cell title="Distrito">
 
                             {{ $movimiento->distrito }}
 
                         </x-table.cell>
 
-                        <x-table.cell>
+                        <x-table.cell title="Servicio">
 
-                            <span class="lg:hidden absolute top-0 left-0 bg-blue-300 px-2 text-[10px] text-white font-bold uppercase rounded-br-xl">Servicio</span>
-
-                            <p class="mt-2">{{ $movimiento->servicio_nombre ?? 'N/A' }}</p>
+                            {{ $movimiento->servicio_nombre ?? 'N/A' }}
 
                         </x-table.cell>
 
-                        <x-table.cell>
+                        <x-table.cell title="Asignado a">
 
-                            <span class="lg:hidden absolute top-0 left-0 bg-blue-300 px-2 text-[10px] text-white font-bold uppercase rounded-br-xl">Asignado a</span>
-
-                            <p class="mt-2">{{ $movimiento->asignadoA?->name }}</p>
+                            {{ $movimiento->asignadoA?->name }}
 
                         </x-table.cell>
 
-                        <x-table.cell>
+                        <x-table.cell title="Supervisor">
 
-                            <span class="lg:hidden absolute top-0 left-0 bg-blue-300 px-2 text-[10px] text-white font-bold uppercase rounded-br-xl">Supervisor</span>
-
-                            <p class="mt-2">{{ $movimiento->supervisor?->name }}</p>
+                            {{ $movimiento->supervisor?->name }}
 
                         </x-table.cell>
 
-                        <x-table.cell>
+                        <x-table.cell title="Registrado">
 
                             <span class="lg:hidden absolute top-0 left-0 bg-blue-300 px-2 text-[10px] text-white font-bold uppercase rounded-br-xl">Registrado</span>
 
-                            <p class="mt-2">
-
-                                <span class="lg:hidden absolute top-0 left-0 bg-blue-300 px-2 text-[10px] text-white font-bold uppercase rounded-br-xl">Registrado</span>
-
-                                {{ $movimiento->created_at }}
-
-                            </p>
+                            {{ $movimiento->created_at }}
 
                         </x-table.cell>
 
-                        <x-table.cell>
+                        <x-table.cell title="Actualizado">
 
-                            <span class="lg:hidden absolute top-0 left-0 bg-blue-300 px-2 text-[10px] text-white font-bold uppercase rounded-br-xl">Actualizado</span>
+                            <span class="font-semibold">@if($movimiento->actualizadoPor != null)Actualizado por: {{$movimiento->actualizadoPor->name}} @else Actualizado: @endif</span> <br>
 
-                            <p class="mt-2">
-
-                                <span class="font-semibold">@if($movimiento->actualizadoPor != null)Actualizado por: {{$movimiento->actualizadoPor->name}} @else Actualizado: @endif</span> <br>
-
-                                {{ $movimiento->updated_at }}
-
-                            </p>
+                            {{ $movimiento->updated_at }}
 
                         </x-table.cell>
 
                         @if(auth()->user()->hasRole(['Administrador', 'Jefe de departamento jurídico', 'Jefe de departamento certificaciones', 'Jefe de departamento inscripciones', 'Supervisor uruapan']))
 
-                            <x-table.cell>
-
-                                <span class="lg:hidden absolute top-0 left-0 bg-blue-300 px-2 text-[10px] text-white font-bold uppercase rounded-br-xl">Acciones</span>
+                            <x-table.cell title="Acciones">
 
                                 <div class="ml-3 relative" x-data="{ open_drop_down:false }">
 

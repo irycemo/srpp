@@ -64,9 +64,7 @@
 
                     <x-table.row wire:loading.class.delaylongest="opacity-50" wire:key="row-{{ $folio->id }}">
 
-                        <x-table.cell>
-
-                            <span class="lg:hidden absolute top-0 left-0 bg-blue-300 px-2 text-[10px] text-white font-bold uppercase rounded-br-xl">Matriz</span>
+                        <x-table.cell title="Matriz">
 
                             @if($folio->matriz)
 
@@ -80,87 +78,61 @@
 
                         </x-table.cell>
 
-                        <x-table.cell>
-
-                            <span class="lg:hidden absolute top-0 left-0 bg-blue-300 px-2 text-[10px] text-white font-bold uppercase rounded-br-xl">Folio</span>
+                        <x-table.cell title="Folio">
 
                             {{ $folio->folio }}
 
                         </x-table.cell>
 
-                        <x-table.cell>
-
-                            <span class="lg:hidden absolute top-0 left-0 bg-blue-300 px-2 text-[10px] text-white font-bold uppercase rounded-br-xl">Estado</span>
+                        <x-table.cell title="Estado">
 
                             <span class="bg-{{ $folio->estado_color }} py-1 px-2 rounded-full text-white text-xs">{{ ucfirst($folio->estado) }}</span>
 
                         </x-table.cell>
 
-                        <x-table.cell>
-
-                            <span class="lg:hidden absolute top-0 left-0 bg-blue-300 px-2 text-[10px] text-white font-bold uppercase rounded-br-xl">Tomo</span>
+                        <x-table.cell title="Tomo">
 
                             {{ $folio->tomo_antecedente ?? 'N/A' }}
 
                         </x-table.cell>
 
-                        <x-table.cell>
-
-                            <span class="lg:hidden absolute top-0 left-0 bg-blue-300 px-2 text-[10px] text-white font-bold uppercase rounded-br-xl">Registro</span>
+                        <x-table.cell title="Registro">
 
                             {{ $folio->registro_antecedente ?? 'N/A' }}
 
                         </x-table.cell>
 
-                        <x-table.cell>
-
-                            <span class="lg:hidden absolute top-0 left-0 bg-blue-300 px-2 text-[10px] text-white font-bold uppercase rounded-br-xl"># Propiedad</span>
+                        <x-table.cell title="# Propiedad">
 
                             {{ $folio->numero_propiedad_antecedente ?? 'N/A' }}
 
                         </x-table.cell>
 
-                        <x-table.cell>
-
-                            <span class="lg:hidden absolute top-0 left-0 bg-blue-300 px-2 text-[10px] text-white font-bold uppercase rounded-br-xl">Distrito</span>
+                        <x-table.cell title="Distrito">
 
                             {{ App\Constantes\Constantes::DISTRITOS[$folio->distrito_antecedente] }}
 
                         </x-table.cell>
 
-                        <x-table.cell>
+                        <x-table.cell title="Registrado">
 
-                            <span class="lg:hidden absolute top-0 left-0 bg-blue-300 px-2 text-[10px] text-white font-bold uppercase rounded-br-xl">Registrado</span>
+                            <span class="font-semibold">@if($folio->creadoPor != null)Registrado por: {{$folio->creadoPor->name}} @else Registro: @endif</span> <br>
 
-                            <p class="mt-2">
-
-                                <span class="font-semibold">@if($folio->creadoPor != null)Registrado por: {{$folio->creadoPor->name}} @else Registro: @endif</span> <br>
-
-                                {{ $folio->created_at }}
-
-                            </p>
+                            {{ $folio->created_at }}
 
                         </x-table.cell>
 
-                        <x-table.cell>
+                        <x-table.cell title="Actualizado">
 
-                            <span class="lg:hidden absolute top-0 left-0 bg-blue-300 px-2 text-[10px] text-white font-bold uppercase rounded-br-xl">Actualizado</span>
+                            <span class="font-semibold">@if($folio->actualizadoPor != null)Actualizado por: {{$folio->actualizadoPor->name}} @else Actualizado: @endif</span> <br>
 
-                            <p class="mt-2">
-
-                                <span class="font-semibold">@if($folio->actualizadoPor != null)Actualizado por: {{$folio->actualizadoPor->name}} @else Actualizado: @endif</span> <br>
-
-                                {{ $folio->updated_at }}
-
-                            </p>
+                            {{ $folio->updated_at }}
 
                         </x-table.cell>
 
                         @if(auth()->user()->hasRole('Administrador'))
 
-                            <x-table.cell>
-
-                                <span class="lg:hidden absolute top-0 left-0 bg-blue-300 px-2 text-[10px] text-white font-bold uppercase rounded-br-xl">Acciones</span>
+                            <x-table.cell title="Acciones">
 
                                 <div class="ml-3 relative" x-data="{ open_drop_down:false }">
 
