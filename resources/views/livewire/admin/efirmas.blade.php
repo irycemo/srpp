@@ -257,7 +257,7 @@
 
                         <span class="rounded-md shadow-sm w-full ">
 
-                            <input @focus="focused = true" @blur="focused = false" class="sr-only" type="file" wire:model.live="cer" id="cer">
+                            <input @focus="focused = true" @blur="focused = false" class="sr-only" type="file" wire:model.live="cer" id="cer" accept=".cer,application/pkix-cert">
 
                             <label for="cer" :class="{ 'outline-none border-blue-300 shadow-outline-blue': focused }" class="relative flex items-center justify-between w-full cursor-pointer py-2 px-3 border border-gray-300 rounded-md text-sm leading-4 font-medium text-gray-700 hover:text-gray-500 active:bg-gray-50 active:text-gray-800 transition duration-150 ease-in-out">
                                 Selecccione el archivo
@@ -299,7 +299,7 @@
 
                         <span class="rounded-md shadow-sm w-full ">
 
-                            <input @focus="focused = true" @blur="focused = false" class="sr-only" type="file" wire:model.live="key" id="key">
+                            <input @focus="focused = true" @blur="focused = false" class="sr-only" type="file" wire:model.live="key" id="key" accept=".key">
 
                             <label for="key" :class="{ 'outline-none border-blue-300 shadow-outline-blue': focused }" class="flex items-center relative justify-between w-full cursor-pointer py-2 px-3 border border-gray-300 rounded-md text-sm leading-4 font-medium text-gray-700 hover:text-gray-500 active:bg-gray-50 active:text-gray-800 transition duration-150 ease-in-out">
                                 Selecccione el archivo

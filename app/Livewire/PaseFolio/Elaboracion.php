@@ -547,9 +547,11 @@ class Elaboracion extends Component
 
     public function creargravamen($gravamen){
 
-        foreach($this->movimientoRegistral->folioReal->gravamenes as $gravamen){
+        $this->movimientoRegistral->folioReal->gravamenes->load('movimientoRegistral');
 
-            if($gravamen->tomo_gravamen == $gravamen->tomog && $gravamen->registro_gravamen == $gravamen->registrog) return;
+        foreach($this->movimientoRegistral->folioReal->gravamenes as $gravamenFolio){
+
+            if($gravamenFolio->movimientoRegistral->tomo_gravamen == $gravamen->tomog && $gravamenFolio->movimientoRegistral->registro_gravamen == $gravamen->registrog) return;
 
         }
 

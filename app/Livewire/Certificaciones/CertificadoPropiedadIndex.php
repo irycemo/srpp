@@ -67,7 +67,6 @@ class CertificadoPropiedadIndex extends Component
 
     public function updatedFilters() { $this->resetPage(); }
 
-
     public function estaBloqueado(){
 
         $movimientos = $this->actual->folioReal->movimientosRegistrales()->whereIn('estado', ['nuevo', 'captura'])->orderBy('folio')->get();
