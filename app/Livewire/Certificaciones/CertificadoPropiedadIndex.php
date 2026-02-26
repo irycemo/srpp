@@ -16,6 +16,7 @@ use App\Http\Services\SistemaTramitesService;
 use App\Exceptions\InscripcionesServiceException;
 use App\Traits\RevisarMovimientosPosterioresTrait;
 use App\Http\Controllers\Certificaciones\CertificadoPropiedadController;
+use App\Traits\Inscripciones\ReasignarmeMovimientoTrait;
 
 class CertificadoPropiedadIndex extends Component
 {
@@ -24,6 +25,7 @@ class CertificadoPropiedadIndex extends Component
     use ComponentesTrait;
     use CalcularDiaElaboracionTrait;
     use RevisarMovimientosPosterioresTrait;
+    use ReasignarmeMovimientoTrait;
 
     public MovimientoRegistral $modelo_editar;
 
@@ -493,6 +495,8 @@ class CertificadoPropiedadIndex extends Component
         $this->motivos = Constantes::RECHAZO_MOTIVOS;
 
         $this->años = Constantes::AÑOS;
+
+        $this->año = now()->year;
 
         $this->usuarios_regionales = Constantes::USUARIOS_REGIONALES;
 
