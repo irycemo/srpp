@@ -135,9 +135,9 @@ trait RecuperarPredioTrait{
 
         }else{
 
-            $superficie_terreno = null;
-            $superficie_judicial = null;
-            $superficie_notarial = null;
+            $superficie_terreno = $objeto->predio->superficie_terreno;
+            $superficie_judicial = $objeto->predio->superficie_judicial;
+            $superficie_notarial = $objeto->predio->superficie_notarial;
 
         }
 

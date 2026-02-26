@@ -34,7 +34,7 @@ class GravamenController extends Controller
         if(!$movimientoRegistral){
 
             return response()->json([
-                'error' => "El movimiento registral no existe.",
+                'error' => "El gravamen no existe.",
             ], 404);
 
         }
@@ -47,10 +47,10 @@ class GravamenController extends Controller
 
         }
 
-        if($movimientoRegistral->gravamen->estado == 'cancelado'){
+        if($movimientoRegistral->gravamen->estado != 'activo'){
 
             return response()->json([
-                'error' => "El gravamen no esa cancelado.",
+                'error' => "El gravamen no esta activo.",
             ], 401);
 
         }
