@@ -22,7 +22,7 @@ class ConsultaGravamenRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'folio_real' => 'nullable',
+            'folio_real' => 'required',
             'folio' => 'nullable',
             'tomo_gravamen' => 'nullable',
             'registro_gravamen' => 'nullable',
