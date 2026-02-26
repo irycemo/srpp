@@ -8,9 +8,7 @@ use App\Http\Controllers\Certificaciones\CertificadoPropiedadController;
 use App\Http\Services\SistemaTramitesService;
 use App\Models\MovimientoRegistral;
 use App\Models\User;
-use App\Traits\CalcularDiaElaboracionTrait;
 use App\Traits\ComponentesTrait;
-use App\Traits\RevisarMovimientosPosterioresTrait;
 use Barryvdh\DomPDF\Facade\Pdf;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
@@ -22,8 +20,6 @@ class CertificadoBienestarIndex extends Component
 
     use WithPagination;
     use ComponentesTrait;
-    use CalcularDiaElaboracionTrait;
-    use RevisarMovimientosPosterioresTrait;
 
     public MovimientoRegistral $modelo_editar;
 
@@ -69,7 +65,7 @@ class CertificadoBienestarIndex extends Component
 
     public function elaborar(MovimientoRegistral $movimientoRegistral){
 
-        return redirect()->route('certificado_propiedad', $movimientoRegistral->certificacion);
+        return redirect()->route('certificado_bienestar', $movimientoRegistral->certificacion);
 
     }
 
@@ -399,7 +395,6 @@ class CertificadoBienestarIndex extends Component
 
         $certificados = MovimientoRegistral::select('id', 'folio', 'folio_real', 'año', 'tramite', 'usuario', 'actualizado_por', 'usuario_asignado', 'usuario_supervisor', 'estado', 'distrito', 'created_at', 'updated_at', 'tomo', 'registro', 'numero_propiedad', 'tipo_servicio', 'fecha_entrega', 'seccion', 'solicitante')
                                             ->with('asignadoA:id,name', 'supervisor:id,name', 'actualizadoPor:id,name', 'certificacion.actualizadoPor:id,name', 'folioReal:id,folio')
-                                            ->where('solicitante', 'Vivienda para el bienestar')
                                             ->where('servicio_nombre', 'Certificado negativo de vivienda bienestar')
                                             ->when(auth()->user()->ubicacion == 'Regional 4', function($q){
                                                 $q->where('distrito', 2);

@@ -299,11 +299,11 @@ class Elaboracion extends Component
 
                 if(app()->isProduction()){
 
-                    Storage::disk('s3')->delete(config('services.ses.ruta_caratulas') . $this->movimientoRegistral->folioReal->archivos()->where('descripcion', 'caratula')->first()->url);
+                    Storage::disk('s3')->delete(config('services.ses.ruta_documento_entrada') . $this->movimientoRegistral->folioReal->archivos()->where('descripcion', 'documento_entrada')->first()->url);
 
                 }else{
 
-                    Storage::disk('caratulas')->delete($this->movimientoRegistral->folioReal->archivos()->where('descripcion', 'caratula')->first()->url);
+                    Storage::disk('documento_entrada')->delete($this->movimientoRegistral->folioReal->archivos()->where('descripcion', 'documento_entrada')->first()->url);
 
                 }
 

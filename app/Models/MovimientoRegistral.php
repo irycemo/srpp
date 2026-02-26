@@ -2,23 +2,24 @@
 
 namespace App\Models;
 
-use App\Models\File;
-use App\Models\Gravamen;
-use App\Models\FolioReal;
-use App\Models\Propiedad;
+use App\Constantes\Constantes;
 use App\Models\Cancelacion;
+use App\Models\Certificacion;
 use App\Models\Fideicomiso;
-use Illuminate\Support\Str;
+use App\Models\File;
+use App\Models\FirmaElectronica;
+use App\Models\FolioReal;
+use App\Models\FolioRealPersona;
+use App\Models\Gravamen;
+use App\Models\Propiedad;
+use App\Models\Rechazo;
 use App\Models\ReformaMoral;
 use App\Traits\ModelosTrait;
-use App\Models\Certificacion;
-use App\Constantes\Constantes;
-use App\Models\FirmaElectronica;
-use App\Models\FolioRealPersona;
+use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Facades\Storage;
+use Illuminate\Support\Str;
 use OwenIt\Auditing\Contracts\Auditable;
-use Illuminate\Database\Eloquent\Factories\HasFactory;
 
 class MovimientoRegistral extends Model implements Auditable
 {
@@ -112,6 +113,10 @@ class MovimientoRegistral extends Model implements Auditable
 
     public function movimientosHijos(){
         return $this->hasMany(MovimientoRegistral::class, 'movimiento_padre');
+    }
+
+    public function rechazos(){
+        return $this->hasMany(Rechazo::class, 'movimiento_registral_id');
     }
 
     public function caratula(){

@@ -2,11 +2,12 @@
 
 namespace App\Traits\Inscripciones;
 
+use App\Http\Services\SistemaTramitesService;
+use App\Models\MovimientoRegistral;
+use App\Models\Rechazo;
 use Barryvdh\DomPDF\Facade\Pdf;
 use Illuminate\Support\Facades\DB;
-use App\Models\MovimientoRegistral;
 use Illuminate\Support\Facades\Log;
-use App\Http\Services\SistemaTramitesService;
 
 trait RechazarMovimientoTrait{
 
@@ -14,6 +15,8 @@ trait RechazarMovimientoTrait{
     public $motivo_rechazo;
     public $observaciones;
     public $modal_rechazar = false;
+    public $modal_rechazos = false;
+    public $rechazo;
 
     public function abrirModalRechazar(MovimientoRegistral $modelo){
 
@@ -26,6 +29,43 @@ trait RechazarMovimientoTrait{
 
     }
 
+    public function abrirModalRechazos(MovimientoRegistral $modelo){
+
+        if($this->modelo_editar->isNot($modelo))
+            $this->modelo_editar = $modelo;
+
+        $this->modelo_editar->load('rechazos');
+
+        $this->modal_rechazos = true;
+
+    }
+
+    public function reimprimirRechazo(Rechazo $rechazo){
+
+        try {
+
+            $pdf = Pdf::loadView('rechazos.rechazo', [
+                'movimientoRegistral' => $this->modelo_editar,
+                'motivo' => $rechazo->fundamento,
+                'observaciones' => $rechazo->observaciones
+            ])->output();
+
+            $this->reset(['modal_rechazos']);
+
+            return response()->streamDownload(
+                fn () => print($pdf),
+                'rechazo.pdf'
+            );
+
+        } catch (\Throwable $th) {
+
+            Log::error("Error al reimprimir rechazo por el usuario: (id: " . auth()->user()->id . ") " . auth()->user()->name . ". " . $th);
+            $this->dispatch('mostrarMensaje', ['error', "Ha ocurrido un error."]);
+
+        }
+
+    }
+
     public function rechazar(){
 
         $this->validate([
@@ -35,6 +75,12 @@ trait RechazarMovimientoTrait{
         try {
 
             DB::transaction(function (){
+
+                $this->modelo_editar->rechazos()->create([
+                    'fundamento' => $this->motivo_rechazo,
+                    'observaciones' => $this->observaciones,
+                    'creado_por' => auth()->id()
+                ]);
 
                 $this->rechazarMovimiento($this->modelo_editar);
 

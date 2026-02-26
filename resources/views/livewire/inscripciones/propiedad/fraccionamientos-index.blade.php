@@ -39,6 +39,8 @@
 
     @include('livewire.comun.inscripciones.modal-rechazar')
 
+    @include('livewire.comun.inscripciones.modal-rechazos')
+
     @include('livewire.comun.inscripciones.modal-correccion')
 
     @include('livewire.comun.inscripciones.modal-concluir')

@@ -4,7 +4,7 @@
 
         <x-header>Movimientos Registrales</x-header>
 
-        <div class="flex gap-3 justify-between overflow-auto p-1">
+        <div class="flex gap-3 overflow-auto p-1">
 
             <select class="bg-white rounded-full text-sm" wire:model.live="filters.año">
 
@@ -281,6 +281,18 @@
 
                                         @endcan
 
+                                        @if($movimiento->rechazos_count)
+
+                                            <button
+                                                wire:click="abrirModalRechazos({{ $movimiento->id }})"
+                                                wire:loading.attr="disabled"
+                                                class="w-full text-left block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 focus:outline-none focus:bg-gray-100"
+                                                role="menuitem">
+                                                Ver rechazos
+                                            </button>
+
+                                        @endif
+
                                     </div>
 
                                 </div>
@@ -472,5 +484,7 @@
     @include('livewire.comun.inscripciones.modal-correccion')
 
     @include('livewire.comun.inscripciones.modal-rechazar')
+
+    @include('livewire.comun.inscripciones.modal-rechazos')
 
 </div>

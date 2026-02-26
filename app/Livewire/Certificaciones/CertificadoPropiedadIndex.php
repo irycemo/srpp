@@ -546,6 +546,7 @@ class CertificadoPropiedadIndex extends Component
                                                             ->whereIn('estado', ['activo', 'centinela']);
                                                     });
                                                 })
+                                                ->where('servicio_nombre', '!=', 'Certificado negativo de vivienda bienestar')
                                                 ->when($this->filters['folio'], fn($q, $folio) => $q->where('folio', $folio))
                                                 ->when($this->filters['estado'], fn($q, $estado) => $q->where('estado', $estado))
                                                 ->orderBy($this->sort, $this->direction)
@@ -574,6 +575,7 @@ class CertificadoPropiedadIndex extends Component
                                                             ->whereIn('estado', ['activo', 'centinela']);
                                                     });
                                                 })
+                                                ->where('servicio_nombre', '!=', 'Certificado negativo de vivienda bienestar')
                                                 ->when($this->filters['folio'], fn($q, $folio) => $q->where('folio', $folio))
                                                 ->when($this->filters['estado'], fn($q, $estado) => $q->where('estado', $estado))
                                                 ->orderBy($this->sort, $this->direction)
@@ -601,6 +603,7 @@ class CertificadoPropiedadIndex extends Component
                                                             ->whereIn('estado', ['activo', 'centinela']);
                                                     });
                                                 })
+                                                ->where('servicio_nombre', '!=', 'Certificado negativo de vivienda bienestar')
                                                 ->when($this->filters['folio'], fn($q, $folio) => $q->where('folio', $folio))
                                                 ->when($this->filters['estado'], fn($q, $estado) => $q->where('estado', $estado))
                                                 ->orderBy($this->sort, $this->direction)
@@ -619,6 +622,7 @@ class CertificadoPropiedadIndex extends Component
                                                             ->whereIn('estado', ['activo', 'centinela']);
                                                     });
                                                 })
+                                                ->where('servicio_nombre', '!=', 'Certificado negativo de vivienda bienestar')
                                                 ->when($this->filters['folio'], fn($q, $folio) => $q->where('folio', $folio))
                                                 ->when($this->filters['estado'], fn($q, $estado) => $q->where('estado', $estado))
                                                 ->whereHas('certificacion', function($q){
@@ -679,6 +683,7 @@ class CertificadoPropiedadIndex extends Component
                                                             ->whereIn('estado', ['activo', 'centinela']);
                                                     });
                                                 })
+                                                ->where('servicio_nombre', '!=', 'Certificado negativo de vivienda bienestar')
                                                 ->when($this->filters['folio'], fn($q, $folio) => $q->where('folio', $folio))
                                                 ->when($this->filters['estado'], fn($q, $estado) => $q->where('estado', $estado))
                                                 ->orderBy($this->sort, $this->direction)

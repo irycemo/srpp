@@ -101,12 +101,12 @@ class SentenciasIndex extends Component
                                                     ->whereHas('folioReal', function($q){
                                                         $q->whereIn('estado', ['activo', 'centinela', 'bloqueado']);
                                                     })
-                                                    ->when(auth()->user()->ubicacion == 'Regional 4', function($q){
+                                                    /* ->when(auth()->user()->ubicacion == 'Regional 4', function($q){
                                                         $q->where('distrito', 2);
                                                     })
                                                     ->when(auth()->user()->ubicacion != 'Regional 4', function($q){
                                                         $q->where('distrito', '!=', 2);
-                                                    })
+                                                    }) */
                                                     ->whereHas('sentencia', function($q){
                                                         $q->whereIn('servicio', ['D157']);
                                                     })
@@ -207,7 +207,7 @@ class SentenciasIndex extends Component
                                                     ->whereHas('sentencia', function($q){
                                                         $q->whereIn('servicio', ['D157']);
                                                     })
-                                                    ->whereIn('estado', ['nuevo', 'captura', 'elaborado', 'finalizado', 'correccion'])
+                                                    ->whereIn('estado', ['nuevo', 'captura', 'elaborado', 'finalizado', 'correccion', 'rechazado'])
                                                     ->when($this->filters['año'], fn($q, $año) => $q->where('año', $año))
                                                     ->when($this->filters['tramite'], fn($q, $tramite) => $q->where('tramite', $tramite))
                                                     ->when($this->filters['usuario'], fn($q, $usuario) => $q->where('usuario', $usuario))

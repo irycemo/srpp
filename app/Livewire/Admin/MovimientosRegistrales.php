@@ -290,7 +290,8 @@ class MovimientosRegistrales extends Component
     {
 
         $movimientos = MovimientoRegistral::select('id', 'folio', 'folio_real', 'año', 'tramite', 'usuario', 'tomo', 'registro', 'distrito', 'numero_propiedad', 'servicio_nombre', 'usuario_asignado', 'usuario_supervisor', 'created_at', 'updated_at', 'actualizado_por', 'estado')
-                            ->with('actualizadoPor', 'folioReal:id,folio,estado,matriz', 'asignadoA:id,name', 'supervisor:id,name')
+                            ->with('actualizadoPor:id,name', 'folioReal:id,folio,estado,matriz', 'asignadoA:id,name', 'supervisor:id,name')
+                            ->withCount('rechazos')
                             ->when($this->filters['año'], fn($q, $año) => $q->where('año', $año))
                             ->when($this->filters['tramite'], fn($q, $tramite) => $q->where('tramite', $tramite))
                             ->when($this->filters['usuario'], fn($q, $usuario) => $q->where('usuario', $usuario))

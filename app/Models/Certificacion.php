@@ -41,6 +41,7 @@ class Certificacion extends Model implements Auditable
         3 -> Unico
         4 ->
         5 -> Negativo sin propiedad / Solo nombre
+        6 -> Vivienda bienestar
     */
 
 }
