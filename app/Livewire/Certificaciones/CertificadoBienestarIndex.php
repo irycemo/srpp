@@ -9,7 +9,7 @@ use App\Http\Services\SistemaTramitesService;
 use App\Models\MovimientoRegistral;
 use App\Models\User;
 use App\Traits\ComponentesTrait;
-use Barryvdh\DomPDF\Facade\Pdf;
+use App\Traits\Inscripciones\RechazarMovimientoTrait;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
 use Livewire\Component;
@@ -20,20 +20,15 @@ class CertificadoBienestarIndex extends Component
 
     use WithPagination;
     use ComponentesTrait;
+    USE RechazarMovimientoTrait;
 
     public MovimientoRegistral $modelo_editar;
 
     public $modalFinalizar = false;
 
-    public $modalRechazar = false;
     public $modalReasignarUsuario = false;
 
     public $actual;
-
-    public $observaciones;
-
-    public $motivos;
-    public $motivo;
 
     public $usuarios;
     public $usuarios_regionales;
@@ -95,23 +90,6 @@ class CertificadoBienestarIndex extends Component
             $this->modelo_editar = $modelo;
 
         $this->modalFinalizar = true;
-
-    }
-
-    public function abrirModalRechazar(MovimientoRegistral $modelo){
-
-        if(!auth()->user()->hasRole(['Certificador Juridico', 'Certificador Oficialia', 'Jefe de departamento certificaciones'])){
-
-            if($this->calcularDiaElaboracion($modelo)) return;
-
-        }
-
-        $this->resetearTodo();
-            $this->modalRechazar = true;
-            $this->editar = true;
-
-        if($this->modelo_editar->isNot($modelo))
-            $this->modelo_editar = $modelo;
 
     }
 
@@ -274,54 +252,6 @@ class CertificadoBienestarIndex extends Component
 
     }
 
-    public function rechazar(){
-
-        $this->validate([
-            'observaciones' => 'required'
-        ]);
-
-        try {
-
-            DB::transaction(function () {
-
-                $observaciones = auth()->user()->name . ' rechaza el ' . now() . ', con motivo: ' . $this->observaciones ;
-
-                (new SistemaTramitesService())->rechazarTramite($this->modelo_editar->año, $this->modelo_editar->tramite, $this->modelo_editar->usuario, $this->motivo . ' ' . $observaciones);
-
-                $this->modelo_editar->update(['estado' => 'rechazado', 'actualizado_por' => auth()->user()->id]);
-
-            });
-
-            $this->dispatch('mostrarMensaje', ['success', "El trámite se rechazó con éxito."]);
-
-            $this->modalRechazar = false;
-
-            $pdf = Pdf::loadView('rechazos.rechazo', [
-                'movimientoRegistral' => $this->modelo_editar,
-                'motivo' => $this->motivo,
-                'observaciones' => $this->observaciones
-            ])->output();
-
-            return response()->streamDownload(
-                fn () => print($pdf),
-                'rechazo.pdf'
-            );
-
-        } catch (\Throwable $th) {
-
-            Log::error("Error al rechazar certificado de propiedad por el usuario: (id: " . auth()->user()->id . ") " . auth()->user()->name . ". " . $th);
-            $this->dispatch('mostrarMensaje', ['error', "Ha ocurrido un error."]);
-
-        }
-
-    }
-
-    public function seleccionarMotivo($key){
-
-        $this->motivo = $this->motivos[$key];
-
-    }
-
     public function corregir(MovimientoRegistral $movimientoRegistral){
 
         if($this->modelo_editar->isNot($movimientoRegistral))
@@ -361,7 +291,7 @@ class CertificadoBienestarIndex extends Component
 
         $this->crearModeloVacio();
 
-        $this->motivos = Constantes::RECHAZO_MOTIVOS;
+        $this->motivos_rechazo = Constantes::RECHAZO_MOTIVOS;
 
         $this->años = Constantes::AÑOS;
 

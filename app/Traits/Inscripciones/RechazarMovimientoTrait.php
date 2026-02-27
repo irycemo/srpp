@@ -69,7 +69,8 @@ trait RechazarMovimientoTrait{
     public function rechazar(){
 
         $this->validate([
-            'observaciones' => 'required'
+            'observaciones' => 'required',
+            'motivo_rechazo' => 'required'
         ]);
 
         try {
