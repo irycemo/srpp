@@ -2,14 +2,15 @@
 
 namespace App\Livewire\PaseFolio;
 
-use App\Models\Predio;
-use Livewire\Component;
 use App\Models\Cancelacion;
-use Livewire\Attributes\On;
-use Illuminate\Support\Facades\DB;
-use App\Models\MovimientoRegistral;
-use Illuminate\Support\Facades\Log;
 use App\Models\Gravamen as GravamenModelo;
+use App\Models\MovimientoRegistral;
+use App\Models\Predio;
+use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Facades\Log;
+use Livewire\Attributes\On;
+use Livewire\Component;
 
 class Gravamen extends Component
 {
@@ -223,6 +224,14 @@ class Gravamen extends Component
     }
 
     public function inactivar(){
+
+        if(!Hash::check($this->contraseña, auth()->user()->password)){
+
+            $this->dispatch('mostrarMensaje', ['error', "Contraseña incorrecta."]);
+
+            return;
+
+        }
 
         try {
 
