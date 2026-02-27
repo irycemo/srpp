@@ -251,7 +251,7 @@
 
             <strong>Observaciones</strong>
 
-            <p>{{ $folioReal->predio->escritura->comentario }}</p>
+            <p>{{ $folioReal->observaciones_antecedente }}</p>
 
         </div>
 
