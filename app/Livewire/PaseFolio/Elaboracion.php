@@ -215,7 +215,6 @@ class Elaboracion extends Component
                     'notaria' => $this->escritura_notaria,
                     'nombre_notario' => $this->escritura_nombre_notario,
                     'estado_notario' => $this->escritura_estado_notario,
-                    'comentario' => $this->escritura_observaciones,
                     'acto_contenido_antecedente' => $this->acto_contenido_antecedente,
                 ]);
 
@@ -225,6 +224,10 @@ class Elaboracion extends Component
                 'escritura_id' => $this->escritura->id,
                 'folio_real' => $folioReal->id,
                 'status' => 'nuevo'
+            ]);
+
+            $folioReal->update([
+                'observaciones_antecedente' => $this->escritura_observaciones,
             ]);
 
         }else{
