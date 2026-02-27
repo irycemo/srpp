@@ -449,7 +449,7 @@ class PaseFolio extends Component
     public function render()
     {
 
-        if(auth()->user()->hasRole(['Administrador', 'Jefe de departamento inscripciones'])){
+        if(auth()->user()->hasRole(['Administrador', 'Jefe de departamento inscripciones', 'Jefe de departamento certificaciones', 'Jefe de departamento inscripciones'])){
 
             $movimientos = MovimientoRegistral::select('id', 'folio', 'folio_real', 'año', 'tramite', 'usuario', 'actualizado_por', 'usuario_asignado', 'usuario_supervisor', 'estado', 'distrito', 'created_at', 'updated_at', 'tomo', 'registro', 'numero_propiedad')
                                                     ->with('actualizadoPor:id,name', 'asignadoA:id,name', 'folioReal:id,folio,estado', 'supervisor:id,name')
@@ -508,38 +508,6 @@ class PaseFolio extends Component
                                                     ->orderBy($this->sort, $this->direction)
                                                     ->paginate($this->pagination);
 
-        }elseif(auth()->user()->hasRole(['Jefe de departamento certificaciones'])){
-
-            $movimientos = MovimientoRegistral::select('id', 'folio', 'folio_real', 'año', 'tramite', 'usuario', 'actualizado_por', 'usuario_asignado', 'usuario_supervisor', 'estado', 'distrito', 'created_at', 'updated_at', 'tomo', 'registro', 'numero_propiedad')
-                                                    ->with('actualizadoPor:id,name', 'asignadoA:id,name', 'folioReal:id,folio,estado', 'supervisor:id,name')
-                                                    ->where('pase_a_folio', true)
-                                                    ->whereIn('estado', ['nuevo', 'correccion', 'no recibido'])
-                                                    ->where(function($q){
-                                                        $q->whereNull('folio_real')
-                                                            ->orWhereHas('folioReal', function($q){
-                                                                $q->select('id', 'estado')
-                                                                    ->whereIn('estado', ['nuevo', 'captura', 'elaborado', 'rechazado', 'pendiente']);
-                                                            });
-                                                    })
-                                                    ->when($this->filters['año'] && $this->filters['año'] != '', fn($q) => $q->where('año', $this->filters['año']))
-                                                    ->when($this->filters['tramite'] && $this->filters['tramite'] != '', fn($q) => $q->where('tramite', $this->filters['tramite']))
-                                                    ->when($this->filters['usuario'] && $this->filters['usuario'] != '', fn($q) => $q->where('usuario', $this->filters['usuario']))
-                                                    ->when($this->filters['folio_real'], function($q){
-                                                        $q->whereHas('folioreal', function ($q){
-                                                            $q->select('id', 'folio')
-                                                                ->where('folio', $this->filters['folio_real']);
-                                                        });
-                                                    })
-                                                    ->when($this->filters['folio'] && $this->filters['folio'] != '', fn($q) => $q->where('folio', $this->filters['folio']))
-                                                    ->when($this->filters['estado'] && $this->filters['estado'] != '', fn($q) => $q->where('estado', $this->filters['estado']))
-                                                    ->when(auth()->user()->ubicacion == 'Regional 4', function($q){
-                                                        $q->where('distrito', 2);
-                                                    })
-                                                    ->when(auth()->user()->ubicacion != 'Regional 4', function($q){
-                                                        $q->where('distrito', '!=', 2);
-                                                    })
-                                                    ->orderBy($this->sort, $this->direction)
-                                                    ->paginate($this->pagination);
         }else{
 
             $movimientos = MovimientoRegistral::select('id', 'folio', 'folio_real', 'año', 'tramite', 'usuario', 'actualizado_por', 'usuario_asignado', 'usuario_supervisor', 'estado', 'distrito', 'created_at', 'updated_at', 'tomo', 'registro', 'numero_propiedad')
