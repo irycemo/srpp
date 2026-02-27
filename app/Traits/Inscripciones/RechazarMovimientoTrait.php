@@ -17,13 +17,14 @@ trait RechazarMovimientoTrait{
     public $modal_rechazar = false;
     public $modal_rechazos = false;
     public $rechazo;
+    public $rechazos = [];
+    public $movimiento_rechazos;
 
     public function abrirModalRechazar(MovimientoRegistral $modelo){
 
         $this->reset(['observaciones']);
 
-        if($this->modelo_editar->isNot($modelo))
-            $this->modelo_editar = $modelo;
+        $this->movimiento_rechazos = $modelo;
 
         $this->modal_rechazar = true;
 
@@ -31,10 +32,9 @@ trait RechazarMovimientoTrait{
 
     public function abrirModalRechazos(MovimientoRegistral $modelo){
 
-        if($this->modelo_editar->isNot($modelo))
-            $this->modelo_editar = $modelo;
+        $this->movimiento_rechazos = $modelo;
 
-        $this->modelo_editar->load('rechazos');
+        $this->rechazos = $modelo->rechazos;
 
         $this->modal_rechazos = true;
 
@@ -45,7 +45,7 @@ trait RechazarMovimientoTrait{
         try {
 
             $pdf = Pdf::loadView('rechazos.rechazo', [
-                'movimientoRegistral' => $this->modelo_editar,
+                'movimientoRegistral' => $this->movimiento_rechazos,
                 'motivo' => $rechazo->fundamento,
                 'observaciones' => $rechazo->observaciones
             ])->output();
@@ -77,18 +77,18 @@ trait RechazarMovimientoTrait{
 
             DB::transaction(function (){
 
-                $this->modelo_editar->rechazos()->create([
+                $this->movimiento_rechazos->rechazos()->create([
                     'fundamento' => $this->motivo_rechazo,
                     'observaciones' => $this->observaciones,
                     'creado_por' => auth()->id()
                 ]);
 
-                $this->rechazarMovimiento($this->modelo_editar);
+                $this->rechazarMovimiento($this->movimiento_rechazos);
 
             });
 
             $pdf = Pdf::loadView('rechazos.rechazo', [
-                'movimientoRegistral' => $this->modelo_editar,
+                'movimientoRegistral' => $this->movimiento_rechazos,
                 'motivo' => $this->motivo_rechazo,
                 'observaciones' => $this->observaciones
             ])->output();

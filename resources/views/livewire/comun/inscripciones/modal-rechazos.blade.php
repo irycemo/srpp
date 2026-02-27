@@ -8,7 +8,7 @@
 
         <div class="divide-y-2 space-y-2">
 
-            @foreach ($modelo_editar->rechazos as $rechazo)
+            @foreach ($rechazos as $rechazo)
 
                 <div>
 

@@ -21,6 +21,7 @@ use App\Traits\CalcularDiaElaboracionTrait;
 use App\Http\Services\SistemaTramitesService;
 use App\Exceptions\InscripcionesServiceException;
 use App\Traits\Inscripciones\ReasignarmeMovimientoTrait;
+use App\Traits\Inscripciones\RechazarMovimientoTrait;
 use App\Traits\RevisarMovimientosPosterioresTrait;
 
 class CertificadoGravamen extends Component
@@ -33,6 +34,7 @@ class CertificadoGravamen extends Component
     use CalcularDiaElaboracionTrait;
     use RevisarMovimientosPosterioresTrait;
     use ReasignarmeMovimientoTrait;
+    use RechazarMovimientoTrait;
 
     public Certificacion $modelo_editar;
 
@@ -44,14 +46,8 @@ class CertificadoGravamen extends Component
 
     public $director;
 
-    public $modalRechazar = false;
     public $modalReasignarUsuario = false;
     public $modalFinalizar = false;
-
-    public $observaciones;
-
-    public $motivos;
-    public $motivo;
 
     public $usuarios;
     public $usuarios_regionales;
@@ -82,17 +78,6 @@ class CertificadoGravamen extends Component
     }
 
     public function updatedFilters() { $this->resetPage(); }
-
-    public function abrirModalRechazar(Certificacion $modelo){
-
-        $this->resetearTodo();
-            $this->modalRechazar = true;
-            $this->editar = true;
-
-        if($this->modelo_editar->isNot($modelo))
-            $this->modelo_editar = $modelo;
-
-    }
 
     public function abrirModalReasignar(Certificacion $modelo){
 
@@ -345,54 +330,6 @@ class CertificadoGravamen extends Component
 
     }
 
-    public function rechazar(){
-
-        $this->validate([
-            'observaciones' => 'required'
-        ]);
-
-        try {
-
-            DB::transaction(function () {
-
-                $observaciones = auth()->user()->name . ' rechaza el ' . now() . ', con motivo: ' . $this->observaciones ;
-
-                (new SistemaTramitesService())->rechazarTramite($this->modelo_editar->movimientoRegistral->año, $this->modelo_editar->movimientoRegistral->tramite, $this->modelo_editar->movimientoRegistral->usuario, $this->motivo . ' ' . $observaciones);
-
-                $this->modelo_editar->movimientoRegistral->update(['estado' => 'rechazado', 'actualizado_por' => auth()->user()->id]);
-
-            });
-
-            if($this->moviminetoRegistral->usuario_tramites_linea_id){
-
-                Cache::forget('estadisticas_tramites_en_linea_' . $this->moviminetoRegistral->usuario_tramites_linea_id);
-
-            }
-
-            $this->dispatch('mostrarMensaje', ['success', "El trámite se rechazó con éxito."]);
-
-            $this->modalRechazar = false;
-
-            $pdf = Pdf::loadView('rechazos.rechazo', [
-                'movimientoRegistral' => $this->modelo_editar->movimientoRegistral,
-                'motivo' => $this->motivo,
-                'observaciones' => $this->observaciones
-            ])->output();
-
-            return response()->streamDownload(
-                fn () => print($pdf),
-                'rechazo.pdf'
-            );
-
-        } catch (\Throwable $th) {
-
-            Log::error("Error al rechazar certificado de propiedad por el usuario: (id: " . auth()->user()->id . ") " . auth()->user()->name . ". " . $th);
-            $this->dispatch('mostrarMensaje', ['error', "Ha ocurrido un error."]);
-
-        }
-
-    }
-
     public function reimprimir(MovimientoRegistral $movimientoRegistral){
 
         try {
@@ -445,12 +382,6 @@ class CertificadoGravamen extends Component
             $this->dispatch('mostrarMensaje', ['error', "Ha ocurrido un error."]);
 
         }
-
-    }
-
-    public function seleccionarMotivo($key){
-
-        $this->motivo = $this->motivos[$key];
 
     }
 
@@ -507,7 +438,7 @@ class CertificadoGravamen extends Component
 
         if(!$this->director) abort(500, message:"Es necesario registrar al director.");
 
-        $this->motivos = Constantes::RECHAZO_MOTIVOS;
+        $this->motivos_rechazo = Constantes::RECHAZO_MOTIVOS;
 
         $this->usuarios_regionales = Constantes::USUARIOS_REGIONALES;
 
