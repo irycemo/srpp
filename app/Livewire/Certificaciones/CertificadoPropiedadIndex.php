@@ -535,12 +535,12 @@ class CertificadoPropiedadIndex extends Component
                                                 ->when(auth()->user()->ubicacion == 'Regional 4', function($q){
                                                     $q->where('distrito', 2);
                                                 })
-                                                ->when(auth()->user()->ubicacion != 'Regional 4', function($q){
+                                                /* ->when(auth()->user()->ubicacion != 'Regional 4', function($q){
                                                     $q->where('distrito', '!=', 2);
                                                 })
                                                 ->whereHas('certificacion', function($q){
                                                     $q->whereIn('servicio', ['DL10', 'DL11']);
-                                                })
+                                                }) */
                                                 ->when($this->filters['año'], fn($q, $año) => $q->where('año', $año))
                                                 ->when($this->filters['tramite'], fn($q, $tramite) => $q->where('tramite', $tramite))
                                                 ->when($this->filters['usuario'], fn($q, $usuario) => $q->where('usuario', $usuario))
