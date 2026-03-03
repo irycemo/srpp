@@ -204,7 +204,7 @@ class FoliosReales extends Component
     {
 
         $folios = FolioReal::select('id', 'matriz', 'folio', 'estado', 'tomo_antecedente', 'registro_antecedente', 'distrito_antecedente', 'numero_propiedad_antecedente', 'created_at', 'updated_at', 'actualizado_por', 'creado_por')
-                            ->with('actualizadoPor', 'creadoPor')
+                            ->with('actualizadoPor:id,name', 'creadoPor:id,name')
                             ->when($this->filters['folio'], fn($q, $folio) => $q->where('folio', $folio))
                             ->when($this->filters['estado'], fn($q, $estado) => $q->where('estado', $estado))
                             ->when($this->filters['tomo'], fn($q, $tomo) => $q->where('tomo_antecedente', $tomo))
