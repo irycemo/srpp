@@ -41,6 +41,20 @@
 
                 </select>
 
+                <select class="bg-white rounded-full text-sm w-min" wire:model.live="filters.distrito">
+
+                    <option value="">Distrito</option>
+                    @foreach ($distritos as $key => $distrito)
+
+                        <option value="{{ $key }}">{{ $distrito }}</option>
+                        @if(auth()->user()->hasRole(['Administrador']))
+                            <option value="2">02 Uruapan</option>
+                        @endif
+
+                    @endforeach
+
+                </select>
+
                 <select class="bg-white rounded-full text-sm" wire:model.live="pagination">
 
                     <option value="10">10</option>

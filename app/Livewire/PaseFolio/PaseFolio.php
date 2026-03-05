@@ -54,7 +54,8 @@ class PaseFolio extends Component
         'usuario' => '',
         'folio_real' => '',
         'folio' => '',
-        'estado' => ''
+        'estado' => '',
+        'distrito' => ''
     ];
 
     protected function rules(){
@@ -464,6 +465,7 @@ class PaseFolio extends Component
                                                     ->when($this->filters['año'] && $this->filters['año'] != '', fn($q) => $q->where('año', $this->filters['año']))
                                                     ->when($this->filters['tramite'] && $this->filters['tramite'] != '', fn($q) => $q->where('tramite', $this->filters['tramite']))
                                                     ->when($this->filters['usuario'] && $this->filters['usuario'] != '', fn($q) => $q->where('usuario', $this->filters['usuario']))
+                                                    ->when($this->filters['distrito'] && $this->filters['distrito'] != '', fn($q) => $q->where('distrito', $this->filters['distrito']))
                                                     ->when($this->filters['folio_real'], function($q){
                                                         $q->whereHas('folioreal', function ($q){
                                                             $q->select('id', 'folio')
@@ -491,6 +493,7 @@ class PaseFolio extends Component
                                                     ->when($this->filters['año'] && $this->filters['año'] != '', fn($q) => $q->where('año', $this->filters['año']))
                                                     ->when($this->filters['tramite'] && $this->filters['tramite'] != '', fn($q) => $q->where('tramite', $this->filters['tramite']))
                                                     ->when($this->filters['usuario'] && $this->filters['usuario'] != '', fn($q) => $q->where('usuario', $this->filters['usuario']))
+                                                    ->when($this->filters['distrito'] && $this->filters['distrito'] != '', fn($q) => $q->where('distrito', $this->filters['distrito']))
                                                     ->when($this->filters['folio_real'], function($q){
                                                         $q->whereHas('folioreal', function ($q){
                                                             $q->select('id', 'folio')
@@ -523,6 +526,7 @@ class PaseFolio extends Component
                                                     ->when($this->filters['año'] && $this->filters['año'] != '', fn($q) => $q->where('año', $this->filters['año']))
                                                     ->when($this->filters['tramite'] && $this->filters['tramite'] != '', fn($q) => $q->where('tramite', $this->filters['tramite']))
                                                     ->when($this->filters['usuario'] && $this->filters['usuario'] != '', fn($q) => $q->where('usuario', $this->filters['usuario']))
+                                                    ->when($this->filters['distrito'] && $this->filters['distrito'] != '', fn($q) => $q->where('distrito', $this->filters['distrito']))
                                                     ->when($this->filters['folio_real'], function($q){
                                                         $q->whereHas('folioreal', function ($q){
                                                             $q->where('folio', $this->filters['folio_real']);
