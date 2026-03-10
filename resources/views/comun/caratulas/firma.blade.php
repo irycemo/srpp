@@ -9,7 +9,7 @@
         @if($datos_control->distrito == '02 Uruapan' )
 
             <p class="borde">Lic. SANDRO MEDINA MORALES </p>
-            <p style="margin:0;">coordinador regional 4 purepecha</p>
+            <p style="margin:0;">COORDINADOR REGIONAL 4 PURHÉPECHA (URUAPAN)</p>
 
         @elseif (isset($datos_control->nombre_regional))
 
