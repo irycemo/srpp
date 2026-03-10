@@ -550,6 +550,8 @@ class Elaboracion extends Component
 
     public function creargravamen($gravamen){
 
+        $this->movimientoRegistral->folioReal->refresh();
+
         $this->movimientoRegistral->folioReal->gravamenes->load('movimientoRegistral');
 
         foreach($this->movimientoRegistral->folioReal->gravamenes as $gravamenFolio){
