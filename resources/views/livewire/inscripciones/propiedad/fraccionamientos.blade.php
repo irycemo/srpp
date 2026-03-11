@@ -13,11 +13,11 @@
             @if(!$propiedad->movimientoRegistral->documentoEntrada())
 
                 <x-button-blue
-                    wire:click="abrirModalDocumento"
+                    wire:click="abrirModalDocumentoEntrada"
                     wire:loading.attr="disabled"
-                    wire:target="abrirModalDocumento">
+                    wire:target="abrirModalDocumentoEntrada">
 
-                    <img wire:loading wire:target="abrirModalDocumento" class="mx-auto h-4 mr-1" src="{{ asset('storage/img/loading3.svg') }}" alt="Loading">
+                    <img wire:loading wire:target="abrirModalDocumentoEntrada" class="mx-auto h-4 mr-1" src="{{ asset('storage/img/loading3.svg') }}" alt="Loading">
 
                     Subir documento de entrada
 
@@ -30,6 +30,18 @@
                     <x-link-blue target="_blank" href="{{ $propiedad->movimientoRegistral->documentoEntrada() }}">Ver documento de entrada</x-link-blue>
 
                 </div>
+
+                <x-button-red
+                    wire:click="eliminarDocumentoEntradaPDF"
+                    wire:confirm="¿Esta seguro que desea eliminar el documento de entrada?"
+                    wire:loading.attr="disabled"
+                    wire:target="eliminarDocumentoEntradaPDF">
+
+                    <img wire:loading wire:target="eliminarDocumentoEntradaPDF" class="mx-auto h-4 mr-1" src="{{ asset('storage/img/loading3.svg') }}" alt="Loading">
+
+                    Eliminar documento de entrada
+
+                </x-button-red>
 
             @endif
 
@@ -57,7 +69,7 @@
 
                 </div>
 
-                @if($documento)
+                @if($documento_entrada_pdf)
 
                     <button
                         class="bg-blue-400 hover:shadow-lg w-full justify-center text-white text-xs md:text-sm px-3 py-1 items-center rounded-full mr-2 hover:bg-blue-700 flex focus:outline-none"
@@ -311,6 +323,8 @@
         </x-slot>
 
     </x-dialog-modal>
+
+    @include('livewire.comun.inscripciones.modal-guardar_documento_entrada_pdf')
 
     @filepondScripts
 

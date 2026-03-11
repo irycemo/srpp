@@ -3,85 +3,34 @@
 namespace App\Livewire\Inscripciones\Propiedad;
 
 use Exception;
-use App\Models\File;
 use Livewire\Component;
 use App\Models\Propiedad;
 use App\Constantes\Constantes;
 use App\Imports\FolioRealImport;
-use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
 use Maatwebsite\Excel\Facades\Excel;
 use Spatie\LivewireFilepond\WithFilePond;
 use App\Http\Controllers\Subdivisiones\SubdivisionesController;
-use App\Traits\Inscripciones\DocumentoEntradaTrait;
+use App\Traits\Inscripciones\GuardarDocumentoEntradaTrait;
 
 class Fraccionamientos extends Component
 {
 
     use WithFilePond;
+    use GuardarDocumentoEntradaTrait;
 
     public Propiedad $propiedad;
-
-    public $documento;
-    public $documento_entrada;
+    public $movimientoRegistral;
 
     public $data;
 
     public $vientos;
-
-    public $modalDocumento = false;
 
     protected function rules(){
         return [
             'documento_entrada_pdf' => 'nullable|mimes:pdf|max:100000',
             'propiedad.descripcion_acto' => 'required'
         ];
-    }
-
-    public function abrirModalDocumento(){
-
-        $this->reset('documento_entrada');
-
-        $this->modalDocumento = true;
-
-    }
-
-    public function guardarDocumento(){
-
-        $this->validate(['documento_entrada' => 'required']);
-
-        try {
-
-            DB::transaction(function (){
-
-                if(app()->isProduction()){
-
-                    $pdf = $this->documento->store(config('services.ses.ruta_documento_entrada'), 's3');
-
-                }else{
-
-                    $pdf = $this->documento->store('/', 'documento_entrada');
-
-                }
-
-                File::create([
-                    'fileable_id' => $this->propiedad->movimientoRegistral->id,
-                    'fileable_type' => 'App\Models\MovimientoRegistral',
-                    'descripcion' => 'documento_entrada',
-                    'url' => $pdf
-                ]);
-
-            });
-
-            $this->modalDocumento = false;
-
-        } catch (\Throwable $th) {
-
-            Log::error("Error al guardar documento de entrada en subdivisiones por el usuario: (id: " . auth()->user()->id . ") " . auth()->user()->name . ". " . $th);
-            $this->dispatch('mostrarMensaje', ['error', "Ha ocurrido un error."]);
-
-        }
-
     }
 
     public function descargarFicha(){
@@ -160,10 +109,13 @@ class Fraccionamientos extends Component
 
         $this->vientos = Constantes::VIENTOS;
 
+        $this->movimientoRegistral = $this->propiedad->movimientoRegistral;
+
     }
 
     public function render()
     {
         return view('livewire.inscripciones.propiedad.fraccionamientos')->extends('layouts.admin');
     }
+
 }
