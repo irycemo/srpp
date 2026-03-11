@@ -57,6 +57,8 @@ class Fraccionamientos extends Component
 
         try {
 
+            set_time_limit(300);
+
             Excel::import($import, $this->documento);
 
             $this->data = $import->data;
