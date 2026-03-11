@@ -69,7 +69,7 @@
 
                 </div>
 
-                @if($documento_entrada_pdf)
+                @if($documento)
 
                     <button
                         class="bg-blue-400 hover:shadow-lg w-full justify-center text-white text-xs md:text-sm px-3 py-1 items-center rounded-full mr-2 hover:bg-blue-700 flex focus:outline-none"

@@ -24,6 +24,8 @@ class Fraccionamientos extends Component
 
     public $data;
 
+    public $documento;
+
     public $vientos;
 
     protected function rules(){
