@@ -506,7 +506,8 @@ class Constantes{
         'El TRABAJADOR Y/O DERECHOHABIENTE',
         'CO-ACREDITADO',
         'FIADO',
-        'DEPOSITARIO'
+        'DEPOSITARIO',
+        'ARRENDATARIO'
     ];
 
     const ACTORES_FIDEICOMISO = [
