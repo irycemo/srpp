@@ -46,7 +46,7 @@ class Subdivisiones extends Component
                 'nullable',
                 'numeric',
                 Rule::requiredIf($this->propiedad->acto_contenido == 'SUBDIVISIÓN CON RESTO' && !$this->propiedad->movimientoRegistral->folioReal->matriz),
-                'lt:' . $this->propiedad->movimientoRegistral->folioReal->predio->superficie_terreno,
+                'lte:' . $this->propiedad->movimientoRegistral->folioReal->predio->superficie_terreno,
                 'gt:0'
             ],
          ];
