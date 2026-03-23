@@ -507,7 +507,8 @@ class Constantes{
         'CO-ACREDITADO',
         'FIADO',
         'DEPOSITARIO',
-        'ARRENDATARIO'
+        'ARRENDATARIO',
+        'GARANTE HIPOTECARIO Y OBLIGADO SOLIDARIO'
     ];
 
     const ACTORES_FIDEICOMISO = [
