@@ -135,6 +135,7 @@ class Constantes{
         'DIAGONAL',
         'EJE VIAL',
         'PASAJE',
+        'PASEO',
         'PEATONAL',
         'PERIFÉRICO',
         'PLAZA',
