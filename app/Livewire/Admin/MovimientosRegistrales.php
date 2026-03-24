@@ -148,7 +148,7 @@ class MovimientosRegistrales extends Component
 
         }
 
-        if(!$this->usuarios->count()){
+        if(!count($this->usuarios)){
 
             $this->dispatch('mostrarMensaje', ['warning', "No hay usuarios activos para reasignar el movimiento registral."]);
 

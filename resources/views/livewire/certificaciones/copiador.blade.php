@@ -4,7 +4,7 @@
 
         <x-header>Copiador  </x-header>
 
-        <div class="flex justify-between">
+        <div class="flex justify-between items-center">
 
             <div>
 
