@@ -192,10 +192,16 @@ class CertificadoUnico extends Component
 
             DB::transaction(function (){
 
-                $folioReal = FolioReal::find($this->predios[0]->folio_real);
+                if(count($this->predios)){
 
-                $this->certificacion->movimientoRegistral->folio_real = $folioReal->id;
-                $this->certificacion->movimientoRegistral->folio = $folioReal->ultimoFolio() + 1;
+
+                    $folioReal = FolioReal::find($this->predios[0]->folio_real);
+
+
+                    $this->certificacion->movimientoRegistral->folio_real = $folioReal->id;
+                    $this->certificacion->movimientoRegistral->folio = $folioReal->ultimoFolio() + 1;
+                }
+
                 $this->certificacion->movimientoRegistral->estado = 'elaborado';
                 $this->certificacion->movimientoRegistral->save();
 
