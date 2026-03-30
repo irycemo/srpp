@@ -327,8 +327,6 @@ class PropietarioCrear extends Component
                     'actualizado_por' => auth()->id()
                 ]);
 
-                dd($this->partes_iguales);
-
                 $this->modelo->update(['partes_iguales' => $this->partes_iguales]);
 
             }

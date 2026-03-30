@@ -254,7 +254,6 @@
                                 <x-table.heading >Registro</x-table.heading>
                                 <x-table.heading ># Propiedad</x-table.heading>
                                 <x-table.heading >Distrito</x-table.heading>
-                                <x-table.heading >Sección</x-table.heading>
                                 <x-table.heading ></x-table.heading>
                             </x-slot>
 
@@ -269,7 +268,6 @@
                                         <x-table.cell>{{ $antecedente->registro_antecedente  ?? 'N/A'}}</x-table.cell>
                                         <x-table.cell>{{ $antecedente->numero_propiedad_antecedente  ?? 'N/A'}}</x-table.cell>
                                         <x-table.cell>{{ $antecedente->distrito_antecedente }}</x-table.cell>
-                                        <x-table.cell>{{ $antecedente->seccion_antecedente }}</x-table.cell>
                                         <x-table.cell>
                                             <div class="flex items-center gap-3">
                                                 <x-button-blue
