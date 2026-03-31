@@ -59,10 +59,10 @@
         <p class="parrafo" style="overflow-wrap: break-word;">{{ $firma_electronica }}</p>
 
         <p >{{ $datos_control->registrado_por }}</p>
-        <p class="borde" style="margin: 0">REGISTRADOR</p>
+        <p style="margin: 0">REGISTRADOR</p>
 
         <p >{{ $datos_control->jefe_departamento }}</p>
-        <p class="borde" style="margin: 0">JEFE DE Departamento de Registro de Inscripciones</p>
+        <p style="margin: 0">JEFE DE Departamento de Registro de Inscripciones</p>
 
     @endif
 
