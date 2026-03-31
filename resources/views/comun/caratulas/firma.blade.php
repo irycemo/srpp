@@ -1,6 +1,6 @@
 <div class="firma no-break">
 
-    <p class="atte" style="margin-bottom: 50px;">
+    <p class="atte">
         <strong>A T E N T A M E N T E</strong>
     </p>
 
@@ -8,7 +8,7 @@
 
         @if($datos_control->distrito == '02 Uruapan' )
 
-            <p class="borde">Lic. SANDRO MEDINA MORALES </p>
+            <p class="borde" style="margin-top: 50px;">Lic. SANDRO MEDINA MORALES </p>
             <p style="margin:0;">COORDINADOR REGIONAL 4 PURHÉPECHA (URUAPAN)</p>
 
         @elseif (isset($datos_control->nombre_regional))
@@ -30,7 +30,7 @@
                     <tr>
                         <td style="padding-right: 40px; text-align:center; width: 50%; vertical-align: bottom; white-space: nowrap;">
 
-                            <p class="borde">{{ $datos_control->registrado_por }}</p>
+                            <p>{{ $datos_control->registrado_por }}</p>
                             <p style="margin: 0">REGISTRADOR</p>
 
                         </td>
@@ -39,7 +39,7 @@
 
                             <td style="padding-right: 40px; text-align:center; width: 50%; vertical-align: bottom; white-space: nowrap;">
 
-                                <p class="borde">{{ $datos_control->jefe_departamento }}</p>
+                                <p>{{ $datos_control->jefe_departamento }}</p>
                                 <p style="margin: 0">JEFE DE Departamento de Registro de Inscripciones	</p>
                             </td>
 
