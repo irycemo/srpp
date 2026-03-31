@@ -58,11 +58,30 @@
         <p style="text-align: center">Firma Electrónica:</p>
         <p class="parrafo" style="overflow-wrap: break-word;">{{ $firma_electronica }}</p>
 
-        <p >{{ $datos_control->registrado_por }}</p>
-        <p style="margin: 0">REGISTRADOR</p>
+        <table class="tabla" >
+            <tbody sty>
+                <tr>
+                    <td style="padding-right: 40px; text-align:center; width: 50%; vertical-align: bottom; white-space: nowrap;">
 
-        <p >{{ $datos_control->jefe_departamento }}</p>
-        <p style="margin: 0">JEFE DE Departamento de Registro de Inscripciones</p>
+                        <p >{{ $datos_control->registrado_por }}</p>
+                        <p style="margin: 0">REGISTRADOR</p>
+
+                    </td>
+
+                    @if($datos_control->distrito != '02 Uruapan' && !isset($datos_control->nombre_regional))
+
+                        <td style="padding-right: 40px; text-align:center; width: 50%; vertical-align: bottom; white-space: nowrap;">
+
+                            <p >{{ $datos_control->jefe_departamento }}</p>
+                            <p style="margin: 0">JEFE DE Departamento de Registro de Inscripciones</p>
+
+                        </td>
+
+                    @endif
+
+                </tr>
+            </tbody>
+        </table>
 
     @endif
 
