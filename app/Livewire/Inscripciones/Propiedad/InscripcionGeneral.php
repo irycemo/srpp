@@ -781,7 +781,7 @@ class InscripcionGeneral extends Component
 
         foreach($this->inscripcion->getAttributes() as $attribute => $value){
 
-            if(!$value && isset($this->inscripcion->movimientoRegistral->folioReal->predio->{ $attribute })){
+            if(isset($this->inscripcion->movimientoRegistral->folioReal->predio->{ $attribute })){
 
                 if($attribute == 'monto_transaccion') continue;
 
