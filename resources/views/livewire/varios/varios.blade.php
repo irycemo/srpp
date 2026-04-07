@@ -12,7 +12,7 @@
         @livewire('varios.aclaracion-administrativa', ['vario' => $this->vario])
 
     {{-- Consolidación de usufructo --}}
-    @elseif($vario->servicio == 'D128')
+    @elseif(in_array($vario->servicio, ['D128', 'D157']))
 
         @livewire('varios.consolidacion-usufructo', ['vario' => $this->vario])
 
