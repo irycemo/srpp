@@ -11,8 +11,8 @@
                 <x-input-select id="vario.acto_contenido" wire:model.live="vario.acto_contenido" class="w-full">
 
                     <option value="">Seleccione una opción</option>
-                    <option value="CONSOLIDACIÓN DEL USUFRUCTO VITACLICIO">CONSOLIDACIÓN DEL USUFRUCTO VITACLICIO</option>
-                    <option value="DONACIÓN DE USUFRUCTO VITACLICIO">DONACIÓN DE USUFRUCTO VITACLICIO</option>
+                    <option value="CONSOLIDACIÓN DEL USUFRUCTO VITALICIO">CONSOLIDACIÓN DEL USUFRUCTO VITALICIO</option>
+                    <option value="DONACIÓN DE USUFRUCTO VITALICIO">DONACIÓN DE USUFRUCTO VITALICIO</option>
                     <option value="VENTA DE USUFRUCTO VITALICIO">VENTA DE USUFRUCTO VITALICIO</option>
                     <option value="RENUNCIA DE USUFRUCTO VITALICIO">RENUNCIA DE USUFRUCTO VITALICIO</option>
 
