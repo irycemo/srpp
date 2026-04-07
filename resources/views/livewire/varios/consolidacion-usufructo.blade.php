@@ -6,7 +6,19 @@
 
         <div class="flex gap-3 items-center w-full lg:w-1/2 justify-center mx-auto">
 
-            <span>{{ $vario->acto_contenido }}</span>
+            <x-input-group for="vario.acto_contenido" label="Acto contenido" :error="$errors->first('vario.acto_contenido')" class="w-full">
+
+                <x-input-select id="vario.acto_contenido" wire:model.live="vario.acto_contenido" class="w-full">
+
+                    <option value="">Seleccione una opción</option>
+                    <option value="CONSOLIDACIÓN DEL USUFRUCTO">CONSOLIDACIÓN DEL USUFRUCTO</option>
+                    <option value="DONACIÓN / VENTA DE USUFRUCTO">DONACIÓN / VENTA DE USUFRUCTO</option>
+                    <option value="VENTA DE USUFRUCTO VITALICIO">VENTA DE USUFRUCTO VITALICIO</option>
+                    <option value="RENUNCIA DE USUFRUCTO VITALICIO">RENUNCIA DE USUFRUCTO VITALICIO</option>
+
+                </x-input-select>
+
+            </x-input-group>
 
         </div>
 
