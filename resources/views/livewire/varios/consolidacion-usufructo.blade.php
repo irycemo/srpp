@@ -12,7 +12,7 @@
 
                     <option value="">Seleccione una opción</option>
                     <option value="CONSOLIDACIÓN DEL USUFRUCTO">CONSOLIDACIÓN DEL USUFRUCTO</option>
-                    <option value="DONACIÓN / VENTA DE USUFRUCTO">DONACIÓN / VENTA DE USUFRUCTO</option>
+                    <option value="DONACIÓN DE USUFRUCTO">DONACIÓN DE USUFRUCTO</option>
                     <option value="VENTA DE USUFRUCTO VITALICIO">VENTA DE USUFRUCTO VITALICIO</option>
                     <option value="RENUNCIA DE USUFRUCTO VITALICIO">RENUNCIA DE USUFRUCTO VITALICIO</option>
 
