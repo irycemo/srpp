@@ -56,6 +56,8 @@ class VariosController extends Controller
 
         $data = $request->validated();
 
+        info($data);
+
         $movimientoRegistral = MovimientoRegistral::whereHas('vario', function($q){
                                                             $q->where('acto_contenido', 'SEGUNDO AVISO PREVENTIVO');
                                                         })

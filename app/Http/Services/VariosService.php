@@ -142,11 +142,11 @@ class VariosService implements MovimientoServiceInterface{
 
     public function avisoAclaratorioCancelar($request){
 
-        $movimiento = MovimientoRegistral::find($request['movimiento_registral']);
+        $movimiento = MovimientoRegistral::find($request['movimiento_registral_id']);
 
         $movimientoAviso = $movimiento->folioReal->movimientosRegistrales()->where('folio', $request['asiento_registral'])->first();
 
-        $movimientoAviso->update(['movimiento_padre' => $request['movimiento_registral']]);
+        $movimientoAviso->update(['movimiento_padre' => $request['movimiento_registral_id']]);
 
     }
 
