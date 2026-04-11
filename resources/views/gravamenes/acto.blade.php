@@ -202,7 +202,17 @@
                 <p class="separador">datos del gravamen</p>
 
                 <p class="parrafo">
-                    <strong>Fecha de inscripción:</strong> {{ $gravamen->fecha_inscripcion }}. <strong>Valor del gravamen:</strong> ${{ number_format($gravamen->valor_gravamen, 2) }} {{ $gravamen->divisa }}. @if(isset($gravamen->expediente)) <strong>Expediente:</strong> {{ $gravamen->expediente }} @endif
+                    <strong>Fecha de inscripción:</strong> {{ $gravamen->fecha_inscripcion }}.
+                    <strong>Valor del gravamen:</strong> ${{ number_format($gravamen->valor_gravamen, 2) }} {{ $gravamen->divisa }}.
+                    @if(isset($gravamen->valor_gravamen_2))
+                        <strong>Valor del gravamen 2:</strong> ${{ number_format($gravamen->valor_gravamen_2, 2) }} {{ $gravamen->divisa_2 }}.
+                    @endif
+                    @if(isset($gravamen->valor_gravamen_3))
+                        <strong>Valor del gravamen 3:</strong> ${{ number_format($gravamen->valor_gravamen_3, 2) }} {{ $gravamen->divisa_3 }}.
+                    @endif
+                    @if(isset($gravamen->expediente))
+                        <strong>Expediente:</strong> {{ $gravamen->expediente }}
+                    @endif
                 </p>
 
                 <p class="parrafo">

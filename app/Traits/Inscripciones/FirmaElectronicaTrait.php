@@ -514,6 +514,10 @@ trait FirmaElectronicaTrait{
         $object->tipo = $gravamen->tipo;
         $object->valor_gravamen = $gravamen->valor_gravamen;
         $object->divisa = $gravamen->divisa;
+        $object->valor_gravamen_2 = $gravamen->valor_gravamen_2;
+        $object->divisa_2 = $gravamen->divisa_2;
+        $object->valor_gravamen_3 = $gravamen->valor_gravamen_3;
+        $object->divisa_3 = $gravamen->divisa_3;
         $object->fecha_inscripcion = Carbon::parse($gravamen->fecha_inscripcion)->format('d/m/Y');
         $object->fecha_prelacion = Carbon::parse($gravamen->movimientoRegistral->fecha_prelacion)->format('d/m/Y');
         $object->observaciones = $gravamen->observaciones;

@@ -74,6 +74,50 @@
 
             </x-input-group>
 
+            <x-input-group for="gravamen.valor_gravamen_2" label="Valor del gravamen 2" :error="$errors->first('gravamen.valor_gravamen_2')" class="w-full relative">
+
+                <x-input-text type="number" id="gravamen.valor_gravamen_2" wire:model="gravamen.valor_gravamen_2" />
+
+                <div class="absolute right-0 top-6">
+
+                    <x-input-select id="divisa" wire:model="gravamen.divisa_2">
+
+                        <option value="" selected>Divisa</option>
+
+                        @foreach ($divisas as $divisa)
+
+                            <option value="{{ $divisa }}">{{ $divisa }}</option>
+
+                        @endforeach
+
+                    </x-input-select>
+
+                </div>
+
+            </x-input-group>
+
+            <x-input-group for="gravamen.valor_gravamen_3" label="Valor del gravamen 3" :error="$errors->first('gravamen.valor_gravamen_3')" class="w-full relative">
+
+                <x-input-text type="number" id="gravamen.valor_gravamen_3" wire:model="gravamen.valor_gravamen_3" />
+
+                <div class="absolute right-0 top-6">
+
+                    <x-input-select id="divisa" wire:model="gravamen.divisa_3">
+
+                        <option value="" selected>Divisa</option>
+
+                        @foreach ($divisas as $divisa)
+
+                            <option value="{{ $divisa }}">{{ $divisa }}</option>
+
+                        @endforeach
+
+                    </x-input-select>
+
+                </div>
+
+            </x-input-group>
+
         </div>
 
         <div class="flex gap-3 items-center w-full lg:w-1/2 justify-center mx-auto">

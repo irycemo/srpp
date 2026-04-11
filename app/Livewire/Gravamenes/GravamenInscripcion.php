@@ -2,7 +2,6 @@
 
 namespace App\Livewire\Gravamenes;
 
-use App\Models\File;
 use App\Models\User;
 use App\Models\Actor;
 use Livewire\Component;
@@ -51,6 +50,10 @@ class GravamenInscripcion extends Component
             'gravamen.acto_contenido' => 'required',
             'gravamen.valor_gravamen' => 'required|numeric',
             'gravamen.divisa' => ['required', Rule::in($this->divisas)],
+            'gravamen.valor_gravamen_2' => 'nullable|numeric',
+            'gravamen.divisa_2' => ['nullable', Rule::requiredIf($this->gravamen->valor_gravamen_2 != null), Rule::in($this->divisas)],
+            'gravamen.valor_gravamen_3' => 'nullable|numeric',
+            'gravamen.divisa_3' => ['nullable', Rule::requiredIf($this->gravamen->valor_gravamen_3 != null), Rule::in($this->divisas)],
             'gravamen.estado' => 'required',
             'gravamen.expediente' => 'nullable',
             'gravamen.observaciones' => 'required',
