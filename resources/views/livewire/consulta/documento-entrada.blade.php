@@ -46,14 +46,6 @@
 
             </div>
 
-            <div class="rounded-lg bg-gray-100 py-1 px-2">
-
-                <strong>Sección</strong>
-
-                <p>{{ $antecedente->seccion_antecedente }}</p>
-
-            </div>
-
         @endforeach
 
     @else

@@ -198,7 +198,6 @@
                                 <th style="padding-right: 10px;">Registro</th>
                                 <th style="padding-right: 10px;">Numero de propiedad</th>
                                 <th style="padding-right: 10px;">Distrito</th>
-                                <th style="padding-right: 10px;">Sección</th>
                             </tr>
 
                         </thead>
@@ -222,9 +221,6 @@
                                     </td>
                                     <td style="padding-right: 40px;">
                                         {{ $antecedente->distrito_antecedente }}
-                                    </td>
-                                    <td style="padding-right: 40px;">
-                                        {{ $antecedente->seccion_antecedente }}
                                     </td>
                                 </tr>
 
