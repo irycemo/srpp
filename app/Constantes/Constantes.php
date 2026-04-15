@@ -389,7 +389,7 @@ class Constantes{
         'RESOLUCIÓN JUDICIAL',
         'CONTRATO',
         'COLECCIONAMIENTO',
-        'DECRETO DEL EJECUTIVO'
+
     ];
 
     const CARGO_AUTORIDAD = [

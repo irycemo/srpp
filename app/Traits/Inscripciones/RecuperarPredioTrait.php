@@ -108,6 +108,7 @@ trait RecuperarPredioTrait{
                     'ap_paterno' => $propietario->ap_paterno,
                     'ap_materno' => $propietario->ap_materno,
                     'razon_social' => $propietario->razon_social,
+                    'tipo' => $propietario->razon_social ? 'MORAL' : 'FÍSICA'
                 ]
             );
 
