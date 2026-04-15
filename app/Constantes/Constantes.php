@@ -388,7 +388,8 @@ class Constantes{
         'TÍTULO DE PROPIEDAD',
         'RESOLUCIÓN JUDICIAL',
         'CONTRATO',
-        'COLECCIONAMIENTO'
+        'COLECCIONAMIENTO',
+        'DECRETO DEL EJECUTIVO'
     ];
 
     const CARGO_AUTORIDAD = [
