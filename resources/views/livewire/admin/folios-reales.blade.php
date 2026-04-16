@@ -12,6 +12,7 @@
 
                 <option value="">Estado</option>
                 <option value="activo">Activo</option>
+                <option value="captura">Captura</option>
                 <option value="elaborado">Elaborado</option>
                 <option value="rechazado">Rechazado</option>
                 <option value="bloqueado">Bloqueado</option>
