@@ -195,7 +195,7 @@
 
                                                 @if($movimiento->estado !== 'no recibido'  && $movimiento->folioRealPersona->estado != 'pendiente')
 
-                                                    <a class="w-full text-left block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 focus:outline-none focus:bg-gray-100" href="{{ route('elaboracion_folio', $movimiento->id) }}">Elaborar</a>
+                                                    <a class="w-full text-left block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 focus:outline-none focus:bg-gray-100" href="{{ route('asignacion', $movimiento->id) }}">Elaborar</a>
 
                                                 @endif
 
@@ -203,7 +203,7 @@
 
                                                 @if($movimiento->estado !== 'no recibido')
 
-                                                    <a class="w-full text-left block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 focus:outline-none focus:bg-gray-100" href="{{ route('elaboracion_folio', $movimiento->id) }}">Elaborar</a>
+                                                    <a class="w-full text-left block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 focus:outline-none focus:bg-gray-100" href="{{ route('asignacion', $movimiento->id) }}">Elaborar</a>
 
                                                 @endif
 
