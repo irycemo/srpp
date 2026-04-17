@@ -30,4 +30,21 @@ class ReformaMoralService implements MovimientoServiceInterface{
     public function corregir(MovimientoRegistral $movimiento):void
     {}
 
+    public function regresarMovimientoId(MovimientoRegistral $movimiento):MovimientoRegistral
+    {
+
+        $movimiento_hijo = MovimientoRegistral::where('movimiento_padre', $movimiento->id)->first();
+
+        if($movimiento_hijo){
+
+            return $movimiento_hijo;
+
+        }else{
+
+            return $movimiento;
+
+        }
+
+    }
+
 }

@@ -41,7 +41,7 @@ class MovimientoRegistralService{
 
         $this->movimiento_service_interface->crear($request + ['movimiento_registral_id' => $movimiento_registral->id]);
 
-        return $movimiento_registral;
+        return $this->movimiento_service_interface->regresarMovimientoId($movimiento_registral);
 
     }
 
@@ -76,7 +76,7 @@ class MovimientoRegistralService{
 
             $movimiento_registral->refresh();
 
-            $this->revisarFolioMatriz($movimiento_registral);
+            /* $this->revisarFolioMatriz($movimiento_registral); */
 
         /* Request no trae folio real */
         }else{

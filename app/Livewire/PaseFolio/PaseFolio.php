@@ -172,6 +172,8 @@ class PaseFolio extends Component
 
                         $this->modelo_editar->update(['estado' => 'concluido']);
 
+                        $this->modelo_editar->porpiedad->update(['descripcion_acto' => 'ESTE MOVIMIENTO REGISTRAL DA ORIGEN A ESTE FOLIO REAL.']);
+
                     }
 
                 }

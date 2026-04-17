@@ -115,7 +115,7 @@ trait RechazarMovimientoTrait{
 
         $observaciones = auth()->user()->name . ' rechaza el ' . now() . ', con motivo: ' . $this->observaciones ;
 
-        (new SistemaTramitesService())->rechazarTramite($movimientoRegistral->año, $movimientoRegistral->tramite, $movimientoRegistral->usuario, $this->motivo_rechazo . ' ' . $observaciones);
+        (new SistemaTramitesService())->rechazarTramite($movimientoRegistral->año, $movimientoRegistral->tramite, $movimientoRegistral->usuario, $movimientoRegistral->folioReal->folio, $movimientoRegistral->tomo, $movimientoRegistral->registro, $movimientoRegistral->numero_propiedad, $this->motivo_rechazo . ' ' . $observaciones);
 
         $movimientoRegistral->update(['estado' => 'rechazado', 'actualizado_por' => auth()->user()->id]);
 

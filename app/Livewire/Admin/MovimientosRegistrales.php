@@ -152,9 +152,11 @@ class MovimientosRegistrales extends Component
 
             $this->dispatch('mostrarMensaje', ['warning', "No hay usuarios activos para reasignar el movimiento registral."]);
 
-        }
+        }else{
 
-        $this->modalReasignarUsuario = true;
+            $this->modalReasignarUsuario = true;
+
+        }
 
     }
 

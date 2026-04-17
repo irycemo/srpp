@@ -46,17 +46,17 @@ trait RevisarFolioMatrizTrait
             $nuevoMovimientoRegistral->movimiento_padre = $movimiento->id;
             $nuevoMovimientoRegistral->save();
 
+            $movimiento->update([
+                'servicio_nombre' => 'Genera nuevo folio real',
+                'pase_a_folio' => false,
+                'estado' => 'concluido',
+            ]);
+
             Propiedad::create([
                 'servicio' => 'D114',
                 'acto_contenido' => 'CREA NUEVO FOLIO',
                 'descripcion_acto' => 'ESTE MOVIMIENTO REGISTRAL CREA EL FOLIO REAL: ' . $folioReal->folio . '.',
                 'movimiento_registral_id' => $movimiento->id
-            ]);
-
-            $movimiento->update([
-                'servicio_nombre' => 'Genera nuevo folio real',
-                'pase_a_folio' => false,
-                'estado' => 'concluido',
             ]);
 
             return $nuevoMovimientoRegistral->id;

@@ -15,4 +15,6 @@ interface MovimientoServiceInterface
 
     public function corregir(MovimientoRegistral $movimientoRegistral):void;
 
+    public function regresarMovimientoId(MovimientoRegistral $movimientoRegistral):MovimientoRegistral;
+
 }

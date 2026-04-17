@@ -41,7 +41,7 @@ class SistemaTramitesService{
 
     }
 
-    public function rechazarTramite($año, $tramite, $usuario, $observaciones){
+    public function rechazarTramite($año, $tramite, $usuario, $folio_real, $tomo, $registro, $numero_propiedad, $observaciones){
 
         $response = Http::withToken(config('services.sistema_tramites.token'))
                             ->accept('application/json')
@@ -53,7 +53,11 @@ class SistemaTramitesService{
                                     'tramite' => $tramite,
                                     'usuario' => $usuario,
                                     'observaciones' => $observaciones,
-                                    'estado' => 'rechazado'
+                                    'estado' => 'rechazado',
+                                    'folio_real' => $folio_real,
+                                    'tomo' => $tomo,
+                                    'registro' => $registro,
+                                    'numero_propiedad' => $numero_propiedad,
                                 ]
                             );
 
