@@ -29,7 +29,8 @@ class MovimientoRegistralService{
                                                     'Varios, Arrendamientos, Avisos Preventivos' => new VariosService,
                                                     'Sentencias' => new SentenciasService,
                                                     'Folio real de persona moral' => new ReformaMoralService,
-                                                    'Folio simplificado' => new FolioSimplificadoService
+                                                    'Folio simplificado' => new FolioSimplificadoService,
+                                                    'Fideicomisos' => new FideicomisoService
                                                 };
 
     }

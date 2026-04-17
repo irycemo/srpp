@@ -24,12 +24,12 @@ class FideicomisoService implements MovimientoServiceInterface{
 
     public function obtenerUsuarioAsignado(array $request):int | null
     {
-        return null;
+        return (new AsignacionService())->obtenerUsuarioPropiedad(isset($request['folio_real']), $request['distrito'], $request['estado']);
     }
 
     public function obtenerSupervisorAsignado(array $request):int
     {
-        return 0;
+        return (new AsignacionService())->obtenerSupervisorInscripciones($request['distrito']);
     }
 
     public function corregir(MovimientoRegistral $movimiento):void
