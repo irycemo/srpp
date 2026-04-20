@@ -202,7 +202,7 @@ class CopiasSimples extends Component
 
                 $observaciones = auth()->user()->name . ' rechaza el ' . now() . ', con motivo: ' . $this->observaciones . '<|>';
 
-                (new SistemaTramitesService())->rechazarTramite($this->modelo_editar->movimientoRegistral->año, $this->modelo_editar->movimientoRegistral->tramite, $this->modelo_editar->movimientoRegistral->usuario, $this->modelo_editar->folioReal?->folio, $this->modelo_editar->tomo, $this->modelo_editar->registro,  $this->modelo_editar->numero_propiedad, $observaciones);
+                (new SistemaTramitesService())->rechazarTramite($this->modelo_editar->movimientoRegistral->año, $this->modelo_editar->movimientoRegistral->tramite, $this->modelo_editar->movimientoRegistral->usuario, $this->modelo_editar->movimientoRegistral->folioReal?->folio, $this->modelo_editar->movimientoRegistral->tomo, $this->modelo_editar->movimientoRegistral->registro,  $this->modelo_editar->movimientoRegistral->numero_propiedad, $observaciones);
 
                 $this->modelo_editar->movimientoRegistral->update(['estado' => 'rechazado']);
 
