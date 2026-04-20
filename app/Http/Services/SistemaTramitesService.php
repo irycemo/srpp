@@ -63,7 +63,7 @@ class SistemaTramitesService{
 
         if($response->status() !== 200){
 
-            Log::error("Error al rechazar trámite en Sistema Trámites, tramite: " . $tramite->año . '-' . $tramite->numero_control . '-' . $tramite->usuario . " por el usuario: (id: " . auth()->user()->id . ") " . auth()->user()->name . ". " . $response);
+            Log::error("Error al rechazar trámite en Sistema Trámites, tramite: " . $año . '-' . $tramite . '-' . $usuario . " por el usuario: (id: " . auth()->user()->id . ") " . auth()->user()->name . ". " . $response);
 
             $data = json_decode($response, true);
 
