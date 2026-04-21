@@ -9,8 +9,8 @@
         @if($folioReal->distrito == '02 Uruapan' )
 
             <p style="margin-top: 80px;"></p>
-            <p class="borde">Lic. SANDRO MEDINA MORALES </p>
-            <p style="margin:0;">COORDINADOR REGIONAL 4 PURHÉPECHA (URUAPAN)</p>
+            <p class="borde">Lic. ANAHÍ RENOVATO CASTAÑEDA </p>
+            <p style="margin:0;">COORDINADORA REGIONAL 4 PURHÉPECHA (URUAPAN)</p>
 
         @elseif (isset($datos_control->nombre_regional))
 
