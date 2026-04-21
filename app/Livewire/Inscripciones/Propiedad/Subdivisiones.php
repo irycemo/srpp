@@ -290,7 +290,7 @@ class Subdivisiones extends Component
 
                 }
 
-                $descripcion = $this->propiedad->descripcion_acto . ' El movimiento da origen a los siguientes folio reales: ' . $folios_reales_generados;
+                $descripcion = $this->propiedad->descripcion_acto . ' El movimiento da origen a los siguientes folios reales: ' . $folios_reales_generados;
 
                 $this->propiedad->update([
                     'descripcion_acto' => $descripcion
