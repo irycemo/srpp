@@ -181,7 +181,7 @@ class Usuarios extends Component
 
         $role = Role::find($this->role)->first();
 
-        if($role->name == 'Jefe de departamento inscripciones' && User::where('status', 'activo')->whereHas('roles', function($q){ $q->where('name', 'Jefe de departamento inscripciones'); })->first()){
+        if(!$this->editar && $role->name == 'Jefe de departamento inscripciones' && User::where('status', 'activo')->whereHas('roles', function($q){ $q->where('name', 'Jefe de departamento inscripciones'); })->first()){
 
             $this->dispatch('mostrarMensaje', ['error', "Solo puede haber un Jefe de departamento inscripciones activo a la vez."]);
 
