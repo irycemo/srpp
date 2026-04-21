@@ -280,15 +280,32 @@ class Subdivisiones extends Component
 
                 }
 
-                $this->propiedad->movimientoRegistral->update(['estado' => 'elaborado', 'actualizado_por' => auth()->id()]);
+                $this->foliosReales = Folioreal::whereKey($this->folioIds)->with('folioRealAntecedente')->get();
+
+                $folios_reales_generados = '';
+
+                foreach($this->foliosReales as $folio){
+
+                    $folios_reales_generados .=  $folio->folio . ', ';
+
+                }
+
+                $descripcion = $this->propiedad->descripcion_acto . ' El movimiento da origen a los siguientes folio reales: ' . $folios_reales_generados;
+
+                $this->propiedad->update([
+                    'descripcion_acto' => $descripcion
+                ]);
+
+                $this->propiedad->movimientoRegistral->update([
+                    'estado' => 'elaborado',
+                    'actualizado_por' => auth()->id()
+                ]);
 
                 $this->propiedad->movimientoRegistral->audits()->latest()->first()->update(['tags' => 'Elaboró inscripción de subdivisión']);
 
                 (new SubdivisionesController())->caratula($this->propiedad);
 
             });
-
-            $this->foliosReales = Folioreal::whereKey($this->folioIds)->with('folioRealAntecedente')->get();
 
             $this->dispatch('mostrarMensaje', ['success', "Los folios reales se generaron con éxito"]);
 
@@ -371,4 +388,5 @@ class Subdivisiones extends Component
     {
         return view('livewire.inscripciones.propiedad.subdivisiones')->extends('layouts.admin');
     }
+
 }
