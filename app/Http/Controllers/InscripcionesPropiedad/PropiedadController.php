@@ -54,6 +54,7 @@ class PropiedadController extends Controller
         $datos_control->tipo_servicio = $propiedad->movimientoRegistral->tipo_servicio;
         $datos_control->asigno_folio = $propiedad->movimientoRegistral->folioReal->asignado_por;
         $datos_control->fecha_prelacion = $propiedad->movimientoRegistral->fecha_prelacion;
+        $datos_control->folio_simplificado = $propiedad->movimientoRegistral->pase_a_folio;
 
         $regional = $this->revisarUsuarioRegional($propiedad->movimientoRegistral->usuario);
 

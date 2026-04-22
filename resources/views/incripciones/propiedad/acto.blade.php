@@ -286,11 +286,13 @@
                             </td>
                             <td style="padding-right: 40px;">
 
-                                <p style="margin: 0"><strong>NÚMERO DE CONTROL: </strong>{{ $datos_control->numero_control }}</p>
+                                @if(!isset($datos_control->folio_simplificado))
+                                    <p style="margin: 0"><strong>NÚMERO DE CONTROL: </strong>{{ $datos_control->numero_control }}</p>
+                                    <p style="margin: 0"><strong>DERECHOS: </strong>${{ number_format($datos_control->monto, 2) }}</p>
+                                    <p style="margin: 0"><strong>Tipo de servicio: </strong>{{ $datos_control->tipo_servicio }}</p>
+                                    <p style="margin: 0"><strong>Servicio: </strong>{{ $datos_control->servicio }}</p>
+                                @endif
                                 <p style="margin: 0"><strong>Movimiento registral:</strong> {{ $datos_control->folioReal }}-{{ $datos_control->movimiento_folio }}</p>
-                                <p style="margin: 0"><strong>DERECHOS: </strong>${{ number_format($datos_control->monto, 2) }}</p>
-                                <p style="margin: 0"><strong>Tipo de servicio: </strong>{{ $datos_control->tipo_servicio }}</p>
-                                <p style="margin: 0"><strong>Servicio: </strong>{{ $datos_control->servicio }}</p>
                                 <p style="margin: 0"><strong>Elaborado en: </strong>{{ $datos_control->elaborado_en }}</p>
                                 @if(isset($datos_control->fecha_prelacion))
                                     <p style="margin: 0"><strong>Fecha de prelación: </strong>{{ $datos_control->fecha_prelacion }}</p>
