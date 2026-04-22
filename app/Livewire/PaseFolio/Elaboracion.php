@@ -796,8 +796,6 @@ class Elaboracion extends Component
 
                 $this->revisarAntecedentesFusionantes();
 
-                $this->dispatch('imprimir_documento', ['documento' => $this->movimientoRegistral->folio_real]);
-
                 $this->redirect(PaseFolio::class);
 
             });
