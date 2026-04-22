@@ -2,17 +2,18 @@
 
 namespace App\Livewire\Certificaciones\CertificadoPropiedad;
 
+use App\Http\Controllers\Certificaciones\CertificadoPropiedadController;
 use App\Models\Actor;
-use App\Models\Predio;
-use App\Models\Persona;
-use Livewire\Component;
 use App\Models\FolioReal;
+use App\Models\Persona;
 use App\Models\Personaold;
+use App\Models\Predio;
 use App\Models\Propiedadold;
 use App\Traits\CalcularDiaElaboracionTrait;
+use App\Traits\Certificaciones\CertificadoPropiedadTrait;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
-use App\Traits\Certificaciones\CertificadoPropiedadTrait;
+use Livewire\Component;
 
 class CertificadoUnico extends Component
 {
@@ -219,9 +220,11 @@ class CertificadoUnico extends Component
 
                 $this->procesarPersona($this->nombre, $this->ap_paterno, $this->ap_materno);
 
+                (new CertificadoPropiedadController)->certificadoUnicoPropiedad($this->certificacion->movimientoRegistral);
+
             });
 
-            $this->dispatch('imprimir_unico_propiedad', ['certificacion' => $this->certificacion->movimientoRegistral->id]);
+            return redirect()->route('certificados_propiedad');
 
         } catch (\Throwable $th) {
 

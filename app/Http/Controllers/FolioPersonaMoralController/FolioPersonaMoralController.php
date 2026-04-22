@@ -161,7 +161,7 @@ class FolioPersonaMoralController extends Controller
             'folioReal' => $objeto->folioReal,
             'datos_control' => $objeto->datos_control,
             'qr'=> $qr,
-            'firma_electronica' => false,
+            'firma_electronica' => base64_encode($firmaElectronica->cadena_encriptada),
         ]);
 
         $pdf->render();

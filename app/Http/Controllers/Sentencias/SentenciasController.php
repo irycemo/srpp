@@ -170,7 +170,7 @@ class SentenciasController extends Controller
         $pdf = Pdf::loadView('sentencias.acto', [
             'sentencia' => $objeto->sentencia,
             'predio' => $objeto->predio,
-            'firma_electronica' => false,
+            'firma_electronica' => base64_encode($firmaElectronica->cadena_encriptada),
             'datos_control' => $objeto->datos_control,
             'qr'=> $qr
         ]);

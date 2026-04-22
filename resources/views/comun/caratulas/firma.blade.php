@@ -58,7 +58,7 @@
         <p style="text-align: center">Firma Electrónica:</p>
         <p class="parrafo" style="overflow-wrap: break-word;">{{ $firma_electronica }}</p>
 
-        <table class="tabla" >
+        {{-- <table class="tabla" >
             <tbody sty>
                 <tr>
                     <td style="padding-right: 40px; text-align:center; width: 50%; vertical-align: bottom; white-space: nowrap;">
@@ -81,7 +81,7 @@
 
                 </tr>
             </tbody>
-        </table>
+        </table> --}}
 
     @endif
 

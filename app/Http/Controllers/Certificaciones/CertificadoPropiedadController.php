@@ -165,7 +165,7 @@ class CertificadoPropiedadController extends Controller
             'director' => $object->director,
             'personas' => $object->personas,
             'datos_control' => $object->datos_control,
-            'firma_electronica' => false,
+            'firma_electronica' => base64_encode($firmaElectronica->cadena_encriptada),
             'qr' => $qr,
         ]);
 
@@ -320,7 +320,7 @@ class CertificadoPropiedadController extends Controller
             'director' => $object->director,
             'personas' => $object->personas,
             'datos_control' => $object->datos_control,
-            'firma_electronica' => false,
+            'firma_electronica' => base64_encode($firmaElectronica->cadena_encriptada),
             'qr' => $qr,
         ]);
 
@@ -474,7 +474,7 @@ class CertificadoPropiedadController extends Controller
             'director' => $object->director,
             'personas' => $object->personas,
             'datos_control' => $object->datos_control,
-            'firma_electronica' => false,
+            'firma_electronica' => base64_encode($firmaElectronica->cadena_encriptada),
             'qr' => $qr,
         ]);
 
@@ -759,7 +759,7 @@ class CertificadoPropiedadController extends Controller
                 'personas' => $object->personas,
                 'datos_control' => $object->datos_control,
                 'observaciones_certificado' => $object->observaciones_certificado,
-                'firma_electronica' => false,
+                'firma_electronica' => base64_encode($firmaElectronica->cadena_encriptada),
                 'qr' => $qr,
             ]);
 

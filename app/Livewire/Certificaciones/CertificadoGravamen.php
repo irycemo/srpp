@@ -2,27 +2,28 @@
 
 namespace App\Livewire\Certificaciones;
 
-use App\Models\User;
-use App\Models\Predio;
-use App\Traits\QrTrait;
-use Livewire\Component;
-use App\Models\Gravamen;
-use Livewire\WithPagination;
-use App\Models\Certificacion;
-use Livewire\WithFileUploads;
 use App\Constantes\Constantes;
-use Barryvdh\DomPDF\Facade\Pdf;
-use App\Traits\ComponentesTrait;
-use Illuminate\Support\Facades\DB;
-use App\Models\MovimientoRegistral;
-use Illuminate\Support\Facades\Log;
-use Illuminate\Support\Facades\Cache;
-use App\Traits\CalcularDiaElaboracionTrait;
-use App\Http\Services\SistemaTramitesService;
 use App\Exceptions\InscripcionesServiceException;
+use App\Http\Controllers\Certificaciones\CertificadoGravamenController;
+use App\Http\Services\SistemaTramitesService;
+use App\Models\Certificacion;
+use App\Models\Gravamen;
+use App\Models\MovimientoRegistral;
+use App\Models\Predio;
+use App\Models\User;
+use App\Traits\CalcularDiaElaboracionTrait;
+use App\Traits\ComponentesTrait;
 use App\Traits\Inscripciones\ReasignarmeMovimientoTrait;
 use App\Traits\Inscripciones\RechazarMovimientoTrait;
+use App\Traits\QrTrait;
 use App\Traits\RevisarMovimientosPosterioresTrait;
+use Barryvdh\DomPDF\Facade\Pdf;
+use Illuminate\Support\Facades\Cache;
+use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Log;
+use Livewire\Component;
+use Livewire\WithFileUploads;
+use Livewire\WithPagination;
 
 class CertificadoGravamen extends Component
 {
@@ -238,7 +239,7 @@ class CertificadoGravamen extends Component
 
         try{
 
-            DB::transaction(function (){
+            $pdf = DB::transaction(function (){
 
                 $this->moviminetoRegistral->estado = 'elaborado';
 
@@ -260,11 +261,13 @@ class CertificadoGravamen extends Component
 
                 }
 
-                $this->dispatch('imprimir_documento', ['gravamen' => $this->moviminetoRegistral->id]);
+                (new CertificadoGravamenController)->certificadoGravamen($this->modelo_editar->movimientoRegistral);
 
                 $this->modal = false;
 
                 $this->reset('predio');
+
+                return (new CertificadoGravamenController)->reimprimirFirmado($this->modelo_editar->movimientoRegistral->firmaElectronica);
 
             });
 
@@ -273,6 +276,11 @@ class CertificadoGravamen extends Component
                 Cache::forget('estadisticas_tramites_en_linea_' . $this->moviminetoRegistral->usuario_tramites_linea_id);
 
             }
+
+            return response()->streamDownload(
+                fn () => print($pdf->output()),
+                'documento.pdf'
+            );
 
         } catch (\Throwable $th) {
 
@@ -336,40 +344,7 @@ class CertificadoGravamen extends Component
 
             $movimientoRegistral->certificacion->update(['reimpreso_en' => now()]);
 
-            $firmaElectronica = $movimientoRegistral->firmaElectronica;
-
-            $objeto = json_decode($firmaElectronica->cadena_original);
-
-            if(auth()->user()->hasRole('Regional')){
-
-                $firma_electronica = base64_encode($firmaElectronica->cadena_encriptada);
-
-            }else{
-
-                $firma_electronica = false;
-            }
-
-            $pdf = Pdf::loadView('certificaciones.certificadoGravamen', [
-                'predio' => $objeto->predio,
-                'director' => $objeto->director,
-                'gravamenes' => $objeto->gravamenes,
-                'folioReal' => $objeto->folioReal,
-                'varios' => $objeto->varios,
-                'sentencias' => $objeto->sentencias,
-                'datos_control' => $objeto->datos_control,
-                'firma_electronica' => $firma_electronica,
-                'qr'=> $this->generadorQr($firmaElectronica->uuid)
-            ]);
-
-            $pdf->render();
-
-            $dom_pdf = $pdf->getDomPDF();
-
-            $canvas = $dom_pdf->get_canvas();
-
-            $canvas->page_text(480, 745, "Página: {PAGE_NUM} de {PAGE_COUNT}", null, 9, array(1,1,1));
-
-            $canvas->page_text(35, 745, $movimientoRegistral->folioReal->folio . '-' .$movimientoRegistral->folio, null, 9, array(1, 1, 1));
+            $pdf = (new CertificadoGravamenController)->reimprimirFirmado($this->modelo_editar->movimientoRegistral->firmaElectronica);
 
             return response()->streamDownload(
                 fn () => print($pdf->output()),

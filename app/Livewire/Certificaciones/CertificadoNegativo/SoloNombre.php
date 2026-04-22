@@ -2,12 +2,13 @@
 
 namespace App\Livewire\Certificaciones\CertificadoNegativo;
 
+use App\Http\Controllers\Certificaciones\CertificadoPropiedadController;
 use App\Traits\CalcularDiaElaboracionTrait;
-use Livewire\Component;
+use App\Traits\Certificaciones\CertificadoPropiedadTrait;
+use App\Traits\Inscripciones\ColindanciasTrait;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
-use App\Traits\Inscripciones\ColindanciasTrait;
-use App\Traits\Certificaciones\CertificadoPropiedadTrait;
+use Livewire\Component;
 
 class SoloNombre extends Component
 {
@@ -71,9 +72,11 @@ class SoloNombre extends Component
 
                 $this->procesarPersonas($this->propietarios);
 
+                (new CertificadoPropiedadController)->certificadoNegativo($this->certificacion->movimientoRegistral);
+
             });
 
-            $this->dispatch('imprimir_negativo', ['certificacion' => $this->certificacion->movimientoRegistral->id]);
+            return redirect()->route('certificados_propiedad');
 
         } catch (\Throwable $th) {
 

@@ -2,12 +2,13 @@
 
 namespace App\Livewire\Certificaciones\CertificadoPropiedad;
 
+use App\Http\Controllers\Certificaciones\CertificadoPropiedadController;
 use App\Traits\CalcularDiaElaboracionTrait;
-use Livewire\Component;
+use App\Traits\Certificaciones\CertificadoPropiedadTrait;
+use App\Traits\Inscripciones\ColindanciasTrait;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
-use App\Traits\Inscripciones\ColindanciasTrait;
-use App\Traits\Certificaciones\CertificadoPropiedadTrait;
+use Livewire\Component;
 
 class CertificadoPropiedad extends Component
 {
@@ -45,11 +46,11 @@ class CertificadoPropiedad extends Component
 
                 }
 
-                $this->procesarPersona($this->nombre, $this->ap_paterno, $this->ap_materno);
+                (new CertificadoPropiedadController)->certificadoPropiedad($this->certificacion->movimientoRegistral);
 
             });
 
-            $this->dispatch('imprimir_propiedad', ['certificacion' => $this->certificacion->movimientoRegistral->id]);
+            return redirect()->route('certificados_propiedad');
 
         } catch (\Throwable $th) {
 

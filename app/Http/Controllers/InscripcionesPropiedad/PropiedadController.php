@@ -171,7 +171,7 @@ class PropiedadController extends Controller
         $pdf = Pdf::loadView('incripciones.propiedad.acto', [
             'propiedad' => $objeto->propiedad,
             'predio' => $objeto->predio,
-            'firma_electronica' => false,
+            'firma_electronica' => base64_encode($firmaElectronica->cadena_encriptada),
             'datos_control' => $objeto->datos_control,
             'qr'=> $qr
         ]);
