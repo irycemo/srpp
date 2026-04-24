@@ -139,7 +139,7 @@ trait InscripcionesIndex{
 
         }
 
-        if(auth()->user()->hasRole('Jefe de departamento inscripciones')){
+        if(auth()->user()->hasRole(['Jefe de departamento inscripciones', 'Operaciones'])){
 
             $this->actual = $this->modelo_editar;
 
