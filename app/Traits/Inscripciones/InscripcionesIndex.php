@@ -304,7 +304,7 @@ trait InscripcionesIndex{
 
     public function imprimir(MovimientoRegistral $movimientoRegistral){
 
-        if($movimientoRegistral->getRawOriginal('distrito') != 2 && !auth()->user()->hasRole(['Jefe de departamento inscripciones'])){
+        if($movimientoRegistral->getRawOriginal('distrito') != 2 && !auth()->user()->hasRole(['Jefe de departamento inscripciones', 'Operaciones'])){
 
             if($this->calcularDiaElaboracion($movimientoRegistral)) return;
 
