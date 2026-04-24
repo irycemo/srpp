@@ -223,12 +223,14 @@ class Subdivisiones extends Component
                     $movimientoRegistral->estado = 'nuevo';
                     $movimientoRegistral->folio_real = $folioReal->id;
                     $movimientoRegistral->usuario_asignado = auth()->id();
+                    $movimientoRegistral->creado_por = auth()->id();
                     $movimientoRegistral->save();
 
                     Propiedad::create([
                         'movimiento_registral_id' => $movimientoRegistral->id,
                         'servicio' => $this->propiedad->servicio,
-                        'descripcion_acto' => 'Movimiento registral que da origen al Folio Real'
+                        'descripcion_acto' => 'Movimiento registral que da origen al Folio Real',
+                        'creado_por' => auth()->id(),
                     ]);
 
                     $predio = $this->propiedad->movimientoRegistral->folioReal->predio->replicate();

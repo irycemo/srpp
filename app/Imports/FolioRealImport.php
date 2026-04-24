@@ -404,6 +404,7 @@ class FolioRealImport implements ToCollection, WithHeadingRow, WithValidation, W
             'solar' => $linea['solar'],
             'descripcion' => $linea['descripcion'],
             'zona_ubicacion' => $linea['zona_ubicacion'],
+            'creado_por' => auth()->id(),
         ]);
 
     }
@@ -457,6 +458,7 @@ class FolioRealImport implements ToCollection, WithHeadingRow, WithValidation, W
             'notaria' => $this->movimientoRegistral->autoridad_numero,
             'nombre_notario' => $this->movimientoRegistral->autoridad_nombre,
             'numero' => $this->movimientoRegistral->numero_documento,
+            'creado_por' => auth()->id(),
         ]);
 
         $predio->update(['escritura_id' => $escritura->id]);
@@ -523,6 +525,7 @@ class FolioRealImport implements ToCollection, WithHeadingRow, WithValidation, W
             'fecha_emision' => $this->movimientoRegistral->fecha_emision,
             'fecha_inscripcion' => $this->movimientoRegistral->fecha_inscripcion,
             'procedencia' => $this->movimientoRegistral->tipo_documento,
+            'creado_por' => auth()->id(),
         ]);
 
         $documentoEntrada = File::where('fileable_type', 'App\Models\MovimientoRegistral')
@@ -544,12 +547,14 @@ class FolioRealImport implements ToCollection, WithHeadingRow, WithValidation, W
         $movimientoRegistralPropiedad->pase_a_folio = 1;
         $movimientoRegistralPropiedad->estado = 'nuevo';
         $movimientoRegistralPropiedad->folio_real = $folioRealNuevo->id;
+        $movimientoRegistralPropiedad->creado_por = auth()->id();
         $movimientoRegistralPropiedad->save();
 
         Propiedad::create([
             'movimiento_registral_id' => $movimientoRegistralPropiedad->id,
             'servicio' => $this->movimientoRegistral->inscripcionPropiedad->servicio,
-            'descripcion_acto' => 'Movimiento registral que da origen al Folio Real'
+            'descripcion_acto' => 'Movimiento registral que da origen al Folio Real',
+            'creado_por' => auth()->id(),
         ]);
 
         return $folioRealNuevo;
@@ -564,6 +569,7 @@ class FolioRealImport implements ToCollection, WithHeadingRow, WithValidation, W
         $movimientoRegistralGravamen->folio_real = $folioRealId;
         $movimientoRegistralGravamen->folio = 2;
         $movimientoRegistralGravamen->estado = 'pase_folio';
+        $movimientoRegistralGravamen->creado_por = auth()->id();
         $movimientoRegistralGravamen->save();
 
         $gravamen = Gravamen::create(['movimiento_registral_id' => $movimientoRegistralGravamen->id,] + $gravamen);
@@ -574,7 +580,8 @@ class FolioRealImport implements ToCollection, WithHeadingRow, WithValidation, W
                 'actorable_type' => 'App\Models\Gravamen',
                 'actorable_id' => $gravamen->id,
                 'persona_id' => $this->persona($acreedor),
-                'tipo_actor' => 'acreedor'
+                'tipo_actor' => 'acreedor',
+                'creado_por' => auth()->id(),
             ]);
 
         }
@@ -586,7 +593,8 @@ class FolioRealImport implements ToCollection, WithHeadingRow, WithValidation, W
                 'actorable_id' => $gravamen->id,
                 'persona_id' => $this->persona($actor),
                 'tipo_actor' => 'deudor',
-                'tipo_deudor' => 'I-DEUDOR ÚNICO'
+                'tipo_deudor' => 'I-DEUDOR ÚNICO',
+                'creado_por' => auth()->id(),
             ]);
 
         }
