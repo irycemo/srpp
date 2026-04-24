@@ -121,13 +121,25 @@ class FolioRealService{
 
         foreach($movimiento->archivos as $archivo){
 
-            if($archivo->descripcion == 'caratula'){
+            if(app()->isProduction()){
 
-                unlink('caratulas/' . $archivo->url);
+                if (Storage::disk('s3')->exists(config('services.ses.ruta_documento_entrada') . '/' . $archivo->url)) {
 
-            }elseif($archivo->descripcion == 'documento_entrada'){
+                    Storage::disk('s3')->delete(config('services.ses.ruta_documento_entrada') . '/' . $archivo->url);
 
-                unlink('documento_entrada/' . $archivo->url);
+                }
+
+            }else{
+
+                if($archivo->descripcion == 'caratula'){
+
+                    unlink('caratulas/' . $archivo->url);
+
+                }elseif($archivo->descripcion == 'documento_entrada'){
+
+                    unlink('documento_entrada/' . $archivo->url);
+
+                }
 
             }
 

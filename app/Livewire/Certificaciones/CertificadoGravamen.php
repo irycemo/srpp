@@ -151,7 +151,7 @@ class CertificadoGravamen extends Component
 
         $this->moviminetoRegistral = $modelo->movimientoRegistral;
 
-        if($this->moviminetoRegistral->getRawOriginal('distrito') != 2 && !auth()->user()->hasRole(['Jefe de departamento certificaciones'])){
+        if($this->moviminetoRegistral->getRawOriginal('distrito') != 2 && !auth()->user()->hasRole(['Jefe de departamento certificaciones', 'Operaciones'])){
 
             if($this->calcularDiaElaboracion($this->moviminetoRegistral)) return;
 
@@ -229,7 +229,7 @@ class CertificadoGravamen extends Component
 
     public function generarCertificado(){
 
-        if(!auth()->user()->hasRole(['Jefe de departamento certificaciones']) && $this->modelo_editar->movimientoRegistral->distrito != '02 Uruapan'){
+        if(!auth()->user()->hasRole(['Jefe de departamento certificaciones' , 'Operaciones']) && $this->modelo_editar->movimientoRegistral->distrito != '02 Uruapan'){
 
             if($this->calcularDiaElaboracion($this->modelo_editar->movimientoRegistral)) return;
 

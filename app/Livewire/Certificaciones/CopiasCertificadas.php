@@ -188,7 +188,7 @@ class CopiasCertificadas extends Component
 
     public function generarCertificacion(Certificacion $modelo){
 
-        if(!$modelo->folio_carpeta_copias && !auth()->user()->hasRole(['Certificador Oficialia', 'Certificador Juridico','Jefe de departamento certificaciones'])){
+        if(!$modelo->folio_carpeta_copias && !auth()->user()->hasRole(['Certificador Oficialia', 'Certificador Juridico','Jefe de departamento certificaciones', 'Operaciones'])){
 
             $this->dispatch('mostrarMensaje', ['warning', "El trámite no tiene folio de carpeta"]);
 
@@ -199,7 +199,7 @@ class CopiasCertificadas extends Component
         if($this->modelo_editar->isNot($modelo))
             $this->modelo_editar = $modelo;
 
-        if(!auth()->user()->hasRole(['Certificador Juridico', 'Certificador Oficialia', 'Jefe de departamento certificaciones'])){
+        if(!auth()->user()->hasRole(['Certificador Juridico', 'Certificador Oficialia', 'Jefe de departamento certificaciones', 'Operaciones'])){
 
             if($this->calcularDiaElaboracion($modelo->movimientoRegistral)) return;
 
