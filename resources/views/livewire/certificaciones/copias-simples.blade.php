@@ -64,7 +64,7 @@
                     <x-table.heading>Sección</x-table.heading>
                     <x-table.heading>Solicitante</x-table.heading>
                     <x-table.heading>Número de páginas</x-table.heading>
-                    @if (auth()->user()->hasRole(['Supervisor certificaciones', 'Administrador', 'Supervisor uruapan', 'Jefe de departamento certificaciones', 'Operador']))
+                    @if (auth()->user()->hasRole(['Supervisor certificaciones', 'Administrador', 'Supervisor uruapan', 'Jefe de departamento certificaciones', 'Operador', 'Operaciones']))
                         <x-table.heading>Folio de carpeta</x-table.heading>
                         <x-table.heading>Asignado a</x-table.heading>
                     @endif

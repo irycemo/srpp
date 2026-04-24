@@ -108,7 +108,7 @@ class PaseFolioPersonaMoral extends Component
                                         ->orderBy('name')
                                         ->get();
 
-        $this->supervisor = in_array(auth()->user()->getRoleNames()->first(), ['Supervisor inscripciones', 'Supervisor certificaciones', 'Supervisor uruapan']);
+        $this->supervisor = in_array(auth()->user()->getRoleNames()->first(), ['Supervisor inscripciones', 'Supervisor certificaciones', 'Supervisor uruapan', 'Operaciones']);
 
     }
 
@@ -138,7 +138,7 @@ class PaseFolioPersonaMoral extends Component
                                                     ->orderBy($this->sort, $this->direction)
                                                     ->paginate($this->pagination);
 
-        }elseif(auth()->user()->hasRole(['Supervisor inscripciones', 'Supervisor uruapan'])){
+        }elseif(auth()->user()->hasRole(['Supervisor inscripciones', 'Supervisor uruapan', 'Operaciones'])){
 
             $movimientos = MovimientoRegistral::select('id', 'folio', 'folio_real_persona', 'año', 'tramite', 'usuario', 'actualizado_por', 'usuario_asignado', 'usuario_supervisor', 'estado', 'distrito', 'created_at', 'updated_at', 'tomo', 'registro', 'numero_propiedad', 'tipo_servicio', 'fecha_entrega')
                                                     ->with('actualizadoPor:id,name', 'folioRealPersona:id,folio,estado', 'asignadoA:id,name')

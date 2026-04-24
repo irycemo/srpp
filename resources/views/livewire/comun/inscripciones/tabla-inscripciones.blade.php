@@ -9,7 +9,7 @@
         <x-table.heading sortable wire:click="sortBy('distrito')" :direction="$sort === 'distrito' ? $direction : null" >Distrito</x-table.heading>
         <x-table.heading sortable wire:click="sortBy('servicio_nombre')" :direction="$sort === 'servicio_nombre' ? $direction : null" >Servicio</x-table.heading>
         <x-table.heading sortable wire:click="sortBy('fecha_entrega')" :direction="$sort === 'fecha_entrega' ? $direction : null">Fecha de entrega</x-table.heading>
-        @if(auth()->user()->hasRole(['Supervisor inscripciones', 'Supervisor uruapan', 'Administrador', 'Jefe de departamento inscripciones', 'Operador']))
+        @if(auth()->user()->hasRole(['Supervisor inscripciones', 'Supervisor uruapan', 'Administrador', 'Jefe de departamento inscripciones', 'Operador', 'Operaciones']))
             <x-table.heading sortable wire:click="sortBy('usuario_asignado')" :direction="$sort === 'usuario_asignado' ? $direction : null">Usuario asignado</x-table.heading>
         @endif
         <x-table.heading sortable wire:click="sortBy('created_at')" :direction="$sort === 'created_at' ? $direction : null">Ingreso</x-table.heading>
@@ -80,7 +80,7 @@
 
                 </x-table.cell>
 
-                @if(auth()->user()->hasRole(['Supervisor inscripciones', 'Supervisor uruapan', 'Administrador','Jefe de departamento inscripciones', 'Operador']))
+                @if(auth()->user()->hasRole(['Supervisor inscripciones', 'Supervisor uruapan', 'Administrador','Jefe de departamento inscripciones', 'Operador', 'Operaciones']))
 
                     <x-table.cell title="Usuario asignado">
 
