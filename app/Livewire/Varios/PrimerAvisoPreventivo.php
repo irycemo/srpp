@@ -2,20 +2,21 @@
 
 namespace App\Livewire\Varios;
 
-use Exception;
-use App\Models\User;
-use Livewire\Component;
-use App\Models\FolioReal;
-use Illuminate\Support\Facades\DB;
-use App\Models\MovimientoRegistral;
-use Illuminate\Support\Facades\Log;
-use Illuminate\Support\Facades\Hash;
-use App\Http\Services\AsignacionService;
-use App\Traits\Inscripciones\Varios\VariosTrait;
 use App\Http\Controllers\Varios\VariosController;
+use App\Http\Services\AsignacionService;
+use App\Http\Services\FolioRealService;
+use App\Models\FolioReal;
+use App\Models\MovimientoRegistral;
+use App\Models\User;
 use App\Traits\Inscripciones\ConsultarArchivoTrait;
 use App\Traits\Inscripciones\DocumentoEntradaTrait;
 use App\Traits\Inscripciones\GuardarDocumentoEntradaTrait;
+use App\Traits\Inscripciones\Varios\VariosTrait;
+use Exception;
+use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Facades\Log;
+use Livewire\Component;
 use Spatie\LivewireFilepond\WithFilePond;
 
 class PrimerAvisoPreventivo extends Component
@@ -71,6 +72,8 @@ class PrimerAvisoPreventivo extends Component
                 $this->vario->movimientoRegistral->audits()->latest()->first()->update(['tags' => 'Elaboró inscripción de varios']);
 
                 (new VariosController())->caratula($this->vario);
+
+                (new FolioRealService())->revisarCertificadosGravamenPendientes($this->vario->movimientoRegistral);
 
             });
 

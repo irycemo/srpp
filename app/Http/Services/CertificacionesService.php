@@ -25,9 +25,23 @@ class CertificacionesService implements MovimientoServiceInterface{
 
         }
 
+        /* Certificado de grvamen desde sistema tramites en linea */
         if($request['servicio'] == 'DL07' && $request['usuario'] == 67){
 
             $movimientoRegistral = MovimientoRegistral::find($request['movimiento_registral_id']);
+
+            $movimientoPendiente = $movimientoRegistral->folioReal->movimientosRegistrales()
+                                                                    ->whereIn('estado', ['nuevo', 'no recibido', 'captura', 'correccion'])
+                                                                    ->where('folio', '<', $movimientoRegistral->folio)
+                                                                    ->first();
+
+            if($movimientoPendiente){
+
+                $movimientoRegistral->update(['estado' => 'pendiente']);
+
+                return;
+
+            }
 
             Cache::forget('estadisticas_tramites_en_linea_' . $movimientoRegistral->usuario_tramites_linea_id);
 

@@ -2,17 +2,18 @@
 
 namespace App\Livewire\Inscripciones\Propiedad;
 
-use Exception;
-use Livewire\Component;
-use Illuminate\Validation\Rule;
-use Illuminate\Support\Facades\DB;
-use Illuminate\Support\Facades\Log;
-use Illuminate\Support\Facades\Hash;
-use Spatie\LivewireFilepond\WithFilePond;
-use App\Traits\Inscripciones\Propiedad\PropiedadTrait;
 use App\Http\Controllers\InscripcionesPropiedad\PropiedadController;
+use App\Http\Services\FolioRealService;
 use App\Traits\Inscripciones\ConsultarArchivoTrait;
+use App\Traits\Inscripciones\Propiedad\PropiedadTrait;
 use App\Traits\Inscripciones\RecuperarPropietariosTrait;
+use Exception;
+use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Facades\Log;
+use Illuminate\Validation\Rule;
+use Livewire\Component;
+use Spatie\LivewireFilepond\WithFilePond;
 
 class FideicomisoCancelacion extends Component
 {
@@ -116,6 +117,8 @@ class FideicomisoCancelacion extends Component
                     $this->obtenerMovimientoConPropietarios($this->movimientoFideicomiso);
 
                 (new PropiedadController())->caratula($this->inscripcion);
+
+                (new FolioRealService())->revisarCertificadosGravamenPendientes($this->inscripcion->movimientoRegistral);
 
             });
 

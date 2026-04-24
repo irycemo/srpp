@@ -2,19 +2,20 @@
 
 namespace App\Livewire\Inscripciones\Propiedad;
 
-use Exception;
-use App\Models\File;
-use App\Models\Actor;
-use Livewire\Component;
-use App\Models\Fideicomiso;
 use App\Constantes\Constantes;
-use Illuminate\Support\Facades\DB;
-use Illuminate\Support\Facades\Log;
-use Illuminate\Support\Facades\Hash;
-use Spatie\LivewireFilepond\WithFilePond;
 use App\Http\Controllers\InscripcionesPropiedad\FideicomisoController;
+use App\Http\Services\FolioRealService;
+use App\Models\Actor;
+use App\Models\Fideicomiso;
+use App\Models\File;
 use App\Traits\Inscripciones\ConsultarArchivoTrait;
 use App\Traits\Inscripciones\DocumentoEntradaTrait;
+use Exception;
+use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Facades\Log;
+use Livewire\Component;
+use Spatie\LivewireFilepond\WithFilePond;
 
 class Fideicomisos extends Component
 {
@@ -142,6 +143,8 @@ class Fideicomisos extends Component
                 $this->fideicomiso->movimientoRegistral->update(['estado' => 'elaborado']);
 
                 (new FideicomisoController())->caratula($this->fideicomiso);
+
+                (new FolioRealService())->revisarCertificadosGravamenPendientes($this->fideicomiso->movimientoRegistral);
 
             });
 

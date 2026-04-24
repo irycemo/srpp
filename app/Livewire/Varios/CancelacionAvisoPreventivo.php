@@ -2,17 +2,18 @@
 
 namespace App\Livewire\Varios;
 
-use Exception;
-use Livewire\Component;
-use Illuminate\Support\Facades\DB;
-use Illuminate\Support\Facades\Log;
-use Illuminate\Support\Facades\Hash;
-use Spatie\LivewireFilepond\WithFilePond;
-use App\Traits\Inscripciones\Varios\VariosTrait;
 use App\Http\Controllers\Varios\VariosController;
+use App\Http\Services\FolioRealService;
 use App\Traits\Inscripciones\ConsultarArchivoTrait;
 use App\Traits\Inscripciones\DocumentoEntradaTrait;
 use App\Traits\Inscripciones\GuardarDocumentoEntradaTrait;
+use App\Traits\Inscripciones\Varios\VariosTrait;
+use Exception;
+use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Facades\Log;
+use Livewire\Component;
+use Spatie\LivewireFilepond\WithFilePond;
 
 class CancelacionAvisoPreventivo extends Component
 {
@@ -72,6 +73,8 @@ class CancelacionAvisoPreventivo extends Component
                 $this->vario->movimientoRegistral->audits()->latest()->first()->update(['tags' => 'Elaboró inscripción de varios']);
 
                 (new VariosController())->caratula($this->vario);
+
+                (new FolioRealService())->revisarCertificadosGravamenPendientes($this->vario->movimientoRegistral);
 
             });
 

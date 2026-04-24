@@ -2,16 +2,17 @@
 
 namespace App\Livewire\Sentencias;
 
-use Livewire\Component;
 use App\Constantes\Constantes;
-use Illuminate\Support\Facades\DB;
-use Illuminate\Support\Facades\Log;
-use Illuminate\Support\Facades\Hash;
-use App\Traits\Inscripciones\Sentencias\SentenciaTrait;
 use App\Http\Controllers\Sentencias\SentenciasController;
+use App\Http\Services\FolioRealService;
 use App\Traits\Inscripciones\ConsultarArchivoTrait;
 use App\Traits\Inscripciones\DocumentoEntradaTrait;
 use App\Traits\Inscripciones\GuardarDocumentoEntradaTrait;
+use App\Traits\Inscripciones\Sentencias\SentenciaTrait;
+use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Facades\Log;
+use Livewire\Component;
 use Spatie\LivewireFilepond\WithFilePond;
 
 class Bloqueadora extends Component
@@ -110,6 +111,8 @@ class Bloqueadora extends Component
                 $this->sentencia->movimientoRegistral->audits()->latest()->first()->update(['tags' => 'Elaboró inscripción de sentencia']);
 
                 (new SentenciasController())->caratula($this->sentencia);
+
+                (new FolioRealService())->revisarCertificadosGravamenPendientes($this->sentencia->movimientoRegistral);
 
             });
 

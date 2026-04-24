@@ -2,22 +2,23 @@
 
 namespace App\Livewire\Varios;
 
+use App\Constantes\Constantes;
+use App\Exceptions\PredioException;
+use App\Http\Controllers\Varios\VariosController;
+use App\Http\Services\FolioRealService;
+use App\Http\Services\PredioService;
 use App\Models\Actor;
 use App\Models\Predio;
-use Livewire\Component;
-use App\Constantes\Constantes;
-use Illuminate\Support\Facades\DB;
-use App\Exceptions\PredioException;
-use Illuminate\Support\Facades\Log;
-use App\Http\Services\PredioService;
-use Illuminate\Support\Facades\Hash;
-use Spatie\LivewireFilepond\WithFilePond;
 use App\Traits\Inscripciones\ColindanciasTrait;
-use App\Traits\Inscripciones\Varios\VariosTrait;
-use App\Http\Controllers\Varios\VariosController;
 use App\Traits\Inscripciones\ConsultarArchivoTrait;
 use App\Traits\Inscripciones\DocumentoEntradaTrait;
 use App\Traits\Inscripciones\GuardarDocumentoEntradaTrait;
+use App\Traits\Inscripciones\Varios\VariosTrait;
+use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Facades\Log;
+use Livewire\Component;
+use Spatie\LivewireFilepond\WithFilePond;
 
 class AclaracionAdministrativa extends Component
 {
@@ -374,6 +375,8 @@ class AclaracionAdministrativa extends Component
                 $this->procesarPredio();
 
                 (new VariosController())->caratula($this->vario);
+
+                (new FolioRealService())->revisarCertificadosGravamenPendientes($this->vario->movimientoRegistral);
 
             });
 

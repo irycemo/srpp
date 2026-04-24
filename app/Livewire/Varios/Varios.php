@@ -2,18 +2,19 @@
 
 namespace App\Livewire\Varios;
 
-use Exception;
-use App\Models\Vario;
-use Livewire\Component;
-use Livewire\WithFileUploads;
 use App\Constantes\Constantes;
-use Illuminate\Support\Facades\DB;
-use Illuminate\Support\Facades\Log;
-use Illuminate\Support\Facades\Hash;
-use App\Traits\Inscripciones\Varios\VariosTrait;
 use App\Http\Controllers\Varios\VariosController;
+use App\Http\Services\FolioRealService;
+use App\Models\Vario;
 use App\Traits\Inscripciones\ConsultarArchivoTrait;
 use App\Traits\Inscripciones\GuardarDocumentoEntradaTrait;
+use App\Traits\Inscripciones\Varios\VariosTrait;
+use Exception;
+use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Facades\Log;
+use Livewire\Component;
+use Livewire\WithFileUploads;
 use Spatie\LivewireFilepond\WithFilePond;
 
 class Varios extends Component
@@ -63,6 +64,8 @@ class Varios extends Component
                 $this->vario->movimientoRegistral->audits()->latest()->first()->update(['tags' => 'Elaboró inscripción de varios']);
 
                 (new VariosController())->caratula($this->vario);
+
+                (new FolioRealService())->revisarCertificadosGravamenPendientes($this->vario->movimientoRegistral);
 
             });
 

@@ -2,21 +2,22 @@
 
 namespace App\Livewire\Gravamenes;
 
-use App\Models\User;
-use App\Models\Actor;
-use Livewire\Component;
-use App\Models\Gravamen;
-use Livewire\WithFileUploads;
 use App\Constantes\Constantes;
-use Illuminate\Validation\Rule;
-use Illuminate\Support\Facades\DB;
-use Illuminate\Support\Facades\Log;
-use Illuminate\Support\Facades\Hash;
-use Spatie\LivewireFilepond\WithFilePond;
 use App\Http\Controllers\Gravamen\GravamenController;
+use App\Http\Services\FolioRealService;
+use App\Models\Actor;
+use App\Models\Gravamen;
+use App\Models\User;
 use App\Traits\Inscripciones\ConsultarArchivoTrait;
 use App\Traits\Inscripciones\DocumentoEntradaTrait;
 use App\Traits\Inscripciones\GuardarDocumentoEntradaTrait;
+use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Facades\Log;
+use Illuminate\Validation\Rule;
+use Livewire\Component;
+use Livewire\WithFileUploads;
+use Spatie\LivewireFilepond\WithFilePond;
 
 class GravamenInscripcion extends Component
 {
@@ -162,6 +163,8 @@ class GravamenInscripcion extends Component
                 $this->gravamen->movimientoRegistral->audits()->latest()->first()->update(['tags' => 'Elaboró inscripción de gravamen']);
 
                 (new GravamenController())->caratula($this->gravamen);
+
+                (new FolioRealService())->revisarCertificadosGravamenPendientes($this->gravamen->movimientoRegistral);
 
             });
 

@@ -2,9 +2,11 @@
 
 namespace App\Http\Services;
 
+use App\Exceptions\GeneralException;
+use App\Http\Controllers\Certificaciones\CertificadoGravamenController;
 use App\Models\FolioReal;
 use App\Models\MovimientoRegistral;
-use App\Exceptions\GeneralException;
+use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\Storage;
 
 class FolioRealService{
@@ -134,6 +136,28 @@ class FolioRealService{
         }
 
         $movimiento->delete();
+
+    }
+
+    public function revisarCertificadosGravamenPendientes(MovimientoRegistral $movimiento){
+
+        $movimiento_certificado_gravamen_pendiente = $movimiento->folioReal->movimientosRegistrales()
+                                                                    ->where('estado', 'pendiente')
+                                                                    ->whereHas('certificacion', function($q){
+                                                                        $q->where('servicio', 'DL07');
+                                                                    })
+                                                                    ->where('folio', $movimiento->folio + 1)
+                                                                    ->first();
+
+        if($movimiento_certificado_gravamen_pendiente){
+
+            Cache::forget('estadisticas_tramites_en_linea_' . $movimiento_certificado_gravamen_pendiente->usuario_tramites_linea_id);
+
+            (new CertificadoGravamenController())->certificadoGravamen($movimiento_certificado_gravamen_pendiente);
+
+            $movimiento_certificado_gravamen_pendiente->update(['estado' => 'concluido']);
+
+        }
 
     }
 

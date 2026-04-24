@@ -3,18 +3,19 @@
 namespace App\Livewire\Cancelaciones;
 
 use App\Constantes\Constantes;
-use Livewire\Component;
-use Illuminate\Validation\Rule;
-use Illuminate\Support\Facades\DB;
-use App\Models\MovimientoRegistral;
-use Illuminate\Support\Facades\Log;
-use Illuminate\Support\Facades\Hash;
-use Spatie\LivewireFilepond\WithFilePond;
-use App\Models\Cancelacion as ModelCancelacion;
 use App\Http\Controllers\Cancelaciones\CancelacionController;
+use App\Http\Services\FolioRealService;
+use App\Models\Cancelacion as ModelCancelacion;
+use App\Models\MovimientoRegistral;
 use App\Traits\Inscripciones\ConsultarArchivoTrait;
 use App\Traits\Inscripciones\DocumentoEntradaTrait;
 use App\Traits\Inscripciones\GuardarDocumentoEntradaTrait;
+use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Facades\Log;
+use Illuminate\Validation\Rule;
+use Livewire\Component;
+use Spatie\LivewireFilepond\WithFilePond;
 
 class Cancelacion extends Component
 {
@@ -163,6 +164,8 @@ class Cancelacion extends Component
                 $this->cancelacion->movimientoRegistral->audits()->latest()->first()->update(['tags' => 'Elaboró inscripción de cancelación']);
 
                 (new CancelacionController())->caratula($this->cancelacion);
+
+                (new FolioRealService())->revisarCertificadosGravamenPendientes($this->cancelacion->movimientoRegistral);
 
             });
 

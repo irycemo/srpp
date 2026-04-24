@@ -2,19 +2,20 @@
 
 namespace App\Livewire\Inscripciones\Propiedad;
 
-use Exception;
-use App\Models\Actor;
-use Livewire\Component;
 use App\Constantes\Constantes;
-use Illuminate\Support\Facades\DB;
-use Illuminate\Support\Facades\Log;
-use Illuminate\Support\Facades\Hash;
-use App\Traits\Inscripciones\ColindanciasTrait;
-use App\Traits\Inscripciones\Propiedad\PropiedadTrait;
 use App\Http\Controllers\InscripcionesPropiedad\PropiedadController;
+use App\Http\Services\FolioRealService;
+use App\Models\Actor;
+use App\Traits\Inscripciones\ColindanciasTrait;
 use App\Traits\Inscripciones\ConsultarArchivoTrait;
 use App\Traits\Inscripciones\DocumentoEntradaTrait;
 use App\Traits\Inscripciones\GuardarDocumentoEntradaTrait;
+use App\Traits\Inscripciones\Propiedad\PropiedadTrait;
+use Exception;
+use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Facades\Log;
+use Livewire\Component;
 use Spatie\LivewireFilepond\WithFilePond;
 
 class InscripcionGeneral extends Component
@@ -730,6 +731,8 @@ class InscripcionGeneral extends Component
                 $this->revisarAvisosPreventivos();
 
                 (new PropiedadController())->caratula($this->inscripcion);
+
+                (new FolioRealService())->revisarCertificadosGravamenPendientes($this->inscripcion->movimientoRegistral);
 
             });
 

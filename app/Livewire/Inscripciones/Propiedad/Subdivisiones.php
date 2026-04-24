@@ -2,19 +2,20 @@
 
 namespace App\Livewire\Inscripciones\Propiedad;
 
-use App\Models\File;
-use Livewire\Component;
-use App\Models\Gravamen;
-use App\Models\Escritura;
-use App\Models\FolioReal;
-use App\Models\Propiedad;
 use App\Constantes\Constantes;
-use Illuminate\Validation\Rule;
+use App\Http\Controllers\Subdivisiones\SubdivisionesController;
+use App\Http\Services\FolioRealService;
+use App\Models\Escritura;
+use App\Models\File;
+use App\Models\FolioReal;
+use App\Models\Gravamen;
+use App\Models\Propiedad;
+use App\Traits\Inscripciones\ColindanciasTrait;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
+use Illuminate\Validation\Rule;
+use Livewire\Component;
 use Spatie\LivewireFilepond\WithFilePond;
-use App\Traits\Inscripciones\ColindanciasTrait;
-use App\Http\Controllers\Subdivisiones\SubdivisionesController;
 
 class Subdivisiones extends Component
 {
@@ -223,14 +224,12 @@ class Subdivisiones extends Component
                     $movimientoRegistral->estado = 'nuevo';
                     $movimientoRegistral->folio_real = $folioReal->id;
                     $movimientoRegistral->usuario_asignado = auth()->id();
-                    $movimientoRegistral->creado_por = auth()->id();
                     $movimientoRegistral->save();
 
                     Propiedad::create([
                         'movimiento_registral_id' => $movimientoRegistral->id,
                         'servicio' => $this->propiedad->servicio,
                         'descripcion_acto' => 'Movimiento registral que da origen al Folio Real',
-                        'creado_por' => auth()->id(),
                     ]);
 
                     $predio = $this->propiedad->movimientoRegistral->folioReal->predio->replicate();
@@ -306,6 +305,8 @@ class Subdivisiones extends Component
                 $this->propiedad->movimientoRegistral->audits()->latest()->first()->update(['tags' => 'Elaboró inscripción de subdivisión']);
 
                 (new SubdivisionesController())->caratula($this->propiedad);
+
+                (new FolioRealService())->revisarCertificadosGravamenPendientes($this->propiedad->movimientoRegistral);
 
             });
 

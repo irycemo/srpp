@@ -2,16 +2,17 @@
 
 namespace App\Livewire\Inscripciones\Propiedad;
 
-use Exception;
-use Livewire\Component;
-use App\Models\Propiedad;
 use App\Constantes\Constantes;
+use App\Http\Controllers\Subdivisiones\SubdivisionesController;
+use App\Http\Services\FolioRealService;
 use App\Imports\FolioRealImport;
+use App\Models\Propiedad;
+use App\Traits\Inscripciones\GuardarDocumentoEntradaTrait;
+use Exception;
 use Illuminate\Support\Facades\Log;
+use Livewire\Component;
 use Maatwebsite\Excel\Facades\Excel;
 use Spatie\LivewireFilepond\WithFilePond;
-use App\Http\Controllers\Subdivisiones\SubdivisionesController;
-use App\Traits\Inscripciones\GuardarDocumentoEntradaTrait;
 
 class Fraccionamientos extends Component
 {
@@ -71,6 +72,8 @@ class Fraccionamientos extends Component
             $this->propiedad->save();
 
             (new SubdivisionesController())->caratula($this->propiedad);
+
+            (new FolioRealService())->revisarCertificadosGravamenPendientes($this->propiedad->movimientoRegistral);
 
             $pdf = (new SubdivisionesController())->reimprimir($this->propiedad->movimientoRegistral->firmaElectronica);
 

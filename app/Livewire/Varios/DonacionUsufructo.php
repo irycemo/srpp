@@ -2,19 +2,20 @@
 
 namespace App\Livewire\Varios;
 
-use Exception;
-use App\Models\Actor;
-use Livewire\Component;
-use Illuminate\Support\Facades\DB;
 use App\Exceptions\PredioException;
-use Illuminate\Support\Facades\Log;
-use App\Http\Services\PredioService;
-use Illuminate\Support\Facades\Hash;
-use Spatie\LivewireFilepond\WithFilePond;
-use App\Traits\Inscripciones\Varios\VariosTrait;
 use App\Http\Controllers\Varios\VariosController;
+use App\Http\Services\FolioRealService;
+use App\Http\Services\PredioService;
+use App\Models\Actor;
 use App\Traits\Inscripciones\ConsultarArchivoTrait;
 use App\Traits\Inscripciones\DocumentoEntradaTrait;
+use App\Traits\Inscripciones\Varios\VariosTrait;
+use Exception;
+use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Facades\Log;
+use Livewire\Component;
+use Spatie\LivewireFilepond\WithFilePond;
 
 class DonacionUsufructo extends Component
 {
@@ -114,6 +115,8 @@ class DonacionUsufructo extends Component
                 $this->procesarPropietarios();
 
                 (new VariosController())->caratula($this->vario);
+
+                (new FolioRealService())->revisarCertificadosGravamenPendientes($this->vario->movimientoRegistral);
 
             });
 

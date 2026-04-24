@@ -2,28 +2,29 @@
 
 namespace App\Livewire\Sentencias;
 
-use App\Models\File;
-use App\Models\Actor;
-use App\Models\Predio;
-use Livewire\Component;
-use App\Models\Sentencia;
-use Livewire\WithFileUploads;
 use App\Constantes\Constantes;
-use Illuminate\Support\Facades\DB;
 use App\Exceptions\PredioException;
-use Illuminate\Support\Facades\Log;
-use App\Http\Services\PredioService;
-use Illuminate\Support\Facades\Hash;
-use Illuminate\Support\Facades\Http;
-use Illuminate\Support\Facades\Storage;
-use Spatie\LivewireFilepond\WithFilePond;
-use App\Traits\Inscripciones\ColindanciasTrait;
-use Illuminate\Http\Client\ConnectionException;
-use App\Traits\Inscripciones\Sentencias\SentenciaTrait;
 use App\Http\Controllers\Sentencias\SentenciasController;
+use App\Http\Services\FolioRealService;
+use App\Http\Services\PredioService;
+use App\Models\Actor;
+use App\Models\File;
+use App\Models\Predio;
+use App\Models\Sentencia;
+use App\Traits\Inscripciones\ColindanciasTrait;
 use App\Traits\Inscripciones\ConsultarArchivoTrait;
 use App\Traits\Inscripciones\DocumentoEntradaTrait;
 use App\Traits\Inscripciones\GuardarDocumentoEntradaTrait;
+use App\Traits\Inscripciones\Sentencias\SentenciaTrait;
+use Illuminate\Http\Client\ConnectionException;
+use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Facades\Http;
+use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Facades\Storage;
+use Livewire\Component;
+use Livewire\WithFileUploads;
+use Spatie\LivewireFilepond\WithFilePond;
 
 class Rectificatoria extends Component
 {
@@ -229,6 +230,8 @@ class Rectificatoria extends Component
                 $this->sentencia->movimientoRegistral->audits()->latest()->first()->update(['tags' => 'Elaboró inscripción de sentencia']);
 
                 (new SentenciasController())->caratula($this->sentencia);
+
+                (new FolioRealService())->revisarCertificadosGravamenPendientes($this->sentencia->movimientoRegistral);
 
             });
 
