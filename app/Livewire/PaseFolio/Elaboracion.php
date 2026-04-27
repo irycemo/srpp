@@ -2,29 +2,30 @@
 
 namespace App\Livewire\PaseFolio;
 
-use Exception;
-use Carbon\Carbon;
-use App\Models\File;
-use App\Models\Predio;
-use Livewire\Component;
-use App\Models\Gravamen;
-use App\Models\Escritura;
-use App\Models\FolioReal;
-use App\Models\Sentencia;
-use App\Models\Antecedente;
-use Livewire\Attributes\On;
-use App\Models\Propiedadold;
 use App\Constantes\Constantes;
-use Illuminate\Validation\Rule;
-use Illuminate\Support\Facades\DB;
-use App\Http\Services\OldBDService;
-use App\Models\MovimientoRegistral;
-use Illuminate\Support\Facades\Log;
-use App\Livewire\PaseFolio\PaseFolio;
-use Illuminate\Support\Facades\Storage;
+use App\Http\Controllers\PaseFolio\PaseFolioController;
 use App\Http\Services\AsignacionService;
-use Spatie\LivewireFilepond\WithFilePond;
+use App\Http\Services\OldBDService;
+use App\Livewire\PaseFolio\PaseFolio;
+use App\Models\Antecedente;
+use App\Models\Escritura;
+use App\Models\File;
+use App\Models\FolioReal;
+use App\Models\Gravamen;
+use App\Models\MovimientoRegistral;
+use App\Models\Predio;
+use App\Models\Propiedadold;
+use App\Models\Sentencia;
 use App\Traits\Inscripciones\GuardarDocumentoEntradaTrait;
+use Carbon\Carbon;
+use Exception;
+use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Facades\Storage;
+use Illuminate\Validation\Rule;
+use Livewire\Attributes\On;
+use Livewire\Component;
+use Spatie\LivewireFilepond\WithFilePond;
 
 class Elaboracion extends Component
 {
@@ -795,6 +796,8 @@ class Elaboracion extends Component
                 }
 
                 $this->revisarAntecedentesFusionantes();
+
+                (new PaseFolioController())->caratula($this->movimientoRegistral->folioReal);
 
                 $this->redirect(PaseFolio::class);
 

@@ -387,8 +387,6 @@ class PaseFolio extends Component
 
         try {
 
-            (new PaseFolioController())->caratula($movimientoRegistral->folioReal);
-
             $pdf = (new PaseFolioController())->reimprimirFirmado($movimientoRegistral->folioReal->firmaElectronica);
 
             return response()->streamDownload(
