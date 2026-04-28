@@ -2,12 +2,11 @@
 
 namespace App\Livewire\Inscripciones\Propiedad;
 
-use App\Models\User;
-use Livewire\Component;
-use Livewire\WithPagination;
 use App\Constantes\Constantes;
-use App\Traits\ComponentesTrait;
+use App\Exceptions\GeneralException;
 use App\Models\MovimientoRegistral;
+use App\Models\User;
+use App\Traits\ComponentesTrait;
 use App\Traits\Inscripciones\EnviarMovimientoCorreccion;
 use App\Traits\Inscripciones\FinalizarInscripcionTrait;
 use App\Traits\Inscripciones\InscripcionesIndex;
@@ -15,6 +14,10 @@ use App\Traits\Inscripciones\ReasignarmeMovimientoTrait;
 use App\Traits\Inscripciones\ReasignarUsuarioTrait;
 use App\Traits\Inscripciones\RechazarMovimientoTrait;
 use App\Traits\Inscripciones\RecibirDocumentoTrait;
+use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Log;
+use Livewire\Component;
+use Livewire\WithPagination;
 
 class SubdivisionesIndex extends Component
 {
@@ -28,6 +31,39 @@ class SubdivisionesIndex extends Component
     use ReasignarUsuarioTrait;
     use ReasignarmeMovimientoTrait;
     use FinalizarInscripcionTrait;
+
+    public function correccion(){
+
+        try {
+
+            DB::transaction(function () {
+
+                $this->enviarCorreccion($this->modelo_editar);
+
+                if($this->modelo_editar->folioReal->estado == 'inactivo'){
+
+                    $this->modelo_editar->folioReal->update(['estado' => 'activo']);
+
+                }
+
+            });
+
+            $this->dispatch('mostrarMensaje', ['success', "La información se actualizó con éxito."]);
+
+            $this->modalCorreccion = false;
+
+        } catch (GeneralException $ex) {
+
+            $this->dispatch('mostrarMensaje', ['warning', $ex->getMessage()]);
+
+        } catch (\Throwable $th) {
+
+            $this->dispatch('mostrarMensaje', ['error', "Hubo un error."]);
+            Log::error("Error al enviar a corrección movimiento registral por el usuario: (id: " . auth()->user()->id . ") " . auth()->user()->name . ". " . $th);
+
+        }
+
+    }
 
     public function mount(){
 
