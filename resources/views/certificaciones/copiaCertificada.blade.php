@@ -169,7 +169,7 @@
             <p class="titulo">Copias certificadas</p>
 
             <p class="parrafo">
-                EL CIUDADANO <strong>@if($distrito == '02 URUAPAN') Lic. SANDRO MEDINA MORALES COORDINADOR REGIONAL URUAPAN @else LICENCIADO EN DERECHO {{ $director }}, DIRECTOR DEL REGISTRO PÚBLICO DE LA PROPIEDAD @endif </strong>
+                EL CIUDADANO <strong>@if($distrito == '02 URUAPAN') ANAHÍ RENOVATO CASTAÑEDA COORDINADORA REGIONAL URUAPAN @else LICENCIADO EN DERECHO {{ $director }}, DIRECTOR DEL REGISTRO PÚBLICO DE LA PROPIEDAD @endif </strong>
                 EN EL ESTADO DE MICHOACÁN DE OCAMPO QUE ACTUA CONFORME A LA LEY, CERTIFICA QUE LA PRESENTE COPIA ES
                 FIELMENTE TOMADA DE LA QUE OBRE EN EL
 
@@ -201,7 +201,7 @@
                 <strong>A T E N T A M E N T E</strong>
             </p>
 
-            @if($distrito == '02 Uruapan' )
+            @if($distrito == '02 URUAPAN' )
                 <p class="borde">Lic. ANAHÍ RENOVATO CASTAÑEDA </p>
                 <p style="margin:0;">COORDINADORA REGIONAL 4 PURHÉPECHA (URUAPAN)</p>
             @else
