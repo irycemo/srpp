@@ -464,7 +464,15 @@ class CopiasCertificadas extends Component
 
     public function imprimirDocumentoEntradaMovimiento(Certificacion $modelo){
 
-        $movimientoRegistral = $modelo->movimientoRegistral->folioReal->movimientosRegistrales()->where('folio', $modelo->movimiento_registral)->first();
+        $movimientoRegistral = $modelo->movimientoRegistral->folioReal->movimientosRegistrales()->where('folio', $modelo->movimiento_registral->folio)->first();
+
+        if(! $movimientoRegistral->documentoEntrada()){
+
+            $this->dispatch('mostrarMensaje', ['warning', "El movimiento registral no tiene documento de entrada."]);
+
+            return;
+
+        }
 
         $this->js('window.open(\' '. $movimientoRegistral->documentoEntrada() . '\', \'_blank\');');
 
@@ -493,6 +501,14 @@ class CopiasCertificadas extends Component
     public function imprimirDocumentoEntradaFolio(Certificacion $modelo){
 
         $folio = $modelo->movimientoRegistral->folioReal;
+
+        if(! $folio->documentoEntrada()){
+
+            $this->dispatch('mostrarMensaje', ['warning', "El folio real no tiene documento de entrada."]);
+
+            return;
+
+        }
 
         $this->js('window.open(\' '. $folio->documentoEntrada() . '\', \'_blank\');');
 
