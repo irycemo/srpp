@@ -1,6 +1,6 @@
 <div class="bg-white rounded-lg p-4 shadow-xl grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-4 text-sm my-3">
 
-    <span class="flex items-center justify-center text-lg text-gray-700 md:col-span-3 col-span-1 sm:col-span-2 lg:col-span-6">Antecedente</span>
+    <span class="flex items-center justify-center text-lg text-gray-700 md:col-span-3 col-span-1 sm:col-span-2 lg:col-span-5">Antecedente</span>
 
     @if($folioReal->antecedentes->count())
 
@@ -87,14 +87,6 @@
             <strong>Distrito</strong>
 
             <p>{{ $folioReal->distrito }}</p>
-
-        </div>
-
-        <div class="rounded-lg bg-gray-100 py-1 px-2">
-
-            <strong>Sección</strong>
-
-            <p>{{ $folioReal->seccion_antecedente }}</p>
 
         </div>
 
