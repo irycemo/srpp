@@ -390,6 +390,7 @@ class Constantes{
         'RESOLUCIÓN JUDICIAL',
         'CONTRATO',
         'COLECCIONAMIENTO',
+        'DECRETO'
 
     ];
 
