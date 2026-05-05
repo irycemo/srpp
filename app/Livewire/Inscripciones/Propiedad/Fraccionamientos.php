@@ -3,13 +3,16 @@
 namespace App\Livewire\Inscripciones\Propiedad;
 
 use App\Constantes\Constantes;
+use App\Exceptions\GeneralException;
 use App\Http\Controllers\Subdivisiones\SubdivisionesController;
 use App\Http\Services\FolioRealService;
 use App\Imports\FolioRealImport;
+use App\Jobs\Fraccionamientos\DispatchFraccionamientoChain;
+use App\Models\Import;
 use App\Models\Propiedad;
 use App\Traits\Inscripciones\GuardarDocumentoEntradaTrait;
-use Exception;
 use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Str;
 use Livewire\Component;
 use Maatwebsite\Excel\Facades\Excel;
 use Spatie\LivewireFilepond\WithFilePond;
@@ -23,11 +26,9 @@ class Fraccionamientos extends Component
     public Propiedad $propiedad;
     public $movimientoRegistral;
 
-    public $data;
-
-    public $documento;
-
     public $vientos;
+    public $documento;
+    public $errores = [];
 
     protected function rules(){
         return [
@@ -44,6 +45,8 @@ class Fraccionamientos extends Component
 
     public function procesar(){
 
+        $this->reset('errores');
+
         $this->validate();
 
         if(!$this->propiedad->movimientoRegistral->documentoEntrada()){
@@ -54,33 +57,48 @@ class Fraccionamientos extends Component
 
         }
 
-        $import = new FolioRealImport($this->propiedad->movimientoRegistral);
+        $batchId = (string) Str::uuid();
+
+        $import = new FolioRealImport($batchId);
 
         try {
 
-            set_time_limit(300);
-
             Excel::import($import, $this->documento);
 
-            $this->data = $import->data;
+            $imports = Import::where('batch_id', $batchId)->get();
 
-            $this->dispatch('mostrarMensaje', ['success', "Los folios reales se generaron con éxito"]);
+            if($this->movimientoRegistral->inscripcionPropiedad->numero_inmuebles != $imports->count()){
 
-            $this->reset('documento');
+                $this->eliminarImportRecords($batchId);
 
-            $this->propiedad->acto_contenido = 'FRACCIONAMIENTO';
-            $this->propiedad->save();
+                throw new GeneralException("El número de propiedades del trámite (" . $this->movimientoRegistral->inscripcionPropiedad->numero_inmuebles . ") no corresponde con el numero de regsitros en el archivo");
 
-            (new SubdivisionesController())->caratula($this->propiedad);
+            }
 
-            (new FolioRealService())->revisarCertificadosGravamenPendientes($this->propiedad->movimientoRegistral);
+            $errores = $imports->whereNotNull('errors')->get();
 
-            $pdf = (new SubdivisionesController())->reimprimir($this->propiedad->movimientoRegistral->firmaElectronica);
+            if(! $errores->count()){
 
-            return response()->streamDownload(
-                fn () => print($pdf->output()),
-                'documento.pdf'
-            );
+                DispatchFraccionamientoChain::dispatch($batchId, $this->movimientoRegistral->id);
+
+            }else{
+
+                foreach($errores as $error){
+
+                    $decoded_errors = json_decode($error->errores);
+
+                    foreach($decoded_errors as $decoded){
+
+                        $this->errores [] = $decoded;
+
+                    }
+
+
+                }
+
+                $this->eliminarImportRecords($batchId);
+
+            }
 
         } catch (\Maatwebsite\Excel\Validators\ValidationException $e) {
 
@@ -98,10 +116,11 @@ class Fraccionamientos extends Component
 
             }
 
-        } catch (Exception $th) {
+            $this->eliminarImportRecords($batchId);
 
-            Log::error("Error al importar ficha técnica por el usuario: (id: " . auth()->user()->id . ") " . auth()->user()->name . ". " . $th);
-            $this->dispatch('mostrarMensaje', ['error', $th->getMessage()]);
+        } catch (GeneralException $ex) {
+
+            $this->dispatch('mostrarMensaje', ['warning', $ex->getMessage()]);
 
         } catch (\Throwable $th) {
 
@@ -109,6 +128,34 @@ class Fraccionamientos extends Component
             $this->dispatch('mostrarMensaje', ['error', "Hubo un error"]);
 
         }
+
+    }
+
+    public function finalizarMovimientoRegistral(){
+
+        $this->dispatch('mostrarMensaje', ['success', "Los folios reales se generaron con éxito"]);
+
+        $this->reset('documento');
+
+        $this->propiedad->acto_contenido = 'FRACCIONAMIENTO';
+        $this->propiedad->save();
+
+        (new SubdivisionesController())->caratula($this->propiedad);
+
+        (new FolioRealService())->revisarCertificadosGravamenPendientes($this->propiedad->movimientoRegistral);
+
+        $pdf = (new SubdivisionesController())->reimprimir($this->propiedad->movimientoRegistral->firmaElectronica);
+
+        return response()->streamDownload(
+            fn () => print($pdf->output()),
+            'documento.pdf'
+        );
+
+    }
+
+    public function eliminarImportRecords($batchId){
+
+        Import::where('batch_id', $batchId)->delete();
 
     }
 

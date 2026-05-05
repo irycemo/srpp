@@ -133,7 +133,7 @@ trait PropiedadTrait{
             'autoridad_numero' => $this->inscripcion->movimientoRegistral->autoridad_numero,
             'fecha_emision' => $this->inscripcion->movimientoRegistral->fecha_emision,
             'fecha_inscripcion' => $this->inscripcion->movimientoRegistral->fecha_inscripcion,
-            'procedencia' => $this->inscripcion->movimientoRegistral->tipo_documento,
+            'procedencia' => $this->inscripcion->movimientoRegistral->procedencia,
         ]);
 
         $documentoEntrada = File::where('fileable_type', 'App\Models\MovimientoRegistral')

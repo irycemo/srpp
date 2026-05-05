@@ -8,6 +8,7 @@ use App\Models\Escritura;
 use App\Models\File;
 use App\Models\FolioReal;
 use App\Models\Gravamen;
+use App\Models\Import;
 use App\Models\MovimientoRegistral;
 use App\Models\Persona;
 use App\Models\Predio;
@@ -29,7 +30,7 @@ class FraccionamientoJob implements ShouldQueue
 
     public MovimientoRegistral $movimiento_registral;
 
-    public function __construct(public array $row, public int $key, public array $gravamen, public int $movimiento_id, public string $cache_key)
+    public function __construct(public int $import_id, public array $row, public int $movimiento_id)
     {
 
         $this->movimiento_registral = MovimientoRegistral::find($this->movimiento_id);
@@ -42,35 +43,64 @@ class FraccionamientoJob implements ShouldQueue
     public function handle(): void
     {
 
-        DB::transaction(function () {
+        try {
 
-            $colindancias = $this->procesarColindacias($this->row['colindancias']);
+            DB::transaction(function () {
 
-            $propietarios = $this->procesarPropietarios($this->row['propietarios']);
+                $colindancias = $this->procesarColindacias($this->row['colindancias']);
 
-            $folioReal = $this->generarFolioReal();
+                $propietarios = $this->procesarPropietarios($this->row['propietarios']);
 
-            $predio = $this->crearPredio($folioReal->id, $this->row);
+                $folioReal = $this->generarFolioReal();
 
-            $this->procesarRealacionesDePredio($predio->id, $colindancias, $propietarios);
+                $predio = $this->crearPredio($folioReal->id, $this->row);
 
-            if(in_array($this->movimiento_registral->tipo_documento, ['ESCRITURA PÚBLICA', 'ESCRITURA PRIVADA'])){
+                $this->procesarRealacionesDePredio($predio->id, $colindancias, $propietarios);
 
-                $this->procesarEscritura($predio);
+                if(in_array($this->movimiento_registral->tipo_documento, ['ESCRITURA PÚBLICA', 'ESCRITURA PRIVADA'])){
 
-            }
+                    $this->procesarEscritura($predio);
 
-            if($this->row['acto_contenido_gravamen']){
+                }
 
-                $acreedores = $this->procesarAcreedores($this->row['acreedores_gravamen']);
+                if($this->row['acto_contenido_gravamen']){
 
-                $actores = $this->procesarActores($this->row['actores_gravamen']);
+                    $gravamen = [
+                        'acto_contenido' => $this->row['acto_contenido_gravamen'],
+                        'servicio' => 'D127',
+                        'estado' => 'activo',
+                        'tipo' => $this->row['tipo_gravamen'],
+                        'valor_gravamen' => $this->row['valor_gravamen'],
+                        'divisa' => $this->row['divisa_gravamen'],
+                        'fecha_inscripcion' => $this->row['fecha_inscripcion_gravamen'],
+                        'observaciones' => $this->row['descripcion_acto_gravamen'],
+                    ];
 
-                $this->generarGravamen($folioReal->id, $this->gravamen, $acreedores, $actores);
+                    $acreedores = $this->procesarAcreedores($this->row['acreedores_gravamen']);
 
-            }
+                    $actores = $this->procesarActores($this->row['actores_gravamen']);
 
-        });
+                    $this->generarGravamen($folioReal->id, $gravamen, $acreedores, $actores);
+
+                }
+
+                Import::find($this->import_id)->update([
+                    'status' => 'processed',
+                    'folio_real' => $folioReal->id . '/ Folio real: ' . $folioReal->folio
+                ]);
+
+            });
+
+        } catch (\Throwable $th) {
+
+            Import::find($this->import_id)->update([
+                'status' => 'error',
+                'errores' => json_encode([$th->getMessage()]),
+            ]);
+
+            throw $th;
+
+        }
 
     }
 
@@ -457,16 +487,5 @@ class FraccionamientoJob implements ShouldQueue
         }
 
     }
-
-    $gravamen = [
-        'acto_contenido' => $rows[0]['acto_contenido_gravamen'],
-        'servicio' => 'D127',
-        'estado' => 'activo',
-        'tipo' => $rows[0]['tipo_gravamen'],
-        'valor_gravamen' => $rows[0]['valor_gravamen'],
-        'divisa' => $rows[0]['divisa_gravamen'],
-        'fecha_inscripcion' => $rows[0]['fecha_inscripcion_gravamen'],
-        'observaciones' => $rows[0]['descripcion_acto_gravamen'],
-    ];
 
 }

@@ -4,7 +4,6 @@ namespace App\Imports;
 
 use App\Constantes\Constantes;
 use App\Models\Import;
-use Illuminate\Support\Str;
 use Illuminate\Validation\Rule;
 use Maatwebsite\Excel\Concerns\OnEachRow;
 use Maatwebsite\Excel\Concerns\SkipsEmptyRows;
@@ -16,12 +15,10 @@ use Maatwebsite\Excel\Row;
 class FolioRealImport implements OnEachRow, WithHeadingRow, WithValidation, WithMultipleSheets, SkipsEmptyRows
 {
 
-    protected string $batchId;
+    protected bool $hasErrors = false;
 
-    public function __construct()
-    {
-        $this->batchId = (string) Str::uuid();
-    }
+    public function __construct(public string $batchId)
+    {}
 
     public function rules():array
     {
@@ -100,17 +97,17 @@ class FolioRealImport implements OnEachRow, WithHeadingRow, WithValidation, With
 
             $campos = explode(':', $colindancia);
 
-            if(!in_array($campos[0], Constantes::VIENTOS))
-                $errores[] = "Error en el campo viento de las colindancias en la línea " . ($row->getIndex() + 2);
+            if(! in_array(trim($campos[0]), Constantes::VIENTOS))
+                $errores[] = "Error en el campo viento de las colindancias en la linea " . ($row->getIndex());
 
             if(!isset($campos[1]) || !isset($campos[2]))
-                $errores[] = "Error en los campos de las colindancias en la línea " . ($row->getIndex() + 2);
+                $errores[] = "Error en los campos de las colindancias en la linea " . ($row->getIndex());
 
             if(isset($campos[3]))
-                $errores[] = "Error en los campos de las colindancias en la líneass " . ($row->getIndex() + 2);
+                $errores[] = "Error en los campos de las colindancias en la lineas " . ($row->getIndex());
 
             if($campos[1] == '' || $campos[2] == '')
-                $errores[] = "Error en los campos de las colindancias en la líneass " . ($row->getIndex() + 2);
+                $errores[] = "Error en los campos de las colindancias en la lineas " . ($row->getIndex());
 
         }
 
@@ -124,17 +121,17 @@ class FolioRealImport implements OnEachRow, WithHeadingRow, WithValidation, With
             $campos = explode(':', $propietario);
 
             if(!in_array($campos[0], ['FISICA', 'MORAL']))
-                $errores[] = "Error en el campo tipo de persona de los propietarios en la línea " . ($row->getIndex() + 2);
+                $errores[] = "Error en el campo tipo de persona de los propietarios en la linea " . ($row->getIndex());
 
             if(in_array($campos[0], ['FISICA', 'FÍSICA'])){
 
                 if(!isset($campos[1]) || !isset($campos[2]) || !isset($campos[3]))
-                    $errores[] = "Error en los campos de los propietarios en la línea " . ($row->getIndex() + 2);
+                    $errores[] = "Error en los campos de los propietarios en la linea " . ($row->getIndex());
 
             }else{
 
                 if(!isset($campos[1]))
-                    $errores[] = "Error en los campos de los propietarios en la línea " . ($row->getIndex() + 2);
+                    $errores[] = "Error en los campos de los propietarios en la linea " . ($row->getIndex());
 
             }
 
@@ -152,17 +149,17 @@ class FolioRealImport implements OnEachRow, WithHeadingRow, WithValidation, With
                 $campos = explode(':', $acreedor);
 
                 if(!in_array($campos[0], ['FISICA', 'MORAL']))
-                    $errores[] = "Error en el campo tipo de persona de los acreedores del gravamen en la línea " . ($row->getIndex() + 2);
+                    $errores[] = "Error en el campo tipo de persona de los acreedores del gravamen en la linea " . ($row->getIndex());
 
                 if(in_array($campos[0], ['FISICA', 'FÍSICA'])){
 
                     if(!isset($campos[1]) || !isset($campos[2]) || !isset($campos[3]))
-                        $errores[] = "Error en los campos de los acreedores del gravamen en la línea " . ($row->getIndex() + 2);
+                        $errores[] = "Error en los campos de los acreedores del gravamen en la linea " . ($row->getIndex());
 
                 }else{
 
                     if(!isset($campos[1]))
-                        $errores[] = "Error en los campos de los acreedores del gravamen en la línea " . ($row->getIndex() + 2);
+                        $errores[] = "Error en los campos de los acreedores del gravamen en la linea " . ($row->getIndex());
 
                 }
 
@@ -178,17 +175,17 @@ class FolioRealImport implements OnEachRow, WithHeadingRow, WithValidation, With
                 $campos = explode(':', $actor);
 
                 if(!in_array($campos[0], ['FISICA', 'MORAL']))
-                    $errores[] = "Error en el campo tipo de persona de los actores del gravamen en la línea " . ($row->getIndex() + 2);
+                    $errores[] = "Error en el campo tipo de persona de los actores del gravamen en la linea " . ($row->getIndex());
 
                 if(in_array($campos[0], ['FISICA', 'FÍSICA'])){
 
                     if(!isset($campos[1]) || !isset($campos[2]) || !isset($campos[3]))
-                        $errores[] = "Error en los campos de los actores del gravamen en la línea " . ($row->getIndex() + 2);
+                        $errores[] = "Error en los campos de los actores del gravamen en la linea " . ($row->getIndex());
 
                 }else{
 
                     if(!isset($campos[1]))
-                        $errores[] = "Error en los campos de los actores del gravamen en la línea " . ($row->getIndex() + 2);
+                        $errores[] = "Error en los campos de los actores del gravamen en la linea " . ($row->getIndex());
 
                 }
 
@@ -196,17 +193,15 @@ class FolioRealImport implements OnEachRow, WithHeadingRow, WithValidation, With
 
         }
 
+        if (!empty($errores)) {
+            $this->hasErrors = true;
+        }
+
         return $errores;
 
     }
 
     public function onRow(Row $row){
-
-        /* if($this->movimientoRegistral->inscripcionPropiedad->numero_inmuebles != count($rows)){
-
-            throw new GeneralException("El número de propiedades del trámite (" . $this->movimientoRegistral->inscripcionPropiedad->numero_inmuebles . ") no corresponde con el numero de regsitros en el archivo");
-
-        } */
 
         $data = $row->toArray();
 
@@ -217,9 +212,7 @@ class FolioRealImport implements OnEachRow, WithHeadingRow, WithValidation, With
             'row_number' => $row->getIndex(),
             'data'       => json_encode($data),
             'errores'    => $errores ? json_encode($errores) : null,
-            'status'     => $errores ? 'error' : 'pending',
-            'created_at' => now(),
-            'updated_at' => now(),
+            'status'     => $errores ? 'error' : 'pending'
         ]);
 
     }
@@ -257,6 +250,11 @@ class FolioRealImport implements OnEachRow, WithHeadingRow, WithValidation, With
     public function getBatchId(): string
     {
         return $this->batchId;
+    }
+
+    public function hasErrors(): bool
+    {
+        return $this->hasErrors;
     }
 
 }

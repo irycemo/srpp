@@ -19,6 +19,7 @@ return new class extends Migration
             $table->json('errores')->nullable();
             $table->enum('status', ['pending', 'error', 'processed'])->default('pending');
             $table->boolean('is_valid')->default(true);
+            $table->string('folio_real')->nullabe();
             $table->timestamps();
             $table->index('batch_id');
         });

@@ -108,7 +108,26 @@
 
     @endif
 
-    @if ($data != null)
+    @if(count($errores) > 0)
+
+        <div class="mb-5 bg-white rounded-lg p-2 shadow-lg flex gap-2 flex-wrap ">
+
+            <ul class="flex gap-2 felx flex-wrap list-disc ml-5">
+                @foreach ($errores as $error)
+
+                    <li class="text-red-500 text-xs md:text-sm ml-5">
+                        {{ $error }}
+                    </li>
+
+                @endforeach
+
+            </ul>
+
+        </div>
+
+    @endif
+
+    {{-- @if ($data != null)
 
         <div class="mb-6">
 
@@ -271,7 +290,7 @@
 
         </div>
 
-    @endif
+    @endif --}}
 
     <x-dialog-modal wire:model="modalDocumento" maxWidth="sm">
 
