@@ -642,7 +642,9 @@ trait FirmaElectronicaTrait{
     public function subdivision(Propiedad $subdivision):object
     {
 
-        $folios_generados = FolioReal::where('antecedente', $subdivision->movimientoRegistral->folio_real)->pluck('folio');
+        $folio_real_ids = MovimientoRegistral::where('movimiento_padre', $subdivision->movimiento_registral_id)->pluck('folio_real');
+
+        $folios_generados = FolioReal::whereIn('id', $folio_real_ids)->pluck('folio');
 
         $object = (object)[];
 

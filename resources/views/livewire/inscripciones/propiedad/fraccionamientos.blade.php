@@ -106,6 +106,30 @@
 
         </div>
 
+        @if($procesando)
+
+            <div wire:poll.1500ms="estadisticas" class="w-full max-w-xl mx-auto bg-white rounded-lg p-2 mb-5">
+
+                <div class="mb-2 flex justify-between text-sm">
+                    <span>Progreso</span>
+                    <span>{{ $progress }}%</span>
+                </div>
+
+                <div class="w-full bg-gray-200 rounded-full h-4">
+                    <div
+                        class="h-4 rounded-full transition-all duration-500 bg-green-500"
+                        style="width: {{ $progress }}%">
+                    </div>
+                </div>
+
+                <div class="mt-3 text-sm text-gray-600">
+                    Procesados: {{ $processed }} / {{ $total }}
+                </div>
+
+            </div>
+
+        @endif
+
     @endif
 
     @if(count($errores) > 0)
@@ -113,6 +137,7 @@
         <div class="mb-5 bg-white rounded-lg p-2 shadow-lg flex gap-2 flex-wrap ">
 
             <ul class="flex gap-2 felx flex-wrap list-disc ml-5">
+
                 @foreach ($errores as $error)
 
                     <li class="text-red-500 text-xs md:text-sm ml-5">
@@ -127,7 +152,7 @@
 
     @endif
 
-    {{-- @if ($data != null)
+    @if ($folios_generados)
 
         <div class="mb-6">
 
@@ -135,91 +160,24 @@
 
         </div>
 
-        <div class="relative overflow-x-auto rounded-lg shadow-xl border-t-2 border-t-gray-500">
+        <div class="mb-5 bg-white rounded-lg p-2 shadow-lg flex gap-2 flex-wrap">
 
-            <x-table>
+            @foreach ($folios_generados as $folio)
 
-                <x-slot name="head">
+                {{ $folio }},
 
-                    <x-table.heading>Folio real</x-table.heading>
-                    <x-table.heading>Estado</x-table.heading>
-                    <x-table.heading>Folio Antecedente</x-table.heading>
+            @endforeach
 
-                </x-slot>
+            <button
+                class="bg-blue-400 hover:shadow-lg w-fit justify-center text-white text-xs md:text-sm px-3 py-1 items-center rounded-full mr-2 hover:bg-blue-700 flex focus:outline-none"
+                wire:click="reimprimir"
+                wire:loading.attr="disabled"
+                wire:target="reimprimir">
 
-                <x-slot name="body">
+                <img wire:loading wire:target="reimprimir" class="h-4 mr-1" src="{{ asset('storage/img/loading3.svg') }}" alt="Loading">
 
-                    @forelse ($data as $folio)
-
-                        <x-table.row wire:loading.class.delaylongest="opacity-50" wire:key="row-{{ $folio->id }}">
-
-                            <x-table.cell>
-
-                                <span class="lg:hidden absolute top-0 left-0 bg-blue-300 px-2 py-1 text-xs text-white font-bold uppercase rounded-br-xl">Folio real</span>
-
-                                <span class="whitespace-nowrap">{{ $folio->folio }}</span>
-
-                            </x-table.cell>
-
-                            <x-table.cell>
-
-                                <span class="lg:hidden absolute top-0 left-0 bg-blue-300 px-2 py-1 text-xs text-white font-bold uppercase rounded-br-xl">Estado</span>
-
-                                <span class="bg-{{ $folio->estado_color }} py-1 px-2 rounded-full text-white text-xs">{{ ucfirst($folio->estado) }}</span>
-
-                            </x-table.cell>
-
-                            <x-table.cell>
-
-                                <span class="lg:hidden absolute top-0 left-0 bg-blue-300 px-2 py-1 text-xs text-white font-bold uppercase rounded-br-xl">Folio Antecedente</span>
-
-                                {{ $folio->folioRealAntecedente->folio }}
-
-                            </x-table.cell>
-
-                        </x-table.row>
-
-                    @empty
-
-                        <x-table.row>
-
-                            <x-table.cell colspan="12">
-
-                                <div class="bg-white text-gray-500 text-center p-5 rounded-full text-lg">
-
-                                    No hay resultados.
-
-                                </div>
-
-                            </x-table.cell>
-
-                        </x-table.row>
-
-                    @endforelse
-
-                </x-slot>
-
-                <x-slot name="tfoot">
-
-                    <x-table.row>
-
-                        <x-table.cell colspan="12" class="bg-gray-50">
-
-
-
-                        </x-table.cell>
-
-                    </x-table.row>
-
-                </x-slot>
-
-            </x-table>
-
-            <div class="h-full w-full rounded-lg bg-gray-200 bg-opacity-75 absolute top-0 left-0" wire:loading.delay.longer>
-
-                <img class="mx-auto h-16" src="{{ asset('storage/img/loading.svg') }}" alt="">
-
-            </div>
+                Imprimir caratula
+            </button>
 
         </div>
 
@@ -290,7 +248,7 @@
 
         </div>
 
-    @endif --}}
+    @endif
 
     <x-dialog-modal wire:model="modalDocumento" maxWidth="sm">
 

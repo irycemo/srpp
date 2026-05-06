@@ -244,7 +244,7 @@ class FolioRealImport implements OnEachRow, WithHeadingRow, WithValidation, With
 
     public function chunkSize(): int
     {
-        return 500;
+        return 50;
     }
 
     public function getBatchId(): string

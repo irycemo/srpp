@@ -86,7 +86,7 @@ class FraccionamientoJob implements ShouldQueue
 
                 Import::find($this->import_id)->update([
                     'status' => 'processed',
-                    'folio_real' => $folioReal->id . '/ Folio real: ' . $folioReal->folio
+                    'folio_real' => $folioReal->id . '| Folio real: ' . $folioReal->folio
                 ]);
 
             });
@@ -411,7 +411,7 @@ class FraccionamientoJob implements ShouldQueue
             'autoridad_numero' => $this->movimiento_registral->autoridad_numero,
             'fecha_emision' => $this->movimiento_registral->fecha_emision,
             'fecha_inscripcion' => $this->movimiento_registral->fecha_inscripcion,
-            'procedencia' => $this->movimiento_registral->tipo_documento,
+            'procedencia' => $this->movimiento_registral->procedencia,
             'creado_por' => auth()->id(),
         ]);
 
@@ -434,14 +434,12 @@ class FraccionamientoJob implements ShouldQueue
         $movimientoRegistralPropiedad->pase_a_folio = 1;
         $movimientoRegistralPropiedad->estado = 'nuevo';
         $movimientoRegistralPropiedad->folio_real = $folioRealNuevo->id;
-        $movimientoRegistralPropiedad->creado_por = auth()->id();
         $movimientoRegistralPropiedad->save();
 
         Propiedad::create([
             'movimiento_registral_id' => $movimientoRegistralPropiedad->id,
             'servicio' => $this->movimiento_registral->inscripcionPropiedad->servicio,
             'descripcion_acto' => 'Movimiento registral que da origen al Folio Real',
-            'creado_por' => auth()->id(),
         ]);
 
         return $folioRealNuevo;
@@ -456,7 +454,6 @@ class FraccionamientoJob implements ShouldQueue
         $movimientoRegistralGravamen->folio_real = $folioRealId;
         $movimientoRegistralGravamen->folio = 2;
         $movimientoRegistralGravamen->estado = 'pase_folio';
-        $movimientoRegistralGravamen->creado_por = auth()->id();
         $movimientoRegistralGravamen->save();
 
         $gravamen = Gravamen::create(['movimiento_registral_id' => $movimientoRegistralGravamen->id,] + $gravamen);

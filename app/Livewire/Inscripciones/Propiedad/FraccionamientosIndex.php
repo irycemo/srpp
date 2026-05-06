@@ -126,6 +126,16 @@ class FraccionamientosIndex extends Component
                                                     ->whereHas('inscripcionPropiedad', function($q){
                                                         $q->whereIn('servicio', ['D121', 'D120', 'D123', 'D122', 'D119', 'D124', 'D125', 'D126']);
                                                     })
+                                                    ->when($this->filters['año'], fn($q, $año) => $q->where('año', $año))
+                                                    ->when($this->filters['tramite'], fn($q, $tramite) => $q->where('tramite', $tramite))
+                                                    ->when($this->filters['usuario'], fn($q, $usuario) => $q->where('usuario', $usuario))
+                                                    ->when($this->filters['folio_real'], function($q){
+                                                        $q->whereHas('folioreal', function ($q){
+                                                            $q->where('folio', $this->filters['folio_real']);
+                                                        });
+                                                    })
+                                                    ->when($this->filters['folio'], fn($q, $folio) => $q->where('folio', $folio))
+                                                    ->when($this->filters['estado'], fn($q, $estado) => $q->where('estado', $estado))
                                                     ->orderBy($this->sort, $this->direction)
                                                     ->paginate($this->pagination);
 
@@ -142,7 +152,7 @@ class FraccionamientosIndex extends Component
                                                     ->when($this->filters['año'], fn($q, $año) => $q->where('año', $año))
                                                     ->when($this->filters['tramite'], fn($q, $tramite) => $q->where('tramite', $tramite))
                                                     ->when($this->filters['usuario'], fn($q, $usuario) => $q->where('usuario', $usuario))
-                                                    ->when($this->filters['folio_real'], function($q){
+                                                    ->when($this->filters['folio_real'] && $this->filters['folio_real'] != '', function($q){
                                                         $q->whereHas('folioreal', function ($q){
                                                             $q->where('folio', $this->filters['folio_real']);
                                                         });

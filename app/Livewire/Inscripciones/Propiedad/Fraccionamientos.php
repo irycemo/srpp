@@ -11,6 +11,7 @@ use App\Jobs\Fraccionamientos\DispatchFraccionamientoChain;
 use App\Models\Import;
 use App\Models\Propiedad;
 use App\Traits\Inscripciones\GuardarDocumentoEntradaTrait;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Str;
 use Livewire\Component;
@@ -29,6 +30,14 @@ class Fraccionamientos extends Component
     public $vientos;
     public $documento;
     public $errores = [];
+
+    public $batchId;
+    public $procesando = false;
+    public $total;
+    public $processed;
+    public $progress;
+    public $folios_generados;
+    public $job_errors;
 
     protected function rules(){
         return [
@@ -57,31 +66,27 @@ class Fraccionamientos extends Component
 
         }
 
-        $batchId = (string) Str::uuid();
+        $this->batchId = (string) Str::uuid();
 
-        $import = new FolioRealImport($batchId);
+        $import = new FolioRealImport($this->batchId);
 
         try {
 
             Excel::import($import, $this->documento);
 
-            $imports = Import::where('batch_id', $batchId)->get();
+            $imports = Import::where('batch_id', $this->batchId)->get();
 
             if($this->movimientoRegistral->inscripcionPropiedad->numero_inmuebles != $imports->count()){
 
-                $this->eliminarImportRecords($batchId);
+                $this->eliminarImportRecords($this->batchId);
 
                 throw new GeneralException("El número de propiedades del trámite (" . $this->movimientoRegistral->inscripcionPropiedad->numero_inmuebles . ") no corresponde con el numero de regsitros en el archivo");
 
             }
 
-            $errores = $imports->whereNotNull('errors')->get();
+            $errores = $imports->whereNotNull('errors');
 
-            if(! $errores->count()){
-
-                DispatchFraccionamientoChain::dispatch($batchId, $this->movimientoRegistral->id);
-
-            }else{
+            if($errores->count()){
 
                 foreach($errores as $error){
 
@@ -96,9 +101,17 @@ class Fraccionamientos extends Component
 
                 }
 
-                $this->eliminarImportRecords($batchId);
+                $this->eliminarImportRecords($this->batchId);
+
+                return;
 
             }
+
+            DispatchFraccionamientoChain::dispatch($this->batchId, $this->movimientoRegistral->id);
+
+            $this->procesando = true;
+
+            $this->estadisticas();
 
         } catch (\Maatwebsite\Excel\Validators\ValidationException $e) {
 
@@ -116,7 +129,7 @@ class Fraccionamientos extends Component
 
             }
 
-            $this->eliminarImportRecords($batchId);
+            $this->eliminarImportRecords($this->batchId);
 
         } catch (GeneralException $ex) {
 
@@ -131,6 +144,43 @@ class Fraccionamientos extends Component
 
     }
 
+    public function estadisticas(){
+
+        if($this->procesando){
+
+            $query = DB::table('imports')
+                ->where('batch_id', $this->batchId);
+
+            $this->total = (clone $query)->count();
+
+            $this->processed = (clone $query)
+                ->where('status', 'processed')
+                ->count();
+
+            $this->job_errors = (clone $query)
+                ->where('status', 'error')
+                ->count();
+
+            $this->progress = $this->total > 0
+                ? intval(($this->processed / $this->total) * 100)
+                : 0;
+
+            if($this->processed === $this->total){
+
+                $this->procesando = false;
+
+                $this->folios_generados = Import::where('batch_id', $this->batchId)->pluck('folio_real');
+
+                Import::where('batch_id', $this->batchId)->delete();
+
+                $this->finalizarMovimientoRegistral();
+
+            }
+
+        }
+
+    }
+
     public function finalizarMovimientoRegistral(){
 
         $this->dispatch('mostrarMensaje', ['success', "Los folios reales se generaron con éxito"]);
@@ -140,9 +190,18 @@ class Fraccionamientos extends Component
         $this->propiedad->acto_contenido = 'FRACCIONAMIENTO';
         $this->propiedad->save();
 
+        $this->movimientoRegistral->update(['estado' => 'concluido']);
+
+        $this->movimientoRegistral->FolioReal->update(['estado' => 'inactivo']);
+
         (new SubdivisionesController())->caratula($this->propiedad);
 
         (new FolioRealService())->revisarCertificadosGravamenPendientes($this->propiedad->movimientoRegistral);
+
+
+    }
+
+    public function reimprimir(){
 
         $pdf = (new SubdivisionesController())->reimprimir($this->propiedad->movimientoRegistral->firmaElectronica);
 
@@ -155,7 +214,7 @@ class Fraccionamientos extends Component
 
     public function eliminarImportRecords($batchId){
 
-        Import::where('batch_id', $batchId)->delete();
+        Import::where('batch_id', $this->batchId)->delete();
 
     }
 
