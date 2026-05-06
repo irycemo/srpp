@@ -24,9 +24,7 @@ class FraccionamientoJob implements ShouldQueue
 {
     use Dispatchable, InteractsWithQueue, Queueable, SerializesModels;
 
-    /**
-     * Create a new job instance.
-     */
+    public $tries = 5;
 
     public MovimientoRegistral $movimiento_registral;
 
