@@ -82,8 +82,6 @@ class PrimerAvisoPreventivo extends Component
 
         } catch (GeneralException $ex) {
 
-            Log::error("Error al finalizar inscripcion de varios por el usuario: (id: " . auth()->user()->id . ") " . auth()->user()->name . ". " . $ex);
-
             $this->dispatch('mostrarMensaje', ['error', $ex->getMessage()]);
 
         } catch (\Throwable $th) {
@@ -176,7 +174,7 @@ class PrimerAvisoPreventivo extends Component
 
             if(!$supervisor_uruapan){
 
-                throw new GeneralException("No hay supervisor en Uruapan");
+                throw new GeneralException("No hay supervisor en Uruapan.");
 
             }else{
 
@@ -190,7 +188,7 @@ class PrimerAvisoPreventivo extends Component
                             ->where('status', 'activo')
                             ->where('ubicacion', '!=', 'Regional 4')
                             ->whereHas('roles', function($q){
-                                $q->where('name', 'Supervisor certificaciones');
+                                $q->where('name', 'Supervisor certificaciones.');
                             })
                             ->first();
 

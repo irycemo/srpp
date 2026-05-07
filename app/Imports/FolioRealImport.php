@@ -97,17 +97,35 @@ class FolioRealImport implements OnEachRow, WithHeadingRow, WithValidation, With
 
             $campos = explode(':', $colindancia);
 
-            if(! in_array(trim($campos[0]), Constantes::VIENTOS))
+            if(!isset($campos[0])){
+
                 $errores[] = "Error en el campo viento de las colindancias en la linea " . ($row->getIndex());
 
-            if(!isset($campos[1]) || !isset($campos[2]))
+            }elseif(! in_array(trim($campos[0]), Constantes::VIENTOS)){
+
+                $errores[] = "Error en el campo viento de las colindancias en la linea " . ($row->getIndex());
+
+            }
+
+            if(!isset($campos[1])){
+
                 $errores[] = "Error en los campos de las colindancias en la linea " . ($row->getIndex());
 
-            if(isset($campos[3]))
+            }elseif($campos[1] == ''){
+
                 $errores[] = "Error en los campos de las colindancias en la lineas " . ($row->getIndex());
 
-            if($campos[1] == '' || $campos[2] == '')
+            }
+
+            if(!isset($campos[2])){
+
+                $errores[] = "Error en los campos de las colindancias en la linea " . ($row->getIndex());
+
+            }elseif($campos[2] == ''){
+
                 $errores[] = "Error en los campos de las colindancias en la lineas " . ($row->getIndex());
+
+            }
 
         }
 
@@ -120,18 +138,29 @@ class FolioRealImport implements OnEachRow, WithHeadingRow, WithValidation, With
 
             $campos = explode(':', $propietario);
 
-            if(!in_array($campos[0], ['FISICA', 'MORAL']))
+            if(!isset($campos[0])){
+
                 $errores[] = "Error en el campo tipo de persona de los propietarios en la linea " . ($row->getIndex());
 
-            if(in_array($campos[0], ['FISICA', 'FÍSICA'])){
+            }elseif(!in_array($campos[0], ['FISICA', 'MORAL'])){
 
-                if(!isset($campos[1]) || !isset($campos[2]) || !isset($campos[3]))
+                $errores[] = "Error en el campo tipo de persona de los propietarios en la linea " . ($row->getIndex());
+
+            }elseif(in_array($campos[0], ['FISICA', 'FÍSICA'])){
+
+                if(!isset($campos[1]) || !isset($campos[2]) || !isset($campos[3])){
+
                     $errores[] = "Error en los campos de los propietarios en la linea " . ($row->getIndex());
 
-            }else{
+                }
 
-                if(!isset($campos[1]))
+            }elseif($campos[0] == 'MORAL'){
+
+                if(!isset($campos[1])){
+
                     $errores[] = "Error en los campos de los propietarios en la linea " . ($row->getIndex());
+
+                }
 
             }
 
@@ -148,18 +177,29 @@ class FolioRealImport implements OnEachRow, WithHeadingRow, WithValidation, With
 
                 $campos = explode(':', $acreedor);
 
-                if(!in_array($campos[0], ['FISICA', 'MORAL']))
-                    $errores[] = "Error en el campo tipo de persona de los acreedores del gravamen en la linea " . ($row->getIndex());
+                if(!isset($campos[0])){
 
-                if(in_array($campos[0], ['FISICA', 'FÍSICA'])){
+                    $errores[] = "Error en el campo tipo de persona de los propietarios en la linea " . ($row->getIndex());
 
-                    if(!isset($campos[1]) || !isset($campos[2]) || !isset($campos[3]))
-                        $errores[] = "Error en los campos de los acreedores del gravamen en la linea " . ($row->getIndex());
+                }elseif(!in_array($campos[0], ['FISICA', 'MORAL'])){
 
-                }else{
+                    $errores[] = "Error en el campo tipo de persona de los propietarios en la linea " . ($row->getIndex());
 
-                    if(!isset($campos[1]))
-                        $errores[] = "Error en los campos de los acreedores del gravamen en la linea " . ($row->getIndex());
+                }elseif(in_array($campos[0], ['FISICA', 'FÍSICA'])){
+
+                    if(!isset($campos[1]) || !isset($campos[2]) || !isset($campos[3])){
+
+                        $errores[] = "Error en los campos de los propietarios en la linea " . ($row->getIndex());
+
+                    }
+
+                }elseif($campos[0] == 'MORAL'){
+
+                    if(!isset($campos[1])){
+
+                        $errores[] = "Error en los campos de los propietarios en la linea " . ($row->getIndex());
+
+                    }
 
                 }
 
@@ -174,18 +214,29 @@ class FolioRealImport implements OnEachRow, WithHeadingRow, WithValidation, With
 
                 $campos = explode(':', $actor);
 
-                if(!in_array($campos[0], ['FISICA', 'MORAL']))
-                    $errores[] = "Error en el campo tipo de persona de los actores del gravamen en la linea " . ($row->getIndex());
+                if(!isset($campos[0])){
 
-                if(in_array($campos[0], ['FISICA', 'FÍSICA'])){
+                    $errores[] = "Error en el campo tipo de persona de los propietarios en la linea " . ($row->getIndex());
 
-                    if(!isset($campos[1]) || !isset($campos[2]) || !isset($campos[3]))
-                        $errores[] = "Error en los campos de los actores del gravamen en la linea " . ($row->getIndex());
+                }elseif(!in_array($campos[0], ['FISICA', 'MORAL'])){
 
-                }else{
+                    $errores[] = "Error en el campo tipo de persona de los propietarios en la linea " . ($row->getIndex());
 
-                    if(!isset($campos[1]))
-                        $errores[] = "Error en los campos de los actores del gravamen en la linea " . ($row->getIndex());
+                }elseif(in_array($campos[0], ['FISICA', 'FÍSICA'])){
+
+                    if(!isset($campos[1]) || !isset($campos[2]) || !isset($campos[3])){
+
+                        $errores[] = "Error en los campos de los propietarios en la linea " . ($row->getIndex());
+
+                    }
+
+                }elseif($campos[0] == 'MORAL'){
+
+                    if(!isset($campos[1])){
+
+                        $errores[] = "Error en los campos de los propietarios en la linea " . ($row->getIndex());
+
+                    }
 
                 }
 
