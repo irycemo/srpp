@@ -355,7 +355,8 @@ class Constantes{
         'AUTORIZACIÓN y PROTOCOLIZACIÓN DE FRACCIONAMIENTO',
         'SERVIDUMBRE DE PASO',
         'EXPROPIACIÓN',
-        'CONVENIO'
+        'CONVENIO',
+        'FUSION DE PREDIOS'
     ];
 
     const ACTOS_INSCRIPCION_SENTENCIAS = [
