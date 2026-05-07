@@ -166,23 +166,43 @@ class PrimerAvisoPreventivo extends Component
 
         if($this->vario->movimientoRegistral->getRawOriginal('distrito') == 2){
 
-            return User::with('ultimoMovimientoRegistralAsignado')
+            $supervisor_uruapan = User::with('ultimoMovimientoRegistralAsignado')
                             ->where('status', 'activo')
                             ->where('ubicacion', 'Regional 4')
                             ->whereHas('roles', function($q){
                                 $q->where('name', 'Supervisor uruapan');
                             })
-                            ->first()->id;
+                            ->first();
+
+            if(!$supervisor_uruapan){
+
+                throw new GeneralException("No hay supervisor en Uruapan");
+
+            }else{
+
+                return $supervisor_uruapan->id;
+
+            }
 
         }else{
 
-            return User::with('ultimoMovimientoRegistralAsignado')
+            $supervisor_certificaciones =  User::with('ultimoMovimientoRegistralAsignado')
                             ->where('status', 'activo')
                             ->where('ubicacion', '!=', 'Regional 4')
                             ->whereHas('roles', function($q){
                                 $q->where('name', 'Supervisor certificaciones');
                             })
-                            ->first()->id;
+                            ->first();
+
+            if(!$supervisor_certificaciones){
+
+                throw new GeneralException("No hay supervisor de certificaciones");
+
+            }else{
+
+                return $supervisor_certificaciones->id;
+
+            }
 
         }
 
