@@ -2,6 +2,7 @@
 
 namespace App\Livewire\Varios;
 
+use App\Exceptions\GeneralException;
 use App\Http\Controllers\Varios\VariosController;
 use App\Http\Services\AsignacionService;
 use App\Http\Services\FolioRealService;
@@ -79,7 +80,9 @@ class PrimerAvisoPreventivo extends Component
 
             return redirect()->route('varios');
 
-        } catch (Exception $ex) {
+        } catch (GeneralException $ex) {
+
+            Log::error("Error al finalizar inscripcion de varios por el usuario: (id: " . auth()->user()->id . ") " . auth()->user()->name . ". " . $ex);
 
             $this->dispatch('mostrarMensaje', ['error', $ex->getMessage()]);
 
@@ -215,4 +218,5 @@ class PrimerAvisoPreventivo extends Component
     {
         return view('livewire.varios.primer-aviso-preventivo');
     }
+
 }
