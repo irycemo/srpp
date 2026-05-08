@@ -13,12 +13,14 @@ use App\Http\Controllers\Reformas\ReformaController;
 use App\Traits\Inscripciones\ConsultarArchivoTrait;
 use App\Traits\Inscripciones\DocumentoEntradaTrait;
 use App\Traits\Inscripciones\GuardarDocumentoEntradaTrait;
+use Spatie\LivewireFilepond\WithFilePond;
 
 class Reformas extends Component
 {
     use DocumentoEntradaTrait;
     use ConsultarArchivoTrait;
     use GuardarDocumentoEntradaTrait;
+    use WithFilePond;
 
     public ReformaMoral $reformaMoral;
 
@@ -35,6 +37,7 @@ class Reformas extends Component
 
     public $modalContraseña = false;
     public $contraseña;
+    public $movimientoRegistral;
 
     protected $listeners = ['refresh' => 'refreshActores'];
 
@@ -115,6 +118,8 @@ class Reformas extends Component
     }
 
     public function finalizar(){
+
+        $this->validate();
 
         if(!$this->reformaMoral->movimientoRegistral->documentoEntrada()){
 
@@ -216,6 +221,8 @@ class Reformas extends Component
     }
 
     public function mount(){
+
+        $this->movimientoRegistral = $this->reformaMoral->movimientoRegistral;
 
         $this->consultarArchivo($this->reformaMoral->movimientoRegistral);
 
