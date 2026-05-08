@@ -33,6 +33,8 @@ class GravamenController extends Controller
 
         if(!$movimientoRegistral){
 
+            info("Movmiento");
+
             return response()->json([
                 'error' => "El gravamen no existe.",
             ], 404);
@@ -41,6 +43,8 @@ class GravamenController extends Controller
 
         if(!$movimientoRegistral->gravamen){
 
+
+            info("gravamen");
             return response()->json([
                 'error' => "El gravamen no existe.",
             ], 404);
