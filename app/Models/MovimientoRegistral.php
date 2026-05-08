@@ -25,7 +25,6 @@ class MovimientoRegistral extends Model implements Auditable
 {
 
     use HasFactory;
-    use HasFactory;
     use ModelosTrait;
     use \OwenIt\Auditing\Auditable;
 
