@@ -31,7 +31,7 @@ class GravamenController extends Controller
                                                         })
                                                         ->first();
 
-                                                        dd($movimientoRegistral);
+                                                        info($movimientoRegistral);
 
         if(!$movimientoRegistral){
 
