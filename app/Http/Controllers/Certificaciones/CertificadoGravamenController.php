@@ -101,11 +101,11 @@ class CertificadoGravamenController extends Controller
 
         $variosCollection = collect();
 
-        if($movimientoRegistral->FolioReal->varios){
+        if($movimientoRegistral->folioReal->varios){
 
-            $movimientoRegistral->FolioReal->load('varios.movimientoRegistral');
+            $movimientoRegistral->folioReal->load('varios.movimientoRegistral');
 
-            foreach($movimientoRegistral->FolioReal->varios as $vario){
+            foreach($movimientoRegistral->folioReal->varios as $vario){
 
                 if($vario->estado === 'activo'){
 
@@ -121,11 +121,11 @@ class CertificadoGravamenController extends Controller
 
         $sentenciasCollection = collect();
 
-        if($movimientoRegistral->FolioReal->sentencias){
+        if($movimientoRegistral->folioReal->sentencias){
 
-            $movimientoRegistral->FolioReal->load('sentencias.movimientoRegistral');
+            $movimientoRegistral->folioReal->load('sentencias.movimientoRegistral');
 
-            foreach($movimientoRegistral->FolioReal->sentencias as $sentencia){
+            foreach($movimientoRegistral->folioReal->sentencias as $sentencia){
 
                 if($sentencia->estado != 'activo' || $sentencia->acto_contenido == 'CANCELACIÓN DE SENTENCIA') continue;
 

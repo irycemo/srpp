@@ -153,26 +153,31 @@ class FolioRealService{
 
     public function revisarCertificadosGravamenPendientes(MovimientoRegistral $movimiento){
 
-        $movimiento_certificado_gravamen_pendiente = $movimiento->folioReal->movimientosRegistrales()
-                                                                    ->where('estado', 'pendiente')
-                                                                    ->whereHas('certificacion', function($q){
-                                                                        $q->where('servicio', 'DL07');
-                                                                    })
-                                                                    ->when($movimiento->folio === 1, function ($q){
-                                                                        $q->where('folio', 1);
-                                                                    })
-                                                                    ->when($movimiento->folio !== 1, function ($q) use($movimiento){
-                                                                        $q->where('folio', $movimiento->folio + 1);
-                                                                    })
-                                                                    ->first();
+        $movimientos = $movimiento->folioReal->movimientosRegistrales()->where('folio', '>=', $movimiento->folio)->get();
 
-        if($movimiento_certificado_gravamen_pendiente){
+        foreach ($movimientos as $movimiento_registral) {
 
-            Cache::forget('estadisticas_tramites_en_linea_' . $movimiento_certificado_gravamen_pendiente->usuario_tramites_linea_id);
+            if($movimiento_registral->estado != 'pendiente' && !in_array($movimiento_registral->estado, ['finalizado', 'concluido', 'elaborado', 'pase_folio'])){
 
-            (new CertificadoGravamenController())->certificadoGravamen($movimiento_certificado_gravamen_pendiente);
+                return;
 
-            $movimiento_certificado_gravamen_pendiente->update(['estado' => 'concluido']);
+            }
+
+            $movimiento_registral->load('certificacion');
+
+            if($movimiento_registral->estado == 'pendiente' && $movimiento_registral->certificacion?->servicio === 'DL07'){
+
+                Cache::forget('estadisticas_tramites_en_linea_' . $movimiento_registral->usuario_tramites_linea_id);
+
+                $movimiento_registral->load('folioReal');
+
+                (new CertificadoGravamenController())->certificadoGravamen($movimiento_registral);
+
+                $movimiento_registral->update(['estado' => 'concluido']);
+
+                return;
+
+            }
 
         }
 
