@@ -188,7 +188,7 @@ class PrimerAvisoPreventivo extends Component
                             ->where('status', 'activo')
                             ->where('ubicacion', '!=', 'Regional 4')
                             ->whereHas('roles', function($q){
-                                $q->where('name', 'Supervisor certificaciones.');
+                                $q->where('name', 'Supervisor inscripciones');
                             })
                             ->first();
 
