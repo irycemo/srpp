@@ -42,7 +42,7 @@ class FolioRealImport implements OnEachRow, WithHeadingRow, WithValidation, With
             'monto_transaccion' => 'required|numeric',
             'divisa' => ['required', Rule::in(Constantes::DIVISAS)],
             'unidad_area' => ['required', Rule::in(Constantes::UNIDADES)],
-            'colindancias' => 'required',
+            'colindancias' => 'nullable',
             'tipo_vialidad' => ['required', Rule::in(Constantes::TIPO_VIALIDADES)],
             'tipo_asentamiento' => ['required', Rule::in(Constantes::TIPO_ASENTAMIENTO)],
             'nombre_vialidad' => 'nullable',
@@ -89,41 +89,45 @@ class FolioRealImport implements OnEachRow, WithHeadingRow, WithValidation, With
         $errores = [];
 
         /* COLINDANCIAS */
-        $colindancias = $row['colindancias'];
+        if(isset($row['colindancias'])){
 
-        $array_colinadancias = explode('|', $colindancias);
+            $colindancias = $row['colindancias'];
 
-        foreach($array_colinadancias as $colindancia){
+            $array_colinadancias = explode('|', $colindancias);
 
-            $campos = explode(':', $colindancia);
+            foreach($array_colinadancias as $colindancia){
 
-            if(!isset($campos[0])){
+                $campos = explode(':', $colindancia);
 
-                $errores[] = "Error en el campo viento de las colindancias en la linea " . ($row->getIndex());
+                if(!isset($campos[0])){
 
-            }elseif(! in_array(trim($campos[0]), Constantes::VIENTOS)){
+                    $errores[] = "Error en el campo viento de las colindancias en la linea " . ($row->getIndex());
 
-                $errores[] = "Error en el campo viento de las colindancias en la linea " . ($row->getIndex());
+                }elseif(! in_array(trim($campos[0]), Constantes::VIENTOS)){
 
-            }
+                    $errores[] = "Error en el campo viento de las colindancias en la linea " . ($row->getIndex());
 
-            if(!isset($campos[1])){
+                }
 
-                $errores[] = "Error en los campos de las colindancias en la linea " . ($row->getIndex());
+                if(!isset($campos[1])){
 
-            }elseif(empty(trim($campos[1]))){
+                    $errores[] = "Error en los campos de las colindancias en la linea " . ($row->getIndex());
 
-                $errores[] = "Error en los campos de las colindancias en la lineas " . ($row->getIndex());
+                }elseif(empty(trim($campos[1]))){
 
-            }
+                    $errores[] = "Error en los campos de las colindancias en la lineas " . ($row->getIndex());
 
-            if(!isset($campos[2])){
+                }
 
-                $errores[] = "Error en los campos de las colindancias en la linea " . ($row->getIndex());
+                if(!isset($campos[2])){
 
-            }elseif(empty(trim($campos[2]))){
+                    $errores[] = "Error en los campos de las colindancias en la linea " . ($row->getIndex());
 
-                $errores[] = "Error en los campos de las colindancias en la lineas " . ($row->getIndex());
+                }elseif(empty(trim($campos[2]))){
+
+                    $errores[] = "Error en los campos de las colindancias en la lineas " . ($row->getIndex());
+
+                }
 
             }
 
