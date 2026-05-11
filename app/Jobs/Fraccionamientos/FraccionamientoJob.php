@@ -19,12 +19,14 @@ use Illuminate\Foundation\Bus\Dispatchable;
 use Illuminate\Queue\InteractsWithQueue;
 use Illuminate\Queue\SerializesModels;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Log;
 
 class FraccionamientoJob implements ShouldQueue
 {
     use Dispatchable, InteractsWithQueue, Queueable, SerializesModels;
 
-    public $tries = 5;
+    public $tries = 20;
+    public $import;
 
     public MovimientoRegistral $movimiento_registral;
 
@@ -82,7 +84,7 @@ class FraccionamientoJob implements ShouldQueue
 
                 }
 
-                Import::find($this->import_id)->update([
+                $this->import = Import::find($this->import_id)->update([
                     'status' => 'processed',
                     'folio_real' => $folioReal->id . '| Folio real: ' . $folioReal->folio
                 ]);
@@ -91,7 +93,9 @@ class FraccionamientoJob implements ShouldQueue
 
         } catch (\Throwable $th) {
 
-            Import::find($this->import_id)->update([
+            Log::error("Error en job fraccionamiento row number: " . $this->import->row_number . " row: " . json_encode($this->row) . " " . $th);
+
+            $this->import->update([
                 'status' => 'error',
                 'errores' => json_encode([$th->getMessage()]),
             ]);
