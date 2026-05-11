@@ -84,7 +84,7 @@ class Fraccionamientos extends Component
 
             }
 
-            $errores = $imports->whereNotNull('errors');
+            $errores = $imports->where('errores', '!=', null);
 
             if($errores->count()){
 
