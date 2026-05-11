@@ -158,7 +158,12 @@ class FolioRealService{
                                                                     ->whereHas('certificacion', function($q){
                                                                         $q->where('servicio', 'DL07');
                                                                     })
-                                                                    ->where('folio', $movimiento->folio + 1)
+                                                                    ->when($movimiento->folio === 1, function ($q){
+                                                                        $q->where('folio', 1);
+                                                                    })
+                                                                    ->when($movimiento->folio !== 1, function ($q) use($movimiento){
+                                                                        $q->where('folio', $movimiento->folio + 1);
+                                                                    })
                                                                     ->first();
 
         if($movimiento_certificado_gravamen_pendiente){

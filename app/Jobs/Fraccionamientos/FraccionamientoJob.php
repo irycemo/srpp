@@ -35,6 +35,8 @@ class FraccionamientoJob implements ShouldQueue
 
         $this->movimiento_registral = MovimientoRegistral::find($this->movimiento_id);
 
+        $this->import = Import::find($this->import_id);
+
     }
 
     /**
@@ -47,7 +49,15 @@ class FraccionamientoJob implements ShouldQueue
 
             DB::transaction(function () {
 
-                $colindancias = $this->procesarColindacias($this->row['colindancias']);
+                if(isset($row['colindancias'])){
+
+                    $colindancias = $this->procesarColindacias($this->row['colindancias']);
+
+                }else{
+
+                    $colindancias = [];
+
+                }
 
                 $propietarios = $this->procesarPropietarios($this->row['propietarios']);
 
@@ -84,7 +94,7 @@ class FraccionamientoJob implements ShouldQueue
 
                 }
 
-                $this->import = Import::find($this->import_id)->update([
+                $this->import->update([
                     'status' => 'processed',
                     'folio_real' => $folioReal->id . '| Folio real: ' . $folioReal->folio
                 ]);

@@ -2,27 +2,28 @@
 
 namespace App\Livewire\PaseFolio;
 
-use Exception;
-use Livewire\Component;
-use App\Models\FolioReal;
-use App\Models\Propiedad;
-use App\Models\Antecedente;
-use App\Models\Propiedadold;
-use Livewire\WithPagination;
-use Livewire\WithFileUploads;
 use App\Constantes\Constantes;
-use App\Traits\ComponentesTrait;
-use Illuminate\Support\Facades\DB;
-use App\Models\MovimientoRegistral;
-use Illuminate\Support\Facades\Log;
-use App\Http\Services\AsignacionService;
-use App\Http\Services\SistemaTramitesService;
 use App\Http\Controllers\PaseFolio\PaseFolioController;
+use App\Http\Services\AsignacionService;
+use App\Http\Services\FolioRealService;
+use App\Http\Services\SistemaTramitesService;
+use App\Models\Antecedente;
+use App\Models\FolioReal;
+use App\Models\MovimientoRegistral;
+use App\Models\Propiedad;
+use App\Models\Propiedadold;
+use App\Traits\ComponentesTrait;
 use App\Traits\Inscripciones\FinalizarInscripcionTrait;
 use App\Traits\Inscripciones\ReasignarmeMovimientoTrait;
 use App\Traits\Inscripciones\ReasignarUsuarioTrait;
 use App\Traits\Inscripciones\RechazarMovimientoTrait;
 use App\Traits\Inscripciones\RecibirDocumentoTrait;
+use Exception;
+use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Log;
+use Livewire\Component;
+use Livewire\WithFileUploads;
+use Livewire\WithPagination;
 
 class PaseFolio extends Component
 {
@@ -189,6 +190,8 @@ class PaseFolio extends Component
                 $this->revisarFolioCero();
 
                 $this->revisarMovimientosPrecalificacion();
+
+                (new FolioRealService())->revisarCertificadosGravamenPendientes($this->modelo_editar);
 
             });
 
@@ -457,7 +460,7 @@ class PaseFolio extends Component
             $movimientos = MovimientoRegistral::select('id', 'folio', 'folio_real', 'año', 'tramite', 'usuario', 'actualizado_por', 'usuario_asignado', 'usuario_supervisor', 'estado', 'distrito', 'created_at', 'updated_at', 'tomo', 'registro', 'numero_propiedad')
                                                     ->with('actualizadoPor:id,name', 'asignadoA:id,name', 'folioReal:id,folio,estado', 'supervisor:id,name')
                                                     ->where('pase_a_folio', true)
-                                                    ->whereIn('estado', ['nuevo', 'correccion', 'no recibido'])
+                                                    ->whereIn('estado', ['nuevo', 'correccion', 'no recibido', 'pendiente'])
                                                     ->where(function($q){
                                                         $q->whereNull('folio_real')
                                                             ->orWhereHas('folioReal', function($q){
@@ -484,7 +487,7 @@ class PaseFolio extends Component
             $movimientos = MovimientoRegistral::select('id', 'folio', 'folio_real', 'año', 'tramite', 'usuario', 'actualizado_por', 'usuario_asignado', 'usuario_supervisor', 'estado', 'distrito', 'created_at', 'updated_at', 'tomo', 'registro', 'numero_propiedad')
                                                     ->with('actualizadoPor:id,name', 'asignadoA:id,name', 'folioReal:id,folio,estado', 'supervisor:id,name')
                                                     ->where('pase_a_folio', true)
-                                                    ->whereIn('estado', ['nuevo', 'correccion', 'no recibido'])
+                                                    ->whereIn('estado', ['nuevo', 'correccion', 'no recibido', 'pendiente'])
                                                     ->where(function($q){
                                                         $q->select('id', 'folio', 'estado')
                                                             ->whereNull('folio_real')
@@ -518,7 +521,7 @@ class PaseFolio extends Component
             $movimientos = MovimientoRegistral::select('id', 'folio', 'folio_real', 'año', 'tramite', 'usuario', 'actualizado_por', 'usuario_asignado', 'usuario_supervisor', 'estado', 'distrito', 'created_at', 'updated_at', 'tomo', 'registro', 'numero_propiedad')
                                                     ->with('actualizadoPor:id,name', 'asignadoA:id,name', 'folioReal:id,folio,estado', 'supervisor:id,name')
                                                     ->where('pase_a_folio', true)
-                                                    ->whereIn('estado', ['nuevo', 'correccion', 'no recibido'])
+                                                    ->whereIn('estado', ['nuevo', 'correccion', 'no recibido', 'pendiente'])
                                                     ->where(function($q){
                                                         $q->whereNull('folio_real')
                                                             ->orWhereHas('folioReal', function($q){

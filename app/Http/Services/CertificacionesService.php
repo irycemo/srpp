@@ -30,24 +30,32 @@ class CertificacionesService implements MovimientoServiceInterface{
 
             $movimientoRegistral = MovimientoRegistral::find($request['movimiento_registral_id']);
 
-            $movimientoPendiente = $movimientoRegistral->folioReal->movimientosRegistrales()
-                                                                    ->whereIn('estado', ['nuevo', 'no recibido', 'captura', 'correccion'])
-                                                                    ->where('folio', '<', $movimientoRegistral->folio)
-                                                                    ->first();
+            if($movimientoRegistral->folioReal){
 
-            if($movimientoPendiente){
+                $movimientoPendiente = $movimientoRegistral->folioReal->movimientosRegistrales()
+                                                                        ->whereIn('estado', ['nuevo', 'no recibido', 'captura', 'correccion'])
+                                                                        ->where('folio', '<', $movimientoRegistral->folio)
+                                                                        ->first();
+
+                if($movimientoPendiente){
+
+                    $movimientoRegistral->update(['estado' => 'pendiente']);
+
+                    return;
+
+                }
+
+                Cache::forget('estadisticas_tramites_en_linea_' . $movimientoRegistral->usuario_tramites_linea_id);
+
+                (new CertificadoGravamenController())->certificadoGravamen($movimientoRegistral);
+
+                $movimientoRegistral->update(['estado' => 'concluido']);
+
+            }else{
 
                 $movimientoRegistral->update(['estado' => 'pendiente']);
 
-                return;
-
             }
-
-            Cache::forget('estadisticas_tramites_en_linea_' . $movimientoRegistral->usuario_tramites_linea_id);
-
-            (new CertificadoGravamenController())->certificadoGravamen($movimientoRegistral);
-
-            $movimientoRegistral->update(['estado' => 'concluido']);
 
         }
 
