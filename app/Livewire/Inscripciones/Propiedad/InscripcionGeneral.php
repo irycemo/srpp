@@ -756,7 +756,7 @@ class InscripcionGeneral extends Component
 
         if($this->inscripcion->movimientoRegistral->folioReal->avisoPreventivo()){
 
-            $aviso = $this->inscripcion->folioReal->avisoPreventivo();
+            $aviso = $this->inscripcion->movimientoRegistral->folioReal->avisoPreventivo();
 
             if(
                 $aviso->movimientoRegistral->tipo_documento == $this->inscripcion->tipo_documento &&
