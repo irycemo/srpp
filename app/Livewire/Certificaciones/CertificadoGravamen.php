@@ -344,7 +344,7 @@ class CertificadoGravamen extends Component
 
             $movimientoRegistral->certificacion->update(['reimpreso_en' => now()]);
 
-            $pdf = (new CertificadoGravamenController)->reimprimirFirmado($this->modelo_editar->movimientoRegistral->firmaElectronica);
+            $pdf = (new CertificadoGravamenController)->reimprimirFirmado($this->modelo_editar->firmaElectronica);
 
             return response()->streamDownload(
                 fn () => print($pdf->output()),
