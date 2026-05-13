@@ -246,7 +246,7 @@ trait ActoresTrait{
 
     public function seleccionar($id){
 
-        $this->persona = collect($this->personas)->where('id', $id)->first();
+        $this->persona = Persona::find($id);
 
         $this->flag_agregar = true;
 
