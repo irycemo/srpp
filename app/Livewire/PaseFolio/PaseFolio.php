@@ -455,7 +455,7 @@ class PaseFolio extends Component
     public function render()
     {
 
-        if(auth()->user()->hasRole(['Administrador', 'Jefe de departamento inscripciones', 'Jefe de departamento certificaciones', 'Jefe de departamento inscripciones'])){
+        if(auth()->user()->hasRole(['Administrador', 'Jefe de departamento inscripciones', 'Jefe de departamento certificaciones', 'Jefe de departamento inscripciones', 'Operaciones'])){
 
             $movimientos = MovimientoRegistral::select('id', 'folio', 'folio_real', 'año', 'tramite', 'usuario', 'actualizado_por', 'usuario_asignado', 'usuario_supervisor', 'estado', 'distrito', 'created_at', 'updated_at', 'tomo', 'registro', 'numero_propiedad')
                                                     ->with('actualizadoPor:id,name', 'asignadoA:id,name', 'folioReal:id,folio,estado', 'supervisor:id,name')
