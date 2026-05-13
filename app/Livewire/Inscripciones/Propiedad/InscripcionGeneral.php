@@ -759,13 +759,13 @@ class InscripcionGeneral extends Component
             $aviso = $this->inscripcion->movimientoRegistral->folioReal->avisoPreventivo();
 
             if(
-                $aviso->movimientoRegistral->tipo_documento == $this->inscripcion->tipo_documento &&
-                $aviso->movimientoRegistral->numero_documento == $this->inscripcion->numero_documento &&
-                $aviso->movimientoRegistral->autoridad_cargo == $this->inscripcion->autoridad_cargo &&
-                $aviso->movimientoRegistral->autoridad_nombre == $this->inscripcion->autoridad_nombre &&
-                $aviso->movimientoRegistral->autoridad_numero == $this->inscripcion->autoridad_numero &&
-                $aviso->movimientoRegistral->fecha_emision == $this->inscripcion->fecha_emision &&
-                $aviso->movimientoRegistral->procedencia == $this->inscripcion->procedencia
+                $aviso->movimientoRegistral->tipo_documento == $this->inscripcion->movimientoRegistral->tipo_documento &&
+                $aviso->movimientoRegistral->numero_documento == $this->inscripcion->movimientoRegistral->numero_documento &&
+                $aviso->movimientoRegistral->autoridad_cargo == $this->inscripcion->movimientoRegistral->autoridad_cargo &&
+                $aviso->movimientoRegistral->autoridad_nombre == $this->inscripcion->movimientoRegistral->autoridad_nombre &&
+                $aviso->movimientoRegistral->autoridad_numero == $this->inscripcion->movimientoRegistral->autoridad_numero &&
+                $aviso->movimientoRegistral->fecha_emision == $this->inscripcion->movimientoRegistral->fecha_emision &&
+                $aviso->movimientoRegistral->procedencia == $this->inscripcion->movimientoRegistral->procedencia
             ){
 
                 $aviso->update(['estado' => 'inactivo']);
