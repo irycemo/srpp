@@ -353,10 +353,12 @@ class FraccionamientoJob implements ShouldQueue
     {
 
         $escritura = Escritura::create([
-            'fecha_inscripcion' => $this->movimiento_registral->fecha_emision,
+            'fecha_inscripcion' => now()->toDateString(),
             'notaria' => $this->movimiento_registral->autoridad_numero,
             'nombre_notario' => $this->movimiento_registral->autoridad_nombre,
             'numero' => $this->movimiento_registral->numero_documento,
+            'estado_notario' => 'MICHOACAN',
+            'acto_contenido_antecedente' => 'PROTOCOLIZACIÓN Y ELEVACIÓN DE LA AUTORIZACIÓN DE FRACCIONAMIENTO',
             'creado_por' => auth()->id(),
         ]);
 
@@ -450,6 +452,7 @@ class FraccionamientoJob implements ShouldQueue
         $movimientoRegistralPropiedad->save();
 
         Propiedad::create([
+            'acto_contenido' => 'PROTOCOLIZACIÓN Y ELEVACIÓN DE LA AUTORIZACIÓN DE FRACCIONAMIENTO',
             'movimiento_registral_id' => $movimientoRegistralPropiedad->id,
             'servicio' => $this->movimiento_registral->inscripcionPropiedad->servicio,
             'descripcion_acto' => 'Movimiento registral que da origen al Folio Real',
