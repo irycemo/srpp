@@ -422,7 +422,8 @@ class FraccionamientoJob implements ShouldQueue
             'autoridad_nombre' => $this->movimiento_registral->autoridad_nombre,
             'autoridad_numero' => $this->movimiento_registral->autoridad_numero,
             'fecha_emision' => $this->movimiento_registral->fecha_emision,
-            'fecha_inscripcion' => $this->movimiento_registral->fecha_inscripcion,
+            'fecha_inscripcion' => now()->toDateString(),
+            'acto_contenido_antecedente' => 'PROTOCOLIZACIÓN Y ELEVACIÓN DE LA AUTORIZACIÓN DE FRACCIONAMIENTO',
             'procedencia' => $this->movimiento_registral->procedencia,
             'creado_por' => auth()->id(),
         ]);
@@ -452,6 +453,7 @@ class FraccionamientoJob implements ShouldQueue
             'movimiento_registral_id' => $movimientoRegistralPropiedad->id,
             'servicio' => $this->movimiento_registral->inscripcionPropiedad->servicio,
             'descripcion_acto' => 'Movimiento registral que da origen al Folio Real',
+            'estado' => 'michoacan'
         ]);
 
         return $folioRealNuevo;
