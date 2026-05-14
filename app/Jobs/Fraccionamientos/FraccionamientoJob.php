@@ -30,14 +30,8 @@ class FraccionamientoJob implements ShouldQueue
 
     public MovimientoRegistral $movimiento_registral;
 
-    public function __construct(public int $import_id, public array $row, public int $movimiento_id)
-    {
-
-        $this->movimiento_registral = MovimientoRegistral::find($this->movimiento_id);
-
-        $this->import = Import::find($this->import_id);
-
-    }
+    public function __construct(public int $import_id, public array $row, public int $movimiento_id, public int $user_id)
+    {}
 
     /**
      * Execute the job.
@@ -46,6 +40,10 @@ class FraccionamientoJob implements ShouldQueue
     {
 
         try {
+
+            $this->movimiento_registral = MovimientoRegistral::find($this->movimiento_id);
+
+            $this->import = Import::find($this->import_id);
 
             DB::transaction(function () {
 
@@ -262,18 +260,18 @@ class FraccionamientoJob implements ShouldQueue
             'cp_oficina' => $linea['oficina'],
             'cp_tipo_predio' => $linea['tipo'],
             'cp_registro' => $linea['registro'],
-            'superficie_terreno' => $linea['superficie_terreno'],
-            'superficie_construccion' => $linea['superficie_construccion'],
-            'superficie_judicial' => $linea['superficie_judicial'],
-            'superficie_notarial' => $linea['superficie_notarial'],
-            'area_comun_terreno' => $linea['area_comun_terreno'],
-            'area_comun_construccion' => $linea['area_comun_construccion'],
-            'valor_terreno_comun' => $linea['valor_terreno_comun'],
-            'valor_construccion_comun' => $linea['valor_construccion_comun'],
-            'valor_total_terreno' => $linea['valor_total_terreno'],
-            'valor_total_construccion' => $linea['valor_total_construccion'],
-            'valor_catastral' => $linea['valor_catastral'],
-            'monto_transaccion' => $linea['monto_transaccion'],
+            'superficie_terreno' => (float)$linea['superficie_terreno'],
+            'superficie_construccion' => (float)$linea['superficie_construccion'],
+            'superficie_judicial' => (float)$linea['superficie_judicial'],
+            'superficie_notarial' => (float)$linea['superficie_notarial'],
+            'area_comun_terreno' => (float)$linea['area_comun_terreno'],
+            'area_comun_construccion' => (float)$linea['area_comun_construccion'],
+            'valor_terreno_comun' => (float)$linea['valor_terreno_comun'],
+            'valor_construccion_comun' => (float)$linea['valor_construccion_comun'],
+            'valor_total_terreno' => (float)$linea['valor_total_terreno'],
+            'valor_total_construccion' => (float)$linea['valor_total_construccion'],
+            'valor_catastral' => (float)$linea['valor_catastral'],
+            'monto_transaccion' => (float)$linea['monto_transaccion'],
             'divisa' => $linea['divisa'],
             'unidad_area' => $linea['unidad_area'],
             'tipo_vialidad' => $linea['tipo_vialidad'],
@@ -303,7 +301,7 @@ class FraccionamientoJob implements ShouldQueue
             'solar' => $linea['solar'],
             'descripcion' => $linea['descripcion'],
             'zona_ubicacion' => $linea['zona_ubicacion'],
-            'creado_por' => auth()->id(),
+            'creado_por' => $this->user_id,
         ]);
 
     }
@@ -359,7 +357,7 @@ class FraccionamientoJob implements ShouldQueue
             'numero' => $this->movimiento_registral->numero_documento,
             'estado_notario' => 'MICHOACAN',
             'acto_contenido_antecedente' => 'PROTOCOLIZACIÓN Y ELEVACIÓN DE LA AUTORIZACIÓN DE FRACCIONAMIENTO',
-            'creado_por' => auth()->id(),
+            'creado_por' => $this->user_id,
         ]);
 
         $predio->update(['escritura_id' => $escritura->id]);
@@ -427,7 +425,7 @@ class FraccionamientoJob implements ShouldQueue
             'fecha_inscripcion' => now()->toDateString(),
             'acto_contenido_antecedente' => 'PROTOCOLIZACIÓN Y ELEVACIÓN DE LA AUTORIZACIÓN DE FRACCIONAMIENTO',
             'procedencia' => $this->movimiento_registral->procedencia,
-            'creado_por' => auth()->id(),
+            'creado_por' => $this->user_id,
         ]);
 
         $documentoEntrada = File::where('fileable_type', 'App\Models\MovimientoRegistral')
@@ -482,7 +480,7 @@ class FraccionamientoJob implements ShouldQueue
                 'actorable_id' => $gravamen->id,
                 'persona_id' => $this->persona($acreedor),
                 'tipo_actor' => 'acreedor',
-                'creado_por' => auth()->id(),
+                'creado_por' => $this->user_id,
             ]);
 
         }
@@ -495,7 +493,7 @@ class FraccionamientoJob implements ShouldQueue
                 'persona_id' => $this->persona($actor),
                 'tipo_actor' => 'deudor',
                 'tipo_deudor' => 'I-DEUDOR ÚNICO',
-                'creado_por' => auth()->id(),
+                'creado_por' => $this->user_id,
             ]);
 
         }

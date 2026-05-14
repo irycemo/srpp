@@ -18,7 +18,7 @@ class DispatchFraccionamientoChain implements ShouldQueue
     /**
      * Create a new job instance.
      */
-    public function __construct(public string $batchId, public int $movimiento_id)
+    public function __construct(public string $batchId, public int $movimiento_id, public int $user_id)
     {}
 
     /**
@@ -41,7 +41,8 @@ class DispatchFraccionamientoChain implements ShouldQueue
                     $jobs[] = new FraccionamientoJob(
                         $row->id,
                         $data,
-                        $this->movimiento_id
+                        $this->movimiento_id,
+                        $this->user_id
                     );
 
                 }

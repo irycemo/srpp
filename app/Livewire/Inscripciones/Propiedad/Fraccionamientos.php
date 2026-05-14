@@ -107,7 +107,7 @@ class Fraccionamientos extends Component
 
             }
 
-            DispatchFraccionamientoChain::dispatch($this->batchId, $this->movimientoRegistral->id);
+            DispatchFraccionamientoChain::dispatch($this->batchId, $this->movimientoRegistral->id, auth()->id());
 
             $this->procesando = true;
 
