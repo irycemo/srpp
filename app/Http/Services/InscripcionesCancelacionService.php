@@ -16,7 +16,7 @@ class InscripcionesCancelacionService implements MovimientoServiceInterface{
     public function crear(array $request):void
     {
 
-        if($request['servicio_nombre'] == 'Cancelación de reserva de dominio' && !isset($request['asiento_registral'])){
+        if($request['servicio_nombre'] == 'Cancelación de reserva de dominio'){
 
             $movimiento_cancelacion = MovimientoRegistral::find($request['movimiento_registral_id']);
 
@@ -43,27 +43,36 @@ class InscripcionesCancelacionService implements MovimientoServiceInterface{
                 'movimiento_registral_id' => $movimiento_gravamen->id
             ]);
 
-        }
-
-        if(isset($request['asiento_registral'])){
-
-            $gravamen = FolioReal::where('folio', $request['folio_real'])
-                                    ->first()
-                                    ->movimientosRegistrales()
-                                    ->where('folio', $request['asiento_registral'])
-                                    ->first();
+            Cancelacion::create([
+                'gravamen' => $movimiento_gravamen->id,
+                'servicio' => $request['servicio'],
+                'movimiento_registral_id' => $request['movimiento_registral_id'],
+            ]);
 
         }else{
 
-            $gravamen = null;
+
+            if(isset($request['asiento_registral'])){
+
+                $gravamen = FolioReal::where('folio', $request['folio_real'])
+                                        ->first()
+                                        ->movimientosRegistrales()
+                                        ->where('folio', $request['asiento_registral'])
+                                        ->first();
+
+            }else{
+
+                $gravamen = null;
+
+            }
+
+            Cancelacion::create([
+                'gravamen' => $gravamen?->id,
+                'servicio' => $request['servicio'],
+                'movimiento_registral_id' => $request['movimiento_registral_id'],
+            ]);
 
         }
-
-        Cancelacion::create([
-            'gravamen' => $gravamen?->id,
-            'servicio' => $request['servicio'],
-            'movimiento_registral_id' => $request['movimiento_registral_id'],
-        ]);
 
     }
 
