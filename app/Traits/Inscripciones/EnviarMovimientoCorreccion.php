@@ -101,11 +101,11 @@ trait EnviarMovimientoCorreccion{
 
             $this->obtenerMovimientoConFirmaElectronica($movimientoRegistral);
 
-            foreach ($movimientoRegistral->gravamen->actores as $actor) {
+            /* foreach ($movimientoRegistral->gravamen->actores as $actor) {
 
                 $actor->delete();
 
-            }
+            } */
 
         }
 

@@ -20,7 +20,7 @@
 
         <div class="rounded-lg bg-gray-100 py-1 px-2">
 
-            <strong>Regsitro</strong>
+            <strong>Registro</strong>
 
             <p>{{ $propiedad->registro }}</p>
 
