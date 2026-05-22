@@ -12,6 +12,7 @@ use App\Models\MovimientoRegistral;
 use Illuminate\Support\Facades\Log;
 use App\Traits\Inscripciones\InscripcionesIndex;
 use App\Exceptions\InscripcionesServiceException;
+use App\Traits\Inscripciones\AutorizarImpresionTrait;
 use App\Traits\Inscripciones\EnviarMovimientoCorreccion;
 use App\Traits\Inscripciones\FinalizarInscripcionTrait;
 use App\Traits\Inscripciones\ReasignarUsuarioTrait;
@@ -31,6 +32,7 @@ class ReformasIndex extends Component
     use RecibirDocumentoTrait;
     use ReasignarUsuarioTrait;
     use FinalizarInscripcionTrait;
+    use AutorizarImpresionTrait;
 
     public function estaBloqueado(){
 
@@ -212,7 +214,7 @@ class ReformasIndex extends Component
                                                     ->WhereHas('folioRealPersona', function($q){
                                                         $q->where('estado', 'activo');
                                                     })
-                                                    ->whereIn('estado', ['nuevo', 'captura', 'elaborado', 'correccion', 'no recibido'])
+                                                    ->whereIn('estado', ['nuevo', 'captura', 'elaborado', 'correccion', 'no recibido', 'autorizado'])
                                                     ->where('usuario_asignado', auth()->user()->id)
                                                     ->when(auth()->user()->ubicacion == 'Regional 4', function($q){
                                                         $q->where('distrito', 2);

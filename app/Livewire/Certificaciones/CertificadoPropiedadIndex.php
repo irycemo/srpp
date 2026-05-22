@@ -15,6 +15,7 @@ use App\Http\Services\SistemaTramitesService;
 use App\Exceptions\InscripcionesServiceException;
 use App\Traits\RevisarMovimientosPosterioresTrait;
 use App\Http\Controllers\Certificaciones\CertificadoPropiedadController;
+use App\Traits\Inscripciones\AutorizarImpresionTrait;
 use App\Traits\Inscripciones\ReasignarmeMovimientoTrait;
 use App\Traits\Inscripciones\RechazarMovimientoTrait;
 
@@ -27,6 +28,7 @@ class CertificadoPropiedadIndex extends Component
     use RevisarMovimientosPosterioresTrait;
     use ReasignarmeMovimientoTrait;
     use RechazarMovimientoTrait;
+    use AutorizarImpresionTrait;
 
     public MovimientoRegistral $modelo_editar;
 
@@ -93,7 +95,7 @@ class CertificadoPropiedadIndex extends Component
 
     public function elaborar(MovimientoRegistral $movimientoRegistral){
 
-        if($movimientoRegistral->getRawOriginal('distrito') != 2 && !auth()->user()->hasRole(['Jefe de departamento certificaciones'])){
+        if($movimientoRegistral->estado !== 'autorizado' && !auth()->user()->hasRole(['Jefe de departamento certificaciones'])){
 
             if($this->calcularDiaElaboracion($movimientoRegistral)) return;
 
@@ -460,16 +462,16 @@ class CertificadoPropiedadIndex extends Component
             $certificados = MovimientoRegistral::select('id', 'folio', 'folio_real', 'año', 'tramite', 'usuario', 'actualizado_por', 'usuario_asignado', 'usuario_supervisor', 'estado', 'distrito', 'created_at', 'updated_at', 'tomo', 'registro', 'numero_propiedad', 'tipo_servicio', 'fecha_entrega', 'seccion', 'solicitante')
                                                 ->with('asignadoA:id,name', 'supervisor:id,name', 'actualizadoPor:id,name', 'certificacion.actualizadoPor:id,name', 'folioReal:id,folio')
                                                 ->where('usuario_asignado', auth()->id())
-                                                ->whereIn('estado', ['nuevo', 'correccion','elaborado'])
+                                                ->whereIn('estado', ['nuevo', 'correccion','elaborado', 'autorizado'])
                                                 ->when(auth()->user()->ubicacion == 'Regional 4', function($q){
                                                     $q->where('distrito', 2);
                                                 })
-                                                /* ->when(auth()->user()->ubicacion != 'Regional 4', function($q){
+                                                ->when(auth()->user()->ubicacion != 'Regional 4', function($q){
                                                     $q->where('distrito', '!=', 2);
                                                 })
                                                 ->whereHas('certificacion', function($q){
                                                     $q->whereIn('servicio', ['DL10', 'DL11']);
-                                                }) */
+                                                })
                                                 ->when($this->filters['año'], fn($q, $año) => $q->where('año', $año))
                                                 ->when($this->filters['tramite'], fn($q, $tramite) => $q->where('tramite', $tramite))
                                                 ->when($this->filters['usuario'], fn($q, $usuario) => $q->where('usuario', $usuario))
@@ -567,7 +569,7 @@ class CertificadoPropiedadIndex extends Component
 
             $certificados = MovimientoRegistral::select('id', 'folio', 'folio_real', 'año', 'tramite', 'usuario', 'actualizado_por', 'usuario_asignado', 'usuario_supervisor', 'estado', 'distrito', 'created_at', 'updated_at', 'tomo', 'registro', 'numero_propiedad', 'tipo_servicio', 'fecha_entrega', 'seccion', 'solicitante')
                                                 ->with('asignadoA:id,name', 'supervisor:id,name', 'actualizadoPor:id,name', 'certificacion.actualizadoPor:id,name', 'folioReal:id,folio')
-                                                ->where('estado', 'elaborado')
+                                                ->whereIn('estado', ['elaborado', 'autorizado', 'nuevo'])
                                                 ->when(auth()->user()->ubicacion === 'Regional 1', function($q){
                                                     $q->where(function($q){
                                                         $q->whereIn('distrito', [3, 9]);

@@ -9,6 +9,7 @@ use Livewire\WithFileUploads;
 use App\Constantes\Constantes;
 use App\Traits\ComponentesTrait;
 use App\Models\MovimientoRegistral;
+use App\Traits\Inscripciones\AutorizarImpresionTrait;
 use App\Traits\Inscripciones\InscripcionesIndex;
 use App\Traits\Inscripciones\EnviarMovimientoCorreccion;
 use App\Traits\Inscripciones\FinalizarInscripcionTrait;
@@ -32,6 +33,7 @@ class GravamenIndex extends Component
     use FinalizarInscripcionTrait;
     use ReasignarUsuarioTrait;
     use ReasignarmeMovimientoTrait;
+    use AutorizarImpresionTrait;
 
     public function mount(){
 
@@ -77,7 +79,7 @@ class GravamenIndex extends Component
                                                     ->when(auth()->user()->ubicacion != 'Regional 4', function($q){
                                                         $q->where('distrito', '!=', 2);
                                                     })
-                                                    ->whereIn('estado', ['nuevo', 'captura', 'elaborado', 'correccion', 'no recibido'])
+                                                    ->whereIn('estado', ['nuevo', 'captura', 'elaborado', 'correccion', 'no recibido', 'autorizado'])
                                                     ->where('usuario_asignado', auth()->id())
                                                     ->whereHas('gravamen', function($q){
                                                         $q->whereIn('servicio', ['D127', 'D153', 'D150', 'D155', 'DM68', 'D154']);
@@ -208,7 +210,7 @@ class GravamenIndex extends Component
                                                     ->when(auth()->user()->ubicacion === 'Regional 7', function($q){
                                                         $q->whereIn('distrito', [5, 14, 8]);
                                                     })
-                                                    ->whereIn('estado', ['nuevo', 'captura', 'elaborado', 'finalizado', 'correccion', 'rechazado'])
+                                                    ->whereIn('estado', ['nuevo', 'captura', 'elaborado', 'finalizado', 'correccion', 'rechazado', 'autorizado'])
                                                     ->whereHas('gravamen', function($q){
                                                         $q->whereIn('servicio', ['D127', 'D153', 'D150', 'D155', 'DM68', 'D154']);
                                                     })

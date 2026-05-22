@@ -13,6 +13,7 @@ use App\Models\Predio;
 use App\Models\User;
 use App\Traits\CalcularDiaElaboracionTrait;
 use App\Traits\ComponentesTrait;
+use App\Traits\Inscripciones\AutorizarImpresionTrait;
 use App\Traits\Inscripciones\ReasignarmeMovimientoTrait;
 use App\Traits\Inscripciones\RechazarMovimientoTrait;
 use App\Traits\QrTrait;
@@ -36,6 +37,7 @@ class CertificadoGravamen extends Component
     use RevisarMovimientosPosterioresTrait;
     use ReasignarmeMovimientoTrait;
     use RechazarMovimientoTrait;
+    use AutorizarImpresionTrait;
 
     public Certificacion $modelo_editar;
 
@@ -151,7 +153,7 @@ class CertificadoGravamen extends Component
 
         $this->moviminetoRegistral = $modelo->movimientoRegistral;
 
-        if($this->moviminetoRegistral->getRawOriginal('distrito') != 2 && !auth()->user()->hasRole(['Jefe de departamento certificaciones', 'Operaciones'])){
+        if($this->moviminetoRegistral->estado !== 'autorizado' && !auth()->user()->hasRole(['Jefe de departamento certificaciones', 'Operaciones'])){
 
             if($this->calcularDiaElaboracion($this->moviminetoRegistral)) return;
 
@@ -451,7 +453,7 @@ class CertificadoGravamen extends Component
                                                 ->whereHas('folioReal', function($q){
                                                     $q->whereIn('estado', ['activo', 'centinela']);
                                                 })
-                                                ->whereIn('estado', ['nuevo', 'correccion', 'elaborado'])
+                                                ->whereIn('estado', ['nuevo', 'correccion', 'elaborado', 'autorizado'])
                                                 ->when(auth()->user()->ubicacion == 'Regional 4', function($q){
                                                     $q->where('distrito', 2);
                                                 })
@@ -625,7 +627,7 @@ class CertificadoGravamen extends Component
                                                 ->when($this->filters['folio'], fn($q, $folio) => $q->where('folio', $folio))
                                                 ->when($this->filters['estado'], fn($q, $estado) => $q->where('estado', $estado))
                                                 ->whereNotNull('folio_real')
-                                                ->whereNotIn('estado', ['nuevo', 'correccion'])
+                                                ->whereIn('estado', ['elaborado', 'autorizado', 'nuevo'])
                                                 ->orderBy($this->sort, $this->direction)
                                                 ->paginate($this->pagination);
 

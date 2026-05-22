@@ -29,6 +29,7 @@
         <option value="rechazado">Rechazado</option>
         <option value="finalizado">Finalizado</option>
         <option value="correccion">Corrección</option>
+        <option value="autorizado">Autorizado</option>
 
     </select>
 

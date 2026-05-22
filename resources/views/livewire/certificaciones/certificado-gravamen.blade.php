@@ -36,6 +36,7 @@
                     <option value="rechazado">Rechazado</option>
                     <option value="finalizado">Finalizado</option>
                     <option value="correccion">Corrección</option>
+                    <option value="autorizado">Autorizado</option>
 
                 </select>
 
@@ -241,7 +242,7 @@
 
                                         @can('Elaborar certificado')
 
-                                            @if(in_array($certificado->estado, ['nuevo' ,'correccion']))
+                                            @if(in_array($certificado->estado, ['nuevo' ,'correccion', 'autorizado']))
 
                                                 <button
                                                     wire:click="visualizarGravamenes({{ $certificado->certificacion->id }})"
@@ -336,6 +337,19 @@
                                             </button>
 
                                         @endif
+
+                                        @can('Autorizar impresión anticipada')
+
+                                            <button
+                                                wire:click="autorizarImpresionAnticipada({{  $certificado->id }})"
+                                                wire:loading.attr="disabled"
+                                                wire:confirm="¿Esta seguro que desea autorizar la impresión anticipada?"
+                                                class="w-full text-left block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 focus:outline-none focus:bg-gray-100"
+                                                role="menuitem">
+                                                Autorizar imipresión anticipada
+                                            </button>
+
+                                        @endcan
 
                                     </div>
 

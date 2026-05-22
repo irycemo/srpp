@@ -358,7 +358,7 @@ class InscripcionGeneral extends Component
 
             if(round($sumaPN, 2) > round($pn_transmitentes + $pp_transmitentes,2)){
 
-                $this->dispatch('mostrarMensaje', ['error', "La suma de los porcentajes de propiedad debe ser " . $pp_transmitentes . '%.']);
+                $this->dispatch('mostrarMensaje', ['warning', "La suma de los porcentajes de propiedad debe ser " . $pp_transmitentes . '%.']);
 
                 return true;
 
@@ -368,7 +368,7 @@ class InscripcionGeneral extends Component
 
             if(round($sumaPU, 2) != round($pu_transmitentes + $pp_transmitentes, 2)){
 
-                $this->dispatch('mostrarMensaje', ['error', "La suma de los porcentajes de usufructo debe ser " . $pu_transmitentes + $pp_transmitentes . '%.']);
+                $this->dispatch('mostrarMensaje', ['warning', "La suma de los porcentajes de usufructo debe ser " . $pu_transmitentes + $pp_transmitentes . '%.']);
 
                 return true;
 
@@ -380,7 +380,7 @@ class InscripcionGeneral extends Component
 
                 if(($pn_adquirientes + $pn) != 0){
 
-                    $this->dispatch('mostrarMensaje', ['error', "La suma de los porcentajes de nuda debe ser 0."]);
+                    $this->dispatch('mostrarMensaje', ['warning', "La suma de los porcentajes de nuda debe ser 0."]);
 
                     return true;
 
@@ -388,7 +388,7 @@ class InscripcionGeneral extends Component
 
                 if(($pu_adquirientes + $pu) != 0){
 
-                    $this->dispatch('mostrarMensaje', ['error', "La suma de los porcentajes de usufructo debe ser 0."]);
+                    $this->dispatch('mostrarMensaje', ['warning', "La suma de los porcentajes de usufructo debe ser 0."]);
 
                     return true;
 
@@ -403,7 +403,7 @@ class InscripcionGeneral extends Component
 
                 if($suma_parcial_nuda_1 > $suma_parcial_nuda_2){
 
-                    $this->dispatch('mostrarMensaje', ['error', "La suma de los porcentajes de nuda no es correcta."]);
+                    $this->dispatch('mostrarMensaje', ['warning', "La suma de los porcentajes de nuda no es correcta."]);
 
                     return true;
 
@@ -415,7 +415,7 @@ class InscripcionGeneral extends Component
 
                 if($suma_parcial_usufructo_1 > $suma_parcial_usufructo_2){
 
-                    $this->dispatch('mostrarMensaje', ['error', "La suma de los porcentajes de usufructo no es correcta."]);
+                    $this->dispatch('mostrarMensaje', ['warning', "La suma de los porcentajes de usufructo no es correcta."]);
 
                     return true;
 

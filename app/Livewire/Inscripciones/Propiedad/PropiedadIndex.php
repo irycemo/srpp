@@ -9,6 +9,7 @@ use Livewire\WithFileUploads;
 use App\Constantes\Constantes;
 use App\Traits\ComponentesTrait;
 use App\Models\MovimientoRegistral;
+use App\Traits\Inscripciones\AutorizarImpresionTrait;
 use App\Traits\Inscripciones\InscripcionesIndex;
 use App\Traits\Inscripciones\EnviarMovimientoCorreccion;
 use App\Traits\Inscripciones\FinalizarInscripcionTrait;
@@ -29,6 +30,7 @@ class PropiedadIndex extends Component
     use ReasignarmeMovimientoTrait;
     use FinalizarInscripcionTrait;
     use ReasignarUsuarioTrait;
+    use AutorizarImpresionTrait;
 
     public function mount(){
 
@@ -81,7 +83,7 @@ class PropiedadIndex extends Component
                                                     ->whereHas('inscripcionPropiedad', function($q){
                                                         $q->whereIn('servicio', ['D158', 'D114', 'D113', 'D115', 'D116', 'D118', 'D149']);
                                                     })
-                                                    ->whereIn('estado', ['nuevo', 'captura', 'elaborado', 'finalizado', 'correccion', 'no recibido'])
+                                                    ->whereIn('estado', ['nuevo', 'captura', 'elaborado', 'finalizado', 'correccion', 'no recibido', 'autorizado'])
                                                     ->when($this->filters['año'], fn($q, $año) => $q->where('año', $año))
                                                     ->when($this->filters['tramite'], fn($q, $tramite) => $q->where('tramite', $tramite))
                                                     ->when($this->filters['usuario'], fn($q, $usuario) => $q->where('usuario', $usuario))
@@ -187,7 +189,7 @@ class PropiedadIndex extends Component
                                                     ->whereHas('inscripcionPropiedad', function($q){
                                                         $q->whereIn('servicio', ['D158', 'D114', 'D113', 'D115', 'D116', 'D118', 'D149']);
                                                     })
-                                                    ->whereIn('estado', ['nuevo', 'captura', 'elaborado', 'finalizado', 'correccion'])
+                                                    ->whereIn('estado', ['nuevo', 'captura', 'elaborado', 'finalizado', 'correccion', 'autorizado'])
                                                     ->when(auth()->user()->ubicacion === 'Regional 1', function($q){
                                                         $q->whereIn('distrito', [3, 9]);
                                                             /* ->orWhereIn('usuario', $this->usuarios_regionales_fliped); */

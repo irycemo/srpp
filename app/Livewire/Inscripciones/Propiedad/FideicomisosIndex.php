@@ -8,6 +8,7 @@ use Livewire\WithPagination;
 use App\Constantes\Constantes;
 use App\Traits\ComponentesTrait;
 use App\Models\MovimientoRegistral;
+use App\Traits\Inscripciones\AutorizarImpresionTrait;
 use App\Traits\Inscripciones\InscripcionesIndex;
 use App\Traits\Inscripciones\EnviarMovimientoCorreccion;
 use App\Traits\Inscripciones\ReasignarmeMovimientoTrait;
@@ -26,6 +27,7 @@ class FideicomisosIndex extends Component
     use RecibirDocumentoTrait;
     use ReasignarUsuarioTrait;
     use ReasignarmeMovimientoTrait;
+    use AutorizarImpresionTrait;
 
     public function mount(){
 
@@ -74,7 +76,7 @@ class FideicomisosIndex extends Component
                                                     ->when(auth()->user()->ubicacion != 'Regional 4', function($q){
                                                         $q->where('distrito', '!=', 2);
                                                     })
-                                                    ->whereIn('estado', ['nuevo', 'captura', 'elaborado', 'correccion', 'no recibido'])
+                                                    ->whereIn('estado', ['nuevo', 'captura', 'elaborado', 'correccion', 'no recibido', 'autorizado'])
                                                     ->when($this->filters['año'], fn($q, $año) => $q->where('año', $año))
                                                     ->when($this->filters['tramite'], fn($q, $tramite) => $q->where('tramite', $tramite))
                                                     ->when($this->filters['usuario'], fn($q, $usuario) => $q->where('usuario', $usuario))

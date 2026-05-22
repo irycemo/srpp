@@ -7,6 +7,7 @@ use App\Exceptions\GeneralException;
 use App\Models\MovimientoRegistral;
 use App\Models\User;
 use App\Traits\ComponentesTrait;
+use App\Traits\Inscripciones\AutorizarImpresionTrait;
 use App\Traits\Inscripciones\EnviarMovimientoCorreccion;
 use App\Traits\Inscripciones\FinalizarInscripcionTrait;
 use App\Traits\Inscripciones\InscripcionesIndex;
@@ -31,6 +32,7 @@ class SubdivisionesIndex extends Component
     use ReasignarUsuarioTrait;
     use ReasignarmeMovimientoTrait;
     use FinalizarInscripcionTrait;
+    use AutorizarImpresionTrait;
 
     public function correccion(){
 
@@ -104,7 +106,7 @@ class SubdivisionesIndex extends Component
                                                     ->whereHas('inscripcionPropiedad', function($q){
                                                         $q->where('servicio', 'D127');
                                                     })
-                                                    ->whereIn('estado', ['nuevo', 'captura', 'elaborado', 'correccion', 'no recibido'])
+                                                    ->whereIn('estado', ['nuevo', 'captura', 'elaborado', 'correccion', 'no recibido', 'autorizado'])
                                                     ->when($this->filters['año'], fn($q, $año) => $q->where('año', $año))
                                                     ->when($this->filters['tramite'], fn($q, $tramite) => $q->where('tramite', $tramite))
                                                     ->when($this->filters['usuario'], fn($q, $usuario) => $q->where('usuario', $usuario))

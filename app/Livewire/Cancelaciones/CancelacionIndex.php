@@ -9,6 +9,7 @@ use Livewire\WithFileUploads;
 use App\Constantes\Constantes;
 use App\Traits\ComponentesTrait;
 use App\Models\MovimientoRegistral;
+use App\Traits\Inscripciones\AutorizarImpresionTrait;
 use App\Traits\Inscripciones\InscripcionesIndex;
 use App\Traits\Inscripciones\EnviarMovimientoCorreccion;
 use App\Traits\Inscripciones\FinalizarInscripcionTrait;
@@ -32,6 +33,7 @@ class CancelacionIndex extends Component
     use FinalizarInscripcionTrait;
     use ReasignarUsuarioTrait;
     use ReasignarmeMovimientoTrait;
+    use AutorizarImpresionTrait;
 
     public function mount(){
 
@@ -80,7 +82,7 @@ class CancelacionIndex extends Component
                                                     ->whereHas('cancelacion', function($q){
                                                         $q->whereIn('servicio', ['D156']);
                                                     })
-                                                    ->whereIn('estado', ['nuevo', 'captura', 'elaborado', 'correccion', 'no recibido'])
+                                                    ->whereIn('estado', ['nuevo', 'captura', 'elaborado', 'correccion', 'no recibido', 'autorizado'])
                                                     ->when($this->filters['año'], fn($q, $año) => $q->where('año', $año))
                                                     ->when($this->filters['tramite'], fn($q, $tramite) => $q->where('tramite', $tramite))
                                                     ->when($this->filters['usuario'], fn($q, $usuario) => $q->where('usuario', $usuario))
@@ -207,7 +209,7 @@ class CancelacionIndex extends Component
                                                     ->whereHas('cancelacion', function($q){
                                                         $q->whereIn('servicio', ['D156']);
                                                     })
-                                                    ->whereIn('estado', ['nuevo', 'captura', 'elaborado', 'finalizado', 'rechazado'])
+                                                    ->whereIn('estado', ['nuevo', 'captura', 'elaborado', 'finalizado', 'rechazado', 'autorizado'])
                                                     ->when($this->filters['año'], fn($q, $año) => $q->where('año', $año))
                                                     ->when($this->filters['tramite'], fn($q, $tramite) => $q->where('tramite', $tramite))
                                                     ->when($this->filters['usuario'], fn($q, $usuario) => $q->where('usuario', $usuario))

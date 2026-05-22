@@ -28,7 +28,14 @@ trait CalcularDiaElaboracionTrait{
 
             }else{
 
-                $this->dispatch('mostrarMensaje', ['warning', "El trámite puede finalizarse apartir del " . $diaElaboracion->format('d-m-Y')]);
+                if(auth()->user()->ubicacion == 'Regional 4'){
+
+                    $this->dispatch('mostrarMensaje', ['warning', "El trámite es ordinario, solicitar firma con Jefe de Área"]);
+
+                }else{
+
+                    $this->dispatch('mostrarMensaje', ['warning', "El trámite puede finalizarse apartir del " . $diaElaboracion->format('d-m-Y')]);
+                }
 
                 return true;
 
