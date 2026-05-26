@@ -3,6 +3,7 @@
 namespace App\Livewire\Certificaciones\CertificadoPropiedad;
 
 use App\Http\Controllers\Certificaciones\CertificadoPropiedadController;
+use App\Http\Services\FolioRealService;
 use App\Models\Actor;
 use App\Models\FolioReal;
 use App\Models\Persona;
@@ -221,6 +222,12 @@ class CertificadoUnico extends Component
                 $this->procesarPersona($this->nombre, $this->ap_paterno, $this->ap_materno);
 
                 (new CertificadoPropiedadController)->certificadoUnicoPropiedad($this->certificacion->movimientoRegistral);
+
+                if($this->certificacion->movimientoRegistral->folio_real){
+
+                    (new FolioRealService())->revisarCertificadosGravamenPendientes($this->certificacion->movimientoRegistral);
+
+                }
 
             });
 

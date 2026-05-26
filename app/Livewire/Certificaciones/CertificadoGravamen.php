@@ -5,6 +5,7 @@ namespace App\Livewire\Certificaciones;
 use App\Constantes\Constantes;
 use App\Exceptions\InscripcionesServiceException;
 use App\Http\Controllers\Certificaciones\CertificadoGravamenController;
+use App\Http\Services\FolioRealService;
 use App\Http\Services\SistemaTramitesService;
 use App\Models\Certificacion;
 use App\Models\Gravamen;
@@ -264,6 +265,8 @@ class CertificadoGravamen extends Component
                 }
 
                 (new CertificadoGravamenController)->certificadoGravamen($this->modelo_editar->movimientoRegistral);
+
+                (new FolioRealService())->revisarCertificadosGravamenPendientes($this->modelo_editar->movimientoRegistral);
 
                 $this->modal = false;
 

@@ -3,6 +3,7 @@
 namespace App\Livewire\Certificaciones\CertificadoPropiedad;
 
 use App\Http\Controllers\Certificaciones\CertificadoPropiedadController;
+use App\Http\Services\FolioRealService;
 use App\Traits\CalcularDiaElaboracionTrait;
 use App\Traits\Certificaciones\CertificadoPropiedadTrait;
 use App\Traits\Inscripciones\ColindanciasTrait;
@@ -47,6 +48,12 @@ class CertificadoPropiedad extends Component
                 }
 
                 (new CertificadoPropiedadController)->certificadoPropiedad($this->certificacion->movimientoRegistral);
+
+                if($this->certificacion->movimientoRegistral->folio_real){
+
+                    (new FolioRealService())->revisarCertificadosGravamenPendientes($this->certificacion->movimientoRegistral);
+
+                }
 
             });
 

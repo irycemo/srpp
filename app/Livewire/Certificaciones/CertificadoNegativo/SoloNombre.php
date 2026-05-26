@@ -3,6 +3,7 @@
 namespace App\Livewire\Certificaciones\CertificadoNegativo;
 
 use App\Http\Controllers\Certificaciones\CertificadoPropiedadController;
+use App\Http\Services\FolioRealService;
 use App\Traits\CalcularDiaElaboracionTrait;
 use App\Traits\Certificaciones\CertificadoPropiedadTrait;
 use App\Traits\Inscripciones\ColindanciasTrait;
@@ -73,6 +74,12 @@ class SoloNombre extends Component
                 $this->procesarPersonas($this->propietarios);
 
                 (new CertificadoPropiedadController)->certificadoNegativo($this->certificacion->movimientoRegistral);
+
+                if($this->certificacion->movimientoRegistral->folio_real){
+
+                    (new FolioRealService())->revisarCertificadosGravamenPendientes($this->certificacion->movimientoRegistral);
+
+                }
 
             });
 
