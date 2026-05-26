@@ -38,6 +38,7 @@
                 <option value="rechazado">Rechazado</option>
                 <option value="carga_parcial">Carga parcial</option>
                 <option value="precalificacion">Precalificación</option>
+                <option value="pendiente">Pendiente</option>
 
             </select>
 

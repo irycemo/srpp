@@ -314,4 +314,5 @@ class MovimientosRegistrales extends Component
 
         return view('livewire.admin.movimientos-registrales', compact('movimientos'))->extends('layouts.admin');
     }
+
 }
