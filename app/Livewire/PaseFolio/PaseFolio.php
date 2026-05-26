@@ -237,7 +237,7 @@ class PaseFolio extends Component
                                             ->where('numero_propiedad', $this->modelo_editar->numero_propiedad)
                                             ->where('distrito', $this->modelo_editar->getRawOriginal('distrito'))
                                             ->whereNull('folio_real')
-                                            ->where('estado', 'precalificacion')
+                                            ->whereIn('estado', ['precalificacion', 'pendiente'])
                                             ->get();
 
         foreach ($mRegsitrales as $movimiento) {
