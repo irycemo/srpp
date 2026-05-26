@@ -367,7 +367,8 @@ class Constantes{
         'CANCELACIÓN DE SENTENCIA',
         'RESOLUCIÓN',
         'DEMANDA',
-        'PROVIDENCIA PRECAUTORIA'
+        'PROVIDENCIA PRECAUTORIA',
+        'ASEGURAMIENTO JUDICIAL'
     ];
 
     const ACTOS_INSCRIPCION_CANCELACIONES = [
