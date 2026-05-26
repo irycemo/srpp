@@ -12,7 +12,7 @@ trait RevisarMovimientosPosterioresTrait{
         $movimiento = $movimientoRegistral->folioReal
                 ->movimientosRegistrales()
                 ->where('folio', ($movimientoRegistral->folio + 1))
-                ->whereNotIn('estado', ['nuevo', 'correccion', 'pase_folio', 'no recibido'])
+                ->whereNotIn('estado', ['nuevo', 'correccion', 'pase_folio', 'no recibido', 'pendiente'])
                 ->first();
 
         if($movimiento) throw new InscripcionesServiceException("El folio real tiene movimientos registrales posteriores ya elaborados.");
@@ -24,7 +24,7 @@ trait RevisarMovimientosPosterioresTrait{
         $movimiento = $movimientoRegistral->folioRealPersona
                 ->movimientosRegistrales()
                 ->where('folio', ($movimientoRegistral->folio + 1))
-                ->whereNotIn('estado', ['nuevo', 'correccion', 'pase_folio', 'no recibido'])
+                ->whereNotIn('estado', ['nuevo', 'correccion', 'pase_folio', 'no recibido', 'pendiente'])
                 ->first();
 
         if($movimiento) throw new InscripcionesServiceException("El folio real tiene movimientos registrales posteriores ya elaborados.");
