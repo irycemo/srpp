@@ -78,7 +78,7 @@
 
 @can('Finalizar inscripción')
 
-    @if($movimiento->estado == 'elaborado')
+    @if(in_array($movimiento->estado, ['elaborado', 'autorizado']))
 
         <button
             wire:click="abrirModalFinalizar({{  $movimiento->id }})"
@@ -94,7 +94,7 @@
 
 @can('Concluir inscripción')
 
-    @if($movimiento->estado == 'finalizado')
+    @if(in_array($movimiento->estado, ['finalizado', 'autorizado']))
 
         <button
             wire:click="abrirModalConcluir({{  $movimiento->id }})"
