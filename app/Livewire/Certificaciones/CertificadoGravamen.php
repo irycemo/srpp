@@ -487,7 +487,7 @@ class CertificadoGravamen extends Component
                                                 ->whereHas('folioReal', function($q){
                                                     $q->whereIn('estado', ['activo', 'centinela']);
                                                 })
-                                                ->whereIn('estado', ['nuevo', 'elaborado', 'correccion'])
+                                                ->whereIn('estado', ['nuevo', 'elaborado', 'correccion', 'autorizado'])
                                                 ->when(auth()->user()->ubicacion == 'Regional 4', function($q){
                                                     $q->where('distrito', 2);
                                                 })
