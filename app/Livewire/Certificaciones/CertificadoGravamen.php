@@ -464,8 +464,7 @@ class CertificadoGravamen extends Component
                                                     $q->where('distrito', '!=', 2);
                                                 })
                                                 ->whereHas('certificacion', function($q){
-                                                    $q->where('servicio', 'DL07')
-                                                        ->whereNull('finalizado_en');
+                                                    $q->where('servicio', 'DL07');
                                                 })
                                                 ->when($this->filters['año'], fn($q, $año) => $q->where('año', $año))
                                                 ->when($this->filters['tramite'], fn($q, $tramite) => $q->where('tramite', $tramite))
