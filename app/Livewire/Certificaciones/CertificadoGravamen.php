@@ -19,7 +19,6 @@ use App\Traits\Inscripciones\ReasignarmeMovimientoTrait;
 use App\Traits\Inscripciones\RechazarMovimientoTrait;
 use App\Traits\QrTrait;
 use App\Traits\RevisarMovimientosPosterioresTrait;
-use Barryvdh\DomPDF\Facade\Pdf;
 use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;

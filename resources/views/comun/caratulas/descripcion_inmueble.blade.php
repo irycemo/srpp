@@ -62,8 +62,12 @@
 
 </p>
 
-<p class="parrafo">
+@if ($predio->descripcion)
 
-    <strong>Descripción:</strong> {{ $predio->descripcion }}.
+    <p class="parrafo">
 
-</p>
+        <strong>Descripción:</strong> {{ $predio->descripcion }}.
+
+    </p>
+
+@endif
