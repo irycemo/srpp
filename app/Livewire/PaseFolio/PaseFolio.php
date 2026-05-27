@@ -3,13 +3,16 @@
 namespace App\Livewire\PaseFolio;
 
 use App\Constantes\Constantes;
+use App\Exceptions\GeneralException;
 use App\Http\Controllers\PaseFolio\PaseFolioController;
 use App\Http\Services\AsignacionService;
 use App\Http\Services\FolioRealService;
 use App\Http\Services\SistemaTramitesService;
 use App\Models\Antecedente;
+use App\Models\Escritura;
 use App\Models\FolioReal;
 use App\Models\MovimientoRegistral;
+use App\Models\Old\PropietariosOld;
 use App\Models\Propiedad;
 use App\Models\Propiedadold;
 use App\Traits\ComponentesTrait;
@@ -18,7 +21,6 @@ use App\Traits\Inscripciones\ReasignarmeMovimientoTrait;
 use App\Traits\Inscripciones\ReasignarUsuarioTrait;
 use App\Traits\Inscripciones\RechazarMovimientoTrait;
 use App\Traits\Inscripciones\RecibirDocumentoTrait;
-use Exception;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
 use Livewire\Component;
@@ -40,6 +42,7 @@ class PaseFolio extends Component
     public $observaciones;
     public $modal = false;
     public $modalNuevoFolio = false;
+    public $modal_tramite_linea = false;
     public $supervisor = false;
 
     public $distritos;
@@ -71,6 +74,14 @@ class PaseFolio extends Component
 
     public function crearModeloVacio(){
         $this->modelo_editar = MovimientoRegistral::make();
+    }
+
+    public function abrirModalRevisarTramiteLinea(MovimientoRegistral $modelo){
+
+        $this->modelo_editar = $modelo;
+
+        $this->modal_tramite_linea = true;
+
     }
 
     public function abrirModalNuevoFolio(){
@@ -199,7 +210,7 @@ class PaseFolio extends Component
 
             $this->modal_finalizar = false;
 
-        } catch (Exception $ex) {
+        } catch (GeneralException $ex) {
 
             Log::error("Error al finalizar folio real por el usuario: (id: " . auth()->user()->id . ") " . auth()->user()->name . ". " . $ex);
 
@@ -424,6 +435,67 @@ class PaseFolio extends Component
         } catch (\Throwable $th) {
             Log::error("Error al envia a pase simplificado por el usuario: (id: " . auth()->user()->id . ") " . auth()->user()->name . ". " . $th);
             $this->dispatch('mostrarMensaje', ['error', "Ha ocurrido un error."]);
+        }
+
+    }
+
+    public function generarFolioRealAutomatico(){
+
+        try {
+
+            $propiedad = Propiedadold::where('tomo', $this->modelo_editar->tomo)
+                                    ->where('registro', $this->modelo_editar->registro)
+                                    ->where('distrito', $this->modelo_editar->getRawOriginal('distrito'))
+                                    ->where('noprop', $this->modelo_editar->numero_propiedad)
+                                    ->first();
+
+            if(! $propiedad){
+
+                throw new GeneralException('No se encontro la propiedad.');
+
+            }
+
+            $propietarios = PropietariosOld::where('idPropiedad', $propiedad->id)->get();
+
+            if(! $propietarios->count()){
+
+                throw new GeneralException('La propiedad no tiene propietarios.');
+
+            }
+
+            if($propietarios->count() > 1){
+
+                throw new GeneralException('La propiedad tiene mas de un propietario.');
+
+            }
+
+            DB::transaction(function () use ($propiedad){
+
+                $escritura = Escritura::create([
+                    'numero' => $propiedad->escritura,
+                    'fecha_inscripcion' => $propiedad->fechainscripcion,
+                    'notaria' => $propiedad->notaria,
+                ]);
+
+            });
+
+            //Revisar documento de entrada
+                //Si documento de entrada == escritura
+                    //Crear escritura
+            //Crear predio
+            //Crear folio
+            //Finalizar folio
+            //Generar certificado automatico
+
+        } catch (GeneralException $ex) {
+
+            $this->dispatch('mostrarMensaje', ['warning', $ex->getMessage()]);
+
+        } catch (\Throwable $th) {
+
+            Log::error("Error al generar folio real automaticamente por el usuario: (id: " . auth()->user()->id . ") " . auth()->user()->name . ". " . $th);
+            $this->dispatch('mostrarMensaje', ['error', "Ha ocurrido un error."]);
+
         }
 
     }

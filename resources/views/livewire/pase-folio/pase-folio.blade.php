@@ -361,6 +361,18 @@
                                             Enviar a folio simplificado
                                         </button>
 
+                                        @if($movimiento->usuario == 67)
+
+                                            <button
+                                                wire:click="abrirModalRevisarTramiteLinea({{ $movimiento->id }})"
+                                                wire:loading.attr="disabled"
+                                                class="w-full text-left block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 focus:outline-none focus:bg-gray-100"
+                                                role="menuitem">
+                                                Revisar trámite
+                                            </button>
+
+                                        @endif
+
                                     </div>
 
                                 </div>
@@ -480,6 +492,94 @@
                     wire:click="$toggle('modalNuevoFolio')"
                     wire:loading.attr="disabled"
                     wire:target="$toggle('modalNuevoFolio')"
+                    type="button">
+                    <span>Cerrar</span>
+                </x-button-red>
+
+            </div>
+
+        </x-slot>
+
+    </x-dialog-modal>
+
+    <x-dialog-modal wire:model="modal_tramite_linea" maxWidth="sm">
+
+        <x-slot name="title">
+
+            Revisar trámite
+
+        </x-slot>
+
+        <x-slot name="content">
+
+            <div class="space-y-2">
+
+                @if($modelo_editar->getKey())
+
+                    <div class="rounded-lg bg-gray-100 py-1 px-2">
+
+                        <p><strong>Número de control:</strong> {{ $modelo_editar->año }}-{{ $modelo_editar->tramite }}-{{ $modelo_editar->usuario }}</p>
+
+                    </div>
+
+                    <div class="rounded-lg bg-gray-100 py-1 px-2">
+
+                        <p><strong>Servicio:</strong> {{ $modelo_editar->servicio_nombre }}</p>
+
+                    </div>
+
+                    <div class="rounded-lg bg-gray-100 py-1 px-2">
+
+                        <p><strong>Tomo:</strong> {{ $modelo_editar->tomo }}</p>
+
+                    </div>
+
+                    <div class="rounded-lg bg-gray-100 py-1 px-2">
+
+                        <p><strong>Registro:</strong> {{ $modelo_editar->registro }}</p>
+
+                    </div>
+
+                    <div class="rounded-lg bg-gray-100 py-1 px-2">
+
+                        <p><strong>Número de propiedad:</strong> {{ $modelo_editar->numero_propiedad }}</p>
+
+                    </div>
+
+                    <div class="rounded-lg bg-gray-100 py-1 px-2">
+
+                        <p><strong>Distrito:</strong> {{ $modelo_editar->distrito }}</p>
+
+                    </div>
+
+                @endif
+
+            </div>
+
+        </x-slot>
+
+        <x-slot name="footer">
+
+            <div class="flex items-center justify-end space-x-3">
+
+                @if($modelo_editar->certificacion)
+
+                    <x-button-blue
+                        wire:click="generarFolioRealAutomatico"
+                        wire:loading.attr="disabled"
+                        wire:target="generarFolioRealAutomatico">
+
+                        <img wire:loading wire:target="generarFolioRealAutomatico" class="mx-auto h-4 mr-1" src="{{ asset('storage/img/loading3.svg') }}" alt="Loading">
+
+                        <span>Generar folio real automático</span>
+                    </x-button-blue>
+
+                @endif
+
+                <x-button-red
+                    wire:click="$toggle('modal_tramite_linea')"
+                    wire:loading.attr="disabled"
+                    wire:target="$toggle('modal_tramite_linea')"
                     type="button">
                     <span>Cerrar</span>
                 </x-button-red>
