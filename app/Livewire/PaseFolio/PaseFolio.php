@@ -518,6 +518,8 @@ class PaseFolio extends Component
                 $escritura = Escritura::create([
                     'numero' => $propiedad->escritura,
                     'notaria' => $propiedad->notaria,
+                    'acto_contenido_antecedente' => 'CERTIFICADO EN LINEA',
+                    'comentario' => 'EL PRESENTE FOLIO REAL SE ASIGNÓ CON LA INFORMACIÓN CONTENIDA EN LA BASE DE DATOS DEL SISTEMA ANTERIOR DE MANERA AUTOMÁTICA, SE ACTUALIZARÁ CON EL SIGUIENTE MOVIMIENTO DE PROPIEDAD'
                 ]);
 
                 $predio = Predio::create([
@@ -565,7 +567,7 @@ class PaseFolio extends Component
 
             });
 
-            $this->dispatch('mostrarMensaje', ['warning', 'El folio real se generó con éxito.']);
+            $this->dispatch('mostrarMensaje', ['success', 'El folio real se generó con éxito.']);
 
             $this->modal_tramite_linea = false;
 

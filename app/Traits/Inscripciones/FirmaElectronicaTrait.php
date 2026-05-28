@@ -110,8 +110,8 @@ trait FirmaElectronicaTrait{
         if($folioReal->predio->escritura){
 
             $escritura->numero = $folioReal->predio->escritura->numero;
-            $escritura->fecha_inscripcion = Carbon::parse($folioReal->predio->escritura->fecha_inscripcion)->format('d/m/Y');
-            $escritura->fecha_escritura = Carbon::parse($folioReal->predio->escritura->fecha_escritura)->format('d/m/Y');
+            $escritura->fecha_inscripcion = $folioReal->predio->escritura->fecha_inscripcion ? Carbon::parse($folioReal->predio->escritura->fecha_inscripcion)->format('d/m/Y') : null;
+            $escritura->fecha_escritura = $folioReal->predio->escritura->fecha_escritura ? Carbon::parse($folioReal->predio->escritura->fecha_escritura)->format('d/m/Y') : null;
             $escritura->numero_hojas = $folioReal->predio->escritura->numero_hojas;
             $escritura->numero_paginas = $folioReal->predio->escritura->numero_paginas;
             $escritura->notaria = $folioReal->predio->escritura->notaria;
