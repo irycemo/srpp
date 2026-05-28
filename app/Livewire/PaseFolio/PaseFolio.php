@@ -7,12 +7,15 @@ use App\Exceptions\GeneralException;
 use App\Http\Controllers\PaseFolio\PaseFolioController;
 use App\Http\Services\AsignacionService;
 use App\Http\Services\FolioRealService;
+use App\Http\Services\OldBDService;
 use App\Http\Services\SistemaTramitesService;
 use App\Models\Antecedente;
 use App\Models\Escritura;
 use App\Models\FolioReal;
 use App\Models\MovimientoRegistral;
 use App\Models\Old\PropietariosOld;
+use App\Models\Persona;
+use App\Models\Predio;
 use App\Models\Propiedad;
 use App\Models\Propiedadold;
 use App\Traits\ComponentesTrait;
@@ -443,6 +446,30 @@ class PaseFolio extends Component
 
         try {
 
+            $folio_real_existente = FolioReal::where('tomo_antecedente', $this->modelo_editar->tomo)
+                                        ->where('registro_antecedente', $this->modelo_editar->registro)
+                                        ->where('numero_propiedad_antecedente', $this->modelo_editar->numero_propiedad)
+                                        ->where('distrito_antecedente', $this->modelo_editar->getRawOriginal('distrito'))
+                                        ->first();
+
+            if($folio_real_existente){
+
+                throw new GeneralException('Ya existe un folio real con el mismo antecedente.');
+
+            }
+
+            $antecedente = Antecedente::where('tomo_antecedente', $this->modelo_editar->tomo)
+                                        ->where('registro_antecedente', $this->modelo_editar->registro)
+                                        ->where('numero_propiedad_antecedente', $this->modelo_editar->numero_propiedad)
+                                        ->where('distrito_antecedente', $this->modelo_editar->getRawOriginal('distrito'))
+                                        ->first();
+
+            if($antecedente){
+
+                throw new GeneralException('Ya existe un folio real con el mismo antecedente.');
+
+            }
+
             $propiedad = Propiedadold::where('tomo', $this->modelo_editar->tomo)
                                     ->where('registro', $this->modelo_editar->registro)
                                     ->where('distrito', $this->modelo_editar->getRawOriginal('distrito'))
@@ -455,37 +482,92 @@ class PaseFolio extends Component
 
             }
 
-            $propietarios = PropietariosOld::where('idPropiedad', $propiedad->id)->get();
+            $personas = (new OldBDService())->obtenerPropietarios($propiedad);
 
-            if(! $propietarios->count()){
+            if(! count($personas)){
 
                 throw new GeneralException('La propiedad no tiene propietarios.');
 
             }
 
-            if($propietarios->count() > 1){
+            if(count($personas) > 1){
 
                 throw new GeneralException('La propiedad tiene mas de un propietario.');
 
             }
 
-            DB::transaction(function () use ($propiedad){
+            DB::transaction(function () use ($propiedad, $personas){
+
+                $folio_real = FolioReal::create([
+                    'estado' => 'activo',
+                    'folio' => (FolioReal::max('folio') ?? 0) + 1,
+                    'matriz' => false,
+                    'tomo_antecedente' => $this->modelo_editar->tomo,
+                    'tomo_antecedente_bis' => $this->modelo_editar->tomo_bis,
+                    'registro_antecedente' => $this->modelo_editar->registro,
+                    'registro_antecedente_bis' => $this->modelo_editar->registro_bis,
+                    'numero_propiedad_antecedente' => $this->modelo_editar->numero_propiedad,
+                    'distrito_antecedente' => $this->modelo_editar->getRawOriginal('distrito'),
+                    'seccion_antecedente' => 'Propiedad',
+                    'tipo_documento' => 'ESCRITURA PÚBLICA',
+                    'acto_contenido_antecedente' => 'CERTIFICADO EN LINEA',
+                    'asignado_por' => auth()->user()->name,
+                    'observaciones_antecedente' => 'EL PRESENTE FOLIO REAL SE ASIGNÓ CON LA INFORMACIÓN CONTENIDA EN LA BASE DE DATOS DEL SISTEMA ANTERIOR DE MANERA AUTOMÁTICA, SE ACTUALIZARÁ CON EL SIGUIENTE MOVIMIENTO DE PROPIEDAD'
+                ]);
 
                 $escritura = Escritura::create([
                     'numero' => $propiedad->escritura,
-                    'fecha_inscripcion' => $propiedad->fechainscripcion,
                     'notaria' => $propiedad->notaria,
                 ]);
 
+                $predio = Predio::create([
+                    'status' => 'activo',
+                    'superficie_terreno' => (float)$propiedad->superficie,
+                    'monto_transaccion' => $propiedad->monto,
+                    'descripcion' => 'LINDEROS: ' . $propiedad->Linderos . '. ' . $propiedad->comentarios,
+                    'observaciones' => $propiedad->ubicacion,
+                    'localidad' => $propiedad->localidad,
+                    'municipio' => $propiedad->municipio,
+                    'divisa' => $propiedad->tipomon,
+                    'escritura_id' => $escritura->id,
+                    'folio_real' => $folio_real->id
+                ]);
+
+                $persona = Persona::where('nombre', $personas[0]['nombre'])
+                                    ->where('ap_paterno', $personas[0]['ap_paterno'])
+                                    ->where('ap_materno', $personas[0]['ap_materno'])
+                                    ->first();
+
+                if(! $persona){
+
+                    $persona = Persona::create([
+                        'tipo' => 'FÍSICA',
+                        'nombre' => $personas[0]['nombre'],
+                        'ap_paterno' => $personas[0]['ap_paterno'],
+                        'ap_materno' => $personas[0]['ap_materno']
+                    ]);
+
+                }
+
+                $predio->actores()->create([
+                    'persona_id' => $persona->id,
+                    'tipo_actor' => 'propietario',
+                    'porcentaje_propiedad' => 100,
+                    'porcentaje_nuda' => 0,
+                    'porcentaje_usufructo' => 0,
+                ]);
+
+                $this->modelo_editar->update(['folio_real' => $folio_real->id]);
+
+                (new PaseFolioController())->caratula($folio_real);
+
+                (new FolioRealService())->revisarCertificadosGravamenPendientes($this->modelo_editar);
+
             });
 
-            //Revisar documento de entrada
-                //Si documento de entrada == escritura
-                    //Crear escritura
-            //Crear predio
-            //Crear folio
-            //Finalizar folio
-            //Generar certificado automatico
+            $this->dispatch('mostrarMensaje', ['warning', 'El folio real se generó con éxito.']);
+
+            $this->modal_tramite_linea = false;
 
         } catch (GeneralException $ex) {
 
