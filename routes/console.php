@@ -237,7 +237,7 @@ Artisan::command('notario', function(){
 
         try {
 
-            $folio_real->predio->escritura->update(['estado_notario' => 'MICHOACÁN']);
+            $folio_real->predio->escritura->update(['estado_notario' => 'SINALOA']);
 
             $progressbar->advance();
 
