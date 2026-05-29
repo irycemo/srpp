@@ -113,7 +113,7 @@ Artisan::command('pase_a_folio', function(){
 
 });
 
-Artisan::command('desgloses', function(){
+Artisan::command('notario', function(){
 
     $count = 0;
 
@@ -237,7 +237,7 @@ Artisan::command('desgloses', function(){
 
         try {
 
-            $folio_real->predio->escritura->update(['estado_notario', 'MICHOACÁN']);
+            $folio_real->predio->escritura->update(['estado_notario' => 'MICHOACÁN']);
 
             $progressbar->advance();
 
