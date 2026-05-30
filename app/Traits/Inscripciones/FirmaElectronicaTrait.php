@@ -535,6 +535,21 @@ trait FirmaElectronicaTrait{
         $object->fecha_emision = Carbon::parse($gravamen->movimientoRegistral->fecha_emision)->format('d/m/Y');
         $object->procedencia = $gravamen->movimientoRegistral->procedencia;
 
+        $gravamen_asociado = Gravamen::where('asociado_a', $gravamen->id)->first();
+
+        if($gravamen_asociado){
+
+            if($gravamen_asociado->servicio == 'D153'){
+
+                $object->gravamen_asociado = 'Gravamen reestructurado: ' . $gravamen_asociado->movimientoRegistral->folioReal->folio . '- '. $gravamen_asociado->movimientoRegistral->folio;
+
+            }else{
+
+                $object->gravamen_asociado = 'Gravamen asociado: ' . $gravamen_asociado->movimientoRegistral->folioReal->folio . '- '. $gravamen_asociado->movimientoRegistral->folio;
+            }
+
+        }
+
         return $object;
 
     }

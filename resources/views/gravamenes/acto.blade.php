@@ -214,6 +214,14 @@
                     <strong>Tipo de gravamen:</strong> {{ $gravamen->tipo }}
                 </p>
 
+                @if(isset($gravamen->gravamen_asociado))
+
+                    <p class="parrafo">
+                        {{ $gravamen->gravamen_asociado }}
+                    </p>
+
+                @endif
+
                 <p class="separador">Actores</p>
 
                 <table>

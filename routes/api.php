@@ -38,6 +38,8 @@ Route::middleware('auth:sanctum')->group(function () {
 
     Route::post('consultar_gravamen', [GravamenController::class, 'consultarGravamen']);
 
+    Route::post('consultar_gravamen_reestructura', [GravamenController::class, 'consultarGravamenReestructura']);
+
     Route::post('consultar_antecedentes', [AntecedentesController::class, 'consultarAntecedentes']);
 
     Route::post('consultar_primer_aviso', [VariosController::class, 'consultarPrimerAvisoPreventivo']);

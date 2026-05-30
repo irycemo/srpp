@@ -243,10 +243,11 @@ class ConsultaFRI extends Component
             'propiedad.movimientoRegistral',
             'certificaciones.movimientoRegistral',
             'cancelaciones.movimientoRegistral',
-            'gravamenes.movimientoRegistral',
+            'gravamenes.movimientoRegistral.folioReal',
             'gravamenes.deudores',
             'gravamenes.acreedores',
-            'antecedentes.folioRealAntecedente'
+            'antecedentes.folioRealAntecedente',
+            'gravamenes.gravamenAsociado'
         );
 
     }

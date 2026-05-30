@@ -14,11 +14,22 @@ class InscripcionesGravamenService implements MovimientoServiceInterface{
     public function crear(array $request):void
     {
 
-        Gravamen::create([
+        $gravamen = Gravamen::create([
             'estado' => 'nuevo',
             'servicio' => $request['servicio'],
             'movimiento_registral_id' => $request['movimiento_registral_id'],
         ]);
+
+        /* Reestructura de credito */
+        if($request['servicio'] == 'D153'){
+
+            $movimiento_gravamen_a_reestructurar = MovimientoRegistral::find($request['asiento_registral']);
+
+            $gravamen_a_reestructurar = $movimiento_gravamen_a_reestructurar->gravamen;
+
+            $gravamen_a_reestructurar->update(['asociado_a' => $gravamen->id, 'estado' => 'reestructurado']);
+
+        }
 
     }
 

@@ -25,6 +25,14 @@ class Gravamen extends Model implements Auditable
         return $this->belongsTo(MovimientoRegistral::class);
     }
 
+    public function gravamenAsociado(){
+        return $this->belongsto(Gravamen::class, 'asociado_a');
+    }
+
+    public function reestructuradoPor(){
+        return $this->belongsto(Gravamen::class, 'asociado_a')->where('servicio', 'D153');
+    }
+
     public function actores(){
         return $this->morphMany(Actor::class, 'actorable');
     }

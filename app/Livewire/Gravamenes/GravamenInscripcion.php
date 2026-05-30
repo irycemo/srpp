@@ -252,6 +252,12 @@ class GravamenInscripcion extends Component
 
         $this->actos = Constantes::ACTOS_INSCRIPCION_GRAVAMEN;
 
+        if($this->gravamen->servicio == 'D153'){
+
+            $this->gravamen->acto_contenido = 'REESTRUCTURA DE CRÉDITO';
+
+        }
+
         $this->divisas = Constantes::DIVISAS;
 
         $this->tipo_deudores = Constantes::ACTORES_GRAVAMEN;

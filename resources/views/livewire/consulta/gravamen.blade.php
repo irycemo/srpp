@@ -155,6 +155,32 @@
 
                     </div>
 
+                    @if($gravamen->gravamenAsociado)
+
+                        @if($gravamen->gravamenAsociado->servicio == 'D153')
+
+                            <div class="rounded-lg bg-gray-100 py-1 px-2">
+
+                                <strong>Reestructurado por el gravamen</strong>
+
+                                <p>{{ $gravamen->gravamenAsociado->movimientoRegistral->folioReal?->folio }}-{{ $gravamen->gravamenAsociado->movimientoRegistral->folio }}</p>
+
+                            </div>
+
+                        @else
+
+                            <div class="rounded-lg bg-gray-100 py-1 px-2">
+
+                                <strong>Gravamen asociado</strong>
+
+                                <p>{{ $gravamen->gravamenAsociado->movimientoRegistral->folioReal?->folio }}-{{ $gravamen->gravamenAsociado->movimientoRegistral->folio }}</p>
+
+                            </div>
+
+                        @endif
+
+                    @endif
+
                     <div class="rounded-lg bg-gray-100 py-1 px-2 md:col-span-3 col-span-1 sm:col-span-2 lg:col-span-6">
 
                         <strong>Comentario del gravámen</strong>

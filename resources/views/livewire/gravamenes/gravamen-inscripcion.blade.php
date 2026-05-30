@@ -18,7 +18,7 @@
 
             <x-input-group for="gravamen.acto_contenido" label="Acto contenido" :error="$errors->first('gravamen.acto_contenido')" class="w-full">
 
-                <x-input-select id="gravamen.acto_contenido" wire:model.live="gravamen.acto_contenido" class="w-full">
+                <x-input-select id="gravamen.acto_contenido" wire:model.live="gravamen.acto_contenido" class="w-full" :disabled="$gravamen->servicio == 'D153'">
 
                     <option value="">Seleccione una opción</option>
 

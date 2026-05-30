@@ -334,7 +334,8 @@ class Constantes{
         'HABILITACIÓN Ó AVÍO',
         'CESIÓN DE DERECHOS LITIGIOSOS',
         'REESTRUCTURA DE CREDITOS',
-        'ANOTACIONES MARGINALES'
+        'ANOTACIONES MARGINALES',
+        'REESTRUCTURA DE CRÉDITO'
     ];
 
     const ACTOS_INSCRIPCION_VARIOS = [
@@ -361,7 +362,8 @@ class Constantes{
         'SERVIDUMBRE DE PASO',
         'EXPROPIACIÓN',
         'CONVENIO',
-        'FUSION DE PREDIOS'
+        'FUSION DE PREDIOS',
+        'CANCELACIÓN DE RÉGIMEN DE PROPIEDAD EN CONDOMINIO'
     ];
 
     const ACTOS_INSCRIPCION_SENTENCIAS = [

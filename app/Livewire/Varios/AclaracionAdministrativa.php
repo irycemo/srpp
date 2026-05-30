@@ -163,7 +163,6 @@ class AclaracionAdministrativa extends Component
                 'numero_interior' => $this->vario->movimientoRegistral->folioReal->predio->numero_interior,
                 'nombre_edificio' => $this->vario->movimientoRegistral->folioReal->predio->nombre_edificio,
                 'departamento_edificio' => $this->vario->movimientoRegistral->folioReal->predio->departamento_edificio,
-                'departamento_edificio' => $this->vario->movimientoRegistral->folioReal->predio->departamento_edificio,
                 'descripcion' => $this->vario->movimientoRegistral->folioReal->predio->descripcion,
                 'lote' => $this->vario->movimientoRegistral->folioReal->predio->lote,
                 'manzana' => $this->vario->movimientoRegistral->folioReal->predio->manzana,
