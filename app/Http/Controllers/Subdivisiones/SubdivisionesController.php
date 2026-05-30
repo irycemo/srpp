@@ -128,7 +128,7 @@ class SubdivisionesController extends Controller
 
             $pdfImagen->selectPage($i)->save('/var/www/html/srpp/storage/app/caratulas/'. $nombre_img);
 
-            $im = new Imagick(Storage::disk('/var/www/html/srpp/storage/app/caratulas')->path($nombre_img));
+            $im = new Imagick(Storage::disk('caratulas')->path($nombre_img));
 
             $all->addImage($im);
 
