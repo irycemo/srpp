@@ -118,7 +118,7 @@ class SubdivisionesController extends Controller
 
         Storage::disk('caratulas')->put($nombre . '.pdf', $pdf->output());
 
-        $pdfImagen = new \Spatie\PdfToImage\Pdf('caratulas/' . $nombre . '.pdf');
+        $pdfImagen = new \Spatie\PdfToImage\Pdf('/var/www/html/srpp/storage/app/caratulas/' . $nombre . '.pdf');
 
         $all = new Imagick();
 
@@ -126,13 +126,13 @@ class SubdivisionesController extends Controller
 
             $nombre_img = $nombre . '_' . $i . '.jpg';
 
-            $pdfImagen->selectPage($i)->save('caratulas/'. $nombre_img);
+            $pdfImagen->selectPage($i)->save('/var/www/html/srpp/storage/app/caratulas/'. $nombre_img);
 
-            $im = new Imagick(Storage::disk('caratulas')->path($nombre_img));
+            $im = new Imagick(Storage::disk('/var/www/html/srpp/storage/app/caratulas')->path($nombre_img));
 
             $all->addImage($im);
 
-            unlink('caratulas/' . $nombre_img);
+            unlink('/var/www/html/srpp/storage/app/caratulas/' . $nombre_img);
 
         }
 
@@ -146,7 +146,7 @@ class SubdivisionesController extends Controller
 
         }else{
 
-            file_put_contents("caratulas/" . $nombre . '.jpg', $combined);
+            file_put_contents("/var/www/html/srpp/storage/app/caratulas/" . $nombre . '.jpg', $combined);
 
         }
 
@@ -157,7 +157,7 @@ class SubdivisionesController extends Controller
             'url' => $nombre . '.jpg'
         ]);
 
-        unlink('caratulas/' . $nombreFinal);
+        unlink('/var/www/html/srpp/storage/app/caratulas/' . $nombreFinal);
 
     }
 
