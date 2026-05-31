@@ -13,7 +13,6 @@ use App\Models\Antecedente;
 use App\Models\Escritura;
 use App\Models\FolioReal;
 use App\Models\MovimientoRegistral;
-use App\Models\Old\PropietariosOld;
 use App\Models\Persona;
 use App\Models\Predio;
 use App\Models\Propiedad;
