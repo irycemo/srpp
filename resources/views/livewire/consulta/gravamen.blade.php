@@ -181,6 +181,18 @@
 
                     @endif
 
+                    @if($gravamen->reestructuraA)
+
+                        <div class="rounded-lg bg-gray-100 py-1 px-2">
+
+                            <strong>Reestructura al gravamen</strong>
+
+                            <p>{{ $gravamen->reestructuraA->movimientoRegistral->folioReal?->folio }}-{{ $gravamen->reestructuraA->movimientoRegistral->folio }}</p>
+
+                        </div>
+
+                    @endif
+
                     <div class="rounded-lg bg-gray-100 py-1 px-2 md:col-span-3 col-span-1 sm:col-span-2 lg:col-span-6">
 
                         <strong>Comentario del gravámen</strong>

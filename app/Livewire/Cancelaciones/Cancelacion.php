@@ -6,6 +6,7 @@ use App\Constantes\Constantes;
 use App\Http\Controllers\Cancelaciones\CancelacionController;
 use App\Http\Services\FolioRealService;
 use App\Models\Cancelacion as ModelCancelacion;
+use App\Models\Gravamen;
 use App\Models\MovimientoRegistral;
 use App\Traits\Inscripciones\ConsultarArchivoTrait;
 use App\Traits\Inscripciones\DocumentoEntradaTrait;
@@ -144,6 +145,13 @@ class Cancelacion extends Component
                         'actualizado_por' => auth()->id(),
                         'observaciones' => $this->gravamenCancelarMovimiento->gravamen->observaciones . ' ' . 'Cancelado mediante movimiento registral: ' . $this->cancelacion->movimientoRegistral->folioReal->folio . '-' . $this->cancelacion->movimientoRegistral->folio,
                     ]);
+
+                    if($this->gravamenCancelarMovimiento->gravamen->servicio == 'D153'){
+
+                        $this->cancelarGravamenReestructura();
+
+                    }
+
                 }
 
                 $this->gravamenCancelarMovimiento->update([
@@ -174,6 +182,24 @@ class Cancelacion extends Component
         } catch (\Throwable $th) {
             Log::error("Error al finalizar inscripcion de cancelación por el usuario: (id: " . auth()->user()->id . ") " . auth()->user()->name . ". " . $th);
             $this->dispatch('mostrarMensaje', ['error', "Ha ocurrido un error."]);
+        }
+
+    }
+
+    public function cancelarGravamenReestructura(){
+
+        $gravamen = $this->gravamenCancelarMovimiento->gravamen;
+
+        while($gravamen){
+
+            $gravamen->update([
+                'estado' => 'cancelado',
+                'actualizado_por' => auth()->id(),
+                'observaciones' => $gravamen->observaciones . ' ' . 'Cancelado mediante movimiento registral: ' . $this->cancelacion->movimientoRegistral->folioReal->folio . '-' . $this->cancelacion->movimientoRegistral->folio,
+            ]);
+
+            $gravamen = Gravamen::where('asociado_a', $gravamen->id)->first();
+
         }
 
     }

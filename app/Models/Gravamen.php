@@ -33,6 +33,10 @@ class Gravamen extends Model implements Auditable
         return $this->belongsto(Gravamen::class, 'asociado_a')->where('servicio', 'D153');
     }
 
+    public function reestructuraA(){
+        return $this->hasOne(Gravamen::class, 'asociado_a');
+    }
+
     public function actores(){
         return $this->morphMany(Actor::class, 'actorable');
     }

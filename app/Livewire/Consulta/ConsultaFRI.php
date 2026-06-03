@@ -247,7 +247,8 @@ class ConsultaFRI extends Component
             'gravamenes.deudores',
             'gravamenes.acreedores',
             'antecedentes.folioRealAntecedente',
-            'gravamenes.gravamenAsociado'
+            'gravamenes.gravamenAsociado.movimientoRegistral.folioReal',
+            'gravamenes.reestructuraA.movimientoRegistral.folioReal'
         );
 
     }

@@ -256,6 +256,12 @@ class GravamenInscripcion extends Component
 
             $this->gravamen->acto_contenido = 'REESTRUCTURA DE CRÉDITO';
 
+            if($this->gravamen->reestructuraA->estado == 'cancelado'){
+
+                abort(403, message:"El gravamen a reestructurar esta cancelado.");
+
+            }
+
         }
 
         $this->divisas = Constantes::DIVISAS;
