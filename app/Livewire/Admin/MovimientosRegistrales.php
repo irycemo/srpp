@@ -2,15 +2,18 @@
 
 namespace App\Livewire\Admin;
 
+use App\Constantes\Constantes;
+use App\Models\FolioReal;
+use App\Models\MovimientoRegistral;
+use App\Models\Propiedadold;
 use App\Models\User;
+use App\Traits\ComponentesTrait;
+use App\Traits\Inscripciones\EnviarMovimientoCorreccion;
+use App\Traits\Inscripciones\RechazarMovimientoTrait;
+use App\Traits\MovimientoRegistral\CambiarAntecedenteTrait;
+use Illuminate\Support\Facades\Log;
 use Livewire\Component;
 use Livewire\WithPagination;
-use App\Constantes\Constantes;
-use App\Traits\ComponentesTrait;
-use App\Models\MovimientoRegistral;
-use App\Traits\Inscripciones\EnviarMovimientoCorreccion;
-use Illuminate\Support\Facades\Log;
-use App\Traits\Inscripciones\RechazarMovimientoTrait;
 
 class MovimientosRegistrales extends Component
 {
@@ -19,6 +22,7 @@ class MovimientosRegistrales extends Component
     use ComponentesTrait;
     use RechazarMovimientoTrait;
     use EnviarMovimientoCorreccion;
+    use CambiarAntecedenteTrait;
 
     public MovimientoRegistral $modelo_editar;
 
@@ -32,7 +36,6 @@ class MovimientosRegistrales extends Component
     public $modalReasignarSupervisor = false;
 
     public $mensaje;
-    public $observaciones;
 
     public $filters = [
         'año' => '',

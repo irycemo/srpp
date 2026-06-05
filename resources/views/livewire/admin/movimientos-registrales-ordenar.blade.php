@@ -107,7 +107,7 @@
                             Guardar
                         </x-button-blue>
 
-                        <span>Movimiento {{ $movimiento->folio }} ({{ ucfirst($movimiento->estado) }}): {{ $movimiento->servicio_nombre }}</span>
+                        <span>{{ $movimiento->año }}-{{ $movimiento->tramite }}-{{ $movimiento->usuario }} Movimiento {{ $movimiento->folio }} ({{ ucfirst($movimiento->estado) }}): {{ $movimiento->servicio_nombre }}</span>
 
                     </li>
 
