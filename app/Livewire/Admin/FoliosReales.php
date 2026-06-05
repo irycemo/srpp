@@ -2,16 +2,17 @@
 
 namespace App\Livewire\Admin;
 
-use App\Models\User;
-use Livewire\Component;
-use App\Models\FolioReal;
-use Livewire\WithPagination;
 use App\Constantes\Constantes;
+use App\Exceptions\GeneralException;
+use App\Http\Controllers\PaseFolio\PaseFolioController;
+use App\Http\Services\FolioRealService;
+use App\Models\FolioReal;
+use App\Models\User;
 use App\Traits\ComponentesTrait;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
-use App\Exceptions\GeneralException;
-use App\Http\Services\FolioRealService;
+use Livewire\Component;
+use Livewire\WithPagination;
 
 class FoliosReales extends Component
 {
@@ -169,6 +170,30 @@ class FoliosReales extends Component
 
             $this->dispatch('mostrarMensaje', ['error', "Hubo un error."]);
             Log::error("Error al eliminar folio real por el usuario: (id: " . auth()->user()->id . ") " . auth()->user()->name . ". " . $th);
+
+        }
+
+    }
+
+    public function imprimirCaratula(FolioReal $folioReal){
+
+        try {
+
+            $pdf = (new PaseFolioController())->reimprimirFirmado($folioReal->firmaElectronica);
+
+            return response()->streamDownload(
+                fn () => print($pdf->output()),
+                'documento.pdf'
+            );
+
+        } catch (GeneralException $ex) {
+
+            $this->dispatch('mostrarMensaje', ['warning', $ex->getMessage()]);
+
+        } catch (\Throwable $th) {
+
+            $this->dispatch('mostrarMensaje', ['error', "Hubo un error."]);
+            Log::error("Error imprimir caratula de folio real por el usuario: (id: " . auth()->user()->id . ") " . auth()->user()->name . ". " . $th);
 
         }
 
