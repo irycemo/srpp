@@ -16,7 +16,7 @@
 
                 <x-input-group for="distrito" label="Distrito" :error="$errors->first('distrito')" class="w-full lg:w-fit">
 
-                    <x-input-select id="distrito" wire:model="distrito" class="w-full">
+                    <x-input-select id="distrito" wire:model.live="distrito" class="w-full">
 
                         <option value="">Distrito</option>
 
@@ -66,15 +66,25 @@
 
     </div>
 
-    @if($movimientos)
+    @if($this->movimientos)
 
-        <div class="bg-white p-4 shadow-xl rounded-lg col-span-4 lg:w-1/2 mx-auto" x-data="sorting()">
+        <div class="bg-white p-4 shadow-xl rounded-lg col-span-4 lg:w-1/2 mx-auto" {{-- x-data="sorting()" --}}>
+
+       {{--      <div class="flex items-center justify-center mb-8">
+
+                <x-input-group for="actualizacion" label="Modificar datos" :error="$errors->first('actualizacion')" class="flex gap-3 items-center">
+
+                    <x-checkbox wire:model.live="actualizacion" id="actualizacion"/>
+
+                </x-input-group>
+
+            </div> --}}
 
             <x-h4>Movimientos registrales</x-h4>
 
             <ul drag-root class="text-sm space-y-3 rounded-md" wire:loading.class.delay.longest="opacity-50">
 
-                @foreach ($movimientos->sortBy('folio') as $movimiento)
+                @foreach ($this->movimientos as $key => $movimiento)
 
                     <li
                         drag-item
@@ -82,7 +92,22 @@
                         wire:key="{{ $movimiento->id }}"
                         class="rounded-lg bg-gray-100 p-2 flex gap-4 items-center cursor-pointer">
 
-                        Movimiento {{ $movimiento->folio }} ({{ ucfirst($movimiento->estado) }}): {{ $movimiento->servicio_nombre }}
+                        <select name="" id="" class="text-sm py-1 px-4 rounded-full" wire:model="datos.{{ $key }}.estado">
+                            <option value="nuevo">Nuevo</option>
+                            <option value="captura">Captura</option>
+                            <option value="elaborado">Elaborado</option>
+                        </select>
+
+                        <input type="number" class="text-sm py-1 px-4 rounded-full w-16" value="{{ $movimiento->folio }}" wire:model="datos.{{ $key }}.folio">
+
+                        <x-button-blue
+                            wire:click="guardar({{ $movimiento->id }}, {{ $key }})"
+                            wire:loading.attr="disabled"
+                            wire:target="guardar({{ $movimiento->id }}, {{ $key }})">
+                            Guardar
+                        </x-button-blue>
+
+                        <span>Movimiento {{ $movimiento->folio }} ({{ ucfirst($movimiento->estado) }}): {{ $movimiento->servicio_nombre }}</span>
 
                     </li>
 

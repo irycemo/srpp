@@ -2,10 +2,13 @@
 
 namespace App\Livewire\Admin;
 
-use Livewire\Component;
 use App\Constantes\Constantes;
 use App\Models\MovimientoRegistral;
+use Illuminate\Support\Facades\Log;
 use Illuminate\Validation\Rule;
+use Livewire\Component;
+
+use function PHPUnit\Framework\isNull;
 
 class MovimientosRegistralesOrdenar extends Component
 {
@@ -18,6 +21,7 @@ class MovimientosRegistralesOrdenar extends Component
     public $distritos;
 
     public $movimientos;
+    public $datos = [];
 
     protected function rules(){
         return [
@@ -26,19 +30,21 @@ class MovimientosRegistralesOrdenar extends Component
             'tomo' => Rule::requiredIf($this->folio_real === null),
             'registro' => Rule::requiredIf($this->folio_real === null),
             'numero_propiedad' => Rule::requiredIf($this->folio_real === null),
+            'datos' => 'nullable|array',
+            'datos.*.estado' => 'required|string',
+            'datos.*.folio' => 'required|int',
          ];
     }
-
 
     public function updated($field, $value){
 
         if($field == 'folio_real'){
 
-            $this->reset(['distrito', 'tomo','registro', 'numero_propiedad']);
+            $this->reset(['distrito', 'tomo','registro', 'numero_propiedad', 'movimientos']);
 
-        }else{
+        }elseif(in_array($field, ['distrito', 'tomo','registro', 'numero_propiedad'])){
 
-            $this->reset('folio_real');
+            $this->reset(['folio_real', 'movimientos']);
 
         }
 
@@ -117,9 +123,43 @@ class MovimientosRegistralesOrdenar extends Component
                                                             ->where('registro', $this->registro)
                                                             ->where('numero_propiedad', $this->numero_propiedad);
                                                     })
+                                                    ->orderBy('folio')
                                                     ->get();
 
-        $this->dispatch('cargar_ordenamiento');
+        foreach($this->movimientos as $movimiento){
+
+            $this->datos [] = [
+                'estado' => $movimiento->estado,
+                'folio' => $movimiento->folio,
+            ];
+
+        }
+
+        /* $this->dispatch('cargar_ordenamiento'); */
+
+    }
+
+    public function guardar(MovimientoRegistral $movimiento, $key){
+
+        try {
+
+            $movimiento->update([
+                'estado' => $this->datos[$key]['estado'],
+                'folio' => $this->datos[$key]['folio'],
+                'actualizado_por' => auth()->id()
+            ]);
+
+            $movimiento->audits()->latest()->first()->update(['tags' => 'Cambió el orden de folio']);
+
+            $this->buscar();
+
+        } catch (\Throwable $th) {
+
+            Log::error("Error al reordenar movimientos por el usuario: (id: " . auth()->user()->id . ") " . auth()->user()->name . ". " . $th);
+
+            $this->dispatch('mostrarMensaje', ['error', "Ha ocurrido un error."]);
+
+        }
 
     }
 
