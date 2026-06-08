@@ -464,7 +464,7 @@ class CopiasCertificadas extends Component
 
     public function imprimirDocumentoEntradaMovimiento(Certificacion $modelo){
 
-        $movimientoRegistral = $modelo->movimientoRegistral->folioReal->movimientosRegistrales()->where('folio', $modelo->movimiento_registral->folio)->first();
+        $movimientoRegistral = $modelo->movimientoRegistral->folioReal->movimientosRegistrales()->where('folio', $modelo->movimientoRegistral->folio)->first();
 
         if(! $movimientoRegistral->documentoEntrada()){
 
