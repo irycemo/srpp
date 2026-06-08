@@ -410,7 +410,7 @@ class CopiasCertificadas extends Component
 
     public function imprimirCaratulaMovimiento(Certificacion $modelo){
 
-        $movimientoRegistral = $modelo->movimientoRegistral->folioReal->movimientosRegistrales()->where('folio', $modelo->movimiento_registral)->first();
+        $movimientoRegistral = $modelo->movimientoRegistral->folioReal->movimientosRegistrales()->where('folio', $modelo->movimiento_registral->folio)->first();
 
         try {
 
