@@ -89,59 +89,6 @@ class ReformasIndex extends Component
 
         }
 
-        $movimientoAsignados = MovimientoRegistral::withWhereHas('folioRealPersona', function($q){
-                                                        $q->where('estado', 'activo');
-                                                    })
-                                                    ->whereIn('estado', ['nuevo', 'captura', 'correccion'])
-                                                    ->where('usuario_Asignado', auth()->id())
-                                                    ->orderBy('created_at')
-                                                    ->get();
-
-        foreach($movimientoAsignados as $movimiento){
-
-            $this->actual = $movimiento;
-
-            if($this->estaBloqueado()){
-
-                /* Esta bloqueado y es el que esta intentando hacer */
-                if($this->modelo_editar->id == $this->actual->id){
-
-                    break;
-
-                }else{
-
-                    continue;
-
-                }
-
-            }else{
-
-                /* Si solo hay un movimiento por realizar y no esta bloqueado */
-                if($movimientoAsignados->count() == 1 && $this->actual->id == $this->modelo_editar->id){
-
-                    $this->ruta($this->modelo_editar);
-
-                }
-
-                /* Revisar si es el que debe hacer ($this->actual) */
-                if($movimientoRegistral->id != $this->actual->id){
-
-                    $this->dispatch('mostrarMensaje', ['error', "Debe elaborar el movimiento registral " . $this->actual->folioRealPersona->folio . '-' . $this->actual->folio . ' primero.']);
-
-                    return;
-
-                }else{
-
-                    $this->ruta($movimientoRegistral);
-
-                    break;
-
-                }
-
-            }
-
-        }
-
     }
 
     public function mount(){

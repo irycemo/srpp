@@ -3,9 +3,13 @@
 namespace App\Livewire\Admin;
 
 use App\Constantes\Constantes;
-use App\Models\FolioReal;
+use App\Http\Controllers\Cancelaciones\CancelacionController;
+use App\Http\Controllers\Certificaciones\CertificadoGravamenController;
+use App\Http\Controllers\Gravamen\GravamenController;
+use App\Http\Controllers\InscripcionesPropiedad\PropiedadController;
+use App\Http\Controllers\Sentencias\SentenciasController;
+use App\Http\Controllers\Varios\VariosController;
 use App\Models\MovimientoRegistral;
-use App\Models\Propiedadold;
 use App\Models\User;
 use App\Traits\ComponentesTrait;
 use App\Traits\Inscripciones\EnviarMovimientoCorreccion;
@@ -268,6 +272,60 @@ class MovimientosRegistrales extends Component
                                 ->where('status', 'activo')
                                 ->orderBy('name')
                                 ->get();
+
+    }
+
+    public function imprimirCaratulaMovimiento(MovimientoRegistral $modelo){
+
+        $movimientoRegistral = $modelo->folioReal->movimientosRegistrales()->where('folio', $modelo->folio)->first();
+
+        try {
+
+            if($movimientoRegistral->inscripcionPropiedad){
+
+                $pdf = (new PropiedadController())->reimprimir($movimientoRegistral->firmaElectronica);
+
+            }
+
+            if($movimientoRegistral->gravamen){
+
+                $pdf = (new GravamenController())->reimprimir($movimientoRegistral->firmaElectronica);
+
+            }
+
+            if($movimientoRegistral->vario){
+
+                $pdf = (new VariosController())->reimprimir($movimientoRegistral->firmaElectronica);
+
+            }
+
+            if($movimientoRegistral->cancelacion){
+
+                $pdf = (new CancelacionController())->reimprimir($movimientoRegistral->firmaElectronica);
+
+            }
+
+            if($movimientoRegistral->sentencia){
+
+                $pdf = (new SentenciasController())->reimprimir($movimientoRegistral->firmaElectronica);
+
+            }
+
+            if($movimientoRegistral->certificacion){
+
+                $pdf = (new CertificadoGravamenController())->reimprimir($movimientoRegistral->firmaElectronica);
+
+            }
+
+            return response()->streamDownload(
+                fn () => print($pdf->output()),
+                'documento.pdf'
+            );
+
+        } catch (\Throwable $th) {
+            Log::error("Error al reimiprimir caratula de inscripción movimientos regsitrales por el usuario: (id: " . auth()->user()->id . ") " . auth()->user()->name . ". " . $th);
+            $this->dispatch('mostrarMensaje', ['error', "Ha ocurrido un error."]);
+        }
 
     }
 
