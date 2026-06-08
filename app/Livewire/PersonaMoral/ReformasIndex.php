@@ -34,63 +34,6 @@ class ReformasIndex extends Component
     use FinalizarInscripcionTrait;
     use AutorizarImpresionTrait;
 
-    public function estaBloqueado(){
-
-        $movimientos = $this->actual->folioRealPersona->movimientosRegistrales()->whereIn('estado', ['nuevo', 'captura', 'correccion'])->orderBy('folio')->get();
-
-        if($movimientos->count()){
-
-            $primerMovimiento = $movimientos->first();
-
-            if($this->actual->folio > $primerMovimiento->folio){
-
-                $this->dispatch('mostrarMensaje', ['warning', "El movimiento registral: (" . $this->actual->folioRealPersona->folio . '-' . $primerMovimiento->folio . ') debe elaborarce primero.']);
-
-                return true;
-
-            }else{
-
-               return false;
-
-            }
-
-        }else{
-
-            return false;
-
-        }
-
-    }
-
-    public function elaborar(MovimientoRegistral $movimientoRegistral){
-
-        if($movimientoRegistral->folioRealPersona->estado == 'centinela'){
-
-            $this->dispatch('mostrarMensaje', ['warning', "El folio real esta en centinela."]);
-
-            return;
-
-        }
-
-        if(auth()->user()->hasRole('Jefe de departamento inscripciones')){
-
-            $this->actual = $movimientoRegistral;
-
-            if($this->estaBloqueado()){
-
-                return;
-
-            }else{
-
-                $this->ruta($movimientoRegistral);
-
-                return;
-            }
-
-        }
-
-    }
-
     public function mount(){
 
         $this->crearModeloVacio();
