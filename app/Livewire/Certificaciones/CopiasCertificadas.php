@@ -20,6 +20,7 @@ use App\Http\Controllers\Sentencias\SentenciasController;
 use App\Http\Controllers\Cancelaciones\CancelacionController;
 use App\Http\Controllers\InscripcionesPropiedad\PropiedadController;
 use App\Http\Controllers\Certificaciones\CertificadoGravamenController;
+use App\Models\FolioReal;
 
 class CopiasCertificadas extends Component
 {
@@ -410,7 +411,9 @@ class CopiasCertificadas extends Component
 
     public function imprimirCaratulaMovimiento(Certificacion $modelo){
 
-        $movimientoRegistral = $modelo->movimientoRegistral->folioReal->movimientosRegistrales()->where('folio', $modelo->movimientoRegistral->folio)->first();
+        $folio_real = FolioReal::where('folio', $modelo->folio_real)->first();
+
+        $movimientoRegistral = $folio_real->movimientosRegistrales()->where('folio', $modelo->movimiento_registral)->first();
 
         try {
 
@@ -464,7 +467,9 @@ class CopiasCertificadas extends Component
 
     public function imprimirDocumentoEntradaMovimiento(Certificacion $modelo){
 
-        $movimientoRegistral = $modelo->movimientoRegistral->folioReal->movimientosRegistrales()->where('folio', $modelo->movimientoRegistral->folio)->first();
+        $folio_real = FolioReal::where('folio', $modelo->folio_real)->first();
+
+        $movimientoRegistral = $folio_real->movimientosRegistrales()->where('folio', $modelo->movimiento_registral)->first();
 
         if(! $movimientoRegistral->documentoEntrada()){
 
