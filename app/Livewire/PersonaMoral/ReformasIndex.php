@@ -34,6 +34,69 @@ class ReformasIndex extends Component
     use FinalizarInscripcionTrait;
     use AutorizarImpresionTrait;
 
+    public function elaborar(MovimientoRegistral $movimientoRegistral){
+
+        $this->modelo_editar = $movimientoRegistral;
+
+        if($this->modelo_editar->folioRealPersona->estado == 'centinela'){
+
+            $this->dispatch('mostrarMensaje', ['warning', "El folio real esta en centinela."]);
+
+            return;
+
+        }
+
+        if(auth()->user()->hasRole(['Jefe de departamento inscripciones', 'Operaciones'])){
+
+            $this->actual = $this->modelo_editar;
+
+            if($this->estaBloqueado()){
+
+                return;
+
+            }else{
+
+                $this->ruta($this->modelo_editar);
+
+                return;
+            }
+
+        }
+
+        $aclaracion = $this->modelo_editar->folioRealPersona->aclaracionAdministrativa();
+
+        if($aclaracion){
+
+            if($aclaracion->id == $this->modelo_editar->id){
+
+                $this->ruta($this->modelo_editar);
+
+                return;
+
+            }else{
+
+                $this->dispatch('mostrarMensaje', ['warning', "El folio real tiene aclaración administrativa vigente."]);
+
+                return;
+
+            }
+
+        }
+
+        $this->actual = $this->modelo_editar;
+
+        if($this->estaBloqueado()){
+
+            return;
+
+        }else{
+
+            $this->ruta($this->modelo_editar);
+
+        }
+
+    }
+
     public function mount(){
 
         $this->crearModeloVacio();
