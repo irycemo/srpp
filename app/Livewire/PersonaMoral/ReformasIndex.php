@@ -34,6 +34,74 @@ class ReformasIndex extends Component
     use FinalizarInscripcionTrait;
     use AutorizarImpresionTrait;
 
+    public function estaBloqueado(){
+
+        $movimientos = $this->actual->folioRealPersona->movimientosRegistrales()->whereIn('estado', ['nuevo', 'captura', 'correccion'])->orderBy('folio')->get();
+
+        if($movimientos->count()){
+
+            $primerMovimiento = $movimientos->first();
+
+            if($this->actual->folioRealPersona->avisoPreventivo()){
+
+                $aviso = $this->actual->folioRealPersona->avisoPreventivo();
+
+                if(($this->actual->inscripcionPropiedad || $this->actual->gravamen) &&
+                    $aviso->movimientoRegistral->tipo_documento == $this->actual->tipo_documento &&
+                    $aviso->movimientoRegistral->numero_documento == $this->actual->numero_documento &&
+                    $aviso->movimientoRegistral->autoridad_cargo == $this->actual->autoridad_cargo &&
+                    $aviso->movimientoRegistral->autoridad_nombre == $this->actual->autoridad_nombre &&
+                    $aviso->movimientoRegistral->autoridad_numero == $this->actual->autoridad_numero &&
+                    $aviso->movimientoRegistral->fecha_emision == $this->actual->fecha_emision &&
+                    $aviso->movimientoRegistral->procedencia == $this->actual->procedencia
+                ){
+
+                    $this->ruta($this->actual);
+
+                    return;
+
+                }
+
+                if($this->actual->vario?->acto_contenido == 'SEGUNDO AVISO PREVENTIVO'){
+
+                    $this->ruta($this->modelo_editar);
+
+                    return false;
+
+                }
+
+                if(in_array($this->actual->vario?->acto_contenido, ['CANCELACIÓN DE SEGUNDO AVISO PREVENTIVO', 'CANCELACIÓN DE PRIMER AVISO PREVENTIVO'])){
+
+                    $this->ruta($this->modelo_editar);
+
+                    return false;
+
+                }
+
+                $this->dispatch('mostrarMensaje', ['warning', "El folio real tiene un aviso preventivo vigente."]);
+
+                return true;
+
+            }elseif($this->actual->folio > $primerMovimiento->folio){
+
+                $this->dispatch('mostrarMensaje', ['warning', "El movimiento registral: (" . $this->actual->folioRealPersona->folio . '-' . $primerMovimiento->folio . ') debe elaborarse primero.']);
+
+                return true;
+
+            }else{
+
+               return false;
+
+            }
+
+        }else{
+
+            return false;
+
+        }
+
+    }
+
     public function elaborar(MovimientoRegistral $movimientoRegistral){
 
         $this->modelo_editar = $movimientoRegistral;
