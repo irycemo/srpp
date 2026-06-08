@@ -91,26 +91,6 @@ class ReformasIndex extends Component
 
         }
 
-        $aclaracion = $this->modelo_editar->folioRealPersona->aclaracionAdministrativa();
-
-        if($aclaracion){
-
-            if($aclaracion->id == $this->modelo_editar->id){
-
-                $this->ruta($this->modelo_editar);
-
-                return;
-
-            }else{
-
-                $this->dispatch('mostrarMensaje', ['warning', "El folio real tiene aclaración administrativa vigente."]);
-
-                return;
-
-            }
-
-        }
-
         $this->actual = $this->modelo_editar;
 
         if($this->estaBloqueado()){
