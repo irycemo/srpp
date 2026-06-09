@@ -8,8 +8,6 @@ use Illuminate\Support\Facades\Log;
 use Illuminate\Validation\Rule;
 use Livewire\Component;
 
-use function PHPUnit\Framework\isNull;
-
 class MovimientosRegistralesOrdenar extends Component
 {
 
@@ -127,10 +125,9 @@ class MovimientosRegistralesOrdenar extends Component
 
         foreach($this->movimientos as $movimiento){
 
-            $this->datos [] = [
-                'estado' => $movimiento->estado,
-                'folio' => $movimiento->folio,
-            ];
+            $this->datos[$movimiento->id]['estado'] = $movimiento->estado;
+
+            $this->datos[$movimiento->id]['folio'] = $movimiento->folio;
 
         }
 
@@ -138,7 +135,7 @@ class MovimientosRegistralesOrdenar extends Component
 
     }
 
-    public function guardar(MovimientoRegistral $movimiento, $key){
+    public function guardar(MovimientoRegistral $movimiento){
 
         $this->validate([
             'datos' => 'required|array',
@@ -149,8 +146,8 @@ class MovimientosRegistralesOrdenar extends Component
         try {
 
             $movimiento->update([
-                'estado' => $this->datos[$key]['estado'],
-                'folio' => $this->datos[$key]['folio'],
+                'estado' => $this->datos[$movimiento->id]['estado'],
+                'folio' => $this->datos[$movimiento->id]['folio'],
                 'actualizado_por' => auth()->id()
             ]);
 
