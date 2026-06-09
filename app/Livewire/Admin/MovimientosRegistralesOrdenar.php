@@ -30,9 +30,6 @@ class MovimientosRegistralesOrdenar extends Component
             'tomo' => Rule::requiredIf($this->folio_real === null),
             'registro' => Rule::requiredIf($this->folio_real === null),
             'numero_propiedad' => Rule::requiredIf($this->folio_real === null),
-            'datos' => 'nullable|array',
-            'datos.*.estado' => 'required|string',
-            'datos.*.folio' => 'required|int',
          ];
     }
 
@@ -126,6 +123,8 @@ class MovimientosRegistralesOrdenar extends Component
                                                     ->orderBy('folio')
                                                     ->get();
 
+        $this->reset('datos')                                                    ;
+
         foreach($this->movimientos as $movimiento){
 
             $this->datos [] = [
@@ -140,6 +139,12 @@ class MovimientosRegistralesOrdenar extends Component
     }
 
     public function guardar(MovimientoRegistral $movimiento, $key){
+
+        $this->validate([
+            'datos' => 'required|array',
+            'datos.*.estado' => 'required|string|min:2',
+            'datos.*.folio' => 'required|int|min:1',
+        ]);
 
         try {
 

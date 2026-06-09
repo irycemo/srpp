@@ -69,6 +69,14 @@ trait CambiarAntecedenteTrait{
 
             }
 
+            if($this->folio_real_cambiar_atecendente && ! $folio_real){
+
+                $this->dispatch('mostrarMensaje', ['warning', "El folio real no existe."]);
+
+                return;
+
+            }
+
             if($folio_real){
 
                 $this->modelo_editar->update([

@@ -90,15 +90,16 @@
                         drag-item
                         draggable="true"
                         wire:key="{{ $movimiento->id }}"
-                        class="rounded-lg bg-gray-100 p-2 flex gap-4 items-center cursor-pointer">
+                        class="rounded-lg bg-gray-100 p-2 flex gap-4 items-center">
 
-                        <select name="" id="" class="text-sm py-1 px-4 rounded-full" wire:model="datos.{{ $key }}.estado">
+                        <select name="" id="{{ 'estado' . $movimiento->id }}" class="text-sm py-1 px-4 rounded-full @error('datos.' . $key . '.estado') border-red-500 @enderror" wire:model="datos.{{ $key }}.estado">
+                            <option value="">----</option>
                             <option value="nuevo">Nuevo</option>
                             <option value="captura">Captura</option>
                             <option value="elaborado">Elaborado</option>
                         </select>
 
-                        <input type="number" class="text-sm py-1 px-4 rounded-full w-16" value="{{ $movimiento->folio }}" wire:model="datos.{{ $key }}.folio">
+                        <input type="number" id="{{ 'number' . $movimiento->id }}" class="text-sm py-1 px-4 rounded-full w-16 @error('datos.' . $key . '.folio') border-red-500 @enderror" value="{{ $movimiento->folio }}" wire:model="datos.{{ $key }}.folio">
 
                         <x-button-blue
                             wire:click="guardar({{ $movimiento->id }}, {{ $key }})"
