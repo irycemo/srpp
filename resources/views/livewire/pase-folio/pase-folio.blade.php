@@ -324,7 +324,7 @@
 
                                         @endcan
 
-                                        @can('Rechazar pase a folio')
+                                        {{-- @can('Rechazar pase a folio')
 
                                             <button
                                                 wire:click="abrirModalRechazar({{ $movimiento->id }})"
@@ -334,7 +334,7 @@
                                                 Rechazar
                                             </button>
 
-                                        @endcan
+                                        @endcan --}}
 
                                         @can('Finalizar pase a folio')
 

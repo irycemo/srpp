@@ -199,6 +199,40 @@ class FoliosReales extends Component
 
     }
 
+    public function activarFolioReal(FolioReal $folioReal){
+
+        try {
+
+            $folioReal->update(['estado' => 'activo', 'actualizado_por' => auth()->id()]);
+
+            $folioReal->audits()->latest()->first()->update(['tags' => 'Reactivó folio real']);
+
+        } catch (\Throwable $th) {
+
+            $this->dispatch('mostrarMensaje', ['error', "Hubo un error."]);
+            Log::error("Error al reactivar folio real por el usuario: (id: " . auth()->user()->id . ") " . auth()->user()->name . ". " . $th);
+
+        }
+
+    }
+
+    public function inactivarFolioReal(FolioReal $folioReal){
+
+        try {
+
+            $folioReal->update(['estado' => 'inactivo', 'actualizado_por' => auth()->id()]);
+
+            $folioReal->audits()->latest()->first()->update(['tags' => 'Inactivó folio real']);
+
+        } catch (\Throwable $th) {
+
+            $this->dispatch('mostrarMensaje', ['error', "Hubo un error."]);
+            Log::error("Error al inactivar folio real por el usuario: (id: " . auth()->user()->id . ") " . auth()->user()->name . ". " . $th);
+
+        }
+
+    }
+
     public function mount(): void
     {
 

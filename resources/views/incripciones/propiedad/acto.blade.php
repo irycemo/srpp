@@ -290,7 +290,7 @@
                                 <p style="margin: 0"><strong>Movimiento registral:</strong> {{ $datos_control->folioReal }}-{{ $datos_control->movimiento_folio }}</p>
                                 <p style="margin: 0"><strong>Elaborado en: </strong>{{ $datos_control->elaborado_en }}</p>
                                 @if(isset($datos_control->fecha_prelacion))
-                                    <p style="margin: 0"><strong>Fecha de prelación: </strong>{{ $datos_control->fecha_prelacion }}</p>
+                                    <p style="margin: 0"><strong>Fecha de ingreso: </strong>{{ $datos_control->fecha_prelacion }}</p>
                                 @endif
                                 <p style="margin: 0"><strong>Registrado POR: </strong>{{  $datos_control->registrado_por }}</p>
                                 <p style="margin: 0"><strong>Folio real asignado por:</strong> {{ $datos_control->asigno_folio }}</p>

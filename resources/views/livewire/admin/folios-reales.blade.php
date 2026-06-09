@@ -217,6 +217,32 @@
                                             Imprimir caraturla
                                         </button>
 
+                                        @if($folio->estado == 'activo')
+
+                                            <button
+                                                wire:click="inactivarFolioReal({{ $folio->id }})"
+                                                wire:loading.attr="disabled"
+                                                wire:confirm="¿Esta seguro que desea inactivar el folio real?"
+                                                class="w-full text-left block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 focus:outline-none focus:bg-gray-100"
+                                                role="menuitem">
+                                                Inactivar folio real
+                                            </button>
+
+                                        @endif
+
+                                        @if($folio->estado == 'inactivo')
+
+                                            <button
+                                                wire:click="activarFolioReal({{ $folio->id }})"
+                                                wire:loading.attr="disabled"
+                                                wire:confirm="¿Esta seguro que desea activar el folio real?"
+                                                class="w-full text-left block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 focus:outline-none focus:bg-gray-100"
+                                                role="menuitem">
+                                                Activar folio real
+                                            </button>
+
+                                        @endif
+
                                     </div>
 
                                 </div>

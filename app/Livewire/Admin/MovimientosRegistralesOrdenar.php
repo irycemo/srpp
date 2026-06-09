@@ -145,9 +145,20 @@ class MovimientosRegistralesOrdenar extends Component
 
         try {
 
+            if($this->datos[$movimiento->id]['folio'] == 1){
+
+                $pase_a_folio = true;
+
+            }else{
+
+                $pase_a_folio = false;
+
+            }
+
             $movimiento->update([
                 'estado' => $this->datos[$movimiento->id]['estado'],
                 'folio' => $this->datos[$movimiento->id]['folio'],
+                'pase_a_folio' => $pase_a_folio,
                 'actualizado_por' => auth()->id()
             ]);
 
