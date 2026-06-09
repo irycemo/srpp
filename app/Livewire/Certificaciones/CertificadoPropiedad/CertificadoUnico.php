@@ -184,7 +184,7 @@ class CertificadoUnico extends Component
 
         $this->validate();
 
-        if(!auth()->user()->hasRole(['Jefe de departamento certificaciones']) && $this->certificacion->movimientoRegistral->distrito != '02 Uruapan'){
+        if($this->certificacion->movimientoRegistral->estado !== 'autorizado' && !auth()->user()->hasRole(['Jefe de departamento certificaciones'])){
 
             if($this->calcularDiaElaboracion($this->certificacion->movimientoRegistral)) return;
 
