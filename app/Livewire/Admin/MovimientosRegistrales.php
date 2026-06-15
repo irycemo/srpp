@@ -8,6 +8,7 @@ use App\Http\Controllers\Certificaciones\CertificadoGravamenController;
 use App\Http\Controllers\Gravamen\GravamenController;
 use App\Http\Controllers\InscripcionesPropiedad\PropiedadController;
 use App\Http\Controllers\Sentencias\SentenciasController;
+use App\Http\Controllers\Subdivisiones\SubdivisionesController;
 use App\Http\Controllers\Varios\VariosController;
 use App\Models\MovimientoRegistral;
 use App\Models\User;
@@ -281,7 +282,11 @@ class MovimientosRegistrales extends Component
 
         try {
 
-            if($movimientoRegistral->inscripcionPropiedad){
+            if(in_array($movimientoRegistral->inscripcionPropiedad->servicio, ['D127', 'D121', 'D120', 'D123', 'D122', 'D119', 'D124', 'D125', 'D126'])){
+
+                $pdf = (new SubdivisionesController())->reimprimir($movimientoRegistral->firmaElectronica);
+
+            }else{
 
                 $pdf = (new PropiedadController())->reimprimir($movimientoRegistral->firmaElectronica);
 
