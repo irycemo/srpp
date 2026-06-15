@@ -40,6 +40,8 @@ trait PropiedadTrait{
     public $propiedad;
     public $predio;
 
+    public $gravamenes;
+
     public function agregarTransmitente(){
 
         $this->modalTransmitente = true;
@@ -198,7 +200,46 @@ trait PropiedadTrait{
 
         $predioNuevo->save();
 
+        $this->gravamenes = Gravamen::with('actores', 'movimientoRegistral')
+                                                ->whereHas('movimientoRegistral', function($q){
+                                                    $q->where('folio_real', $this->inscripcion->movimientoRegistral->folioReal->id);
+                                                })
+                                                ->get();
+
+        $this->generarGravamenes($this->inscripcion->movimientoRegistral->folioReal, $folioRealNuevo->id);
+
         return $folioRealNuevo->folio;
+
+    }
+
+    public function generarGravamenes(FolioReal $folioReal, $folioRealNuevo){
+
+        foreach ($this->gravamenes as $gravamen) {
+
+            if($gravamen->estado == 'activo'){
+
+                $movimientoRegistral = $this->inscripcion->movimientoRegistral->replicate();
+                $movimientoRegistral->folio = $folioReal->ultimoFolio() + 1;
+                $movimientoRegistral->estado = 'pase_folio';
+                $movimientoRegistral->folio_real = $folioRealNuevo;
+                $movimientoRegistral->save();
+
+                $gravamenCopia = $gravamen->replicate();
+                $gravamenCopia->observaciones = $gravamen->observaciones . ' GRAVAMEN GENERADO POR ANTECEDENTE DEL FOLIO REAL: ' . $this->inscripcion->movimientoRegistral->folioReal->folio . '-' . $gravamen->movimientoRegistral->folio;
+                $gravamenCopia->movimiento_registral_id = $movimientoRegistral->id;
+                $gravamenCopia->save();
+
+                foreach($gravamen->actores as $actor){
+
+                    $nuevo_actor = $actor->replicate();
+                    $nuevo_actor->actorable_id = $gravamenCopia->id;
+                    $nuevo_actor->save();
+
+                }
+
+            }
+
+        }
 
     }
 
