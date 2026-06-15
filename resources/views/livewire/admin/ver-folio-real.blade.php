@@ -646,7 +646,7 @@
                         class="rounded-lg bg-gray-100 p-2 flex gap-4 items-center cursor-pointer"
                         wire:key="{{ $movimiento->id }}">
 
-                        Movimiento {{ $movimiento->folio }} ({{ ucfirst($movimiento->estado) }}): {{ $movimiento->servicio_nombre }}
+                        {{ $movimiento->año }}-{{ $movimiento->tramite }}-{{ $movimiento->usuario }} Movimiento {{ $movimiento->folio }} ({{ ucfirst($movimiento->estado) }}): {{ $movimiento->servicio_nombre }}
 
                     </li>
 
