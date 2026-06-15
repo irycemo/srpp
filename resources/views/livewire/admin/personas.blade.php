@@ -2,6 +2,19 @@
 
     <x-header>Personas</x-header>
 
+    <div class="mb-5 flex justify-end">
+
+        <button wire:click="abrirModalCrear" class="bg-gray-500 hover:shadow-lg hover:bg-gray-700 text-sm py-2 px-4 text-white rounded-full hidden md:block items-center justify-center focus:outline-gray-400 focus:outline-offset-2">
+
+            <img wire:loading wire:target="abrirModalCrear" class="mx-auto h-4 mr-1" src="{{ asset('storage/img/loading3.svg') }}" alt="Loading">
+            Agregar nueva persona
+
+        </button>
+
+        <button wire:click="abrirModalCrear" class="bg-gray-500 hover:shadow-lg hover:bg-gray-700 float-right text-sm py-2 px-4 text-white rounded-full md:hidden focus:outline-gray-400 focus:outline-offset-2">+</button>
+
+    </div>
+
     <div class="bg-white p-4 rounded-lg mb-5 shadow-xl">
 
         <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-3 mb-3 col-span-2 rounded-lg w-full lg:w-1/2 mx-auto">
@@ -51,7 +64,11 @@
                 wire:target="buscar"
                 wire:loading.attr="disabled"
                 class="mx-auto">
+
+                <img wire:loading wire:target="buscar" class="mx-auto h-4 mr-1" src="{{ asset('storage/img/loading3.svg') }}" alt="Loading">
+
                 Buscar persona
+
             </x-button-blue>
 
         </div>
@@ -102,23 +119,17 @@
 
                         <x-table.cell title="Razón social">
 
-                            <span class="lg:hidden absolute top-0 left-0 bg-blue-300 px-2 py-1 text-xs text-white font-bold uppercase rounded-br-xl">Razón social</span>
-
                             {{$persona->razon_social ?? 'N/A' }}
 
                         </x-table.cell>
 
                         <x-table.cell title="RFC">
 
-                            <span class="lg:hidden absolute top-0 left-0 bg-blue-300 px-2 py-1 text-xs text-white font-bold uppercase rounded-br-xl">RFC</span>
-
                             {{$persona->rfc ?? 'N/A' }}
 
                         </x-table.cell>
 
                         <x-table.cell title="CURP">
-
-                            <span class="lg:hidden absolute top-0 left-0 bg-blue-300 px-2 py-1 text-xs text-white font-bold uppercase rounded-br-xl">CURP</span>
 
                             {{$persona->curp ?? 'N/A' }}
 
@@ -132,7 +143,7 @@
 
                         </x-table.cell>
 
-                        <x-table.cell title="Actualizado">
+                        <x-table.cell title="Registrado">
 
                             <span class="font-semibold">@if($persona->actualizadoPor != null)Actualizado por: {{$persona->actualizadoPor->name}} @else Actualizado: @endif</span> <br>
 
@@ -196,69 +207,83 @@
 
     <x-dialog-modal wire:model="modal">
 
-        <x-slot name="title">Actualizar Persona</x-slot>
+        <x-slot name="title">
+
+            @if($crear)
+                Nueva persona
+            @elseif($editar)
+                Editar persona
+            @endif
+
+        </x-slot>
 
         <x-slot name="content">
 
             <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-3 mb-3 col-span-2 rounded-lg p-3">
 
-                @if($tipo_persona == 'FISICA')
+                <x-input-group for="modelo_editar.tipo" label="Tipo de persona" :error="$errors->first('modelo_editar.tipo')" class="w-full">
 
-                    <x-input-group for="modelo_editar.nombre" label="Nombre(s)" :error="$errors->first('modelo_editar.nombre')" class="w-full">
+                    <x-input-select id="modelo_editar.tipo" wire:model.live="modelo_editar.tipo" class="w-full">
 
-                        <x-input-text id="modelo_editar.nombre" wire:model="modelo_editar.nombre"  />
+                        <option value="">Seleccione una opción</option>
+                        <option value="MORAL">MORAL</option>
+                        <option value="FÍSICA">FISICA</option>
 
-                    </x-input-group>
+                    </x-input-select>
 
-                    <x-input-group for="modelo_editar.ap_paterno" label="Apellido paterno" :error="$errors->first('modelo_editar.ap_paterno')" class="w-full">
+                </x-input-group>
 
-                        <x-input-text id="modelo_editar.ap_paterno" wire:model="modelo_editar.ap_paterno"  />
+                <x-input-group for="modelo_editar.nombre" label="Nombre(s)" :error="$errors->first('modelo_editar.nombre')" class="w-full">
 
-                    </x-input-group>
+                    <x-input-text id="modelo_editar.nombre" wire:model="modelo_editar.nombre"  />
 
-                    <x-input-group for="modelo_editar.ap_materno" label="Apellido materno" :error="$errors->first('modelo_editar.ap_materno')" class="w-full">
+                </x-input-group>
 
-                        <x-input-text id="modelo_editar.ap_materno" wire:model="modelo_editar.ap_materno"  />
+                <x-input-group for="modelo_editar.ap_paterno" label="Apellido paterno" :error="$errors->first('modelo_editar.ap_paterno')" class="w-full">
 
-                    </x-input-group>
+                    <x-input-text id="modelo_editar.ap_paterno" wire:model="modelo_editar.ap_paterno"  />
 
-                    <div class=" col-span-3 rounded-lg">
+                </x-input-group>
 
-                        <x-input-group for="modelo_editar.multiple_nombre" label="Nombre multiple (Opcional)" :error="$errors->first('modelo_editar.multiple_nombre')" class="sm:col-span-2 lg:col-span-3">
+                <x-input-group for="modelo_editar.ap_materno" label="Apellido materno" :error="$errors->first('modelo_editar.ap_materno')" class="w-full">
 
-                            <textarea rows="3" class="w-full bg-white rounded text-sm" wire:model="modelo_editar.multiple_nombre"></textarea>
+                    <x-input-text id="modelo_editar.ap_materno" wire:model="modelo_editar.ap_materno"  />
 
-                        </x-input-group>
+                </x-input-group>
 
-                    </div>
+                <x-input-group for="modelo_editar.razon_social" label="Razon social" :error="$errors->first('modelo_editar.razon_social')" class="w-full">
 
-                    <x-input-group for="modelo_editar.curp" label="CURP" :error="$errors->first('modelo_editar.curp')" class="w-full">
+                    <x-input-text id="modelo_editar.razon_social" wire:model="modelo_editar.razon_social"  />
 
-                        <x-input-text id="modelo_editar.curp" wire:model="modelo_editar.curp"  />
+                </x-input-group>
 
-                    </x-input-group>
+                <div class=" col-span-3 rounded-lg">
 
-                    <x-input-group for="modelo_editar.fecha_nacimiento" label="Fecha de nacimiento" :error="$errors->first('modelo_editar.fecha_nacimiento')" class="w-full">
+                    <x-input-group for="modelo_editar.multiple_nombre" label="Nombre multiple (Opcional)" :error="$errors->first('modelo_editar.multiple_nombre')" class="sm:col-span-2 lg:col-span-3">
 
-                        <x-input-text type="date" id="modelo_editar.fecha_nacimiento" wire:model="modelo_editar.fecha_nacimiento" />
-
-                    </x-input-group>
-
-                    <x-input-group for="modelo_editar.estado_civil" label="Estado civil" :error="$errors->first('modelo_editar.estado_civil')" class="w-full">
-
-                        <x-input-text id="modelo_editar.estado_civil" wire:model="modelo_editar.estado_civil" />
+                        <textarea rows="3" class="w-full bg-white rounded text-sm" wire:model="modelo_editar.multiple_nombre"></textarea>
 
                     </x-input-group>
 
-                @elseif($tipo_persona == 'MORAL')
+                </div>
 
-                    <x-input-group for="modelo_editar.razon_social" label="Razon social" :error="$errors->first('modelo_editar.razon_social')" class="w-full">
+                <x-input-group for="modelo_editar.curp" label="CURP" :error="$errors->first('modelo_editar.curp')" class="w-full">
 
-                        <x-input-text id="modelo_editar.razon_social" wire:model="modelo_editar.razon_social"  />
+                    <x-input-text id="modelo_editar.curp" wire:model="modelo_editar.curp"  />
 
-                    </x-input-group>
+                </x-input-group>
 
-                @endif
+                <x-input-group for="modelo_editar.fecha_nacimiento" label="Fecha de nacimiento" :error="$errors->first('modelo_editar.fecha_nacimiento')" class="w-full">
+
+                    <x-input-text type="date" id="modelo_editar.fecha_nacimiento" wire:model="modelo_editar.fecha_nacimiento" />
+
+                </x-input-group>
+
+                <x-input-group for="modelo_editar.estado_civil" label="Estado civil" :error="$errors->first('modelo_editar.estado_civil')" class="w-full">
+
+                    <x-input-text id="modelo_editar.estado_civil" wire:model="modelo_editar.estado_civil" />
+
+                </x-input-group>
 
                 <x-input-group for="modelo_editar.rfc" label="RFC" :error="$errors->first('modelo_editar.rfc')" class="w-full">
 
@@ -330,15 +355,32 @@
 
             <div class="flex justify-end gap-4">
 
-                <x-button-blue
-                    wire:click="actualizar"
-                    wire:loading.attr="disabled"
-                    wire:target="actualizar">
+                @if($crear)
 
-                    <img wire:loading wire:target="actualizar" class="mx-auto h-4 mr-1" src="{{ asset('storage/img/loading3.svg') }}" alt="Loading">
+                    <x-button-blue
+                        wire:click="guardar"
+                        wire:loading.attr="disabled"
+                        wire:target="guardar">
 
-                    <span>Actualizar</span>
-                </x-button-blue>
+                        <img wire:loading wire:target="guardar" class="mx-auto h-4 mr-1" src="{{ asset('storage/img/loading3.svg') }}" alt="Loading">
+
+                        Guardar
+                    </x-button-blue>
+
+                @elseif($editar)
+
+                    <x-button-blue
+                        wire:click="actualizar"
+                        wire:loading.attr="disabled"
+                        wire:target="actualizar">
+
+                        <img wire:loading wire:target="actualizar" class="mx-auto h-4 mr-1" src="{{ asset('storage/img/loading3.svg') }}" alt="Loading">
+
+                        <span>Actualizar</span>
+
+                    </x-button-blue>
+
+                @endif
 
                 <x-button-red
                     wire:click="$toggle('modal')"

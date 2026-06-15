@@ -8,7 +8,6 @@ use Livewire\WithPagination;
 use Illuminate\Validation\Rule;
 use App\Traits\ComponentesTrait;
 use Illuminate\Support\Facades\Log;
-use App\Exceptions\GeneralException;
 
 class Personas extends Component
 {
@@ -58,6 +57,7 @@ class Personas extends Component
             'modelo_editar.ciudad' => 'nullable',
             'modelo_editar.entidad' => 'nullable',
             'modelo_editar.municipio' => 'nullable',
+            'modelo_editar.tipo' => 'nullable',
          ];
     }
 
@@ -77,7 +77,19 @@ class Personas extends Component
         if($this->modelo_editar->isNot($modelo))
             $this->modelo_editar = $modelo;
 
-        $this->tipo_persona = $this->modelo_editar->tipo;
+        if(in_array($this->modelo_editar->tipo, ['FISICA', 'FÍSICA'])){
+
+            $this->modelo_editar->tipo = 'FÍSICA';
+
+            $this->tipo_persona = 'FÍSICA';
+
+        }else{
+
+            $this->modelo_editar->tipo = 'MORAL';
+
+            $this->tipo_persona = 'MORAL';
+
+        }
 
     }
 
@@ -86,8 +98,6 @@ class Personas extends Component
         $this->validate();
 
         try{
-
-            $this->buscarPersona();
 
             $this->modelo_editar->actualizado_por = auth()->user()->id;
             $this->modelo_editar->save();
@@ -98,16 +108,32 @@ class Personas extends Component
 
             $this->dispatch('mostrarMensaje', ['success', "La persona se actualizó con éxito."]);
 
-        } catch (GeneralException $ex) {
-
-            $this->dispatch('mostrarMensaje', ['warning', $ex->getMessage()]);
-
         } catch (\Throwable $th) {
 
             Log::error("Error al actualizar persona por el usuario: (id: " . auth()->user()->id . ") " . auth()->user()->name . ". " . $th);
             $this->dispatch('mostrarMensaje', ['error', "Ha ocurrido un error."]);
             $this->resetearTodo();
 
+        }
+
+    }
+
+    public function guardar(){
+
+        $this->validate();
+
+        try {
+
+            $this->modelo_editar->save();
+
+            $this->resetearTodo();
+
+            $this->dispatch('mostrarMensaje', ['success', "La persona se creó con éxito."]);
+
+        } catch (\Throwable $th) {
+            Log::error("Error al crear persona por el usuario: (id: " . auth()->user()->id . ") " . auth()->user()->name . ". " . $th);
+            $this->dispatch('mostrarMensaje', ['error', "Ha ocurrido un error."]);
+            $this->resetearTodo();
         }
 
     }
@@ -123,7 +149,7 @@ class Personas extends Component
         }
 
         $this->validate([
-            'nombre' => Rule::requiredIf($this->ap_materno || $this->ap_paterno),
+            'nombre' => 'nullable',
             'ap_materno' => 'nullable',
             'ap_paterno' => 'nullable',
             'curp' => [
@@ -136,7 +162,7 @@ class Personas extends Component
             ],
         ]);
 
-        $this->personas = Persona::with('creadoPor', 'actualizadoPor')
+        $this->personas = Persona::with('creadoPor:id,name', 'actualizadoPor:id,name')
                                     ->when($this->rfc && $this->rfc != '', function($q){
                                         $q->where('rfc', $this->rfc);
                                     })
@@ -144,16 +170,16 @@ class Personas extends Component
                                         $q->where('curp', $this->curp);
                                     })
                                     ->when($this->nombre && $this->nombre != '', function($q){
-                                        $q->where('nombre', 'like' , '%' . $this->nombre . '%');
+                                        $q->where('nombre', 'like', '%' .$this->nombre . '%');
                                     })
                                     ->when($this->ap_materno && $this->ap_materno != '', function($q){
-                                        $q->where('ap_materno', 'like' , '%' . $this->ap_materno .'%');
+                                        $q->where('ap_materno', 'like', '%' .$this->ap_materno . '%');
                                     })
                                     ->when($this->ap_paterno && $this->ap_paterno != '', function($q){
-                                        $q->where('ap_paterno', 'like' , '%' . $this->ap_paterno .'%');
+                                        $q->where('ap_paterno', 'like', '%' .$this->ap_paterno . '%');
                                     })
                                     ->when($this->razon_social && $this->razon_social != '', function($q){
-                                        $q->where('razon_social', 'like', '%' . $this->razon_social . '%');
+                                        $q->where('razon_social', 'like', '%' .$this->razon_social . '%');
                                     })
                                     ->get();
 
