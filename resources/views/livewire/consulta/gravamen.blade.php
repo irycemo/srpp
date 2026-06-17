@@ -141,6 +141,14 @@
 
                     <div class="rounded-lg bg-gray-100 py-1 px-2">
 
+                        <strong>Valor del gravamen 2</strong>
+
+                        <p>${{ number_format($gravamen->valor_gravamen_2, 2) }} {{ $gravamen->divisa_2 }}</p>
+
+                    </div>
+
+                    <div class="rounded-lg bg-gray-100 py-1 px-2">
+
                         <strong>Fecha de inscripción</strong>
 
                         <p>{{ $gravamen->fecha_inscripcion }}</p>
