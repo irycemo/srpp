@@ -2,18 +2,19 @@
 
 namespace App\Models;
 
-use App\Models\File;
+use App\Constantes\Constantes;
 use App\Models\Actor;
 use App\Models\Escritura;
+use App\Models\File;
+use App\Models\MovimientoRegistral;
+use App\Models\ObjetoPersonaMOral;
 use App\Models\ReformaMoral;
 use App\Traits\ModelosTrait;
-use App\Constantes\Constantes;
-use App\Models\ObjetoPersonaMOral;
-use App\Models\MovimientoRegistral;
+use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Facades\Storage;
+use Illuminate\Support\Str;
 use OwenIt\Auditing\Contracts\Auditable;
-use Illuminate\Database\Eloquent\Factories\HasFactory;
 
 class FolioRealPersona extends Model implements Auditable
 {
@@ -60,15 +61,53 @@ class FolioRealPersona extends Model implements Auditable
 
     public function caratula(){
 
-        return $this->archivos()->where('descripcion', 'caratula')->first()
-                ? Storage::disk('caratulas')->url($this->archivos()->where('descripcion', 'caratula')->first()->url)
-                : null;
+        if(app()->isProduction()){
+
+            return $this->archivos()->where('descripcion', 'caratula')->latest()->first()
+                    ? Storage::disk('s3')->temporaryUrl(config('services.ses.ruta_caratulas') . $this->archivos()->where('descripcion', 'caratula')->first()->url, now()->addMinutes(10))
+                    : null;
+
+        }else{
+
+            return $this->archivos()->where('descripcion', 'caratula')->first()
+                    ? Storage::disk('caratulas')->url($this->archivos()->where('descripcion', 'caratula')->first()->url)
+                    : null;
+
+        }
     }
 
     public function documentoEntrada(){
-        return $this->archivos()->where('descripcion', 'documento_entrada')->latest()->first()
-                ? Storage::disk('documento_entrada')->url($this->archivos()->where('descripcion', 'documento_entrada')->first()->url)
-                : null;
+
+        if(app()->isProduction()){
+
+            if($this->archivos()->where('descripcion', 'documento_entrada')->latest()->first()){
+
+                $url = $this->archivos()->where('descripcion', 'documento_entrada')->latest()->first()->url;
+
+                if(Str::contains($url, config('services.ses.ruta_documento_entrada'))){
+
+                    return Storage::disk('s3')->temporaryUrl($url, now()->addMinutes(10));
+
+                }else{
+
+                    return Storage::disk('s3')->temporaryUrl(config('services.ses.ruta_documento_entrada') . '/' . $url, now()->addMinutes(10));
+
+                }
+
+            }else{
+
+                return null;
+
+            }
+
+        }else{
+
+            return $this->archivos()->where('descripcion', 'documento_entrada')->latest()->first()
+                    ? Storage::disk('documento_entrada')->url($this->archivos()->where('descripcion', 'documento_entrada')->first()->url)
+                    : null;
+
+        }
+
     }
 
     public function objetos(){
