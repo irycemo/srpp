@@ -157,64 +157,69 @@
 
     <main>
 
-        <div class="container">
+        @include('comun.caratulas.titulo')
 
-            <div>
+        <div style="text-align: right">
+            <p style="margin:0;"><strong>Movimiento registral:</strong> {{ $datos_control->folioReal }}-{{ $datos_control->movimiento_folio }}</p>
+            <p style="margin:0;"><strong>DISTRITO:</strong> {{ $datos_control->distrito}}</p>
+        </div>
 
-                @include('comun.caratulas.titulo')
+        <div class="titulo">
+            <p><strong>{{ $reforma->acto_contenido }}</strong></p>
+        </div>
 
-                <div style="text-align: right">
-                    <p style="margin:0;"><strong>Movimiento registral:</strong> {{ $datos_control->folioReal }}-{{ $datos_control->movimiento_folio }}</p>
-                    <p style="margin:0;"><strong>DISTRITO:</strong> {{ $datos_control->distrito}}</p>
-                </div>
+        <p class="separador">Descripción del acto</p>
 
-                <div class="titulo">
-                    <p><strong>{{ $reforma->acto_contenido }}</strong></p>
-                </div>
+        <p class="parrafo">
+            {{ $reforma->descripcion }}
+        </p>
 
-                <p class="separador">Descripción del acto</p>
+        <div>
 
-                <p class="parrafo">
-                    {{ $reforma->descripcion }}
-                </p>
-
-                @include('comun.caratulas.folio_persona_moral')
-
-                @include('comun.caratulas.solicitante')
-
-                @include('comun.caratulas.firma')
-
-                <p class="separador">datos de control</p>
-
-                <table style="margin-top: 10px">
-
-                    <tbody>
-                        <tr>
-                            <td style="padding-right: 40px;">
-
-                                <img class="qr" src="{{ $qr }}" alt="QR">
-                            </td>
-                            <td style="padding-right: 40px;">
-
-                                <p style="margin: 0"><strong>NÚMERO DE CONTROL: </strong>{{ $datos_control->numero_control }}</p>
-                                <p style="margin: 0"><strong>Movimiento registral:</strong> {{ $datos_control->folioReal }}-{{ $datos_control->movimiento_folio }}</p>
-                                <p style="margin: 0"><strong>DERECHOS: </strong>${{ number_format($datos_control->monto, 2) }}</p>
-                                <p style="margin: 0"><strong>Tipo de servicio: </strong>{{ $datos_control->tipo_servicio }}</p>
-                                <p style="margin: 0"><strong>Servicio: </strong>{{ $datos_control->servicio }}</p>
-                                <p style="margin: 0"><strong>Elaborado en: </strong>{{ $datos_control->elaborado_en }}</p>
-                                <p style="margin: 0"><strong>Fecha de ingreso: </strong>{{ $reforma->fecha_prelacion }}</p>
-                                <p style="margin: 0"><strong>Registrado POR: </strong>{{  $datos_control->registrado_por }}</p>
-                                <p style="margin: 0"><strong>Folio real asignado por:</strong> {{ $datos_control->asigno_folio }}</p>
-
-                            </td>
-                        </tr>
-                    </tbody>
-
-                </table>
-
-            </div>
+            @include('comun.caratulas.folio_persona_moral')
 
         </div>
+
+        <div>
+
+            @include('comun.caratulas.solicitante')
+
+        </div>
+
+
+        <div>
+
+            @include('comun.caratulas.firma')
+
+        </div>
+
+        <p class="separador">datos de control</p>
+
+        <table style="margin-top: 10px">
+
+            <tbody>
+                <tr>
+                    <td style="padding-right: 40px;">
+
+                        <img class="qr" src="{{ $qr }}" alt="QR">
+                    </td>
+                    <td style="padding-right: 40px;">
+
+                        <p style="margin: 0"><strong>NÚMERO DE CONTROL: </strong>{{ $datos_control->numero_control }}</p>
+                        <p style="margin: 0"><strong>Movimiento registral:</strong> {{ $datos_control->folioReal }}-{{ $datos_control->movimiento_folio }}</p>
+                        <p style="margin: 0"><strong>DERECHOS: </strong>${{ number_format($datos_control->monto, 2) }}</p>
+                        <p style="margin: 0"><strong>Tipo de servicio: </strong>{{ $datos_control->tipo_servicio }}</p>
+                        <p style="margin: 0"><strong>Servicio: </strong>{{ $datos_control->servicio }}</p>
+                        <p style="margin: 0"><strong>Elaborado en: </strong>{{ $datos_control->elaborado_en }}</p>
+                        <p style="margin: 0"><strong>Fecha de ingreso: </strong>{{ $reforma->fecha_prelacion }}</p>
+                        <p style="margin: 0"><strong>Registrado POR: </strong>{{  $datos_control->registrado_por }}</p>
+                        <p style="margin: 0"><strong>Folio real asignado por:</strong> {{ $datos_control->asigno_folio }}</p>
+
+                    </td>
+                </tr>
+            </tbody>
+
+        </table>
 
     </main>
 

@@ -157,403 +157,421 @@
 
     <main>
 
-        <div class="container">
+        @include('comun.caratulas.titulo')
 
-            <div>
+        <div style="text-align: right">
+            <p style="margin:0"><strong>DISTRITO:</strong> {{ $distrito }}</p>
+        </div>
 
-                @include('comun.caratulas.titulo')
+        <div>
 
-                <div style="text-align: right">
-                    <p style="margin:0"><strong>DISTRITO:</strong> {{ $distrito }}</p>
-                </div>
+            <p class="titulo">CARATULA DE ASIGNACION DE FOLIO REAL</p>
 
-                <div>
+        </div>
 
-                    <p class="titulo">CARATULA DE ASIGNACION DE FOLIO REAL</p>
+        <p class="parrafo">
+            EL DIRECTOR DEL REGISTRO PÚBLICO DE LA PROPIEDAD <strong>{{ $director }}</strong>, AUTORIZA EL PRESENTE FOLIO REAL PARA LOS ASIENTOS RELATIVOS A EL INMUEBLE QUE A CONTINUACIÓN SE DESCRIBE:
+        </p>
 
-                </div>
+        <p style="text-align: center" class="titulo"><strong>FOLIO REAL: I-</strong>{{ $folioReal->folio }} @if(isset($folioReal->matriz) && $folioReal->matriz) Matriz @endif</p>
 
-                <p class="parrafo">
-                    EL DIRECTOR DEL REGISTRO PÚBLICO DE LA PROPIEDAD <strong>{{ $director }}</strong>, AUTORIZA EL PRESENTE FOLIO REAL PARA LOS ASIENTOS RELATIVOS A EL INMUEBLE QUE A CONTINUACIÓN SE DESCRIBE:
-                </p>
 
-                <p style="text-align: center" class="titulo"><strong>FOLIO REAL: I-</strong>{{ $folioReal->folio }} @if(isset($folioReal->matriz) && $folioReal->matriz) Matriz @endif</p>
+        <div>
 
-                @if(count($folioReal->antecedentes))
+            @if(count($folioReal->antecedentes))
 
-                    <p class="separador">Antecedente(s)</p>
+                <p class="separador">Antecedente(s)</p>
 
-                    <table>
+                <table>
 
-                        <thead>
+                    <thead>
 
-                            <tr>
-                                <th style="padding-right: 10px;">Folio real</th>
-                                <th style="padding-right: 10px;">Tomo</th>
-                                <th style="padding-right: 10px;">Registro</th>
-                                <th style="padding-right: 10px;">Numero de propiedad</th>
-                                <th style="padding-right: 10px;">Distrito</th>
-                            </tr>
+                        <tr>
+                            <th style="padding-right: 10px;">Folio real</th>
+                            <th style="padding-right: 10px;">Tomo</th>
+                            <th style="padding-right: 10px;">Registro</th>
+                            <th style="padding-right: 10px;">Numero de propiedad</th>
+                            <th style="padding-right: 10px;">Distrito</th>
+                        </tr>
 
-                        </thead>
-
-                        <tbody>
-
-                            @foreach ($folioReal->antecedentes as $antecedente)
-
-                                <tr>
-                                    <td style="padding-right: 40px;">
-                                        {{ $antecedente->folio_real ?? 'N/A' }}
-                                    </td>
-                                    <td style="padding-right: 40px;">
-                                        {{ $antecedente->tomo_antecedente ?? 'N/A' }}
-                                    </td>
-                                    <td style="padding-right: 40px;">
-                                        {{ $antecedente->registro_antecedente ?? 'N/A' }}
-                                    </td>
-                                    <td style="padding-right: 40px;">
-                                        {{ $antecedente->numero_propiedad_antecedente ?? 'N/A' }}
-                                    </td>
-                                    <td style="padding-right: 40px;">
-                                        {{ $antecedente->distrito_antecedente }}
-                                    </td>
-                                </tr>
-
-                            @endforeach
-
-                        </tbody>
-
-                    </table>
-
-                @else
-                    <p class="separador">Antecedente</p>
-
-                    @if(isset($folioReal->antecedente))
-
-                        <p style="text-align: center"><strong>Folio real:</strong> {{ $folioReal->antecedente }}
-
-                    @else
-
-                        <p style="text-align: center"><strong>SECCIÓN:</strong> {{ $folioReal->seccion_antecedente }}; <strong>DISTRITO:</strong> {{ $distrito}}; <strong>TOMO:</strong> {{ $folioReal->tomo_antecedente }}, <strong>REGISTRO:</strong> {{ $folioReal->registro_antecedente }}, <strong>NÚMERO DE PROPIEDAD:</strong> {{ $folioReal->numero_propiedad_antecedente }}</p>
-
-                    @endif
-
-                @endif
-
-                <p class="separador">Documento de entrada</p>
-
-                @if(!in_array($folioReal->tipo_documento, ['ESCRITURA PÚBLICA', 'ESCRITURA PRIVADA']))
-
-                    <p class="parrafo">
-                        <strong>Tipo de documento: </strong> {{ $folioReal->tipo_documento }}; <strong>Número de documento: </strong> {{ $folioReal->numero_documento }}; <strong>Cargo de la autoridad: </strong> {{ $folioReal->autoridad_cargo }}; <strong>Nombre de la autoridad: </strong> {{ $folioReal->autoridad_nombre }}; <strong>Número de la autoridad: </strong> {{ $folioReal->autoridad_numero }}; <strong>Fecha de emisión: </strong> {{ $folioReal->fecha_emision }}; <strong>Fecha de inscripción: </strong> {{$folioReal->fecha_inscripcion }}; <strong>Dependencia: </strong>{{ $folioReal->procedencia }}
-                    </p>
-
-                    <p class="parrafo"><strong>Acto contenido:</strong> {{ $folioReal->acto_contenido_antecedente }}</p>
-
-                    @if($folioReal->observaciones_antecedente)
-
-                        <p class="parrafo"><strong>descripción del acto:</strong> {{ $folioReal->observaciones_antecedente }}</p>
-
-                    @endif
-
-                @else
-
-                    <p class="parrafo">
-                        <strong>Tipo de documento: </strong> {{ $folioReal->tipo_documento }}; <strong>Número de escritura: </strong> {{ $folioReal->escritura->numero }}; <strong>Número de notaria: </strong> {{ $folioReal->escritura->notaria }}; <strong>Nombre del notario: </strong> {{ $folioReal->escritura->nombre_notario }}; <strong>Estado del notario: </strong> {{ $folioReal->escritura->estado_notario }}; <strong>Fecha de inscripción: </strong> {{ $folioReal->escritura->fecha_inscripcion }}; <strong>Fecha de la escritura: </strong> {{ $folioReal->escritura->fecha_escritura }}; <strong>Número de hojas: </strong>{{ $folioReal->escritura->numero_hojas }}; <strong>Número de paginas: </strong>{{ $folioReal->escritura->numero_paginas }}
-                    </p>
-
-                    <p class="parrafo"><strong>Acto contenido en el antecedente:</strong> {{ $folioReal->escritura->acto_contenido_antecedente }}</p>
-
-                    @if($folioReal->escritura->comentario)
-
-                        <p class="parrafo"><strong>descripción del acto:</strong> {{ $folioReal->escritura->comentario }}</p>
-
-                    @endif
-
-                @endif
-
-                @include('comun.caratulas.ubicacion_inmueble')
-
-                @if(count($predio->colindancias))
-
-                    @include('comun.caratulas.colindancias')
-
-                @endif
-
-                @include('comun.caratulas.descripcion_inmueble')
-
-                @include('comun.caratulas.propietarios')
-
-                @if($folioReal->movimientosRegistrales > 1)
-
-                    <p class="separador" style="text-align: center">Movimientos registrales</p>
-
-                    <div style="margin-left: 10px; margin-right: 10px;">
-
-                        @if(count($folioReal->gravamenes) >= 1)
-
-                            <p class="separador" style="text-align: center">Gravamenes</p>
-
-                            @foreach ($folioReal->gravamenes as $gravamen)
-
-                                <p class="parrafo">
-
-                                    <p class="separador">gravamen ({{ $folioReal->folio }}-{{ $gravamen->movimiento_folio }})</p>
-
-                                    <p class="parrafo">
-                                        <strong>Fecha de inscripción: </strong> {{ $gravamen->fecha_inscripcion }}. <strong>Valor del gravamen:</strong> ${{ number_format($gravamen->valor_gravamen, 2) }} {{ $gravamen->divisa }}.
-                                    </p>
-
-                                    <p class="parrafo">
-                                        <strong>Acto contenido: </strong> {{ $gravamen->acto_contenido }}
-                                    </p>
-
-                                    <p class="parrafo">
-                                        <strong>Tipo de documento / Número de documento: </strong> {{ $gravamen->tipo_documento }} / {{ $gravamen->numero_documento }}
-                                    </p>
-
-                                    <p class="parrafo">
-                                        <strong>Procedencia: </strong> {{ $gravamen->procedencia }}
-                                    </p>
-
-                                    <p class="parrafo">
-                                        <strong>Tipo de gravamen: </strong> {{ $gravamen->tipo }}
-                                    </p>
-
-                                    <p class="parrafo">
-                                        <strong>Descripción: </strong> {{ $gravamen->observaciones }}
-                                    </p>
-
-                                    {{-- <p class="parrafo">
-                                        <strong>Actores: </strong>
-                                        @foreach ($gravamen->deudores as $deudor)
-
-                                        {{ $deudor->tipo_deudor }}: {{ $deudor->nombre }} {{ $deudor->ap_paterno }} {{ $deudor->ap_materno }} {{ $deudor->razon_social }}@if(!$loop->last), @endif
-
-                                        @endforeach
-                                    </p> --}}
-
-                                    <p class="separador">Actores</p>
-
-                                    <table>
-
-                                        <thead>
-
-                                            <tr>
-                                                <th >Tipo de actor</th>
-                                                <th >Nombre / Razón social</th>
-                                            </tr>
-
-                                        </thead>
-
-                                        <tbody>
-
-                                            @foreach ($gravamen->deudores as $deudor)
-
-                                            <tr>
-                                                <td style="padding-right: 40px;">
-                                                    {{ $deudor->tipo_deudor }}
-                                                </td>
-                                                <td style="padding-right: 40px;">
-                                                    {{ $deudor->nombre }} {{ $deudor->ap_paterno }} {{ $deudor->ap_materno }} {{ $deudor->razon_social }}
-                                                </td>
-                                            </tr>
-
-                                            @endforeach
-
-                                        </tbody>
-
-                                    </table>
-
-                                    {{-- <p class="parrafo">
-                                        <strong>acreedores: </strong>
-                                        @foreach ($gravamen->acreedores as $acreedor)
-
-                                            {{ $acreedor->nombre }} {{ $acreedor->ap_paterno }} {{ $acreedor->ap_materno }} {{ $acreedor->razon_social }}@if(!$loop->last), @endif
-
-                                        @endforeach
-                                    </p> --}}
-
-                                    <p class="separador">acreedores</p>
-
-                                    <table>
-
-                                        <thead>
-
-                                            <tr>
-                                                <th >Nombre / Razón social</th>
-                                            </tr>
-
-                                        </thead>
-
-                                        <tbody>
-
-                                            @foreach ($gravamen->acreedores as $acreedor)
-
-                                                <tr>
-                                                    <td style="padding-right: 40px;">
-                                                        {{ $acreedor->nombre }} {{ $acreedor->ap_paterno }} {{ $acreedor->ap_materno }} {{ $acreedor->razon_social }}
-                                                    </td>
-                                                </tr>
-
-                                            @endforeach
-
-                                        </tbody>
-
-                                    </table>
-
-                                </p>
-
-                            @endforeach
-
-                        @endif
-
-                        @if(count($folioReal->sentencias) >= 1)
-
-                            <p class="separador" style="text-align: center">Sentencias</p>
-
-                            @foreach ($folioReal->sentencias as $sentencia)
-
-                                <p class="parrafo">
-
-                                    <p class="separador">Sentencia ({{ $folioReal->folio }}-{{ $sentencia->movimiento_folio }})</p>
-
-                                    <p class="parrafo">
-                                        <strong>Fecha de inscripción: </strong> {{ $sentencia->fecha_inscripcion }}. <strong>Tomo:</strong> {{ $sentencia->tomo }}. <strong>Registro:</strong> {{ $sentencia->registro }}.  @if(isset($sentencia->hojas))<strong>Hojas: </strong> {{ $sentencia->hojas }}.@endif  @if(isset($sentencia->expediente))<strong>Expediente: </strong> {{ $sentencia->expediente }}.@endif
-                                    </p>
-
-                                    <p class="parrafo">
-                                        <strong>Acto contenido:</strong> {{ $sentencia->acto_contenido }}
-                                    </p>
-
-                                    <p class="parrafo">
-                                        <strong>Descripción del acto:</strong> {{ $sentencia->descripcion }}
-                                    </p>
-
-                                </p>
-
-                            @endforeach
-
-                        @endif
-
-                        @if(count($folioReal->varios) >= 1)
-
-                            <p class="separador" style="text-align: center">Varios</p>
-
-                            @foreach ($folioReal->varios as $vario)
-
-                                <p class="parrafo">
-
-                                    <p class="separador">Varios ({{ $folioReal->folio }}-{{ $vario->movimiento_folio }})</p>
-
-                                    <p class="parrafo">
-                                        <strong>Fecha de inscripción: </strong> {{ $vario->fecha_inscripcion }}. <strong>Tomo:</strong> {{ $vario->tomo }}. <strong>Registro:</strong> {{ $vario->registro }}.
-                                    </p>
-
-                                    <p class="parrafo">
-                                        <strong>Acto contenido:</strong> {{ $vario->acto_contenido }}
-                                    </p>
-
-                                    <p class="parrafo">
-                                        <strong>Descripción del acto:</strong> {{ $vario->descripcion }}
-                                    </p>
-
-                                </p>
-
-                            @endforeach
-
-                        @endif
-
-                        @if(count($folioReal->cancelaciones) >= 1)
-
-                            <p class="separador" style="text-align: center">Cancelaciones</p>
-
-                            @foreach ($folioReal->cancelaciones as $cancelacion)
-
-                                <p class="parrafo">
-
-                                    <p class="separador">Cancelación ({{ $folioReal->folio }}-{{ $cancelacion->movimiento_folio }})</p>
-
-                                    <p class="parrafo">
-                                        <strong>Gravamen cancelado:</strong> {{ $folioReal->folio }}-{{ $cancelacion->movimiento_folio }}
-                                    </p>
-
-                                    <p class="parrafo">
-                                        <strong>Acto contenido:</strong> {{ $cancelacion->acto_contenido }}
-                                    </p>
-
-                                    <p class="parrafo">
-                                        <strong>Descripción del acto:</strong> {{ $cancelacion->observaciones }}
-                                    </p>
-
-                                </p>
-
-                            @endforeach
-
-                        @endif
-
-                    </div>
-
-                @endif
-
-                <div class="firma no-break">
-
-                    <p class="atte">
-                        <strong>A T E N T A M E N T E</strong>
-                    </p>
-
-                    @if(!$firma_electronica)
-
-                        @if($distrito == '02 Uruapan' )
-                            <p style="margin-top: 80px;"></p>
-                            <p class="borde">Lic. ANAHÍ RENOVATO CASTAÑEDA </p>
-                            <p style="margin:0;">COORDINADORA REGIONAL 4 PURHÉPECHA (URUAPAN)</p>
-                        @else
-                            <p style="margin-top: 80px;"></p>
-                            <p class="borde" style="margin:0;">{{ $director }}</p>
-                            <p style="margin:0;">Director del registro público de la propiedad</p>
-                        @endif
-
-                    @else
-
-                        <p style="margin:0;">{{ $director }}</p>
-                        <p style="margin:0;">Director del registro público de la propiedad</p>
-                        <p style="text-align: center">Firma Electrónica:</p>
-                        <p class="parrafo" style="overflow-wrap: break-word;">{{ $firma_electronica }}</p>
-
-                    @endif
-
-                </div>
-
-                <p class="separador">datos de control</p>
-
-                <table style="margin-top: 10px">
+                    </thead>
 
                     <tbody>
-                        <tr>
-                            <td style="padding-right: 40px;">
 
-                                <img class="qr" src="{{ $qr }}" alt="QR">
-                            </td>
-                            <td style="padding-right: 40px;">
+                        @foreach ($folioReal->antecedentes as $antecedente)
 
-                                <p><strong>folio Asignado por:</strong> {{ $folioReal->asignado_por }}.</p>
-                                <p><strong>Fecha de asignación de folio:</strong> {{ $datos_control->fecha_asignacion }}.</p>
-                                @if(isset($datos_control->numero_control))
+                            <tr>
+                                <td style="padding-right: 40px;">
+                                    {{ $antecedente->folio_real ?? 'N/A' }}
+                                </td>
+                                <td style="padding-right: 40px;">
+                                    {{ $antecedente->tomo_antecedente ?? 'N/A' }}
+                                </td>
+                                <td style="padding-right: 40px;">
+                                    {{ $antecedente->registro_antecedente ?? 'N/A' }}
+                                </td>
+                                <td style="padding-right: 40px;">
+                                    {{ $antecedente->numero_propiedad_antecedente ?? 'N/A' }}
+                                </td>
+                                <td style="padding-right: 40px;">
+                                    {{ $antecedente->distrito_antecedente }}
+                                </td>
+                            </tr>
 
-                                    <p><strong>número de control:</strong> {{ $datos_control->numero_control }}.</p>
+                        @endforeach
 
-                                @endif
-
-                            </td>
-                        </tr>
                     </tbody>
 
                 </table>
 
-            </div>
+            @else
+
+                <p class="separador">Antecedente</p>
+
+                @if(isset($folioReal->antecedente))
+
+                    <p style="text-align: center"><strong>Folio real:</strong> {{ $folioReal->antecedente }}</p>
+
+                @else
+
+                    <p style="text-align: center"><strong>SECCIÓN:</strong> {{ $folioReal->seccion_antecedente }}; <strong>DISTRITO:</strong> {{ $distrito}}; <strong>TOMO:</strong> {{ $folioReal->tomo_antecedente }}, <strong>REGISTRO:</strong> {{ $folioReal->registro_antecedente }}, <strong>NÚMERO DE PROPIEDAD:</strong> {{ $folioReal->numero_propiedad_antecedente }}</p>
+
+                @endif
+
+            @endif
 
         </div>
+
+        <p class="separador">Documento de entrada</p>
+
+        <div>
+
+            @if(!in_array($folioReal->tipo_documento, ['ESCRITURA PÚBLICA', 'ESCRITURA PRIVADA']))
+
+                <p class="parrafo">
+                    <strong>Tipo de documento: </strong> {{ $folioReal->tipo_documento }}; <strong>Número de documento: </strong> {{ $folioReal->numero_documento }}; <strong>Cargo de la autoridad: </strong> {{ $folioReal->autoridad_cargo }}; <strong>Nombre de la autoridad: </strong> {{ $folioReal->autoridad_nombre }}; <strong>Número de la autoridad: </strong> {{ $folioReal->autoridad_numero }}; <strong>Fecha de emisión: </strong> {{ $folioReal->fecha_emision }}; <strong>Fecha de inscripción: </strong> {{$folioReal->fecha_inscripcion }}; <strong>Dependencia: </strong>{{ $folioReal->procedencia }}
+                </p>
+
+                <p class="parrafo"><strong>Acto contenido:</strong> {{ $folioReal->acto_contenido_antecedente }}</p>
+
+                @if($folioReal->observaciones_antecedente)
+
+                    <p class="parrafo"><strong>descripción del acto:</strong> {{ $folioReal->observaciones_antecedente }}</p>
+
+                @endif
+
+            @else
+
+                <p class="parrafo">
+                    <strong>Tipo de documento: </strong> {{ $folioReal->tipo_documento }}; <strong>Número de escritura: </strong> {{ $folioReal->escritura->numero }}; <strong>Número de notaria: </strong> {{ $folioReal->escritura->notaria }}; <strong>Nombre del notario: </strong> {{ $folioReal->escritura->nombre_notario }}; <strong>Estado del notario: </strong> {{ $folioReal->escritura->estado_notario }}; <strong>Fecha de inscripción: </strong> {{ $folioReal->escritura->fecha_inscripcion }}; <strong>Fecha de la escritura: </strong> {{ $folioReal->escritura->fecha_escritura }}; <strong>Número de hojas: </strong>{{ $folioReal->escritura->numero_hojas }}; <strong>Número de paginas: </strong>{{ $folioReal->escritura->numero_paginas }}
+                </p>
+
+                <p class="parrafo"><strong>Acto contenido en el antecedente:</strong> {{ $folioReal->escritura->acto_contenido_antecedente }}</p>
+
+                @if($folioReal->escritura->comentario)
+
+                    <p class="parrafo"><strong>descripción del acto:</strong> {{ $folioReal->escritura->comentario }}</p>
+
+                @endif
+
+            @endif
+
+        </div>
+
+        <div>
+
+            @include('comun.caratulas.ubicacion_inmueble')
+
+        </div>
+
+        <div>
+
+            @if(count($predio->colindancias))
+
+                @include('comun.caratulas.colindancias')
+
+            @endif
+
+        </div>
+
+        <div>
+
+            @include('comun.caratulas.descripcion_inmueble')
+
+        </div>
+
+        <div>
+
+            @include('comun.caratulas.propietarios')
+
+        </div>
+
+        @if($folioReal->movimientosRegistrales > 1)
+
+            <p class="separador" style="text-align: center">Movimientos registrales</p>
+
+            <div style="margin-left: 10px; margin-right: 10px;">
+
+                @if(count($folioReal->gravamenes) >= 1)
+
+                    <p class="separador" style="text-align: center">Gravamenes</p>
+
+                    @foreach ($folioReal->gravamenes as $gravamen)
+
+                        <p class="parrafo">
+
+                            <p class="separador">gravamen ({{ $folioReal->folio }}-{{ $gravamen->movimiento_folio }})</p>
+
+                            <p class="parrafo">
+                                <strong>Fecha de inscripción: </strong> {{ $gravamen->fecha_inscripcion }}. <strong>Valor del gravamen:</strong> ${{ number_format($gravamen->valor_gravamen, 2) }} {{ $gravamen->divisa }}.
+                            </p>
+
+                            <p class="parrafo">
+                                <strong>Acto contenido: </strong> {{ $gravamen->acto_contenido }}
+                            </p>
+
+                            <p class="parrafo">
+                                <strong>Tipo de documento / Número de documento: </strong> {{ $gravamen->tipo_documento }} / {{ $gravamen->numero_documento }}
+                            </p>
+
+                            <p class="parrafo">
+                                <strong>Procedencia: </strong> {{ $gravamen->procedencia }}
+                            </p>
+
+                            <p class="parrafo">
+                                <strong>Tipo de gravamen: </strong> {{ $gravamen->tipo }}
+                            </p>
+
+                            <p class="parrafo">
+                                <strong>Descripción: </strong> {{ $gravamen->observaciones }}
+                            </p>
+
+                            {{-- <p class="parrafo">
+                                <strong>Actores: </strong>
+                                @foreach ($gravamen->deudores as $deudor)
+
+                                {{ $deudor->tipo_deudor }}: {{ $deudor->nombre }} {{ $deudor->ap_paterno }} {{ $deudor->ap_materno }} {{ $deudor->razon_social }}@if(!$loop->last), @endif
+
+                                @endforeach
+                            </p> --}}
+
+                            <p class="separador">Actores</p>
+
+                            <table>
+
+                                <thead>
+
+                                    <tr>
+                                        <th >Tipo de actor</th>
+                                        <th >Nombre / Razón social</th>
+                                    </tr>
+
+                                </thead>
+
+                                <tbody>
+
+                                    @foreach ($gravamen->deudores as $deudor)
+
+                                    <tr>
+                                        <td style="padding-right: 40px;">
+                                            {{ $deudor->tipo_deudor }}
+                                        </td>
+                                        <td style="padding-right: 40px;">
+                                            {{ $deudor->nombre }} {{ $deudor->ap_paterno }} {{ $deudor->ap_materno }} {{ $deudor->razon_social }}
+                                        </td>
+                                    </tr>
+
+                                    @endforeach
+
+                                </tbody>
+
+                            </table>
+
+                            {{-- <p class="parrafo">
+                                <strong>acreedores: </strong>
+                                @foreach ($gravamen->acreedores as $acreedor)
+
+                                    {{ $acreedor->nombre }} {{ $acreedor->ap_paterno }} {{ $acreedor->ap_materno }} {{ $acreedor->razon_social }}@if(!$loop->last), @endif
+
+                                @endforeach
+                            </p> --}}
+
+                            <p class="separador">acreedores</p>
+
+                            <table>
+
+                                <thead>
+
+                                    <tr>
+                                        <th >Nombre / Razón social</th>
+                                    </tr>
+
+                                </thead>
+
+                                <tbody>
+
+                                    @foreach ($gravamen->acreedores as $acreedor)
+
+                                        <tr>
+                                            <td style="padding-right: 40px;">
+                                                {{ $acreedor->nombre }} {{ $acreedor->ap_paterno }} {{ $acreedor->ap_materno }} {{ $acreedor->razon_social }}
+                                            </td>
+                                        </tr>
+
+                                    @endforeach
+
+                                </tbody>
+
+                            </table>
+
+                        </p>
+
+                    @endforeach
+
+                @endif
+
+                @if(count($folioReal->sentencias) >= 1)
+
+                    <p class="separador" style="text-align: center">Sentencias</p>
+
+                    @foreach ($folioReal->sentencias as $sentencia)
+
+                        <p class="parrafo">
+
+                            <p class="separador">Sentencia ({{ $folioReal->folio }}-{{ $sentencia->movimiento_folio }})</p>
+
+                            <p class="parrafo">
+                                <strong>Fecha de inscripción: </strong> {{ $sentencia->fecha_inscripcion }}. <strong>Tomo:</strong> {{ $sentencia->tomo }}. <strong>Registro:</strong> {{ $sentencia->registro }}.  @if(isset($sentencia->hojas))<strong>Hojas: </strong> {{ $sentencia->hojas }}.@endif  @if(isset($sentencia->expediente))<strong>Expediente: </strong> {{ $sentencia->expediente }}.@endif
+                            </p>
+
+                            <p class="parrafo">
+                                <strong>Acto contenido:</strong> {{ $sentencia->acto_contenido }}
+                            </p>
+
+                            <p class="parrafo">
+                                <strong>Descripción del acto:</strong> {{ $sentencia->descripcion }}
+                            </p>
+
+                        </p>
+
+                    @endforeach
+
+                @endif
+
+                @if(count($folioReal->varios) >= 1)
+
+                    <p class="separador" style="text-align: center">Varios</p>
+
+                    @foreach ($folioReal->varios as $vario)
+
+                        <p class="parrafo">
+
+                            <p class="separador">Varios ({{ $folioReal->folio }}-{{ $vario->movimiento_folio }})</p>
+
+                            <p class="parrafo">
+                                <strong>Fecha de inscripción: </strong> {{ $vario->fecha_inscripcion }}. <strong>Tomo:</strong> {{ $vario->tomo }}. <strong>Registro:</strong> {{ $vario->registro }}.
+                            </p>
+
+                            <p class="parrafo">
+                                <strong>Acto contenido:</strong> {{ $vario->acto_contenido }}
+                            </p>
+
+                            <p class="parrafo">
+                                <strong>Descripción del acto:</strong> {{ $vario->descripcion }}
+                            </p>
+
+                        </p>
+
+                    @endforeach
+
+                @endif
+
+                @if(count($folioReal->cancelaciones) >= 1)
+
+                    <p class="separador" style="text-align: center">Cancelaciones</p>
+
+                    @foreach ($folioReal->cancelaciones as $cancelacion)
+
+                        <p class="parrafo">
+
+                            <p class="separador">Cancelación ({{ $folioReal->folio }}-{{ $cancelacion->movimiento_folio }})</p>
+
+                            <p class="parrafo">
+                                <strong>Gravamen cancelado:</strong> {{ $folioReal->folio }}-{{ $cancelacion->movimiento_folio }}
+                            </p>
+
+                            <p class="parrafo">
+                                <strong>Acto contenido:</strong> {{ $cancelacion->acto_contenido }}
+                            </p>
+
+                            <p class="parrafo">
+                                <strong>Descripción del acto:</strong> {{ $cancelacion->observaciones }}
+                            </p>
+
+                        </p>
+
+                    @endforeach
+
+                @endif
+
+            </div>
+
+        @endif
+
+        <div class="firma no-break">
+
+            <p class="atte">
+                <strong>A T E N T A M E N T E</strong>
+            </p>
+
+            @if(!$firma_electronica)
+
+                @if($distrito == '02 Uruapan' )
+                    <p style="margin-top: 80px;"></p>
+                    <p class="borde">Lic. ANAHÍ RENOVATO CASTAÑEDA </p>
+                    <p style="margin:0;">COORDINADORA REGIONAL 4 PURHÉPECHA (URUAPAN)</p>
+                @else
+                    <p style="margin-top: 80px;"></p>
+                    <p class="borde" style="margin:0;">{{ $director }}</p>
+                    <p style="margin:0;">Director del registro público de la propiedad</p>
+                @endif
+
+            @else
+
+                <p style="margin:0;">{{ $director }}</p>
+                <p style="margin:0;">Director del registro público de la propiedad</p>
+                <p style="text-align: center">Firma Electrónica:</p>
+                <p class="parrafo" style="overflow-wrap: break-word;">{{ $firma_electronica }}</p>
+
+            @endif
+
+        </div>
+
+        <p class="separador">datos de control</p>
+
+        <table style="margin-top: 10px">
+
+            <tbody>
+                <tr>
+                    <td style="padding-right: 40px;">
+
+                        <img class="qr" src="{{ $qr }}" alt="QR">
+                    </td>
+                    <td style="padding-right: 40px;">
+
+                        <p><strong>folio Asignado por:</strong> {{ $folioReal->asignado_por }}.</p>
+                        <p><strong>Fecha de asignación de folio:</strong> {{ $datos_control->fecha_asignacion }}.</p>
+                        @if(isset($datos_control->numero_control))
+
+                            <p><strong>número de control:</strong> {{ $datos_control->numero_control }}.</p>
+
+                        @endif
+
+                    </td>
+                </tr>
+            </tbody>
+
+        </table>
 
     </main>
 

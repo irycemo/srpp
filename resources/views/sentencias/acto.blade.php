@@ -155,169 +155,189 @@
 
     <main>
 
-        <div class="container">
+        @include('comun.caratulas.titulo')
 
-            @include('comun.caratulas.titulo')
+        <div style="text-align: right">
+            <p style="margin:0;"><strong>FOLIO REAL:</strong> {{ $datos_control->folioReal }}-{{ $datos_control->movimiento_folio }}</p>
+            <p style="margin:0;"><strong>DISTRITO:</strong> {{ $datos_control->distrito}}</p>
+        </div>
 
-            <div class="informacion">
+        <div class="titulo">
+            <p><strong>{{ $sentencia->acto_contenido }}</strong></p>
+        </div>
 
-                <div style="text-align: right">
-                    <p style="margin:0;"><strong>FOLIO REAL:</strong> {{ $datos_control->folioReal }}-{{ $datos_control->movimiento_folio }}</p>
-                    <p style="margin:0;"><strong>DISTRITO:</strong> {{ $datos_control->distrito}}</p>
-                </div>
+        <p class="separador">Descripción del acto</p>
 
-                <div class="titulo">
-                    <p><strong>{{ $sentencia->acto_contenido }}</strong></p>
-                </div>
+        <p class="parrafo">
+            <strong>Tipo: </strong>{{ $sentencia->tipo }}
+        </p>
 
-                <p class="separador">Descripción del acto</p>
+        <p class="parrafo">
+            <strong>Descripción: </strong>{{ $sentencia->descripcion }}
+        </p>
 
-                <p class="parrafo">
-                    <strong>Tipo: </strong>{{ $sentencia->tipo }}
-                </p>
+        <p class="separador">Documento de entrada</p>
 
-                <p class="parrafo">
-                    <strong>Descripción: </strong>{{ $sentencia->descripcion }}
-                </p>
+        <p class="parrafo">
+            <strong>Tipo de documento: </strong> {{ $sentencia->tipo_documento }}; @if(isset($sentencia->numero_documento))<strong>Número de documento: </strong> {{ $sentencia->numero_documento }};@endif <strong>Cargo de la autoridad: </strong> {{ $sentencia->autoridad_cargo }}; <strong>Nombre de la autoridad: </strong> {{ $sentencia->autoridad_nombre }}; <strong>Número de la autoridad: </strong> {{ $sentencia->autoridad_numero }}; <strong>Fecha de emisión: </strong> {{ $sentencia->fecha_emision }}; @if(isset($sentencia->fecha_inscripcion))<strong>Fecha de inscripción: </strong> {{$sentencia->fecha_inscripcion }};@endif @if(isset($sentencia->procedencia))<strong>Dependencia: </strong>{{ $sentencia->procedencia }} @endif
+        </p>
 
-                <p class="separador">Documento de entrada</p>
+        <div>
 
-                <p class="parrafo">
-                    <strong>Tipo de documento: </strong> {{ $sentencia->tipo_documento }}; @if(isset($sentencia->numero_documento))<strong>Número de documento: </strong> {{ $sentencia->numero_documento }};@endif <strong>Cargo de la autoridad: </strong> {{ $sentencia->autoridad_cargo }}; <strong>Nombre de la autoridad: </strong> {{ $sentencia->autoridad_nombre }}; <strong>Número de la autoridad: </strong> {{ $sentencia->autoridad_numero }}; <strong>Fecha de emisión: </strong> {{ $sentencia->fecha_emision }}; @if(isset($sentencia->fecha_inscripcion))<strong>Fecha de inscripción: </strong> {{$sentencia->fecha_inscripcion }};@endif @if(isset($sentencia->procedencia))<strong>Dependencia: </strong>{{ $sentencia->procedencia }} @endif
-                </p>
+            @include('comun.caratulas.ubicacion_inmueble')
 
-                @include('comun.caratulas.ubicacion_inmueble')
+        </div>
 
-                @if(count($predio->colindancias))
+        <div>
 
-                    @include('comun.caratulas.colindancias')
+            @if(count($predio->colindancias))
+
+                @include('comun.caratulas.colindancias')
+
+            @endif
+
+        </div>
+
+        <div>
+
+            @include('comun.caratulas.descripcion_inmueble')
+
+        </div>
+
+        <div>
+
+            @include('comun.caratulas.propietarios')
+
+        </div>
+
+        <div>
+
+            @if(isset($sentencia->movimientoCancelado))
+
+                <p class="separador">datos de la inscripción cancelada</p>
+
+                @if($sentencia->movimientoCancelado->gravamen)
+
+                    <p class="parrafo">
+                        <strong>Folio:</strong>{{ $sentencia->movimientoCancelado->folioReal->folio . '-' . $sentencia->movimientoCancelado->folio }}.
+                        <strong>Fecha de inscripción:</strong>{{ Carbon\Carbon::parse($sentencia->movimientoCancelado->gravamen->fecha_inscripcion)->format('d-m-Y') }}.
+                        <strong>Valor del gravamen:</strong>${{ number_format($sentencia->movimientoCancelado->gravamen->valor_gravamen, 2) }} {{ $sentencia->movimientoCancelado->gravamen->divisa }}.
+                    </p>
+
+                    <p class="parrafo">
+                        <strong>Acto contenido:</strong>{{ $sentencia->movimientoCancelado->gravamen->acto_contenido }}.
+                        <strong>Tipo:</strong>{{ $sentencia->movimientoCancelado->gravamen->tipo }}
+                    </p>
+
+                    <p class="parrafo">
+                        {{ $sentencia->movimientoCancelado->gravamen->observaciones }}
+                    </p>
+
+                @elseif($sentencia->movimientoCancelado->cancelacion)
+
+                    <p class="parrafo">
+                        <strong>Folio:</strong>{{ $sentencia->movimientoCancelado->folioReal->folio . '-' . $sentencia->movimientoCancelado->folio }}.
+                    </p>
+
+                    <p class="parrafo">
+                        <strong>Acto contenido:</strong>{{ $sentencia->movimientoCancelado->cancelacion->acto_contenido }}.
+                        <strong>Tipo:</strong>{{ $sentencia->movimientoCancelado->cancelacion->tipo }}
+                    </p>
+
+                    <p class="parrafo">
+                        {{ $sentencia->movimientoCancelado->cancelacion->observaciones }}
+                    </p>
+
+                @elseif($sentencia->movimientoCancelado->inscripcionPropiedad)
+
+                    <p class="parrafo">
+                        <strong>Folio:</strong>{{ $sentencia->movimientoCancelado->folioReal->folio . '-' . $sentencia->movimientoCancelado->folio }}.
+                    </p>
+
+                    <p class="parrafo">
+                        <strong>Acto contenido:</strong>{{ $sentencia->movimientoCancelado->inscripcionPropiedad->acto_contenido }}.
+                    </p>
+
+                    <p class="parrafo">
+                        {{ $sentencia->movimientoCancelado->inscripcionPropiedad->observaciones }}
+                    </p>
+
+                @elseif($sentencia->movimientoCancelado->vario)
+
+                    <p class="parrafo">
+                        <strong>Folio:</strong>{{ $sentencia->movimientoCancelado->folioReal->folio . '-' . $sentencia->movimientoCancelado->folio }}.
+                    </p>
+
+                    <p class="parrafo">
+                        <strong>Acto contenido:</strong>{{ $sentencia->movimientoCancelado->vario->acto_contenido }}.
+                    </p>
+
+                    <p class="parrafo">
+                        {{ $sentencia->movimientoCancelado->vario->descripcion }}
+                    </p>
+
+                @elseif($sentencia->movimientoCancelado->sentencia)
+
+                    <p class="parrafo">
+                        <strong>Folio:</strong>{{ $sentencia->movimientoCancelado->folioReal->folio . '-' . $sentencia->movimientoCancelado->folio }}.
+                    </p>
+
+                    <p class="parrafo">
+                        <strong>Acto contenido:</strong>{{ $sentencia->movimientoCancelado->sentencia->acto_contenido }}.
+                    </p>
+
+                    <p class="parrafo">
+                        {{ $sentencia->movimientoCancelado->sentencia->descripcion }}
+                    </p>
 
                 @endif
 
-                @include('comun.caratulas.descripcion_inmueble')
+            @endif
 
-                @include('comun.caratulas.propietarios')
+        </div>
 
-                @if(isset($sentencia->movimientoCancelado))
-
-                    <p class="separador">datos de la inscripción cancelada</p>
-
-                    @if($sentencia->movimientoCancelado->gravamen)
-
-                        <p class="parrafo">
-                            <strong>Folio:</strong>{{ $sentencia->movimientoCancelado->folioReal->folio . '-' . $sentencia->movimientoCancelado->folio }}.
-                            <strong>Fecha de inscripción:</strong>{{ Carbon\Carbon::parse($sentencia->movimientoCancelado->gravamen->fecha_inscripcion)->format('d-m-Y') }}.
-                            <strong>Valor del gravamen:</strong>${{ number_format($sentencia->movimientoCancelado->gravamen->valor_gravamen, 2) }} {{ $sentencia->movimientoCancelado->gravamen->divisa }}.
-                        </p>
-
-                        <p class="parrafo">
-                            <strong>Acto contenido:</strong>{{ $sentencia->movimientoCancelado->gravamen->acto_contenido }}.
-                            <strong>Tipo:</strong>{{ $sentencia->movimientoCancelado->gravamen->tipo }}
-                        </p>
-
-                        <p class="parrafo">
-                            {{ $sentencia->movimientoCancelado->gravamen->observaciones }}
-                        </p>
-
-                    @elseif($sentencia->movimientoCancelado->cancelacion)
-
-                        <p class="parrafo">
-                            <strong>Folio:</strong>{{ $sentencia->movimientoCancelado->folioReal->folio . '-' . $sentencia->movimientoCancelado->folio }}.
-                        </p>
-
-                        <p class="parrafo">
-                            <strong>Acto contenido:</strong>{{ $sentencia->movimientoCancelado->cancelacion->acto_contenido }}.
-                            <strong>Tipo:</strong>{{ $sentencia->movimientoCancelado->cancelacion->tipo }}
-                        </p>
-
-                        <p class="parrafo">
-                            {{ $sentencia->movimientoCancelado->cancelacion->observaciones }}
-                        </p>
-
-                    @elseif($sentencia->movimientoCancelado->inscripcionPropiedad)
-
-                        <p class="parrafo">
-                            <strong>Folio:</strong>{{ $sentencia->movimientoCancelado->folioReal->folio . '-' . $sentencia->movimientoCancelado->folio }}.
-                        </p>
-
-                        <p class="parrafo">
-                            <strong>Acto contenido:</strong>{{ $sentencia->movimientoCancelado->inscripcionPropiedad->acto_contenido }}.
-                        </p>
-
-                        <p class="parrafo">
-                            {{ $sentencia->movimientoCancelado->inscripcionPropiedad->observaciones }}
-                        </p>
-
-                    @elseif($sentencia->movimientoCancelado->vario)
-
-                        <p class="parrafo">
-                            <strong>Folio:</strong>{{ $sentencia->movimientoCancelado->folioReal->folio . '-' . $sentencia->movimientoCancelado->folio }}.
-                        </p>
-
-                        <p class="parrafo">
-                            <strong>Acto contenido:</strong>{{ $sentencia->movimientoCancelado->vario->acto_contenido }}.
-                        </p>
-
-                        <p class="parrafo">
-                            {{ $sentencia->movimientoCancelado->vario->descripcion }}
-                        </p>
-
-                    @elseif($sentencia->movimientoCancelado->sentencia)
-
-                        <p class="parrafo">
-                            <strong>Folio:</strong>{{ $sentencia->movimientoCancelado->folioReal->folio . '-' . $sentencia->movimientoCancelado->folio }}.
-                        </p>
-
-                        <p class="parrafo">
-                            <strong>Acto contenido:</strong>{{ $sentencia->movimientoCancelado->sentencia->acto_contenido }}.
-                        </p>
-
-                        <p class="parrafo">
-                            {{ $sentencia->movimientoCancelado->sentencia->descripcion }}
-                        </p>
-
-                    @endif
-
-                @endif
-
-            </div>
+        <div>
 
             @include('comun.caratulas.solicitante')
 
+        </div>
+
+        <div>
+
             @include('comun.caratulas.firma')
 
-            <div class="control no-break">
+        </div>
 
-                <p class="separador">DATOS DE CONTROL</p>
+        <div class="control no-break">
 
-                <table style="margin-top: 10px">
+            <p class="separador">DATOS DE CONTROL</p>
 
-                    <tbody>
-                        <tr>
-                            <td style="padding-right: 40px;">
+            <table style="margin-top: 10px">
 
-                                <img class="qr" src="{{ $qr }}" alt="QR">
+                <tbody>
+                    <tr>
+                        <td style="padding-right: 40px;">
 
-                            </td>
-                            <td style="padding-right: 40px;">
+                            <img class="qr" src="{{ $qr }}" alt="QR">
 
-                                <p style="margin: 0"><strong>NÚMERO DE CONTROL: </strong>{{ $datos_control->numero_control }}</p>
-                                <p style="margin: 0"><strong>Movimiento registral:</strong> {{ $datos_control->folioReal }}-{{ $datos_control->movimiento_folio }}</p>
-                                <p style="margin: 0"><strong>DERECHOS: </strong>${{ number_format($datos_control->monto, 2) }}</p>
-                                <p style="margin: 0"><strong>Tipo de servicio: </strong>{{ $datos_control->tipo_servicio }}</p>
-                                <p style="margin: 0"><strong>Servicio: </strong>{{ $datos_control->servicio }}</p>
-                                <p style="margin: 0"><strong>Elaborado en: </strong>{{ $datos_control->elaborado_en }}</p>
-                                <p style="margin: 0"><strong>Fecha de ingreso: </strong>{{ $sentencia->fecha_prelacion }}</p>
-                                <p style="margin: 0"><strong>Registrado POR: </strong>{{  $datos_control->registrado_por }}</p>
-                                <p style="margin: 0"><strong>Folio real asignado por:</strong> {{ $datos_control->asigno_folio }}</p>
+                        </td>
+                        <td style="padding-right: 40px;">
 
-                            </td>
-                        </tr>
-                    </tbody>
+                            <p style="margin: 0"><strong>NÚMERO DE CONTROL: </strong>{{ $datos_control->numero_control }}</p>
+                            <p style="margin: 0"><strong>Movimiento registral:</strong> {{ $datos_control->folioReal }}-{{ $datos_control->movimiento_folio }}</p>
+                            <p style="margin: 0"><strong>DERECHOS: </strong>${{ number_format($datos_control->monto, 2) }}</p>
+                            <p style="margin: 0"><strong>Tipo de servicio: </strong>{{ $datos_control->tipo_servicio }}</p>
+                            <p style="margin: 0"><strong>Servicio: </strong>{{ $datos_control->servicio }}</p>
+                            <p style="margin: 0"><strong>Elaborado en: </strong>{{ $datos_control->elaborado_en }}</p>
+                            <p style="margin: 0"><strong>Fecha de ingreso: </strong>{{ $sentencia->fecha_prelacion }}</p>
+                            <p style="margin: 0"><strong>Registrado POR: </strong>{{  $datos_control->registrado_por }}</p>
+                            <p style="margin: 0"><strong>Folio real asignado por:</strong> {{ $datos_control->asigno_folio }}</p>
 
-                </table>
+                        </td>
+                    </tr>
+                </tbody>
 
-            </div>
+            </table>
 
         </div>
 

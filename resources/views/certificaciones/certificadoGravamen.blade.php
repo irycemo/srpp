@@ -177,13 +177,21 @@
 
             <p style="text-align: center; margin:0;"><strong>FOLIO REAL: I-</strong>{{ $folioReal->folio }}</p>
 
+        </div>
+
             <p class="separador">Antecedente(s)</p>
 
             <p style="text-align: center; margin:0;"><strong>SECCIÓN:</strong> {{ $folioReal->seccion }}; <strong>DISTRITO:</strong> {{ $folioReal->distrito}}; <strong>TOMO:</strong> {{ $folioReal->tomo }}, <strong>REGISTRO:</strong> {{ $folioReal->registro }}, <strong>NÚMERO DE PROPIEDAD:</strong> {{ $folioReal->numero_propiedad }}.</p>
 
             <br>
 
+        <div class="informacion">
+
             @include('comun.caratulas.ubicacion_inmueble')
+
+        </div>
+
+        <div class="informacion">
 
             @if(count($predio->colindancias))
 
@@ -191,11 +199,23 @@
 
             @endif
 
+        </div>
+
+        <div class="informacion">
+
             @include('comun.caratulas.descripcion_inmueble')
+
+        </div>
+
+        <div class="informacion">
 
             @include('comun.caratulas.propietarios')
 
             <br>
+
+        </div>
+
+        <div class="informacion">
 
             @if(count($gravamenes))
 
@@ -242,6 +262,10 @@
                 <br>
 
             @endif
+
+        </div>
+
+        <div class="informacion">
 
             @if(count($varios))
 
@@ -295,6 +319,10 @@
 
             @endif
 
+        </div>
+
+        <div class="informacion">
+
             @if(isset($fideicomiso))
 
                 <p><strong>REPORTA el siguiente {{ $fideicomiso->tipo }}:</strong></p>
@@ -345,9 +373,17 @@
 
         </div>
 
-        @include('comun.caratulas.solicitante-certificaciones')
+        <div class="informacion">
 
-        @include('comun.caratulas.firma-certificaciones')
+            @include('comun.caratulas.solicitante-certificaciones')
+
+        </div>
+
+        <div class="informacion">
+
+            @include('comun.caratulas.firma-certificaciones')
+
+        </div>
 
         <div class="informacion no-break">
 

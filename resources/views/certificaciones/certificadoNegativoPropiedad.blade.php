@@ -157,102 +157,126 @@
 
     <main>
 
-        <div class="container">
+        @include('comun.caratulas.titulo')
 
-            <div>
+        <div style="text-align: right">
+            <p style="margin:0;"><strong>Movimiento registral:</strong> {{ $folioReal->folio }}-{{ $datos_control->movimiento_folio }}</p>
+            <p style="margin:0;"><strong>DISTRITO:</strong> {{ $folioReal->distrito}}</p>
+        </div>
 
-                @include('comun.caratulas.titulo')
+        <div>
 
-                <div style="text-align: right">
-                    <p style="margin:0;"><strong>Movimiento registral:</strong> {{ $folioReal->folio }}-{{ $datos_control->movimiento_folio }}</p>
-                    <p style="margin:0;"><strong>DISTRITO:</strong> {{ $folioReal->distrito}}</p>
-                </div>
+            <p class="titulo">
+                certificado negativo de propiedad
+            </p>
 
-                <p class="titulo">
-                    certificado negativo de propiedad
-                </p>
+        </div>
+
+        <div>
+
+            <p class="parrafo">
+                EL DIRECTOR DEL REGISTRO PÚBLICO DE LA PROPIEDAD
+                @if($folioReal->distrito == '02 Uruapan' )
+                    <strong>L.A. SANDRO MEDINA MORALES</strong>
+                @else
+                    <strong>{{ $director }}</strong>,
+                @endif
+                certifica que habiendose examinado el acervo registral
+                @if($datos_control->servicio == 'Certificado negativo de vivienda bienestar')
+                    correspondiente al distrito de {{ $folioReal->distrito}}, en el periodo de @if(isset($datos_control->temporalidad)) {{ $datos_control->temporalidad }}, {{ $datos_control->temporalidad_letra }} @else 1977 un mil novecientos setenta y siete @endif a la fecha,
+                @else
+                no se encontro constancia de que se registre a nombre de:
+                @foreach ($personas as $persona)
+                    <strong> {{ $persona->nombre }} {{ $persona->ap_paterno }} {{ $persona->ap_materno }}</strong>@if(!$loop->last),@endif
+                @endforeach
+                la siguiente propiedad.
+            </p>
+
+        </div>
+
+        <div>
+
+            <p style="text-align: center; margin:0;"><strong>FOLIO REAL: I-</strong>{{ $folioReal->folio }}</p>
+
+            <p style="text-align: center"><strong>SECCIÓN:</strong> {{ $folioReal->seccion }}; <strong>DISTRITO:</strong> {{ $folioReal->distrito}}; <strong>TOMO:</strong> {{ $folioReal->tomo }}, <strong>REGISTRO:</strong> {{ $folioReal->registro }}, <strong>NÚMERO DE PROPIEDAD:</strong> {{ $folioReal->numero_propiedad }}</p>
+
+        </div>
+
+        <div>
+
+            @include('comun.caratulas.ubicacion_inmueble')
+
+        </div>
+
+        <div>
+
+            @include('comun.caratulas.descripcion_inmueble')
+
+        </div>
+
+        <div>
+
+            @if(isset($datos_control->observaciones_certificado))
 
                 <p class="parrafo">
-                    EL DIRECTOR DEL REGISTRO PÚBLICO DE LA PROPIEDAD
-                    @if($folioReal->distrito == '02 Uruapan' )
-                        <strong>L.A. SANDRO MEDINA MORALES</strong>
-                    @else
-                        <strong>{{ $director }}</strong>,
-                    @endif
-                    certifica que habiendose examinado el acervo registral
-                    @if($datos_control->servicio == 'Certificado negativo de vivienda bienestar')
-                        correspondiente al distrito de {{ $folioReal->distrito}}, en el periodo de @if(isset($datos_control->temporalidad)) {{ $datos_control->temporalidad }}, {{ $datos_control->temporalidad_letra }} @else 1977 un mil novecientos setenta y siete @endif a la fecha,
-                    @else
-                    no se encontro constancia de que se registre a nombre de:
-                    @foreach ($personas as $persona)
-                        <strong> {{ $persona->nombre }} {{ $persona->ap_paterno }} {{ $persona->ap_materno }}</strong>@if(!$loop->last),@endif
-                    @endforeach
-                    la siguiente propiedad.
+                    <strong>Observaciones del certificado:</strong> {!! $datos_control->observaciones_certificado !!}
                 </p>
 
-                <p style="text-align: center; margin:0;"><strong>FOLIO REAL: I-</strong>{{ $folioReal->folio }}</p>
+            @endif
 
-                <p style="text-align: center"><strong>SECCIÓN:</strong> {{ $folioReal->seccion }}; <strong>DISTRITO:</strong> {{ $folioReal->distrito}}; <strong>TOMO:</strong> {{ $folioReal->tomo }}, <strong>REGISTRO:</strong> {{ $folioReal->registro }}, <strong>NÚMERO DE PROPIEDAD:</strong> {{ $folioReal->numero_propiedad }}</p>
+        </div>
 
-                @include('comun.caratulas.ubicacion_inmueble')
+        <div>
 
-                @include('comun.caratulas.descripcion_inmueble')
+            @include('comun.caratulas.solicitante-certificaciones')
 
-                @if(isset($datos_control->observaciones_certificado))
+        </div>
 
-                    <p class="parrafo">
-                        <strong>Observaciones del certificado:</strong> {!! $datos_control->observaciones_certificado !!}
-                    </p>
+        <div>
 
-                @endif
+            @include('comun.caratulas.firma-certificaciones')
 
-                @include('comun.caratulas.solicitante-certificaciones')
+        </div>
 
-                @include('comun.caratulas.firma-certificaciones')
+        <div class="informacion">
 
-                <div class="informacion">
+            <div class="control no-break">
 
-                    <div class="control no-break">
+                <p class="separador">DATOS DE CONTROL</p>
 
-                        <p class="separador">DATOS DE CONTROL</p>
+                <table style="margin-top: 10px">
 
-                        <table style="margin-top: 10px">
+                    <tbody>
+                        <tr>
+                            <td style="padding-right: 40px;">
 
-                            <tbody>
-                                <tr>
-                                    <td style="padding-right: 40px;">
+                                <img class="qr" src="{{ $qr }}" alt="QR">
 
-                                        <img class="qr" src="{{ $qr }}" alt="QR">
+                            </td>
+                            <td style="padding-right: 40px;">
 
-                                    </td>
-                                    <td style="padding-right: 40px;">
+                                @if($datos_control->numero_control)
 
-                                        @if($datos_control->numero_control)
+                                    <p style="margin: 0"><strong>NÚMERO DE CONTROL: </strong>{{ $datos_control->numero_control }}</p>
 
-                                            <p style="margin: 0"><strong>NÚMERO DE CONTROL: </strong>{{ $datos_control->numero_control }}</p>
+                                @else
 
-                                        @else
+                                    <p style="margin: 0"><strong>NÚMERO DE CONTROL: </strong>{{ $movimientoRegistral->certificacion->observaciones }}</p>
 
-                                            <p style="margin: 0"><strong>NÚMERO DE CONTROL: </strong>{{ $movimientoRegistral->certificacion->observaciones }}</p>
+                                @endif
+                                <p style="margin: 0"><strong>DERECHOS: </strong>${{ number_format($datos_control->monto, 2) }}</p>
+                                <p style="margin: 0"><strong>Tipo de servicio: </strong>{{ $datos_control->tipo_servicio }}</p>
+                                <p style="margin: 0"><strong>Servicio: </strong>{{ $datos_control->servicio }}</p>
+                                <p style="margin: 0"><strong>Elaborado en: </strong>{{ $datos_control->elaborado_en }}</p>
+                                <p style="margin: 0"><strong>Verificado POR: </strong>{{  $datos_control->verificado_por }}</p>
+                                <p style="margin: 0"><strong>Movimiento registral:</strong> {{ $folioReal->folio }}-{{ $datos_control->movimiento_folio }}</p>
+                                <p style="margin: 0"><strong>Folio real asignado por:</strong> {{ $datos_control->asigno_folio }}</p>
 
-                                        @endif
-                                        <p style="margin: 0"><strong>DERECHOS: </strong>${{ number_format($datos_control->monto, 2) }}</p>
-                                        <p style="margin: 0"><strong>Tipo de servicio: </strong>{{ $datos_control->tipo_servicio }}</p>
-                                        <p style="margin: 0"><strong>Servicio: </strong>{{ $datos_control->servicio }}</p>
-                                        <p style="margin: 0"><strong>Elaborado en: </strong>{{ $datos_control->elaborado_en }}</p>
-                                        <p style="margin: 0"><strong>Verificado POR: </strong>{{  $datos_control->verificado_por }}</p>
-                                        <p style="margin: 0"><strong>Movimiento registral:</strong> {{ $folioReal->folio }}-{{ $datos_control->movimiento_folio }}</p>
-                                        <p style="margin: 0"><strong>Folio real asignado por:</strong> {{ $datos_control->asigno_folio }}</p>
+                            </td>
+                        </tr>
+                    </tbody>
 
-                                    </td>
-                                </tr>
-                            </tbody>
-
-                        </table>
-
-                    </div>
-
-                </div>
+                </table>
 
             </div>
 

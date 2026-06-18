@@ -155,171 +155,211 @@
 
     <main>
 
-        <div class="container">
+        <div>
 
             @include('comun.caratulas.titulo')
 
-            <div class="informacion">
+        </div>
 
-                <div style="text-align: right">
-                    <p style="margin:0"><strong>movimiento registral:</strong> {{ $datos_control->folioReal }}-{{ $datos_control->movimiento_folio }}</p>
-                    <p style="margin:0"><strong>DISTRITO:</strong> {{ $datos_control->distrito}}</p>
-                </div>
+        <div class="informacion">
 
-                <div class="titulo">
-                    <p><strong>{{ $gravamen->acto_contenido }}</strong></p>
-                </div>
-
-                <p class="separador">Descripción del acto</p>
-
-                <p class="parrafo">
-                    {{ $gravamen->observaciones }}
-                </p>
-
-                <p class="separador">Documento de entrada</p>
-
-                <p class="parrafo">
-                    <strong>Tipo de documento: </strong> {{ $gravamen->tipo_documento }}; @if(isset($gravamen->numero_documento))<strong>Número de documento: </strong> {{ $gravamen->numero_documento }};@endif <strong>Cargo de la autoridad: </strong> {{ $gravamen->autoridad_cargo }}; <strong>Nombre de la autoridad: </strong> {{ $gravamen->autoridad_nombre }}; <strong>Número de la autoridad: </strong> {{ $gravamen->autoridad_numero }}; <strong>Fecha de emisión: </strong> {{ $gravamen->fecha_emision }}; @if(isset($gravamen->fecha_inscripcion))<strong>Fecha de inscripción: </strong> {{$gravamen->fecha_inscripcion }};@endif @if(isset($gravamen->procedencia))<strong>Dependencia: </strong>{{ $gravamen->procedencia }} @endif
-                </p>
-
-                @include('comun.caratulas.ubicacion_inmueble')
-
-                @if(count($predio->colindancias))
-
-                    @include('comun.caratulas.colindancias')
-
-                @endif
-
-                @include('comun.caratulas.descripcion_inmueble')
-
-                @include('comun.caratulas.propietarios')
-
-                <p class="separador">datos del gravamen</p>
-
-                <p class="parrafo">
-                    <strong>Fecha de inscripción:</strong> {{ $gravamen->fecha_inscripcion }}.
-                    <strong>Valor del gravamen:</strong> ${{ number_format($gravamen->valor_gravamen, 2) }} {{ $gravamen->divisa }}.
-                    @if(isset($gravamen->valor_gravamen_2))
-                        <strong>Valor del gravamen 2:</strong> ${{ number_format($gravamen->valor_gravamen_2, 2) }} {{ $gravamen->divisa_2 }}.
-                    @endif
-                    @if(isset($gravamen->valor_gravamen_3))
-                        <strong>Valor del gravamen 3:</strong> ${{ number_format($gravamen->valor_gravamen_3, 2) }} {{ $gravamen->divisa_3 }}.
-                    @endif
-                    @if(isset($gravamen->expediente))
-                        <strong>Expediente:</strong> {{ $gravamen->expediente }}
-                    @endif
-                </p>
-
-                <p class="parrafo">
-                    <strong>Tipo de gravamen:</strong> {{ $gravamen->tipo }}
-                </p>
-
-                @if(isset($gravamen->gravamen_asociado))
-
-                    <p class="parrafo">
-                        {{ $gravamen->gravamen_asociado }}
-                    </p>
-
-                @endif
-
-                <p class="separador">Actores</p>
-
-                <table>
-
-                    <thead>
-
-                        <tr>
-                            <th >Tipo de actor</th>
-                            <th >Nombre / Razón social</th>
-                        </tr>
-
-                    </thead>
-
-                    <tbody>
-
-                        @foreach ($gravamen->deudores as $deudor)
-
-                        <tr>
-                            <td style="padding-right: 40px;">
-                                {{ $deudor->tipo_deudor }}
-                            </td>
-                            <td style="padding-right: 40px;">
-                                {{ $deudor->nombre }} {{ $deudor->ap_paterno }} {{ $deudor->ap_materno }} {{ $deudor->razon_social }}
-                            </td>
-                        </tr>
-
-                        @endforeach
-
-                    </tbody>
-
-                </table>
-
-                <p class="separador">acreedores</p>
-
-                <table>
-
-                    <thead>
-
-                        <tr>
-                            <th >Nombre / Razón social</th>
-                        </tr>
-
-                    </thead>
-
-                    <tbody>
-
-                        @foreach ($gravamen->acreedores as $acreedor)
-
-                            <tr>
-                                <td style="padding-right: 40px;">
-                                    {{ $acreedor->nombre }} {{ $acreedor->ap_paterno }} {{ $acreedor->ap_materno }} {{ $acreedor->razon_social }}
-                                </td>
-                            </tr>
-
-                        @endforeach
-
-                    </tbody>
-
-                </table>
-
+            <div style="text-align: right">
+                <p style="margin:0"><strong>movimiento registral:</strong> {{ $datos_control->folioReal }}-{{ $datos_control->movimiento_folio }}</p>
+                <p style="margin:0"><strong>DISTRITO:</strong> {{ $datos_control->distrito}}</p>
             </div>
+
+            <div class="titulo">
+                <p><strong>{{ $gravamen->acto_contenido }}</strong></p>
+            </div>
+
+            <p class="separador">Descripción del acto</p>
+
+            <p class="parrafo">
+                {{ $gravamen->observaciones }}
+            </p>
+
+        </div>
+
+        <div>
+
+            <p class="separador">Documento de entrada</p>
+
+            <p class="parrafo">
+                <strong>Tipo de documento: </strong> {{ $gravamen->tipo_documento }}; @if(isset($gravamen->numero_documento))<strong>Número de documento: </strong> {{ $gravamen->numero_documento }};@endif <strong>Cargo de la autoridad: </strong> {{ $gravamen->autoridad_cargo }}; <strong>Nombre de la autoridad: </strong> {{ $gravamen->autoridad_nombre }}; <strong>Número de la autoridad: </strong> {{ $gravamen->autoridad_numero }}; <strong>Fecha de emisión: </strong> {{ $gravamen->fecha_emision }}; @if(isset($gravamen->fecha_inscripcion))<strong>Fecha de inscripción: </strong> {{$gravamen->fecha_inscripcion }};@endif @if(isset($gravamen->procedencia))<strong>Dependencia: </strong>{{ $gravamen->procedencia }} @endif
+            </p>
+
+        </div>
+
+        <div>
+
+            @include('comun.caratulas.ubicacion_inmueble')
+
+        </div>
+
+        <div>
+
+            @if(count($predio->colindancias))
+
+                @include('comun.caratulas.colindancias')
+
+            @endif
+
+        </div>
+
+        <div>
+
+            @include('comun.caratulas.descripcion_inmueble')
+
+        </div>
+
+        <div>
+
+            @include('comun.caratulas.propietarios')
+
+        </div>
+
+        <div>
+
+            <p class="separador">datos del gravamen</p>
+
+            <p class="parrafo">
+                <strong>Fecha de inscripción:</strong> {{ $gravamen->fecha_inscripcion }}.
+                <strong>Valor del gravamen:</strong> ${{ number_format($gravamen->valor_gravamen, 2) }} {{ $gravamen->divisa }}.
+                @if(isset($gravamen->valor_gravamen_2))
+                    <strong>Valor del gravamen 2:</strong> ${{ number_format($gravamen->valor_gravamen_2, 2) }} {{ $gravamen->divisa_2 }}.
+                @endif
+                @if(isset($gravamen->valor_gravamen_3))
+                    <strong>Valor del gravamen 3:</strong> ${{ number_format($gravamen->valor_gravamen_3, 2) }} {{ $gravamen->divisa_3 }}.
+                @endif
+                @if(isset($gravamen->expediente))
+                    <strong>Expediente:</strong> {{ $gravamen->expediente }}
+                @endif
+            </p>
+
+            <p class="parrafo">
+                <strong>Tipo de gravamen:</strong> {{ $gravamen->tipo }}
+            </p>
+
+            @if(isset($gravamen->gravamen_asociado))
+
+                <p class="parrafo">
+                    {{ $gravamen->gravamen_asociado }}
+                </p>
+
+            @endif
+
+        </div>
+
+        <div>
+
+            <p class="separador">Actores</p>
+
+            <table>
+
+                <thead>
+
+                    <tr>
+                        <th >Tipo de actor</th>
+                        <th >Nombre / Razón social</th>
+                    </tr>
+
+                </thead>
+
+                <tbody>
+
+                    @foreach ($gravamen->deudores as $deudor)
+
+                    <tr>
+                        <td style="padding-right: 40px;">
+                            {{ $deudor->tipo_deudor }}
+                        </td>
+                        <td style="padding-right: 40px;">
+                            {{ $deudor->nombre }} {{ $deudor->ap_paterno }} {{ $deudor->ap_materno }} {{ $deudor->razon_social }}
+                        </td>
+                    </tr>
+
+                    @endforeach
+
+                </tbody>
+
+            </table>
+
+        </div>
+
+        <div>
+
+            <p class="separador">acreedores</p>
+
+            <table>
+
+                <thead>
+
+                    <tr>
+                        <th >Nombre / Razón social</th>
+                    </tr>
+
+                </thead>
+
+                <tbody>
+
+                    @foreach ($gravamen->acreedores as $acreedor)
+
+                        <tr>
+                            <td style="padding-right: 40px;">
+                                {{ $acreedor->nombre }} {{ $acreedor->ap_paterno }} {{ $acreedor->ap_materno }} {{ $acreedor->razon_social }}
+                            </td>
+                        </tr>
+
+                    @endforeach
+
+                </tbody>
+
+            </table>
+
+        </div>
+
+        <div>
 
             @include('comun.caratulas.solicitante')
 
+        </div>
+
+        <div>
+
             @include('comun.caratulas.firma')
 
-            <div class="control no-break">
+        </div>
 
-                <p class="separador">DATOS DE CONTROL</p>
+        <div class="control no-break">
 
-                <table style="margin-top: 10px">
+            <p class="separador">DATOS DE CONTROL</p>
 
-                    <tbody>
-                        <tr>
-                            <td style="padding-right: 40px;">
+            <table style="margin-top: 10px">
 
-                                <img class="qr" src="{{ $qr }}" alt="QR">
+                <tbody>
+                    <tr>
+                        <td style="padding-right: 40px;">
 
-                            </td>
-                            <td style="padding-right: 40px;">
+                            <img class="qr" src="{{ $qr }}" alt="QR">
 
-                                <p style="margin: 0"><strong>NÚMERO DE CONTROL: </strong>{{ $datos_control->numero_control }}</p>
-                                <p style="margin: 0"><strong>Movimiento registral:</strong> {{ $datos_control->folioReal }}-{{ $datos_control->movimiento_folio }}</p>
-                                <p style="margin: 0"><strong>DERECHOS: </strong>${{ number_format($datos_control->monto, 2) }}</p>
-                                <p style="margin: 0"><strong>Tipo de servicio: </strong>{{ $datos_control->tipo_servicio }}</p>
-                                <p style="margin: 0"><strong>Servicio: </strong>{{ $datos_control->servicio }}</p>
-                                <p style="margin: 0"><strong>Elaborado en: </strong>{{ $datos_control->elaborado_en }}</p>
-                                <p style="margin: 0"><strong>Fecha de ingreso: </strong>{{ $gravamen->fecha_prelacion }}</p>
-                                <p style="margin: 0"><strong>Registrado POR: </strong>{{  $datos_control->registrado_por }}</p>
-                                <p style="margin: 0"><strong>Folio real asignado por:</strong> {{ $datos_control->asigno_folio }}</p>
+                        </td>
+                        <td style="padding-right: 40px;">
 
-                            </td>
-                        </tr>
-                    </tbody>
+                            <p style="margin: 0"><strong>NÚMERO DE CONTROL: </strong>{{ $datos_control->numero_control }}</p>
+                            <p style="margin: 0"><strong>Movimiento registral:</strong> {{ $datos_control->folioReal }}-{{ $datos_control->movimiento_folio }}</p>
+                            <p style="margin: 0"><strong>DERECHOS: </strong>${{ number_format($datos_control->monto, 2) }}</p>
+                            <p style="margin: 0"><strong>Tipo de servicio: </strong>{{ $datos_control->tipo_servicio }}</p>
+                            <p style="margin: 0"><strong>Servicio: </strong>{{ $datos_control->servicio }}</p>
+                            <p style="margin: 0"><strong>Elaborado en: </strong>{{ $datos_control->elaborado_en }}</p>
+                            <p style="margin: 0"><strong>Fecha de ingreso: </strong>{{ $gravamen->fecha_prelacion }}</p>
+                            <p style="margin: 0"><strong>Registrado POR: </strong>{{  $datos_control->registrado_por }}</p>
+                            <p style="margin: 0"><strong>Folio real asignado por:</strong> {{ $datos_control->asigno_folio }}</p>
 
-                </table>
+                        </td>
+                    </tr>
+                </tbody>
 
-            </div>
+            </table>
 
         </div>
 

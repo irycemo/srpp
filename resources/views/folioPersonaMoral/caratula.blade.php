@@ -157,89 +157,101 @@
 
     <main>
 
-        <div class="container">
+        @include('comun.caratulas.titulo')
 
-            <div>
+        <div style="text-align: right">
+            <p style="margin:0"><strong>DISTRITO:</strong> {{ $datos_control->distrito }}</p>
+        </div>
 
-                @include('comun.caratulas.titulo')
+        <div>
 
-                <div style="text-align: right">
-                    <p style="margin:0"><strong>DISTRITO:</strong> {{ $datos_control->distrito }}</p>
-                </div>
+            <p class="titulo">CARATULA DE ASIGNACION DE FOLIO REAL DE PERSONAS MORALES</p>
 
-                <div>
+        </div>
 
-                    <p class="titulo">CARATULA DE ASIGNACION DE FOLIO REAL DE PERSONAS MORALES</p>
+        <div>
 
-                </div>
+            <p class="parrafo">
+                EL DIRECTOR DEL REGISTRO PÚBLICO DE LA PROPIEDAD <strong> {{ $datos_control->director }}</strong>, AUTORIZA EL PRESENTE FOLIO REAL DE PERSONA MORAL:
+            </p>
 
-                <p class="parrafo">
-                    EL DIRECTOR DEL REGISTRO PÚBLICO DE LA PROPIEDAD <strong> {{ $datos_control->director }}</strong>, AUTORIZA EL PRESENTE FOLIO REAL DE PERSONA MORAL:
-                </p>
+            <p style="text-align: center" class="titulo"><strong>FOLIO REAL: PM-</strong>{{ $folioReal->folio }}</p>
 
-                <p style="text-align: center" class="titulo"><strong>FOLIO REAL: PM-</strong>{{ $folioReal->folio }}</p>
+            <p class="separador">Documento de entrada</p>
 
-                <p class="separador">Documento de entrada</p>
+            <p class="parrafo">
+                <strong>Tipo de documento: </strong> escritura pública; <strong>Número de escritura: </strong> {{ $folioReal->escritura->numero }}; <strong>Número de notaria: </strong> {{ $folioReal->escritura->notaria }}; <strong>Nombre del notario: </strong> {{ $folioReal->escritura->nombre_notario }}; <strong>Estado del notario: </strong> {{ $folioReal->escritura->estado_notario }}; <strong>Fecha de inscripción: </strong> {{ $folioReal->escritura->fecha_inscripcion }}; <strong>Fecha de la escritura: </strong> {{ $folioReal->escritura->fecha_escritura }}; <strong>Número de hojas: </strong>{{ $folioReal->escritura->numero_hojas }}; <strong>Número de paginas: </strong>{{ $folioReal->escritura->numero_paginas }}
+            </p>
 
-                <p class="parrafo">
-                    <strong>Tipo de documento: </strong> escritura pública; <strong>Número de escritura: </strong> {{ $folioReal->escritura->numero }}; <strong>Número de notaria: </strong> {{ $folioReal->escritura->notaria }}; <strong>Nombre del notario: </strong> {{ $folioReal->escritura->nombre_notario }}; <strong>Estado del notario: </strong> {{ $folioReal->escritura->estado_notario }}; <strong>Fecha de inscripción: </strong> {{ $folioReal->escritura->fecha_inscripcion }}; <strong>Fecha de la escritura: </strong> {{ $folioReal->escritura->fecha_escritura }}; <strong>Número de hojas: </strong>{{ $folioReal->escritura->numero_hojas }}; <strong>Número de paginas: </strong>{{ $folioReal->escritura->numero_paginas }}
-                </p>
+        </div>
 
-                @include('comun.caratulas.folio_persona_moral')
+        <div>
 
-                @if(count($folioReal->reformas))
+            @include('comun.caratulas.folio_persona_moral')
 
-                    <p class="separador" style="text-align: center">Actas de asamblea</p>
+        </div>
 
-                    @foreach ($folioReal->reformas as $reforma)
+        <div>
+
+            @if(count($folioReal->reformas))
+
+                <p class="separador" style="text-align: center">Actas de asamblea</p>
+
+                @foreach ($folioReal->reformas as $reforma)
+
+                    <p class="parrafo">
+
+                        <p class="separador">Acta de asamblea ({{ $folioReal->folio }}-{{ $reforma->movimiento_folio }})</p>
 
                         <p class="parrafo">
-
-                            <p class="separador">Acta de asamblea ({{ $folioReal->folio }}-{{ $reforma->movimiento_folio }})</p>
-
-                            <p class="parrafo">
-                                <strong>Tomo: </strong> {{ $reforma->tomo }}; <strong>Registro: </strong> {{ $reforma->registro }}; <strong>Notaria: </strong> {{ $reforma->autoridad_numero }}; <strong>Número de escritura: </strong> {{ $reforma->numero_documento }}; <strong>Fecha de protocolización: </strong> {{ $reforma->fecha_constitucion }}; <strong>Fecha de inscripción: </strong> {{ $reforma->fecha_inscripcion }}
-                            </p>
-
-                            <p class="parrafo">
-                                <strong>Descripción: </strong> {{ $reforma->descripcion }}
-                            </p>
-
+                            <strong>Tomo: </strong> {{ $reforma->tomo }}; <strong>Registro: </strong> {{ $reforma->registro }}; <strong>Notaria: </strong> {{ $reforma->autoridad_numero }}; <strong>Número de escritura: </strong> {{ $reforma->numero_documento }}; <strong>Fecha de protocolización: </strong> {{ $reforma->fecha_constitucion }}; <strong>Fecha de inscripción: </strong> {{ $reforma->fecha_inscripcion }}
                         </p>
 
-                    @endforeach
+                        <p class="parrafo">
+                            <strong>Descripción: </strong> {{ $reforma->descripcion }}
+                        </p>
 
-                @endif
+                    </p>
 
-                @include('comun.caratulas.firma')
+                @endforeach
 
-                <p class="separador">datos de control</p>
+            @endif
 
-                <table style="margin-top: 10px">
+        </div>
 
-                    <tbody>
-                        <tr>
-                            <td style="padding-right: 40px;">
+        <div>
 
-                                <img class="qr" src="{{ $qr }}" alt="QR">
-                            </td>
-                            <td style="padding-right: 40px;">
+            @include('comun.caratulas.firma')
 
-                                <p><strong>folio Asignado por:</strong> {{ $folioReal->asignado_por }}.</p>
-                                <p><strong>Fecha de asignación de folio:</strong> {{ $datos_control->fecha_asignacion }}.</p>
-                                @if(isset($datos_control->numero_control))
-                                    <p><strong>número de control:</strong> {{ $datos_control->numero_control }}.</p>
-                                @else
+        </div>
 
-                                @endif
+        <div>
 
-                            </td>
-                        </tr>
-                    </tbody>
+            <p class="separador">datos de control</p>
 
-                </table>
+            <table style="margin-top: 10px">
 
-            </div>
+                <tbody>
+                    <tr>
+                        <td style="padding-right: 40px;">
+
+                            <img class="qr" src="{{ $qr }}" alt="QR">
+                        </td>
+                        <td style="padding-right: 40px;">
+
+                            <p><strong>folio Asignado por:</strong> {{ $folioReal->asignado_por }}.</p>
+                            <p><strong>Fecha de asignación de folio:</strong> {{ $datos_control->fecha_asignacion }}.</p>
+                            @if(isset($datos_control->numero_control))
+                                <p><strong>número de control:</strong> {{ $datos_control->numero_control }}.</p>
+                            @else
+
+                            @endif
+
+                        </td>
+                    </tr>
+                </tbody>
+
+            </table>
 
         </div>
 

@@ -155,119 +155,147 @@
 
     <main>
 
-        <div class="container">
+        @include('comun.caratulas.titulo')
 
-            @include('comun.caratulas.titulo')
+        <div class="informacion">
 
-            <div class="informacion">
-
-                <div style="text-align: right">
-                    <p style="margin:0"><strong>movimiento registral:</strong> {{ $datos_control->folioReal }}-{{ $datos_control->movimiento_folio }}</p>
-                    <p style="margin:0"><strong>DISTRITO:</strong> {{ $datos_control->distrito}}</p>
-                </div>
-
-                <div class="titulo">
-                    <p><strong>{{ $fideicomiso->tipo }}</strong></p>
-                </div>
-
-                <p class="separador">Objeto del fideicomiso</p>
-
-                <p class="parrafo">
-                    {{ $fideicomiso->objeto }}
-                </p>
-
-                <p class="parrafo">
-                    <strong>Fecha de inscripción:</strong> {{ $fideicomiso->fecha_inscripcion }}. @if(isset($fideicomiso->fecha_vencimiento)) <strong>Fecha de vencimiento:</strong> {{ $fideicomiso->fecha_vencimiento }} @endif
-                </p>
-
-                <p class="separador">Actores del fideicomiso</p>
-
-                <table>
-
-                    <thead>
-
-                        <tr>
-                            <th >Tipo de actor</th>
-                            <th >Nombre / Razón social</th>
-                        </tr>
-
-                    </thead>
-
-                    <tbody>
-
-                        @foreach ($fideicomiso->actores as $actor)
-
-                        <tr>
-                            <td style="padding-right: 40px;">
-                                {{ $actor->tipo }}
-                            </td>
-                            <td style="padding-right: 40px;">
-                                {{ $actor->nombre }} {{ $actor->ap_paterno }} {{ $actor->ap_materno }} {{ $actor->razon_social }}
-                            </td>
-                        </tr>
-
-                        @endforeach
-
-                    </tbody>
-
-                </table>
-
-                <p class="separador">Documento de entrada</p>
-
-                <p class="parrafo">
-                    <strong>Tipo de documento: </strong> {{ $fideicomiso->tipo_documento }}; @if(isset($fideicomiso->numero_documento))<strong>Número de documento: </strong> {{ $fideicomiso->numero_documento }};@endif <strong>Cargo de la autoridad: </strong> {{ $fideicomiso->autoridad_cargo }}; <strong>Nombre de la autoridad: </strong> {{ $fideicomiso->autoridad_nombre }}; <strong>Número de la autoridad: </strong> {{ $fideicomiso->autoridad_numero }}; <strong>Fecha de emisión: </strong> {{ $fideicomiso->fecha_emision }}; @if(isset($fideicomiso->fecha_inscripcion))<strong>Fecha de inscripción: </strong> {{$fideicomiso->fecha_inscripcion }};@endif @if(isset($fideicomiso->procedencia))<strong>Dependencia: </strong>{{ $fideicomiso->procedencia }} @endif
-                </p>
-
-                @include('comun.caratulas.ubicacion_inmueble')
-
-                @if(count($predio->colindancias))
-
-                    @include('comun.caratulas.colindancias')
-
-                @endif
-
-                @include('comun.caratulas.descripcion_inmueble')
-
-                @include('comun.caratulas.propietarios')
-
+            <div style="text-align: right">
+                <p style="margin:0"><strong>movimiento registral:</strong> {{ $datos_control->folioReal }}-{{ $datos_control->movimiento_folio }}</p>
+                <p style="margin:0"><strong>DISTRITO:</strong> {{ $datos_control->distrito}}</p>
             </div>
+
+            <div class="titulo">
+                <p><strong>{{ $fideicomiso->tipo }}</strong></p>
+            </div>
+
+            <p class="separador">Objeto del fideicomiso</p>
+
+            <p class="parrafo">
+                {{ $fideicomiso->objeto }}
+            </p>
+
+            <p class="parrafo">
+                <strong>Fecha de inscripción:</strong> {{ $fideicomiso->fecha_inscripcion }}. @if(isset($fideicomiso->fecha_vencimiento)) <strong>Fecha de vencimiento:</strong> {{ $fideicomiso->fecha_vencimiento }} @endif
+            </p>
+
+        </div>
+
+        <div>
+
+            <p class="separador">Actores del fideicomiso</p>
+
+            <table>
+
+                <thead>
+
+                    <tr>
+                        <th >Tipo de actor</th>
+                        <th >Nombre / Razón social</th>
+                    </tr>
+
+                </thead>
+
+                <tbody>
+
+                    @foreach ($fideicomiso->actores as $actor)
+
+                    <tr>
+                        <td style="padding-right: 40px;">
+                            {{ $actor->tipo }}
+                        </td>
+                        <td style="padding-right: 40px;">
+                            {{ $actor->nombre }} {{ $actor->ap_paterno }} {{ $actor->ap_materno }} {{ $actor->razon_social }}
+                        </td>
+                    </tr>
+
+                    @endforeach
+
+                </tbody>
+
+            </table>
+
+        </div>
+
+        <div>
+
+            <p class="separador">Documento de entrada</p>
+
+            <p class="parrafo">
+                <strong>Tipo de documento: </strong> {{ $fideicomiso->tipo_documento }}; @if(isset($fideicomiso->numero_documento))<strong>Número de documento: </strong> {{ $fideicomiso->numero_documento }};@endif <strong>Cargo de la autoridad: </strong> {{ $fideicomiso->autoridad_cargo }}; <strong>Nombre de la autoridad: </strong> {{ $fideicomiso->autoridad_nombre }}; <strong>Número de la autoridad: </strong> {{ $fideicomiso->autoridad_numero }}; <strong>Fecha de emisión: </strong> {{ $fideicomiso->fecha_emision }}; @if(isset($fideicomiso->fecha_inscripcion))<strong>Fecha de inscripción: </strong> {{$fideicomiso->fecha_inscripcion }};@endif @if(isset($fideicomiso->procedencia))<strong>Dependencia: </strong>{{ $fideicomiso->procedencia }} @endif
+            </p>
+
+        </div>
+
+        <div>
+
+            @include('comun.caratulas.ubicacion_inmueble')
+
+        </div>
+
+        <div>
+
+            @if(count($predio->colindancias))
+
+                @include('comun.caratulas.colindancias')
+
+            @endif
+
+        </div>
+
+        <div>
+
+            @include('comun.caratulas.descripcion_inmueble')
+
+        </div>
+
+        <div>
+
+            @include('comun.caratulas.propietarios')
+
+        </div>
+
+        <div>
 
             @include('comun.caratulas.solicitante')
 
+        </div>
+
+        <div>
+
             @include('comun.caratulas.firma')
 
-            <div class="control no-break">
+        </div>
 
-                <p class="separador">DATOS DE CONTROL</p>
+        <div class="control no-break">
 
-                <table style="margin-top: 10px">
+            <p class="separador">DATOS DE CONTROL</p>
 
-                    <tbody>
-                        <tr>
-                            <td style="padding-right: 40px;">
+            <table style="margin-top: 10px">
 
-                                <img class="qr" src="{{ $qr }}" alt="QR">
+                <tbody>
+                    <tr>
+                        <td style="padding-right: 40px;">
 
-                            </td>
-                            <td style="padding-right: 40px;">
+                            <img class="qr" src="{{ $qr }}" alt="QR">
 
-                                <p style="margin: 0"><strong>NÚMERO DE CONTROL: </strong>{{ $datos_control->numero_control }}</p>
-                                <p style="margin: 0"><strong>Movimiento registral:</strong> {{ $datos_control->folioReal }}-{{ $datos_control->movimiento_folio }}</p>
-                                <p style="margin: 0"><strong>DERECHOS: </strong>${{ number_format($datos_control->monto, 2) }}</p>
-                                <p style="margin: 0"><strong>Tipo de servicio: </strong>{{ $datos_control->tipo_servicio }}</p>
-                                <p style="margin: 0"><strong>Servicio: </strong>{{ $datos_control->servicio }}</p>
-                                <p style="margin: 0"><strong>Elaborado en: </strong>{{ $datos_control->elaborado_en }}</p>
-                                <p style="margin: 0"><strong>Fecha de ingreso: </strong>{{ $fideicomiso->fecha_prelacion }}</p>
-                                <p style="margin: 0"><strong>Registrado POR: </strong>{{  $datos_control->registrado_por }}</p>
-                                <p style="margin: 0"><strong>Folio real asignado por:</strong> {{ $datos_control->asigno_folio }}</p>
+                        </td>
+                        <td style="padding-right: 40px;">
 
-                            </td>
-                        </tr>
-                    </tbody>
+                            <p style="margin: 0"><strong>NÚMERO DE CONTROL: </strong>{{ $datos_control->numero_control }}</p>
+                            <p style="margin: 0"><strong>Movimiento registral:</strong> {{ $datos_control->folioReal }}-{{ $datos_control->movimiento_folio }}</p>
+                            <p style="margin: 0"><strong>DERECHOS: </strong>${{ number_format($datos_control->monto, 2) }}</p>
+                            <p style="margin: 0"><strong>Tipo de servicio: </strong>{{ $datos_control->tipo_servicio }}</p>
+                            <p style="margin: 0"><strong>Servicio: </strong>{{ $datos_control->servicio }}</p>
+                            <p style="margin: 0"><strong>Elaborado en: </strong>{{ $datos_control->elaborado_en }}</p>
+                            <p style="margin: 0"><strong>Fecha de ingreso: </strong>{{ $fideicomiso->fecha_prelacion }}</p>
+                            <p style="margin: 0"><strong>Registrado POR: </strong>{{  $datos_control->registrado_por }}</p>
+                            <p style="margin: 0"><strong>Folio real asignado por:</strong> {{ $datos_control->asigno_folio }}</p>
 
-                </table>
+                        </td>
+                    </tr>
+                </tbody>
 
-            </div>
+            </table>
 
         </div>
 

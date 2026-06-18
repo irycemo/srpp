@@ -155,48 +155,52 @@
 
     <main>
 
-        <div class="container">
+        @include('comun.caratulas.titulo')
 
-            @include('comun.caratulas.titulo')
+        <div style="text-align: right">
+            <p style="margin:0"><strong>movimiento registral:</strong> {{ $datos_control->folioReal }}-{{ $datos_control->movimiento_folio }}</p>
+            <p style="margin:0"><strong>DISTRITO:</strong> {{ $datos_control->distrito }}</p>
+        </div>
 
-            <div style="text-align: right">
-                <p style="margin:0"><strong>movimiento registral:</strong> {{ $datos_control->folioReal }}-{{ $datos_control->movimiento_folio }}</p>
-                <p style="margin:0"><strong>DISTRITO:</strong> {{ $datos_control->distrito }}</p>
-            </div>
+        <div class="titulo">
+            <p><strong>{{ $subdivision->acto_contenido }}</strong></p>
+        </div>
 
-            <div class="titulo">
-                <p><strong>{{ $subdivision->acto_contenido }}</strong></p>
-            </div>
+        <div class="parrafo">
 
-            <div class="parrafo">
+            <p>
+                <strong>por</strong> {{ $subdivision->tipo_documento }} <strong>n°</strong>
+                {{ $subdivision->numero_documento }}
+                <strong>de fecha</strong> {{ $subdivision->fecha_emision }}
+                <strong>otorgado por</strong> {{ $subdivision->autoridad_cargo }} {{ $subdivision->autoridad_nombre }}
+                <strong>consta que </strong>
+                @foreach ($predio->propietarios as $propietario)
 
-                <p>
-                    <strong>por</strong> {{ $subdivision->tipo_documento }} <strong>n°</strong>
-                    {{ $subdivision->numero_documento }}
-                    <strong>de fecha</strong> {{ $subdivision->fecha_emision }}
-                    <strong>otorgado por</strong> {{ $subdivision->autoridad_cargo }} {{ $subdivision->autoridad_nombre }}
-                    <strong>consta que </strong>
-                    @foreach ($predio->propietarios as $propietario)
+                    {{ $propietario->nombre }} {{ $propietario->ap_paterno }} {{ $propietario->ap_materno }} {{ $propietario->razon_social }} {{ $propietario->multiple_nombre }}
 
-                        {{ $propietario->nombre }} {{ $propietario->ap_paterno }} {{ $propietario->ap_materno }} {{ $propietario->razon_social }} {{ $propietario->multiple_nombre }}
+                    @if(isset($propietario->representado_por))
 
-                        @if(isset($propietario->representado_por))
+                        <strong>representado(a) por: </strong>{{ $propietario->representado_por }}
 
-                            <strong>representado(a) por: </strong>{{ $propietario->representado_por }}
+                    @endif
 
-                        @endif
+                @endforeach
+                <strong>, comparecio a realizar el acto de </strong> {{ $subdivision->acto_contenido }}.
+            </p>
 
-                    @endforeach
-                    <strong>, comparecio a realizar el acto de </strong> {{ $subdivision->acto_contenido }}.
-                </p>
+            <p class="separador">Descripción del acto</p>
 
-                <p class="separador">Descripción del acto</p>
+            <p>{{ $subdivision->descripcion_acto }}.</p>
 
-                <p>{{ $subdivision->descripcion_acto }}.</p>
+        </div>
 
-            </div>
+        <div>
 
             @include('comun.caratulas.ubicacion_inmueble')
+
+        </div>
+
+        <div>
 
             @if(count($predio->colindancias))
 
@@ -204,58 +208,74 @@
 
             @endif
 
+        </div>
+
+        <div>
+
             @include('comun.caratulas.descripcion_inmueble')
+
+        </div>
+
+        <div>
 
             @include('comun.caratulas.propietarios')
 
-            <p class="separador">Folios reales generados</p>
+        </div>
 
-            <p class="parrafo">
+        <p class="separador">Folios reales generados</p>
 
-                @foreach ($subdivision->folios_generados as $folio)
+        <p class="parrafo">
 
-                    {{ $folio }} @if(!$loop->last), @endif
+            @foreach ($subdivision->folios_generados as $folio)
 
-                @endforeach
+                {{ $folio }} @if(!$loop->last), @endif
 
-            </p>
+            @endforeach
+
+        </p>
+
+        <div>
 
             @include('comun.caratulas.solicitante')
 
+        </div>
+
+        <div>
+
             @include('comun.caratulas.firma')
 
-            <div class="control no-break">
+        </div>
 
-                <p class="separador">DATOS DE CONTROL</p>
+        <div class="control no-break">
 
-                <table style="margin-top: 10px">
+            <p class="separador">DATOS DE CONTROL</p>
 
-                    <tbody>
-                        <tr>
-                            <td style="padding-right: 40px;">
+            <table style="margin-top: 10px">
 
-                                <img class="qr" src="{{ $qr }}" alt="QR">
+                <tbody>
+                    <tr>
+                        <td style="padding-right: 40px;">
 
-                            </td>
-                            <td style="padding-right: 40px;">
+                            <img class="qr" src="{{ $qr }}" alt="QR">
 
-                                <p style="margin: 0"><strong>NÚMERO DE CONTROL: </strong>{{ $datos_control->numero_control }}</p>
-                                <p style="margin: 0"><strong>Movimiento registral:</strong> {{ $datos_control->folioReal }}-{{ $datos_control->movimiento_folio }}</p>
-                                <p style="margin: 0"><strong>DERECHOS: </strong>${{ number_format($datos_control->monto, 2) }}</p>
-                                <p style="margin: 0"><strong>Tipo de servicio: </strong>{{ $datos_control->tipo_servicio }}</p>
-                                <p style="margin: 0"><strong>Servicio: </strong>{{ $datos_control->servicio }}</p>
-                                <p style="margin: 0"><strong>Elaborado en: </strong>{{ $datos_control->elaborado_en }}</p>
-                                <p style="margin: 0"><strong>Fecha de ingreso: </strong>{{ $subdivision->fecha_prelacion }}</p>
-                                <p style="margin: 0"><strong>Registrado POR: </strong>{{  $datos_control->registrado_por }}</p>
-                                <p style="margin: 0"><strong>Folio real asignado por:</strong> {{ $datos_control->asigno_folio }}</p>
+                        </td>
+                        <td style="padding-right: 40px;">
 
-                            </td>
-                        </tr>
-                    </tbody>
+                            <p style="margin: 0"><strong>NÚMERO DE CONTROL: </strong>{{ $datos_control->numero_control }}</p>
+                            <p style="margin: 0"><strong>Movimiento registral:</strong> {{ $datos_control->folioReal }}-{{ $datos_control->movimiento_folio }}</p>
+                            <p style="margin: 0"><strong>DERECHOS: </strong>${{ number_format($datos_control->monto, 2) }}</p>
+                            <p style="margin: 0"><strong>Tipo de servicio: </strong>{{ $datos_control->tipo_servicio }}</p>
+                            <p style="margin: 0"><strong>Servicio: </strong>{{ $datos_control->servicio }}</p>
+                            <p style="margin: 0"><strong>Elaborado en: </strong>{{ $datos_control->elaborado_en }}</p>
+                            <p style="margin: 0"><strong>Fecha de ingreso: </strong>{{ $subdivision->fecha_prelacion }}</p>
+                            <p style="margin: 0"><strong>Registrado POR: </strong>{{  $datos_control->registrado_por }}</p>
+                            <p style="margin: 0"><strong>Folio real asignado por:</strong> {{ $datos_control->asigno_folio }}</p>
 
-                </table>
+                        </td>
+                    </tr>
+                </tbody>
 
-            </div>
+            </table>
 
         </div>
 

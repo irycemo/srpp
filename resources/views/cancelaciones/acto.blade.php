@@ -159,16 +159,16 @@
 
             @include('comun.caratulas.titulo')
 
-            <div class="informacion">
+            <div style="text-align: right">
+                <p style="margin:0;"><strong>Movimiento registral:</strong>{{ $datos_control->folioReal }}-{{ $datos_control->movimiento_folio }}</p>
+                <p style="margin:0;"><strong>DISTRITO:</strong> {{ $datos_control->distrito}}</p>
+            </div>
 
-                <div style="text-align: right">
-                    <p style="margin:0;"><strong>Movimiento registral:</strong>{{ $datos_control->folioReal }}-{{ $datos_control->movimiento_folio }}</p>
-                    <p style="margin:0;"><strong>DISTRITO:</strong> {{ $datos_control->distrito}}</p>
-                </div>
+            <div class="titulo">
+                <p><strong>{{ $cancelacion->acto_contenido }}</strong></p>
+            </div>
 
-                <div class="titulo">
-                    <p><strong>{{ $cancelacion->acto_contenido }}</strong></p>
-                </div>
+            <div>
 
                 <p class="separador">Descripción del acto</p>
 
@@ -176,13 +176,25 @@
                     {{ $cancelacion->observaciones }}
                 </p>
 
+            </div>
+
+            <div>
+
                 <p class="separador">Documento de entrada</p>
 
                 <p class="parrafo">
                     <strong>Tipo de documento: </strong> {{ $cancelacion->tipo_documento }}; @if(isset($cancelacion->numero_documento))<strong>Número de documento: </strong> {{ $cancelacion->numero_documento }};@endif <strong>Cargo de la autoridad: </strong> {{ $cancelacion->autoridad_cargo }}; <strong>Nombre de la autoridad: </strong> {{ $cancelacion->autoridad_nombre }}; <strong>Número de la autoridad: </strong> {{ $cancelacion->autoridad_numero }}; <strong>Fecha de emisión: </strong> {{ $cancelacion->fecha_emision }}; @if(isset($cancelacion->fecha_inscripcion))<strong>Fecha de inscripción: </strong> {{$cancelacion->fecha_inscripcion }};@endif @if(isset($cancelacion->procedencia))<strong>Dependencia: </strong>{{ $cancelacion->procedencia }} @endif
                 </p>
 
+            </div>
+
+            <div>
+
                 @include('comun.caratulas.ubicacion_inmueble')
+
+            </div>
+
+            <div>
 
                 @if(count($predio->colindancias))
 
@@ -190,9 +202,21 @@
 
                 @endif
 
+            </div>
+
+            <div>
+
                 @include('comun.caratulas.descripcion_inmueble')
 
+            </div>
+
+            <div>
+
                 @include('comun.caratulas.propietarios')
+
+            </div>
+
+            <div>
 
                 <p class="separador">datos del gravamen afectado</p>
 
@@ -213,42 +237,50 @@
 
             </div>
 
+        </div>
+
+        <div>
+
             @include('comun.caratulas.solicitante')
+
+        </div>
+
+        <div>
 
             @include('comun.caratulas.firma')
 
-            <div class="control no-break">
+        </div>
 
-                <p class="separador">DATOS DE CONTROL</p>
+        <div class="control no-break">
 
-                <table style="margin-top: 10px">
+            <p class="separador">DATOS DE CONTROL</p>
 
-                    <tbody>
-                        <tr>
-                            <td style="padding-right: 40px;">
+            <table style="margin-top: 10px">
 
-                                <img class="qr" src="{{ $qr }}" alt="QR">
+                <tbody>
+                    <tr>
+                        <td style="padding-right: 40px;">
 
-                            </td>
-                            <td style="padding-right: 40px;">
+                            <img class="qr" src="{{ $qr }}" alt="QR">
 
-                                <p style="margin: 0"><strong>NÚMERO DE CONTROL: </strong>{{ $datos_control->numero_control }}</p>
-                                <p style="margin: 0"><strong>Movimiento registral:</strong> {{ $datos_control->folioReal }}-{{ $datos_control->movimiento_folio }}</p>
-                                <p style="margin: 0"><strong>DERECHOS: </strong>${{ number_format($datos_control->monto, 2) }}</p>
-                                <p style="margin: 0"><strong>Tipo de servicio: </strong>{{ $datos_control->tipo_servicio }}</p>
-                                <p style="margin: 0"><strong>Servicio: </strong>{{ $datos_control->servicio }}</p>
-                                <p style="margin: 0"><strong>Elaborado en: </strong>{{ $datos_control->elaborado_en }}</p>
-                                <p style="margin: 0"><strong>Fecha de ingreso: </strong>{{ $cancelacion->fecha_prelacion }}</p>
-                                <p style="margin: 0"><strong>Registrado POR: </strong>{{  $datos_control->registrado_por }}</p>
-                                <p style="margin: 0"><strong>Folio real asignado por:</strong> {{ $datos_control->asigno_folio }}</p>
+                        </td>
+                        <td style="padding-right: 40px;">
 
-                            </td>
-                        </tr>
-                    </tbody>
+                            <p style="margin: 0"><strong>NÚMERO DE CONTROL: </strong>{{ $datos_control->numero_control }}</p>
+                            <p style="margin: 0"><strong>Movimiento registral:</strong> {{ $datos_control->folioReal }}-{{ $datos_control->movimiento_folio }}</p>
+                            <p style="margin: 0"><strong>DERECHOS: </strong>${{ number_format($datos_control->monto, 2) }}</p>
+                            <p style="margin: 0"><strong>Tipo de servicio: </strong>{{ $datos_control->tipo_servicio }}</p>
+                            <p style="margin: 0"><strong>Servicio: </strong>{{ $datos_control->servicio }}</p>
+                            <p style="margin: 0"><strong>Elaborado en: </strong>{{ $datos_control->elaborado_en }}</p>
+                            <p style="margin: 0"><strong>Fecha de ingreso: </strong>{{ $cancelacion->fecha_prelacion }}</p>
+                            <p style="margin: 0"><strong>Registrado POR: </strong>{{  $datos_control->registrado_por }}</p>
+                            <p style="margin: 0"><strong>Folio real asignado por:</strong> {{ $datos_control->asigno_folio }}</p>
 
-                </table>
+                        </td>
+                    </tr>
+                </tbody>
 
-            </div>
+            </table>
 
         </div>
 

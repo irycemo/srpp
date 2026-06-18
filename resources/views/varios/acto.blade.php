@@ -155,171 +155,162 @@
 
     <main>
 
-        <div class="container">
+        @include('comun.caratulas.titulo')
 
-            @include('comun.caratulas.titulo')
+        @if($vario->acto_contenido == 'PERSONAS MORALES')
 
-            <div class="informacion">
-
-                @if($vario->acto_contenido == 'PERSONAS MORALES')
-
-                    <div style="text-align: right">
-                        <p style="margin:0;"><strong>movimiento registral: </strong>{{ $vario->folioPersonaMoral->folio }}-{{ $datos_control->movimiento_folio }}</p>
-                        <p style="margin:0;"><strong>DISTRITO:</strong> {{ $datos_control->distrito}}</p>
-                    </div>
-
-                @else
-
-                    <div style="text-align: right">
-                        <p style="margin:0;"><strong>movimiento registral: </strong>{{ $datos_control->folioReal }}-{{ $datos_control->movimiento_folio }}</p>
-                        <p style="margin:0;"><strong>DISTRITO:</strong> {{ $datos_control->distrito}}</p>
-                    </div>
-
-                @endif
-
-                <div class="titulo">
-                    <p><strong>{{ $vario->acto_contenido }}</strong></p>
-                </div>
-
-                <p class="separador">Descripción del acto</p>
-
-                <p class="parrafo">
-                    {{ $vario->descripcion }}
-                </p>
-
-                <p class="separador">Documento de entrada</p>
-
-                <p class="parrafo">
-                    <strong>Tipo de documento: </strong> {{ $vario->tipo_documento }}; @if(isset($vario->numero_documento))<strong>Número de documento: </strong> {{ $vario->numero_documento }};@endif <strong>Cargo de la autoridad: </strong> {{ $vario->autoridad_cargo }}; <strong>Nombre de la autoridad: </strong> {{ $vario->autoridad_nombre }}; <strong>Número de la autoridad: </strong> {{ $vario->autoridad_numero }}; <strong>Fecha de emisión: </strong> {{ $vario->fecha_emision }}; @if(isset($vario->fecha_inscripcion))<strong>Fecha de inscripción: </strong> {{$vario->fecha_inscripcion }};@endif @if(isset($vario->procedencia))<strong>Dependencia: </strong>{{ $vario->procedencia }} @endif
-                </p>
-
-                @if($vario->acto_contenido == 'PERSONAS MORALES')
-
-                    <p class="parrafo">
-
-                        <p><strong>FOLIO REAL de persona moral:</strong>{{ $vario->folioPersonaMoral->folio }}
-
-                    </p>
-
-                    <p class="parrafo">
-                        <strong>Denominación:</strong> {{ $vario->folioPersonaMoral->folio->denominacion }}
-                    </p>
-
-                    <p class="parrafo">
-
-                        <strong>Fecha de celebarción:</strong>{{ $vario->folioPersonaMoral->folio->fecha_celebracion }}; <strong>Fecha de inscripción:</strong>{{ $vario->folioPersonaMoral->folio->fecha_inscripcion }}.
-
-                    </p>
-
-                    <p class="parrafo">
-
-                        <strong>Notaria:</strong> {{ $vario->folioPersonaMoral->folio->notaria }}; <strong>Nombre del notario:</strong>{{ $vario->folioPersonaMoral->folio->nombre_notario }}; <strong>Número de hojas:</strong>{{ $vario->folioPersonaMoral->folio->numero_hojas }}.
-
-                    </p>
-
-                    <p class="parrafo">
-
-                        <strong>Descripción:</strong> {{ $vario->folioPersonaMoral->folio->descripcion }}
-
-                    </p>
-
-                    <p class="parrafo">
-
-                        <strong>Observaciones:</strong> {{ $vario->folioPersonaMoral->folio->observaciones }}
-
-                    </p>
-
-                    <p class="separador">Participantes</p>
-
-                    <table>
-
-                        <thead>
-
-                            <tr>
-                                <th >Razón social</th>
-                                <th >RFC</th>
-                            </tr>
-
-                        </thead>
-
-                        <tbody>
-
-                            @foreach ($vario->folioPersonaMoral->folio->actores as $actor)
-
-                                <tr>
-                                    <td style="padding-right: 40px;">
-                                        {{ $actor->razon_social }}
-                                    </td>
-                                    <td style="padding-right: 40px;">
-                                        {{ $actor->rfc }}
-                                    </td>
-                                </tr>
-
-                            @endforeach
-
-                        </tbody>
-
-                    </table>
-
-                    <p class="parrafo">
-                        <strong>descripción del acto:</strong> {{ $vario->descripcion }}
-                    </p>
-
-                @else
-
-                    @include('comun.caratulas.ubicacion_inmueble')
-
-                    @if(count($predio->colindancias))
-
-                        @include('comun.caratulas.colindancias')
-
-                    @endif
-
-                    @include('comun.caratulas.descripcion_inmueble')
-
-                    @include('comun.caratulas.propietarios')
-
-                @endif
-
-
-                @include('comun.caratulas.solicitante')
-
+            <div style="text-align: right">
+                <p style="margin:0;"><strong>movimiento registral: </strong>{{ $vario->folioPersonaMoral->folio }}-{{ $datos_control->movimiento_folio }}</p>
+                <p style="margin:0;"><strong>DISTRITO:</strong> {{ $datos_control->distrito}}</p>
             </div>
 
-            @include('comun.caratulas.firma')
+        @else
 
-            <div class="control no-break">
+            <div style="text-align: right">
+                <p style="margin:0;"><strong>movimiento registral: </strong>{{ $datos_control->folioReal }}-{{ $datos_control->movimiento_folio }}</p>
+                <p style="margin:0;"><strong>DISTRITO:</strong> {{ $datos_control->distrito}}</p>
+            </div>
 
-                <p class="separador">DATOS DE CONTROL</p>
+        @endif
 
-                <table style="margin-top: 10px">
+        <div class="titulo">
+            <p><strong>{{ $vario->acto_contenido }}</strong></p>
+        </div>
 
-                    <tbody>
+        <p class="separador">Descripción del acto</p>
+
+        <p class="parrafo">
+            {{ $vario->descripcion }}
+        </p>
+
+        <p class="separador">Documento de entrada</p>
+
+        <p class="parrafo">
+            <strong>Tipo de documento: </strong> {{ $vario->tipo_documento }}; @if(isset($vario->numero_documento))<strong>Número de documento: </strong> {{ $vario->numero_documento }};@endif <strong>Cargo de la autoridad: </strong> {{ $vario->autoridad_cargo }}; <strong>Nombre de la autoridad: </strong> {{ $vario->autoridad_nombre }}; <strong>Número de la autoridad: </strong> {{ $vario->autoridad_numero }}; <strong>Fecha de emisión: </strong> {{ $vario->fecha_emision }}; @if(isset($vario->fecha_inscripcion))<strong>Fecha de inscripción: </strong> {{$vario->fecha_inscripcion }};@endif @if(isset($vario->procedencia))<strong>Dependencia: </strong>{{ $vario->procedencia }} @endif
+        </p>
+
+        @if($vario->acto_contenido == 'PERSONAS MORALES')
+
+            <p class="parrafo">
+
+                <p><strong>FOLIO REAL de persona moral:</strong>{{ $vario->folioPersonaMoral->folio }}
+
+            </p>
+
+            <p class="parrafo">
+                <strong>Denominación:</strong> {{ $vario->folioPersonaMoral->folio->denominacion }}
+            </p>
+
+            <p class="parrafo">
+
+                <strong>Fecha de celebarción:</strong>{{ $vario->folioPersonaMoral->folio->fecha_celebracion }}; <strong>Fecha de inscripción:</strong>{{ $vario->folioPersonaMoral->folio->fecha_inscripcion }}.
+
+            </p>
+
+            <p class="parrafo">
+
+                <strong>Notaria:</strong> {{ $vario->folioPersonaMoral->folio->notaria }}; <strong>Nombre del notario:</strong>{{ $vario->folioPersonaMoral->folio->nombre_notario }}; <strong>Número de hojas:</strong>{{ $vario->folioPersonaMoral->folio->numero_hojas }}.
+
+            </p>
+
+            <p class="parrafo">
+
+                <strong>Descripción:</strong> {{ $vario->folioPersonaMoral->folio->descripcion }}
+
+            </p>
+
+            <p class="parrafo">
+
+                <strong>Observaciones:</strong> {{ $vario->folioPersonaMoral->folio->observaciones }}
+
+            </p>
+
+            <p class="separador">Participantes</p>
+
+            <table>
+
+                <thead>
+
+                    <tr>
+                        <th >Razón social</th>
+                        <th >RFC</th>
+                    </tr>
+
+                </thead>
+
+                <tbody>
+
+                    @foreach ($vario->folioPersonaMoral->folio->actores as $actor)
+
                         <tr>
                             <td style="padding-right: 40px;">
-
-                                <img class="qr" src="{{ $qr }}" alt="QR">
-
+                                {{ $actor->razon_social }}
                             </td>
                             <td style="padding-right: 40px;">
-
-                                <p style="margin: 0"><strong>NÚMERO DE CONTROL: </strong>{{ $datos_control->numero_control }}</p>
-                                <p style="margin: 0"><strong>Movimiento registral:</strong> {{ $datos_control->folioReal }}-{{ $datos_control->movimiento_folio }}</p>
-                                <p style="margin: 0"><strong>DERECHOS: </strong>${{ number_format($datos_control->monto, 2) }}</p>
-                                <p style="margin: 0"><strong>Tipo de servicio: </strong>{{ $datos_control->tipo_servicio }}</p>
-                                <p style="margin: 0"><strong>Servicio: </strong>{{ $datos_control->servicio }}</p>
-                                <p style="margin: 0"><strong>Elaborado en: </strong>{{ $datos_control->elaborado_en }}</p>
-                                <p style="margin: 0"><strong>Fecha de ingreso: </strong>{{ $vario->fecha_prelacion }}</p>
-                                <p style="margin: 0"><strong>Registrado POR: </strong>{{  $datos_control->registrado_por }}</p>
-                                <p style="margin: 0"><strong>Folio real asignado por:</strong> {{ $datos_control->asigno_folio }}</p>
-
+                                {{ $actor->rfc }}
                             </td>
                         </tr>
-                    </tbody>
 
-                </table>
+                    @endforeach
 
-            </div>
+                </tbody>
+
+            </table>
+
+            <p class="parrafo">
+                <strong>descripción del acto:</strong> {{ $vario->descripcion }}
+            </p>
+
+        @else
+
+            @include('comun.caratulas.ubicacion_inmueble')
+
+            @if(count($predio->colindancias))
+
+                @include('comun.caratulas.colindancias')
+
+            @endif
+
+            @include('comun.caratulas.descripcion_inmueble')
+
+            @include('comun.caratulas.propietarios')
+
+        @endif
+
+        @include('comun.caratulas.solicitante')
+
+        @include('comun.caratulas.firma')
+
+        <div class="control no-break">
+
+            <p class="separador">DATOS DE CONTROL</p>
+
+            <table style="margin-top: 10px">
+
+                <tbody>
+                    <tr>
+                        <td style="padding-right: 40px;">
+
+                            <img class="qr" src="{{ $qr }}" alt="QR">
+
+                        </td>
+                        <td style="padding-right: 40px;">
+
+                            <p style="margin: 0"><strong>NÚMERO DE CONTROL: </strong>{{ $datos_control->numero_control }}</p>
+                            <p style="margin: 0"><strong>Movimiento registral:</strong> {{ $datos_control->folioReal }}-{{ $datos_control->movimiento_folio }}</p>
+                            <p style="margin: 0"><strong>DERECHOS: </strong>${{ number_format($datos_control->monto, 2) }}</p>
+                            <p style="margin: 0"><strong>Tipo de servicio: </strong>{{ $datos_control->tipo_servicio }}</p>
+                            <p style="margin: 0"><strong>Servicio: </strong>{{ $datos_control->servicio }}</p>
+                            <p style="margin: 0"><strong>Elaborado en: </strong>{{ $datos_control->elaborado_en }}</p>
+                            <p style="margin: 0"><strong>Fecha de ingreso: </strong>{{ $vario->fecha_prelacion }}</p>
+                            <p style="margin: 0"><strong>Registrado POR: </strong>{{  $datos_control->registrado_por }}</p>
+                            <p style="margin: 0"><strong>Folio real asignado por:</strong> {{ $datos_control->asigno_folio }}</p>
+
+                        </td>
+                    </tr>
+                </tbody>
+
+            </table>
 
         </div>
 
