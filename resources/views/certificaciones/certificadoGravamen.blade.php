@@ -247,6 +247,17 @@
 
                         @endforeach
                         <strong>POR LA CANTIDAD DE: </strong> ${{ number_format($gravamen->valor_gravamen, 2) }} {{ $gravamen->valor_gravamen_letras }} {{ $gravamen->divisa }}.
+                        @if(isset($gravamen->valor_gravamen_2))
+
+                            <strong>POR LA CANTIDAD DE: </strong> ${{ number_format($gravamen->valor_gravamen_2, 2) }} {{ $gravamen->valor_gravamen_letras_2 }} {{ $gravamen->divisa_2 }}.
+
+                        @endif
+
+                        @if(isset($gravamen->valor_gravamen_3))
+
+                            <strong>POR LA CANTIDAD DE: </strong> ${{ number_format($gravamen->valor_gravamen_3, 2) }} {{ $gravamen->valor_gravamen_letras_3 }} {{ $gravamen->divisa_3 }}.
+
+                        @endif
                     </p>
 
                     <br>

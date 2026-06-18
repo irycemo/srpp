@@ -62,6 +62,26 @@ class CertificadoGravamenController extends Controller
 
                 }
 
+                if(isset($item->valor_gravamen_2) && $item->valor_gravamen_2< 999999999){
+
+                    $item->valor_gravamen_letras_2 = $formatter->toWords($item->valor_gravamen_2);
+
+                }else{
+
+                    $item->valor_gravamen_letras_2 = '';
+
+                }
+
+                if(isset($item->valor_gravamen_3) && $item->valor_gravamen_3< 999999999){
+
+                    $item->valor_gravamen_letras_3 = $formatter->toWords($item->valor_gravamen_3);
+
+                }else{
+
+                    $item->valor_gravamen_letras_3 = '';
+
+                }
+
                 $gravamenesCollection->push($item);
 
             }
