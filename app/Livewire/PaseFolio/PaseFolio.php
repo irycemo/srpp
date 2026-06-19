@@ -23,6 +23,7 @@ use App\Traits\Inscripciones\ReasignarmeMovimientoTrait;
 use App\Traits\Inscripciones\ReasignarUsuarioTrait;
 use App\Traits\Inscripciones\RechazarMovimientoTrait;
 use App\Traits\Inscripciones\RecibirDocumentoTrait;
+use App\Traits\MovimientoRegistral\CambiarAntecedenteTrait;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
 use Livewire\Component;
@@ -40,6 +41,7 @@ class PaseFolio extends Component
     use FinalizarInscripcionTrait;
     use ReasignarUsuarioTrait;
     use ReasignarmeMovimientoTrait;
+    use CambiarAntecedenteTrait;
 
     public $observaciones;
     public $modal = false;

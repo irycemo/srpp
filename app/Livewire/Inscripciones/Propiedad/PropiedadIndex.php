@@ -2,21 +2,22 @@
 
 namespace App\Livewire\Inscripciones\Propiedad;
 
-use App\Models\User;
-use Livewire\Component;
-use Livewire\WithPagination;
-use Livewire\WithFileUploads;
 use App\Constantes\Constantes;
-use App\Traits\ComponentesTrait;
 use App\Models\MovimientoRegistral;
+use App\Models\User;
+use App\Traits\ComponentesTrait;
 use App\Traits\Inscripciones\AutorizarImpresionTrait;
-use App\Traits\Inscripciones\InscripcionesIndex;
 use App\Traits\Inscripciones\EnviarMovimientoCorreccion;
 use App\Traits\Inscripciones\FinalizarInscripcionTrait;
+use App\Traits\Inscripciones\InscripcionesIndex;
 use App\Traits\Inscripciones\ReasignarmeMovimientoTrait;
 use App\Traits\Inscripciones\ReasignarUsuarioTrait;
 use App\Traits\Inscripciones\RechazarMovimientoTrait;
 use App\Traits\Inscripciones\RecibirDocumentoTrait;
+use App\Traits\MovimientoRegistral\CambiarAntecedenteTrait;
+use Livewire\Component;
+use Livewire\WithFileUploads;
+use Livewire\WithPagination;
 
 class PropiedadIndex extends Component
 {
@@ -31,6 +32,7 @@ class PropiedadIndex extends Component
     use FinalizarInscripcionTrait;
     use ReasignarUsuarioTrait;
     use AutorizarImpresionTrait;
+    use CambiarAntecedenteTrait;
 
     public function mount(){
 

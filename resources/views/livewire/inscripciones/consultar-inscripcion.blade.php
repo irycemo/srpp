@@ -48,7 +48,7 @@
 
     </div>
 
-    <div class="rounded-lg shadow-xl border-t-2 border-t-gray-500">
+    <div class="rounded-lg shadow-xl border-t-2 border-t-gray-500 mb-5">
 
         @if($movimientoRegistral != null)
 
@@ -56,15 +56,14 @@
 
                 <x-slot name="head">
 
-                    <x-table.heading >Mov. Reg.</x-table.heading>
                     <x-table.heading ># Control</x-table.heading>
-                    <x-table.heading sortable wire:click="sortBy('estado')" :direction="$sort === 'estado' ? $direction : null" >Estado</x-table.heading>
-                    <x-table.heading sortable wire:click="sortBy('tipo_servicio')" :direction="$sort === 'tipo_servicio' ? $direction : null" >Tipo de servicio</x-table.heading>
-                    <x-table.heading sortable wire:click="sortBy('solicitante')" :direction="$sort === 'solicitante' ? $direction : null" >Solicitante</x-table.heading>
-                    <x-table.heading sortable wire:click="sortBy('tomo')" :direction="$sort === 'tomo' ? $direction : null" >Tomo / Bis</x-table.heading>
-                    <x-table.heading sortable wire:click="sortBy('registro')" :direction="$sort === 'registro' ? $direction : null" >Registro / Bis</x-table.heading>
+                    <x-table.heading sortable wire:click="sortBy('folio')" :direction="$sort === 'folio' ? $direction : null" >M.R.</x-table.heading>
+                    <x-table.heading sortable wire:click="sortBy('estado')" :direction="$sort === 'estado' ? $direction : null" >estado</x-table.heading>
+                    <x-table.heading sortable wire:click="sortBy('tomo')" :direction="$sort === 'tomo' ? $direction : null" >Tomo</x-table.heading>
+                    <x-table.heading sortable wire:click="sortBy('registro')" :direction="$sort === 'registro' ? $direction : null" >Registro</x-table.heading>
+                    <x-table.heading sortable wire:click="sortBy('numero_propiedad')" :direction="$sort === 'numero_propiedad' ? $direction : null" ># Propiedad</x-table.heading>
                     <x-table.heading sortable wire:click="sortBy('distrito')" :direction="$sort === 'distrito' ? $direction : null" >Distrito</x-table.heading>
-                    <x-table.heading sortable wire:click="sortBy('seccion')" :direction="$sort === 'seccion' ? $direction : null" >Sección</x-table.heading>
+                    <x-table.heading sortable wire:click="sortBy('servicio_nombre')" :direction="$sort === 'servicio_nombre' ? $direction : null" >Servicio</x-table.heading>
                     <x-table.heading sortable wire:click="sortBy('usuario_asignado')" :direction="$sort === 'usuario_asignado' ? $direction : null" >Asignado a</x-table.heading>
                     <x-table.heading sortable wire:click="sortBy('fecha_entrega')" :direction="$sort === 'fecha_entrega' ? $direction : null" >Fecha de entrega</x-table.heading>
                     @if(auth()->user()->hasRole('Administrador'))
@@ -77,63 +76,75 @@
 
                     <x-table.row wire:loading.class.delaylongest="opacity-50" wire:key="row-{{$movimientoRegistral->id }}">
 
-                        <x-table.cell title="Mov. Reg.">
+                        <x-table.cell title="# Control">
 
-                            {{$movimientoRegistral->folioReal?->folio }}-{{$movimientoRegistral->folio }}
+                            <span class="whitespace-nowrap">{{ $movimientoRegistral->año }}-{{ $movimientoRegistral->tramite }}-{{ $movimientoRegistral->usuario }}</span>
 
                         </x-table.cell>
 
-                        <x-table.cell title="Año">
+                        <x-table.cell title="M.R.">
 
-                            {{$movimientoRegistral->año }}-{{$movimientoRegistral->tramite }}-{{$movimientoRegistral->usuario }}
+                            <span class="whitespace-nowrap flex items-center justify-center">
+
+                                @if($movimientoRegistral->folioReal?->estado == 'pendiente')
+
+                                    <span class="bg-pink-400 px-1 rounded-full text-white text-xs mr-2">P</span>
+
+                                @elseif($movimientoRegistral->folioReal?->estado == 'captura')
+
+                                    <span class="bg-yellow-400 px-1 rounded-full text-white text-xs mr-2">C</span>
+
+                                @elseif($movimientoRegistral->folioReal?->estado == 'elaborado')
+
+                                    <span class="bg-green-400 px-1 rounded-full text-white text-xs mr-2">E</span>
+
+                                @endif
+
+                                @if($movimientoRegistral->folioReal?->matriz) <span class="bg-pink-400 px-1 rounded-full text-white text-xs mr-2">M</span> @endif{{ $movimientoRegistral->folioReal?->folio }}-{{ $movimientoRegistral->folio }}
+
+                            </span>
 
                         </x-table.cell>
 
                         <x-table.cell title="Estado">
 
-                            <span class="bg-{{$movimientoRegistral->estado_color }} py-1 px-2 rounded-full text-white text-xs">{{ ucfirst($movimientoRegistral->estado) }}</span>
-
-                        </x-table.cell>
-
-                        <x-table.cell title="Tipo de servicio">
-
-                            {{$movimientoRegistral->tipo_servicio }}
-
-                        </x-table.cell>
-
-                        <x-table.cell title="Solicitante">
-
-                            {{$movimientoRegistral->solicitante }}
+                            <span class="bg-{{ $movimientoRegistral->estado_color }} py-1 px-2 rounded-full text-white text-xs whitespace-nowrap">{{ ucfirst($movimientoRegistral->estado) }}</span>
 
                         </x-table.cell>
 
                         <x-table.cell title="Tomo">
 
-                            {{$movimientoRegistral->tomo }}
+                            {{ $movimientoRegistral->tomo ?? 'N/A' }}
 
                         </x-table.cell>
 
                         <x-table.cell title="Registro">
 
-                            {{$movimientoRegistral->registro }}
+                            {{ $movimientoRegistral->registro ?? 'N/A' }}
+
+                        </x-table.cell>
+
+                        <x-table.cell title="# Propiedad">
+
+                            {{ $movimientoRegistral->numero_propiedad ?? 'N/A' }}
 
                         </x-table.cell>
 
                         <x-table.cell title="Distrito">
 
-                            {{$movimientoRegistral->distrito }}
+                            {{ $movimientoRegistral->distrito }}
 
                         </x-table.cell>
 
-                        <x-table.cell title="Sección">
+                        <x-table.cell title="Servicio">
 
-                            {{$movimientoRegistral->seccion }}
+                            {{ $movimientoRegistral->servicio_nombre ?? 'N/A' }}
 
                         </x-table.cell>
 
                         <x-table.cell title="Asignado a">
 
-                            {{$movimientoRegistral->asignadoA->name }}
+                            {{ $movimientoRegistral->asignadoA?->name }}
 
                         </x-table.cell>
 
@@ -227,6 +238,193 @@
         @endif
 
     </div>
+
+    @if(count($movimientos))
+
+        <div class="rounded-lg shadow-xl border-t-2 border-t-gray-500">
+
+            <x-table>
+
+                <x-slot name="head">
+
+                    <x-table.heading ># Control</x-table.heading>
+                    <x-table.heading sortable wire:click="sortBy('folio')" :direction="$sort === 'folio' ? $direction : null" >M.R.</x-table.heading>
+                    <x-table.heading sortable wire:click="sortBy('estado')" :direction="$sort === 'estado' ? $direction : null" >estado</x-table.heading>
+                    <x-table.heading sortable wire:click="sortBy('tomo')" :direction="$sort === 'tomo' ? $direction : null" >Tomo</x-table.heading>
+                    <x-table.heading sortable wire:click="sortBy('registro')" :direction="$sort === 'registro' ? $direction : null" >Registro</x-table.heading>
+                    <x-table.heading sortable wire:click="sortBy('numero_propiedad')" :direction="$sort === 'numero_propiedad' ? $direction : null" ># Propiedad</x-table.heading>
+                    <x-table.heading sortable wire:click="sortBy('distrito')" :direction="$sort === 'distrito' ? $direction : null" >Distrito</x-table.heading>
+                    <x-table.heading sortable wire:click="sortBy('servicio_nombre')" :direction="$sort === 'servicio_nombre' ? $direction : null" >Servicio</x-table.heading>
+                    <x-table.heading sortable wire:click="sortBy('usuario_asignado')" :direction="$sort === 'usuario_asignado' ? $direction : null" >Asignado a</x-table.heading>
+                    <x-table.heading sortable wire:click="sortBy('fecha_entrega')" :direction="$sort === 'fecha_entrega' ? $direction : null" >Fecha de entrega</x-table.heading>
+                    @if(auth()->user()->hasRole('Administrador'))
+                        <x-table.heading >Acciones</x-table.heading>
+                    @endif
+
+                </x-slot>
+
+                <x-slot name="body">
+
+                    @foreach ($movimientos as $movimiento)
+
+                        <x-table.row wire:loading.class.delaylongest="opacity-50" wire:key="row-{{$movimiento->id }}">
+
+                            <x-table.cell title="# Control">
+
+                                <span class="whitespace-nowrap">{{ $movimiento->año }}-{{ $movimiento->tramite }}-{{ $movimiento->usuario }}</span>
+
+                            </x-table.cell>
+
+                            <x-table.cell title="M.R.">
+
+                                <span class="whitespace-nowrap flex items-center justify-center">
+
+                                    @if($movimiento->folioReal?->estado == 'pendiente')
+
+                                        <span class="bg-pink-400 px-1 rounded-full text-white text-xs mr-2">P</span>
+
+                                    @elseif($movimiento->folioReal?->estado == 'captura')
+
+                                        <span class="bg-yellow-400 px-1 rounded-full text-white text-xs mr-2">C</span>
+
+                                    @elseif($movimiento->folioReal?->estado == 'elaborado')
+
+                                        <span class="bg-green-400 px-1 rounded-full text-white text-xs mr-2">E</span>
+
+                                    @endif
+
+                                    @if($movimiento->folioReal?->matriz) <span class="bg-pink-400 px-1 rounded-full text-white text-xs mr-2">M</span> @endif{{ $movimiento->folioReal?->folio }}-{{ $movimiento->folio }}
+
+                                </span>
+
+                            </x-table.cell>
+
+                            <x-table.cell title="Estado">
+
+                                <span class="bg-{{ $movimiento->estado_color }} py-1 px-2 rounded-full text-white text-xs whitespace-nowrap">{{ ucfirst($movimiento->estado) }}</span>
+
+                            </x-table.cell>
+
+                            <x-table.cell title="Tomo">
+
+                                {{ $movimiento->tomo ?? 'N/A' }}
+
+                            </x-table.cell>
+
+                            <x-table.cell title="Registro">
+
+                                {{ $movimiento->registro ?? 'N/A' }}
+
+                            </x-table.cell>
+
+                            <x-table.cell title="# Propiedad">
+
+                                {{ $movimiento->numero_propiedad ?? 'N/A' }}
+
+                            </x-table.cell>
+
+                            <x-table.cell title="Distrito">
+
+                                {{ $movimiento->distrito }}
+
+                            </x-table.cell>
+
+                            <x-table.cell title="Servicio">
+
+                                {{ $movimiento->servicio_nombre ?? 'N/A' }}
+
+                            </x-table.cell>
+
+                            <x-table.cell title="Asignado a">
+
+                                {{ $movimiento->asignadoA?->name }}
+
+                            </x-table.cell>
+
+                            <x-table.cell title="Fecha de entrega">
+
+                                {{$movimiento->fecha_entrega }}
+
+                            </x-table.cell>
+
+                            @if(auth()->user()->hasRole('Administrador'))
+
+                                <x-table.cell title="Acciones">
+
+                                    <div class="ml-3 relative" x-data="{ open_drop_down:false }">
+
+                                        <div>
+
+                                            <button x-on:click="open_drop_down=true" type="button" class="rounded-full focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-offset-gray-800 focus:ring-white">
+
+                                                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-6 h-6">
+                                                    <path stroke-linecap="round" stroke-linejoin="round" d="M6.75 12a.75.75 0 1 1-1.5 0 .75.75 0 0 1 1.5 0ZM12.75 12a.75.75 0 1 1-1.5 0 .75.75 0 0 1 1.5 0ZM18.75 12a.75.75 0 1 1-1.5 0 .75.75 0 0 1 1.5 0Z" />
+                                                </svg>
+
+                                            </button>
+
+                                        </div>
+
+                                        <div x-cloak x-show="open_drop_down" x-on:click="open_drop_down=false" x-on:click.away="open_drop_down=false" class="z-50 origin-top-right absolute right-0 mt-2 w-48 rounded-md shadow-lg py-1 bg-white ring-1 ring-black ring-opacity-5 focus:outline-none" role="menu" aria-orientation="vertical" aria-labelledby="user-menu">
+
+                                            <button
+                                                wire:click="$set('modal2', '!modal2')"
+                                                wire:loading.attr="disabled"
+                                                class="w-full text-left block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 focus:outline-none focus:bg-gray-100"
+                                                role="menuitem">
+                                                Reasignar
+                                            </button>
+
+                                            @if($movimiento->estado == 'nuevo')
+
+                                                <button
+                                                    wire:click="$set('modalRechazar', '!modalRechazar')"
+                                                    wire:loading.attr="disabled"
+                                                    class="w-full text-left block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 focus:outline-none focus:bg-gray-100"
+                                                    role="menuitem">
+                                                    Rechazar
+                                                </button>
+
+                                            @endif
+
+                                            <a
+                                                href="{{ route('auditoria') . "?modelo=". $modelo . "&modelo_id=" .  $modeloId }}"
+                                                class="w-full text-left block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 focus:outline-none focus:bg-gray-100"
+                                                role="menuitem">
+                                                Auditar
+                                            </a>
+
+                                        </div>
+
+                                    </div>
+
+                                </x-table.cell>
+
+                            @endif
+
+                        </x-table.row>
+
+                    @endforeach
+
+                </x-slot>
+
+                <x-slot name="tfoot">
+
+                    <x-table.row>
+
+                        <x-table.cell colspan="14" class="bg-gray-50">
+
+                        </x-table.cell>
+
+                    </x-table.row>
+
+                </x-slot>
+
+            </x-table>
+
+        </div>
+
+    @endif
 
     <x-dialog-modal wire:model="modalRechazar">
 

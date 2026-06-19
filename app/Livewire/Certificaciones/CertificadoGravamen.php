@@ -17,6 +17,7 @@ use App\Traits\ComponentesTrait;
 use App\Traits\Inscripciones\AutorizarImpresionTrait;
 use App\Traits\Inscripciones\ReasignarmeMovimientoTrait;
 use App\Traits\Inscripciones\RechazarMovimientoTrait;
+use App\Traits\MovimientoRegistral\CambiarAntecedenteTrait;
 use App\Traits\QrTrait;
 use App\Traits\RevisarMovimientosPosterioresTrait;
 use Illuminate\Support\Facades\Cache;
@@ -38,6 +39,7 @@ class CertificadoGravamen extends Component
     use ReasignarmeMovimientoTrait;
     use RechazarMovimientoTrait;
     use AutorizarImpresionTrait;
+    use CambiarAntecedenteTrait;
 
     public Certificacion $modelo_editar;
 

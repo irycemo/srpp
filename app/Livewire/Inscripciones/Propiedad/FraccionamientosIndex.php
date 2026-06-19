@@ -2,12 +2,10 @@
 
 namespace App\Livewire\Inscripciones\Propiedad;
 
-use App\Models\User;
-use Livewire\Component;
-use Livewire\WithPagination;
 use App\Constantes\Constantes;
-use App\Traits\ComponentesTrait;
 use App\Models\MovimientoRegistral;
+use App\Models\User;
+use App\Traits\ComponentesTrait;
 use App\Traits\Inscripciones\AutorizarImpresionTrait;
 use App\Traits\Inscripciones\EnviarMovimientoCorreccion;
 use App\Traits\Inscripciones\InscripcionesIndex;
@@ -15,6 +13,9 @@ use App\Traits\Inscripciones\ReasignarmeMovimientoTrait;
 use App\Traits\Inscripciones\ReasignarUsuarioTrait;
 use App\Traits\Inscripciones\RechazarMovimientoTrait;
 use App\Traits\Inscripciones\RecibirDocumentoTrait;
+use App\Traits\MovimientoRegistral\CambiarAntecedenteTrait;
+use Livewire\Component;
+use Livewire\WithPagination;
 
 class FraccionamientosIndex extends Component
 {
@@ -28,6 +29,7 @@ class FraccionamientosIndex extends Component
     use ReasignarUsuarioTrait;
     use ReasignarmeMovimientoTrait;
     use AutorizarImpresionTrait;
+    use CambiarAntecedenteTrait;
 
     public function mount(){
 

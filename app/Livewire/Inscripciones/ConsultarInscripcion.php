@@ -35,6 +35,7 @@ class ConsultarInscripcion extends Component
     public $movimientoRegistral;
     public $modelo;
     public $modeloId;
+    public $movimientos = [];
 
     public function abrirModalRechazar(MovimientoRegistral $modelo){
 
@@ -122,11 +123,21 @@ class ConsultarInscripcion extends Component
             'tramite_usuario' => 'required'
         ]);
 
-        $this->movimientoRegistral = MovimientoRegistral::where('año', $this->año)->where('tramite', $this->tramite)->where('usuario', $this->tramite_usuario)->first();
+        $this->movimientoRegistral = MovimientoRegistral::where('año', $this->año)
+                                                            ->where('tramite', $this->tramite)
+                                                            ->where('usuario', $this->tramite_usuario)
+                                                            ->first();
+
+        $this->movimientos = MovimientoRegistral::with('folioReal:id,folio,estado,matriz', 'asignadoA:id,name')
+                                                    ->where('tomo', $this->movimientoRegistral->tomo)
+                                                    ->where('registro', $this->movimientoRegistral->registro)
+                                                    ->where('numero_propiedad', $this->movimientoRegistral->numero_propiedad)
+                                                    ->where('distrito', $this->movimientoRegistral->getRawOriginal('distrito'))
+                                                    ->get();
 
         if(!$this->movimientoRegistral){
 
-            $this->dispatch('mostrarMensaje', ['error', "No se encontro el trámite."]);
+            $this->dispatch('mostrarMensaje', ['warning', "No se encontro el trámite."]);
 
             return;
 
@@ -134,7 +145,7 @@ class ConsultarInscripcion extends Component
 
         if($this->movimientoRegistral->certificacion){
 
-            $this->dispatch('mostrarMensaje', ['error', "El trámite no es una inscripción."]);
+            $this->dispatch('mostrarMensaje', ['warning', "El trámite no es una inscripción."]);
 
         }
 
