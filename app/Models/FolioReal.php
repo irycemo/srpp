@@ -242,7 +242,7 @@ class FolioReal extends Model implements Auditable
                                         ->whereHas('vario', function($q){
                                             $q->where('acto_contenido', 'ACLARACIÓN ADMINISTRATIVA');
                                         })
-                                        ->whereNotIn('estado',['concluido', 'finalizado'])
+                                        ->whereNotIn('estado',['concluido', 'finalizado', 'inactivo'])
                                         ->first();
 
         return $movimiento;
