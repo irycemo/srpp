@@ -354,7 +354,7 @@
                                         @if(auth()->user()->ubicacion === 'Regional 4')
 
                                             <button
-                                                wire:click="abrirModalCambiarAntecedente({{ $movimiento->id }})"
+                                                wire:click="abrirModalCambiarAntecedente({{ $certificado->id }})"
                                                 wire:loading.attr="disabled"
                                                 class="w-full text-left block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 focus:outline-none focus:bg-gray-100"
                                                 role="menuitem">
