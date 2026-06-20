@@ -248,11 +248,11 @@ trait InscripcionesIndex{
 
         if($movimientoRegistral->inscripcionPropiedad){
 
-            if(in_array($movimientoRegistral->inscripcionPropiedad->servicio, ['D121', 'D120', 'D123', 'D122', 'D119', 'D124'])){
+            if(in_array($movimientoRegistral->inscripcionPropiedad->servicio, ['D121', 'D120', 'D123', 'D122', 'D119', 'D124', 'D126'])){
 
                 return redirect()->route('propiedad.fraccionamiento', $movimientoRegistral->inscripcionPropiedad);
 
-            }elseif(in_array($movimientoRegistral->inscripcionPropiedad->servicio, ['D126', 'D127'])){
+            }elseif(in_array($movimientoRegistral->inscripcionPropiedad->servicio, ['D127'])){
 
                 return redirect()->route('propiedad.subdivision', $movimientoRegistral->inscripcionPropiedad);
 
