@@ -39,7 +39,15 @@ class DocumentoEntrada extends Component
 
             DB::transaction(function (){
 
-                $pdf = $this->documento->store('/', 'documento_entrada');
+                if(app()->isProduction()){
+
+                    $pdf = $this->documento->store(config('services.ses.ruta_documento_entrada'), 's3');
+
+                }else{
+
+                    $pdf = $this->documento->store('/', 'documento_entrada');
+
+                }
 
                 File::create([
                     'fileable_id' => $this->id,
