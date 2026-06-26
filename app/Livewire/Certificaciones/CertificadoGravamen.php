@@ -412,6 +412,8 @@ class CertificadoGravamen extends Component
 
         $this->año = now()->year;
 
+        $this->distritos = Constantes::DISTRITOS;
+
         $this->director = User::where('status', 'activo')
                                 ->whereHas('roles', function($q){
                                     $q->where('name', 'Director');

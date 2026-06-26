@@ -431,6 +431,8 @@ class CertificadoPropiedadIndex extends Component
 
         $this->año = now()->year;
 
+        $this->distritos = Constantes::DISTRITOS;
+
         $this->usuarios_regionales = Constantes::USUARIOS_REGIONALES;
 
         $this->usuarios = User::where('status', 'activo')

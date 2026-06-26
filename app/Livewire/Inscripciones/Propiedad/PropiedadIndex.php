@@ -42,6 +42,8 @@ class PropiedadIndex extends Component
 
         $this->año = now()->format('Y');
 
+        $this->distritos = Constantes::DISTRITOS;
+
         $this->motivos_rechazo = Constantes::RECHAZO_MOTIVOS;
 
         $this->usuarios_regionales = Constantes::USUARIOS_REGIONALES;

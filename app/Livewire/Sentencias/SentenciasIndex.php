@@ -45,6 +45,8 @@ class SentenciasIndex extends Component
 
         $this->motivos_rechazo = Constantes::RECHAZO_MOTIVOS;
 
+        $this->distritos = Constantes::DISTRITOS;
+
         $this->usuarios_regionales = Constantes::USUARIOS_REGIONALES;
 
         if(auth()->user()->hasRole(['Regional'])){

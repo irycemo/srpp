@@ -16,6 +16,7 @@ trait CambiarAntecedenteTrait{
     public $registro_cambiar_atecendente;
     public $numero_propiedad_cambiar_atecendente;
     public $distrito_cambiar_atecendente;
+    public $distritos;
 
     public function updated($field, $value){
 
