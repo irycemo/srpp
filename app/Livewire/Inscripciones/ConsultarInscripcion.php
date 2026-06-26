@@ -128,18 +128,33 @@ class ConsultarInscripcion extends Component
                                                             ->where('usuario', $this->tramite_usuario)
                                                             ->first();
 
-        $this->movimientos = MovimientoRegistral::with('folioReal:id,folio,estado,matriz', 'asignadoA:id,name')
-                                                    ->where('tomo', $this->movimientoRegistral->tomo)
-                                                    ->where('registro', $this->movimientoRegistral->registro)
-                                                    ->where('numero_propiedad', $this->movimientoRegistral->numero_propiedad)
-                                                    ->where('distrito', $this->movimientoRegistral->getRawOriginal('distrito'))
-                                                    ->get();
-
         if(!$this->movimientoRegistral){
 
             $this->dispatch('mostrarMensaje', ['warning', "No se encontro el trámite."]);
 
             return;
+
+        }
+
+        if($this->movimientoRegistral->folio_real){
+
+            $this->movimientos = MovimientoRegistral::with('folioReal:id,folio,estado,matriz', 'asignadoA:id,name')
+                                                        ->where('folio_real', $this->movimientoRegistral->folio_real)
+                                                        ->get();
+
+        }elseif(
+            $this->movimientoRegistral->tomo &&
+            $this->movimientoRegistral->registro &&
+            $this->movimientoRegistral->numero_propiedad &&
+            $this->movimientoRegistral->numero_propiedad->distrito)
+        {
+
+            $this->movimientos = MovimientoRegistral::with('folioReal:id,folio,estado,matriz', 'asignadoA:id,name')
+                                                        ->where('tomo', $this->movimientoRegistral->tomo)
+                                                        ->where('registro', $this->movimientoRegistral->registro)
+                                                        ->where('numero_propiedad', $this->movimientoRegistral->numero_propiedad)
+                                                        ->where('distrito', $this->movimientoRegistral->getRawOriginal('distrito'))
+                                                        ->get();
 
         }
 

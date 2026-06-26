@@ -465,6 +465,8 @@
 
     @include('livewire.comun.inscripciones.modal-rechazos')
 
+    @include('livewire.comun.inscripciones.modal-cambiar-antecedente')
+
 </div>
 
 @push('scripts')

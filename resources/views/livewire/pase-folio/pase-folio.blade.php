@@ -612,4 +612,6 @@
 
     @include('livewire.comun.inscripciones.modal-reasignar-usuario')
 
+    @include('livewire.comun.inscripciones.modal-cambiar-antecedente')
+
 </div>
