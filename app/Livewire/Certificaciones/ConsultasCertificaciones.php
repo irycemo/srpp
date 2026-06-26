@@ -10,6 +10,7 @@ use Illuminate\Support\Facades\DB;
 use App\Models\MovimientoRegistral;
 use Illuminate\Support\Facades\Log;
 use App\Http\Services\SistemaTramitesService;
+use App\Traits\MovimientoRegistral\CambiarAntecedenteTrait;
 use Livewire\WithPagination;
 
 class ConsultasCertificaciones extends Component
@@ -17,6 +18,7 @@ class ConsultasCertificaciones extends Component
 
     use ComponentesTrait;
     use WithPagination;
+    use CambiarAntecedenteTrait;
 
     public $certificacion;
     public $año;
@@ -29,6 +31,11 @@ class ConsultasCertificaciones extends Component
     public $usuarios;
     public $usuario;
     public $años;
+    public $modelo_editar;
+
+    public function crearModeloVacio(){
+        $this->modelo_editar = MovimientoRegistral::make();
+    }
 
     public function save(){
 
@@ -232,7 +239,11 @@ class ConsultasCertificaciones extends Component
 
     public function mount(){
 
+        $this->crearModeloVacio();
+
         $this->años = Constantes::AÑOS;
+
+        $this->distritos = Constantes::DISTRITOS;
 
         $this->año = now()->format('Y');
 

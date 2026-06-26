@@ -12,12 +12,14 @@ use Illuminate\Support\Facades\DB;
 use App\Models\MovimientoRegistral;
 use Illuminate\Support\Facades\Log;
 use App\Http\Services\SistemaTramitesService;
+use App\Traits\MovimientoRegistral\CambiarAntecedenteTrait;
 
 class ConsultarInscripcion extends Component
 {
 
     use ComponentesTrait;
     use WithPagination;
+    use CambiarAntecedenteTrait;
 
     public $año;
     public $tramite;
@@ -36,6 +38,11 @@ class ConsultarInscripcion extends Component
     public $modelo;
     public $modeloId;
     public $movimientos = [];
+    public $modelo_editar;
+
+    public function crearModeloVacio(){
+        $this->modelo_editar = MovimientoRegistral::make();
+    }
 
     public function abrirModalRechazar(MovimientoRegistral $modelo){
 
@@ -208,7 +215,11 @@ class ConsultarInscripcion extends Component
 
     public function mount(){
 
+        $this->crearModeloVacio();
+
         $this->motivos = Constantes::RECHAZO_MOTIVOS;
+
+        $this->distritos = Constantes::DISTRITOS;
 
         $this->años = Constantes::AÑOS;
 

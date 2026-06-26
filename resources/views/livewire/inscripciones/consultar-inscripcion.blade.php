@@ -66,7 +66,7 @@
                     <x-table.heading sortable wire:click="sortBy('servicio_nombre')" :direction="$sort === 'servicio_nombre' ? $direction : null" >Servicio</x-table.heading>
                     <x-table.heading sortable wire:click="sortBy('usuario_asignado')" :direction="$sort === 'usuario_asignado' ? $direction : null" >Asignado a</x-table.heading>
                     <x-table.heading sortable wire:click="sortBy('fecha_entrega')" :direction="$sort === 'fecha_entrega' ? $direction : null" >Fecha de entrega</x-table.heading>
-                    @if(auth()->user()->hasRole('Administrador'))
+                    @if(auth()->user()->hasRole('Administrador') || auth()->user()->ubicacion === 'Regional 4')
                         <x-table.heading >Acciones</x-table.heading>
                     @endif
 
@@ -154,7 +154,7 @@
 
                         </x-table.cell>
 
-                        @if(auth()->user()->hasRole('Administrador'))
+                        @if(auth()->user()->hasRole('Administrador') || auth()->user()->ubicacion === 'Regional 4')
 
                             <x-table.cell title="Acciones">
 
@@ -174,32 +174,44 @@
 
                                     <div x-cloak x-show="open_drop_down" x-on:click="open_drop_down=false" x-on:click.away="open_drop_down=false" class="z-50 origin-top-right absolute right-0 mt-2 w-48 rounded-md shadow-lg py-1 bg-white ring-1 ring-black ring-opacity-5 focus:outline-none" role="menu" aria-orientation="vertical" aria-labelledby="user-menu">
 
-                                        <button
-                                            wire:click="$set('modal2', '!modal2')"
-                                            wire:loading.attr="disabled"
-                                            class="w-full text-left block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 focus:outline-none focus:bg-gray-100"
-                                            role="menuitem">
-                                            Reasignar
-                                        </button>
-
-                                        @if($movimientoRegistral->estado == 'nuevo')
+                                        @if(auth()->user()->hasRole('Administrador'))
 
                                             <button
-                                                wire:click="$set('modalRechazar', '!modalRechazar')"
+                                                wire:click="$set('modal2', '!modal2')"
                                                 wire:loading.attr="disabled"
                                                 class="w-full text-left block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 focus:outline-none focus:bg-gray-100"
                                                 role="menuitem">
-                                                Rechazar
+                                                Reasignar
                                             </button>
+
+                                            @if($movimientoRegistral->estado == 'nuevo')
+
+                                                <button
+                                                    wire:click="$set('modalRechazar', '!modalRechazar')"
+                                                    wire:loading.attr="disabled"
+                                                    class="w-full text-left block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 focus:outline-none focus:bg-gray-100"
+                                                    role="menuitem">
+                                                    Rechazar
+                                                </button>
+
+                                            @endif
+
+                                            <a
+                                                href="{{ route('auditoria') . "?modelo=". $modelo . "&modelo_id=" .  $modeloId }}"
+                                                class="w-full text-left block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 focus:outline-none focus:bg-gray-100"
+                                                role="menuitem">
+                                                Auditar
+                                            </a>
 
                                         @endif
 
-                                        <a
-                                            href="{{ route('auditoria') . "?modelo=". $modelo . "&modelo_id=" .  $modeloId }}"
+                                        <button
+                                            wire:click="abrirModalCambiarAntecedente({{ $movimientoRegistral->id }})"
+                                            wire:loading.attr="disabled"
                                             class="w-full text-left block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 focus:outline-none focus:bg-gray-100"
                                             role="menuitem">
-                                            Auditar
-                                        </a>
+                                            Cambiar antecedente
+                                        </button>
 
                                     </div>
 
@@ -578,5 +590,7 @@
         </x-slot>
 
     </x-dialog-modal>
+
+    @include('livewire.comun.inscripciones.modal-cambiar-antecedente')
 
 </div>

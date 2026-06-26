@@ -135,6 +135,10 @@
 
                                     <span class="bg-green-400 px-1 rounded-full text-white text-xs mr-2">E</span>
 
+                                @elseif($movimiento->folioReal?->estado == 'inactivo')
+
+                                    <span class="bg-green-400 px-1 rounded-full text-white text-xs mr-2">I</span>
+
                                 @endif
 
                                 @if($movimiento->folioReal?->matriz) <span class="bg-pink-400 px-1 rounded-full text-white text-xs mr-2">M</span> @endif{{ $movimiento->folioReal?->folio }}-{{ $movimiento->folio }}

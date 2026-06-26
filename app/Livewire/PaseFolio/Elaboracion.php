@@ -902,13 +902,13 @@ class Elaboracion extends Component
 
         }
 
-        if($this->movimientoRegistral->inscripcionPropiedad?->servicio == 'D157' && $this->movimientoRegistral->inscripcionPropiedad?->numero_inmuebles == $this->movimientoRegistral->folioReal->antecedentes->count()){
+        /* if($this->movimientoRegistral->inscripcionPropiedad?->servicio == 'D157' && $this->movimientoRegistral->inscripcionPropiedad?->numero_inmuebles == $this->movimientoRegistral->folioReal->antecedentes->count()){
 
             $this->dispatch('mostrarMensaje', ['warning', "No puede agregar mas antecedentes a fusionar."]);
 
             return;
 
-        }
+        } */
 
         if($this->folio_real_antecedente){
 
