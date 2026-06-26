@@ -324,17 +324,21 @@
 
                                         @endcan
 
-                                        {{-- @can('Rechazar pase a folio')
+                                        @can('Rechazar pase a folio')
 
-                                            <button
-                                                wire:click="abrirModalRechazar({{ $movimiento->id }})"
-                                                wire:loading.attr="disabled"
-                                                class="w-full text-left block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 focus:outline-none focus:bg-gray-100"
-                                                role="menuitem">
-                                                Rechazar
-                                            </button>
+                                            @if(! $movimiento->folio_real)
 
-                                        @endcan --}}
+                                                <button
+                                                    wire:click="abrirModalRechazar({{ $movimiento->id }})"
+                                                    wire:loading.attr="disabled"
+                                                    class="w-full text-left block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 focus:outline-none focus:bg-gray-100"
+                                                    role="menuitem">
+                                                    Rechazar
+                                                </button>
+
+                                            @endif
+
+                                        @endcan
 
                                         @can('Finalizar pase a folio')
 

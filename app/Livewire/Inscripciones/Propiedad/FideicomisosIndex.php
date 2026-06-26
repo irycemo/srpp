@@ -39,6 +39,8 @@ class FideicomisosIndex extends Component
 
         $this->motivos_rechazo = Constantes::RECHAZO_MOTIVOS;
 
+        $this->distritos = Constantes::DISTRITOS;
+
         $this->usuarios_regionales = Constantes::USUARIOS_REGIONALES;
 
         $this->usuarios_regionales_fliped = array_flip($this->usuarios_regionales);

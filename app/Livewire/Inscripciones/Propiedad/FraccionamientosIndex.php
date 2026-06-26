@@ -37,6 +37,8 @@ class FraccionamientosIndex extends Component
 
         $this->años = Constantes::AÑOS;
 
+        $this->distritos = Constantes::DISTRITOS;
+
         $this->motivos_rechazo = Constantes::RECHAZO_MOTIVOS;
 
         $this->usuarios_regionales = Constantes::USUARIOS_REGIONALES;

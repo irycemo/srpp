@@ -51,4 +51,6 @@
 
     @include('livewire.comun.inscripciones.modal-reasignarme-movimiento-registral')
 
+    @include('livewire.comun.inscripciones.modal-cambiar-antecedente')
+
 </div>
