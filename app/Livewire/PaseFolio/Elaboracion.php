@@ -928,26 +928,6 @@ class Elaboracion extends Component
 
             }
 
-            $antecedente = Antecedente::where('folio_real_antecedente', $this->folio_real_antecedente)->first();
-
-            if($antecedente){
-
-                $this->dispatch('mostrarMensaje', ['warning', "El folio ya es antecedente de otro folio."]);
-
-                return;
-
-            }
-
-            $antecedente = FolioReal::where('antecedente', $folioReal->id)->first();
-
-            if($antecedente){
-
-                $this->dispatch('mostrarMensaje', ['warning', "El folio ya es antecedente de otro folio."]);
-
-                return;
-
-            }
-
             $antecedente = Antecedente::where('folio_real_antecedente', $this->folio_real_antecedente)
                                             ->where('folio_real', $this->movimientoRegistral->folio_real)
                                             ->first();
