@@ -251,7 +251,7 @@
 
     </div>
 
-    @if(count($movimientos))
+    @if(count($movimientos) > 1)
 
         <div class="rounded-lg shadow-xl border-t-2 border-t-gray-500">
 
