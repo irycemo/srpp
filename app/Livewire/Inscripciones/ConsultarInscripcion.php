@@ -153,7 +153,7 @@ class ConsultarInscripcion extends Component
             $this->movimientoRegistral->tomo &&
             $this->movimientoRegistral->registro &&
             $this->movimientoRegistral->numero_propiedad &&
-            $this->movimientoRegistral->numero_propiedad->distrito)
+            $this->movimientoRegistral->distrito)
         {
 
             $this->movimientos = MovimientoRegistral::with('folioReal:id,folio,estado,matriz', 'asignadoA:id,name')

@@ -331,13 +331,13 @@ class Elaboracion extends Component
         $this->authorize('update', $this->movimientoRegistral);
 
         /* Fusion */
-        if($this->movimientoRegistral->folioReal && $this->movimientoRegistral->inscripcionPropiedad?->servicio == 'D157' && $this->movimientoRegistral->inscripcionPropiedad?->numero_inmuebles != $this->movimientoRegistral->folioReal->antecedentes->count()){
+        /* if($this->movimientoRegistral->folioReal && $this->movimientoRegistral->inscripcionPropiedad?->servicio == 'D157' && $this->movimientoRegistral->inscripcionPropiedad?->numero_inmuebles != $this->movimientoRegistral->folioReal->antecedentes->count()){
 
             $this->dispatch('mostrarMensaje', ['warning', "Debe ingresar todos los antecedentes a fusionar."]);
 
             return;
 
-        }
+        } */
 
         $this->validate();
 
@@ -1151,7 +1151,7 @@ class Elaboracion extends Component
 
             if(!$this->movimientoRegistral->folioReal->documentoEntrada()){
 
-                throw new Exception('El documento de entrada es obligatorio');
+                throw new Exception('El documento de entrada es obligatorio.');
 
             }
 
