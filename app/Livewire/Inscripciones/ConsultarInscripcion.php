@@ -6,12 +6,11 @@ use App\Models\User;
 use Livewire\Component;
 use Livewire\WithPagination;
 use App\Constantes\Constantes;
-use Barryvdh\DomPDF\Facade\Pdf;
 use App\Traits\ComponentesTrait;
 use Illuminate\Support\Facades\DB;
 use App\Models\MovimientoRegistral;
+use App\Traits\Inscripciones\RechazarMovimientoTrait;
 use Illuminate\Support\Facades\Log;
-use App\Http\Services\SistemaTramitesService;
 use App\Traits\MovimientoRegistral\CambiarAntecedenteTrait;
 
 class ConsultarInscripcion extends Component
@@ -20,6 +19,7 @@ class ConsultarInscripcion extends Component
     use ComponentesTrait;
     use WithPagination;
     use CambiarAntecedenteTrait;
+    use RechazarMovimientoTrait;
 
     public $año;
     public $tramite;
@@ -27,7 +27,6 @@ class ConsultarInscripcion extends Component
     public $modal2;
     public $modalRechazar;
     public $paginas;
-    public $observaciones;
     public $usuarios;
     public $usuario;
     public $años;
@@ -42,59 +41,6 @@ class ConsultarInscripcion extends Component
 
     public function crearModeloVacio(){
         $this->modelo_editar = MovimientoRegistral::make();
-    }
-
-    public function abrirModalRechazar(MovimientoRegistral $modelo){
-
-        $this->reset(['observaciones', 'motivo']);
-
-        if($this->modelo_editar->isNot($modelo))
-            $this->movimientoRegistral = $modelo;
-
-        $this->modalRechazar = true;
-
-    }
-
-    public function rechazar(){
-
-        $this->validate([
-            'observaciones' => 'required'
-        ]);
-
-        try {
-
-            DB::transaction(function () {
-
-                $observaciones = auth()->user()->name . ' rechaza el ' . now() . ', con motivo: ' . $this->observaciones ;
-
-                (new SistemaTramitesService())->rechazarTramite($this->movimientoRegistral->año, $this->movimientoRegistral->tramite, $this->movimientoRegistral->usuario, $this->motivo . ' ' . $observaciones);
-
-                $this->movimientoRegistral->update(['estado' => 'rechazado', 'actualizado_por' => auth()->user()->id]);
-
-            });
-
-            $this->dispatch('mostrarMensaje', ['success', "El trámite se rechazó con éxito."]);
-
-            $this->modalRechazar = false;
-
-            $pdf = Pdf::loadView('rechazos.rechazo', [
-                'movimientoRegistral' => $this->movimientoRegistral,
-                'motivo' => $this->motivo,
-                'observaciones' => $this->observaciones
-            ])->output();
-
-            return response()->streamDownload(
-                fn () => print($pdf),
-                'rechazo.pdf'
-            );
-
-        } catch (\Throwable $th) {
-
-            Log::error("Error al rechazar inscripcion por el usuario: (id: " . auth()->user()->id . ") " . auth()->user()->name . ". " . $th);
-            $this->dispatch('mostrarMensaje', ['error', "Ha ocurrido un error."]);
-
-        }
-
     }
 
     public function reasignar(){
@@ -207,17 +153,11 @@ class ConsultarInscripcion extends Component
 
     }
 
-    public function seleccionarMotivo($key){
-
-        $this->motivo = $this->motivos[$key];
-
-    }
-
     public function mount(){
 
         $this->crearModeloVacio();
 
-        $this->motivos = Constantes::RECHAZO_MOTIVOS;
+        $this->motivos_rechazo = Constantes::RECHAZO_MOTIVOS;
 
         $this->distritos = Constantes::DISTRITOS;
 
