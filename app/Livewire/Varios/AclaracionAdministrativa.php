@@ -181,7 +181,6 @@ class AclaracionAdministrativa extends Component
 
             $this->vario->update([
                 'predio_id' => $predio->id,
-                'estado' => 'inactivo'
             ]);
 
             $this->actualizarDocumentoEntrada($this->vario->movimientoRegistral);
@@ -364,7 +363,7 @@ class AclaracionAdministrativa extends Component
 
                 $this->guardarColindancias($this->vario->predio);
 
-                $this->vario->estado = 'activo';
+                $this->vario->estado = 'inactivo';
                 $this->vario->actualizado_por = auth()->id();
                 $this->vario->fecha_inscripcion = now()->toDateString();
                 $this->vario->predio_id = null;
