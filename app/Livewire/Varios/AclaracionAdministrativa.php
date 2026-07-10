@@ -179,7 +179,10 @@ class AclaracionAdministrativa extends Component
                 'clave_edificio' => $this->vario->movimientoRegistral->folioReal->predio->clave_edificio,
             ]);
 
-            $this->vario->update(['predio_id' => $predio->id]);
+            $this->vario->update([
+                'predio_id' => $predio->id,
+                'estado' => 'inactivo'
+            ]);
 
             $this->actualizarDocumentoEntrada($this->vario->movimientoRegistral);
 
