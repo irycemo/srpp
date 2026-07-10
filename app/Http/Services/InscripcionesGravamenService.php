@@ -20,6 +20,17 @@ class InscripcionesGravamenService implements MovimientoServiceInterface{
             'movimiento_registral_id' => $request['movimiento_registral_id'],
         ]);
 
+        /* Revisar si son para folio matriz */
+        $id = $this->revisarFolioMatriz($gravamen->movimientoRegistral);
+
+        if($id){
+
+            $gravamen->update(['movimiento_registral_id' => $id]);
+
+            $gravamen->refresh();
+
+        }
+
         /* Reestructura de credito */
         if($request['servicio'] == 'D153'){
 
