@@ -94,7 +94,7 @@
 
             <div class="">
 
-                @livewire('comun.actores.socio-crear', ['sub_tipos' => $actores, 'modelo' => $reformaMoral->movimientoRegistral->folioRealPersona])
+                @livewire('comun.actores.socio-crear', ['sub_tipos' => [], 'modelo' => $reformaMoral->movimientoRegistral->folioRealPersona])
 
                 <div>
 

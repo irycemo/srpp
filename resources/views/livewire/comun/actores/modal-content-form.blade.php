@@ -1,6 +1,6 @@
 <div class="flex justify-center gap-3 mb-3 col-span-2 rounded-lg p-3">
 
-    @if($sub_tipos)
+    @if(count($sub_tipos))
 
         <x-input-group for="sub_tipo" label="Tipo de {{ $tipo_actor }}" :error="$errors->first('sub_tipo')" class="w-full">
 
@@ -15,6 +15,14 @@
                 @endforeach
 
             </x-input-select>
+
+        </x-input-group>
+
+    @else
+
+        <x-input-group for="sub_tipo" label="Tipo de {{ $tipo_actor }}" :error="$errors->first('sub_tipo')" class="w-full">
+
+            <x-input-text id="sub_tipo" wire:model="sub_tipo"/>
 
         </x-input-group>
 
