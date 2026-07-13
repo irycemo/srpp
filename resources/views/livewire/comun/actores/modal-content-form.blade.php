@@ -1,6 +1,6 @@
 <div class="flex justify-center gap-3 mb-3 col-span-2 rounded-lg p-3">
 
-    @if(count($sub_tipos))
+    @if(isset($sub_tipos) && count($sub_tipos))
 
         <x-input-group for="sub_tipo" label="Tipo de {{ $tipo_actor }}" :error="$errors->first('sub_tipo')" class="w-full">
 
