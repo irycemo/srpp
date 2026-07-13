@@ -1,30 +1,34 @@
 <div class="flex justify-center gap-3 mb-3 col-span-2 rounded-lg p-3">
 
-    @if(isset($sub_tipos) && count($sub_tipos))
+    @if(isset($sub_tipos))
 
-        <x-input-group for="sub_tipo" label="Tipo de {{ $tipo_actor }}" :error="$errors->first('sub_tipo')" class="w-full">
+        @if(count($sub_tipos))
 
-            <x-input-select id="sub_tipo" wire:model="sub_tipo" class="w-full">
+            <x-input-group for="sub_tipo" label="Tipo de {{ $tipo_actor }}" :error="$errors->first('sub_tipo')" class="w-full">
 
-                <option value="">Seleccione una opción</option>
+                <x-input-select id="sub_tipo" wire:model="sub_tipo" class="w-full">
 
-                @foreach ($sub_tipos as $tipo)
+                    <option value="">Seleccione una opción</option>
 
-                    <option value="{{ $tipo }}">{{ $tipo }}</option>
+                    @foreach ($sub_tipos as $tipo)
 
-                @endforeach
+                        <option value="{{ $tipo }}">{{ $tipo }}</option>
 
-            </x-input-select>
+                    @endforeach
 
-        </x-input-group>
+                </x-input-select>
 
-    @else
+            </x-input-group>
 
-        <x-input-group for="sub_tipo" label="Tipo de {{ $tipo_actor }}" :error="$errors->first('sub_tipo')" class="w-full">
+        @else
 
-            <x-input-text id="sub_tipo" wire:model="sub_tipo"/>
+            <x-input-group for="sub_tipo" label="Tipo de {{ $tipo_actor }}" :error="$errors->first('sub_tipo')" class="w-full">
 
-        </x-input-group>
+                <x-input-text id="sub_tipo" wire:model="sub_tipo"/>
+
+            </x-input-group>
+
+        @endif
 
     @endif
 
