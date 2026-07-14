@@ -156,6 +156,18 @@ class FoliosReales extends Component
 
             DB::transaction(function () use($folioReal){
 
+                $folios_hijos = FolioReal::where('antecedente', $folioReal->id)->get();
+
+                if($folios_hijos->count()){
+
+                    foreach($folios_hijos as $folio_hijo){
+
+                        (new FolioRealService())->borrarFolioReal($folio_hijo->id);
+
+                    }
+
+                }
+
                 (new FolioRealService())->borrarFolioReal($folioReal->id);
 
             });
