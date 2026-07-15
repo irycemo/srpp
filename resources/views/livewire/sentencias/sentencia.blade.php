@@ -2,11 +2,11 @@
 
     <x-header>Sentencia  <span class="text-sm tracking-widest">Folio real: {{ $sentencia->movimientoRegistral->folioReal->folio }} - {{ $sentencia->movimientoRegistral->folio }}</span></x-header>
 
-    @if($sentencia->acto_contenido == 'SENTENCIA RECTIFICATORIA')
+    @if(in_array($sentencia->acto_contenido, ['SENTENCIA RECTIFICATORIA', 'CANCELACIÓN DE INSCRIPCIÓN DE PROPIEDAD']))
 
         @livewire('sentencias.rectificatoria', ['sentencia' => $this->sentencia])
 
-    @elseif($sentencia->acto_contenido == 'CANCELACIÓN DE SENTENCIA')
+    @elseif(in_array($sentencia->acto_contenido, ['CANCELACIÓN DE SENTENCIA']))
 
         @livewire('sentencias.cancelatoria', ['sentencia' => $this->sentencia])
 
