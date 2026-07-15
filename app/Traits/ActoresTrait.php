@@ -86,7 +86,7 @@ trait ActoresTrait{
 
     public function updatedTipoPersona(){
 
-        if($this->tipo_persona == 'FISICA'){
+        if(in_array($this->tipo_persona, ['FISICA', 'FÍSICA'])){
 
             $this->reset('razon_social');
 

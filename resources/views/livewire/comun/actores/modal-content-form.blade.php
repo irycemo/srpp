@@ -38,7 +38,7 @@
 
             <option value="">Seleccione una opción</option>
             <option value="MORAL">MORAL</option>
-            <option value="FISICA">FISICA</option>
+            <option value="FÍSICA">FISICA</option>
 
         </x-input-select>
 
@@ -48,7 +48,7 @@
 
 <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-3 mb-3 col-span-2 rounded-lg p-3">
 
-    @if($tipo_persona == 'FISICA')
+    @if(in_array($tipo_persona, ['FISICA', 'FÍSICA']))
 
         <x-input-group for="nombre" label="Nombre(s)" :error="$errors->first('nombre')" class="w-full">
 
