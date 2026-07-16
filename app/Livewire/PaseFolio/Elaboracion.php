@@ -193,7 +193,8 @@ class Elaboracion extends Component
             'seccion_antecedente' => 'Propiedad',
             'tipo_documento' => $this->tipo_documento,
             'acto_contenido_antecedente' => $this->acto_contenido_antecedente,
-            'observaciones_antecedente' => $this->observaciones_antecedente
+            'observaciones_antecedente' => $this->observaciones_antecedente,
+            'creado_por' => auth()->id()
         ]);
 
         $this->movimientoRegistral->update(['folio_real' => $folioReal->id]);
@@ -217,6 +218,7 @@ class Elaboracion extends Component
                     'nombre_notario' => $this->escritura_nombre_notario,
                     'estado_notario' => $this->escritura_estado_notario,
                     'acto_contenido_antecedente' => $this->acto_contenido_antecedente,
+                    'creado_por' => auth()->id()
                 ]);
 
             }

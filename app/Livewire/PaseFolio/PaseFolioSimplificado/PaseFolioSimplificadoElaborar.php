@@ -164,7 +164,8 @@ class PaseFolioSimplificadoElaborar extends Component
             'seccion_antecedente' => 'Propiedad',
             'tipo_documento' => $this->tipo_documento,
             'acto_contenido_antecedente' => $this->acto_contenido_antecedente,
-            'observaciones_antecedente' => $this->observaciones_antecedente
+            'observaciones_antecedente' => $this->observaciones_antecedente,
+            'creado_por' => auth()->id()
         ]);
 
         $this->movimientoRegistral->update(['folio_real' => $folioReal->id]);
@@ -189,6 +190,7 @@ class PaseFolioSimplificadoElaborar extends Component
                     'estado_notario' => $this->escritura_estado_notario,
                     'comentario' => $this->escritura_observaciones,
                     'acto_contenido_antecedente' => $this->acto_contenido_antecedente,
+                    'creado_por' => auth()->id()
                 ]);
 
             }
