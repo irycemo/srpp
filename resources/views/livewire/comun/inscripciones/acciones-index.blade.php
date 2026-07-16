@@ -149,7 +149,7 @@
 
 @endcan
 
-@if(auth()->user()->ubicacion === 'Regional 4')
+@if(auth()->user()->ubicacion === 'Regional 4' && in_array($movimiento->estado, ['nuevo', 'correccion', 'captura', 'autorizado']))
 
     <button
         wire:click="abrirModalCambiarAntecedente({{ $movimiento->id }})"
