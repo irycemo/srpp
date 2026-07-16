@@ -176,6 +176,12 @@
 
         <div>
 
+            @include('comun.caratulas.documento_entrada')
+
+        </div>
+
+        <div>
+
             @include('comun.caratulas.folio_persona_moral')
 
         </div>

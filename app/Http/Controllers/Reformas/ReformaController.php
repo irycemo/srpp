@@ -53,6 +53,17 @@ class ReformaController extends Controller
         $datos_control->tipo_servicio = $reforma->movimientoRegistral->tipo_servicio;
         $datos_control->asigno_folio = $reforma->movimientoRegistral->folioRealPersona->asignado_por;
 
+        $documento_entrada = (object)[];
+
+        $documento_entrada->tipo_documento = $reforma->movimientoRegistral->tipo_documento;
+        $documento_entrada->numero_documento = $reforma->movimientoRegistral->numero_documento;
+        $documento_entrada->fecha_emision = $reforma->movimientoRegistral->fecha_emision;
+        $documento_entrada->autoridad_cargo = $reforma->movimientoRegistral->autoridad_cargo;
+        $documento_entrada->autoridad_nombre = $reforma->movimientoRegistral->autoridad_nombre;
+        $documento_entrada->autoridad_numero = $reforma->movimientoRegistral->autoridad_numero;
+
+        $datos_control->documento_entrada = $documento_entrada;
+
         $regional = $this->revisarUsuarioRegional($reforma->movimientoRegistral->usuario);
 
         if($regional){
