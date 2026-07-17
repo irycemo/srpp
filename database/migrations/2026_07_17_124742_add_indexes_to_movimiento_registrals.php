@@ -12,7 +12,8 @@ return new class extends Migration
     public function up(): void
     {
         Schema::table('movimiento_registrals', function (Blueprint $table) {
-            $table->unique(['año', 'tramite', 'usuario']);
+            $table->index(['año', 'tramite', 'usuario']);
+            $table->index('servicio_nombre');
         });
     }
 
