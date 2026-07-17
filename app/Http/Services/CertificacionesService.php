@@ -6,14 +6,17 @@ use App\Http\Controllers\Certificaciones\CertificadoGravamenController;
 use App\Http\Services\MovimientoServiceInterface;
 use App\Models\Certificacion;
 use App\Models\MovimientoRegistral;
+use App\Traits\Inscripciones\RevisarFolioMatrizTrait;
 use Illuminate\Support\Facades\Cache;
 
 class CertificacionesService implements MovimientoServiceInterface{
 
+    use RevisarFolioMatrizTrait;
+
     public function crear(array $request):void
     {
 
-        Certificacion::create($this->requestCrear($request));
+        $certificacion = Certificacion::create($this->requestCrear($request));
 
         if($request['servicio_nombre'] == 'Certificado negativo de vivienda bienestar' && $request['solicitante'] == 'Vivienda Bienestar'){
 
@@ -56,6 +59,15 @@ class CertificacionesService implements MovimientoServiceInterface{
                 $movimientoRegistral->update(['estado' => 'pendiente']);
 
             }
+
+        }
+
+        /* Revisar si son para folio matriz */
+        $id = $this->revisarFolioMatriz($certificacion->movimientoRegistral);
+
+        if($id){
+
+            $certificacion->update(['movimiento_registral_id' => $id]);
 
         }
 

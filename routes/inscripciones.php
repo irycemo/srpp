@@ -22,6 +22,8 @@ use App\Livewire\Inscripciones\Propiedad\Fideicomisos;
 use App\Livewire\Inscripciones\Propiedad\FideicomisosIndex;
 use App\Livewire\Inscripciones\Propiedad\PropiedadInscripcion;
 use App\Livewire\Inscripciones\Propiedad\FraccionamientosIndex;
+use App\Livewire\Varios\SinPropiedad\SinPropiedad;
+use App\Livewire\Varios\SinPropiedad\SinPropiedadIndex;
 
 Route::group(['middleware' => ['auth', 'esta.activo']], function(){
 
@@ -57,5 +59,7 @@ Route::group(['middleware' => ['auth', 'esta.activo']], function(){
     Route::get('varios', VariosIndex::class)->middleware('permission:Varios')->name('varios');
     Route::get('varios/{vario}', Varios::class)->middleware('permission:Varios inscripción')->name('varios.inscripcion');
     Route::get('varios_pdf/{vario}', [VariosController::class, 'acto'])->middleware('permission:Varios inscripción')->name('varios.inscripcion.acto');
+    Route::get('varios_sin_porpiead', SinPropiedadIndex::class)->middleware('permission:Varios')->name('varios_sin_porpiead');
+    Route::get('varios_sin_porpiead/{vario}', SinPropiedad::class)->middleware('permission:Varios inscripción')->name('varios_sin_porpiead.inscripcion');
 
 });
