@@ -85,6 +85,12 @@ class VariosService implements MovimientoServiceInterface{
 
         }
 
+        if($vario->movimientoRegistral->servicio_nombre === 'Inscripciones varios sin afectación de propiedad'){
+
+            $vario->movimientoRegistral->update(['pase_a_folio' => false]);
+
+        }
+
     }
 
     public function obtenerUsuarioAsignado(array $request):int | null
