@@ -172,7 +172,7 @@
                 </p>
 
                 <p class="parrafo">
-                    EL DIRECTOR DEL REGISTRO PÚBLICO DE LA PROPIEDAD @if($distrito == '02 Uruapan' ) <strong>L.A. SANDRO MEDINA MORALES</strong> @else <strong>{{ $director }}</strong>, @endif certifica que habiendose examinado el acervo registral
+                    EL DIRECTOR DEL REGISTRO PÚBLICO DE LA PROPIEDAD <strong>{{ $director }}</strong>, @endif certifica que habiendose examinado el acervo registral
                     @if($datos_control->servicio !== 'Certificado negativo de vivienda bienestar')
                         correspondiente al distrito  {{ $distrito}},
                     @endif

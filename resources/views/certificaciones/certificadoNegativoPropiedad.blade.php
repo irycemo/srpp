@@ -176,11 +176,7 @@
 
             <p class="parrafo">
                 EL DIRECTOR DEL REGISTRO PÚBLICO DE LA PROPIEDAD
-                @if($folioReal->distrito == '02 Uruapan' )
-                    <strong>L.A. SANDRO MEDINA MORALES</strong>
-                @else
-                    <strong>{{ $director }}</strong>,
-                @endif
+                <strong>{{ $director }}</strong>,
                 certifica que habiendose examinado el acervo registral
                 @if($datos_control->servicio == 'Certificado negativo de vivienda bienestar')
                     correspondiente al distrito de {{ $folioReal->distrito}}, en el periodo de @if(isset($datos_control->temporalidad)) {{ $datos_control->temporalidad }}, {{ $datos_control->temporalidad_letra }} @else 1977 un mil novecientos setenta y siete @endif a la fecha,

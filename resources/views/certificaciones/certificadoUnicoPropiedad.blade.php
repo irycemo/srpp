@@ -171,7 +171,7 @@
                 </p>
 
                 <p class="parrafo">
-                    EL DIRECTOR DEL REGISTRO PÚBLICO DE LA PROPIEDAD @if($folioReal->distrito == '02 Uruapan' ) <strong>L.A. SANDRO MEDINA MORALES</strong> @else <strong>{{ $director }}</strong>, @endif certifica que habiendose examinado el acervo registral correspondientes al distrito de {{ $folioReal->distrito}}, en el periodo de 1977 un mil novecientos setenta y siete a la fecha, la propiedad que acontinuación se describe es la única que se registra a nombre de:
+                    EL DIRECTOR DEL REGISTRO PÚBLICO DE LA PROPIEDAD <strong>{{ $director }}</strong>, @endif certifica que habiendose examinado el acervo registral correspondientes al distrito de {{ $folioReal->distrito}}, en el periodo de 1977 un mil novecientos setenta y siete a la fecha, la propiedad que acontinuación se describe es la única que se registra a nombre de:
                     @foreach ($personas as $persona)
                         <strong> {{ $persona->nombre }} {{ $persona->ap_paterno }} {{ $persona->ap_materno }}</strong>@if(!$loop->last),@endif
                     @endforeach

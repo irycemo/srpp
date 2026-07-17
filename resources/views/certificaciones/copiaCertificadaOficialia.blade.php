@@ -164,7 +164,7 @@
             <p class="titulo">Copias certificadas</p>
 
             <p class="parrafo" >
-                EL CIUDADANO <strong>@if($distrito == '02 URUAPAN') L.A. SANDRO MEDINA MORALES COORDINADOR REGIONAL URUAPAN @else LICENCIADO EN DERECHO {{ $director }}, DIRECTOR DEL REGISTRO PÚBLICO DE LA PROPIEDAD @endif </strong>
+                EL CIUDADANO <strong> LICENCIADO EN DERECHO {{ $director }}, DIRECTOR DEL REGISTRO PÚBLICO DE LA PROPIEDAD</strong>
                 EN EL ESTADO DE MICHOACÁN DE OCAMPO QUE ACTUA CONFORME A LA LEY, CERTIFICA QUE LA PRESENTE COPIA ES
                 FIELMENTE TOMADA DE LA QUE OBRE EN EL
 
