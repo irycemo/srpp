@@ -174,11 +174,15 @@
             {{ $reforma->descripcion }}
         </p>
 
-        <div>
+        @if(isset($datos_control->documento_entrada))
 
-            @include('comun.caratulas.documento_entrada')
+            <div>
 
-        </div>
+                @include('comun.caratulas.documento_entrada')
+
+            </div>
+
+        @endif
 
         <div>
 
