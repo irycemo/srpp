@@ -2,11 +2,14 @@
 
 namespace App\Livewire\Admin;
 
-use Livewire\Component;
-use Livewire\WithPagination;
 use App\Constantes\Constantes;
+use App\Exceptions\GeneralException;
+use App\Http\Controllers\FolioPersonaMoralController\FolioPersonaMoralController;
 use App\Models\FolioRealPersona;
 use App\Traits\ComponentesTrait;
+use Illuminate\Support\Facades\Log;
+use Livewire\Component;
+use Livewire\WithPagination;
 
 class FoliosRealesPM extends Component
 {
@@ -36,6 +39,32 @@ class FoliosRealesPM extends Component
 
     }
 
+    public function imprimirCaratula(FolioRealPersona $folioReal){
+
+        try {
+
+            $reforma = $folioReal->movimientosRegistrales()->where('folio', 1)->first();
+
+            $pdf = (new FolioPersonaMoralController())->reimprimirFirmado($reforma->firmaElectronica);
+
+            return response()->streamDownload(
+                fn () => print($pdf->output()),
+                'documento.pdf'
+            );
+
+        } catch (GeneralException $ex) {
+
+            $this->dispatch('mostrarMensaje', ['warning', $ex->getMessage()]);
+
+        } catch (\Throwable $th) {
+
+            $this->dispatch('mostrarMensaje', ['error', "Hubo un error."]);
+            Log::error("Error imprimir caratula de folio real de persona moral por el usuario: (id: " . auth()->user()->id . ") " . auth()->user()->name . ". " . $th);
+
+        }
+
+    }
+
     public function mount(): void
     {
 
@@ -61,4 +90,5 @@ class FoliosRealesPM extends Component
         return view('livewire.admin.folios-reales-p-m', compact('folios'))->extends('layouts.admin');
 
     }
+
 }

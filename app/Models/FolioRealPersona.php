@@ -6,6 +6,7 @@ use App\Constantes\Constantes;
 use App\Models\Actor;
 use App\Models\Escritura;
 use App\Models\File;
+use App\Models\FirmaElectronica;
 use App\Models\MovimientoRegistral;
 use App\Models\ObjetoPersonaMOral;
 use App\Models\ReformaMoral;
@@ -57,6 +58,14 @@ class FolioRealPersona extends Model implements Auditable
 
     public function archivos(){
         return $this->morphMany(File::class, 'fileable');
+    }
+
+    public function firmasElectronicas(){
+        return $this->hasMany(FirmaElectronica::class, 'folio_real');
+    }
+
+    public function firmaElectronica(){
+        return $this->hasOne(FirmaElectronica::class, 'folio_real')->where('estado', 'activo');
     }
 
     public function caratula(){

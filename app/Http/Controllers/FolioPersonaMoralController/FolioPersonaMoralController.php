@@ -185,7 +185,7 @@ class FolioPersonaMoralController extends Controller
         $qr = $this->generadorQr($firmaElectronica->uuid);
 
         $pdf = Pdf::loadView('folioPersonaMoral.caratula', [
-            'folioReal' => $objeto->folioReal,
+            'folioReal' => $objeto->reforma->folioReal,
             'firma_electronica' => base64_encode($firmaElectronica->cadena_encriptada),
             'datos_control' => $objeto->datos_control,
             'qr'=> $qr

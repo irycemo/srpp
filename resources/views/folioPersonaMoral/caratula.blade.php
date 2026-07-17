@@ -240,7 +240,7 @@
                         <td style="padding-right: 40px;">
 
                             <p><strong>folio Asignado por:</strong> {{ $folioReal->asignado_por }}.</p>
-                            <p><strong>Fecha de asignación de folio:</strong> {{ $datos_control->fecha_asignacion }}.</p>
+                            <p><strong>Fecha de asignación de folio:</strong> {{ $reforma->fecha_inscripcion }}.</p>
                             @if(isset($datos_control->numero_control))
                                 <p><strong>número de control:</strong> {{ $datos_control->numero_control }}.</p>
                             @else
