@@ -13,6 +13,7 @@ use App\Models\FirmaElectronica;
 use App\Traits\NombreServicioTrait;
 use PhpCfdi\Credentials\Credential;
 use App\Http\Controllers\Controller;
+use App\Models\VariosFolio;
 use Illuminate\Support\Facades\Storage;
 use App\Traits\Inscripciones\FirmaElectronicaTrait;
 use App\Traits\Inscripciones\RevisarUsuarioRegionalTrait;
@@ -212,6 +213,170 @@ class VariosController extends Controller
         $canvas->page_text(480, 745, "Página: {PAGE_NUM} de {PAGE_COUNT}", null, 9, array(1,1,1));
 
         $canvas->page_text(35, 745, 'I-' . $firmaElectronica->movimientoRegistral->folioReal->folio . '-' .$firmaElectronica->movimientoRegistral->folio, null, 9, array(1, 1, 1));
+
+        return $pdf;
+
+    }
+
+    public function caratulaSinPropiedad(Vario $vario)
+    {
+
+        $this->resetCaratula($vario->movimientoRegistral->id);
+
+        $director = User::where('status', 'activo')->whereHas('roles', function($q){
+            $q->where('name', 'Director');
+        })->first();
+
+        $jefe_departamento = User::where('status', 'activo')->whereHas('roles', function($q){
+            $q->where('name', 'Jefe de departamento inscripciones');
+        })->first()->name;
+
+        $datos_control = (object)[];
+
+        $datos_control->numero_control = $vario->movimientoRegistral->año . '-' . $vario->movimientoRegistral->tramite . '-' . $vario->movimientoRegistral->usuario;
+        $datos_control->registrado_por = auth()->user()->name;
+        $datos_control->fecha_asignacion = Carbon::now()->locale('es')->translatedFormat('H:i:s \d\e\l l d \d\e F \d\e\l Y');
+        $datos_control->elaborado_en = Carbon::now()->locale('es')->translatedFormat('H:i:s \d\e\l l d \d\e F \d\e\l Y');
+        $datos_control->jefe_departamento = $jefe_departamento;
+        $datos_control->director = $director->name;
+        $datos_control->distrito = $vario->movimientoRegistral->distrito;
+        $datos_control->movimiento_folio = $vario->movimientoRegistral->folio;
+        $datos_control->servicio = $this->nombreServicio($vario->movimientoRegistral->año, $vario->movimientoRegistral->tramite, $vario->movimientoRegistral->usuario);
+        $datos_control->solicitante = $vario->movimientoRegistral->solicitante;
+        $datos_control->monto = $vario->movimientoRegistral->monto;
+        $datos_control->tipo_servicio = $vario->movimientoRegistral->tipo_servicio;
+
+        $varios_folio = VariosFolio::where('movimiento_registral_id', $vario->movimientoRegistral->id)->first();
+
+        $datos_control->varios_folio = $varios_folio->folio;
+
+        $regional = $this->revisarUsuarioRegional($vario->movimientoRegistral->usuario);
+
+        if($regional){
+
+            $datos_control->nombre_regional = $regional->nombre;
+            $datos_control->titular_regional = $regional->titular;
+            $datos_control->ciudad_regional = $regional->ciudad;
+
+        }
+
+        $object = (object)[];
+
+        $object->datos_control = $datos_control;
+        $object->vario = $this->vario($vario);
+
+        $fielDirector = Credential::openFiles(Storage::disk('efirmas')->path($director->efirma->cer),
+                                                Storage::disk('efirmas')->path($director->efirma->key),
+                                                $director->efirma->contraseña
+                                            );
+
+        $firmaDirector = $fielDirector->sign(json_encode($object));
+
+        $firmaElectronica = FirmaElectronica::create([
+                                                    'movimiento_registral_id' => $vario->movimientoRegistral->id,
+                                                    'cadena_original' => json_encode($object),
+                                                    'cadena_encriptada' => base64_encode($firmaDirector),
+                                                    'estado' => 'activo'
+                                                    ]);
+
+        $qr = $this->generadorQr($firmaElectronica->uuid);
+
+        $pdf = Pdf::loadView('varios.acto_sin_propiedad', [
+            'vario' => $object->vario,
+            'firma_electronica' => base64_encode($firmaDirector),
+            'datos_control' => $object->datos_control,
+            'qr'=> $qr
+        ]);
+
+        $pdf->render();
+
+        $dom_pdf = $pdf->getDomPDF();
+
+        $canvas = $dom_pdf->get_canvas();
+
+        $canvas->page_text(480, 745, "Página: {PAGE_NUM} de {PAGE_COUNT}", null, 10, array(1, 1, 1));
+
+        $canvas->page_text(35, 745, 'Movimiento de varios No. ' . $varios_folio->folio, null, 9, array(1, 1, 1));
+
+        $canvas->page_script(function ($pageNumber, $pageCount, $canvas, $fontMetrics) {
+            $w = $canvas->get_width();
+            $h = $canvas->get_height();
+
+            $canvas->image(public_path('storage/img/watermark.png'), 0, 0, $w, $h, $resolution = "normal");
+
+        });
+
+        $nombre = Str::random(40);
+
+        $nombreFinal = $nombre . '.pdf';
+
+        Storage::disk('caratulas')->put($nombre . '.pdf', $pdf->output());
+
+        $pdfImagen = new \Spatie\PdfToImage\Pdf('caratulas/' . $nombre . '.pdf');
+
+        $all = new Imagick();
+
+        for ($i=1; $i <= $pdfImagen->pageCount(); $i++) {
+
+            $nombre_img = $nombre . '_' . $i . '.jpg';
+
+            $pdfImagen->selectPage($i)->save('caratulas/'. $nombre_img);
+
+            $im = new Imagick(Storage::disk('caratulas')->path($nombre_img));
+
+            $all->addImage($im);
+
+            unlink('caratulas/' . $nombre_img);
+
+        }
+
+        $all->resetIterator();
+        $combined = $all->appendImages(true);
+        $combined->setImageFormat("jpg");
+
+        if(app()->isProduction()){
+
+            Storage::disk('s3')->put(config('services.ses.ruta_caratulas') . $nombre . '.jpg', $combined);
+
+        }else{
+
+            file_put_contents("caratulas/" . $nombre . '.jpg', $combined);
+
+        }
+
+        File::create([
+            'fileable_id' => $vario->movimientoRegistral->id,
+            'fileable_type' => 'App\Models\MovimientoRegistral',
+            'descripcion' => 'caratula',
+            'url' => $nombre . '.jpg'
+        ]);
+
+        unlink('caratulas/' . $nombreFinal);
+
+    }
+
+    public function reimprimirSinPropiedad(FirmaElectronica $firmaElectronica){
+
+        $objeto = json_decode($firmaElectronica->cadena_original);
+
+        $qr = $this->generadorQr($firmaElectronica->uuid);
+
+        $pdf = Pdf::loadView('varios.acto_sin_propiedad', [
+            'vario' => $objeto->vario,
+            'firma_electronica' => base64_encode($firmaElectronica->cadena_encriptada),
+            'datos_control' => $objeto->datos_control,
+            'qr'=> $qr
+        ]);
+
+        $pdf->render();
+
+        $dom_pdf = $pdf->getDomPDF();
+
+        $canvas = $dom_pdf->get_canvas();
+
+        $canvas->page_text(480, 745, "Página: {PAGE_NUM} de {PAGE_COUNT}", null, 9, array(1,1,1));
+
+        $canvas->page_text(35, 745, 'Movimiento de varios No. ' . $objeto->datos_control->varios_folio, null, 9, array(1, 1, 1));
 
         return $pdf;
 

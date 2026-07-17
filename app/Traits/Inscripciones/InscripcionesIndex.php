@@ -131,6 +131,14 @@ trait InscripcionesIndex{
 
         $this->modelo_editar = $movimientoRegistral;
 
+        if($movimientoRegistral->servicio_nombre === 'Inscripciones varios sin afectación de propiedad'){
+
+            $this->ruta($this->modelo_editar);
+
+            return;
+
+        }
+
         if($this->modelo_editar->folioReal->estado == 'centinela'){
 
             $this->dispatch('mostrarMensaje', ['warning', "El folio real esta en centinela."]);
@@ -278,6 +286,12 @@ trait InscripcionesIndex{
 
         if($movimientoRegistral->vario){
 
+            if($movimientoRegistral->servicio_nombre === 'Inscripciones varios sin afectación de propiedad'){
+
+                return redirect()->route('varios_sin_porpiead.inscripcion', $movimientoRegistral->vario);
+
+            }
+
             return redirect()->route('varios.inscripcion', $movimientoRegistral->vario);
 
         }
@@ -340,7 +354,15 @@ trait InscripcionesIndex{
 
             if($movimientoRegistral->vario){
 
-                $pdf = (new VariosController())->reimprimir($movimientoRegistral->firmaElectronica);
+                if($movimientoRegistral->servicio_nombre === 'Inscripciones varios sin afectación de propiedad'){
+
+                    $pdf = (new VariosController())->reimprimirSinPropiedad($movimientoRegistral->firmaElectronica);
+
+                }else{
+
+                    $pdf = (new VariosController())->reimprimir($movimientoRegistral->firmaElectronica);
+
+                }
 
             }
 

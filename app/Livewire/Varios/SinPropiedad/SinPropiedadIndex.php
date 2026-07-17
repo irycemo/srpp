@@ -67,8 +67,8 @@ class SinPropiedadIndex extends Component
 
         if(auth()->user()->hasRole(['Varios', 'Registrador Varios', 'Aclaraciones administrativas', 'Avisos preventivos'])){
 
-            $movimientos = MovimientoRegistral::select('id', 'folio', 'año', 'tramite', 'usuario', 'actualizado_por', 'usuario_asignado', 'usuario_supervisor', 'estado', 'distrito', 'created_at', 'updated_at', 'tomo', 'registro', 'numero_propiedad', 'tipo_servicio', 'fecha_entrega')
-                                                    ->with('vario:id,movimiento_registral_id', 'actualizadoPor:id,name')
+            $movimientos = MovimientoRegistral::select('id', 'folio', 'año', 'tramite', 'servicio_nombre', 'usuario', 'actualizado_por', 'usuario_asignado', 'usuario_supervisor', 'estado', 'distrito', 'created_at', 'updated_at', 'tomo', 'registro', 'numero_propiedad', 'tipo_servicio', 'fecha_entrega')
+                                                    ->with('vario:id,movimiento_registral_id', 'actualizadoPor:id,name', 'asignadoA:id,name')
                                                     ->whereNull('folio_real')
                                                     ->whereHas('vario')
                                                     ->when(auth()->user()->ubicacion == 'Regional 4', function($q){
@@ -89,8 +89,8 @@ class SinPropiedadIndex extends Component
 
         }elseif(auth()->user()->hasRole(['Supervisor inscripciones', 'Supervisor uruapan', 'Operaciones'])){
 
-            $movimientos = MovimientoRegistral::select('id', 'folio', 'año', 'tramite', 'usuario', 'actualizado_por', 'usuario_asignado', 'usuario_supervisor', 'estado', 'distrito', 'created_at', 'updated_at', 'tomo', 'registro', 'numero_propiedad', 'tipo_servicio', 'fecha_entrega')
-                                                    ->with('vario:id,movimiento_registral_id', 'actualizadoPor:id,name')
+            $movimientos = MovimientoRegistral::select('id', 'folio', 'año', 'tramite', 'servicio_nombre', 'usuario', 'actualizado_por', 'usuario_asignado', 'usuario_supervisor', 'estado', 'distrito', 'created_at', 'updated_at', 'tomo', 'registro', 'numero_propiedad', 'tipo_servicio', 'fecha_entrega')
+                                                    ->with('vario:id,movimiento_registral_id', 'actualizadoPor:id,name', 'asignadoA:id,name')
                                                     ->whereNull('folio_real')
                                                     ->whereHas('vario')
                                                     ->when(auth()->user()->ubicacion == 'Regional 4', function($q){
@@ -100,7 +100,7 @@ class SinPropiedadIndex extends Component
                                                         $q->where('distrito', '!=', 2);
                                                     })
                                                     ->where('servicio_nombre', 'Inscripciones varios sin afectación de propiedad')
-                                                    ->whereIn('estado', ['nuevo', 'captura', 'elaborado', 'finalizado', 'correccion', 'no recibido'])
+                                                    ->whereIn('estado', ['nuevo', 'captura', 'elaborado', 'finalizado', 'correccion', 'no recibido', 'autorizado'])
                                                     ->when($this->filters['año'], fn($q, $año) => $q->where('año', $año))
                                                     ->when($this->filters['tramite'], fn($q, $tramite) => $q->where('tramite', $tramite))
                                                     ->when($this->filters['usuario'], fn($q, $usuario) => $q->where('usuario', $usuario))
@@ -110,8 +110,8 @@ class SinPropiedadIndex extends Component
 
         }elseif(auth()->user()->hasRole(['Jefe de departamento inscripciones'])){
 
-            $movimientos = MovimientoRegistral::select('id', 'folio', 'año', 'tramite', 'usuario', 'actualizado_por', 'usuario_asignado', 'usuario_supervisor', 'estado', 'distrito', 'created_at', 'updated_at', 'tomo', 'registro', 'numero_propiedad', 'tipo_servicio', 'fecha_entrega')
-                                                    ->with('vario:id,movimiento_registral_id', 'actualizadoPor:id,name')
+            $movimientos = MovimientoRegistral::select('id', 'folio', 'año', 'tramite', 'servicio_nombre', 'usuario', 'actualizado_por', 'usuario_asignado', 'usuario_supervisor', 'estado', 'distrito', 'created_at', 'updated_at', 'tomo', 'registro', 'numero_propiedad', 'tipo_servicio', 'fecha_entrega')
+                                                    ->with('vario:id,movimiento_registral_id', 'actualizadoPor:id,name', 'asignadoA:id,name')
                                                     ->whereNull('folio_real')
                                                     ->whereHas('vario')
                                                     ->where('servicio_nombre', 'Inscripciones varios sin afectación de propiedad')
@@ -124,8 +124,8 @@ class SinPropiedadIndex extends Component
 
         }elseif(auth()->user()->hasRole(['Administrador', 'Operador', 'Director', 'Jefe de departamento jurídico'])){
 
-            $movimientos = MovimientoRegistral::select('id', 'folio', 'año', 'tramite', 'usuario', 'actualizado_por', 'usuario_asignado', 'usuario_supervisor', 'estado', 'distrito', 'created_at', 'updated_at', 'tomo', 'registro', 'numero_propiedad', 'tipo_servicio', 'fecha_entrega')
-                                                    ->with('vario:id,movimiento_registral_id', 'actualizadoPor:id,name')
+            $movimientos = MovimientoRegistral::select('id', 'folio', 'año', 'tramite', 'servicio_nombre', 'usuario', 'actualizado_por', 'usuario_asignado', 'usuario_supervisor', 'estado', 'distrito', 'created_at', 'updated_at', 'tomo', 'registro', 'numero_propiedad', 'tipo_servicio', 'fecha_entrega')
+                                                    ->with('vario:id,movimiento_registral_id', 'actualizadoPor:id,name', 'asignadoA:id,name')
                                                     ->whereNull('folio_real')
                                                     ->whereHas('vario')
                                                     ->where('servicio_nombre', 'Inscripciones varios sin afectación de propiedad')
@@ -138,8 +138,8 @@ class SinPropiedadIndex extends Component
 
         }elseif(auth()->user()->hasRole(['Regional'])){
 
-            $movimientos = MovimientoRegistral::select('id', 'folio', 'año', 'tramite', 'usuario', 'actualizado_por', 'usuario_asignado', 'usuario_supervisor', 'estado', 'distrito', 'created_at', 'updated_at', 'tomo', 'registro', 'numero_propiedad', 'tipo_servicio', 'fecha_entrega')
-                                                    ->with('vario:id,movimiento_registral_id', 'actualizadoPor:id,name')
+            $movimientos = MovimientoRegistral::select('id', 'folio', 'año', 'tramite', 'servicio_nombre', 'usuario', 'actualizado_por', 'usuario_asignado', 'usuario_supervisor', 'estado', 'distrito', 'created_at', 'updated_at', 'tomo', 'registro', 'numero_propiedad', 'tipo_servicio', 'fecha_entrega')
+                                                    ->with('vario:id,movimiento_registral_id', 'actualizadoPor:id,name', 'asignadoA:id,name')
                                                     ->whereNull('folio_real')
                                                     ->whereHas('vario')
                                                     ->where('servicio_nombre', 'Inscripciones varios sin afectación de propiedad')

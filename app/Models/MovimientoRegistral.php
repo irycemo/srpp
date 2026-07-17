@@ -14,6 +14,7 @@ use App\Models\Gravamen;
 use App\Models\Propiedad;
 use App\Models\Rechazo;
 use App\Models\ReformaMoral;
+use App\Models\VariosFolio;
 use App\Traits\ModelosTrait;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
@@ -56,6 +57,10 @@ class MovimientoRegistral extends Model implements Auditable
 
     public function folioRealPersona(){
         return $this->belongsTo(FolioRealPersona::class, 'folio_real_persona');
+    }
+
+    public function folioVarios(){
+        return $this->hasOne(VariosFolio::class, 'movimiento_registral_id');
     }
 
     public function certificacion(){
