@@ -44,8 +44,9 @@ class FolioReal extends Model implements Auditable
             'centinela' => 'red-400',
             'elaborado' => 'green-400',
             'matriz' => 'indigo-400',
-            'pendiente' => 'pink-400'
-        ][$this->estado] ?? 'gray-400';
+            'pendiente' => 'pink-400',
+            'autorizado' => 'pink-700'
+        ][$this->estado] ?? 'indigo-900';
     }
 
     public function movimientosRegistrales(){
