@@ -138,7 +138,7 @@
 
             </x-input-group>
 
-            @if(!$nuevoFolio)
+            {{-- @if(!$nuevoFolio) --}}
 
                 <x-input-group for="inscripcion.monto_transaccion" label="Monto de la transacción" :error="$errors->first('inscripcion.monto_transaccion')" class="w-full relative">
 
@@ -162,7 +162,7 @@
 
                 </x-input-group>
 
-            @endif
+            {{-- @endif --}}
 
             <x-input-group for="inscripcion.descripcion" label="Descripción" :error="$errors->first('inscripcion.descripcion')" class="sm:col-span-2 lg:col-span-3">
 
