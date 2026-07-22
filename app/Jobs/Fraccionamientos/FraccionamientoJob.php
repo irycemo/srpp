@@ -47,7 +47,7 @@ class FraccionamientoJob implements ShouldQueue
 
             DB::transaction(function () {
 
-                if(isset($row['colindancias'])){
+                if(isset($this->row['colindancias'])){
 
                     $colindancias = $this->procesarColindacias($this->row['colindancias']);
 
