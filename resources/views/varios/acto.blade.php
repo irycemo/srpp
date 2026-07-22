@@ -160,13 +160,15 @@
         @if($vario->acto_contenido == 'PERSONAS MORALES')
 
             <div style="text-align: right">
-                <p style="margin:0;"><strong>movimiento registral: </strong>{{ $vario->folioPersonaMoral->folio }}-{{ $datos_control->movimiento_folio }}</p>
+                <p style="margin:0;"><strong>Folio Real PM:</strong> {{ $vario->folioPersonaMoral->folio }}</p>
+                <p style="margin:0;"><strong>movimiento registral: </strong> {{ $datos_control->movimiento_folio }}</p>
                 <p style="margin:0;"><strong>DISTRITO:</strong> {{ $datos_control->distrito}}</p>
             </div>
 
         @else
 
             <div style="text-align: right">
+                <p style="margin:0;"><strong>Folio Real:</strong> {{ $datos_control->folioReal }}</p>
                 <p style="margin:0;"><strong>movimiento registral: </strong>{{ $datos_control->folioReal }}-{{ $datos_control->movimiento_folio }}</p>
                 <p style="margin:0;"><strong>DISTRITO:</strong> {{ $datos_control->distrito}}</p>
             </div>

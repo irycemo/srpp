@@ -164,7 +164,8 @@
         <div class="informacion">
 
             <div style="text-align: right">
-                <p style="margin:0"><strong>movimiento registral:</strong> {{ $datos_control->folioReal }}-{{ $datos_control->movimiento_folio }}</p>
+                <p style="margin:0;"><strong>Folio Real:</strong> {{ $datos_control->folioReal }}</p>
+                <p style="margin:0"><strong>movimiento registral:</strong> {{ $datos_control->movimiento_folio }}</p>
                 <p style="margin:0"><strong>DISTRITO:</strong> {{ $datos_control->distrito}}</p>
             </div>
 
