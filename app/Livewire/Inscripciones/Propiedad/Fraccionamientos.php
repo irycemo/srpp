@@ -187,7 +187,16 @@ class Fraccionamientos extends Component
 
         $this->reset('documento');
 
-        $this->propiedad->acto_contenido = 'FRACCIONAMIENTO';
+        if(in_array($this->propiedad->servicio , ['D125', 'D126'])){
+
+            $this->propiedad->acto_contenido = 'CONDOMINIO';
+
+        }else{
+
+            $this->propiedad->acto_contenido = 'FRACCIONAMIENTO';
+
+        }
+
         $this->propiedad->save();
 
         $this->movimientoRegistral->update(['estado' => 'concluido']);

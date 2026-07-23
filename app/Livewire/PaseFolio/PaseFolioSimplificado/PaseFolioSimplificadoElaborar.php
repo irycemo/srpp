@@ -754,4 +754,5 @@ class PaseFolioSimplificadoElaborar extends Component
     {
         return view('livewire.pase-folio.pase-folio-simplificado.pase-folio-simplificado-elaborar')->extends('layouts.admin');
     }
+
 }
