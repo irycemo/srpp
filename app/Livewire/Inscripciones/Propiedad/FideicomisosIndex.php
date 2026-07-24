@@ -20,10 +20,6 @@ use Livewire\WithPagination;
 class FideicomisosIndex extends Component
 {
 
-
-
-
-
     use WithPagination;
     use ComponentesTrait;
     use InscripcionesIndex;

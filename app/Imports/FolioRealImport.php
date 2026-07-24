@@ -79,6 +79,8 @@ class FolioRealImport implements OnEachRow, WithHeadingRow, WithValidation, With
             'descripcion_acto_gravamen' => [ 'required_unless:acto_contenido_gravamen,null', 'nullable'],
             'actores_gravamen' => [ 'required_unless:acto_contenido_gravamen,null', 'nullable'],
             'acreedores_gravamen' => [ 'required_unless:acto_contenido_gravamen,null', 'nullable'],
+            'acto contenido' => 'nullable',
+            'descripcion_acto' => 'nullable',
         ];
 
     }
