@@ -57,7 +57,7 @@ trait EnviarMovimientoCorreccion{
     public function enviarCorreccion(MovimientoRegistral $movimientoRegistral){
 
         $movimiento = $movimientoRegistral->folioReal->movimientosRegistrales()
-                                                        ->whereIn('estado', ['finalizado', 'concluido', 'elaborado', 'expirado'])
+                                                        ->whereIn('estado', ['finalizado', 'concluido', 'elaborado'])
                                                         ->where('folio', '>', $movimientoRegistral->folio)
                                                         ->first();
 
