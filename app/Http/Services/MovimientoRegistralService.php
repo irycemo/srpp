@@ -310,7 +310,7 @@ class MovimientoRegistralService{
             'usuario_asignado' => $this->obtenerUsuarioAsignado($request + ['estado' => $array['estado']]),
             'usuario_supervisor' => $this->obtenerSupervisor($request),
             'solicitante' => $request['nombre_solicitante'],
-            'autoridad_numero' => $request['numero_autoridad'],
+            'autoridad_numero' => $request['numero_autoridad'] ?? null,
         ];
 
     }
