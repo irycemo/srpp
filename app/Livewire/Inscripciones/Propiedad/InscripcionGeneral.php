@@ -188,7 +188,7 @@ class InscripcionGeneral extends Component
 
         $propietario = Actor::find($this->propietario);
 
-        foreach ($this->inscripcion->transmitentes() as $transmitente) {
+        /* foreach ($this->inscripcion->transmitentes() as $transmitente) {
 
             if($propietario->persona_id == $transmitente->persona_id){
 
@@ -198,7 +198,7 @@ class InscripcionGeneral extends Component
 
             }
 
-        }
+        } */
 
         try {
 
@@ -841,4 +841,5 @@ class InscripcionGeneral extends Component
         return view('livewire.inscripciones.propiedad.inscripcion-general');
 
     }
+
 }
