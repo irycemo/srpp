@@ -153,7 +153,7 @@ trait EnviarMovimientoCorreccion{
 
                 $movimientoRegistral->folioReal->update(['estado' => 'activo']);
 
-                $movimientoRegistral->folioReal->bloqueos()->where('estado', 'activo')->first()->update([
+                $movimientoRegistral->folioReal->bloqueos()->where('estado', 'activo')->first()?->update([
                     'estado' => 'inactivo',
                     'observaciones_desbloqueo' => 'Se desbloquea folio por corrección en la sentencia con folio: ' . $movimientoRegistral->folio,
                     'actualizado_por' => auth()->id()
