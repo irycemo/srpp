@@ -115,7 +115,7 @@ class FolioRealImport implements OnEachRow, WithHeadingRow, WithValidation, With
 
                     $errores[] = "Error en los campos de las colindancias en la linea " . ($row->getIndex());
 
-                }elseif(empty(trim($campos[1]))){
+                }elseif(trim($campos[1]) != 0 && empty(trim($campos[1]))){
 
                     $errores[] = "Error en los campos de las colindancias en la lineas " . ($row->getIndex());
 
