@@ -357,7 +357,8 @@ class FraccionamientoJob implements ShouldQueue
             'nombre_notario' => $this->movimiento_registral->autoridad_nombre,
             'numero' => $this->movimiento_registral->numero_documento,
             'estado_notario' => 'MICHOACAN',
-            'acto_contenido_antecedente' => 'PROTOCOLIZACIÓN Y ELEVACIÓN DE LA AUTORIZACIÓN DE FRACCIONAMIENTO',
+            'acto_contenido_antecedente' => $this->row['acto_contenido'] ?? 'PROTOCOLIZACIÓN Y ELEVACIÓN DE LA AUTORIZACIÓN DE FRACCIONAMIENTO',
+            'comentario' => $this->row['descripcion_acto'] ?? null,
             'creado_por' => $this->user_id,
         ]);
 
@@ -424,7 +425,8 @@ class FraccionamientoJob implements ShouldQueue
             'autoridad_numero' => $this->movimiento_registral->autoridad_numero,
             'fecha_emision' => $this->movimiento_registral->fecha_emision,
             'fecha_inscripcion' => now()->toDateString(),
-            'acto_contenido_antecedente' => 'PROTOCOLIZACIÓN Y ELEVACIÓN DE LA AUTORIZACIÓN DE FRACCIONAMIENTO',
+            'acto_contenido_antecedente' => $this->row['acto_contenido'] ?? 'PROTOCOLIZACIÓN Y ELEVACIÓN DE LA AUTORIZACIÓN DE FRACCIONAMIENTO',
+            'observaciones_antecedente' => $this->row['descripcion_acto'] ?? null,
             'procedencia' => $this->movimiento_registral->procedencia,
             'creado_por' => $this->user_id,
         ]);
