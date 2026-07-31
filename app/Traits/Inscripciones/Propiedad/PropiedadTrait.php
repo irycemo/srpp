@@ -280,7 +280,8 @@ trait PropiedadTrait{
 
         $movimiento = $this->inscripcion->movimientoRegistral->replicate();
         $movimiento->folio = $this->inscripcion->movimientoRegistral->folioReal->ultimoFolio() + 1;
-        $movimiento->estado = 'carga_parcial';
+        $movimiento->servicio_nombre = 'Inscripción de gravámenes de bienes inmuebles';
+        $movimiento->estado = 'nuevo';
         $movimiento->save();
 
         $url = $this->inscripcion->movimientoRegistral->archivos()->where('descripcion', 'documento_entrada')->first()->url;
