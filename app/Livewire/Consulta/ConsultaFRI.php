@@ -146,7 +146,7 @@ class ConsultaFRI extends Component
 
                 $this->folios_reales = $folios;
 
-            }else{
+            }elseif($folios->count()){
 
                 $this->folios_reales = $this->folios_reales->intersect($folios);
 
@@ -178,7 +178,7 @@ class ConsultaFRI extends Component
 
                     $this->folios_reales = $folios;
 
-                }else{
+                }elseif($folios->count()){
 
                     $this->folios_reales = $this->folios_reales->intersect($folios);
 
