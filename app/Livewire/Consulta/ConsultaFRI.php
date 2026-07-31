@@ -148,12 +148,7 @@ class ConsultaFRI extends Component
 
             }else{
 
-                foreach ($folios as $folio) {
-
-                    if(!$this->folios_reales->where('id', $folio->id)->first())
-                        $this->folios_reales->push($folio);
-
-                }
+                $this->folios_reales = $this->folios_reales->intersect($folios);
 
             }
 
@@ -185,12 +180,7 @@ class ConsultaFRI extends Component
 
                 }else{
 
-                    foreach ($folios as $folio) {
-
-                        if(!$this->folios_reales->where('id', $folio->id)->first())
-                            $this->folios_reales->push($folio);
-
-                    }
+                    $this->folios_reales = $this->folios_reales->intersect($folios);
 
                 }
             }
