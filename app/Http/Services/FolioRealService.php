@@ -147,6 +147,18 @@ class FolioRealService{
 
         }
 
+        $movimientos_padres = MovimientoRegistral::where('movimiento_padre', $movimiento->id)->get();
+
+        if($movimientos_padres->count()){
+
+            foreach ($movimientos_padres as $mov_padre) {
+
+                $mov_padre->update(['movimiento_padre' => null]);
+
+            }
+
+        }
+
         $movimiento->delete();
 
     }
