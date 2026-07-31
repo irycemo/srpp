@@ -279,7 +279,7 @@ trait PropiedadTrait{
     public function generarGravamenReservaDominio(){
 
         $movimiento = $this->inscripcion->movimientoRegistral->replicate();
-        $movimiento->folio = $movimiento->folio + 1;
+        $movimiento->folio = $this->inscripcion->movimientoRegistral->folioReal->ultimoFolio() + 1;
         $movimiento->estado = 'carga_parcial';
         $movimiento->save();
 
