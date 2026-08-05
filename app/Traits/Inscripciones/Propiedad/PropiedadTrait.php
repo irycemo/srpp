@@ -278,10 +278,19 @@ trait PropiedadTrait{
 
     public function generarGravamenReservaDominio(){
 
+        $gravamen_existente = MovimientoRegistral::where('movimiento_padre', $this->inscripcion->movimientoRegistral->id)
+                                                ->whereHas('gravamen', function($q){
+                                                    $q->where('acto_contenido', 'RESERVA DE DOMINIO');
+                                                })
+                                                ->first();
+
+        if($gravamen_existente) return;
+
         $movimiento = $this->inscripcion->movimientoRegistral->replicate();
         $movimiento->folio = $this->inscripcion->movimientoRegistral->folioReal->ultimoFolio() + 1;
         $movimiento->servicio_nombre = 'Inscripción de gravámenes de bienes inmuebles';
         $movimiento->estado = 'nuevo';
+        $movimiento->movimiento_padre = $this->inscripcion->movimientoRegistral->id;
         $movimiento->save();
 
         $url = $this->inscripcion->movimientoRegistral->archivos()->where('descripcion', 'documento_entrada')->first()->url;
