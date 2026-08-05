@@ -75,8 +75,6 @@ trait EnviarMovimientoCorreccion{
 
         if($movimientoRegistral->inscripcionPropiedad){
 
-            $this->revisarReservaDominio($movimientoRegistral);
-
             $this->obtenerMovimientoConFirmaElectronica($movimientoRegistral);
 
             foreach ($movimientoRegistral->inscripcionPropiedad->actores as $actor) {
