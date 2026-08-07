@@ -246,7 +246,7 @@ class CertificadoGravamen extends Component
             $pdf = DB::transaction(function (){
 
                 $this->moviminetoRegistral->estado = 'elaborado';
-                $this->movimientoRegistral->fecha_elaboracion = now()->toDateString();
+                $this->moviminetoRegistral->fecha_elaboracion = now()->toDateString();
 
                 $this->moviminetoRegistral->save();
 
