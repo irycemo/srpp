@@ -111,7 +111,7 @@ class Cancelatoria extends Component
 
                 $this->movimientoCancelar->update(['movimiento_padre' => $this->sentencia->movimientoRegistral->id]);
 
-                $this->sentencia->movimientoRegistral->update(['estado' => 'elaborado', 'actualizado_por' => auth()->id()]);
+                $this->sentencia->movimientoRegistral->update(['estado' => 'elaborado', 'actualizado_por' => auth()->id(), 'fecha_elaboracion' => now()->toDateString()]);
 
                 $this->sentencia->movimientoRegistral->audits()->latest()->first()->update(['tags' => 'Elaboró inscripción de sentencia']);
 

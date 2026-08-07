@@ -199,7 +199,7 @@ class Fraccionamientos extends Component
 
         $this->propiedad->save();
 
-        $this->movimientoRegistral->update(['estado' => 'concluido']);
+        $this->movimientoRegistral->update(['estado' => 'concluido', 'actualizado_por' => auth()->id(), 'fecha_elaboracion' => now()->toDateString()]);
 
         $this->movimientoRegistral->FolioReal->update(['estado' => 'inactivo']);
 

@@ -75,6 +75,7 @@ class FideicomisoCancelacion extends Component
                     $this->inscripcion->movimientoRegistral->estado = 'captura';
 
                 $this->inscripcion->movimientoRegistral->actualizado_por = auth()->id();
+                $this->inscripcion->movimientoRegistral->fecha_elaboracion = now()->toDateString();
                 $this->inscripcion->movimientoRegistral->save();
 
                 $this->inscripcion->save();
@@ -110,7 +111,7 @@ class FideicomisoCancelacion extends Component
                 $this->inscripcion->fecha_inscripcion = now()->toDateString();
                 $this->inscripcion->save();
 
-                $this->inscripcion->movimientoRegistral->update(['estado' => 'elaborado']);
+                $this->inscripcion->movimientoRegistral->update(['estado' => 'elaborado', 'actualizado_por' => auth()->id(), 'fecha_elaboracion' => now()->toDateString()]);
 
                 if($this->fideicomiso->tipo == 'FIDEICOMISO TRASLATIVO')
                     $this->obtenerMovimientoConPropietarios($this->movimientoFideicomiso);

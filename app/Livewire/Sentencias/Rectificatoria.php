@@ -217,7 +217,7 @@ class Rectificatoria extends Component
                 $this->sentencia->actualizado_por = auth()->id();
                 $this->sentencia->fecha_inscripcion = now()->toDateString();
 
-                $this->sentencia->movimientoRegistral->update(['estado' => 'elaborado']);
+                $this->sentencia->movimientoRegistral->update(['estado' => 'elaborado', 'actualizado_por' => auth()->id(), 'fecha_elaboracion' => now()->toDateString()]);
 
                 $this->procesarPredio();
 

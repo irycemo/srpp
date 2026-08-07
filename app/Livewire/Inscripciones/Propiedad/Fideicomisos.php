@@ -140,7 +140,7 @@ class Fideicomisos extends Component
 
                 $this->actualizarDocumentoEntrada($this->fideicomiso->movimientoRegistral);
 
-                $this->fideicomiso->movimientoRegistral->update(['estado' => 'elaborado']);
+                $this->fideicomiso->movimientoRegistral->update(['estado' => 'elaborado', 'fecha_elaboracion' => now()->toDateString(), 'actualizado_por' => auth()->id()]);
 
                 (new FideicomisoController())->caratula($this->fideicomiso);
 

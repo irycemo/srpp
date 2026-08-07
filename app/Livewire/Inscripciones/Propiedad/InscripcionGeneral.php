@@ -724,7 +724,7 @@ class InscripcionGeneral extends Component
 
                 $this->guardarColindancias($this->inscripcion->movimientoRegistral->folioReal->predio);
 
-                $this->inscripcion->movimientoRegistral->update(['estado' => 'elaborado', 'actualizado_por' => auth()->id()]);
+                $this->inscripcion->movimientoRegistral->update(['estado' => 'elaborado', 'actualizado_por' => auth()->id(), 'fecha_elaboracion' => now()->toDateString()]);
 
                 $this->inscripcion->movimientoRegistral->audits()->latest()->first()->update(['tags' => 'Elaboró inscripción de propiedad']);
 

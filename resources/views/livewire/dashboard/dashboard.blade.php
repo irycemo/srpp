@@ -1,78 +1,96 @@
 <div>
 
-    @if(auth()->user()->hasRole(['Administrador', 'Jefe de departamento jurídico', 'Director']))
+    @if(auth()->user()->hasRole('Administrador'))
 
-        @include('livewire.dashboard.propiedad-dashboard', ['inscripcion' => $propiedad, 'titulo' => 'Inscripciones de propiedad'])
+        <x-header class="mt-5">Cantidad de movimientos generados del día actual</x-header>
 
-        @include('livewire.dashboard.propiedad-dashboard', ['inscripcion' => $gravamen, 'titulo' => 'Inscripciones de gravamen'])
+        <div class="flex gap-4 items-start w-full">
 
-        @include('livewire.dashboard.propiedad-dashboard', ['inscripcion' => $sentencia, 'titulo' => 'Inscripciones de sentencias'])
+            <div class="shadow-lg bg-white rounded-xl mb-5 p-4 w-full">
 
-        @include('livewire.dashboard.propiedad-dashboard', ['inscripcion' => $cancelacion, 'titulo' => 'Inscripciones de cancelación'])
+                <p class="text-center tracking-wider font-semibold">Uruapan</p>
 
-        @include('livewire.dashboard.propiedad-dashboard', ['inscripcion' => $varios, 'titulo' => 'Inscripciones de varios'])
+                <table class="w-full table-fixed">
 
-        @include('livewire.dashboard.propiedad-dashboard', ['inscripcion' => $certificado_propiedad, 'titulo' => 'Certificados de propiedad'])
+                    <tbody class="divide-y divide-gray-200">
 
-        @include('livewire.dashboard.propiedad-dashboard', ['inscripcion' => $certificado_gravamen, 'titulo' => 'Certificados de gravamen'])
+                        @php
+                            $total_1 = 0;
+                        @endphp
 
-        @include('livewire.dashboard.propiedad-dashboard', ['inscripcion' => $reforma, 'titulo' => 'Inscripciones de folio real de persona moral'])
+                        @foreach ($servicios_uruapan as $key => $item)
 
-    @elseif(auth()->user()->hasRole(['Jefe de departamento certificaciones', 'Supervisor certificaciones']))
+                            <tr class="text-gray-500 text-sm leading-relaxed">
+                                <td class=" px-2 w-full whitespace-nowrap overflow-hidden text-ellipsis"><p>{{ $key }}</p></td>
+                                <td class=" px-2 w-1/12"><p>{{ $item }}</p></td>
+                            </tr>
 
-        @include('livewire.dashboard.propiedad-dashboard', ['inscripcion' => $certificado_propiedad, 'titulo' => 'Certificados de propiedad'])
+                            @php
 
-        @include('livewire.dashboard.propiedad-dashboard', ['inscripcion' => $certificado_gravamen, 'titulo' => 'Certificados de gravamen'])
+                                $total_1 = $total_1 + $item
 
-    @elseif(auth()->user()->hasRole(['Jefe de departamento inscripciones', 'Supervisor inscripciones']))
+                            @endphp
 
-        @include('livewire.dashboard.propiedad-dashboard', ['inscripcion' => $propiedad, 'titulo' => 'Inscripciones de propiedad'])
+                        @endforeach
 
-        @include('livewire.dashboard.propiedad-dashboard', ['inscripcion' => $gravamen, 'titulo' => 'Inscripciones de gravamen'])
+                        @php
 
-        @include('livewire.dashboard.propiedad-dashboard', ['inscripcion' => $sentencia, 'titulo' => 'Inscripciones de sentencias'])
+                            echo " <tr class='text-gray-500 text-sm leading-relaxed'>
+                                        <td class='px-2 w-full whitespace-nowrap font-bold'>Total</td>
+                                        <td class='px-2 w-full font-bold'>" . $total_1 . "</td>
+                                    </tr>
+                                ";
+                        @endphp
 
-        @include('livewire.dashboard.propiedad-dashboard', ['inscripcion' => $cancelacion, 'titulo' => 'Inscripciones de cancelación'])
+                    </tbody>
 
-        @include('livewire.dashboard.propiedad-dashboard', ['inscripcion' => $varios, 'titulo' => 'Inscripciones de varios'])
+                </table>
 
-        @include('livewire.dashboard.propiedad-dashboard', ['inscripcion' => $reforma, 'titulo' => 'Inscripciones de folio real de persona moral'])
+            </div>
 
-    @elseif(auth()->user()->hasRole(['Registrador Propiedad', 'Propiedad']))
+            <div class="shadow-lg bg-white rounded-xl mb-5 p-4 w-full">
 
-        @include('livewire.dashboard.propiedad-dashboard', ['inscripcion' => $propiedad, 'titulo' => 'Inscripciones de propiedad'])
+                <p class="text-center tracking-wider font-semibold">Resto del estado</p>
 
-    @elseif(auth()->user()->hasRole(['Registrador Gravamen', 'Gravamen']))
+                <table class="w-full table-fixed">
 
-        @include('livewire.dashboard.propiedad-dashboard', ['inscripcion' => $gravamen, 'titulo' => 'Inscripciones de gravamen'])
+                    <tbody class="divide-y divide-gray-200">
 
-    @elseif(auth()->user()->hasRole(['Registrador Sentencias']))
+                        @php
+                            $total_2 = 0;
+                        @endphp
 
-        @include('livewire.dashboard.propiedad-dashboard', ['inscripcion' => $sentencia, 'titulo' => 'Inscripciones de sentencias'])
+                        @foreach ($servicios_resto as $key => $item)
 
-    @elseif(auth()->user()->hasRole(['Registrador Cancelación', 'Cancelación']))
+                            <tr class="text-gray-500 text-sm leading-relaxed">
+                                <td class=" px-2 w-full whitespace-nowrap overflow-hidden text-ellipsis"><p>{{ $key }}</p></td>
+                                <td class=" px-2 w-1/12"><p>{{ $item }}</p></td>
+                            </tr>
 
-        @include('livewire.dashboard.propiedad-dashboard', ['inscripcion' => $cancelacion, 'titulo' => 'Inscripciones de cancelación'])
+                            @php
 
-    @elseif(auth()->user()->hasRole(['Registrador Varios', 'Varios']))
+                                $total_2 = $total_2 + $item
 
-        @include('livewire.dashboard.propiedad-dashboard', ['inscripcion' => $varios, 'titulo' => 'Inscripciones de varios'])
+                            @endphp
 
-    @elseif(auth()->user()->hasRole(['Certificador Propiedad']))
+                        @endforeach
 
-        @include('livewire.dashboard.propiedad-dashboard', ['inscripcion' => $certificado_propiedad, 'titulo' => 'Certificados de propiedad'])
+                        @php
 
-    @elseif(auth()->user()->hasRole(['Certificador Gravamen']))
+                            echo " <tr class='text-gray-500 text-sm leading-relaxed'>
+                                        <td class='px-2 w-full whitespace-nowrap font-bold'>Total</td>
+                                        <td class='px-2 w-full font-bold'>" . $total_2 . "</td>
+                                    </tr>
+                                ";
+                        @endphp
 
-        @include('livewire.dashboard.propiedad-dashboard', ['inscripcion' => $certificado_gravamen, 'titulo' => 'Certificados de gravamen'])
+                    </tbody>
 
-    @elseif(auth()->user()->hasRole(['Pase a folio']))
+                </table>
 
-        @include('livewire.dashboard.propiedad-dashboard', ['inscripcion' => $pase_a_folio, 'titulo' => 'Pases a folio'])
+            </div>
 
-    @elseif(auth()->user()->hasRole(['Folio real moral']))
-
-        @include('livewire.dashboard.propiedad-dashboard', ['inscripcion' => $reforma, 'titulo' => 'Actas de asamblea'])
+        </div>
 
     @endif
 

@@ -53,7 +53,7 @@ class SinPropiedad extends Component
                 $this->vario->fecha_inscripcion = now()->toDateString();
                 $this->vario->save();
 
-                $this->vario->movimientoRegistral->update(['estado' => 'elaborado', 'actualizado_por' => auth()->id()]);
+                $this->vario->movimientoRegistral->update(['estado' => 'elaborado', 'actualizado_por' => auth()->id(), 'fecha_elaboracion' => now()->toDateString()]);
 
                 VariosFolio::create([
                                     'folio' => (VariosFolio::max('folio') ?? 0) + 1,

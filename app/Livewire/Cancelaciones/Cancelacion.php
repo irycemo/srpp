@@ -167,7 +167,7 @@ class Cancelacion extends Component
 
                 $this->actualizarDocumentoEntrada($this->cancelacion->movimientoRegistral);
 
-                $this->cancelacion->movimientoRegistral->update(['estado' => 'elaborado', 'actualizado_por' => auth()->id()]);
+                $this->cancelacion->movimientoRegistral->update(['estado' => 'elaborado', 'actualizado_por' => auth()->id(), 'fecha_elaboracion' => now()->toDateString()]);
 
                 $this->cancelacion->movimientoRegistral->audits()->latest()->first()->update(['tags' => 'Elaboró inscripción de cancelación']);
 

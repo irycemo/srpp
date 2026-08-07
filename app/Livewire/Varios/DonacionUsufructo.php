@@ -110,7 +110,7 @@ class DonacionUsufructo extends Component
 
                 $this->actualizarDocumentoEntrada($this->vario->movimientoRegistral);
 
-                $this->vario->movimientoRegistral->update(['estado' => 'elaborado']);
+                $this->vario->movimientoRegistral->update(['estado' => 'elaborado', 'actualizado_por' => auth()->id(), 'fecha_elaboracion' => now()->toDateString()]);
 
                 $this->procesarPropietarios();
 

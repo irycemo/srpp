@@ -158,7 +158,7 @@ class GravamenInscripcion extends Component
 
                 $this->actualizarDocumentoEntrada($this->gravamen->movimientoRegistral);
 
-                $this->gravamen->movimientoRegistral->update(['estado' => 'elaborado', 'actualizado_por' => auth()->id()]);
+                $this->gravamen->movimientoRegistral->update(['estado' => 'elaborado', 'actualizado_por' => auth()->id(), 'fecha_elaboracion' => now()->toDateString()]);
 
                 $this->gravamen->movimientoRegistral->audits()->latest()->first()->update(['tags' => 'Elaboró inscripción de gravamen']);
 

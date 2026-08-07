@@ -158,7 +158,7 @@ class Reformas extends Component
 
                 $this->reformaMoral->update(['fecha_inscripcion' => now()->toDateString()]);
 
-                $this->reformaMoral->movimientoRegistral->update(['estado' => 'elaborado', 'actualizado_por' => auth()->id()]);
+                $this->reformaMoral->movimientoRegistral->update(['estado' => 'elaborado', 'actualizado_por' => auth()->id(), 'fecha_elaboracion' => now()->toDateString()]);
 
                 $this->actualizarDocumentoEntrada($this->reformaMoral->movimientoRegistral);
 

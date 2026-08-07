@@ -216,6 +216,8 @@ class CopiasCertificadas extends Component
 
                 $this->modelo_editar->actualizado_por = auth()->user()->id;
 
+                $this->modelo_editar->movimientoRegistral->fecha_elaboracion = now()->toDateString();
+
                 $this->modelo_editar->movimientoRegistral->save();
 
                 $this->modelo_editar->save();

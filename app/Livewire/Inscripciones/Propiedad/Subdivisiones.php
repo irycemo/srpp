@@ -299,7 +299,8 @@ class Subdivisiones extends Component
 
                 $this->propiedad->movimientoRegistral->update([
                     'estado' => 'elaborado',
-                    'actualizado_por' => auth()->id()
+                    'actualizado_por' => auth()->id(),
+                    'fecha_elaboracion' => now()->toDateString()
                 ]);
 
                 $this->propiedad->movimientoRegistral->audits()->latest()->first()->update(['tags' => 'Elaboró inscripción de subdivisión']);

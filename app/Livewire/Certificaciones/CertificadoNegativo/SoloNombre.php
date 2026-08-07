@@ -56,6 +56,7 @@ class SoloNombre extends Component
             DB::transaction(function (){
 
                 $this->certificacion->movimientoRegistral->estado = 'elaborado';
+                $this->certificacion->movimientoRegistral->fecha_elaboracion = now()->toDateString();
                 $this->certificacion->movimientoRegistral->save();
 
                 $this->certificacion->actualizado_por = auth()->user()->id;
