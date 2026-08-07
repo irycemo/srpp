@@ -146,7 +146,7 @@ class Cancelacion extends Component
                         'observaciones' => $this->gravamenCancelarMovimiento->gravamen->observaciones . ' ' . 'Cancelado mediante movimiento registral: ' . $this->cancelacion->movimientoRegistral->folioReal->folio . '-' . $this->cancelacion->movimientoRegistral->folio,
                     ]);
 
-                    if($this->gravamenCancelarMovimiento->gravamen->servicio == 'D153'){
+                    if(in_array($this->gravamenCancelarMovimiento->gravamen->servicio, ['D153', 'D154'])){
 
                         $this->cancelarGravamenReestructura();
 

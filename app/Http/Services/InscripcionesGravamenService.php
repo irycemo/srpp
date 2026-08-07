@@ -32,7 +32,7 @@ class InscripcionesGravamenService implements MovimientoServiceInterface{
         }
 
         /* Reestructura de credito */
-        if($request['servicio'] == 'D153'){
+        if(in_array($request['servicio'], ['D153', 'D154'])){
 
             $movimiento_gravamen_a_reestructurar = MovimientoRegistral::find($request['asiento_registral']);
 
