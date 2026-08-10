@@ -34,9 +34,9 @@ class Dashboard extends Component
 
         }else{
 
-            Cache::remember('movimientos_dashboard_uruapan', now()->addHour(), function(){
+            $this->servicios_uruapan = Cache::remember('movimientos_dashboard_uruapan', now()->addHour(), function(){
 
-                $this->servicios_uruapan = MovimientoRegistral::select('id', 'servicio_nombre')
+                return MovimientoRegistral::select('id', 'servicio_nombre')
                                                             ->where('distrito', 2)
                                                             ->whereIn('estado', ['elaborado', 'finalizado', 'concluido'])
                                                             ->whereBetween('fecha_elaboracion', [now()->startOfDay(), now()->endOfDay()])
@@ -55,9 +55,9 @@ class Dashboard extends Component
 
         }else{
 
-            Cache::remember('movimientos_dashboard_resto', now()->addHour(), function(){
+            $this->servicios_resto = Cache::remember('movimientos_dashboard_resto', now()->addHour(), function(){
 
-                $this->servicios_resto = MovimientoRegistral::select('id', 'servicio_nombre')
+                return MovimientoRegistral::select('id', 'servicio_nombre')
                                                             ->where('distrito', '!=', 2)
                                                             ->whereIn('estado', ['elaborado', 'finalizado', 'concluido'])
                                                             ->whereBetween('fecha_elaboracion', [now()->startOfDay(), now()->endOfDay()])
