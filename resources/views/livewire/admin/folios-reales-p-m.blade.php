@@ -151,6 +151,15 @@
                                             Imprimir caraturla
                                         </button>
 
+                                        <button
+                                            wire:click="borrarFolioReal({{ $folio->id }})"
+                                            wire:confirm="¿Esta seguro que desea borar el folio real de persona moral? Todos sus movimientos registrales seran eliminados, la información no podrá ser recuperada."
+                                            wire:loading.attr="disabled"
+                                            class="w-full text-left block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 focus:outline-none focus:bg-gray-100"
+                                            role="menuitem">
+                                            Borrar folio real
+                                        </button>
+
                                         <a
                                             href="{{ route('auditoria') . "?modelo=FolioRealPersonaMoral&modelo_id=" . $folio->id }}"
                                             class="w-full text-left block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 focus:outline-none focus:bg-gray-100"

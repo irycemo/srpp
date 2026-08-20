@@ -5,8 +5,10 @@ namespace App\Livewire\Admin;
 use App\Constantes\Constantes;
 use App\Exceptions\GeneralException;
 use App\Http\Controllers\FolioPersonaMoralController\FolioPersonaMoralController;
+use App\Http\Services\FolioRealPersonaService;
 use App\Models\FolioRealPersona;
 use App\Traits\ComponentesTrait;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
 use Livewire\Component;
 use Livewire\WithPagination;
@@ -60,6 +62,31 @@ class FoliosRealesPM extends Component
 
             $this->dispatch('mostrarMensaje', ['error', "Hubo un error."]);
             Log::error("Error imprimir caratula de folio real de persona moral por el usuario: (id: " . auth()->user()->id . ") " . auth()->user()->name . ". " . $th);
+
+        }
+
+    }
+
+    public function borrarFolioReal(FolioRealPersona $folioReal){
+
+        try {
+
+            DB::transaction(function () use($folioReal){
+
+                (new FolioRealPersonaService())->borrarFolioRealPersona($folioReal->id);
+
+            });
+
+            $this->dispatch('mostrarMensaje', ['success', "El folio se eliminó con éxito."]);
+
+        } catch (GeneralException $ex) {
+
+            $this->dispatch('mostrarMensaje', ['warning', $ex->getMessage()]);
+
+        } catch (\Throwable $th) {
+
+            $this->dispatch('mostrarMensaje', ['error', "Hubo un error."]);
+            Log::error("Error al eliminar folio real de persona moral por el usuario: (id: " . auth()->user()->id . ") " . auth()->user()->name . ". " . $th);
 
         }
 
