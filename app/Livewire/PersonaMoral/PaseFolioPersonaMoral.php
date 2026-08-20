@@ -121,7 +121,7 @@ class PaseFolioPersonaMoral extends Component
                                                     ->with('actualizadoPor:id,name', 'folioRealPersona:id,folio,estado')
                                                     ->has('reformaMoral')
                                                     ->where('folio', 1)
-                                                    ->whereIn('estado', ['nuevo', 'correccion', 'elaborado', 'no recibido'])
+                                                    ->whereIn('estado', ['nuevo', 'correccion', 'elaborado'])
                                                     ->where('usuario_asignado', auth()->user()->id)
                                                     ->where(function($q){
                                                         $q->whereNull('folio_real_persona')
@@ -148,7 +148,7 @@ class PaseFolioPersonaMoral extends Component
                                                     ->where(function($q){
                                                         $q->whereNull('folio_real_persona')
                                                             ->orWhereHas('folioRealPersona', function($q){
-                                                                $q->whereIn('estado', ['nuevo', 'captura', 'elaborado', 'no recibido']);
+                                                                $q->whereIn('estado', ['nuevo', 'captura', 'elaborado']);
                                                             });
                                                     })
                                                     ->when(auth()->user()->ubicacion == 'Regional 4', function($q){
@@ -169,7 +169,7 @@ class PaseFolioPersonaMoral extends Component
                                                 ->where(function($q){
                                                     $q->whereNull('folio_real_persona')
                                                         ->orWhereHas('folioRealPersona', function($q){
-                                                            $q->whereIn('estado', ['nuevo', 'captura', 'elaborado', 'no recibido']);
+                                                            $q->whereIn('estado', ['nuevo', 'captura', 'elaborado']);
                                                         });
                                                 })
                                                 ->orderBy($this->sort, $this->direction)

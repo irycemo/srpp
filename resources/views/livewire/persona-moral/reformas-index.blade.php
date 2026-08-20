@@ -6,6 +6,8 @@
 
         @include('livewire.comun.filtros-inscripciones')
 
+        @include('livewire.comun.inscripciones.asignarme-tramite')
+
     </div>
 
     <div class="overflow-x-auto rounded-lg shadow-xl border-t-2 border-t-gray-500">
@@ -202,5 +204,7 @@
     @include('livewire.comun.inscripciones.modal-reasignar-usuario')
 
     @include('livewire.comun.inscripciones.modal-recibir-documento')
+
+    @include('livewire.comun.inscripciones.modal-reasignarme-movimiento-registral')
 
 </div>

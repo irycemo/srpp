@@ -39,9 +39,20 @@ trait ReasignarmeMovimientoTrait{
 
             DB::transaction(function () use($movimientoRegistral) {
 
+                if($movimientoRegistral->estado === 'no recibido'){
+
+                    $estado = 'nuevo';
+
+                }else{
+
+                    $estado = $movimientoRegistral->estado;
+
+                }
+
                 $movimientoRegistral->update([
                     'usuario_asignado' => auth()->id(),
-                    'actualizado_por' => auth()->id()
+                    'actualizado_por' => auth()->id(),
+                    'estado' => $estado
                 ]);
 
                 $movimientoRegistral->audits()->latest()->first()->update(['tags' => 'Reasignó usuario']);

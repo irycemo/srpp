@@ -6,7 +6,7 @@
 
         <div class="flex justify-between items-center">
 
-            <div class="flex gap-3 overflow-auto p-1">
+            <div class="flex gap-3 overflow-auto p-1 items-center">
 
                 <select class="bg-white rounded-full text-sm" wire:model.live="filters.año">
 
@@ -82,17 +82,13 @@
 
                 <div x-cloak x-show="open_drop_down" x-on:click="open_drop_down=false" x-on:click.away="open_drop_down=false" class="z-50 origin-top-right absolute right-0 mt-2 w-48 rounded-md shadow-lg py-1 bg-white ring-1 ring-black ring-opacity-5 focus:outline-none" role="menu" aria-orientation="vertical" aria-labelledby="user-menu">
 
-                    @if(auth()->user()->hasRole(['Pase a folio', 'Propiedad', 'Registrador Propiedad']) && auth()->user()->ubicacion === 'Regional 4')
-
-                        <button
-                            wire:click="$toggle('modal_reasignarme_movimiento_registral')"
-                            wire:loading.attr="disabled"
-                            class="w-full text-left block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 focus:outline-none focus:bg-gray-100"
-                            role="menuitem">
-                            Reasignarme pase a folio
-                        </button>
-
-                    @endif
+                    <button
+                        wire:click="$toggle('modal_reasignarme_movimiento_registral')"
+                        wire:loading.attr="disabled"
+                        class="w-full text-left block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 focus:outline-none focus:bg-gray-100"
+                        role="menuitem">
+                        Reasignarme pase a folio
+                    </button>
 
                     @if(!auth()->user()->hasRole(['Administrador' , 'Operador']))
 
@@ -365,17 +361,13 @@
                                             Enviar a folio simplificado
                                         </button>
 
-                                        @if($movimiento->usuario == 67)
-
-                                            <button
-                                                wire:click="abrirModalRevisarTramiteLinea({{ $movimiento->id }})"
-                                                wire:loading.attr="disabled"
-                                                class="w-full text-left block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 focus:outline-none focus:bg-gray-100"
-                                                role="menuitem">
-                                                Revisar trámite
-                                            </button>
-
-                                        @endif
+                                        <button
+                                            wire:click="abrirModalRevisarTramiteLinea({{ $movimiento->id }})"
+                                            wire:loading.attr="disabled"
+                                            class="w-full text-left block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 focus:outline-none focus:bg-gray-100"
+                                            role="menuitem">
+                                            Revisar trámite
+                                        </button>
 
                                         @if(auth()->user()->ubicacion === 'Regional 4')
 

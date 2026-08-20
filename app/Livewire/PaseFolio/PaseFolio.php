@@ -617,7 +617,6 @@ class PaseFolio extends Component
             $movimientos = MovimientoRegistral::select('id', 'folio', 'folio_real', 'año', 'tramite', 'usuario', 'actualizado_por', 'usuario_asignado', 'usuario_supervisor', 'estado', 'distrito', 'created_at', 'updated_at', 'tomo', 'registro', 'numero_propiedad')
                                                     ->with('actualizadoPor:id,name', 'asignadoA:id,name', 'folioReal:id,folio,estado', 'supervisor:id,name')
                                                     ->where('pase_a_folio', true)
-                                                    ->whereIn('estado', ['nuevo', 'correccion', 'no recibido', 'pendiente'])
                                                     ->where(function($q){
                                                         $q->whereNull('folio_real')
                                                             ->orWhereHas('folioReal', function($q){
@@ -644,7 +643,7 @@ class PaseFolio extends Component
             $movimientos = MovimientoRegistral::select('id', 'folio', 'folio_real', 'año', 'tramite', 'usuario', 'actualizado_por', 'usuario_asignado', 'usuario_supervisor', 'estado', 'distrito', 'created_at', 'updated_at', 'tomo', 'registro', 'numero_propiedad')
                                                     ->with('actualizadoPor:id,name', 'asignadoA:id,name', 'folioReal:id,folio,estado', 'supervisor:id,name')
                                                     ->where('pase_a_folio', true)
-                                                    ->whereIn('estado', ['nuevo', 'correccion', 'no recibido', 'pendiente'])
+                                                    ->whereIn('estado', ['nuevo', 'correccion', 'pendiente'])
                                                     ->where(function($q){
                                                         $q->select('id', 'folio', 'estado')
                                                             ->whereNull('folio_real')
@@ -678,7 +677,7 @@ class PaseFolio extends Component
             $movimientos = MovimientoRegistral::select('id', 'folio', 'folio_real', 'año', 'tramite', 'usuario', 'actualizado_por', 'usuario_asignado', 'usuario_supervisor', 'estado', 'distrito', 'created_at', 'updated_at', 'tomo', 'registro', 'numero_propiedad')
                                                     ->with('actualizadoPor:id,name', 'asignadoA:id,name', 'folioReal:id,folio,estado', 'supervisor:id,name')
                                                     ->where('pase_a_folio', true)
-                                                    ->whereIn('estado', ['nuevo', 'correccion', 'no recibido', 'pendiente'])
+                                                    ->whereIn('estado', ['nuevo', 'correccion', 'pendiente'])
                                                     ->where(function($q){
                                                         $q->whereNull('folio_real')
                                                             ->orWhereHas('folioReal', function($q){
