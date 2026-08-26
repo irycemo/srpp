@@ -511,7 +511,7 @@ class PaseFolio extends Component
                     'distrito_antecedente' => $this->modelo_editar->getRawOriginal('distrito'),
                     'seccion_antecedente' => 'Propiedad',
                     'tipo_documento' => 'ESCRITURA PÚBLICA',
-                    'acto_contenido_antecedente' => 'CERTIFICADO EN LINEA',
+                    'acto_contenido_antecedente' => 'ASIGNACIÓN DE FOLIO',
                     'asignado_por' => auth()->user()->name,
                     'observaciones_antecedente' => 'EL PRESENTE FOLIO REAL SE ASIGNÓ CON LA INFORMACIÓN CONTENIDA EN LA BASE DE DATOS DEL SISTEMA ANTERIOR DE MANERA AUTOMÁTICA, SE ACTUALIZARÁ CON EL SIGUIENTE MOVIMIENTO DE PROPIEDAD'
                 ]);
@@ -519,7 +519,7 @@ class PaseFolio extends Component
                 $escritura = Escritura::create([
                     'numero' => $propiedad->escritura,
                     'notaria' => $propiedad->notaria,
-                    'acto_contenido_antecedente' => 'CERTIFICADO EN LINEA',
+                    'acto_contenido_antecedente' => 'ASIGNACIÓN DE FOLIO',
                     'comentario' => 'EL PRESENTE FOLIO REAL SE ASIGNÓ CON LA INFORMACIÓN CONTENIDA EN LA BASE DE DATOS DEL SISTEMA ANTERIOR DE MANERA AUTOMÁTICA, SE ACTUALIZARÁ CON EL SIGUIENTE MOVIMIENTO DE PROPIEDAD'
                 ]);
 

@@ -10,7 +10,11 @@
         <strong>Clave catastral:</strong> {{ $predio->cc_estado }}-{{ $predio->cc_region_catastral }}-{{ $predio->cc_municipio }}-{{ $predio->cc_zona_catastral }}-{{ $predio->cc_sector }}-{{ $predio->cc_manzana }}-{{ $predio->cc_predio }}-{{ $predio->cc_edificio }}-{{ $predio->cc_departamento }};
     @endif
 
-    <strong>Superficie de terreno:</strong>  {{ $predio->superficie_terreno }}  {{ $predio->unidad_area }}
+    @if($predio->superficie_terreno)
+
+        <strong>Superficie de terreno:</strong>  {{ $predio->superficie_terreno }}  {{ $predio->unidad_area }}
+
+    @endif
 
     @if ($predio->superficie_construccion)
 

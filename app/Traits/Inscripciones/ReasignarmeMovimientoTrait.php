@@ -26,12 +26,19 @@ trait ReasignarmeMovimientoTrait{
             $movimientoRegistral = MovimientoRegistral::where('año', $this->año)
                                                         ->where('tramite', $this->tramite)
                                                         ->where('usuario', $this->usuario)
-                                                        ->whereIn('estado', ['nuevo', 'no recibido', 'pendiente', 'autorizado'])
                                                         ->first();
 
-            if(!$movimientoRegistral){
+            if(! $movimientoRegistral){
 
                 $this->dispatch('mostrarMensaje', ['warning', "No se encontro el movimiento registral."]);
+
+                return;
+
+            }
+
+            if(! in_array($movimientoRegistral->estado, ['nuevo', 'no recibido', 'pendiente', 'autorizado'])){
+
+                $this->dispatch('mostrarMensaje', ['warning', "El movimiento debe estar en estado 'nuevo', 'no recibido', 'pendiente' ó 'autorizado'."]);
 
                 return;
 
