@@ -59,7 +59,6 @@ class MovimientosRegistrales extends Component
     protected function rules(){
         return [
             'modelo_editar.usuario_asignado' => 'required',
-            'modelo_editar.usuario_supervisor' => 'required',
          ];
     }
 
