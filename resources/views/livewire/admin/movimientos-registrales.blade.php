@@ -101,7 +101,7 @@
                 <x-table.heading sortable wire:click="sortBy('usuario_supervisor')" :direction="$sort === 'usuario_supervisor' ? $direction : null" >Supervisor</x-table.heading>
                 <x-table.heading sortable wire:click="sortBy('created_at')" :direction="$sort === 'created_at' ? $direction : null">Registro</x-table.heading>
                 <x-table.heading sortable wire:click="sortBy('updated_at')" :direction="$sort === 'updated_at' ? $direction : null">Actualizado</x-table.heading>
-                @if(auth()->user()->hasRole(['Administrador', 'Jefe de departamento jurídico', 'Jefe de departamento certificaciones', 'Jefe de departamento inscripciones', 'Supervisor uruapan']))
+                @if(auth()->user()->hasRole(['Administrador', 'Jefe de departamento jurídico', 'Jefe de departamento certificaciones', 'Jefe de departamento inscripciones', 'Supervisor uruapan', 'Supervisor inscripciones', 'Supervisor certificaciones']))
                     <x-table.heading >Acciones</x-table.heading>
                 @endif
 
@@ -215,7 +215,7 @@
 
                         </x-table.cell>
 
-                        @if(auth()->user()->hasRole(['Administrador', 'Jefe de departamento jurídico', 'Jefe de departamento certificaciones', 'Jefe de departamento inscripciones', 'Supervisor uruapan']))
+                        @if(auth()->user()->hasRole(['Administrador', 'Jefe de departamento jurídico', 'Jefe de departamento certificaciones', 'Jefe de departamento inscripciones', 'Supervisor uruapan', 'Supervisor inscripciones', 'Supervisor certificaciones']))
 
                             <x-table.cell title="Acciones">
 
@@ -245,13 +245,13 @@
                                                 Reasignar usuario
                                             </button>
 
-                                            <button
+                                            {{-- <button
                                                 wire:click="abrirModalReasignarSupervisor({{ $movimiento->id }})"
                                                 wire:loading.attr="disabled"
                                                 class="w-full text-left block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 focus:outline-none focus:bg-gray-100"
                                                 role="menuitem">
                                                 Reasignar supervisor
-                                            </button>
+                                            </button> --}}
 
                                         @endif
 
