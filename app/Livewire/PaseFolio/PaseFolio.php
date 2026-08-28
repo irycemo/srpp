@@ -525,10 +525,11 @@ class PaseFolio extends Component
 
                 $predio = Predio::create([
                     'status' => 'activo',
-                    'superficie_terreno' => (float)$propiedad->superficie,
+                    'superficie_terreno' => preg_replace('/[^\d.]/', '', $propiedad->superficie),
+                    'unidad_area' => str_contains($propiedad->superficie, 'HAS') ? 'Hectareas' : 'Metros cuadrados',
                     'monto_transaccion' => $propiedad->monto,
-                    'descripcion' => 'LINDEROS: ' . $propiedad->Linderos . '. ' . $propiedad->comentarios,
-                    'observaciones' => $propiedad->ubicacion,
+                    'observaciones' => 'LINDEROS: ' . $propiedad->Linderos . '. ' . $propiedad->comentarios,
+                    'descripcion' => $propiedad->ubicacion . ' Superficie: ' . $propiedad->superficie,
                     'localidad' => $propiedad->localidad,
                     'municipio' => $propiedad->municipio,
                     'divisa' => $propiedad->tipomon,
