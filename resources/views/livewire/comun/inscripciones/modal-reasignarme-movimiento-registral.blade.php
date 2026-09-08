@@ -6,7 +6,7 @@
 
     <x-slot name="content">
 
-        <div class="flex justify-center">
+        <div class="flex justify-center mb-5">
 
             <select class="bg-white rounded-l text-sm border border-r-transparent  focus:ring-0 @error('año') border-red-500 @enderror " wire:model="año">
                 @foreach ($años as $año)
@@ -22,6 +22,29 @@
 
         </div>
 
+        <div class="divide-y divide-gray-200 space-y-2">
+
+            @foreach ($movimientosRegistralesReasignarme as $movimiento_item)
+
+                <div class="">
+
+                    <span class="mb-2">{{ $movimiento_item->servicio_nombre}}</span>
+
+                    <x-button-blue
+                        class="ml-auto"
+                        wire:click="asignarmeMovimientoRegistral({{ $movimiento_item->id }})"
+                        wire:loading.attr="disabled"
+                        wire:target="asignarmeMovimientoRegistral({{ $movimiento_item->id }})"
+                    >
+                        Asignarme
+                    </x-button-blue>
+
+                </div>
+
+            @endforeach
+
+        </div>
+
     </x-slot>
 
     <x-slot name="footer">
@@ -30,16 +53,16 @@
             wire:click="$toggle('modal_reasignarme_movimiento_registral')"
             wire:loading.attr="disabled"
         >
-            No
+            Cerrar
         </x-button-red>
 
         <x-button-blue
             class="ml-2"
-            wire:click="asignarmeMovimientoRegistral"
+            wire:click="buscarMovientoRegistralReasignarme"
             wire:loading.attr="disabled"
-            wire:target="asignarmeMovimientoRegistral"
+            wire:target="buscarMovientoRegistralReasignarme"
         >
-            Asignarme
+            Buscar
         </x-button-blue>
 
     </x-slot>

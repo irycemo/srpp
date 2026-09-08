@@ -12,8 +12,9 @@ trait ReasignarmeMovimientoTrait{
     public $año;
     public $tramite;
     public $usuario;
+    public $movimientosRegistralesReasignarme = [];
 
-    public function asignarmeMovimientoRegistral(){
+    public function buscarMovientoRegistralReasignarme(){
 
         $this->validate([
             'año' => 'required',
@@ -21,28 +22,25 @@ trait ReasignarmeMovimientoTrait{
             'usuario' => 'required',
         ]);
 
+        $this->movimientosRegistralesReasignarme = MovimientoRegistral::where('año', $this->año)
+                                                    ->where('tramite', $this->tramite)
+                                                    ->where('usuario', $this->usuario)
+                                                    ->where('estado', ['nuevo', 'no recibido', 'pendiente', 'autorizado', 'captura'])
+                                                    ->get();
+
+        if($this->movimientosRegistralesReasignarme->count() === 0){
+
+            $this->dispatch('mostrarMensaje', ['warning', "No se encontro el movimiento registral."]);
+
+            return;
+
+        }
+
+    }
+
+    public function asignarmeMovimientoRegistral(MovimientoRegistral $movimientoRegistral){
+
         try {
-
-            $movimientoRegistral = MovimientoRegistral::where('año', $this->año)
-                                                        ->where('tramite', $this->tramite)
-                                                        ->where('usuario', $this->usuario)
-                                                        ->first();
-
-            if(! $movimientoRegistral){
-
-                $this->dispatch('mostrarMensaje', ['warning', "No se encontro el movimiento registral."]);
-
-                return;
-
-            }
-
-            if(! in_array($movimientoRegistral->estado, ['nuevo', 'no recibido', 'pendiente', 'autorizado'])){
-
-                $this->dispatch('mostrarMensaje', ['warning', "El movimiento debe estar en estado 'nuevo', 'no recibido', 'pendiente' ó 'autorizado'."]);
-
-                return;
-
-            }
 
             DB::transaction(function () use($movimientoRegistral) {
 

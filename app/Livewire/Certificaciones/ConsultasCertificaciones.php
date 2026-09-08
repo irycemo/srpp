@@ -145,11 +145,15 @@ class ConsultasCertificaciones extends Component
             'tramite_usuario' => 'required'
         ]);
 
-        $this->certificacion = MovimientoRegistral::where('año', $this->año)->where('tramite', $this->tramite)->where('usuario', $this->tramite_usuario)->first();
+        $this->certificacion = MovimientoRegistral::where('año', $this->año)
+                                                    ->where('tramite', $this->tramite)
+                                                    ->where('usuario', $this->tramite_usuario)
+                                                    ->whereHas('certificacion')
+                                                    ->first();
 
         if(!$this->certificacion){
 
-            $this->dispatch('mostrarMensaje', ['error', "No se encontro el trámite."]);
+            $this->dispatch('mostrarMensaje', ['warning', "No se encontro el trámite."]);
 
             return;
 
@@ -159,7 +163,7 @@ class ConsultasCertificaciones extends Component
 
             $this->certificacion = null;
 
-            $this->dispatch('mostrarMensaje', ['error', "El trámite no es una certificación."]);
+            $this->dispatch('mostrarMensaje', ['warning', "El trámite no es una certificación."]);
 
         }
 
