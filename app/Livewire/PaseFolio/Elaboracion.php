@@ -928,6 +928,12 @@ class Elaboracion extends Component
 
                 return;
 
+            }elseif($folioReal->distrito_antecedente != $this->folio_real_antecedente->distrito_antecedente){
+
+                $this->dispatch('mostrarMensaje', ['warning', "El folio real no es del mismo distrito."]);
+
+                return;
+
             }
 
             $antecedente = Antecedente::where('folio_real_antecedente', $this->folio_real_antecedente)
