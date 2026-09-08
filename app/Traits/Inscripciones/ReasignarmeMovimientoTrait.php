@@ -25,7 +25,7 @@ trait ReasignarmeMovimientoTrait{
         $this->movimientosRegistralesReasignarme = MovimientoRegistral::where('año', $this->año)
                                                     ->where('tramite', $this->tramite)
                                                     ->where('usuario', $this->usuario)
-                                                    ->where('estado', ['nuevo', 'no recibido', 'pendiente', 'autorizado', 'captura'])
+                                                    //->where('estado', ['nuevo', 'no recibido', 'pendiente', 'autorizado', 'captura'])
                                                     ->get();
 
         if($this->movimientosRegistralesReasignarme->count() === 0){

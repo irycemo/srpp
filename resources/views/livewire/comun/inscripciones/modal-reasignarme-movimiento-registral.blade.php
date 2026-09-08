@@ -26,7 +26,7 @@
 
             @foreach ($movimientosRegistralesReasignarme as $movimiento_item)
 
-                <div class="">
+                <div class="p-2 border border-gray-200 rounded-lg">
 
                     <span class="mb-2">{{ $movimiento_item->servicio_nombre}}</span>
 
