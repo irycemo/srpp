@@ -281,13 +281,17 @@ class MovimientosRegistrales extends Component
 
         try {
 
-            if(in_array($movimientoRegistral->inscripcionPropiedad->servicio, ['D127', 'D121', 'D120', 'D123', 'D122', 'D119', 'D124', 'D125', 'D126'])){
+            if($movimientoRegistral->inscripcionPropiedad){
 
-                $pdf = (new SubdivisionesController())->reimprimir($movimientoRegistral->firmaElectronica);
+                if(in_array($movimientoRegistral->inscripcionPropiedad->servicio, ['D127', 'D121', 'D120', 'D123', 'D122', 'D119', 'D124', 'D125', 'D126'])){
 
-            }else{
+                    $pdf = (new SubdivisionesController())->reimprimir($movimientoRegistral->firmaElectronica);
 
-                $pdf = (new PropiedadController())->reimprimir($movimientoRegistral->firmaElectronica);
+                }else{
+
+                    $pdf = (new PropiedadController())->reimprimir($movimientoRegistral->firmaElectronica);
+
+                }
 
             }
 
