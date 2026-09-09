@@ -525,7 +525,7 @@ class PaseFolio extends Component
 
                 $predio = Predio::create([
                     'status' => 'activo',
-                    'superficie_terreno' => preg_replace('/[^\d.]/', '', $propiedad->superficie),
+                    'superficie_terreno' => $this->obtenerNumero($propiedad->superficie),
                     'unidad_area' => str_contains($propiedad->superficie, 'HAS') ? 'Hectareas' : 'Metros cuadrados',
                     'monto_transaccion' => $propiedad->monto,
                     'observaciones' => 'LINDEROS: ' . $propiedad->Linderos . '. ' . $propiedad->comentarios,
@@ -583,6 +583,21 @@ class PaseFolio extends Component
             $this->dispatch('mostrarMensaje', ['error', "Ha ocurrido un error."]);
 
         }
+
+    }
+
+    function obtenerNumero($texto) {
+
+        $textoLimpio = str_replace('-', '', $texto);
+
+        // 2. Buscamos el primer número con decimales antes de un espacio o letra
+        if (preg_match('/^\d+(?:\.\d+)?/', trim($textoLimpio), $coincidencias)) {
+
+            return (float)$coincidencias[0];
+
+        }
+
+        return 0.0;
 
     }
 
