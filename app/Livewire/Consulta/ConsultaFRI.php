@@ -10,9 +10,14 @@ use Illuminate\Support\Str;
 use App\Models\CodigoPostal;
 use App\Constantes\Constantes;
 use App\Models\Antecedente;
+use App\Models\Predio;
+use Livewire\Attributes\Computed;
+use Livewire\WithPagination;
 
 class ConsultaFRI extends Component
 {
+
+    use WithPagination;
 
     public $folio_real;
     public $tomo;
@@ -43,8 +48,17 @@ class ConsultaFRI extends Component
     public $ap_materno;
     public $razon_social;
 
-    public $folios_reales;
+    public $tipo_documento;
+    public $numero_documento;
+    public $autoridad_cargo;
+    public $autoridad_nombre;
+    public $fecha_emision;
+    public $procedencia;
+
+    public $folios_reales = [];
     public $folioReal;
+
+    public $ver_filtros = true;
 
     public function updatedCodigoPostal(){
 
@@ -92,7 +106,15 @@ class ConsultaFRI extends Component
             'razon_social',
             'folios_reales',
             'folioReal',
+            'tipo_documento',
+            'numero_documento',
+            'autoridad_cargo',
+            'autoridad_nombre',
+            'fecha_emision',
+            'procedencia',
         ]);
+
+        $this->resetPage();
 
     }
 
@@ -100,15 +122,35 @@ class ConsultaFRI extends Component
 
         $this->reset(['folioReal']);
 
-        if($this->folio_real || $this->tomo || $this->registro || $this->numero_propiedad || $this->distrito || $this->seccion || $this->codigo_postal || $this->municipio || $this->ciudad || $this->tipo_asentamiento || $this->nombre_asentamiento || $this->localidad_ubicacion || $this->tipo_vialidad || $this->nombre_vialidad || $this->numero_exterior){
+        if(
+            $this->folio_real ||
+            $this->tomo ||
+            $this->registro ||
+            $this->numero_propiedad ||
+            $this->distrito ||
+            $this->codigo_postal ||
+            $this->municipio ||
+            $this->ciudad ||
+            $this->tipo_asentamiento ||
+            $this->nombre_asentamiento ||
+            $this->localidad_ubicacion ||
+            $this->tipo_vialidad ||
+            $this->nombre_vialidad ||
+            $this->numero_exterior ||
+            $this->tipo_documento ||
+            $this->numero_documento ||
+            $this->autoridad_cargo ||
+            $this->autoridad_nombre ||
+            $this->fecha_emision ||
+            $this->procedencia
+        ){
 
-            $this->folios_reales = FolioReal::with('predio')
+            $this->folios_reales = FolioReal::query()
                                 ->when($this->folio_real, fn($q, $folio_real) => $q->where('folio', $folio_real) )
                                 ->when($this->tomo, fn($q, $tomo) => $q->where('tomo_antecedente', $tomo) )
                                 ->when($this->registro, fn($q, $registro) => $q->where('registro_antecedente', $registro) )
                                 ->when($this->numero_propiedad, fn($q, $numero_propiedad) => $q->where('numero_propiedad_antecedente', $numero_propiedad) )
                                 ->when($this->distrito, fn($q, $distrito) => $q->where('distrito_antecedente', $distrito) )
-                                ->when($this->seccion, fn($q, $seccion) => $q->where('seccion_antecedente', $seccion) )
                                 ->when($this->codigo_postal, fn($q, $codigo_postal) => $q->whereHas('predio', function($q) use($codigo_postal){ $q->where('codigo_postal', $codigo_postal); }))
                                 ->when($this->municipio, fn($q, $municipio) => $q->whereHas('predio', function($q) use($municipio){ $q->where('municipio', 'like' , '%' . $municipio . '%'); }))
                                 ->when($this->ciudad, fn($q, $ciudad) => $q->whereHas('predio', function($q) use($ciudad){ $q->where('ciudad', 'like' , '%' .$ciudad . '%'); }))
@@ -118,11 +160,14 @@ class ConsultaFRI extends Component
                                 ->when($this->tipo_vialidad, fn($q, $tipo_vialidad) => $q->whereHas('predio', function($q) use($tipo_vialidad){ $q->where('tipo_vialidad', $tipo_vialidad); }))
                                 ->when($this->nombre_vialidad, fn($q, $nombre_vialidad) => $q->whereHas('predio', function($q) use($nombre_vialidad){ $q->where('nombre_vialidad', $nombre_vialidad); }))
                                 ->when($this->numero_exterior, fn($q, $numero_exterior) => $q->whereHas('predio', function($q) use($numero_exterior){ $q->where('numero_exterior', $numero_exterior); }))
-                                ->get();
-
-        }else{
-
-            $this->folios_reales = collect(new FolioReal);
+                                ->when($this->tipo_documento, fn($q, $tipo_documento) => $q->whereHas('predio', function($q) use($tipo_documento){ $q->where('tipo_documento', $tipo_documento); }))
+                                ->when($this->numero_documento, fn($q, $numero_documento) => $q->whereHas('predio', function($q) use($numero_documento){ $q->where('numero_documento', $numero_documento); }))
+                                ->when($this->autoridad_cargo, fn($q, $autoridad_cargo) => $q->whereHas('predio', function($q) use($autoridad_cargo){ $q->where('autoridad_cargo', $autoridad_cargo); }))
+                                ->when($this->autoridad_nombre, fn($q, $autoridad_nombre) => $q->whereHas('predio', function($q) use($autoridad_nombre){ $q->where('autoridad_nombre', $autoridad_nombre); }))
+                                ->when($this->fecha_emision, fn($q, $fecha_emision) => $q->whereHas('predio', function($q) use($fecha_emision){ $q->where('fecha_emision', $fecha_emision); }))
+                                ->when($this->procedencia, fn($q, $procedencia) => $q->whereHas('predio', function($q) use($procedencia){ $q->where('procedencia', $procedencia); }))
+                                ->pluck('id')
+                                ->toArray();
 
         }
 
@@ -136,21 +181,10 @@ class ConsultaFRI extends Component
                                                     $q->where('folio', $this->folio_real);
                                                 });
                                             })
-                                            ->pluck('folio_real');
+                                            ->pluck('folio_real')
+                                            ->toArray();
 
-            $folios = FolioReal::with('predio')
-                                    ->whereKey($antecedentes)
-                                    ->get();
-
-            if($this->folios_reales->count() == 0){
-
-                $this->folios_reales = $folios;
-
-            }elseif($folios->count()){
-
-                $this->folios_reales = $this->folios_reales->intersect($folios);
-
-            }
+            $this->folios_reales = array_merge($this->folios_reales, $antecedentes);
 
 
         }
@@ -163,35 +197,37 @@ class ConsultaFRI extends Component
                                 ->when($this->razon_social, fn($q, $razon_social) => $q->where('razon_social', 'like' , '%' . $razon_social . '%'))
                                 ->pluck('id');
 
-            $predios = Actor::whereIn('persona_id', $personas)->where('actorable_type', 'App\Models\Predio')->where('tipo_actor', 'propietario')->pluck('actorable_id');
+            $predios = Actor::whereIn('persona_id', $personas)
+                                ->where('actorable_type', 'App\Models\Predio')
+                                ->where('tipo_actor', 'propietario')
+                                ->pluck('actorable_id');
 
             if(count($predios)){
 
-                $folios = FolioReal::with('predio')
-                                        ->whereHas('predio', function($q) use($predios){
-                                            $q->whereKey($predios);
-                                        })
-                                        ->get();
+                $folios_id = Predio::whereKey($predios)->pluck('folio_real')->toArray();
 
+                $this->folios_reales = array_merge($this->folios_reales, $folios_id);
 
-                if($this->folios_reales->count() == 0){
-
-                    $this->folios_reales = $folios;
-
-                }elseif($folios->count()){
-
-                    $this->folios_reales = $this->folios_reales->intersect($folios);
-
-                }
             }
 
         }
 
-        if($this->folios_reales->count() === 0){
+        if(count($this->folios_reales) === 0){
 
-            $this->dispatch('mostrarMensaje', ['error', "No hay resultado con los parametros ingresados."]);
+            $this->dispatch('mostrarMensaje', ['warning', "No hay resultado con los parametros ingresados."]);
 
         }
+
+        $this->folios_reales = array_unique($this->folios_reales);
+
+    }
+
+    #[Computed]
+    public function foliosReales(){
+
+        return FolioReal::whereKey($this->folios_reales)
+                            ->with('predio:id,folio_real,municipio,ciudad,codigo_postal,nombre_asentamiento,nombre_vialidad,numero_exterior')
+                            ->paginate(50);
 
     }
 
@@ -241,6 +277,10 @@ class ConsultaFRI extends Component
             'gravamenes.reestructuraA.movimientoRegistral.folioReal'
         );
 
+        $this->resetPage();
+
+        $this->ver_filtros = false;
+
     }
 
     public function mount(){
@@ -257,4 +297,5 @@ class ConsultaFRI extends Component
     {
         return view('livewire.consulta.consulta-f-r-i')->extends('layouts.admin');
     }
+
 }

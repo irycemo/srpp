@@ -1,212 +1,208 @@
 <div class="">
 
-    <div class="mb-6">
+    @if($ver_filtros)
 
-        <x-header>Consultas FR-I</x-header>
+        <div class="mb-6">
 
-        <div class="grid grid-cols-1 lg:grid-cols-6 md:grid-cols-3 sm:grid-cols-2 gap-3 mb-3 bg-white rounded-lg p-3 shadow-lg items-end">
+            <x-header>Consultas FR-I</x-header>
 
-            <span class="lg:col-span-6 md:col-span-7 sm:col-span- text-center">Antecedente</span>
+            <div class="mb-3 bg-white rounded-lg p-3 shadow-lg">
 
-            <x-input-group for="folio_real" label="Folio real" class="w-full">
+                <div class="text-center mb-3">
 
-                <x-input-text id="folio_real" wire:model="folio_real"/>
+                    <span >Folio real</span>
 
-            </x-input-group>
+                    <x-input-group for="folio_real" label="" class="w-fit mx-auto">
 
-            <x-input-group for="tomo" label="Tomo" class="w-full">
+                        <x-input-text id="folio_real" wire:model="folio_real"/>
 
-                <x-input-text id="tomo" wire:model="tomo"/>
+                    </x-input-group>
 
-            </x-input-group>
+                </div>
 
-            <x-input-group for="registro" label="Registro" class="w-full">
+                <div class="grid grid-cols-1 lg:grid-cols-4 sm:grid-cols-2 gap-3 items-end mb-3">
 
-                <x-input-text id="registro" wire:model="registro"/>
+                    <span class="lg:col-span-4 sm:col-span-2 text-center">Antecedente</span>
 
-            </x-input-group>
+                    <x-input-group for="tomo" label="Tomo" class="w-full">
 
-            <x-input-group for="numero_propiedad" label="Número de propiedad" class="w-full">
+                        <x-input-text id="tomo" wire:model="tomo"/>
 
-                <x-input-text id="numero_propiedad" wire:model="numero_propiedad"/>
+                    </x-input-group>
 
-            </x-input-group>
+                    <x-input-group for="registro" label="Registro" class="w-full">
 
-            <x-input-group for="distrito" label="Distrito" class="w-full">
+                        <x-input-text id="registro" wire:model="registro"/>
 
-                <x-input-select id="distrito" wire:model="distrito" class="w-full">
+                    </x-input-group>
 
-                    <option value="">Seleccione una opción</option>
+                    <x-input-group for="numero_propiedad" label="Número de propiedad" class="w-full">
 
-                    @foreach ($distritos as $key => $nombre)
+                        <x-input-text id="numero_propiedad" wire:model="numero_propiedad"/>
 
-                        <option value="{{ $key }}">{{ $nombre }}</option>
+                    </x-input-group>
 
-                    @endforeach
+                    <x-input-group for="distrito" label="Distrito" class="w-full">
 
-                </x-input-select>
+                        <x-input-select id="distrito" wire:model="distrito" class="w-full">
 
-            </x-input-group>
+                            <option value="">Seleccione una opción</option>
 
-            <x-input-group for="seccion" label="Sección" class="w-full">
+                            @foreach ($distritos as $key => $nombre)
 
-                <x-input-text id="seccion" wire:model="seccion"/>
+                                <option value="{{ $key }}">{{ $nombre }}</option>
 
-            </x-input-group>
+                            @endforeach
 
-            <span class="lg:col-span-6 md:col-span-7 sm:col-span- text-center">Ubicación</span>
+                        </x-input-select>
 
-            {{-- <x-input-group for="codigo_postal" label="Código postal" :error="$errors->first('codigo_postal')" class="w-full">
+                    </x-input-group>
 
-                <x-input-text id="codigo_postal" wire:model.lazy="codigo_postal" />
+                </div>
 
-            </x-input-group> --}}
+                <div class="grid grid-cols-1 lg:grid-cols-4 md:grid-cols-2 gap-3 items-end mb-3">
 
-            <x-input-group for="municipio" label="Municipio" :error="$errors->first('municipio')" class="w-full">
+                    <span class="lg:col-span-4 md:col-span-2 text-center">Ubicación</span>
 
-                <x-input-text id="municipio" wire:model="municipio"/>
+                    <x-input-group for="municipio" label="Municipio" :error="$errors->first('municipio')" class="w-full">
 
-            </x-input-group>
+                        <x-input-text id="municipio" wire:model="municipio"/>
 
-            {{-- <x-input-group for="ciudad" label="Ciudad" :error="$errors->first('ciudad')" class="w-full">
+                    </x-input-group>
 
-                <x-input-text id="ciudad" wire:model="ciudad"/>
+                    <x-input-group for="localidad_ubicacion" label="Localidad" :error="$errors->first('localidad_ubicacion')" class="w-full">
 
-            </x-input-group> --}}
+                        <x-input-text id="localidad_ubicacion" wire:model="localidad_ubicacion" />
 
-            {{-- <x-input-group for="tipo_asentamiento" label="Tipo de asentamiento" :error="$errors->first('tipo_asentamiento')" class="w-full">
+                    </x-input-group>
 
-                <x-input-select id="tipo_asentamiento" wire:model="tipo_asentamiento" class="w-full">
+                    <x-input-group for="nombre_asentamiento" label="Nombre del asentamiento" :error="$errors->first('nombre_asentamiento')" class="w-full">
 
-                    <option value="">Seleccione una opción</option>
+                        <x-input-text id="nombre_asentamiento" wire:model="nombre_asentamiento" />
 
-                    @foreach ($tipos_asentamientos as $nombre)
+                    </x-input-group>
 
-                        <option value="{{ $nombre }}">{{ $nombre }}</option>
+                    <x-input-group for="nombre_vialidad" label="Nombre de la vialidad" :error="$errors->first('nombre_vialidad')" class="w-full">
 
-                    @endforeach
+                        <x-input-text id="nombre_vialidad" wire:model="nombre_vialidad" />
 
-                </x-input-select>
+                    </x-input-group>
 
-            </x-input-group> --}}
+                </div>
 
-           {{--  <x-input-group for="nombre_asentamiento" label="Nombre del asentamiento" :error="$errors->first('nombre_asentamiento')" class="w-full">
+                <div class="grid grid-cols-1 lg:grid-cols-4 md:grid-cols-2 gap-3 items-end mb-3">
 
-                <x-input-select id="nombre_asentamiento" wire:model="nombre_asentamiento" class="w-full">
+                    <span class="lg:col-span-4 md:col-span-3 text-center">Propietario</span>
 
-                    <option value="">Seleccione una opción</option>
+                    <x-input-group for="nombre_propietario" label="Nombre del propietario" :error="$errors->first('nombre_propietario')" class="w-full">
 
-                    @if($nombres_asentamientos)
+                        <x-input-text id="nombre_propietario" wire:model="nombre_propietario" />
 
-                        @foreach ($nombres_asentamientos as $nombre)
+                    </x-input-group>
 
-                            <option value="{{ $nombre }}">{{ $nombre }}</option>
+                    <x-input-group for="ap_paterno" label="Ap. paterno del propietario" :error="$errors->first('ap_paterno')" class="w-full">
 
-                        @endforeach
+                        <x-input-text id="ap_paterno" wire:model="ap_paterno" />
 
-                    @endif
+                    </x-input-group>
 
-                </x-input-select>
+                    <x-input-group for="ap_materno" label="Ap. materno del propietario" :error="$errors->first('ap_materno')" class="w-full">
 
-            </x-input-group> --}}
+                        <x-input-text id="ap_materno" wire:model="ap_materno" />
 
-            <x-input-group for="localidad_ubicacion" label="Localidad" :error="$errors->first('localidad_ubicacion')" class="w-full">
+                    </x-input-group>
 
-                <x-input-text id="localidad_ubicacion" wire:model="localidad_ubicacion" />
+                    <x-input-group for="razon_social" label="Razón social" :error="$errors->first('razon_social')" class="w-full">
 
-            </x-input-group>
+                        <x-input-text id="razon_social" wire:model="razon_social" />
 
-            {{-- <x-input-group for="tipo_vialidad" label="Tipo de vialidad" :error="$errors->first('tipo_vialidad')" class="w-full">
+                    </x-input-group>
 
-                <x-input-select id="tipo_vialidad" wire:model="tipo_vialidad" class="w-full">
+                </div>
 
-                    <option value="">Seleccione una opción</option>
+                <div class="grid grid-cols-1 lg:grid-cols-6 md:grid-cols-3 gap-3 items-end mb-3">
 
-                    @foreach ($tipos_vialidades as $vialidad)
+                    <span class="lg:col-span-6 md:col-span-3 text-center">Documento de entrada</span>
 
-                        <option value="{{ $vialidad }}">{{ $vialidad }}</option>
+                    <x-input-group for="tipo_documento" label="Tipo de documento" :error="$errors->first('tipo_documento')" class="w-full">
 
-                    @endforeach
+                        <x-input-text id="tipo_documento" wire:model="tipo_documento" />
 
-                </x-input-select>
+                    </x-input-group>
 
-            </x-input-group> --}}
+                    <x-input-group for="numero_documento" label="Número de documento" :error="$errors->first('numero_documento')" class="w-full">
 
-            <x-input-group for="nombre_asentamiento" label="Nombre del asentamiento" :error="$errors->first('nombre_asentamiento')" class="w-full">
+                        <x-input-text id="numero_documento" wire:model="numero_documento" />
 
-                <x-input-text id="nombre_asentamiento" wire:model="nombre_asentamiento" />
+                    </x-input-group>
 
-            </x-input-group>
+                    <x-input-group for="autoridad_cargo" label="Cargo de la autoridad" :error="$errors->first('autoridad_cargo')" class="w-full">
 
-            <x-input-group for="nombre_vialidad" label="Nombre de la vialidad" :error="$errors->first('nombre_vialidad')" class="w-full">
+                        <x-input-text id="autoridad_cargo" wire:model="autoridad_cargo" />
 
-                <x-input-text id="nombre_vialidad" wire:model="nombre_vialidad" />
+                    </x-input-group>
 
-            </x-input-group>
+                    <x-input-group for="autoridad_nombre" label="Nombre de la autoridad" :error="$errors->first('autoridad_nombre')" class="w-full">
 
-            {{-- <x-input-group for="numero_exterior" label="Número exterior" :error="$errors->first('numero_exterior')" class="w-full">
+                        <x-input-text id="autoridad_nombre" wire:model="autoridad_nombre" />
 
-                <x-input-text id="numero_exterior" wire:model="numero_exterior" />
+                    </x-input-group>
 
-            </x-input-group> --}}
+                    <x-input-group for="fecha_emision" label="Fecha de emisión" :error="$errors->first('fecha_emision')" class="w-full">
 
-            <span class="lg:col-span-6 md:col-span-7 sm:col-span- text-center">Propietario</span>
+                        <x-input-text type="date" id="fecha_emision" wire:model="fecha_emision" />
 
-            <x-input-group for="nombre_propietario" label="Nombre del propietario" :error="$errors->first('nombre_propietario')" class="w-full">
+                    </x-input-group>
 
-                <x-input-text id="nombre_propietario" wire:model="nombre_propietario" />
+                    <x-input-group for="procedencia" label="Procedencia" :error="$errors->first('procedencia')" class="w-full">
 
-            </x-input-group>
+                        <x-input-text id="procedencia" wire:model="procedencia" />
 
-            <x-input-group for="ap_paterno" label="Ap. paterno del propietario" :error="$errors->first('ap_paterno')" class="w-full">
+                    </x-input-group>
 
-                <x-input-text id="ap_paterno" wire:model="ap_paterno" />
+                </div>
 
-            </x-input-group>
+                <div class="flex gap-4 items-center justify-center">
 
-            <x-input-group for="ap_materno" label="Ap. materno del propietario" :error="$errors->first('ap_materno')" class="w-full">
+                    <x-button-green
+                        wire:click="limpiar"
+                        wire:loading.attr="disabled"
+                        wire:target="limpiar">
 
-                <x-input-text id="ap_materno" wire:model="ap_materno" />
+                        <img wire:loading wire:target="limpiar" class="mx-auto h-4 mr-1" src="{{ asset('storage/img/loading3.svg') }}" alt="Loading">
 
-            </x-input-group>
+                        Limpiar
 
-            <x-input-group for="razon_social" label="Razón social" :error="$errors->first('razon_social')" class="w-full">
+                    </x-button-green>
 
-                <x-input-text id="razon_social" wire:model="razon_social" />
+                    <x-button-blue
+                        wire:click="buscar"
+                        wire:loading.attr="disabled"
+                        wire:target="buscar">
 
-            </x-input-group>
+                        <img wire:loading wire:target="buscar" class="mx-auto h-4 mr-1" src="{{ asset('storage/img/loading3.svg') }}" alt="Loading">
 
-            <div class="col-span-1 sm:col-span-2 md:col-span-3 lg:col-span-6 flex justify-end gap-3">
+                        Buscar
 
-                <x-button-green
-                    wire:click="limpiar"
-                    wire:loading.attr="disabled"
-                    wire:target="limpiar">
+                    </x-button-blue>
 
-                    <img wire:loading wire:target="limpiar" class="mx-auto h-4 mr-1" src="{{ asset('storage/img/loading3.svg') }}" alt="Loading">
-
-                    Limpiar
-
-                </x-button-green>
-
-                <x-button-blue
-                    wire:click="buscar"
-                    wire:loading.attr="disabled"
-                    wire:target="buscar">
-
-                    <img wire:loading wire:target="buscar" class="mx-auto h-4 mr-1" src="{{ asset('storage/img/loading3.svg') }}" alt="Loading">
-
-                    Buscar
-
-                </x-button-blue>
+                </div>
 
             </div>
 
         </div>
 
-    </div>
+    @else
 
-    @if($folios_reales && $folios_reales->count() > 0)
+        <div class="mb-3 bg-white rounded-lg p-3 shadow-lg text-center">
+
+            <span class="rounded-full px-2 tracking-widest bg-gray-400 text-sm text-white py-1 cursor-pointer" wire:click="$toggle('ver_filtros')">Ver filtros</span>
+
+        </div>
+
+    @endif
+
+    @if($this->foliosReales->count())
 
         <div class="overflow-x-auto rounded-lg shadow-xl border-t-2 border-t-gray-500">
 
@@ -224,7 +220,7 @@
 
                 <x-slot name="body">
 
-                    @foreach ($folios_reales as $folio)
+                    @foreach ($this->foliosReales as $folio)
 
                         <x-table.row wire:loading.class.delaylongest="opacity-50" wire:key="row-{{ $folio->id }}">
 
@@ -291,6 +287,8 @@
                     <x-table.row>
 
                         <x-table.cell colspan="13" class="bg-gray-50">
+
+                            {{ $this->foliosReales->links()}}
 
                         </x-table.cell>
 
