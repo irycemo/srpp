@@ -90,9 +90,9 @@ class FolioPersonaMoralController extends Controller
 
         $canvas = $dom_pdf->get_canvas();
 
-        $canvas->page_text(480, 745, "Página: {PAGE_NUM} de {PAGE_COUNT}", null, 10, array(1, 1, 1));
+        $canvas->page_text(480, 745, "Página: {PAGE_NUM} de {PAGE_COUNT}", $dom_pdf->getFontMetrics()->getFont('helvetica'), 10, array(1, 1, 1));
 
-        $canvas->page_text(35, 745, 'PM-' . $reforma->movimientoRegistral->folioRealPersona->folio, null, 9, array(1, 1, 1));
+        $canvas->page_text(35, 745, 'PM-' . $reforma->movimientoRegistral->folioRealPersona->folio, $dom_pdf->getFontMetrics()->getFont('helvetica'), 9, array(1, 1, 1));
 
         $canvas->page_script(function ($pageNumber, $pageCount, $canvas, $fontMetrics) {
             $w = $canvas->get_width();
@@ -170,9 +170,9 @@ class FolioPersonaMoralController extends Controller
 
         $canvas = $dom_pdf->get_canvas();
 
-        $canvas->page_text(480, 745, "Página: {PAGE_NUM} de {PAGE_COUNT}", null, 9, array(1,1,1));
+        $canvas->page_text(480, 745, "Página: {PAGE_NUM} de {PAGE_COUNT}", $dom_pdf->getFontMetrics()->getFont('helvetica'), 9, array(1,1,1));
 
-        $canvas->page_text(35, 745, 'PM-' . $firmaElectronica->movimientoRegistral->folioRealPersona->folio, null, 9, array(1, 1, 1));
+        $canvas->page_text(35, 745, 'PM-' . $firmaElectronica->movimientoRegistral->folioRealPersona->folio, $dom_pdf->getFontMetrics()->getFont('helvetica'), 9, array(1, 1, 1));
 
         return $pdf;
 
@@ -197,9 +197,9 @@ class FolioPersonaMoralController extends Controller
 
         $canvas = $dom_pdf->get_canvas();
 
-        $canvas->page_text(480, 745, "Página: {PAGE_NUM} de {PAGE_COUNT}", null, 9, array(1,1,1));
+        $canvas->page_text(480, 745, "Página: {PAGE_NUM} de {PAGE_COUNT}", $dom_pdf->getFontMetrics()->getFont('helvetica'), 9, array(1,1,1));
 
-        $canvas->page_text(35, 745, 'PM-' . $firmaElectronica->movimientoRegistral->folioRealPersona->folio, null, 9, array(1, 1, 1));
+        $canvas->page_text(35, 745, 'PM-' . $firmaElectronica->movimientoRegistral->folioRealPersona->folio, $dom_pdf->getFontMetrics()->getFont('helvetica'), 9, array(1, 1, 1));
 
         return $pdf;
 

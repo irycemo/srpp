@@ -21,6 +21,7 @@ use App\Http\Controllers\VerificacionController;
 use App\Livewire\PersonaMoral\PaseFolioPersonaMoral;
 use App\Http\Controllers\Consultas\PreguntasController;
 use App\Http\Controllers\PaseFolio\PaseFolioController;
+use App\Livewire\Consulta\Candidatos;
 use App\Livewire\Dashboard\Dashboard;
 use App\Livewire\PaseFolio\PaseFolioSimplificado\PaseFolioSimplificado;
 use App\Livewire\PaseFolio\PaseFolioSimplificado\PaseFolioSimplificadoElaborar;
@@ -68,6 +69,7 @@ Route::group(['middleware' => ['auth', 'esta.activo']], function(){
     Route::get('indices_cancelacion', IndicesCancelacion::class)->middleware('permission:Consultas')->name('indices.cancelacion');
     Route::get('indices_varios', IndicesVarios::class)->middleware('permission:Consultas')->name('indices.varios');
     Route::get('reportes', Productividad::class)->middleware('permission:Consultas')->name('reportes');
+    Route::get('candidatos', Candidatos::class)->middleware('permission:Consultas')->name('candidatos');
 
     /* Preguntas */
     Route::get('preguntas_frecuentes', Preguntas::class)->middleware('permission:Consultas')->name('consultas.preguntas');

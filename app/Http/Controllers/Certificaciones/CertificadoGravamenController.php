@@ -217,9 +217,9 @@ class CertificadoGravamenController extends Controller
 
         $canvas = $dom_pdf->get_canvas();
 
-        $canvas->page_text(480, 745, "Página: {PAGE_NUM} de {PAGE_COUNT}", null, 9, array(1,1,1));
+        $canvas->page_text(480, 745, "Página: {PAGE_NUM} de {PAGE_COUNT}", $dom_pdf->getFontMetrics()->getFont('helvetica'), 9, array(1,1,1));
 
-        $canvas->page_text(35, 745, 'I-' . $movimientoRegistral->folioReal->folio . '-' .$movimientoRegistral->folio, null, 9, array(1, 1, 1));
+        $canvas->page_text(35, 745, 'I-' . $movimientoRegistral->folioReal->folio . '-' .$movimientoRegistral->folio, $dom_pdf->getFontMetrics()->getFont('helvetica'), 9, array(1, 1, 1));
 
         $objeto = json_decode($firmaElectronica->cadena_original);
 
@@ -250,9 +250,9 @@ class CertificadoGravamenController extends Controller
 
         $canvas = $dom_pdf->get_canvas();
 
-        $canvas->page_text(35, 745, $folio, null, 9, array(1, 1, 1));
+        $canvas->page_text(35, 745, $folio, $dom_pdf->getFontMetrics()->getFont('helvetica'), 9, array(1, 1, 1));
 
-        $canvas->page_text(480, 745, "Página: {PAGE_NUM} de {PAGE_COUNT}", null, 9, array(1, 1, 1));
+        $canvas->page_text(480, 745, "Página: {PAGE_NUM} de {PAGE_COUNT}", $dom_pdf->getFontMetrics()->getFont('helvetica'), 9, array(1, 1, 1));
 
         $canvas->page_script(function ($pageNumber, $pageCount, $canvas, $fontMetrics) {
             $w = $canvas->get_width();
@@ -336,9 +336,9 @@ class CertificadoGravamenController extends Controller
 
         $canvas = $dom_pdf->get_canvas();
 
-        $canvas->page_text(480, 745, "Página: {PAGE_NUM} de {PAGE_COUNT}", null, 9, array(1,1,1));
+        $canvas->page_text(480, 745, "Página: {PAGE_NUM} de {PAGE_COUNT}", $dom_pdf->getFontMetrics()->getFont('helvetica'), 9, array(1,1,1));
 
-        $canvas->page_text(35, 745, 'I-' . $firmaElectronica->movimientoRegistral->folioReal->folio . '-' .$firmaElectronica->movimientoRegistral->folio, null, 9, array(1, 1, 1));
+        $canvas->page_text(35, 745, 'I-' . $firmaElectronica->movimientoRegistral->folioReal->folio . '-' .$firmaElectronica->movimientoRegistral->folio, $dom_pdf->getFontMetrics()->getFont('helvetica'), 9, array(1, 1, 1));
 
         return $pdf;
 
@@ -369,9 +369,9 @@ class CertificadoGravamenController extends Controller
 
         $canvas = $dom_pdf->get_canvas();
 
-        $canvas->page_text(480, 745, "Página: {PAGE_NUM} de {PAGE_COUNT}", null, 9, array(1,1,1));
+        $canvas->page_text(480, 745, "Página: {PAGE_NUM} de {PAGE_COUNT}", $dom_pdf->getFontMetrics()->getFont('helvetica'), 9, array(1,1,1));
 
-        $canvas->page_text(35, 745, 'I-' . $firmaElectronica->movimientoRegistral->folioReal->folio . '-' .$firmaElectronica->movimientoRegistral->folio, null, 9, array(1, 1, 1));
+        $canvas->page_text(35, 745, 'I-' . $firmaElectronica->movimientoRegistral->folioReal->folio . '-' .$firmaElectronica->movimientoRegistral->folio, $dom_pdf->getFontMetrics()->getFont('helvetica'), 9, array(1, 1, 1));
 
         return $pdf;
 
