@@ -563,6 +563,42 @@ class Elaboracion extends Component
 
         }
 
+        $movimiento_registral_gravamen_existente = MovimientoRegistral::where('tomo_gravamen', $gravamen->tomog)
+                                                                        ->where('registro_gravamen', $gravamen->registrog)
+                                                                        ->whereHas('gravamen')
+                                                                        ->first();
+
+        if($movimiento_registral_gravamen_existente && $movimiento_registral_gravamen_existente->gravamen->estado === 'activo'){
+
+            $movimientoRegistralGravamenNuevo = MovimientoRegistral::create([
+                'registro_gravamen' => $gravamen->registrog ? ltrim($gravamen->registrog, '0') : null,
+                'tomo_gravamen' => $gravamen->tomog ? ltrim($gravamen->tomog, '0') : null,
+                'seccion' => 'Gravamen',
+                'folio_real' => $this->movimientoRegistral->folio_real,
+                'folio' => $this->movimientoRegistral->folioReal->ultimoFolio() + 1,
+                'distrito' => $this->movimientoRegistral->getRawOriginal('distrito'),
+                'estado' => 'carga_parcial',
+                'usuario_asignado' => auth()->id(),
+            ]);
+
+            $gravamen_existente = $movimiento_registral_gravamen_existente->gravamen->replicate();
+
+            $gravamen_existente->movimiento_registral_id = $movimientoRegistralGravamenNuevo->id;
+
+            $gravamen_existente->save();
+
+            foreach($movimiento_registral_gravamen_existente->gravamen->actores as $actor){
+
+                $nuevo_actor = $actor->replicate();
+                $nuevo_actor->actorable_id = $gravamen_existente->id;
+                $nuevo_actor->save();
+
+            }
+
+            return;
+
+        }
+
         $movimientoRegistralGravamenNuevo = MovimientoRegistral::create([
             'registro_gravamen' => $gravamen->registrog ? ltrim($gravamen->registrog, '0') : null,
             'tomo_gravamen' => $gravamen->tomog ? ltrim($gravamen->tomog, '0') : null,
