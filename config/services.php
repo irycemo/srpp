@@ -39,6 +39,7 @@ return [
         'rechazar_tramite' => env('SISTEMA_TRAMITES_RECHAZAR'),
         'consultar_archivo' => env('SISTEMA_TRAMITES_CONSULTAR_ARCHIVO'),
         'consultar_servicio' => env('SISTEMA_TRAMITES_CONSULTAR_SERVICIO'),
+        'desvincular_movimiento_registral' => env('SISTEMA_TRAMITES_DESVINCULAR_MOVIMIENTO_REGISTRAL'),
     ],
 
 ];

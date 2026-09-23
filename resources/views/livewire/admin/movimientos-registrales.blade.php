@@ -98,7 +98,6 @@
                 <x-table.heading sortable wire:click="sortBy('distrito')" :direction="$sort === 'distrito' ? $direction : null" >Distrito</x-table.heading>
                 <x-table.heading sortable wire:click="sortBy('servicio_nombre')" :direction="$sort === 'servicio_nombre' ? $direction : null" >Servicio</x-table.heading>
                 <x-table.heading sortable wire:click="sortBy('usuario_asignado')" :direction="$sort === 'usuario_asignado' ? $direction : null" >Asignado a</x-table.heading>
-                <x-table.heading sortable wire:click="sortBy('usuario_supervisor')" :direction="$sort === 'usuario_supervisor' ? $direction : null" >Supervisor</x-table.heading>
                 <x-table.heading sortable wire:click="sortBy('created_at')" :direction="$sort === 'created_at' ? $direction : null">Registro</x-table.heading>
                 <x-table.heading sortable wire:click="sortBy('updated_at')" :direction="$sort === 'updated_at' ? $direction : null">Actualizado</x-table.heading>
                 @if(auth()->user()->hasRole(['Administrador', 'Jefe de departamento jurídico', 'Jefe de departamento certificaciones', 'Jefe de departamento inscripciones', 'Supervisor uruapan', 'Supervisor inscripciones', 'Supervisor certificaciones']))
@@ -190,12 +189,6 @@
                         <x-table.cell title="Asignado a">
 
                             {{ $movimiento->asignadoA?->name }}
-
-                        </x-table.cell>
-
-                        <x-table.cell title="Supervisor">
-
-                            {{ $movimiento->supervisor?->name }}
 
                         </x-table.cell>
 
@@ -318,6 +311,19 @@
                                                 class="w-full text-left block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 focus:outline-none focus:bg-gray-100"
                                                 role="menuitem">
                                                 Reimprimir caratula
+                                            </button>
+
+                                        @endif
+
+                                        @can("Eliminar movimiento registral")
+
+                                            <button
+                                                wire:click="eliminarMovimientoRegistral({{ $movimiento->id }})"
+                                                wire:loading.attr="disabled"
+                                                wire:confirm="¿Esta seguro que desea eliminar el movimiento registral? Si tiene movimientos asociados estos tambien seran eliminados."
+                                                class="w-full text-left block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 focus:outline-none focus:bg-gray-100"
+                                                role="menuitem">
+                                                Eliminar
                                             </button>
 
                                         @endif

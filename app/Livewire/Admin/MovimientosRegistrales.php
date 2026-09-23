@@ -2,7 +2,9 @@
 
 namespace App\Livewire\Admin;
 
+use App\Actions\MovimientoRegistral\EliminarMovimientoRegistralAction;
 use App\Constantes\Constantes;
+use App\Exceptions\GeneralException;
 use App\Http\Controllers\Cancelaciones\CancelacionController;
 use App\Http\Controllers\Certificaciones\CertificadoGravamenController;
 use App\Http\Controllers\Gravamen\GravamenController;
@@ -10,6 +12,7 @@ use App\Http\Controllers\InscripcionesPropiedad\PropiedadController;
 use App\Http\Controllers\Sentencias\SentenciasController;
 use App\Http\Controllers\Subdivisiones\SubdivisionesController;
 use App\Http\Controllers\Varios\VariosController;
+use App\Http\Services\MovimientoRegistralService;
 use App\Models\MovimientoRegistral;
 use App\Models\User;
 use App\Traits\ComponentesTrait;
@@ -333,6 +336,35 @@ class MovimientosRegistrales extends Component
         } catch (\Throwable $th) {
             Log::error("Error al reimiprimir caratula de inscripción movimientos regsitrales por el usuario: (id: " . auth()->user()->id . ") " . auth()->user()->name . ". " . $th);
             $this->dispatch('mostrarMensaje', ['error', "Ha ocurrido un error."]);
+        }
+
+    }
+
+    public function eliminarMovimientoRegistral(MovimientoRegistral $movimiento, EliminarMovimientoRegistralAction $action){
+
+        try {
+
+            $action->handle($movimiento);
+
+            $this->dispatch('mostrarMensaje', ['success', 'Movimiento registral eliminado correctamente.']);
+
+        } catch (GeneralException $ex) {
+
+            $this->dispatch('mostrarMensaje', ['warning', $ex->getMessage()]);
+
+        } catch (\Throwable $th) {
+
+            Log::error("Error al eliminar movimiento regsitral.",
+            [
+                'usuario_id' => auth()->id(),
+                'usuario' => auth()->user()?->name,
+                'movimiento_tramite' => $movimiento->año . '-' . $movimiento->folio . '-' .$movimiento->usuario,
+                'movimiento_id' => $movimiento->id,
+                'exception' => $th,
+            ]);
+
+            $this->dispatch('mostrarMensaje', ['error', "Ha ocurrido un error."]);
+
         }
 
     }

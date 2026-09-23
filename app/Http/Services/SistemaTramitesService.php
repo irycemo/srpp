@@ -79,4 +79,33 @@ class SistemaTramitesService{
 
     }
 
+    public function desvincularMovimientoRegistral(int $movimiento_registral_id){
+
+    $response = Http::withToken(config('services.sistema_tramites.token'))
+                            ->accept('application/json')
+                            ->asForm()
+                            ->post(
+                                config('services.sistema_tramites.desvincular_movimiento_registral'),
+                                [
+                                    'movimiento_registral_id' => $movimiento_registral_id,
+                                ]
+                            );
+
+        if($response->status() !== 200){
+
+            Log::error("Error al desvincular movimiento registral en Sistema Trámites, movimiento registral id: " . $movimiento_registral_id . " por el usuario: (id: " . auth()->user()->id . ") " . auth()->user()->name . ". " . $response);
+
+            $data = json_decode($response, true);
+
+            if(isset($data['error'])){
+
+                throw new GeneralException($data['error']);
+
+            }
+
+            throw new GeneralException("Error al desvincular movimiento registral en Sistema Trámites.");
+
+        }
+    }
+
 }

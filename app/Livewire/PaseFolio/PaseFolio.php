@@ -586,19 +586,20 @@ class PaseFolio extends Component
 
     }
 
-    function obtenerNumero($texto) {
+    function obtenerNumero($texto): float
+    {
 
-        $textoLimpio = str_replace('-', '', $texto);
+        $texto = (string) $texto;
 
-        // 2. Buscamos el primer número con decimales antes de un espacio o letra
-        if (preg_match('/^\d+(?:\.\d+)?/', trim($textoLimpio), $coincidencias)) {
+        $texto = trim($texto);
 
-            return (float)$coincidencias[0];
+        $texto = str_replace([',', '-'], '', $texto);
 
+        if (preg_match('/^\d+(?:\.\d+)?/', $texto, $coincidencias)) {
+            return (float) $coincidencias[0];
         }
 
         return 0.0;
-
     }
 
     public function mount(){
