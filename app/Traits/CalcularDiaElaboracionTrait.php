@@ -6,6 +6,8 @@ trait CalcularDiaElaboracionTrait{
 
     public function calcularDiaElaboracion($modelo){
 
+        if(auth()->user()->ubicacion != 'Regional 4') return false;
+
         if($modelo->tipo_servicio == 'ordinario'){
 
             $diaElaboracion = $modelo->fecha_pago;

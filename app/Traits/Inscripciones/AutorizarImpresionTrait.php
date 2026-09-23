@@ -2,6 +2,7 @@
 
 namespace App\Traits\Inscripciones;
 
+use App\Exceptions\GeneralException;
 use App\Models\MovimientoRegistral;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
@@ -11,6 +12,12 @@ trait AutorizarImpresionTrait{
     public function autorizarImpresionAnticipada(MovimientoRegistral $movimientoRegistral){
 
         try {
+
+            if($movimientoRegistral->folioReal->estado != 'activo'){
+
+                throw new GeneralException('El folio real no esta activo.');
+
+            }
 
             DB::transaction(function () use($movimientoRegistral){
 
