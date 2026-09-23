@@ -232,21 +232,34 @@ class EliminarMovimientoRegistralAction
                                                             ->where('registro', $movimiento_registral->registro)
                                                             ->where('distrito', $movimiento_registral->getRawOriginal('distrito'))
                                                             ->where('folio', '>', $movimiento_registral->folio)
+                                                            ->orderBy('folio')
                                                             ->get();
 
-        if($movimientos_precalificacion->count()){
+        DB::transaction(function () use($movimientos_precalificacion, $movimiento_registral){
 
-            foreach ($movimientos_precalificacion as $movimiento) {
+        $count = $movimiento_registral->folio;
 
-                $movimiento->update(['folio' => $movimiento->folio - 1]);
+            if($movimientos_precalificacion->count()){
+
+                foreach ($movimientos_precalificacion as $movimiento) {
+
+                    if($movimiento->folio - 1 === 1){
+
+                        $movimiento->update(['folio' => $movimiento->folio - 1, 'estado' => 'no recibido']);
+
+                    }
+
+                    $movimiento->update(['folio' => $count]);
+
+                    $count ++;
+
+                }
 
             }
 
-        }
+            $this->borrarMovimientoRegistral($movimiento_registral);
 
-        $this->sistemaTramitesService->desvincularMovimientoRegistral($movimiento_registral->id);
-
-        $movimiento_registral->delete();
+        });
 
     }
 
