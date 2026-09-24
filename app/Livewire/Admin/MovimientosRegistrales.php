@@ -3,6 +3,7 @@
 namespace App\Livewire\Admin;
 
 use App\Actions\MovimientoRegistral\EliminarMovimientoRegistralAction;
+use Livewire\Attributes\Computed;
 use App\Constantes\Constantes;
 use App\Exceptions\GeneralException;
 use App\Http\Controllers\Cancelaciones\CancelacionController;
@@ -12,7 +13,6 @@ use App\Http\Controllers\InscripcionesPropiedad\PropiedadController;
 use App\Http\Controllers\Sentencias\SentenciasController;
 use App\Http\Controllers\Subdivisiones\SubdivisionesController;
 use App\Http\Controllers\Varios\VariosController;
-use App\Http\Services\MovimientoRegistralService;
 use App\Models\MovimientoRegistral;
 use App\Models\User;
 use App\Traits\ComponentesTrait;
@@ -340,11 +340,11 @@ class MovimientosRegistrales extends Component
 
     }
 
-    public function eliminarMovimientoRegistral(MovimientoRegistral $movimiento, EliminarMovimientoRegistralAction $action){
+    public function eliminarMovimientoRegistral(MovimientoRegistral $movimiento, EliminarMovimientoRegistralAction $action, bool $revisar_movimientos_posteriores){
 
         try {
 
-            $action->handle($movimiento);
+            $action->handle($movimiento, $revisar_movimientos_posteriores);
 
             $this->dispatch('mostrarMensaje', ['success', 'Movimiento registral eliminado correctamente.']);
 
@@ -389,10 +389,10 @@ class MovimientosRegistrales extends Component
 
     }
 
-    public function render()
-    {
+    #[Computed]
+    public function movimientos(){
 
-        $movimientos = MovimientoRegistral::select('id', 'folio', 'folio_real', 'año', 'tramite', 'usuario', 'tomo', 'registro', 'distrito', 'numero_propiedad', 'servicio_nombre', 'usuario_asignado', 'usuario_supervisor', 'created_at', 'updated_at', 'actualizado_por', 'estado')
+        return MovimientoRegistral::select('id', 'folio', 'folio_real', 'año', 'tramite', 'usuario', 'tomo', 'registro', 'distrito', 'numero_propiedad', 'servicio_nombre', 'usuario_asignado', 'usuario_supervisor', 'created_at', 'updated_at', 'actualizado_por', 'estado')
                             ->with('actualizadoPor:id,name', 'folioReal:id,folio,estado,matriz', 'asignadoA:id,name', 'supervisor:id,name')
                             ->withCount('rechazos')
                             ->when($this->filters['año'], fn($q, $año) => $q->where('año', $año))
@@ -413,7 +413,11 @@ class MovimientosRegistrales extends Component
                             ->orderBy($this->sort, $this->direction)
                             ->paginate($this->pagination);
 
-        return view('livewire.admin.movimientos-registrales', compact('movimientos'))->extends('layouts.admin');
+    }
+
+    public function render()
+    {
+        return view('livewire.admin.movimientos-registrales')->extends('layouts.admin');
     }
 
 }

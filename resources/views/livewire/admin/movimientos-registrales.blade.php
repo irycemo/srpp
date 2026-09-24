@@ -108,7 +108,7 @@
 
             <x-slot name="body">
 
-                @forelse ($movimientos as $movimiento)
+                @forelse ($this->movimientos as $movimiento)
 
                     <x-table.row wire:loading.class.delaylongest="opacity-50" wire:key="row-{{ $movimiento->id }}">
 
@@ -318,12 +318,21 @@
                                         @can("Eliminar movimiento registral")
 
                                             <button
-                                                wire:click="eliminarMovimientoRegistral({{ $movimiento->id }})"
+                                                wire:click="eliminarMovimientoRegistral({{ $movimiento->id }}, 1)"
                                                 wire:loading.attr="disabled"
                                                 wire:confirm="¿Esta seguro que desea eliminar el movimiento registral? Si tiene movimientos asociados estos tambien seran eliminados."
                                                 class="w-full text-left block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 focus:outline-none focus:bg-gray-100"
                                                 role="menuitem">
                                                 Eliminar
+                                            </button>
+
+                                            <button
+                                                wire:click="eliminarMovimientoRegistral({{ $movimiento->id }}, 0)"
+                                                wire:loading.attr="disabled"
+                                                wire:confirm="¿Esta seguro que desea eliminar el movimiento registral? Si tiene movimientos asociados estos tambien seran eliminados."
+                                                class="w-full text-left block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 focus:outline-none focus:bg-gray-100"
+                                                role="menuitem">
+                                                Forzar Eliminar
                                             </button>
 
                                         @endif
@@ -364,7 +373,7 @@
 
                     <x-table.cell colspan="15" class="bg-gray-50">
 
-                        {{ $movimientos->links()}}
+                        {{ $this->movimientos->links()}}
 
                     </x-table.cell>
 

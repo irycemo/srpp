@@ -16,7 +16,7 @@ class EliminarMovimientoRegistralAction
     public function __construct(private SistemaTramitesService $sistemaTramitesService)
     {}
 
-    public function handle(MovimientoRegistral $movimiento_registral):void
+    public function handle(MovimientoRegistral $movimiento_registral, bool $revisar_movimientos_posteriores = true):void
     {
 
         if(! $movimiento_registral->folio_real){
@@ -33,7 +33,7 @@ class EliminarMovimientoRegistralAction
 
         foreach ($movimientos as $item) {
 
-            $this->validarMovimientoRegistral($item, $ids_a_eliminar);
+            $this->validarMovimientoRegistral($item, $ids_a_eliminar, $revisar_movimientos_posteriores);
 
         }
 
@@ -77,7 +77,7 @@ class EliminarMovimientoRegistralAction
 
     }
 
-    private function validarMovimientoRegistral(MovimientoRegistral $movimiento, Collection $ids_a_eliminar): void
+    private function validarMovimientoRegistral(MovimientoRegistral $movimiento, Collection $ids_a_eliminar, bool $revisar_movimientos_posteriores): void
     {
 
         if (!in_array($movimiento->estado, [
@@ -95,24 +95,28 @@ class EliminarMovimientoRegistralAction
             );
         }
 
-        $hayMovimientosPosteriores = MovimientoRegistral::where('folio_real', $movimiento->folio_real)
-                                                            ->where('folio', '>', $movimiento->folio)
-                                                            ->whereIn('estado', [
-                                                                'elaborado',
-                                                                'finalizado',
-                                                                'concluido',
-                                                            ])
-                                                            ->whereNotIn('id', $ids_a_eliminar)
-                                                            ->exists();
+        if($revisar_movimientos_posteriores){
 
-        if ($hayMovimientosPosteriores) {
+            $hayMovimientosPosteriores = MovimientoRegistral::where('folio_real', $movimiento->folio_real)
+                                                                ->where('folio', '>', $movimiento->folio)
+                                                                ->whereIn('estado', [
+                                                                    'elaborado',
+                                                                    'finalizado',
+                                                                    'concluido',
+                                                                ])
+                                                                ->whereNotIn('id', $ids_a_eliminar)
+                                                                ->exists();
 
-            throw new GeneralException(
-                'El folio real del movimiento registral: ' .
-                $movimiento->folioReal->folio . '-' .
-                $movimiento->folio .
-                ' tiene movimientos posteriores elaborados'
-            );
+            if ($hayMovimientosPosteriores) {
+
+                throw new GeneralException(
+                    'El folio real del movimiento registral: ' .
+                    $movimiento->folioReal->folio . '-' .
+                    $movimiento->folio .
+                    ' tiene movimientos posteriores elaborados'
+                );
+
+            }
 
         }
 
