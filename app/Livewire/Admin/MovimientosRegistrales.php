@@ -358,7 +358,7 @@ class MovimientosRegistrales extends Component
             [
                 'usuario_id' => auth()->id(),
                 'usuario' => auth()->user()?->name,
-                'movimiento_tramite' => $movimiento->año . '-' . $movimiento->folio . '-' .$movimiento->usuario,
+                'movimiento_tramite' => $movimiento->año . '-' . $movimiento->tramite . '-' .$movimiento->usuario,
                 'movimiento_id' => $movimiento->id,
                 'exception' => $th,
             ]);

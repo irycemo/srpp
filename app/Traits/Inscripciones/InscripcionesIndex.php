@@ -2,6 +2,7 @@
 
 namespace App\Traits\Inscripciones;
 
+use App\Exceptions\GeneralException;
 use Illuminate\Support\Facades\DB;
 use App\Models\MovimientoRegistral;
 use Illuminate\Support\Facades\Log;
@@ -324,6 +325,12 @@ trait InscripcionesIndex{
 
         }
 
+        if(! $movimientoRegistral->firmaElectronica){
+
+            throw new GeneralException('El movimiento registral no tiene firma electrónica.');
+
+        }
+
         try {
 
             if($movimientoRegistral->inscripcionPropiedad){
@@ -388,6 +395,10 @@ trait InscripcionesIndex{
                 fn () => print($pdf->output()),
                 'documento.pdf'
             );
+
+        } catch (GeneralException $ex) {
+
+            $this->dispatch('mostrarMensaje', ['warning', $ex->getMessage()]);
 
         } catch (\Throwable $th) {
             Log::error("Error al reimiprimir caratula de inscripción por el usuario: (id: " . auth()->user()->id . ") " . auth()->user()->name . ". " . $th);
