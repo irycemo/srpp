@@ -1,6 +1,7 @@
 <?php
 
 use App\Livewire\Consulta\Pregunta;
+use App\Livewire\Consulta\ConsultasTramite;
 use App\Livewire\Consulta\Preguntas;
 use App\Livewire\PaseFolio\PaseFolio;
 use Illuminate\Support\Facades\Route;
@@ -63,6 +64,7 @@ Route::group(['middleware' => ['auth', 'esta.activo']], function(){
     /* Consultas */
     Route::get('consultas_fri', ConsultaFRI::class)->middleware('permission:Consultas')->name('consultas_fri');
     Route::get('consultas_frpm', ConsultaFRPM::class)->middleware('permission:Consultas')->name('consultas_frpm');
+    Route::get('consultas_tramite', ConsultasTramite::class)->middleware('permission:Consultas')->name('consultas_tramite');
     Route::get('indices_propiedad', IndicesPropiedad::class)->middleware('permission:Consultas')->name('indices.propiedad');
     Route::get('indices_gravamen', IndicesGravamen::class)->middleware('permission:Consultas')->name('indices.gravamen');
     Route::get('indices_sentencia', IndicesSentencia::class)->middleware('permission:Consultas')->name('indices.sentencia');
