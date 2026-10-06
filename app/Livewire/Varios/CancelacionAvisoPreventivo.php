@@ -126,7 +126,15 @@ class CancelacionAvisoPreventivo extends Component
 
         $this->avisoCancelar = $this->vario->movimientoRegistral->movimientosHijos->first()->vario;
 
-        $this->vario->acto_contenido = 'CANCELACIÓN DE PRIMER AVISO PREVENTIVO';
+        if($this->vario->movimientoRegistral->servicio_nombre === 'Segundo aviso preventivo'){
+
+            $this->vario->acto_contenido = 'CANCELACIÓN DE SEGUNDO AVISO PREVENTIVO';
+
+        }else{
+
+            $this->vario->acto_contenido = 'CANCELACIÓN DE PRIMER AVISO PREVENTIVO';
+
+        }
 
         $this->cargarDocumentoEntrada($this->vario->movimientoRegistral);
 
