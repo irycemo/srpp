@@ -13,7 +13,6 @@ use App\Traits\Inscripciones\ConsultarArchivoTrait;
 use App\Traits\Inscripciones\DocumentoEntradaTrait;
 use App\Traits\Inscripciones\GuardarDocumentoEntradaTrait;
 use App\Traits\Inscripciones\Varios\VariosTrait;
-use Exception;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Log;
@@ -145,7 +144,6 @@ class PrimerAvisoPreventivo extends Component
             'fecha_inscripcion' => $this->vario->movimientoRegistral->fecha_inscripcion,
             'procedencia' => $this->vario->movimientoRegistral->procedencia,
             'numero_oficio' => $this->vario->movimientoRegistral->numero_oficio,
-            'folio_real' => $this->vario->movimientoRegistral->folio_real,
             'monto' => $this->vario->movimientoRegistral->monto,
             'usuario_asignado' => (new AsignacionService())->obtenerUltimoUsuarioConAsignacion($this->obtenerUsuarios()),
             'usuario_supervisor' => $this->obtenerSupervisor(),

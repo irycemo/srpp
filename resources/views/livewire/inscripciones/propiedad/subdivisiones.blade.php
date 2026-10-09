@@ -6,6 +6,10 @@
 
     </div>
 
+    @include('livewire.comun.documento_entrada_campos')
+
+    @include('livewire.varios.comun.datos-predio')
+
     @if($propiedad->movimientoRegistral->estado != 'elaborado')
 
         <div class="mb-5 bg-white rounded-lg p-2 space-y-2">
@@ -104,11 +108,11 @@
                 @if(!$propiedad->movimientoRegistral->documentoEntrada())
 
                     <x-button-blue
-                        wire:click="abrirModalDocumento"
+                        wire:click="abrirModalDocumentoEntrada"
                         wire:loading.attr="disabled"
-                        wire:target="abrirModalDocumento">
+                        wire:target="abrirModalDocumentoEntrada">
 
-                        <img wire:loading wire:target="abrirModalDocumento" class="mx-auto h-4 mr-1" src="{{ asset('storage/img/loading3.svg') }}" alt="Loading">
+                        <img wire:loading wire:target="abrirModalDocumentoEntrada" class="mx-auto h-4 mr-1" src="{{ asset('storage/img/loading3.svg') }}" alt="Loading">
 
                         Subir documento de entrada
 
@@ -118,11 +122,34 @@
 
                     <div class="inline-block">
 
-                        <x-link-blue target="_blank" href="{{ $propiedad->movimientoRegistral->documentoEntrada() }}">Ver documento de entrada</x-link-blue>
+                        <x-link-blue target="_blank" href="{{ $propiedad->movimientoRegistral->documentoEntrada() }}">Documento de entrada</x-link-blue>
 
                     </div>
 
+                    <x-button-red
+                        wire:click="eliminarDocumentoEntradaPDF"
+                        wire:confirm="¿Esta seguro que desea eliminar el documento de entrada?"
+                        wire:loading.attr="disabled"
+                        wire:target="eliminarDocumentoEntradaPDF">
+
+                        <img wire:loading wire:target="eliminarDocumentoEntradaPDF" class="mx-auto h-4 mr-1" src="{{ asset('storage/img/loading3.svg') }}" alt="Loading">
+
+                        Eliminar documento de entrada
+
+                    </x-button-red>
+
                 @endif
+
+                <x-button-blue
+                    wire:click="guardar"
+                    wire:loading.attr="disabled"
+                    wire:target="guardar">
+
+                    <img wire:loading wire:target="guardar" class="mx-auto h-4 mr-1" src="{{ asset('storage/img/loading3.svg') }}" alt="Loading">
+
+                    Guardar y continuar
+
+                </x-button-blue>
 
                 <x-button-green
                     wire:click="finalizar"

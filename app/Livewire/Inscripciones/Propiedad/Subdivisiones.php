@@ -3,6 +3,7 @@
 namespace App\Livewire\Inscripciones\Propiedad;
 
 use App\Constantes\Constantes;
+use App\Traits\Inscripciones\DocumentoEntradaTrait;
 use App\Http\Controllers\Subdivisiones\SubdivisionesController;
 use App\Http\Services\FolioRealService;
 use App\Models\Escritura;
@@ -11,6 +12,7 @@ use App\Models\FolioReal;
 use App\Models\Gravamen;
 use App\Models\Propiedad;
 use App\Traits\Inscripciones\ColindanciasTrait;
+use App\Traits\Inscripciones\GuardarDocumentoEntradaTrait;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Validation\Rule;
@@ -22,6 +24,8 @@ class Subdivisiones extends Component
 
     use WithFilePond;
     use ColindanciasTrait;
+    use DocumentoEntradaTrait;
+    use GuardarDocumentoEntradaTrait;
 
     public Propiedad $propiedad;
 
@@ -38,6 +42,8 @@ class Subdivisiones extends Component
 
     public $gravamenes;
     public $escritura;
+
+    public $movimientoRegistral;
 
     protected function rules(){
         return [
@@ -385,6 +391,10 @@ class Subdivisiones extends Component
             $this->propiedad->acto_contenido = 'SUBDIVISIÓN CON RESTO';
 
         }
+
+        $this->movimientoRegistral = $this->propiedad->movimientoRegistral;
+
+        $this->cargarDocumentoEntrada($this->movimientoRegistral);
 
     }
 

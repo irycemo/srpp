@@ -6,7 +6,7 @@
 
         <strong>Municipio</strong>
 
-        <p>{{ $vario->movimientoRegistral->folioReal->predio->municipio }}</p>
+        <p>{{ $movimientoRegistral->folioReal->predio->municipio }}</p>
 
     </div>
 
@@ -14,7 +14,7 @@
 
         <strong>Ciudad</strong>
 
-        <p>{{ $vario->movimientoRegistral->folioReal->predio->ciudad }}</p>
+        <p>{{ $movimientoRegistral->folioReal->predio->ciudad }}</p>
 
     </div>
 
@@ -22,7 +22,7 @@
 
         <strong>Localidad</strong>
 
-        <p>{{ $vario->movimientoRegistral->folioReal->predio->localidad }}</p>
+        <p>{{ $movimientoRegistral->folioReal->predio->localidad }}</p>
 
     </div>
 
@@ -30,7 +30,7 @@
 
         <strong>Código postal</strong>
 
-        <p>{{ $vario->movimientoRegistral->folioReal->predio->codigo_postal }}</p>
+        <p>{{ $movimientoRegistral->folioReal->predio->codigo_postal }}</p>
 
     </div>
 
@@ -38,7 +38,7 @@
 
         <strong>Tipo de asentamiento</strong>
 
-        <p>{{ $vario->movimientoRegistral->folioReal->predio->tipo_asentamiento }}</p>
+        <p>{{ $movimientoRegistral->folioReal->predio->tipo_asentamiento }}</p>
 
     </div>
 
@@ -46,7 +46,7 @@
 
         <strong>Nombre del asentamiento</strong>
 
-        <p>{{ $vario->movimientoRegistral->folioReal->predio->nombre_asentamiento }}</p>
+        <p>{{ $movimientoRegistral->folioReal->predio->nombre_asentamiento }}</p>
 
     </div>
 
@@ -54,7 +54,7 @@
 
         <strong>Tipo de vialidad</strong>
 
-        <p>{{ $vario->movimientoRegistral->folioReal->predio->tipo_vialidad }}</p>
+        <p>{{ $movimientoRegistral->folioReal->predio->tipo_vialidad }}</p>
 
     </div>
 
@@ -62,7 +62,7 @@
 
         <strong>Nombre de la vialidad</strong>
 
-        <p>{{ $vario->movimientoRegistral->folioReal->predio->nombre_vialidad }}</p>
+        <p>{{ $movimientoRegistral->folioReal->predio->nombre_vialidad }}</p>
 
     </div>
 
@@ -70,197 +70,197 @@
 
         <strong>Número exterior</strong>
 
-        <p>{{ $vario->movimientoRegistral->folioReal->predio->numero_exterior }}</p>
+        <p>{{ $movimientoRegistral->folioReal->predio->numero_exterior }}</p>
 
     </div>
 
-    @if($vario->movimientoRegistral->folioReal->predio->numero_interior)
+    @if($movimientoRegistral->folioReal->predio->numero_interior)
 
         <div class="rounded-lg bg-gray-100 py-1 px-2">
 
             <strong>Número interior</strong>
 
-            <p>{{ $vario->movimientoRegistral->folioReal->predio->numero_interior }}</p>
+            <p>{{ $movimientoRegistral->folioReal->predio->numero_interior }}</p>
 
         </div>
 
     @endif
 
-    @if($vario->movimientoRegistral->folioReal->predio->nombre_edificio)
+    @if($movimientoRegistral->folioReal->predio->nombre_edificio)
 
         <div class="rounded-lg bg-gray-100 py-1 px-2">
 
             <strong>Edificio</strong>
 
-            <p>{{ $vario->movimientoRegistral->folioReal->predio->nombre_edificio }}</p>
+            <p>{{ $movimientoRegistral->folioReal->predio->nombre_edificio }}</p>
 
         </div>
 
     @endif
 
-    @if($vario->movimientoRegistral->folioReal->predio->departamento_edificio)
+    @if($movimientoRegistral->folioReal->predio->departamento_edificio)
 
         <div class="rounded-lg bg-gray-100 py-1 px-2">
 
             <strong>Departamento</strong>
 
-            <p>{{ $vario->movimientoRegistral->folioReal->predio->departamento_edificio }}</p>
+            <p>{{ $movimientoRegistral->folioReal->predio->departamento_edificio }}</p>
 
         </div>
 
     @endif
 
-    @if($vario->movimientoRegistral->folioReal->predio->lote)
+    @if($movimientoRegistral->folioReal->predio->lote)
 
         <div class="rounded-lg bg-gray-100 py-1 px-2">
 
             <strong>Lote</strong>
 
-            <p>{{ $vario->movimientoRegistral->folioReal->predio->lote }}</p>
+            <p>{{ $movimientoRegistral->folioReal->predio->lote }}</p>
 
         </div>
 
     @endif
 
-    @if($vario->movimientoRegistral->folioReal->predio->manzana)
+    @if($movimientoRegistral->folioReal->predio->manzana)
 
         <div class="rounded-lg bg-gray-100 py-1 px-2">
 
             <strong>Manzana</strong>
 
-            <p>{{ $vario->movimientoRegistral->folioReal->predio->manzana }}</p>
+            <p>{{ $movimientoRegistral->folioReal->predio->manzana }}</p>
 
         </div>
 
     @endif
 
-    @if($vario->movimientoRegistral->folioReal->predio->ejido)
+    @if($movimientoRegistral->folioReal->predio->ejido)
 
         <div class="rounded-lg bg-gray-100 py-1 px-2">
 
             <strong>Ejido</strong>
 
-            <p>{{ $vario->movimientoRegistral->folioReal->predio->ejido }}</p>
+            <p>{{ $movimientoRegistral->folioReal->predio->ejido }}</p>
 
         </div>
 
     @endif
 
-    @if($vario->movimientoRegistral->folioReal->predio->parcela)
+    @if($movimientoRegistral->folioReal->predio->parcela)
 
         <div class="rounded-lg bg-gray-100 py-1 px-2">
 
             <strong>Parcela</strong>
 
-            <p>{{ $vario->movimientoRegistral->folioReal->predio->parcela }}</p>
+            <p>{{ $movimientoRegistral->folioReal->predio->parcela }}</p>
 
         </div>
 
     @endif
 
-    @if($vario->movimientoRegistral->folioReal->predio->solar)
+    @if($movimientoRegistral->folioReal->predio->solar)
 
         <div class="rounded-lg bg-gray-100 py-1 px-2">
 
             <strong>Solar</strong>
 
-            <p>{{ $vario->movimientoRegistral->folioReal->predio->solar }}</p>
+            <p>{{ $movimientoRegistral->folioReal->predio->solar }}</p>
 
         </div>
 
     @endif
 
-    @if($vario->movimientoRegistral->folioReal->predio->poblado)
+    @if($movimientoRegistral->folioReal->predio->poblado)
 
         <div class="rounded-lg bg-gray-100 py-1 px-2">
 
             <strong>Poblado</strong>
 
-            <p>{{ $vario->movimientoRegistral->folioReal->predio->poblado }}</p>
+            <p>{{ $movimientoRegistral->folioReal->predio->poblado }}</p>
 
         </div>
 
     @endif
 
-    @if($vario->movimientoRegistral->folioReal->predio->numero_exterior_2)
+    @if($movimientoRegistral->folioReal->predio->numero_exterior_2)
 
         <div class="rounded-lg bg-gray-100 py-1 px-2">
 
             <strong>Número exterior 2</strong>
 
-            <p>{{ $vario->movimientoRegistral->folioReal->predio->numero_exterior_2 }}</p>
+            <p>{{ $movimientoRegistral->folioReal->predio->numero_exterior_2 }}</p>
 
         </div>
 
     @endif
 
-    @if($vario->movimientoRegistral->folioReal->predio->numero_adicional)
+    @if($movimientoRegistral->folioReal->predio->numero_adicional)
 
         <div class="rounded-lg bg-gray-100 py-1 px-2">
 
             <strong>Número adicional</strong>
 
-            <p>{{ $vario->movimientoRegistral->folioReal->predio->numero_adicional }}</p>
+            <p>{{ $movimientoRegistral->folioReal->predio->numero_adicional }}</p>
 
         </div>
 
     @endif
 
-    @if($vario->movimientoRegistral->folioReal->predio->numero_adicional_2)
+    @if($movimientoRegistral->folioReal->predio->numero_adicional_2)
 
         <div class="rounded-lg bg-gray-100 py-1 px-2">
 
             <strong>Número adicional 2</strong>
 
-            <p>{{ $vario->movimientoRegistral->folioReal->predio->numero_adicional_2 }}</p>
+            <p>{{ $movimientoRegistral->folioReal->predio->numero_adicional_2 }}</p>
 
         </div>
 
     @endif
 
-    @if($vario->movimientoRegistral->folioReal->predio->lote_fraccionador)
+    @if($movimientoRegistral->folioReal->predio->lote_fraccionador)
 
         <div class="rounded-lg bg-gray-100 py-1 px-2">
 
             <strong>Lote del fraccionador</strong>
 
-            <p>{{ $vario->movimientoRegistral->folioReal->predio->lote_fraccionador }}</p>
+            <p>{{ $movimientoRegistral->folioReal->predio->lote_fraccionador }}</p>
 
         </div>
 
     @endif
 
-    @if($vario->movimientoRegistral->folioReal->predio->manzana_fraccionador)
+    @if($movimientoRegistral->folioReal->predio->manzana_fraccionador)
 
         <div class="rounded-lg bg-gray-100 py-1 px-2">
 
             <strong>Manzana del fraccionador</strong>
 
-            <p>{{ $vario->movimientoRegistral->folioReal->predio->manzana_fraccionador }}</p>
+            <p>{{ $movimientoRegistral->folioReal->predio->manzana_fraccionador }}</p>
 
         </div>
 
     @endif
 
-    @if($vario->movimientoRegistral->folioReal->predio->etapa_fraccionador)
+    @if($movimientoRegistral->folioReal->predio->etapa_fraccionador)
 
         <div class="rounded-lg bg-gray-100 py-1 px-2">
 
             <strong>Etapa del fraccionador</strong>
 
-            <p>{{ $vario->movimientoRegistral->folioReal->predio->etapa_fraccionador }}</p>
+            <p>{{ $movimientoRegistral->folioReal->predio->etapa_fraccionador }}</p>
 
         </div>
 
     @endif
 
-    @if($vario->movimientoRegistral->folioReal->predio->clave_edificio)
+    @if($movimientoRegistral->folioReal->predio->clave_edificio)
 
         <div class="rounded-lg bg-gray-100 py-1 px-2">
 
             <strong>Clave del edificio</strong>
 
-            <p>{{ $vario->movimientoRegistral->folioReal->predio->clave_edificio }}</p>
+            <p>{{ $movimientoRegistral->folioReal->predio->clave_edificio }}</p>
 
         </div>
 
@@ -270,29 +270,29 @@
 
         <strong>Superficie de terreno</strong>
 
-        <p>@if($vario->movimientoRegistral->folioReal->predio->unidad_area == 'Hectareas') {{ $vario->movimientoRegistral->folioReal->predio->superficie_terreno_formateada }} @else {{ $vario->movimientoRegistral->folioReal->predio->superficie_terreno }} @endif {{ $vario->movimientoRegistral->folioReal->predio->unidad_area }}</p>
+        <p>@if($movimientoRegistral->folioReal->predio->unidad_area == 'Hectareas') {{ $movimientoRegistral->folioReal->predio->superficie_terreno_formateada }} @else {{ $movimientoRegistral->folioReal->predio->superficie_terreno }} @endif {{ $movimientoRegistral->folioReal->predio->unidad_area }}</p>
 
     </div>
 
-    @if($vario->movimientoRegistral->folioReal->predio->observaciones)
+    @if($movimientoRegistral->folioReal->predio->observaciones)
 
         <div class="rounded-lg bg-gray-100 py-1 px-2 md:col-span-3 col-span-1 sm:col-span-2 lg:col-span-6">
 
             <strong>Observaciones</strong>
 
-            <p>{{ $vario->movimientoRegistral->folioReal->predio->observaciones }}</p>
+            <p>{{ $movimientoRegistral->folioReal->predio->observaciones }}</p>
 
         </div>
 
     @endif
 
-    @if($vario->movimientoRegistral->folioReal->predio->descripcion)
+    @if($movimientoRegistral->folioReal->predio->descripcion)
 
         <div class="rounded-lg bg-gray-100 py-1 px-2 md:col-span-3 col-span-1 sm:col-span-2 lg:col-span-6">
 
             <strong>Descripción</strong>
 
-            <p>{{ $vario->movimientoRegistral->folioReal->predio->descripcion }}</p>
+            <p>{{ $movimientoRegistral->folioReal->predio->descripcion }}</p>
 
         </div>
 
@@ -315,9 +315,9 @@
 
         <x-slot name="body">
 
-            @if($vario->movimientoRegistral->folioReal->predio->propietarios()->count() > 0)
+            @if($movimientoRegistral->folioReal->predio->propietarios()->count() > 0)
 
-                @foreach ($vario->movimientoRegistral->folioReal->predio->propietarios() as $propietario)
+                @foreach ($movimientoRegistral->folioReal->predio->propietarios() as $propietario)
 
                     <x-table.row >
 
