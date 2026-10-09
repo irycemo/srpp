@@ -2,6 +2,8 @@
 
     @include('livewire.comun.documento_entrada_campos')
 
+    @include('livewire.varios.comun.datos-predio')
+
     <div class="p-4 bg-white shadow-xl rounded-xl mb-5">
 
         <div class="flex gap-3 items-center w-full lg:w-1/2 justify-center mx-auto">

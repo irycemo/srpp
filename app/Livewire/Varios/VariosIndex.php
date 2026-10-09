@@ -45,6 +45,8 @@ class VariosIndex extends Component
 
         $this->años = Constantes::AÑOS;
 
+        $this->año = now()->format('Y');
+
         $this->motivos_rechazo = Constantes::RECHAZO_MOTIVOS;
 
         $this->distritos = Constantes::DISTRITOS;

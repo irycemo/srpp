@@ -7,6 +7,7 @@ use App\Http\Controllers\Varios\VariosController;
 use App\Http\Services\FolioRealService;
 use App\Models\Vario;
 use App\Traits\Inscripciones\ConsultarArchivoTrait;
+use App\Traits\Inscripciones\DocumentoEntradaTrait;
 use App\Traits\Inscripciones\GuardarDocumentoEntradaTrait;
 use App\Traits\Inscripciones\Varios\VariosTrait;
 use Exception;
@@ -25,6 +26,7 @@ class Varios extends Component
     use WithFilePond;
     use ConsultarArchivoTrait;
     use GuardarDocumentoEntradaTrait;
+    use DocumentoEntradaTrait;
 
     public $actos;
 
@@ -149,6 +151,8 @@ class Varios extends Component
             $this->actos = array_flip($this->actos);
 
         }
+
+        $this->cargarDocumentoEntrada($this->movimientoRegistral);
 
     }
 
