@@ -99,7 +99,7 @@ class FoliosReales extends Component
         try {
 
             $folioReal->update([
-                'matriz' => true,
+                'matriz' => ! $folioReal->matriz ,
                 'actualizado_por' => auth()->id()
             ]);
 

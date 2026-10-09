@@ -191,6 +191,21 @@
 
                                             @endif
 
+                                        @else
+
+                                            @can('Convertir en matriz')
+
+                                                <button
+                                                    wire:click="cambiarAFolioMatriz({{ $folio->id }})"
+                                                    wire:confirm="¿Esta seguro que desea convertir el folio en folio matriz?"
+                                                    wire:loading.attr="disabled"
+                                                    class="w-full text-left block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 focus:outline-none focus:bg-gray-100"
+                                                    role="menuitem">
+                                                    Revertir matriz
+                                                </button>
+
+                                            @endif
+
                                         @endif
 
                                         <a
