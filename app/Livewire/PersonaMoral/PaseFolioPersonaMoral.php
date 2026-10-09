@@ -13,6 +13,7 @@ use App\Models\MovimientoRegistral;
 use App\Traits\Inscripciones\FinalizarInscripcionTrait;
 use Illuminate\Support\Facades\Log;
 use App\Traits\Inscripciones\InscripcionesIndex;
+use App\Traits\Inscripciones\ReasignarmeMovimientoTrait;
 use App\Traits\Inscripciones\ReasignarUsuarioTrait;
 use App\Traits\Inscripciones\RechazarMovimientoTrait;
 use App\Traits\Inscripciones\RecibirDocumentoTrait;
@@ -27,6 +28,7 @@ class PaseFolioPersonaMoral extends Component
     use RecibirDocumentoTrait;
     use ReasignarUsuarioTrait;
     use FinalizarInscripcionTrait;
+    use ReasignarmeMovimientoTrait;
 
     public $supervisor;
 
@@ -97,6 +99,10 @@ class PaseFolioPersonaMoral extends Component
 
         $this->crearModeloVacio();
 
+        $this->años = Constantes::AÑOS;
+
+        $this->año = now()->format('Y');
+
         $this->motivos_rechazo = Constantes::RECHAZO_MOTIVOS;
 
         $this->usuarios_regionales = Constantes::USUARIOS_REGIONALES;
@@ -123,6 +129,14 @@ class PaseFolioPersonaMoral extends Component
                                                     ->where('folio', 1)
                                                     ->whereIn('estado', ['nuevo', 'correccion', 'elaborado'])
                                                     ->where('usuario_asignado', auth()->user()->id)
+                                                    ->when($this->filters['año'] && $this->filters['año'] != '', fn($q) => $q->where('año', $this->filters['año']))
+                                                    ->when($this->filters['tramite'] && $this->filters['tramite'] != '', fn($q) => $q->where('tramite', $this->filters['tramite']))
+                                                    ->when($this->filters['usuario'] && $this->filters['usuario'] != '', fn($q) => $q->where('usuario', $this->filters['usuario']))
+                                                    ->when($this->filters['folio_real'], function($q){
+                                                        $q->whereHas('folioRealPersona', function ($q){
+                                                            $q->where('folio', $this->filters['folio_real']);
+                                                        });
+                                                    })
                                                     ->where(function($q){
                                                         $q->whereNull('folio_real_persona')
                                                             ->orWhereHas('folioRealPersona', function($q){
@@ -145,6 +159,14 @@ class PaseFolioPersonaMoral extends Component
                                                     ->has('reformaMoral')
                                                     ->where('folio', 1)
                                                     ->where('usuario_supervisor', auth()->user()->id)
+                                                    ->when($this->filters['año'] && $this->filters['año'] != '', fn($q) => $q->where('año', $this->filters['año']))
+                                                    ->when($this->filters['tramite'] && $this->filters['tramite'] != '', fn($q) => $q->where('tramite', $this->filters['tramite']))
+                                                    ->when($this->filters['usuario'] && $this->filters['usuario'] != '', fn($q) => $q->where('usuario', $this->filters['usuario']))
+                                                    ->when($this->filters['folio_real'], function($q){
+                                                        $q->whereHas('folioRealPersona', function ($q){
+                                                            $q->where('folio', $this->filters['folio_real']);
+                                                        });
+                                                    })
                                                     ->where(function($q){
                                                         $q->whereNull('folio_real_persona')
                                                             ->orWhereHas('folioRealPersona', function($q){
@@ -166,6 +188,14 @@ class PaseFolioPersonaMoral extends Component
                                                 ->with('actualizadoPor:id,name', 'folioRealPersona:id,folio,estado', 'asignadoA:id,name')
                                                 ->has('reformaMoral')
                                                 ->where('folio', 1)
+                                                ->when($this->filters['año'] && $this->filters['año'] != '', fn($q) => $q->where('año', $this->filters['año']))
+                                                ->when($this->filters['tramite'] && $this->filters['tramite'] != '', fn($q) => $q->where('tramite', $this->filters['tramite']))
+                                                ->when($this->filters['usuario'] && $this->filters['usuario'] != '', fn($q) => $q->where('usuario', $this->filters['usuario']))
+                                                ->when($this->filters['folio_real'], function($q){
+                                                        $q->whereHas('folioRealPersona', function ($q){
+                                                            $q->where('folio', $this->filters['folio_real']);
+                                                        });
+                                                    })
                                                 ->where(function($q){
                                                     $q->whereNull('folio_real_persona')
                                                         ->orWhereHas('folioRealPersona', function($q){

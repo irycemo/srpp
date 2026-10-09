@@ -93,6 +93,40 @@
 
                     </x-input-group>
 
+                    <div class="mb-3">
+
+                        <span class="flex items-center justify-center text-lg text-gray-700 mb-5">Actores</span>
+
+                        <x-table>
+
+                            <x-slot name="head">
+                                <x-table.heading >Nombre / Razón social</x-table.heading>
+                                <x-table.heading >Actor</x-table.heading>
+                                <x-table.heading >Tipo deudor</x-table.heading>
+                            </x-slot>
+
+                            <x-slot name="body">
+
+                                @foreach ($gravamenCancelarMovimiento->gravamen->actores as $actor)
+
+                                    <x-table.row >
+
+                                        <x-table.cell>{{ $actor->persona->nombre }} {{ $actor->persona->ap_paterno }} {{ $actor->persona->ap_materno }} {{ $actor->persona->razon_social }}</x-table.cell>
+                                        <x-table.cell>{{ $actor->tipo_actor }}</x-table.cell>
+                                        <x-table.cell>{{ $actor->tipo_deudor ?? 'N/A' }}</x-table.cell>
+
+                                    </x-table.row>
+
+                                @endforeach
+
+                            </x-slot>
+
+                            <x-slot name="tfoot"></x-slot>
+
+                        </x-table>
+
+                    </div>
+
                 </div>
 
                 @if($cancelacion->acto_contenido == 'CANCELACIÓN PARCIAL DE GRAVAMEN')

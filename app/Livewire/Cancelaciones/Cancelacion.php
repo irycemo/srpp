@@ -239,7 +239,8 @@ class Cancelacion extends Component
 
         if(!$this->cancelacion->gravamen){
 
-            $this->gravamenCancelarMovimiento = MovimientoRegistral::where('folio_real', $this->cancelacion->movimientoRegistral->folio_real)
+            $this->gravamenCancelarMovimiento = MovimientoRegistral::with('gravamen.actores.persona')
+                                                                        ->where('folio_real', $this->cancelacion->movimientoRegistral->folio_real)
                                                                         ->where('tomo_gravamen', $this->cancelacion->movimientoRegistral->tomo_gravamen)
                                                                         ->where('registro_gravamen', $this->cancelacion->movimientoRegistral->registro_gravamen)
                                                                         ->whereHas('gravamen', function($q){
@@ -257,6 +258,8 @@ class Cancelacion extends Component
         }else{
 
             $this->gravamenCancelarMovimiento = $this->cancelacion->gravamenCancelado;
+
+            $this->gravamenCancelarMovimiento->load('gravamen.actores.persona');
 
         }
 

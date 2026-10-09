@@ -1,5 +1,15 @@
 <div>
 
+    @if($cargas_legales_flag)
+
+        <div class="bg-yellow-100 border border-yellow-400 text-yellow-700 px-4 py-3 rounded-lg font-semibold relative text-center mb-6" role="alert">
+
+            <span class="block sm:inline">EL folio real tiene cargas legales favor de verificar antes de inscribir.</span>
+
+        </div>
+
+    @endif
+
     @include('livewire.comun.documento_entrada_campos')
 
     <div class="bg-white rounded-lg p-4 shadow-lg mb-4">

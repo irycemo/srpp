@@ -35,6 +35,7 @@ class InscripcionGeneral extends Component
 
     public $partes_iguales;
     public $partes_iguales_flag = true;
+    public $cargas_legales_flag = false;
 
     public $movimientoRegistral;
 
@@ -828,6 +829,12 @@ class InscripcionGeneral extends Component
         $this->tipos_asentamientos = Constantes::TIPO_ASENTAMIENTO;
 
         $this->cargarDocumentoEntrada($this->inscripcion->movimientoRegistral);
+
+        if($this->inscripcion->movimientoRegistral->folioReal->gravamenes()->where('gravamens.estado', 'activo')->get() || $this->inscripcion->movimientoRegistral->folioReal->sentencias){
+
+            $this->cargas_legales_flag = true;
+
+        }
 
     }
 
