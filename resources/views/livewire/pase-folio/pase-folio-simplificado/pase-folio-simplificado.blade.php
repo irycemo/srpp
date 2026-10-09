@@ -41,6 +41,10 @@
 
                 </select>
 
+                <input type="number" wire:model.live.debounce.500ms="filters.tomo" placeholder="Tomo" class="bg-white rounded-full text-sm w-24">
+
+                <input type="number" wire:model.live.debounce.500ms="filters.registro" placeholder="Registro" class="bg-white rounded-full text-sm w-24">
+
                 <select class="bg-white rounded-full text-sm w-min" wire:model.live="filters.distrito">
 
                     <option value="">Distrito</option>

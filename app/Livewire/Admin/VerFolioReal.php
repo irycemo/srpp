@@ -128,4 +128,5 @@ class VerFolioReal extends Component
     {
         return view('livewire.admin.ver-folio-real')->extends('layouts.admin');
     }
+
 }
