@@ -2,6 +2,8 @@
 
     @include('livewire.comun.documento_entrada_campos')
 
+    @include('livewire.varios.comun.datos-predio')
+
     <div class="p-4 bg-white shadow-xl rounded-xl mb-5 space-y-2">
 
         <span class="flex items-center justify-center ext-gray-700">Datos del movimiento</span>

@@ -10,11 +10,15 @@
 
         @livewire('sentencias.cancelatoria', ['sentencia' => $this->sentencia])
 
-    @elseif(in_array($sentencia->acto_contenido, ['RESOLUCIÓN', 'DEMANDA', 'PROVIDENCIA PRECAUTORIA']))
+    @elseif(in_array($sentencia->acto_contenido, ['RESOLUCIÓN', 'PROVIDENCIA PRECAUTORIA']))
 
         @livewire('sentencias.bloqueadora', ['sentencia' => $this->sentencia])
 
     @else
+
+        @include('livewire.comun.documento_entrada_campos')
+
+        @include('livewire.varios.comun.datos-predio')
 
         <div class="p-4 bg-white shadow-xl rounded-xl mb-5">
 

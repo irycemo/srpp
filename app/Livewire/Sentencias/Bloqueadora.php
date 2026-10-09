@@ -118,10 +118,6 @@ class Bloqueadora extends Component
 
             $this->dispatch('imprimir_documento', ['caratula' => $this->sentencia->id]);
 
-            sleep(2);
-
-            return redirect()->route('sentencias');
-
         } catch (\Throwable $th) {
             Log::error("Error al finalizar inscripcion de sentencia por el usuario: (id: " . auth()->user()->id . ") " . auth()->user()->name . ". " . $th);
             $this->dispatch('mostrarMensaje', ['error', "Ha ocurrido un error."]);

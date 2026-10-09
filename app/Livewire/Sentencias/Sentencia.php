@@ -3,6 +3,8 @@
 namespace App\Livewire\Sentencias;
 
 use Livewire\Component;
+use App\Traits\Inscripciones\GuardarDocumentoEntradaTrait;
+use App\Traits\Inscripciones\DocumentoEntradaTrait;
 use Livewire\Attributes\On;
 use App\Constantes\Constantes;
 use App\Traits\Inscripciones\ConsultarArchivoTrait;
@@ -13,6 +15,10 @@ class Sentencia extends Component
 
     use SentenciaTrait;
     use ConsultarArchivoTrait;
+    use DocumentoEntradaTrait;
+    use GuardarDocumentoEntradaTrait;
+
+    public $movimientoRegistral;
 
     protected function rules(){
         return [
@@ -34,6 +40,10 @@ class Sentencia extends Component
         $this->consultarArchivo($this->sentencia->movimientoRegistral);
 
         $this->actos = Constantes::ACTOS_INSCRIPCION_SENTENCIAS;
+
+        $this->movimientoRegistral = $this->sentencia->movimientoRegistral;
+
+        $this->cargarDocumentoEntrada($this->movimientoRegistral);
 
     }
 

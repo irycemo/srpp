@@ -43,6 +43,8 @@ class SentenciasIndex extends Component
 
         $this->años = Constantes::AÑOS;
 
+        $this->año = now()->format('Y');
+
         $this->motivos_rechazo = Constantes::RECHAZO_MOTIVOS;
 
         $this->distritos = Constantes::DISTRITOS;
@@ -75,7 +77,7 @@ class SentenciasIndex extends Component
                                                     ->with('sentencia:id,movimiento_registral_id', 'asignadoA:id,name', 'actualizadoPor:id,name', 'folioReal:id,folio')
                                                     ->where('usuario_asignado', auth()->id())
                                                     ->whereHas('folioReal', function($q){
-                                                        $q->whereIn('estado', ['activo', 'centinela']);
+                                                        $q->whereIn('estado', ['activo', 'centinela', 'bloqueado']);
                                                     })
                                                     ->when(auth()->user()->ubicacion == 'Regional 4', function($q){
                                                         $q->where('distrito', 2);
@@ -230,4 +232,5 @@ class SentenciasIndex extends Component
 
         return view('livewire.sentencias.sentencias-index', compact('movimientos'))->extends('layouts.admin');
     }
+
 }
