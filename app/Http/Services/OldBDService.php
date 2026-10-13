@@ -41,12 +41,12 @@ class OldBDService{
 
             if($propietario->nombre2 && strlen(trim($propietario->nombre2)) > 0){
 
-                $nombre = $nombre . ' ' . $propietario->nombre2;
+                $nombre = $nombre . ' ' . trim($propietario->nombre2);
 
             }
 
             $array [] = [
-                'nombre' => $nombre,
+                'nombre' => trim($nombre),
                 'ap_paterno' => trim($propietario->paterno),
                 'ap_materno' => trim($propietario->materno),
             ];
