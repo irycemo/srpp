@@ -3,6 +3,8 @@
 namespace App\Livewire\Consulta;
 
 use Livewire\Component;
+use App\Models\Propiedad;
+use App\Models\Certificacion;
 use App\Traits\Inscripciones\RechazarMovimientoTrait;
 use App\Traits\MovimientoRegistral\CambiarAntecedenteTrait;
 use Livewire\WithPagination;
@@ -38,6 +40,103 @@ class ConsultasTramite extends Component
     public $modeloId;
     public $movimientos = [];
     public $modelo_editar;
+
+    public $modal_certificacion = false;
+    public $modal_propiedad = false;
+    public $numero_paginas;
+    public $numero_inmuebles;
+
+    public function abrirModalCertifiacion(MovimientoRegistral $movimientoRegistral){
+
+        $this->movimientoRegistral = $movimientoRegistral;
+
+        $this->modal_certificacion = true;
+
+    }
+
+    public function abrirModalPropiedad(MovimientoRegistral $movimientoRegistral){
+
+        $this->movimientoRegistral = $movimientoRegistral;
+
+        $this->modal_propiedad = true;
+
+    }
+
+    public function actualizarCertificacion(){
+
+        $this->validate(['numero_paginas' => 'required']);
+
+        if(!in_array($this->movimientoRegistral->estado, ['nuevo', 'elaborado'])){
+
+            $this->dispatch('mostrarMensaje', ['warning', "El trámite debe estar en estado nuevo o elaborado."]);
+
+            $this->modal_certificacion = false;
+
+            $this->reset('numero_paginas');
+
+            return;
+
+        }
+
+        if($this->numero_paginas >= $this->movimientoRegistral->certificacion->numero_paginas){
+
+            $this->dispatch('mostrarMensaje', ['warning', "El número de paginas no puede ser mayor o igual al registrado."]);
+
+            $this->modal_certificacion = false;
+
+            $this->reset('numero_paginas');
+
+            return;
+
+        }
+
+        $this->movimientoRegistral->certificacion->update(['numero_paginas' => $this->numero_paginas]);
+
+        $this->dispatch('mostrarMensaje', ['success', "Se actualizó la información con éxito."]);
+
+        $this->modal_certificacion = false;
+
+        $this->reset('numero_paginas');
+
+    }
+
+    public function actualizarPropiedad(){
+
+        $this->validate(['numero_inmuebles' => 'required']);
+
+        if(!in_array($this->movimientoRegistral->estado, ['nuevo'])){
+
+            $this->dispatch('mostrarMensaje', ['warning', "El trámite debe estar en estado nuevo."]);
+
+            $this->modal_propiedad = false;
+
+            $this->reset('numero_inmuebles');
+
+            return;
+
+        }
+
+        if($this->numero_inmuebles >= $this->movimientoRegistral->inscripcionPropiedad->numero_inmuebles){
+
+            $this->dispatch('mostrarMensaje', ['warning', "El número de inmuebles no puede ser mayor o igual al registrado."]);
+
+            $this->modal_propiedad = false;
+
+            $this->reset('numero_inmuebles');
+
+            return;
+
+        }
+
+        $this->movimientoRegistral->inscripcionPropiedad->update(['numero_inmuebles' => $this->numero_inmuebles]);
+
+        $this->dispatch('mostrarMensaje', ['success', "Se actualizó la información con éxito."]);
+
+        $this->modal_propiedad = false;
+
+        $this->reset('numero_inmuebles');
+
+    }
 
     public function crearModeloVacio(){
         $this->modelo_editar = MovimientoRegistral::make();

@@ -176,6 +176,30 @@
 
                                         @if(auth()->user()->hasRole('Administrador'))
 
+                                            @if($movimientoRegistral->certificacion && in_array($movimientoRegistral->certificacion->servicio, ['DL13', 'DL14']))
+
+                                                <button
+                                                    wire:click="abrirModalCertifiacion({{ $movimientoRegistral->id }})"
+                                                    wire:loading.attr="disabled"
+                                                    class="w-full text-left block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 focus:outline-none focus:bg-gray-100"
+                                                    role="menuitem">
+                                                    Corregir paginas
+                                                </button>
+
+                                            @endif
+
+                                            @if($movimientoRegistral->inscripcionPropiedad && in_array($movimientoRegistral->inscripcionPropiedad->servicio, ['D127']))
+
+                                                <button
+                                                    wire:click="abrirModalPropiedad({{ $movimientoRegistral->id }})"
+                                                    wire:loading.attr="disabled"
+                                                    class="w-full text-left block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 focus:outline-none focus:bg-gray-100"
+                                                    role="menuitem">
+                                                    Corregir numero de inmuebles
+                                                </button>
+
+                                            @endif
+
                                             <button
                                                 wire:click="$set('modal2', '!modal2')"
                                                 wire:loading.attr="disabled"
@@ -515,5 +539,121 @@
     @include('livewire.comun.inscripciones.modal-cambiar-antecedente')
 
     @include('livewire.comun.inscripciones.modal-rechazar')
+
+    <x-dialog-modal wire:model="modal_certificacion" maxWidth="sm">
+
+        <x-slot name="title">
+            Corregir número de páginas
+        </x-slot>
+
+        <x-slot name="content">
+
+            <div class="flex flex-col md:flex-row justify-between md:space-x-3 mb-5">
+
+                <div class="flex-auto mr-1 ">
+
+                    <div>
+
+                        <Label>Número de paginas</Label>
+
+                    </div>
+
+                    <div>
+
+                        <input type="number" class="bg-white rounded text-sm w-full" wire:model="numero_paginas">
+
+                    </div>
+
+                    <div>
+
+                        @error('numero_paginas') <span class="error text-sm text-red-500">{{ $message }}</span> @enderror
+
+                    </div>
+
+                </div>
+
+            </div>
+
+        </x-slot>
+
+        <x-slot name="footer">
+
+            <x-secondary-button
+                wire:click="$toggle('modal_certificacion')"
+                wire:loading.attr="disabled"
+            >
+                No
+            </x-secondary-button>
+
+            <x-danger-button
+                class="ml-2"
+                wire:click="actualizarCertificacion"
+                wire:loading.attr="disabled"
+                wire:target="actualizarCertificacion"
+            >
+                Actualizar
+            </x-danger-button>
+
+        </x-slot>
+
+    </x-dialog-modal>
+
+     <x-dialog-modal wire:model="modal_propiedad" maxWidth="sm">
+
+        <x-slot name="title">
+            Corregir número de inmuebles
+        </x-slot>
+
+        <x-slot name="content">
+
+            <div class="flex flex-col md:flex-row justify-between md:space-x-3 mb-5">
+
+                <div class="flex-auto mr-1 ">
+
+                    <div>
+
+                        <Label>Número de inmuebles</Label>
+
+                    </div>
+
+                    <div>
+
+                        <input type="number" class="bg-white rounded text-sm w-full" wire:model="numero_inmuebles">
+
+                    </div>
+
+                    <div>
+
+                        @error('numero_inmuebles') <span class="error text-sm text-red-500">{{ $message }}</span> @enderror
+
+                    </div>
+
+                </div>
+
+            </div>
+
+        </x-slot>
+
+        <x-slot name="footer">
+
+            <x-secondary-button
+                wire:click="$toggle('modal_propiedad')"
+                wire:loading.attr="disabled"
+            >
+                No
+            </x-secondary-button>
+
+            <x-danger-button
+                class="ml-2"
+                wire:click="actualizarPropiedad"
+                wire:loading.attr="disabled"
+                wire:target="actualizarPropiedad"
+            >
+                Actualizar
+            </x-danger-button>
+
+        </x-slot>
+
+    </x-dialog-modal>
 
 </div>
