@@ -26,6 +26,7 @@ class FoliosReales extends Component
     public $usuarios;
 
     public $modalReasignar = false;
+    public $modal_antecedente = false;
 
     public $usuario_id;
 
@@ -37,6 +38,15 @@ class FoliosReales extends Component
         'numero_propiedad' => '',
         'distrito' => '',
     ];
+
+    protected function rules(){
+        return [
+            'modelo_editar.tomo_antecedente' => 'required',
+            'modelo_editar.registro_antecedente' => 'required',
+            'modelo_editar.numero_propiedad_antecedente' => 'required',
+            'modelo_editar.distrito_antecedente' => 'required',
+         ];
+    }
 
     public function updatedFilters() { $this->resetPage(); }
 
@@ -126,6 +136,15 @@ class FoliosReales extends Component
 
     }
 
+    public function abrirModalAntecedente(FolioReal $modelo){
+
+        if($this->modelo_editar->isNot($modelo))
+            $this->modelo_editar = $modelo;
+
+        $this->modal_antecedente = true;
+
+    }
+
     public function reasignar(){
 
         try {
@@ -145,6 +164,68 @@ class FoliosReales extends Component
 
             $this->dispatch('mostrarMensaje', ['error', "Hubo un error."]);
             Log::error("Error al reasignar folio real por el usuario: (id: " . auth()->user()->id . ") " . auth()->user()->name . ". " . $th);
+
+        }
+
+    }
+
+    public function cambiarAntecedente(){
+
+        $this->validate();
+
+        try {
+
+            $folio_existente = FolioReal::where('tomo_antecedente', $this->modelo_editar->tomo_antecedente)
+                                            ->where('registro_antecedente', $this->modelo_editar->registro_antecedente)
+                                            ->where('numero_propiedad_antecedente', $this->modelo_editar->numero_propiedad_antecedente)
+                                            ->where('distrito_antecedente', $this->modelo_editar->distrito_antecedente)
+                                            ->where('id', '!=', $this->modelo_editar->id)
+                                            ->first();
+
+            if($folio_existente){
+
+                throw new GeneralException('Ya existe un folio real con el antecedente ingresado.');
+
+            }
+
+            DB::transaction(function () {
+
+                foreach ($this->modelo_editar->movimientosRegistrales as $movimiento) {
+
+                    $movimiento->update([
+                        'tomo' => $this->modelo_editar->tomo_antecedente,
+                        'registro' => $this->modelo_editar->registro_antecedente,
+                        'distrito' => $this->modelo_editar->distrito_antecedente,
+                        'numero_propiedad' => $this->modelo_editar->numero_propiedad_antecedente,
+                    ]);
+
+                }
+
+                $this->modelo_editar->save();
+
+            });
+
+            $this->dispatch('mostrarMensaje', ['success', 'El antecedente se cambió con éxito.']);
+
+            $this->modal_antecedente = false;
+
+        } catch (GeneralException $ex) {
+
+            $this->dispatch('mostrarMensaje', ['warning', $ex->getMessage()]);
+
+        } catch (\Throwable $th) {
+
+            $this->dispatch('mostrarMensaje', ['error', "Hubo un error."]);
+
+            Log::error(
+                "Error al cambiar antecedente de folio.",
+                [
+                    'usuario' => auth()->user()->name,
+                    'message' => $th->getMessage(),
+                    'folio real' => $this->modelo_editar,
+                    'trace' => $th
+                ]
+            );
 
         }
 

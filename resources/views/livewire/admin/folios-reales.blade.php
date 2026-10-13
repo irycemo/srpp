@@ -258,6 +258,14 @@
 
                                         @endif
 
+                                        <button
+                                            wire:click="abrirModalAntecedente({{ $folio->id }})"
+                                            wire:loading.attr="disabled"
+                                            class="w-full text-left block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 focus:outline-none focus:bg-gray-100"
+                                            role="menuitem">
+                                            Cambiar antecedente
+                                        </button>
+
                                     </div>
 
                                 </div>
@@ -356,6 +364,88 @@
                     wire:click="$toggle('modalReasignar')"
                     wire:loading.attr="disabled"
                     wire:target="$toggle('modalReasignar')"
+                    type="button">
+                    Cerrar
+                </x-button-red>
+
+            </div>
+
+        </x-slot>
+
+    </x-dialog-modal>
+
+    <x-dialog-modal wire:model="modal_antecedente" maxWidth="sm">
+
+        <x-slot name="title">
+
+            Cambiar antecedente
+
+        </x-slot>
+
+        <x-slot name="content">
+
+            <div class="flex flex-col md:flex-row justify-between gap-3 mb-3">
+
+                <x-input-group for="modelo_editar.tomo_antecedente" label="Tomo" :error="$errors->first('modelo_editar.tomo_antecedente')" class="w-full">
+
+                    <x-input-text type="number" id="modelo_editar.tomo_antecedente" wire:model="modelo_editar.tomo_antecedente" />
+
+                </x-input-group>
+
+                <x-input-group for="modelo_editar.registro_antecedente" label="Registro" :error="$errors->first('modelo_editar.registro_antecedente')" class="w-full">
+
+                    <x-input-text type="number" id="modelo_editar.registro_antecedente" wire:model="modelo_editar.registro_antecedente" />
+
+                </x-input-group>
+
+            </div>
+
+            <div class="flex flex-col md:flex-row justify-between gap-3 mb-3">
+
+                <x-input-group for="modelo_editar.numero_propiedad_antecedente" label="Número de propiedad" :error="$errors->first('modelo_editar.numero_propiedad_antecedente')" class="w-full">
+
+                    <x-input-text type="number" id="modelo_editar.numero_propiedad_antecedente" wire:model="modelo_editar.numero_propiedad_antecedente" />
+
+                </x-input-group>
+
+                <x-input-group for="modelo_editar.distrito_antecedente" label="Distrito" :error="$errors->first('modelo_editar.distrito_antecedente')" class="w-full">
+
+                    <x-input-select id="modelo_editar.distrito_antecedente" wire:model="modelo_editar.distrito_antecedente" class="w-full">
+
+                        <option value="">Seleccione una opción</option>
+
+                        @foreach ($distritos as $key => $value)
+
+                            <option value="{{ $key }}">{{ $value }}</option>
+
+                        @endforeach
+
+                    </x-input-select>
+
+                </x-input-group>
+
+            </div>
+
+        </x-slot>
+
+        <x-slot name="footer">
+
+            <div class="flex gap-3">
+
+                <x-button-blue
+                    wire:click="cambiarAntecedente"
+                    wire:loading.attr="disabled"
+                    wire:target="cambiarAntecedente">
+
+                    <img wire:loading wire:target="cambiarAntecedente" class="mx-auto h-4 mr-1" src="{{ asset('storage/img/loading3.svg') }}" alt="Loading">
+
+                    <span>Actualizar</span>
+                </x-button-blue>
+
+                <x-button-red
+                    wire:click="$toggle('modal_antecedente')"
+                    wire:loading.attr="disabled"
+                    wire:target="$toggle('modal_antecedente')"
                     type="button">
                     Cerrar
                 </x-button-red>
