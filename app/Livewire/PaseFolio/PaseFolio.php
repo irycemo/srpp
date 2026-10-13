@@ -3,6 +3,7 @@
 namespace App\Livewire\PaseFolio;
 
 use App\Constantes\Constantes;
+use App\Models\Candidato;
 use App\Exceptions\GeneralException;
 use App\Http\Controllers\PaseFolio\PaseFolioController;
 use App\Http\Services\AsignacionService;
@@ -448,6 +449,18 @@ class PaseFolio extends Component
     public function generarFolioRealAutomatico(){
 
         try {
+
+            $candidato = Candidato::where('tomo', $this->modelo_editar->tomo)
+                                    ->where('registro', $this->modelo_editar->registro)
+                                    ->where('distrito', $this->modelo_editar->getRawOriginal('distrito'))
+                                    ->where('numero_propiedad', $this->modelo_editar->numero_propiedad)
+                                    ->first();
+
+            if(! $candidato){
+
+                throw new GeneralException('El antecedente no es candidato a esta función.');
+
+            }
 
             $folio_real_existente = FolioReal::where('tomo_antecedente', $this->modelo_editar->tomo)
                                         ->where('registro_antecedente', $this->modelo_editar->registro)
