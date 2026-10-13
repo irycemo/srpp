@@ -126,13 +126,36 @@ class Subdivisiones extends Component
 
         if(!$this->propiedad->movimientoRegistral->documentoEntrada()){
 
-            $this->dispatch('mostrarMensaje', ['error', "Debe subir el documento de entrada."]);
+            $this->dispatch('mostrarMensaje', ['warning', "Debe subir el documento de entrada."]);
 
             return;
 
         }
 
         $this->modalContraseña = true;
+
+    }
+
+    public function guardar(){
+
+        try {
+
+            if($this->propiedad->acto_contenido === 'SUBDIVISIÓN CON RESTO'){
+
+                $this->guardarColindancias($this->propiedad->movimientoRegistral->folioReal->predio);
+
+            }
+
+            $this->propiedad->save();
+
+            $this->dispatch('mostrarMensaje', ['success', "La información se guardó con éxito."]);
+
+        } catch (\Throwable $th) {
+
+            Log::error("Error al guardar subdivisión por el usuario: (id: " . auth()->user()->id . ") " . auth()->user()->name . ". " . $th);
+            $this->dispatch('mostrarMensaje', ['error', "Hubo un error"]);
+
+        }
 
     }
 
@@ -395,6 +418,8 @@ class Subdivisiones extends Component
         $this->movimientoRegistral = $this->propiedad->movimientoRegistral;
 
         $this->cargarDocumentoEntrada($this->movimientoRegistral);
+
+        $this->updatedPropiedadActoContenido();
 
     }
 

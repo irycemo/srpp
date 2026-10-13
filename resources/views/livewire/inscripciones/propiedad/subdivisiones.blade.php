@@ -264,6 +264,8 @@
 
     @endif
 
+    @include('livewire.comun.inscripciones.modal-guardar_documento_entrada_pdf')
+
     <x-dialog-modal wire:model="modalDocumento" maxWidth="sm">
 
         <x-slot name="title">
