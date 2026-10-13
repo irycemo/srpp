@@ -830,7 +830,7 @@ class InscripcionGeneral extends Component
 
         $this->cargarDocumentoEntrada($this->inscripcion->movimientoRegistral);
 
-        if($this->inscripcion->movimientoRegistral->folioReal->gravamenes()->where('gravamens.estado', 'activo')->get() || $this->inscripcion->movimientoRegistral->folioReal->sentencias){
+        if($this->inscripcion->movimientoRegistral->folioReal->gravamenes()->where('gravamens.estado', 'activo')->count() || $this->inscripcion->movimientoRegistral->folioReal->sentencias->count()){
 
             $this->cargas_legales_flag = true;
 
