@@ -250,6 +250,76 @@ class ConsultasTramite extends Component
 
     }
 
+    public function reactivarTramtie(MovimientoRegistral $movimientoRegistral){
+
+        try {
+
+            if($movimientoRegistral->certificacion->folio_carpeta_copias){
+
+                $movimientoRegistral->update([
+                    'estado' => 'elaborado',
+                    'fecha_entrega' => $this->calcularFechaEntrega($movimientoRegistral->tipo_servicio)
+                ]);
+
+            }else{
+
+                $movimientoRegistral->update([
+                    'estado' => 'nuevo',
+                    'fecha_entrega' => $this->calcularFechaEntrega($movimientoRegistral->tipo_servicio)
+                ]);
+
+            }
+
+            $this->dispatch('mostrarMensaje', ['success', "El trámite se reactivó con éxito."]);
+
+        } catch (\Throwable $th) {
+            Log::error("Error al reactivar trámite por el usuario: (id: " . auth()->user()->id . ") " . auth()->user()->name . ". " . $th);
+            $this->dispatch('mostrarMensaje', ['error', "Ha ocurrido un error."]);
+        }
+
+    }
+
+    public function calcularFechaEntrega(string $tipo_servicio):string
+    {
+
+        if($tipo_servicio == 'ordinario'){
+
+            $actual = now();
+
+            for ($i=0; $i < 5; $i++) {
+
+                $actual->addDays(1);
+
+                while($actual->isWeekend()){
+
+                    $actual->addDay();
+
+                }
+
+            }
+
+            return $actual->toDateString();
+
+        }elseif($tipo_servicio == 'urgente'){
+
+            $actual = now()->addDays(1);
+
+            while($actual->isWeekend()){
+
+                $actual->addDay();
+
+            }
+
+            return $actual->toDateString();
+
+        }else{
+
+            return now()->toDateString();
+
+        }
+
+    }
+
     public function mount(){
 
         $this->crearModeloVacio();

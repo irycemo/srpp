@@ -186,6 +186,22 @@
                                                     Corregir paginas
                                                 </button>
 
+                                                @if(in_array($movimientoRegistral->estado, ['caducado', 'expirado', 'rechazado']))
+
+                                                    @can('Reactivar trámite')
+
+                                                        <button
+                                                            wire:click="reactivarTramtie({{$movimientoRegistral->id}})"
+                                                            wire:loading.attr="disabled"
+                                                            class="w-full text-left block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 focus:outline-none focus:bg-gray-100"
+                                                            role="menuitem">
+                                                            Reactivar
+                                                        </button>
+
+                                                    @endcan
+
+                                                @endif
+
                                             @endif
 
                                             @if($movimientoRegistral->inscripcionPropiedad && in_array($movimientoRegistral->inscripcionPropiedad->servicio, ['D127', 'D121', 'D120', 'D123', 'D122', 'D119', 'D124', 'D125', 'D126']))
