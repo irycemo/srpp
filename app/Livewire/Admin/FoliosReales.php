@@ -11,6 +11,7 @@ use App\Models\User;
 use App\Traits\ComponentesTrait;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
+use Illuminate\Validation\Rule;
 use Livewire\Component;
 use Livewire\WithPagination;
 
@@ -41,9 +42,9 @@ class FoliosReales extends Component
 
     protected function rules(){
         return [
-            'modelo_editar.tomo_antecedente' => 'required',
-            'modelo_editar.registro_antecedente' => 'required',
-            'modelo_editar.numero_propiedad_antecedente' => 'required',
+            'modelo_editar.tomo_antecedente' => ['nullable', Rule::requiredIf($this->modelo_editar->registro_antecedente || $this->modelo_editar->numero_propiedad_antecedente)],
+            'modelo_editar.registro_antecedente' => ['nullable', Rule::requiredIf($this->modelo_editar->tomo_antecedente || $this->modelo_editar->numero_propiedad_antecedente)],
+            'modelo_editar.numero_propiedad_antecedente' => ['nullable', Rule::requiredIf($this->modelo_editar->tomo_antecedente || $this->modelo_editar->registro_antecedente)],
             'modelo_editar.distrito_antecedente' => 'required',
          ];
     }
