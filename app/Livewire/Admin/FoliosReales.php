@@ -176,16 +176,20 @@ class FoliosReales extends Component
 
         try {
 
-            $folio_existente = FolioReal::where('tomo_antecedente', $this->modelo_editar->tomo_antecedente)
-                                            ->where('registro_antecedente', $this->modelo_editar->registro_antecedente)
-                                            ->where('numero_propiedad_antecedente', $this->modelo_editar->numero_propiedad_antecedente)
-                                            ->where('distrito_antecedente', $this->modelo_editar->distrito_antecedente)
-                                            ->where('id', '!=', $this->modelo_editar->id)
-                                            ->first();
+            if($this->modelo_editar->tomo_antecedente && $this->modelo_editar->registro_antecedente && $this->modelo_editar->numero_propiedad_antecedente){
 
-            if($folio_existente){
+                $folio_existente = FolioReal::where('tomo_antecedente', $this->modelo_editar->tomo_antecedente)
+                                                ->where('registro_antecedente', $this->modelo_editar->registro_antecedente)
+                                                ->where('numero_propiedad_antecedente', $this->modelo_editar->numero_propiedad_antecedente)
+                                                ->where('distrito_antecedente', $this->modelo_editar->distrito_antecedente)
+                                                ->where('id', '!=', $this->modelo_editar->id)
+                                                ->first();
 
-                throw new GeneralException('Ya existe un folio real con el antecedente ingresado.');
+                if($folio_existente){
+
+                    throw new GeneralException('Ya existe un folio real con el antecedente ingresado.');
+
+                }
 
             }
 
