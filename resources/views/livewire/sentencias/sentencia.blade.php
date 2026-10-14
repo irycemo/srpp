@@ -178,6 +178,52 @@
 
         @endif
 
+        <x-dialog-modal wire:model="modalContraseña" maxWidth="sm">
+
+            <x-slot name="title">
+
+                Ingresa tu contraseña
+
+            </x-slot>
+
+            <x-slot name="content">
+
+                <x-input-group for="contraseña" label="Contraseña" :error="$errors->first('contraseña')" class="w-full">
+
+                    <x-input-text type="password" id="contraseña" wire:model="contraseña" />
+
+                </x-input-group>
+
+            </x-slot>
+
+            <x-slot name="footer">
+
+                <div class="flex gap-3">
+
+                    <x-button-blue
+                        wire:click="inscribir"
+                        wire:loading.attr="disabled"
+                        wire:target="inscribir">
+
+                        <img wire:loading wire:target="inscribir" class="mx-auto h-4 mr-1" src="{{ asset('storage/img/loading3.svg') }}" alt="Loading">
+
+                        <span>Ingresar contraseña</span>
+                    </x-button-blue>
+
+                    <x-button-red
+                        wire:click="$toggle('modalContraseña')"
+                        wire:loading.attr="disabled"
+                        wire:target="$toggle('modalContraseña')"
+                        type="button">
+                        Cerrar
+                    </x-button-red>
+
+                </div>
+
+            </x-slot>
+
+        </x-dialog-modal>
+
     @endif
 
     @include('livewire.comun.inscripciones.modal-guardar_documento_entrada_pdf')
