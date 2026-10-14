@@ -20,11 +20,11 @@
 
         @include('livewire.varios.comun.datos-predio')
 
-        <div class="p-4 bg-white shadow-xl rounded-xl mb-5">
+        <div class="p-4 bg-white shadow-xl rounded-xl mb-5 space-y-2">
 
             <span class="flex items-center justify-center ext-gray-700">Datos del movimiento</span>
 
-            <div class="flex gap-3 items-center w-full lg:w-1/2 justify-center mx-auto mb-4">
+            <div class="flex gap-3 items-center w-full lg:w-1/2 justify-center mx-auto">
 
                 <x-input-group for="sentencia.acto_contenido" label="Acto contenido" :error="$errors->first('sentencia.acto_contenido')" class="w-full">
 
@@ -44,7 +44,139 @@
 
             </div>
 
+            <div class="flex gap-3 items-center w-full lg:w-1/2 justify-center mx-auto">
+
+                <x-input-group for="sentencia.tipo" label="Tipo" :error="$errors->first('sentencia.tipo')" class="w-full">
+
+                    <x-input-text id="sentencia.tipo" wire:model="sentencia.tipo" />
+
+                </x-input-group>
+
+            </div>
+
+            <div class="flex gap-3 items-center w-full lg:w-1/2 justify-center mx-auto ">
+
+                <x-input-group for="sentencia.expediente" label="Expediente" :error="$errors->first('sentencia.expediente')" class="w-full">
+
+                    <x-input-text id="sentencia.expediente" wire:model="sentencia.expediente" />
+
+                </x-input-group>
+
+                <x-input-group for="sentencia.hojas" label="Hojas" :error="$errors->first('sentencia.hojas')" class="w-full">
+
+                    <x-input-text type="number" id="sentencia.hojas" wire:model="sentencia.hojas" />
+
+                </x-input-group>
+
+                <x-input-group for="sentencia.tomo" label="Tomo" :error="$errors->first('sentencia.tomo')" class="w-full">
+
+                    <x-input-text id="sentencia.tomo" wire:model="sentencia.tomo" />
+
+                </x-input-group>
+
+                <x-input-group for="sentencia.registro" label="Registro" :error="$errors->first('sentencia.registro')" class="w-full">
+
+                    <x-input-text id="sentencia.registro" wire:model="sentencia.registro" />
+
+                </x-input-group>
+
+            </div>
+
+            <div class="flex gap-3 items-center w-full lg:w-1/2 justify-center mx-auto">
+
+                <x-input-group for="sentencia.descripcion" label="Comentario del movimiento" :error="$errors->first('sentencia.descripcion')" class="w-full">
+
+                    <textarea rows="3" class="w-full bg-white rounded" wire:model="sentencia.descripcion"></textarea>
+
+                </x-input-group>
+
+            </div>
+
         </div>
+
+        @if(count($errors) > 0)
+
+            <div class="mb-5 bg-white rounded-lg p-2 shadow-lg flex gap-2 flex-wrap ">
+
+                <ul class="flex gap-2 felx flex-wrap list-disc ml-5">
+                    @foreach ($errors->all() as $error)
+
+                        <li class="text-red-500 text-xs md:text-sm ml-5">
+                            {{ $error }}
+                        </li>
+
+                    @endforeach
+
+                </ul>
+
+            </div>
+
+        @endif
+
+        @if($sentencia->movimientoRegistral->estado !== 'finalizado')
+
+            <div class="bg-white rounded-lg p-3 flex justify-end shadow-lg gap-3">
+
+                @if(!$sentencia->movimientoRegistral->documentoEntrada())
+
+                    <x-button-blue
+                        wire:click="abrirModalDocumentoEntrada"
+                        wire:loading.attr="disabled"
+                        wire:target="abrirModalDocumentoEntrada">
+
+                        <img wire:loading wire:target="abrirModalDocumentoEntrada" class="mx-auto h-4 mr-1" src="{{ asset('storage/img/loading3.svg') }}" alt="Loading">
+
+                        Subir documento de entrada
+
+                    </x-button-blue>
+
+                @else
+
+                    <div class="inline-block">
+
+                        <x-link-blue target="_blank" href="{{ $sentencia->movimientoRegistral->documentoEntrada() }}">Documento de entrada</x-link-blue>
+
+                    </div>
+
+                    <x-button-red
+                        wire:click="eliminarDocumentoEntradaPDF"
+                        wire:confirm="¿Esta seguro que desea eliminar el documento de entrada?"
+                        wire:loading.attr="disabled"
+                        wire:target="eliminarDocumentoEntradaPDF">
+
+                        <img wire:loading wire:target="eliminarDocumentoEntradaPDF" class="mx-auto h-4 mr-1" src="{{ asset('storage/img/loading3.svg') }}" alt="Loading">
+
+                        Eliminar documento de entrada
+
+                    </x-button-red>
+
+                @endif
+
+                <x-button-blue
+                    wire:click="guardar"
+                    wire:loading.attr="disabled"
+                    wire:target="guardar">
+
+                    <img wire:loading wire:target="guardar" class="mx-auto h-4 mr-1" src="{{ asset('storage/img/loading3.svg') }}" alt="Loading">
+
+                    Guardar y continuar
+
+                </x-button-blue>
+
+                <x-button-green
+                    wire:click="finalizar"
+                    wire:loading.attr="disabled"
+                    wire:target="finalizar">
+
+                    <img wire:loading wire:target="finalizar" class="mx-auto h-4 mr-1" src="{{ asset('storage/img/loading3.svg') }}" alt="Loading">
+
+                    Finalizar inscripción
+
+                </x-button-green>
+
+            </div>
+
+        @endif
 
     @endif
 
