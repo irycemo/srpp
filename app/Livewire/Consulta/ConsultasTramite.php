@@ -3,8 +3,6 @@
 namespace App\Livewire\Consulta;
 
 use Livewire\Component;
-use App\Models\Propiedad;
-use App\Models\Certificacion;
 use App\Traits\Inscripciones\RechazarMovimientoTrait;
 use App\Traits\MovimientoRegistral\CambiarAntecedenteTrait;
 use Livewire\WithPagination;

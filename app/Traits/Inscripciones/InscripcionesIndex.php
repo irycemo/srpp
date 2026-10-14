@@ -62,7 +62,7 @@ trait InscripcionesIndex{
 
     public function estaBloqueado(){
 
-        $movimientos = $this->actual->folioReal->movimientosRegistrales()->whereIn('estado', ['nuevo', 'captura', 'correccion'])->orderBy('folio')->get();
+        $movimientos = $this->actual->folioReal->movimientosRegistrales()->whereIn('estado', ['nuevo', 'captura', 'correccion', 'no recibido', 'autorizado'])->orderBy('folio')->get();
 
         if($movimientos->count()){
 
