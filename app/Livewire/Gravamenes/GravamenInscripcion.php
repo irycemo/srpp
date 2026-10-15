@@ -256,7 +256,7 @@ class GravamenInscripcion extends Component
 
             if($this->gravamen->servicio === 'D153'){
 
-                $this->gravamen->acto_contenido = 'REESTRUCTURA DE CRÉDITO';
+                $this->actos = ['REESTRUCTURA DE CRÉDITO', 'RENOVACION'];
 
             }{
 
