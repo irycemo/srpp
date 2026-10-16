@@ -15,7 +15,7 @@ class Cancelacion extends Model implements Auditable
     use \OwenIt\Auditing\Auditable;
     use ModelosTrait;
 
-    protected $guarded = ['id', 'created_at', 'updated_At'];
+    protected $guarded = ['id', 'created_at', 'updated_at'];
 
     public function movimientoRegistral(){
         return $this->belongsTo(MovimientoRegistral::class);
