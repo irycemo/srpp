@@ -2,6 +2,21 @@
 
     <x-header>Candidatos a folio real simplificado</x-header>
 
+    <div class="flex items-center justify-end mb-5">
+
+            <x-button-gray
+                wire:click="$toggle('modal_candidatos')"
+                wire:loading.attr="disabled"
+                wire:target="$toggle('modal_candidatos')">
+
+                <img wire:loading wire:target="$toggle('modal_candidatos')" class="mx-auto h-4 mr-1" src="{{ asset('storage/img/loading3.svg') }}" alt="Loading">
+
+                Agregar candidato
+
+            </x-button-gray>
+
+        </div>
+
     <div class="mb-3 bg-white rounded-lg p-3 shadow-lg">
 
         <div class="flex gap-4 justify-center mb-5">
@@ -78,5 +93,117 @@
         </div>
 
     </div>
+
+    <x-dialog-modal wire:model="modal_candidatos" maxWidth="sm">
+
+        <x-slot name="title">
+
+            Ingresar candidatos
+
+        </x-slot>
+
+        <x-slot name="content">
+
+            <div class="flex flex-col md:flex-row justify-between gap-3 mb-3">
+
+                <x-input-group for="tomo" label="Tomo" :error="$errors->first('tomo')" class="w-full">
+
+                    <x-input-text id="tomo" wire:model="tomo" />
+
+                </x-input-group>
+
+                <x-input-group for="registro" label="Regsitro" :error="$errors->first('registro')" class="w-full">
+
+                    <x-input-text id="registro" wire:model="registro" />
+
+                </x-input-group>
+
+            </div>
+
+            <div class="flex flex-col md:flex-row justify-between gap-3 mb-3">
+
+                <x-input-group for="distrito" label="Distrito" :error="$errors->first('distrito')" class="w-full">
+
+                    <x-input-select id="distrito" wire:model="distrito">
+
+                        <option value="" selected>Seleccione una opción</option>
+
+                        @foreach ($distritos as $key => $distrito_item)
+
+                            <option value="{{ $key }}">{{ $distrito_item }}</option>
+
+                        @endforeach
+
+                    </x-input-select>
+
+                </x-input-group>
+
+            </div>
+
+            <div class="flex flex-col md:flex-row justify-between gap-3 mb-3">
+
+                <x-input-group for="numero_propiedad_inicial" label="# Propiedad inicial" :error="$errors->first('numero_propiedad_inicial')" class="w-full">
+
+                    <x-input-text id="numero_propiedad_inicial" wire:model="numero_propiedad_inicial" />
+
+                </x-input-group>
+
+                <x-input-group for="numero_propiedad_final" label="# Propiedad final" :error="$errors->first('numero_propiedad_final')" class="w-full">
+
+                    <x-input-text id="numero_propiedad_final" wire:model="numero_propiedad_final" />
+
+                </x-input-group>
+
+            </div>
+
+            <div class="flex flex-col md:flex-row justify-start gap-3 mb-3">
+
+                <div class="flex space-x-4 items-center">
+
+                    <x-checkbox wire:model="tomo_bis"></x-checkbox>
+
+                    <Label>Tomo bis</Label>
+
+                </div>
+
+                <div class="flex space-x-4 items-center">
+
+                    <x-checkbox wire:model="registro_bis"></x-checkbox>
+
+                    <Label>Registro bis</Label>
+
+                </div>
+
+            </div>
+
+        </x-slot>
+
+        <x-slot name="footer">
+
+            <div class="flex gap-3">
+
+                <x-button-blue
+                    wire:click="agregarCandidatos"
+                    wire:loading.attr="disabled"
+                    wire:target="agregarCandidatos">
+
+                    <img wire:loading wire:target="agregarCandidatos" class="mx-auto h-4 mr-1" src="{{ asset('storage/img/loading3.svg') }}" alt="Loading">
+
+                    <span>Guardar</span>
+                </x-button-blue>
+
+                <x-button-red
+                    wire:click="resetearTodo"
+                    wire:loading.attr="disabled"
+                    wire:target="resetearTodo"
+                    type="button">
+                    Cerrar
+                </x-button-red>
+
+            </div>
+
+        </x-slot>
+
+    </x-dialog-modal>
 
 </div>
