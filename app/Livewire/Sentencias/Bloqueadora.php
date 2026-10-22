@@ -116,6 +116,8 @@ class Bloqueadora extends Component
 
             });
 
+            $this->modalContraseña = false;
+
             $this->dispatch('imprimir_documento', ['caratula' => $this->sentencia->id]);
 
         } catch (\Throwable $th) {
