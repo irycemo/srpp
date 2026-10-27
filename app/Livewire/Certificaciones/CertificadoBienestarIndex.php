@@ -326,14 +326,33 @@ class CertificadoBienestarIndex extends Component
         $certificados = MovimientoRegistral::select('id', 'folio', 'folio_real', 'año', 'tramite', 'usuario', 'actualizado_por', 'usuario_asignado', 'usuario_supervisor', 'estado', 'distrito', 'created_at', 'updated_at', 'tomo', 'registro', 'numero_propiedad', 'tipo_servicio', 'fecha_entrega', 'seccion', 'solicitante')
                                             ->with('asignadoA:id,name', 'supervisor:id,name', 'actualizadoPor:id,name', 'certificacion.actualizadoPor:id,name', 'folioReal:id,folio')
                                             ->where('servicio_nombre', 'Certificado negativo de vivienda bienestar')
-                                            ->when(auth()->user()->ubicacion == 'Regional 4', function($q){
-                                                $q->where('distrito', 2);
+                                            ->when(auth()->user()->ubicacion === 'Regional 1', function($q){
+                                                $q->whereIn('distrito', [3, 9]);
+                                                    /* ->orWhereIn('usuario', $this->usuarios_regionales_fliped); */
                                             })
-                                            ->when(auth()->user()->ubicacion != 'Regional 4', function($q){
-                                                $q->where('distrito', '!=', 2);
+                                            ->when(auth()->user()->ubicacion === 'Regional 2', function($q){
+                                                $q->whereIn('distrito', [12, 19]);
+
                                             })
-                                            ->whereHas('certificacion', function($q){
-                                                $q->where('servicio', 'DL10');
+                                            ->when(auth()->user()->ubicacion === 'Regional 3', function($q){
+                                                $q->whereIn('distrito', [4, 17]);
+
+                                            })
+                                            ->when(auth()->user()->ubicacion === 'Regional 4', function($q){
+                                                $q->whereIn('distrito', [2, 18]);
+
+                                            })
+                                            ->when(auth()->user()->ubicacion === 'Regional 5', function($q){
+                                                $q->where('distrito', 13);
+
+                                            })
+                                            ->when(auth()->user()->ubicacion === 'Regional 6', function($q){
+                                                $q->where('distrito', 15);
+
+                                            })
+                                            ->when(auth()->user()->ubicacion === 'Regional 7', function($q){
+                                                $q->whereIn('distrito', [5, 14, 8]);
+
                                             })
                                             ->when($this->filters['año'], fn($q, $año) => $q->where('año', $año))
                                             ->when($this->filters['tramite'], fn($q, $tramite) => $q->where('tramite', $tramite))
