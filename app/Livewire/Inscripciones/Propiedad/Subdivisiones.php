@@ -370,6 +370,8 @@ class Subdivisiones extends Component
                 $movimientoRegistral->folio = $folioReal->ultimoFolio() + 1;
                 $movimientoRegistral->estado = 'pase_folio';
                 $movimientoRegistral->folio_real = $folioReal->id;
+                $movimientoRegistral->servicio_nombre = 'Inscripción de gravámenes de bienes inmuebles';
+                $movimientoRegistral->movimiento_padre = null;
                 $movimientoRegistral->save();
 
                 $gravamenCopia = $gravamen->replicate();
