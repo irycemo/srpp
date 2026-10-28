@@ -355,6 +355,8 @@ class PaseFolioSimplificadoElaborar extends Component
 
                 $this->movimientoRegistral->refresh();
 
+                $this->copiarDocumentoEntrada();
+
                 if(!$this->propiedad->escritura_id && in_array($this->tipo_documento, ['ESCRITURA PÚBLICA', 'ESCRITURA PRIVADA'])){
 
                     $this->escritura = Escritura::Create([
@@ -673,6 +675,21 @@ class PaseFolioSimplificadoElaborar extends Component
 
     }
 
+    public function copiarDocumentoEntrada(){
+
+        if($this->movimientoRegistral->documentoEntrada() && ! $this->movimientoRegistral->folioReal->documentoEntrada()){
+
+            File::create([
+                'fileable_id' => $this->movimientoRegistral->folio_real,
+                'fileable_type' => 'App\Models\FolioReal',
+                'descripcion' => 'documento_entrada',
+                'url' => $this->movimientoRegistral->archivos()->where('descripcion', 'documento_entrada')->first()->url
+            ]);
+
+        }
+
+    }
+
     public function mount(){
 
         $this->consultarArchivo($this->movimientoRegistral);
@@ -724,6 +741,13 @@ class PaseFolioSimplificadoElaborar extends Component
                     $this->escritura_observaciones = $this->propiedad->escritura->comentario;
                     $this->acto_contenido_antecedente = $this->propiedad->escritura->acto_contenido_antecedente;
 
+                }else{
+
+                    $this->escritura_numero = $this->movimientoRegistral->numero_documento;
+                    $this->escritura_fecha_inscripcion = $this->movimientoRegistral->fecha_inscripcion;
+                    $this->escritura_notaria = $this->movimientoRegistral->autoridad_numero;
+                    $this->escritura_nombre_notario = $this->movimientoRegistral->autoridad_nombre;
+
                 }
 
             }
@@ -739,6 +763,11 @@ class PaseFolioSimplificadoElaborar extends Component
             $this->numero_documento = $this->movimientoRegistral->numero_documento;
             $this->fecha_emision = $this->movimientoRegistral->fecha_emision;
             $this->fecha_inscripcion = $this->movimientoRegistral->fecha_inscripcion;
+            $this->escritura_numero = $this->movimientoRegistral->numero_documento;
+            $this->escritura_fecha_inscripcion = $this->movimientoRegistral->fecha_inscripcion;
+            $this->escritura_fecha_escritura = $this->movimientoRegistral->fecha_emision;
+            $this->escritura_notaria = $this->movimientoRegistral->autoridad_numero;
+            $this->escritura_nombre_notario = $this->movimientoRegistral->autoridad_nombre;
 
         }
 

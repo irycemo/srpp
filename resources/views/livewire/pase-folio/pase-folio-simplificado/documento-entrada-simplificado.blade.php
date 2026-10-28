@@ -253,44 +253,40 @@
 
 <div class="space-y-2 lg:space-y-0 lg:flex gap-3 flex-grow justify-center lg:justify-end items-center bg-white rounded-lg p-2 shadow-lg">
 
-    @if ($movimientoRegistral->folioReal)
+    @if(!$movimientoRegistral->documentoEntrada())
 
-        @if(!$movimientoRegistral->folioReal->documentoEntrada())
+        <x-button-blue
+            class="w-full lg:w-fit"
+            wire:click="abrirModalDocumentoEntrada"
+            wire:loading.attr="disabled"
+            wire:target="abrirModalDocumentoEntrada">
 
-            <x-button-blue
-                class="w-full lg:w-fit"
-                wire:click="abrirModalDocumentoEntrada"
-                wire:loading.attr="disabled"
-                wire:target="abrirModalDocumentoEntrada">
+            <img wire:loading wire:target="abrirModalDocumentoEntrada" class="mx-auto h-4 mr-1" src="{{ asset('storage/img/loading3.svg') }}" alt="Loading">
 
-                <img wire:loading wire:target="abrirModalDocumentoEntrada" class="mx-auto h-4 mr-1" src="{{ asset('storage/img/loading3.svg') }}" alt="Loading">
+            Subir documento de entrada
 
-                Subir documento de entrada
+        </x-button-blue>
 
-            </x-button-blue>
+    @else
 
-        @else
+        <div class="inline-block w-full lg:w-fit">
 
-            <div class="inline-block w-full lg:w-fit">
+            <x-link-blue target="_blank" href="{{ $movimientoRegistral->documentoEntrada() }}">Documento de entrada</x-link-blue>
 
-                <x-link-blue target="_blank" href="{{ $movimientoRegistral->folioReal->documentoEntrada() }}">Documento de entrada</x-link-blue>
+        </div>
 
-            </div>
+        <x-button-red
+            class="w-full lg:w-fit"
+            wire:click="eliminarDocumentoEntradaPDF"
+            wire:confirm="¿Esta seguro que desea eliminar el documento de entrada?"
+            wire:loading.attr="disabled"
+            wire:target="eliminarDocumentoEntradaPDF">
 
-            <x-button-red
-                class="w-full lg:w-fit"
-                wire:click="eliminarDocumentoEntradaPDF"
-                wire:confirm="¿Esta seguro que desea eliminar el documento de entrada?"
-                wire:loading.attr="disabled"
-                wire:target="eliminarDocumentoEntradaPDF">
+            <img wire:loading wire:target="eliminarDocumentoEntradaPDF" class="mx-auto h-4 mr-1" src="{{ asset('storage/img/loading3.svg') }}" alt="Loading">
 
-                <img wire:loading wire:target="eliminarDocumentoEntradaPDF" class="mx-auto h-4 mr-1" src="{{ asset('storage/img/loading3.svg') }}" alt="Loading">
+            Eliminar documento de entrada
 
-                Eliminar documento de entrada
-
-            </x-button-red>
-
-        @endif
+        </x-button-red>
 
     @endif
 
