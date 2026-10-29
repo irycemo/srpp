@@ -253,6 +253,26 @@ class ConsolidacionUsufructo extends Component
 
     }
 
+    public function recargarPropietarios(){
+
+        $this->vario->actores()->delete();
+
+        foreach ($this->vario->movimientoRegistral->folioReal->predio->propietarios() as $propietario) {
+
+            $this->vario->actores()->create([
+                'persona_id' => $propietario->persona_id,
+                'tipo_actor' => 'propietario',
+                'porcentaje_propiedad' => $propietario->porcentaje_propiedad,
+                'porcentaje_nuda' => $propietario->porcentaje_nuda,
+                'porcentaje_usufructo' => $propietario->porcentaje_usufructo,
+            ]);
+
+        }
+
+        $this->vario->load('actores.persona');
+
+    }
+
     public function mount(){
 
         $this->movimientoRegistral = $this->vario->movimientoRegistral;
@@ -261,23 +281,7 @@ class ConsolidacionUsufructo extends Component
 
         $this->vario->acto_contenido = 'CONSOLIDACIÓN DEL USUFRUCTO';
 
-        if($this->vario->actores()->count() == 0){
-
-            foreach ($this->vario->movimientoRegistral->folioReal->predio->propietarios() as $propietario) {
-
-                $this->vario->actores()->create([
-                    'persona_id' => $propietario->persona_id,
-                    'tipo_actor' => 'propietario',
-                    'porcentaje_propiedad' => $propietario->porcentaje_propiedad,
-                    'porcentaje_nuda' => $propietario->porcentaje_nuda,
-                    'porcentaje_usufructo' => $propietario->porcentaje_usufructo,
-                ]);
-
-            }
-
-        }
-
-        $this->vario->load('actores.persona');
+        $this->recargarPropietarios();
 
         $this->cargarDocumentoEntrada($this->vario->movimientoRegistral);
 
@@ -287,4 +291,5 @@ class ConsolidacionUsufructo extends Component
     {
         return view('livewire.varios.consolidacion-usufructo');
     }
+
 }
