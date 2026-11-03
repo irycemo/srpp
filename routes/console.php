@@ -1,6 +1,7 @@
 <?php
 
 use App\Models\Actor;
+use App\Models\Audit;
 use App\Models\Representado;
 use Illuminate\Support\Facades\DB;
 use App\Models\MovimientoRegistral;
@@ -261,378 +262,7 @@ Artisan::command('folios_reales', function(){
     $count = 0;
 
     $folios_reales = FolioReal::with('predio:id,folio_real,descripcion,observaciones')
-                            ->whereKey([
-13622,
-13689,
-21352,
-22028,
-23300,
-24724,
-26429,
-26778,
-26781,
-26783,
-26791,
-26792,
-26838,
-26933,
-26934,
-26935,
-26936,
-26937,
-26938,
-26939,
-26940,
-26941,
-26942,
-26943,
-26944,
-26945,
-26946,
-26947,
-26948,
-26949,
-26950,
-26951,
-26952,
-26953,
-26954,
-26955,
-26956,
-26957,
-26958,
-26959,
-26960,
-26961,
-26962,
-26963,
-26964,
-26965,
-26966,
-26967,
-26968,
-26969,
-26970,
-26971,
-26972,
-26973,
-26974,
-26975,
-26976,
-26977,
-26978,
-26979,
-26980,
-26981,
-26982,
-26983,
-26984,
-26985,
-26986,
-26987,
-26988,
-26989,
-26990,
-26991,
-26992,
-26993,
-26994,
-26995,
-26996,
-26997,
-26998,
-26999,
-27000,
-27001,
-27002,
-27003,
-27004,
-27005,
-27006,
-27007,
-27008,
-27009,
-27010,
-27011,
-27012,
-27013,
-27014,
-27015,
-27016,
-27017,
-27018,
-27019,
-27020,
-27021,
-27022,
-27023,
-27024,
-27025,
-27026,
-27027,
-27028,
-27029,
-27030,
-27031,
-27032,
-27033,
-27034,
-27035,
-27036,
-27037,
-27038,
-27039,
-27040,
-27041,
-27042,
-27043,
-27044,
-27045,
-27046,
-27047,
-27048,
-27049,
-27050,
-27051,
-27052,
-27053,
-27054,
-27055,
-27056,
-27057,
-27058,
-27059,
-27060,
-27061,
-27062,
-27063,
-27064,
-27065,
-27066,
-27067,
-27068,
-27069,
-27070,
-27071,
-27072,
-27073,
-27074,
-27075,
-27076,
-27077,
-27078,
-27079,
-27080,
-27081,
-27082,
-27083,
-27084,
-27085,
-27086,
-27087,
-27088,
-27089,
-27090,
-27091,
-27092,
-27093,
-27094,
-27095,
-27096,
-27097,
-27098,
-27099,
-27100,
-27101,
-27102,
-27103,
-27104,
-27105,
-27106,
-27107,
-27108,
-27109,
-27110,
-27111,
-27112,
-27113,
-27114,
-27115,
-27116,
-27117,
-27118,
-27119,
-27120,
-27121,
-27122,
-27123,
-27124,
-27125,
-27126,
-27127,
-27128,
-27129,
-27130,
-27131,
-27132,
-27133,
-27134,
-27135,
-27136,
-27137,
-27138,
-27139,
-27140,
-27141,
-27142,
-27143,
-27144,
-27145,
-27146,
-27147,
-27148,
-27149,
-27150,
-27151,
-27152,
-27153,
-27154,
-27155,
-27156,
-27157,
-27158,
-27159,
-27160,
-27161,
-27162,
-27163,
-27164,
-27165,
-27166,
-27167,
-27168,
-27169,
-27170,
-27171,
-27172,
-27173,
-27174,
-27175,
-27176,
-27177,
-27178,
-27179,
-27180,
-27181,
-27182,
-27183,
-27184,
-27185,
-27186,
-27187,
-27188,
-27189,
-27190,
-27191,
-27192,
-27193,
-27194,
-27195,
-27196,
-27197,
-27198,
-27199,
-27200,
-27201,
-27202,
-27203,
-27204,
-27205,
-27206,
-27207,
-27208,
-27209,
-27210,
-27211,
-27212,
-27213,
-27214,
-27215,
-27216,
-27217,
-27218,
-27219,
-27220,
-27221,
-27222,
-27223,
-27224,
-27225,
-27226,
-27227,
-27228,
-27229,
-27230,
-27231,
-27232,
-27233,
-27234,
-27235,
-27236,
-27237,
-27238,
-27239,
-27240,
-27241,
-27242,
-27243,
-27244,
-27245,
-27246,
-27247,
-27248,
-27249,
-27250,
-27251,
-27252,
-27253,
-27254,
-27255,
-27256,
-27257,
-27258,
-27259,
-27260,
-27261,
-27262,
-27263,
-27264,
-27265,
-27266,
-27267,
-27268,
-27269,
-27270,
-27271,
-27272,
-27273,
-27274,
-27275,
-27276,
-27277,
-27278,
-27279,
-27280,
-27281,
-27282,
-27283,
-27284,
-27285,
-27286,
-27287,
-27288,
-27289,
-                            ])
+                            ->whereKey([                            ])
                         ->get();
 
     $progressbar = $this->output->createProgressBar($folios_reales->count());
@@ -668,6 +298,160 @@ Artisan::command('folios_reales', function(){
 
         } catch (\Throwable $th) {
             $this->info($th);
+
+        }
+
+    }
+
+    fclose($file);
+
+    $progressbar->finish();
+
+    $this->info($count);
+
+});
+
+Artisan::command('folios', function(){
+
+    $count = 0;
+
+    $audits = Audit::where('user_id', 1)
+                ->whereBetween('created_at', ['2026-10-29 08:12:00', '2026-10-29 08:13:29'])
+                ->get();
+
+    $progressbar = $this->output->createProgressBar($audits->count());
+
+    $progressbar->start();
+
+    $path = storage_path('app/public/folios.csv');
+
+    $file = fopen($path, 'w');
+
+    $columns = array('Movimiento id', 'Old values', 'New values', 'BD Folio real', 'BD Folio', 'BD etado');
+
+    fputcsv($file, $columns);
+
+    foreach($audits as $audit){
+
+        $movimientoRegistral = MovimientoRegistral::with('folioReal:id,folio')->find($audit->auditable_id);
+
+        if(! $movimientoRegistral) continue;
+
+        $mov_audits = $audits->where('auditable_id', $audit->auditable_id);
+
+        if($mov_audits->count() > 1){
+
+            $folio_mayor = 0;
+
+            $ultimo_audit;
+
+            foreach($mov_audits as $mov_audit){
+
+                $old_values = json_decode($mov_audit->old_values);
+
+                if(isset($old_values->folio) && $old_values->folio > $folio_mayor){
+
+                    $ultimo_audit = $mov_audit->id;
+
+                    $folio_mayor = (int)$old_values->folio;
+
+                }
+
+            }
+
+            $primer_audit = $mov_audits->where('id', '!=', $ultimo_audit)->first();
+
+            $old_values = json_decode($primer_audit->old_values);
+
+            if(isset($old_values->estado)){
+
+                $movimientoRegistral->estado = $old_values->estado;
+            }
+
+            if(isset($old_values->folio)){
+
+                $movimientoRegistral->folio = $old_values->folio;
+            }
+
+            $movimientoRegistral->save();
+
+            $data = [
+                $primer_audit->auditable_id,
+                $primer_audit->old_values,
+                $primer_audit->new_values,
+                $movimientoRegistral->folioReal?->folio,
+                $movimientoRegistral->estado,
+                $movimientoRegistral->folio
+            ];
+
+            fputcsv($file, $data);
+
+            $progressbar->advance();
+
+            $count ++;
+
+            $segundo_audit = $mov_audits->where('id', $ultimo_audit)->first();
+
+            $old_values = json_decode($segundo_audit->old_values);
+
+            if(isset($old_values->estado)){
+
+                $movimientoRegistral->estado = $old_values->estado;
+            }
+
+            if(isset($old_values->folio)){
+
+                $movimientoRegistral->folio = $old_values->folio;
+            }
+
+            $movimientoRegistral->save();
+
+            $data = [
+                $segundo_audit->auditable_id,
+                $segundo_audit->old_values,
+                $segundo_audit->new_values,
+                $movimientoRegistral->folioReal?->folio,
+                $movimientoRegistral->estado,
+                $movimientoRegistral->folio
+            ];
+
+            fputcsv($file, $data);
+
+            $progressbar->advance();
+
+            $count ++;
+
+
+        }else{
+
+            $old_values = json_decode($audit->old_values);
+
+            if(isset($old_values->estado)){
+
+                $movimientoRegistral->estado = $old_values->estado;
+            }
+
+            if(isset($old_values->folio)){
+
+                $movimientoRegistral->folio = $old_values->folio;
+            }
+
+            $movimientoRegistral->save();
+
+            $data = [
+                $audit->auditable_id,
+                $audit->old_values,
+                $audit->new_values,
+                $movimientoRegistral->folioReal?->folio,
+                $movimientoRegistral->estado,
+                $movimientoRegistral->folio
+            ];
+
+            fputcsv($file, $data);
+
+            $progressbar->advance();
+
+            $count ++;
 
         }
 
