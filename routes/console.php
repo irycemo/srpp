@@ -316,7 +316,7 @@ Artisan::command('folios', function(){
     $count = 0;
 
     $audits = Audit::where('user_id', 1)
-                ->where('created_at', '>', '2026-10-29')
+                ->whereBetween('created_at', ['2026-10-29 00:00:00', '2026-10-29 23:59:59'])
                 ->get();
 
     $progressbar = $this->output->createProgressBar($audits->count());
@@ -327,7 +327,7 @@ Artisan::command('folios', function(){
 
     $file = fopen($path, 'w');
 
-    $columns = array('Movimiento id', 'Old values', 'New values', 'BD Folio real', 'BD Folio', 'BD etado');
+    $columns = array('Movimiento id', 'Old values', 'New values', 'BD Folio real', 'BD Folio', 'BD estado');
 
     fputcsv($file, $columns);
 
@@ -335,125 +335,53 @@ Artisan::command('folios', function(){
 
         $movimientoRegistral = MovimientoRegistral::with('folioReal:id,folio')->find($audit->auditable_id);
 
-        if(! $movimientoRegistral) continue;
-
-        $mov_audits = $audits->where('auditable_id', $audit->auditable_id);
-
-        if($mov_audits->count() > 1){
-
-            $folio_mayor = 0;
-
-            $ultimo_audit;
-
-            foreach($mov_audits as $mov_audit){
-
-                $old_values = json_decode($mov_audit->old_values);
-
-                if(isset($old_values->folio) && $old_values->folio > $folio_mayor){
-
-                    $ultimo_audit = $mov_audit->id;
-
-                    $folio_mayor = (int)$old_values->folio;
-
-                }
-
-            }
-
-            $primer_audit = $mov_audits->where('id', '!=', $ultimo_audit)->first();
-
-            $old_values = json_decode($primer_audit->old_values);
-
-            if(isset($old_values->estado)){
-
-                $movimientoRegistral->estado = $old_values->estado;
-            }
-
-            if(isset($old_values->folio)){
-
-                $movimientoRegistral->folio = $old_values->folio;
-            }
-
-            $movimientoRegistral->save();
-
-            $data = [
-                $primer_audit->auditable_id,
-                $primer_audit->old_values,
-                $primer_audit->new_values,
-                $movimientoRegistral->folioReal?->folio,
-                $movimientoRegistral->estado,
-                $movimientoRegistral->folio
-            ];
-
-            fputcsv($file, $data);
-
-            $progressbar->advance();
-
-            $count ++;
-
-            $segundo_audit = $mov_audits->where('id', $ultimo_audit)->first();
-
-            $old_values = json_decode($segundo_audit->old_values);
-
-            if(isset($old_values->estado)){
-
-                $movimientoRegistral->estado = $old_values->estado;
-            }
-
-            if(isset($old_values->folio)){
-
-                $movimientoRegistral->folio = $old_values->folio;
-            }
-
-            $movimientoRegistral->save();
-
-            $data = [
-                $segundo_audit->auditable_id,
-                $segundo_audit->old_values,
-                $segundo_audit->new_values,
-                $movimientoRegistral->folioReal?->folio,
-                $movimientoRegistral->estado,
-                $movimientoRegistral->folio
-            ];
-
-            fputcsv($file, $data);
-
-            $progressbar->advance();
-
-            $count ++;
-
-
-        }else{
-
-            $old_values = json_decode($audit->old_values);
-
-            if(isset($old_values->estado)){
-
-                $movimientoRegistral->estado = $old_values->estado;
-            }
-
-            if(isset($old_values->folio)){
-
-                $movimientoRegistral->folio = $old_values->folio;
-            }
-
-            $movimientoRegistral->save();
-
-            $data = [
-                $audit->auditable_id,
-                $audit->old_values,
-                $audit->new_values,
-                $movimientoRegistral->folioReal?->folio,
-                $movimientoRegistral->estado,
-                $movimientoRegistral->folio
-            ];
-
-            fputcsv($file, $data);
-
-            $progressbar->advance();
-
-            $count ++;
-
+        if (!$movimientoRegistral) {
+            continue;
         }
+
+        $mov_audits = Audit::where('user_id', 1)
+                            ->where('auditable_type', MovimientoRegistral::class)
+                            ->where('auditable_id', $audit->auditable_id)
+                            ->whereBetween('created_at', [
+                                '2026-10-29 00:00:00',
+                                '2026-10-29 23:59:59'
+                            ])
+                            ->orderBy('id', 'asc')
+                            ->get();
+
+        $primer_audit = $mov_audits->first();
+
+        if (!$primer_audit) {
+            continue;
+        }
+
+        $old_values = json_decode($primer_audit->old_values);
+
+        if(! isset($old_values->folio)) continue;
+
+        if(is_object($old_values) && property_exists($old_values, 'estado')){
+
+            $movimientoRegistral->estado = $old_values->estado;
+        }
+
+        $movimientoRegistral->folio = $old_values->folio;
+
+        $movimientoRegistral->save();
+
+        $data = [
+            $primer_audit->auditable_id,
+            $primer_audit->old_values,
+            $primer_audit->new_values,
+            $movimientoRegistral->folioReal?->folio,
+            $movimientoRegistral->folio,
+            $movimientoRegistral->estado
+        ];
+
+        fputcsv($file, $data);
+
+        $progressbar->advance();
+
+        $count ++;
 
     }
 
