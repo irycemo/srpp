@@ -316,7 +316,7 @@ Artisan::command('folios', function(){
     $count = 0;
 
     $audits = Audit::where('user_id', 1)
-                ->whereBetween('created_at', ['2026-10-29 08:12:00', '2026-10-29 08:13:29'])
+                ->where('created_at', '>', '2026-10-29')
                 ->get();
 
     $progressbar = $this->output->createProgressBar($audits->count());
