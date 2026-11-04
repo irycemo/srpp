@@ -10,6 +10,7 @@ trait DocumentoEntradaTrait{
     public $tipo_documento;
     public $autoridad_cargo;
     public $autoridad_nombre;
+    public $autoridad_numero;
     public $numero_documento;
     public $fecha_emision;
     public $procedencia;
@@ -39,6 +40,7 @@ trait DocumentoEntradaTrait{
         $this->tipo_documento = $movimientoRegistral->tipo_documento;
         $this->autoridad_cargo = $movimientoRegistral->autoridad_cargo;
         $this->autoridad_nombre = $movimientoRegistral->autoridad_nombre;
+        $this->autoridad_numero = $movimientoRegistral->autoridad_numero;
         $this->numero_documento = $movimientoRegistral->numero_documento;
         $this->fecha_emision = $movimientoRegistral->fecha_emision;
         $this->procedencia = $movimientoRegistral->procedencia;
@@ -52,6 +54,7 @@ trait DocumentoEntradaTrait{
             'tipo_documento' => $this->tipo_documento,
             'autoridad_cargo' => $this->autoridad_cargo,
             'autoridad_nombre' => $this->autoridad_nombre,
+            'autoridad_numero' => $this->autoridad_numero,
             'numero_documento' => $this->numero_documento,
             'fecha_emision' => $this->fecha_emision,
             'procedencia' => $this->procedencia,

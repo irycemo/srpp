@@ -47,7 +47,7 @@ class GravamenInscripcion extends Component
 
     protected function rules(){
         return [
-            'gravamen.tipo' => 'required',
+            'gravamen.tipo' => 'required|max: 250',
             'gravamen.acto_contenido' => 'required',
             'gravamen.valor_gravamen' => 'required|numeric',
             'gravamen.divisa' => ['required', Rule::in($this->divisas)],

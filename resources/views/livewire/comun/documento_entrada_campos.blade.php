@@ -1,6 +1,6 @@
 <x-h4>Documento de entrada</x-h4>
 
-<div class="grid grid-cols-1 md:grid-cols-3 gap-3 bg-white p-4 rounded-lg mb-3 shadow-md">
+<div class="grid grid-cols-1 md:grid-cols-4 gap-3 bg-white p-4 rounded-lg mb-3 shadow-md">
 
     <x-input-group for="tipo_documento" label="Tipo de documento" :error="$errors->first('tipo_documento')" class="w-full">
 
@@ -37,6 +37,12 @@
     <x-input-group for="autoridad_nombre" label="Nombre de la autoridad" :error="$errors->first('autoridad_nombre')" class="w-full">
 
         <x-input-text id="autoridad_nombre" wire:model="autoridad_nombre" />
+
+    </x-input-group>
+
+    <x-input-group for="autoridad_numero" label="Número de la autoridad" :error="$errors->first('autoridad_numero')" class="w-full">
+
+        <x-input-text id="autoridad_numero" wire:model="autoridad_numero" />
 
     </x-input-group>
 
