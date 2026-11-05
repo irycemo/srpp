@@ -3,6 +3,9 @@
 namespace App\Http\Controllers\Certificaciones;
 
 use App\Models\User;
+use App\Models\FirmaElectronica;
+use Illuminate\Support\Facades\Storage;
+use PhpCfdi\Credentials\Credential;
 use Illuminate\Support\Str;
 use App\Models\Certificacion;
 use Barryvdh\DomPDF\Facade\Pdf;
@@ -350,6 +353,144 @@ class CopiasController extends Controller
             'movimiento_registral',
             'movimiento_registral_letra',
         ));
+
+        $pdf->render();
+
+        $dom_pdf = $pdf->getDomPDF();
+
+        $canvas = $dom_pdf->get_canvas();
+
+        $canvas->page_text(480, 745, "Página: {PAGE_NUM} de {PAGE_COUNT}", $dom_pdf->getFontMetrics()->getFont('helvetica'), 9, array(1,1,1));
+
+        return $pdf->stream('documento.pdf');
+
+    }
+
+    public function copiaCertificadaFirmada(Certificacion $certificacion){
+
+        $certificacion->load('movimientoRegistral');
+
+        $formatter = new NumeroALetras();
+
+        $object = (object)[];
+
+        $director = User::where('status', 'activo')->whereHas('roles', function($q){
+                                    $q->where('name', 'Director');
+                                })->first();
+
+        $object->director = $director->name;
+
+        if($certificacion->folio_real){
+
+            $object->folio_real = $certificacion->folio_real;
+
+            $object->folio_real_letra = $formatter->toWords($object->folio_real);
+
+        }else{
+
+            $object->folio_real = null;
+
+            $object->folio_real_letra = null;
+
+        }
+
+        if($certificacion->movimiento_registral){
+
+            $object->movimiento_registral = $certificacion->movimiento_registral;
+
+            $object->movimiento_registral_letra = $formatter->toWords($object->movimiento_registral);
+
+        }else{
+
+            $object->movimiento_registral = null;
+
+            $object->movimiento_registral_letra = null;
+
+        }
+
+        $object->distrito = Str::upper($certificacion->movimientoRegistral->distrito);
+
+        $object->registro = $certificacion->movimientoRegistral->registro;
+
+        $object->registro_bis = $certificacion->movimientoRegistral->registro_bis;
+
+        $object->registro_letras = $formatter->toWords($object->registro);
+
+        $object->tomo = $certificacion->movimientoRegistral->tomo;
+
+        $object->tomo_bis = $certificacion->movimientoRegistral->tomo_bis;
+
+        $object->tomo_letras = $formatter->toWords($object->tomo);
+
+        $object->paginas = $certificacion->numero_paginas;
+
+        $object->paginas_letras = $formatter->toWords($object->paginas);
+
+        $object->solicitante = Str::upper($certificacion->movimientoRegistral->solicitante);
+
+        $now = now()->locale('es');
+
+        $object->hora = $now->format('H');
+
+        $object->hora_letras = $formatter->toWords($object->hora);
+
+        $object->minutos = $now->format('i');
+
+        $object->minutos_letras = $formatter->toWords($object->minutos);
+
+        $object->dia = $now->format('d');
+
+        $object->dia_letras = $formatter->toWords($object->dia);
+
+        $object->mes = Str::upper($now->monthName);
+
+        $object->año = $now->format('Y');
+
+        $object->año_letras = $formatter->toWords($object->año);
+
+        $object->numero_control = $certificacion->movimientoRegistral->año . '-' .$certificacion->movimientoRegistral->tramite . '-' .$certificacion->movimientoRegistral->usuario;
+
+        $object->superviso = Str::upper($certificacion->movimientoRegistral->supervisor->name);
+
+        $object->elaboro = Str::upper($certificacion->movimientoRegistral->asignadoA->name);
+
+        $object->folio_carpeta = $certificacion->folio_carpeta_copias;
+
+        $object->derechos = $certificacion->movimientoRegistral->monto;
+
+        $object->fecha_entrega = $certificacion->movimientoRegistral->fecha_entrega;
+
+        $object->tipo_servicio = Str::upper($certificacion->movimientoRegistral->tipo_servicio);
+
+        $object->seccion = Str::upper($certificacion->movimientoRegistral->seccion);
+
+        $qr = $this->generadorQr();
+
+        $object->numero_oficio = $certificacion->movimientoRegistral->numero_oficio;
+
+        $object->servicio = $this->nombreServicio($certificacion->movimientoRegistral->año, $certificacion->movimientoRegistral->tramite, $certificacion->movimientoRegistral->usuario);
+
+        $fielDirector = Credential::openFiles(Storage::disk('efirmas')->path($director->efirma->cer),
+                                                Storage::disk('efirmas')->path($director->efirma->key),
+                                                $director->efirma->contraseña
+                                            );
+
+        $firmaDirector = $fielDirector->sign(json_encode($object));
+
+        FirmaElectronica::where('movimiento_registral_id', $certificacion->movimientoRegistral)->first()?->delete();
+
+        FirmaElectronica::create([
+            'movimiento_registral_id' => $certificacion->movimiento_registral_id,
+            'cadena_original' => json_encode($object),
+            'cadena_encriptada' => base64_encode($firmaDirector),
+            'estado' => 'activo'
+        ]);
+
+        $pdf = Pdf::loadView('certificaciones.copiaCertificadaFirmada', [
+            'datos_control' => $object,
+            'firma_electronica' => base64_encode($firmaDirector),
+            'qr' => $qr
+        ]);
 
         $pdf->render();
 

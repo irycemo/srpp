@@ -326,7 +326,15 @@ class CopiasCertificadas extends Component
 
                 $this->modelo_editar->save();
 
-                $this->dispatch('imprimir_documento', ['documento' => $this->modelo_editar->id]);
+                if(auth()->user()->ubicacion == 'Regional 4'){
+
+                    $this->dispatch('imprimir_documento_firmado', ['documento' => $this->modelo_editar->id]);
+
+                }else{
+
+                    $this->dispatch('imprimir_documento', ['documento' => $this->modelo_editar->id]);
+
+                }
 
                 $this->dispatch('mostrarMensaje', ['success', "El trámite se finalizó con éxito."]);
 

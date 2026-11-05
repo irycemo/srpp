@@ -199,7 +199,7 @@
             </p>
 
             @if($distrito == '02 Uruapan' )
-                <p class="borde">Lic. ANAHÍ RENOVATO CASTAÑEDA </p>
+                <p class="borde">_______________</p>
                 <p style="margin:0;">COORDINADORA REGIONAL 4 PURHÉPECHA (URUAPAN)</p>
             @else
                 <p class="borde" style="margin:0;">{{ $director }}</p>

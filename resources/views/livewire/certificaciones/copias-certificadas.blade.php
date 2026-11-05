@@ -580,6 +580,18 @@
 
         });
 
+        window.addEventListener('imprimir_documento_firmado', event => {
+
+            const documento = event.detail[0].documento;
+
+            var url = "{{ route('copia_certificada_firmada', '')}}" + "/" + documento;
+
+            window.open(url, '_blank');
+
+            window.location.href = "{{ route('copias_certificadas')}}";
+
+        });
+
     </script>
 
 @endpush
