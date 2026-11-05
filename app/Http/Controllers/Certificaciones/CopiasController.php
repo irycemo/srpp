@@ -3,6 +3,8 @@
 namespace App\Http\Controllers\Certificaciones;
 
 use App\Models\User;
+use App\Models\File;
+use Imagick;
 use App\Models\FirmaElectronica;
 use Illuminate\Support\Facades\Storage;
 use PhpCfdi\Credentials\Credential;
@@ -486,13 +488,15 @@ class CopiasController extends Controller
             'estado' => 'activo'
         ]);
 
-        $qr = $this->generadorQr();
+        $qr = $this->generadorQr($firmaElectronica->uuid);
 
         $pdf = Pdf::loadView('certificaciones.copiaCertificadaFirmada', [
             'datos_control' => $object,
             'firma_electronica' => base64_encode($firmaDirector),
             'qr' => $qr
         ]);
+
+        $this->pdfFirmado($pdf, $certificacion->movimiento_registral_id, $certificacion->movimientoRegistral->folio);
 
         $pdf->render();
 
@@ -534,6 +538,75 @@ class CopiasController extends Controller
                             ->build();
 
         return $result->getDataUri();
+    }
+
+    public function pdfFirmado($pdf, $id, $folio){
+
+        $pdf->render();
+
+        $dom_pdf = $pdf->getDomPDF();
+
+        $canvas = $dom_pdf->get_canvas();
+
+        $canvas->page_text(35, 745, $folio, $dom_pdf->getFontMetrics()->getFont('helvetica'), 9, array(1, 1, 1));
+
+        $canvas->page_text(480, 745, "Página: {PAGE_NUM} de {PAGE_COUNT}", $dom_pdf->getFontMetrics()->getFont('helvetica'), 9, array(1, 1, 1));
+
+        $canvas->page_script(function ($pageNumber, $pageCount, $canvas, $fontMetrics) {
+            $w = $canvas->get_width();
+            $h = $canvas->get_height();
+
+            $canvas->image(public_path('storage/img/watermark.png'), 0, 0, $w, $h, $resolution = "normal");
+
+        });
+
+        $nombre = Str::random(40);
+
+        $nombreFinal = $nombre . '.pdf';
+
+        Storage::disk('caratulas')->put($nombre . '.pdf', $pdf->output());
+
+        $pdfImagen = new \Spatie\PdfToImage\Pdf('caratulas/' . $nombre . '.pdf');
+
+        $all = new Imagick();
+
+        for ($i=1; $i <= $pdfImagen->pageCount(); $i++) {
+
+            $nombre_img = $nombre . '_' . $i . '.jpg';
+
+            $pdfImagen->selectPage($i)->save('caratulas/'. $nombre_img);
+
+            $im = new Imagick(Storage::disk('caratulas')->path($nombre_img));
+
+            $all->addImage($im);
+
+            unlink('caratulas/' . $nombre_img);
+
+        }
+
+        $all->resetIterator();
+        $combined = $all->appendImages(true);
+        $combined->setImageFormat("jpg");
+
+        if(app()->isProduction()){
+
+            Storage::disk('s3')->put(config('services.ses.ruta_caratulas') . $nombre . '.jpg', $combined);
+
+        }else{
+
+            file_put_contents("caratulas/" . $nombre . '.jpg', $combined);
+
+        }
+
+        File::create([
+            'fileable_id' => $id,
+            'fileable_type' => 'App\Models\MovimientoRegistral',
+            'descripcion' => 'caratula',
+            'url' => $nombre . '.jpg'
+        ]);
+
+        unlink('caratulas/' . $nombreFinal);
+
     }
 
 }
