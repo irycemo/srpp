@@ -11,6 +11,7 @@ use App\Models\Certificacion;
 use Barryvdh\DomPDF\Facade\Pdf;
 use Endroid\QrCode\Builder\Builder;
 use App\Http\Controllers\Controller;
+use App\Traits\GenerarMarcaDeAguaTrait;
 use App\Traits\NombreServicioTrait;
 use Endroid\QrCode\Writer\PngWriter;
 use Endroid\QrCode\Encoding\Encoding;
@@ -24,6 +25,7 @@ class CopiasController extends Controller
 {
 
     use NombreServicioTrait;
+    use GenerarMarcaDeAguaTrait;
 
     public function copiaCertificada(Certificacion $certificacion){
 
@@ -464,8 +466,6 @@ class CopiasController extends Controller
 
         $object->seccion = Str::upper($certificacion->movimientoRegistral->seccion);
 
-        $qr = $this->generadorQr();
-
         $object->numero_oficio = $certificacion->movimientoRegistral->numero_oficio;
 
         $object->servicio = $this->nombreServicio($certificacion->movimientoRegistral->año, $certificacion->movimientoRegistral->tramite, $certificacion->movimientoRegistral->usuario);
@@ -479,12 +479,14 @@ class CopiasController extends Controller
 
         FirmaElectronica::where('movimiento_registral_id', $certificacion->movimientoRegistral)->first()?->delete();
 
-        FirmaElectronica::create([
+        $firmaElectronica = FirmaElectronica::create([
             'movimiento_registral_id' => $certificacion->movimiento_registral_id,
             'cadena_original' => json_encode($object),
             'cadena_encriptada' => base64_encode($firmaDirector),
             'estado' => 'activo'
         ]);
+
+        $qr = $this->generadorQr();
 
         $pdf = Pdf::loadView('certificaciones.copiaCertificadaFirmada', [
             'datos_control' => $object,
@@ -504,12 +506,22 @@ class CopiasController extends Controller
 
     }
 
-    public function generadorQr(){
+    public function generadorQr($firma_electronica = null){
+
+        if($firma_electronica){
+
+            $rute = route('verificacion', $firma_electronica);
+
+        }else{
+
+            $rute = 'https://irycem.michoacan.gob.mx/';
+
+        }
 
         $result = Builder::create()
                             ->writer(new PngWriter())
                             ->writerOptions([])
-                            ->data('https://irycem.michoacan.gob.mx/')
+                            ->data($rute)
                             ->encoding(new Encoding('UTF-8'))
                             ->errorCorrectionLevel(ErrorCorrectionLevel::High)
                             ->size(100)
