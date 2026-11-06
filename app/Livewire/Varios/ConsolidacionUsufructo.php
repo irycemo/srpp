@@ -196,13 +196,13 @@ class ConsolidacionUsufructo extends Component
 
         if($pp == 0){
 
-            if($pn < 99.9999){
+            if($pn < 99.999){
 
                 throw new Exception("El porcentaje de nuda propiedad no es el 100%.");
 
             }
 
-            if($pu < 99.9999){
+            if($pu < 99.999){
 
                 throw new Exception("El porcentaje de usufructo no es el 100%.");
 
@@ -211,13 +211,13 @@ class ConsolidacionUsufructo extends Component
         }else{
 
 
-            if(($pn + $pp) < 99.9999){
+            if(($pn + $pp) < 99.999){
 
                 throw new Exception("El porcentaje de nuda propiedad no es el 100%.");
 
             }
 
-            if(($pu + $pp) < 99.9999){
+            if(($pu + $pp) < 99.999){
 
                 throw new Exception("El porcentaje de usufructo no es el 100%.");
 
