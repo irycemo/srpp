@@ -496,7 +496,13 @@ class CopiasController extends Controller
             'qr' => $qr
         ]);
 
-        $this->pdfFirmado($pdf, $certificacion->movimiento_registral_id, $certificacion->movimientoRegistral->folio);
+        $pdf2 = Pdf::loadView('certificaciones.copiaCertificadaFirmada', [
+            'datos_control' => $object,
+            'firma_electronica' => base64_encode($firmaDirector),
+            'qr' => $qr
+        ]);
+
+        $this->pdfFirmado($pdf2, $certificacion->movimiento_registral_id, $certificacion->movimientoRegistral->folio);
 
         $pdf->render();
 
