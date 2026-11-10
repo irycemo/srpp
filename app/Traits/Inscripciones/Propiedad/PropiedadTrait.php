@@ -332,8 +332,6 @@ trait PropiedadTrait{
 
         }
 
-        (new GravamenController())->caratula($gravamen);
-
     }
 
 }
