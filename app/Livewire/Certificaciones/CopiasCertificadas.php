@@ -96,7 +96,7 @@ class CopiasCertificadas extends Component
 
     public function abrirModalFolio(Certificacion $modelo){
 
-        if(!auth()->user()->hasRole(['Certificador Juridico', 'Certificador Oficialia','Jefe de departamento certificaciones'])){
+        if($modelo->movimientoRegistral->estado !== 'autorizado' && !auth()->user()->hasRole(['Certificador Juridico', 'Certificador Oficialia','Jefe de departamento certificaciones'])){
 
             if($this->calcularDiaElaboracion($modelo->movimientoRegistral)) return;
 
