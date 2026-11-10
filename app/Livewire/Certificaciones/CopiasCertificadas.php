@@ -82,7 +82,7 @@ class CopiasCertificadas extends Component
 
         }
 
-        if($this->copiaConsultada->estado != 'elaborado'){
+        if(in_array($this->copiaConsultada->estado, ['elaborado', 'autorizado'])){
 
             $this->reset('copiaConsultada');
 
