@@ -13,7 +13,7 @@ trait AutorizarImpresionTrait{
 
         try {
 
-            if($movimientoRegistral->folioReal->estado != 'activo'){
+            if(!$movimientoRegistral->certificacion && $movimientoRegistral->folioReal->estado != 'activo'){
 
                 throw new GeneralException('El folio real no esta activo.');
 
