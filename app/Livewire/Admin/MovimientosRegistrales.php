@@ -16,6 +16,7 @@ use App\Http\Controllers\Varios\VariosController;
 use App\Models\MovimientoRegistral;
 use App\Models\User;
 use App\Traits\ComponentesTrait;
+use App\Traits\Inscripciones\AutorizarImpresionTrait;
 use App\Traits\Inscripciones\EnviarMovimientoCorreccion;
 use App\Traits\Inscripciones\RechazarMovimientoTrait;
 use App\Traits\MovimientoRegistral\CambiarAntecedenteTrait;
@@ -31,6 +32,7 @@ class MovimientosRegistrales extends Component
     use RechazarMovimientoTrait;
     use EnviarMovimientoCorreccion;
     use CambiarAntecedenteTrait;
+    use AutorizarImpresionTrait;
 
     public MovimientoRegistral $modelo_editar;
 

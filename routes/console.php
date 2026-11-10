@@ -392,3 +392,53 @@ Artisan::command('folios', function(){
     $this->info($count);
 
 });
+
+Artisan::command('csv', function(){
+
+    $count = 0;
+
+    $folios = FolioReal::with('predio')
+                            ->where('tomo_antecedente', 445)
+                            ->where('registro_antecedente', 23)
+                            ->get();
+
+    $progressbar = $this->output->createProgressBar($folios->count());
+
+    $progressbar->start();
+
+    $handle = fopen(storage_path('app/public/folio.csv'), 'w');
+
+    fputcsv($handle,[
+        'Folio real',
+        'Tomo',
+        'Registro',
+        'Número de propiedad',
+        'Distrito',
+        'Descripción',
+        'Superficie',
+        'Propietario'
+    ]);
+
+    foreach($folios as $folio){
+
+        fputcsv($handle,[
+            $folio->folio,
+            $folio->tomo_antecedente,
+            $folio->registro_antecedente,
+            $folio->distrito_antecedente,
+            $folio->predio->descripcion . ' ' . $folio->predio->observaciones,
+            $folio->predio->superficie_terreno,
+            $folio->predio->primerPropietario()
+        ]);
+
+    }
+
+    rewind($handle);
+
+    fclose($handle);
+
+    $progressbar->finish();
+
+    $this->info($count);
+
+});

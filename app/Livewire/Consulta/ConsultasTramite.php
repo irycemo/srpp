@@ -12,6 +12,7 @@ use App\Constantes\Constantes;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\DB;
 use App\Models\MovimientoRegistral;
+use App\Traits\Inscripciones\AutorizarImpresionTrait;
 
 class ConsultasTramite extends Component
 {
@@ -20,6 +21,7 @@ class ConsultasTramite extends Component
     use WithPagination;
     use CambiarAntecedenteTrait;
     use RechazarMovimientoTrait;
+    use AutorizarImpresionTrait;
 
     public $año;
     public $tramite;

@@ -315,6 +315,19 @@
 
                                         @endif
 
+                                        @can('Autorizar impresión anticipada')
+
+                                            <button
+                                                wire:click="autorizarImpresionAnticipada({{  $movimiento->id }})"
+                                                wire:loading.attr="disabled"
+                                                wire:confirm="¿Esta seguro que desea autorizar la impresión anticipada?"
+                                                class="w-full text-left block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 focus:outline-none focus:bg-gray-100"
+                                                role="menuitem">
+                                                Autorizar imipresión anticipada
+                                            </button>
+
+                                        @endcan
+
                                         @can("Eliminar movimiento registral")
 
                                             <button
