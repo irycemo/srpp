@@ -304,7 +304,7 @@ class CopiasCertificadas extends Component
 
     public function asignarFolio(){
 
-        if(!auth()->user()->hasRole(['Certificador Juridico', 'Certificador Oficialia', 'Jefe de departamento certificaciones'])){
+        if($this->modelo_editar->movimientoRegistral->estado !== 'autorizado' && !auth()->user()->hasRole(['Certificador Juridico', 'Certificador Oficialia', 'Jefe de departamento certificaciones'])){
 
             if($this->calcularDiaElaboracion($this->modelo_editar->movimientoRegistral)) return;
 
