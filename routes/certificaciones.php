@@ -28,6 +28,7 @@ Route::group(['middleware' => ['auth', 'esta.activo']], function(){
     Route::get('copias_certificadas', CopiasCertificadas::class)->middleware('permission:Copias Certificadas')->name('copias_certificadas');
     Route::get('copia_certificada/{certificacion}', [CopiasController::class, 'copiaCertificada'])->name('copia_certificada');
     Route::get('copia_certificada_firmada/{certificacion}', [CopiasController::class, 'copiaCertificadaFirmada'])->name('copia_certificada_firmada');
+    Route::get('reimprimir_copia_certificada_firmada/{firma_electronica:uuid}', [CopiasController::class, 'reimprimirPdfFirmado'])->name('reimprimir_copia_certificada_firmada');
 
     /* Indices */
     Route::get('indices_y_tomos', Consultas::class)->middleware('permission:Indices y tomos')->name('indices_y_tomos');

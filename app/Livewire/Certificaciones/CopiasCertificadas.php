@@ -326,7 +326,7 @@ class CopiasCertificadas extends Component
 
                 $this->modelo_editar->save();
 
-                if(auth()->user()->ubicacion == 'Regional 4'){
+                if($this->modelo_editar->movimientoRegistral->getRawOriginal('distrito') == 2){
 
                     $this->dispatch('imprimir_documento_firmado', ['documento' => $this->modelo_editar->id]);
 
@@ -400,7 +400,15 @@ class CopiasCertificadas extends Component
 
         try {
 
-            $this->dispatch('imprimir_documento', ['documento' => $this->modelo_editar->id]);
+            if($this->modelo_editar->movimientoRegistral->getRawOriginal('distrito') == 2){
+
+                $this->dispatch('reimprimir_documento_firmado', ['documento' => $this->modelo_editar->movimientoRegistral->firmaElectronica->uuid]);
+
+            }else{
+
+                $this->dispatch('imprimir_documento', ['documento' => $this->modelo_editar->id]);
+
+            }
 
             $this->modelo_editar->reimpreso_en = now();
 

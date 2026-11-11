@@ -592,6 +592,18 @@
 
         });
 
+        window.addEventListener('reimprimir_documento_firmado', event => {
+
+            const documento = event.detail[0].documento;
+
+            var url = "{{ route('reimprimir_copia_certificada_firmada', '')}}" + "/" + documento;
+
+            window.open(url, '_blank');
+
+            window.location.href = "{{ route('copias_certificadas')}}";
+
+        });
+
     </script>
 
 @endpush

@@ -615,4 +615,28 @@ class CopiasController extends Controller
 
     }
 
+    public function reimprimirPdfFirmado(FirmaElectronica $firmaElectronica){
+
+        $object = json_decode($firmaElectronica->cadena_original);
+
+        $qr = $this->generadorQr($firmaElectronica->uuid);
+
+        $pdf = Pdf::loadView('certificaciones.copiaCertificadaFirmada', [
+            'datos_control' => $object,
+            'firma_electronica' => $firmaElectronica->cadena_encriptada,
+            'qr' => $qr
+        ]);
+
+        $pdf->render();
+
+        $dom_pdf = $pdf->getDomPDF();
+
+        $canvas = $dom_pdf->get_canvas();
+
+        $canvas->page_text(480, 745, "Página: {PAGE_NUM} de {PAGE_COUNT}", $dom_pdf->getFontMetrics()->getFont('helvetica'), 9, array(1,1,1));
+
+        return $pdf->stream('documento.pdf');
+
+    }
+
 }
