@@ -3,10 +3,10 @@
 namespace App\Http\Controllers\Api;
 
 use Carbon\Carbon;
+use Illuminate\Support\Facades\Storage;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use App\Models\MovimientoRegistral;
-use Illuminate\Support\Facades\Log;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Cache;
 use App\Http\Requests\CertificadoListaRequest;
@@ -27,6 +27,7 @@ class CertificadosController extends Controller
         }
 
         $certificaciones = MovimientoRegistral::with('folioReal')
+                                ->whereHas('certificacion')
                                 ->where('usuario_tramites_linea_id', $validated['entidad'])
                                 ->when(isset($validated['folio_real']), function($q) use ($validated){
                                     $q->WhereHas('folioReal', function($q) use ($validated){
@@ -53,7 +54,7 @@ class CertificadosController extends Controller
 
         $movimientoRegistral = MovimientoRegistral::find($validated['id']);
 
-        if(!$movimientoRegistral->firmaElectronica){
+        if(! $movimientoRegistral){
 
             return response()->json([
                 'error' => 'No see ncontro el certificado de gravamen.',
@@ -61,23 +62,49 @@ class CertificadosController extends Controller
 
         }
 
-        try {
+        if(! $movimientoRegistral->pdf){
 
-            $pdf = (new CertificadoGravamenController())->reimprimirFirmado($movimientoRegistral->firmaElectronica);
+            (new CertificadoGravamenController)->reimprimirFirmado($movimientoRegistral->firmaElectronica);
 
-            return response()->json([
-                'data' => [
-                    'pdf' => base64_encode($pdf->stream())
-                ]
-            ], 200);
+            $movimientoRegistral->refresh();
 
-        } catch (\Throwable $th) {
+            if(app()->isProduction()){
 
-            Log::error("Error al generar pdf desde Sistema Trámites en Lína." . $th);
+                return response()->json([
+                    'data' => [
+                        'pdf' => Storage::disk('s3')->temporaryUrl(config('services.ses.ruta_pdfs') . $movimientoRegistral->pdf->url, now()->addMinutes(10))
+                    ]
+                ], 200);
 
-            return response()->json([
-                'error' => 'Hubo un error al generar el pdf.',
-            ], 500);
+            }else{
+
+                return response()->json([
+                    'data' => [
+                        'pdf' => Storage::disk('pdfs')->Url($movimientoRegistral->pdf->url)
+                    ]
+                ], 200);
+
+            }
+
+        }else{
+
+            if(app()->isProduction()){
+
+                return response()->json([
+                    'data' => [
+                        'pdf' => Storage::disk('s3')->temporaryUrl(config('services.ses.ruta_pdfs') . $movimientoRegistral->pdf->url, now()->addMinutes(10))
+                    ]
+                ], 200);
+
+            }else{
+
+                return response()->json([
+                    'data' => [
+                        'pdf' => Storage::disk('pdfs')->Url($movimientoRegistral->pdf->url)
+                    ]
+                ], 200);
+
+            }
 
         }
 

@@ -52,6 +52,7 @@ class VariosService implements MovimientoServiceInterface{
         $vario = Vario::create([
             'acto_contenido' => $acto,
             'servicio' => $request['servicio'],
+            'descripcion' => $request['descripcion_acto'] ?? null,
             'movimiento_registral_id' => $request['movimiento_registral_id'],
         ]);
 

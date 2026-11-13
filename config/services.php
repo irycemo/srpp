@@ -31,6 +31,7 @@ return [
         'region' => env('AWS_DEFAULT_REGION', 'us-east-1'),
         'ruta_caratulas' => 'srpp/caratulas/',
         'ruta_documento_entrada' => 'srpp/documento_entrada',
+        'ruta_pdfs' => 'srpp/pdfs/',
     ],
 
     'sistema_tramites' => [
@@ -40,6 +41,11 @@ return [
         'consultar_archivo' => env('SISTEMA_TRAMITES_CONSULTAR_ARCHIVO'),
         'consultar_servicio' => env('SISTEMA_TRAMITES_CONSULTAR_SERVICIO'),
         'desvincular_movimiento_registral' => env('SISTEMA_TRAMITES_DESVINCULAR_MOVIMIENTO_REGISTRAL'),
+    ],
+
+    'sistema_tramites_linea' => [
+        'token' => env('SISTEMA_TRAMITES_LINEA_TOKEN'),
+        'actualizar_estado' => env('SISTEMA_TRAMITES_LINEA_ACTUALIZAR_ESTADO'),
     ],
 
 ];

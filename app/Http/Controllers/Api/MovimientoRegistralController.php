@@ -39,7 +39,14 @@ class MovimientoRegistralController extends Controller
 
         } catch (GeneralException $th) {
 
-            Log::error('Error al ingresar el trámite: ' . $validated['año'] . '-' . $validated['tramite'] . '-' . $validated['usuario'] . ' desde Sistema Trámites. ' . $th);
+            Log::error(
+                'Error al ingresar el trámite.',
+                [
+                    'message' => $th->getMessage(),
+                    'data' => $validated,
+                    'trace' => $th->getTraceAsString()
+                ]
+            );
 
             return response()->json([
                 'error' => $th->getMessage(),
@@ -47,7 +54,14 @@ class MovimientoRegistralController extends Controller
 
         }catch (\Throwable $th) {
 
-            Log::error('Error al ingresar el trámite: ' . $validated['año'] . '-' . $validated['tramite'] . '-' . $validated['usuario'] .' desde Sistema Trámites. ' . $th);
+            Log::error(
+                'Error al ingresar el trámite.',
+                [
+                    'message' => $th->getMessage(),
+                    'data' => $validated,
+                    'trace' => $th->getTraceAsString()
+                ]
+            );
 
             return response()->json([
                 'error' => 'Error al actualizar el trámite: ' . $validated['año'] . '-' . $validated['tramite'] . '-' . $validated['usuario'] . ' en Sistema RPP.',
@@ -75,7 +89,14 @@ class MovimientoRegistralController extends Controller
 
         } catch (GeneralException $th) {
 
-            Log::error('Error al actualizar el trámite desde Sistema Trámites. ' . $th);
+            Log::error(
+                'Error al actualizar el trámite desde Sistema Trámites.',
+                [
+                    'message' => $th->getMessage(),
+                    'data' => $validated,
+                    'trace' => $th->getTraceAsString()
+                ]
+            );
 
             return response()->json([
                 'error' => $th->getMessage(),
@@ -83,7 +104,14 @@ class MovimientoRegistralController extends Controller
 
         } catch (\Throwable $th) {
 
-            Log::error('Error al actualizar el trámite desde Sistema Trámites. ' . $th);
+            Log::error(
+                'Error al actualizar el trámite desde Sistema Trámites.',
+                [
+                    'message' => $th->getMessage(),
+                    'data' => $validated,
+                    'trace' => $th->getTraceAsString()
+                ]
+            );
 
             return response()->json([
                 'error' => 'Error al actualizar el trámite en Sistema RPP.',

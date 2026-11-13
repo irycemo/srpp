@@ -175,6 +175,10 @@ class MovimientoRegistral extends Model implements Auditable
 
     }
 
+    public function pdf(){
+        return $this->morphOne(File::class, 'fileable')->where('descripcion', 'pdf');
+    }
+
     public function getDistritoAttribute(){
         return Constantes::DISTRITOS[$this->attributes['distrito']];
     }

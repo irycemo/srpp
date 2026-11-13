@@ -6,6 +6,7 @@ use App\Exceptions\GeneralException;
 use App\Http\Controllers\Varios\VariosController;
 use App\Http\Services\AsignacionService;
 use App\Http\Services\FolioRealService;
+use App\Jobs\Varios\AvisoPreventivoCambioEstadoJob;
 use App\Models\FolioReal;
 use App\Models\MovimientoRegistral;
 use App\Models\User;
@@ -75,6 +76,8 @@ class PrimerAvisoPreventivo extends Component
 
                 (new FolioRealService())->revisarCertificadosGravamenPendientes($this->vario->movimientoRegistral);
 
+                AvisoPreventivoCambioEstadoJob::dispatch($this->vario->movimientoRegistral->id)->afterCommit();
+
             });
 
             return redirect()->route('varios');
@@ -119,8 +122,18 @@ class PrimerAvisoPreventivo extends Component
 
     public function crearCertificadoGravamen(){
 
+        if($this->vario->movimientoRegistral->usuario == 67){
+
+            $estado = 'pendiente';
+
+        }else{
+
+            $estado = 'nuevo';
+
+        }
+
         $movimiento = MovimientoRegistral::create([
-            'estado' => 'nuevo',
+            'estado' => $estado,
             'folio' => FolioReal::find($this->vario->movimientoRegistral->folio_real)->ultimoFolio() + 1,
             'folio_real' => $this->vario->movimientoRegistral->folio_real,
             'fecha_prelacion' => $this->vario->movimientoRegistral->fecha_prelacion,
@@ -145,6 +158,7 @@ class PrimerAvisoPreventivo extends Component
             'procedencia' => $this->vario->movimientoRegistral->procedencia,
             'numero_oficio' => $this->vario->movimientoRegistral->numero_oficio,
             'monto' => $this->vario->movimientoRegistral->monto,
+            'usuario_tramites_linea_id' => $this->vario->movimientoRegistral->usuario_tramites_linea_id,
             'usuario_asignado' => (new AsignacionService())->obtenerUltimoUsuarioConAsignacion($this->obtenerUsuarios()),
             'usuario_supervisor' => $this->obtenerSupervisor(),
             'movimiento_padre' => $this->vario->movimientoRegistral->id,

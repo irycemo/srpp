@@ -81,7 +81,7 @@ class SistemaTramitesService{
 
     public function desvincularMovimientoRegistral(int $movimiento_registral_id){
 
-    $response = Http::withToken(config('services.sistema_tramites.token'))
+        $response = Http::withToken(config('services.sistema_tramites.token'))
                             ->accept('application/json')
                             ->asForm()
                             ->post(
@@ -106,6 +106,7 @@ class SistemaTramitesService{
             throw new GeneralException("Error al desvincular movimiento registral en Sistema Trámites.");
 
         }
+
     }
 
 }

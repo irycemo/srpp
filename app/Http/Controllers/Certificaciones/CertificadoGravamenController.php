@@ -221,6 +221,27 @@ class CertificadoGravamenController extends Controller
 
         $canvas->page_text(35, 745, 'I-' . $movimientoRegistral->folioReal->folio . '-' .$movimientoRegistral->folio, $dom_pdf->getFontMetrics()->getFont('helvetica'), 9, array(1, 1, 1));
 
+        $nombre = Str::random(40);
+
+        $nombreFinal = $nombre . '.pdf';
+
+        if(app()->isProduction()){
+
+            Storage::disk('s3')->put(config('services.ses.ruta_pdfs') . $nombreFinal, $pdf->output());
+
+        }else{
+
+            Storage::disk('pdfs')->put($nombreFinal, $pdf->output());
+
+        }
+
+        File::create([
+            'fileable_id' => $vario->movimientoRegistral->id,
+            'fileable_type' => 'App\Models\MovimientoRegistral',
+            'descripcion' => 'pdf',
+            'url' => $nombreFinal
+        ]);
+
         $objeto = json_decode($firmaElectronica->cadena_original);
 
         $pdfFirmado = Pdf::loadView('certificaciones.certificadoGravamen', [
@@ -313,6 +334,30 @@ class CertificadoGravamenController extends Controller
 
     public function reimprimirFirmado(FirmaElectronica $firmaElectronica){
 
+        if($firmaElectronica->movimientoRegistral->pdf){
+
+            File::where('fileable_type', MovimientoRegistral::class)
+                        ->where('fileable_id', $firmaElectronica->movimientoRegistral->id)
+                        ->where('descripcion', 'pdf')
+                        ->get()
+                        ->each(function(File $anterior){
+
+                            if(app()->isProduction()){
+
+                                Storage::disk('s3')->delete(config('services.ses.ruta_pdfs'). $anterior->url);
+
+                            }else{
+
+                                Storage::disk('s3')->delete('pdfs/'. $anterior->url);
+
+                            }
+
+                            $anterior->delete();
+
+                        });
+
+        }
+
         $objeto = json_decode($firmaElectronica->cadena_original);
 
         $qr = $this->generadorQr($firmaElectronica->uuid);
@@ -339,6 +384,34 @@ class CertificadoGravamenController extends Controller
         $canvas->page_text(480, 745, "Página: {PAGE_NUM} de {PAGE_COUNT}", $dom_pdf->getFontMetrics()->getFont('helvetica'), 9, array(1,1,1));
 
         $canvas->page_text(35, 745, 'I-' . $firmaElectronica->movimientoRegistral->folioReal->folio . '-' .$firmaElectronica->movimientoRegistral->folio, $dom_pdf->getFontMetrics()->getFont('helvetica'), 9, array(1, 1, 1));
+
+        $nombre = Str::random(40);
+
+        $nombreFinal = $nombre . '.pdf';
+
+        if(app()->isProduction()){
+
+            Storage::disk('s3')->put(
+                config('services.ses.ruta_pdfs') . $nombreFinal,
+                $pdf->output(),
+                [
+                    'ContentType' => 'application/pdf',
+                    'ContentDisposition' => 'attachment; filename="' . $nombreFinal . '"',
+                ]
+            );
+
+        }else{
+
+            Storage::put('pdfs/' . $nombreFinal, $pdf->output());
+
+        }
+
+        File::create([
+            'fileable_type' => MovimientoRegistral::class,
+            'fileable_id' => $firmaElectronica->movimientoRegistral->id,
+            'url' => $nombreFinal,
+            'descripcion' => 'pdf',
+        ]);
 
         return $pdf;
 

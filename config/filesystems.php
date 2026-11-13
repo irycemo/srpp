@@ -101,6 +101,14 @@ return [
             'throw' => false,
         ],
 
+        'pdfs' => [
+            'driver' => 'local',
+            'root' => storage_path('app/pdfs'),
+            'url' => env('APP_URL').'/pdfs',
+            'visibility' => 'public',
+            'throw' => false,
+        ],
+
     ],
 
     /*
@@ -120,6 +128,7 @@ return [
         public_path('documento_entrada') => storage_path('app/documento_entrada'),
         public_path('efirmas') => storage_path('app/efirmas'),
         public_path('preguntas') => storage_path('app/preguntas'),
+        public_path('pdfs') => storage_path('app/pdfs'),
     ],
 
 ];

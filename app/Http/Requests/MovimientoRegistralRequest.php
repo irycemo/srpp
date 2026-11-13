@@ -80,6 +80,9 @@ class MovimientoRegistralRequest extends FormRequest
             'numero_documento' => 'nullable',
             'numero_autoridad' => 'nullable',
             'procedencia' => 'nullable',
+
+            /* Inscripciones */
+            'descripcion_acto' => 'required'
         ];
     }
 }

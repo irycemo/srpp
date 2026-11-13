@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\Api\AntecedentesController;
+use App\Http\Controllers\Api\AvisosPreventivosController;
 use App\Http\Controllers\Api\CandidatoController;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Api\CertificacionController;
@@ -54,6 +55,8 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::post('consultar_estadisticas', [CertificadosController::class, 'consultarEstadisticas']);
 
     Route::post('consultar_candidato', [CandidatoController::class, 'consultarCandidato']);
+
+    Route::post('generar_aviso_preventivo_pdf', [AvisosPreventivosController::class, 'generarAvisoPreventivoPdf']);
 
 });
 
