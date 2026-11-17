@@ -236,7 +236,7 @@ class CertificadoGravamenController extends Controller
         }
 
         File::create([
-            'fileable_id' => $vario->movimientoRegistral->id,
+            'fileable_id' => $movimientoRegistral->id,
             'fileable_type' => 'App\Models\MovimientoRegistral',
             'descripcion' => 'pdf',
             'url' => $nombreFinal
