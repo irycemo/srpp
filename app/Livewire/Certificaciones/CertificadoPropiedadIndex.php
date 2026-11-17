@@ -97,7 +97,7 @@ class CertificadoPropiedadIndex extends Component
 
     public function elaborar(MovimientoRegistral $movimientoRegistral){
 
-        if($movimientoRegistral->estado !== 'autorizado' && !auth()->user()->hasRole(['Jefe de departamento certificaciones'])){
+        if($movimientoRegistral->estado !== 'autorizado' && !auth()->user()->hasRole(['Jefe de departamento certificaciones', 'Operaciones'])){
 
             if($this->calcularDiaElaboracion($movimientoRegistral)) return;
 
