@@ -76,7 +76,11 @@ class PrimerAvisoPreventivo extends Component
 
                 (new FolioRealService())->revisarCertificadosGravamenPendientes($this->vario->movimientoRegistral);
 
-                AvisoPreventivoCambioEstadoJob::dispatch($this->vario->movimientoRegistral->id)->afterCommit();
+                if($this->vario->movimientoRegistral->usuario == 67){
+
+                    AvisoPreventivoCambioEstadoJob::dispatch($this->vario->movimientoRegistral->id)->afterCommit();
+
+                }
 
             });
 

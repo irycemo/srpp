@@ -401,7 +401,19 @@ trait InscripcionesIndex{
             $this->dispatch('mostrarMensaje', ['warning', $ex->getMessage()]);
 
         } catch (\Throwable $th) {
-            Log::error("Error al reimiprimir caratula de inscripción por el usuario: (id: " . auth()->user()->id . ") " . auth()->user()->name . ". " . $th);
+
+            Log::error(
+                "Error al reimiprimir caratula de inscripción.",
+                [
+                    'message' => $th->getMessage(),
+                    'user_id' => auth()->id(),
+                    'usuario' => auth()->user()->name,
+                    'movimiento_registral_id' => $movimientoRegistral->id,
+                    'tramite' => $movimientoRegistral->año . '-' . $movimientoRegistral->tramite . '-' . $movimientoRegistral->usuario,
+                    'trace' => $th->getTraceAsString()
+                ]
+            );
+
             $this->dispatch('mostrarMensaje', ['error', "Ha ocurrido un error."]);
         }
 
