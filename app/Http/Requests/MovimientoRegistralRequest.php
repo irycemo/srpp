@@ -82,7 +82,7 @@ class MovimientoRegistralRequest extends FormRequest
             'procedencia' => 'nullable',
 
             /* Inscripciones */
-            'descripcion_acto' => 'required'
+            'descripcion_acto' => 'nullable'
         ];
     }
 }

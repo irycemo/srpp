@@ -240,4 +240,5 @@ class PropiedadIndex extends Component
 
         return view('livewire.inscripciones.propiedad.propiedad-index', compact('movimientos'))->extends('layouts.admin');
     }
+
 }
