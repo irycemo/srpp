@@ -56,6 +56,17 @@ trait EnviarMovimientoCorreccion{
 
     public function enviarCorreccion(MovimientoRegistral $movimientoRegistral){
 
+        if(! $movimientoRegistral->folio_real){
+
+            $movimientoRegistral->update([
+                'estado' => 'correccion',
+                'actualizado_por' => auth()->id()
+            ]);
+
+            $movimientoRegistral->audits()->latest()->first()->update(['tags' => 'Envió movimiento registral a corrección']);
+
+        }
+
         $movimiento = $movimientoRegistral->folioReal->movimientosRegistrales()
                                                         ->whereIn('estado', ['finalizado', 'concluido', 'elaborado'])
                                                         ->where('folio', '>', $movimientoRegistral->folio)
