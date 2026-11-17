@@ -65,6 +65,8 @@ trait EnviarMovimientoCorreccion{
 
             $movimientoRegistral->audits()->latest()->first()->update(['tags' => 'Envió movimiento registral a corrección']);
 
+            return;
+
         }
 
         $movimiento = $movimientoRegistral->folioReal->movimientosRegistrales()
