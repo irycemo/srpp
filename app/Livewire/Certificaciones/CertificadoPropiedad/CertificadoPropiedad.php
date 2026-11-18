@@ -20,7 +20,7 @@ class CertificadoPropiedad extends Component
 
     public function generarCertificado(){
 
-        if($this->certificacion->movimientoRegistral->estado !== 'autorizado' && !auth()->user()->hasRole(['Jefe de departamento certificaciones'])){
+        if($this->certificacion->movimientoRegistral->estado !== 'autorizado' && !auth()->user()->hasRole(['Jefe de departamento certificaciones', 'Operaciones'])){
 
             if($this->calcularDiaElaboracion($this->certificacion->movimientoRegistral)) return;
 
