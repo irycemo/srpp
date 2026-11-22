@@ -232,16 +232,24 @@ class EliminarMovimientoRegistralAction
     private function procesarMovimientosPrecalificacion(MovimientoRegistral $movimiento_registral):void
     {
 
-        if($movimiento_registral->tomo && $movimiento_registral->registro && $movimiento_registral->numero_propiedad){
+        $movimientos_precalificacion = collect();
 
+        if (
+            filled($movimiento_registral->tomo) &&
+            filled($movimiento_registral->registro) &&
+            filled($movimiento_registral->numero_propiedad) &&
+            filled($movimiento_registral->getRawOriginal('distrito'))
+        ) {
             $movimientos_precalificacion = MovimientoRegistral::where('tomo', $movimiento_registral->tomo)
-                                                                ->where('registro', $movimiento_registral->registro)
-                                                                ->where('numero_propiedad', $movimiento_registral->numero_propiedad)
-                                                                ->where('distrito', $movimiento_registral->getRawOriginal('distrito'))
-                                                                ->where('folio', '>', $movimiento_registral->folio)
-                                                                ->orderBy('folio')
-                                                                ->get();
-
+                ->where('registro', $movimiento_registral->registro)
+                ->where('numero_propiedad', $movimiento_registral->numero_propiedad)
+                ->where('distrito', $movimiento_registral->getRawOriginal('distrito'))
+                ->whereNull('folio_real')
+                ->whereNull('folio_real_persona') // si esta cola debe excluir persona moral
+                ->where('folio', '>', $movimiento_registral->folio)
+                ->where('estado', 'precalificacion')
+                ->orderBy('folio')
+                ->get();
         }
 
         DB::transaction(function () use($movimientos_precalificacion, $movimiento_registral){
