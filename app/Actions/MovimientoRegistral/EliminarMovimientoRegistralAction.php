@@ -232,16 +232,21 @@ class EliminarMovimientoRegistralAction
     private function procesarMovimientosPrecalificacion(MovimientoRegistral $movimiento_registral):void
     {
 
-        $movimientos_precalificacion = MovimientoRegistral::where('tomo', $movimiento_registral->tomo)
-                                                            ->where('registro', $movimiento_registral->registro)
-                                                            ->where('distrito', $movimiento_registral->getRawOriginal('distrito'))
-                                                            ->where('folio', '>', $movimiento_registral->folio)
-                                                            ->orderBy('folio')
-                                                            ->get();
+        if($movimiento_registral->tomo && $movimiento_registral->registro && $movimiento_registral->numero_propiedad){
+
+            $movimientos_precalificacion = MovimientoRegistral::where('tomo', $movimiento_registral->tomo)
+                                                                ->where('registro', $movimiento_registral->registro)
+                                                                ->where('numero_propiedad', $movimiento_registral->numero_propiedad)
+                                                                ->where('distrito', $movimiento_registral->getRawOriginal('distrito'))
+                                                                ->where('folio', '>', $movimiento_registral->folio)
+                                                                ->orderBy('folio')
+                                                                ->get();
+
+        }
 
         DB::transaction(function () use($movimientos_precalificacion, $movimiento_registral){
 
-        $count = $movimiento_registral->folio;
+            $count = $movimiento_registral->folio;
 
             if($movimientos_precalificacion->count()){
 
