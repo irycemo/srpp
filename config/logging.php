@@ -73,6 +73,14 @@ return [
             'replace_placeholders' => true,
         ],
 
+        'diagnostics' => [
+            'driver' => 'daily',
+            'path' => storage_path('logs/diagnostics.log'),
+            'level' => 'info',
+            'days' => (int) env('DIAGNOSTICS_LOG_DAYS', 30),
+            'replace_placeholders' => true,
+        ],
+
         'slack' => [
             'driver' => 'slack',
             'url' => env('LOG_SLACK_WEBHOOK_URL'),
