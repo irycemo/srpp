@@ -54,71 +54,56 @@
 
             </x-input-group>
 
-            <x-input-group for="gravamen.valor_gravamen" label="Valor del gravamen" :error="$errors->first('gravamen.valor_gravamen')" class="w-full relative">
+        </div>
 
-                <x-input-text type="number" id="gravamen.valor_gravamen" wire:model="gravamen.valor_gravamen" />
+        <div class="w-full lg:w-1/2 mx-auto mb-4">
 
-                <div class="absolute right-0 top-6">
+            <div class="flex items-center justify-between">
 
-                    <x-input-select id="divisa" wire:model="gravamen.divisa">
+                <h3 class="text-sm font-medium text-gray-700">Montos</h3>
 
-                        <option value="" selected>Divisa</option>
+                <button type="button" id="agregar-atributo" wire:click="agregarMonto" class="text-xs font-medium text-blue-600 hover:text-blue-800">
+                    + Agregar monto
+                </button>
 
-                        @foreach ($divisas as $divisa)
+            </div>
 
-                            <option value="{{ $divisa }}">{{ $divisa }}</option>
+            <div id="montos" class="mt-2 space-y-2">
 
-                        @endforeach
+                @foreach ($montos as $index => $valor)
 
-                    </x-input-select>
+                    <div class="atributo-fila flex items-center gap-2">
 
-                </div>
+                        <input type="number" wire:model="montos.{{ $index }}.monto" placeholder="Monto"
+                            class="fila-clave block w-2/5 rounded-lg border-gray-300 text-sm shadow-sm focus:border-blue-500 focus:ring-blue-500 @error('montos.' . $index . '.monto') border-red-500 @enderror">
 
-            </x-input-group>
+                        <select
+                            wire:model="montos.{{ $index }}.divisa"
+                            class="fila-valor block flex-1 rounded-lg border-gray-300 text-sm shadow-sm focus:border-blue-500 focus:ring-blue-500 @error('montos.' . $index . '.divisa') border-red-500 @enderror">
 
-            <x-input-group for="gravamen.valor_gravamen_2" label="Valor del gravamen 2" :error="$errors->first('gravamen.valor_gravamen_2')" class="w-full relative">
+                                <option value="" selected>Seleccione una opción</option>
 
-                <x-input-text type="number" id="gravamen.valor_gravamen_2" wire:model="gravamen.valor_gravamen_2" />
+                                @foreach ($divisas as $divisa)
 
-                <div class="absolute right-0 top-6">
+                                    <option value="{{ $divisa }}" selected>{{ $divisa }}</option>
 
-                    <x-input-select id="divisa" wire:model="gravamen.divisa_2">
+                                @endforeach
 
-                        <option value="" selected>Divisa</option>
+                        </select>
 
-                        @foreach ($divisas as $divisa)
+                        <button type="button" wire:click="borrarMonto({{ $index }})" class="quitar-atributo rounded p-1 text-gray-400 hover:text-red-600" title="Quitar">
+                            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" class="h-4 w-4"><path d="M6 6l12 12M18 6L6 18"/></svg>
+                        </button>
 
-                            <option value="{{ $divisa }}">{{ $divisa }}</option>
+                    </div>
 
-                        @endforeach
+                @endforeach
 
-                    </x-input-select>
+            </div>
 
-                </div>
-
-            </x-input-group>
-
-            <x-input-group for="gravamen.valor_gravamen_3" label="Valor del gravamen 3" :error="$errors->first('gravamen.valor_gravamen_3')" class="w-full relative">
-
-                <x-input-text type="number" id="gravamen.valor_gravamen_3" wire:model="gravamen.valor_gravamen_3" />
-
-                <div class="absolute right-0 top-6">
-
-                    <x-input-select id="divisa" wire:model="gravamen.divisa_3">
-
-                        <option value="" selected>Divisa</option>
-
-                        @foreach ($divisas as $divisa)
-
-                            <option value="{{ $divisa }}">{{ $divisa }}</option>
-
-                        @endforeach
-
-                    </x-input-select>
-
-                </div>
-
-            </x-input-group>
+            @error('montos')
+                <p class="mt-1 text-xs text-red-600">{{ $message }}</p>
+            @enderror
 
         </div>
 

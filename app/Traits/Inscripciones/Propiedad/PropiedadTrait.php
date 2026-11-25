@@ -11,8 +11,6 @@ use App\Models\FolioReal;
 use App\Models\Propiedad;
 use App\Models\MovimientoRegistral;
 use Illuminate\Support\Facades\Log;
-use App\Http\Controllers\Gravamen\GravamenController;
-
 
 trait PropiedadTrait{
 

@@ -225,7 +225,9 @@
 
             <p class="parrafo">
                 <strong>Fecha de inscripción:</strong> {{ $gravamen->fecha_inscripcion }}.
-                <strong>Valor del gravamen:</strong> ${{ number_format($gravamen->valor_gravamen, 2) }} {{ $gravamen->divisa }}.
+                @if(isset($gravamen->valor_gravamen))
+                    <strong>Valor del gravamen:</strong> ${{ number_format($gravamen->valor_gravamen, 2) }} {{ $gravamen->divisa }}.
+                @endif
                 @if(isset($gravamen->valor_gravamen_2))
                     <strong>Valor del gravamen 2:</strong> ${{ number_format($gravamen->valor_gravamen_2, 2) }} {{ $gravamen->divisa_2 }}.
                 @endif
@@ -235,6 +237,17 @@
                 @if(isset($gravamen->expediente))
                     <strong>Expediente:</strong> {{ $gravamen->expediente }}
                 @endif
+
+                @if(isset($gravamen->montos))
+
+                    @foreach ($gravamen->montos as $monto)
+
+                        <p><strong>Monto {{ $loop->iteration }}: </strong> ${{ number_format($monto->monto, 2) }}, <strong>Divisa: </strong> {{ $monto->divisa }}</p>
+
+                    @endforeach
+
+                @endif
+
             </p>
 
             <p class="parrafo">

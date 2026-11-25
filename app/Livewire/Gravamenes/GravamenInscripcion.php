@@ -10,11 +10,11 @@ use App\Models\Gravamen;
 use App\Models\User;
 use App\Traits\Inscripciones\ConsultarArchivoTrait;
 use App\Traits\Inscripciones\DocumentoEntradaTrait;
+use App\Traits\Inscripciones\Gravamenes\MontosTrait;
 use App\Traits\Inscripciones\GuardarDocumentoEntradaTrait;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Log;
-use Illuminate\Validation\Rule;
 use Livewire\Component;
 use Livewire\WithFileUploads;
 use Spatie\LivewireFilepond\WithFilePond;
@@ -27,6 +27,7 @@ class GravamenInscripcion extends Component
     use DocumentoEntradaTrait;
     use ConsultarArchivoTrait;
     use GuardarDocumentoEntradaTrait;
+    use MontosTrait;
 
     public $distritos;
     public $actos;
@@ -49,15 +50,16 @@ class GravamenInscripcion extends Component
         return [
             'gravamen.tipo' => 'required|max: 250',
             'gravamen.acto_contenido' => 'required',
-            'gravamen.valor_gravamen' => 'required|numeric',
-            'gravamen.divisa' => ['required', Rule::in($this->divisas)],
-            'gravamen.valor_gravamen_2' => 'nullable|numeric',
-            'gravamen.divisa_2' => ['nullable', Rule::requiredIf($this->gravamen->valor_gravamen_2 != null), Rule::in($this->divisas)],
-            'gravamen.valor_gravamen_3' => 'nullable|numeric',
-            'gravamen.divisa_3' => ['nullable', Rule::requiredIf($this->gravamen->valor_gravamen_3 != null), Rule::in($this->divisas)],
             'gravamen.estado' => 'required',
             'gravamen.expediente' => 'nullable',
             'gravamen.observaciones' => 'required',
+            'montos' => 'required|array|min:1',
+            'montos.*.divisa' => 'required|string',
+            'montos.*.monto' => [
+                                        'required',
+                                        'numeric',
+                                        'min:0',
+                                    ],
             'tipo_documento' => 'required',
             'autoridad_cargo' => 'required',
             'autoridad_nombre' => 'required',
@@ -67,6 +69,11 @@ class GravamenInscripcion extends Component
             'documento_entrada_pdf' => 'nullable|mimes:pdf|max:100000',
          ];
     }
+
+    protected $validationAttributes  = [
+        'montos.*.monto' => 'monto',
+        'montos.*.divisa' => 'divisa'
+    ];
 
     public function updated($property, $value){
 
@@ -152,6 +159,7 @@ class GravamenInscripcion extends Component
             DB::transaction(function () {
 
                 $this->gravamen->estado = 'activo';
+                $this->gravamen->montos = json_encode($this->montos);
                 $this->gravamen->fecha_inscripcion = now()->toDateString();
                 $this->gravamen->actualizado_por = auth()->id();
                 $this->gravamen->save();
@@ -186,6 +194,7 @@ class GravamenInscripcion extends Component
                 if($this->gravamen->movimientoRegistral->estado != 'correccion')
                     $this->gravamen->movimientoRegistral->estado = 'captura';
 
+                $this->gravamen->montos = json_encode($this->montos);
                 $this->gravamen->movimientoRegistral->actualizado_por = auth()->id();
                 $this->gravamen->movimientoRegistral->save();
 
@@ -295,6 +304,8 @@ class GravamenInscripcion extends Component
         if(!$jefe_departamento) abort(500, message:"Es necesario registrar al jefe de Departamento de Registro de Inscripciones.");
 
         $this->cargarDocumentoEntrada($this->gravamen->movimientoRegistral);
+
+        $this->cargarMontos(json_decode($this->gravamen->montos, true));
 
     }
 
