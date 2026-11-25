@@ -20,7 +20,9 @@ trait MontosTrait{
 
     }
 
-    public function cargarMontos(array $montos){
+    public function cargarMontos(array | null $montos){
+
+        if(is_null($montos)) return;
 
         $this->montos = [];
 
