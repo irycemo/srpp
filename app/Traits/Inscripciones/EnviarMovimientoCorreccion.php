@@ -182,6 +182,8 @@ trait EnviarMovimientoCorreccion{
 
             }
 
+            $movimientoRegistral->sentencia->update(['estado' => null]);
+
         }
 
         if($movimientoRegistral->reformaMoral){

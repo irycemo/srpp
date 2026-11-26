@@ -4,9 +4,15 @@
 
         <div @click="selected != {{ $loop->index }} ? selected = {{ $loop->index }} : selected = null">
 
-            <x-h4>
+            <x-h4 class="flex items-center justify-between">
 
-                Movimiento registral: ({{ $cancelacion->movimientoRegistral->folio }})
+                <div class="flex items-center gap-4">
+
+                    Movimiento registral: ({{ $cancelacion->movimientoRegistral->folio }})
+
+                    <span class="bg-{{ $cancelacion->movimientoRegistral->estado_color }} py-1 px-2 rounded-full text-white text-xs whitespace-nowrap">{{ ucfirst($cancelacion->movimientoRegistral->estado) }}</span>
+
+                </div>
 
                 <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 float-right" :class="selected == 1 ? 'transform rotate-180' : ''" fill="none" viewBox="0 0 24 24" stroke="gray">
                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1" d="M19 9l-7 7-7-7" />
