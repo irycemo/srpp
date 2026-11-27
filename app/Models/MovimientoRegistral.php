@@ -123,31 +123,31 @@ class MovimientoRegistral extends Model implements Auditable
         return $this->hasMany(Rechazo::class, 'movimiento_registral_id');
     }
 
-    public function caratula(){
+    public function caratulaUrl(){
 
         if(app()->isProduction()){
 
-            return $this->archivos()->where('descripcion', 'caratula')->latest()->first()
-                    ? Storage::disk('s3')->temporaryUrl(config('services.ses.ruta_caratulas') . $this->archivos()->where('descripcion', 'caratula')->first()->url, now()->addMinutes(10))
+            return $this->caratula
+                    ? Storage::disk('s3')->temporaryUrl(config('services.ses.ruta_caratulas') . $this->caratula->url, now()->addMinutes(10))
                     : null;
 
         }else{
 
-            return $this->archivos()->where('descripcion', 'caratula')->first()
-                    ? Storage::disk('caratulas')->url($this->archivos()->where('descripcion', 'caratula')->first()->url)
+            return $this->caratula
+                    ? Storage::disk('caratulas')->url($this->caratula->url)
                     : null;
 
         }
 
     }
 
-    public function documentoEntrada(){
+    public function documentoEntradaUrl(){
 
         if(app()->isProduction()){
 
-            if($this->archivos()->where('descripcion', 'documento_entrada')->latest()->first()){
+            if($this->documentoEntrada){
 
-                $url = $this->archivos()->where('descripcion', 'documento_entrada')->latest()->first()->url;
+                $url = $this->documentoEntrada->url;
 
                 if(Str::contains($url, config('services.ses.ruta_documento_entrada'))){
 
@@ -173,6 +173,14 @@ class MovimientoRegistral extends Model implements Auditable
 
         }
 
+    }
+
+    public function caratula(){
+        return $this->morphOne(File::class, 'fileable')->where('descripcion', 'caratula');
+    }
+
+    public function documentoEntrada(){
+        return $this->morphOne(File::class, 'fileable')->where('descripcion', 'documento_entrada');
     }
 
     public function pdf(){

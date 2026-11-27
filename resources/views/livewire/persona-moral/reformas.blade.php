@@ -173,7 +173,7 @@
 
         @if($reformaMoral->movimientoRegistral->folioRealPersona)
 
-            @if(!$reformaMoral->movimientoRegistral->documentoEntrada())
+            @if(!$reformaMoral->movimientoRegistral->documentoEntrada)
 
                 <x-button-blue
                     wire:click="abrirModalDocumentoEntrada"
@@ -190,7 +190,7 @@
 
                 <div class="inline-block">
 
-                    <x-link-blue target="_blank" href="{{ $reformaMoral->movimientoRegistral->documentoEntrada() }}">Documento de entrada</x-link-blue>
+                    <x-link-blue target="_blank" href="{{ $reformaMoral->movimientoRegistral->documentoEntradaUrl() }}">Documento de entrada</x-link-blue>
 
                 </div>
 

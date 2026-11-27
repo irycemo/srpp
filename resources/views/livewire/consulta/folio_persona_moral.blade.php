@@ -232,9 +232,9 @@
 
         <div>
 
-            @if($folioReal->documentoEntrada())
+            @if($folioReal->documentoEntrada)
 
-                <x-link-blue target="_blank" href="{{ $folioReal->documentoEntrada() }}">Documento de entrada</x-link-blue>
+                <x-link-blue target="_blank" href="{{ $folioReal->documentoEntradaUrl() }}">Documento de entrada</x-link-blue>
 
             @endif
 
@@ -242,9 +242,9 @@
 
         <div>
 
-            @if($folioReal->caratula())
+            @if($folioReal->caratula)
 
-                <x-link-blue target="_blank" href="{{ $folioReal->caratula() }}">Caratula</x-link-blue>
+                <x-link-blue target="_blank" href="{{ $folioReal->caratulaUrl() }}">Caratula</x-link-blue>
 
             @endif
 

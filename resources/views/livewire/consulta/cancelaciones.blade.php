@@ -167,9 +167,9 @@
 
                     <div>
 
-                        @if($cancelacion->movimientoRegistral->documentoEntrada())
+                        @if($cancelacion->movimientoRegistral->documentoEntrada)
 
-                            <x-link-blue target="_blank" href="{{ $cancelacion->movimientoRegistral->documentoEntrada() }}">Documento de entrada</x-link-blue>
+                            <x-link-blue target="_blank" href="{{ $cancelacion->movimientoRegistral->documentoEntradaUrl() }}">Documento de entrada</x-link-blue>
 
                         @endif
 
@@ -177,9 +177,9 @@
 
                     <div>
 
-                        @if($cancelacion->movimientoRegistral->caratula())
+                        @if($cancelacion->movimientoRegistral->caratula)
 
-                            <x-link-blue target="_blank" href="{{ $cancelacion->movimientoRegistral->caratula() }}">Caratula</x-link-blue>
+                            <x-link-blue target="_blank" href="{{ $cancelacion->movimientoRegistral->caratulaUrl() }}">Caratula</x-link-blue>
 
                         @endif
 

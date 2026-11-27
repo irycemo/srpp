@@ -10,7 +10,7 @@
 
         <div class="space-y-2 mb-5 bg-white rounded-lg p-2">
 
-            @if(!$propiedad->movimientoRegistral->documentoEntrada())
+            @if(!$propiedad->movimientoRegistral->documentoEntrada)
 
                 <x-button-blue
                     wire:click="abrirModalDocumentoEntrada"
@@ -27,7 +27,7 @@
 
                 <div class="inline-block">
 
-                    <x-link-blue target="_blank" href="{{ $propiedad->movimientoRegistral->documentoEntrada() }}">Ver documento de entrada</x-link-blue>
+                    <x-link-blue target="_blank" href="{{ $propiedad->movimientoRegistral->documentoEntradaUrl() }}">Ver documento de entrada</x-link-blue>
 
                 </div>
 

@@ -291,9 +291,9 @@
 
                     <div>
 
-                        @if($gravamen->movimientoRegistral->documentoEntrada())
+                        @if($gravamen->movimientoRegistral->documentoEntrada)
 
-                            <x-link-blue target="_blank" href="{{ $gravamen->movimientoRegistral->documentoEntrada() }}">Documento de entrada</x-link-blue>
+                            <x-link-blue target="_blank" href="{{ $gravamen->movimientoRegistral->documentoEntradaUrl() }}">Documento de entrada</x-link-blue>
 
                         @endif
 
@@ -301,9 +301,9 @@
 
                     <div>
 
-                        @if($gravamen->movimientoRegistral->caratula())
+                        @if($gravamen->movimientoRegistral->caratula)
 
-                            <x-link-blue target="_blank" href="{{ $gravamen->movimientoRegistral->caratula() }}">Caratula</x-link-blue>
+                            <x-link-blue target="_blank" href="{{ $gravamen->movimientoRegistral->caratulaUrl() }}">Caratula</x-link-blue>
 
                         @endif
 

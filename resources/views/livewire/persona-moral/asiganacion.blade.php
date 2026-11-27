@@ -271,7 +271,7 @@
 
         @if($movimientoRegistral->folioRealPersona)
 
-            @if(!$movimientoRegistral->folioRealPersona->documentoEntrada())
+            @if(!$movimientoRegistral->folioRealPersona->documentoEntrada)
 
                 @livewire('comun.documento-entrada', ['folioRealPersonaMoral' => $movimientoRegistral->folioRealPersona])
 
@@ -279,7 +279,7 @@
 
                 <div class="inline-block">
 
-                    <x-link-blue target="_blank" href="{{ $movimientoRegistral->folioRealPersona->documentoEntrada() }}">Documento de entrada</x-link-blue>
+                    <x-link-blue target="_blank" href="{{ $movimientoRegistral->folioRealPersona->documentoEntradaUrl() }}">Documento de entrada</x-link-blue>
 
                 </div>
 

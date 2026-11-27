@@ -269,9 +269,9 @@
 
                     <div>
 
-                        @if($inscripcion->movimientoRegistral->documentoEntrada())
+                        @if($inscripcion->movimientoRegistral->documentoEntrada)
 
-                            <x-link-blue target="_blank" href="{{ $inscripcion->movimientoRegistral->documentoEntrada() }}">Documento de entrada</x-link-blue>
+                            <x-link-blue target="_blank" href="{{ $inscripcion->movimientoRegistral->documentoEntradaUrl() }}">Documento de entrada</x-link-blue>
 
                         @endif
 
@@ -279,9 +279,9 @@
 
                     <div>
 
-                        @if($inscripcion->movimientoRegistral->caratula())
+                        @if($inscripcion->movimientoRegistral->caratula)
 
-                            <x-link-blue target="_blank" href="{{ $inscripcion->movimientoRegistral->caratula() }}">Caratula</x-link-blue>
+                            <x-link-blue target="_blank" href="{{ $inscripcion->movimientoRegistral->caratulaUrl() }}">Caratula</x-link-blue>
 
                         @endif
 

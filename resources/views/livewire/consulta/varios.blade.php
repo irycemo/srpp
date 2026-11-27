@@ -151,9 +151,9 @@
 
                     <div>
 
-                        @if($vario->movimientoRegistral->documentoEntrada())
+                        @if($vario->movimientoRegistral->documentoEntrada)
 
-                            <x-link-blue target="_blank" href="{{ $vario->movimientoRegistral->documentoEntrada() }}">Documento de entrada</x-link-blue>
+                            <x-link-blue target="_blank" href="{{ $vario->movimientoRegistral->documentoEntradaUrl() }}">Documento de entrada</x-link-blue>
 
                         @endif
 
@@ -161,9 +161,9 @@
 
                     <div>
 
-                        @if($vario->movimientoRegistral->caratula())
+                        @if($vario->movimientoRegistral->caratula)
 
-                            <x-link-blue target="_blank" href="{{ $vario->movimientoRegistral->caratula() }}">Caratula</x-link-blue>
+                            <x-link-blue target="_blank" href="{{ $vario->movimientoRegistral->caratulaUrl() }}">Caratula</x-link-blue>
 
                         @endif
 

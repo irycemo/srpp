@@ -153,7 +153,7 @@
 
         <div class="bg-white rounded-lg p-3 flex justify-end shadow-lg gap-3">
 
-            @if(!$sentencia->movimientoRegistral->documentoEntrada())
+            @if(!$sentencia->movimientoRegistral->documentoEntrada)
 
                 <x-button-blue
                     wire:click="abrirModalDocumentoEntrada"
@@ -170,7 +170,7 @@
 
                 <div class="inline-block">
 
-                    <x-link-blue target="_blank" href="{{ $sentencia->movimientoRegistral->documentoEntrada() }}">Documento de entrada</x-link-blue>
+                    <x-link-blue target="_blank" href="{{ $sentencia->movimientoRegistral->documentoEntradaUrl() }}">Documento de entrada</x-link-blue>
 
                 </div>
 

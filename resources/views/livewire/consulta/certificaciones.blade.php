@@ -14,9 +14,9 @@
 
             <div class="flex gap-2 text-xs">
 
-                @if($certificado->movimientoRegistral->caratula())
+                @if($certificado->movimientoRegistral->caratula)
 
-                    <x-link-blue target="_blank" href="{{ $certificado->movimientoRegistral->caratula() }}">Caratula</x-link-blue>
+                    <x-link-blue target="_blank" href="{{ $certificado->movimientoRegistral->caratulaUrl() }}">Caratula</x-link-blue>
 
                 @endif
 
