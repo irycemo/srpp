@@ -489,7 +489,7 @@ class CopiasCertificadas extends Component
 
         $movimientoRegistral = $folio_real->movimientosRegistrales()->where('folio', $modelo->movimiento_registral)->first();
 
-        if(! $movimientoRegistral->documentoEntrada()){
+        if(! $movimientoRegistral->documentoEntrada){
 
             $this->dispatch('mostrarMensaje', ['warning', "El movimiento registral no tiene documento de entrada."]);
 
@@ -497,7 +497,7 @@ class CopiasCertificadas extends Component
 
         }
 
-        $this->js('window.open(\' '. $movimientoRegistral->documentoEntrada() . '\', \'_blank\');');
+        $this->js('window.open(\' '. $movimientoRegistral->documentoEntradaUrl() . '\', \'_blank\');');
 
     }
 
